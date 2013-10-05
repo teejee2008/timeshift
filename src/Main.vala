@@ -120,6 +120,31 @@ public class Main : GLib.Object{
 	public Main(string[] args){
 		string msg = "";
 		
+		//init log ------------------
+		
+		try {
+			DateTime now = new DateTime.now_local();
+			log_dir = "/var/log/timeshift";
+			log_file = log_dir + "/" + now.format("%Y-%m-%d %H-%M-%S") + ".log";
+			
+			var file = File.new_for_path (log_dir);
+			if (!file.query_exists ()) {
+				file.make_directory_with_parents();
+			}
+
+			file = File.new_for_path (log_file);
+			if (file.query_exists ()) {
+				file.delete ();
+			}
+        
+			dos_log = new DataOutputStream (file.create(FileCreateFlags.REPLACE_DESTINATION));
+			log_msg(_("Session log file") + ": %s".printf(log_file));
+		} 
+		catch (Error e) {
+			is_success = false;
+			log_error (e.message);
+		}
+		
 		//parse arguments (initial) ------------
 		
 		parse_arguments(args);
@@ -148,9 +173,6 @@ public class Main : GLib.Object{
 			if (app_mode == ""){
 				Gtk.init (ref args);
 				messagebox_show(_("Missing Dependencies"),message,true);
-			}
-			else{
-				log_error(msg);
 			}
 			exit(0);
 		}
@@ -182,31 +204,6 @@ public class Main : GLib.Object{
 				//already logged - do nothing
 			}
 			exit(0);
-		}
-
-		//init log ------------------
-		
-		try {
-			DateTime now = new DateTime.now_local();
-			log_dir = "/var/log/timeshift";
-			log_file = log_dir + "/" + now.format("%Y-%m-%d %H-%M-%S") + ".log";
-			
-			var file = File.new_for_path (log_dir);
-			if (!file.query_exists ()) {
-				file.make_directory_with_parents();
-			}
-
-			file = File.new_for_path (log_file);
-			if (file.query_exists ()) {
-				file.delete ();
-			}
-        
-			dos_log = new DataOutputStream (file.create(FileCreateFlags.REPLACE_DESTINATION));
-			log_msg(_("Session log file") + ": %s".printf(log_file));
-		} 
-		catch (Error e) {
-			is_success = false;
-			log_error (e.message);
 		}
 
 		//initialize variables ------------------
@@ -351,9 +348,9 @@ public class Main : GLib.Object{
 	public bool check_dependencies(out string msg){
 		msg = "";
 		
-		string[] dependencies = { "rsync","blkid","df","du","mount","umount","fuser","crontab","cp","rm","touch","ln","sync","shutdown","chroot" };
+		string[] dependencies = { "rsync","/sbin/blkid","df","du","mount","umount","fuser","crontab","cp","rm","touch","ln","sync",}; //"shutdown","chroot", 
 		
-		debug("Checking dependencies...");
+		log_msg("Checking dependencies...");
 		
 		string path;
 		foreach(string cmd_tool in dependencies){
@@ -366,11 +363,12 @@ public class Main : GLib.Object{
 		if (msg.length > 0){
 			msg = _("Following dependencies are missing:") + "\n\n" + msg + "\n";
 			msg += _("Please install the packages for the commands \nlisted above and try running TimeShift again.");
-			debug("Missing dependencies");
+			log_error(msg);
+			log_error("Missing dependencies");
 			return false;
 		}
 		else{
-			debug("All depenencies satisfied");
+			log_msg("All dependencies satisfied");
 			return true;
 		}
 	}

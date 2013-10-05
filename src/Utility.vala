@@ -106,6 +106,16 @@ public void debug (string message)
 	if (DEBUG_MODE){
 		log_msg (message);
 	}
+	else{
+		try {
+			if (dos_log != null){
+				dos_log.put_string ("[%s] %s\n".printf(Utility.timestamp(), message));
+			}
+		} 
+		catch (Error e) {
+			stdout.printf (e.message);
+		}
+	}
 }
 
 namespace Utility 

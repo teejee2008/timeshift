@@ -1,0 +1,32 @@
+#!/bin/bash
+
+rm -rfd ./installer/32bit/share
+rm -rfd ./installer/64bit/share
+
+mkdir -p ./installer/32bit/share
+mkdir -p ./installer/64bit/share
+
+cp -rfd -p --no-preserve=ownership -t ./installer/32bit/share ./src/share/*
+cp -rfd -p --no-preserve=ownership -t ./installer/64bit/share ./src/share/*
+
+cp -rfd -p --no-preserve=ownership -t ./installer/32bit ./src/TimeShift.desktop
+cp -rfd -p --no-preserve=ownership -t ./installer/64bit ./src/TimeShift.desktop
+
+chmod u+x ./installer/install.sh
+cp -rfd -p --no-preserve=ownership -t ./installer/32bit ./installer/install.sh
+cp -rfd -p --no-preserve=ownership -t ./installer/64bit ./installer/install.sh
+
+makeself ./installer/32bit ./installer/timeshift-32bit-setup.run "TimeShift (32-bit)" ./install.sh 
+makeself ./installer/64bit ./installer/timeshift-64bit-setup.run "TimeShift (64-bit)" ./install.sh  
+
+rm -rfd ./installer/32bit/share
+rm -rfd ./installer/64bit/share 
+
+rm -f ./installer/32bit/TimeShift.desktop
+rm -f ./installer/64bit/TimeShift.desktop 
+
+rm -f ./installer/32bit/makefile
+rm -f ./installer/64bit/makefile 
+
+rm -f ./installer/32bit/install.sh 
+rm -f ./installer/64bit/install.sh 

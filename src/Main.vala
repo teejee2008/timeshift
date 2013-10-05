@@ -348,7 +348,7 @@ public class Main : GLib.Object{
 	public bool check_dependencies(out string msg){
 		msg = "";
 		
-		string[] dependencies = { "rsync","/sbin/blkid","df","du","mount","umount","fuser","crontab","cp","rm","touch","ln","sync",}; //"shutdown","chroot", 
+		string[] dependencies = { "rsync","/sbin/blkid","df","du","mount","umount","fuser","crontab","cp","rm","touch","ln","sync"}; //"shutdown","chroot", 
 		
 		log_msg("Checking dependencies...");
 		

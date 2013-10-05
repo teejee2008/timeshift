@@ -22,8 +22,7 @@ install:
 	mkdir -p "$(DESTDIR)$(launcherdir)"
 	mkdir -p "$(DESTDIR)$(sharedir)/timeshift"
 	mkdir -p "$(DESTDIR)$(sharedir)/pixmaps"
-	mkdir -p "/mnt/timeshift"
-	
+
 	#binary
 	install -m 0755 timeshift "$(DESTDIR)$(bindir)"
 	

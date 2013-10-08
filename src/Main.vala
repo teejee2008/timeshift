@@ -578,7 +578,7 @@ public class Main : GLib.Object{
 						log_msg(_("Last hourly snapshot not found"));
 						take_new = true;
 					}
-					else if (last_snapshot_hourly.date.compare(now.add_hours(-1)) < 0){
+					else if (last_snapshot_hourly.date.compare(now.add_hours(-1).add_minutes(1)) < 0){
 						log_msg(_("Last hourly snapshot is more than 1 hour old"));
 						take_new = true;
 					}
@@ -610,7 +610,7 @@ public class Main : GLib.Object{
 						log_msg(_("Last daily snapshot not found"));
 						take_new = true;
 					}
-					else if (last_snapshot_daily.date.compare(now.add_days(-1)) < 0){
+					else if (last_snapshot_daily.date.compare(now.add_days(-1).add_minutes(1)) < 0){
 						log_msg(_("Last daily snapshot is more than 1 day old"));
 						take_new = true;
 					}
@@ -642,7 +642,7 @@ public class Main : GLib.Object{
 						log_msg(_("Last weekly snapshot not found"));
 						take_new = true;
 					}
-					else if (last_snapshot_weekly.date.compare(now.add_weeks(-1)) < 0){
+					else if (last_snapshot_weekly.date.compare(now.add_weeks(-1).add_minutes(1)) < 0){
 						log_msg(_("Last weekly snapshot is more than 1 week old"));
 						take_new = true;
 					}
@@ -674,7 +674,7 @@ public class Main : GLib.Object{
 						log_msg(_("Last monthly snapshot not found"));
 						take_new = true;
 					}
-					else if (last_snapshot_monthly.date.compare(now.add_months(-1)) < 0){
+					else if (last_snapshot_monthly.date.compare(now.add_months(-1).add_minutes(1)) < 0){
 						log_msg(_("Last monthly snapshot is more than 1 month old"));
 						take_new = true;
 					}

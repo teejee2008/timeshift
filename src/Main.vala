@@ -281,6 +281,8 @@ public class Main : GLib.Object{
 		//initialize app --------------------
 		
 		update_partition_list();
+		detect_system_devices();
+		
 		load_app_config();
 		update_snapshot_list();
 	}
@@ -1739,12 +1741,8 @@ public class Main : GLib.Object{
 		partition_list = get_all_partitions();
 
 		foreach(PartitionInfo pi in partition_list){
-			if (pi.mount_point == "/"){
-				root_device = pi;
-			}
-			if (pi.mount_point == "/home"){
-				home_device = pi;
-			}
+			//root_device and home_device will be detected by detect_system_devices()
+			
 			if (pi.mount_point == "/mnt/timeshift"){
 				snapshot_device = pi;
 			}
@@ -1755,7 +1753,7 @@ public class Main : GLib.Object{
 		if (partition_list.size == 0){
 			log_error(_("Failed to get partition list."));
 		}
-		
+
 		debug(_("updated partition list"));
 	}
 
@@ -1774,6 +1772,52 @@ public class Main : GLib.Object{
 		});
 
 		return list;
+	}
+	
+	public bool detect_system_devices(){
+		string cmd = "";
+		string std_out;
+		string std_err;
+		int ret_val;
+
+		try{
+			cmd = "mount";
+			Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
+			if (ret_val != 0){
+				log_error (_("Failed to detect root device!"));
+				log_error (std_err);
+				return false;
+			}
+			else{
+				foreach(string line in std_out.split("\n")){
+					if (line.contains(" / ")){
+						string dev = line.split(" ")[0].strip();
+						foreach(PartitionInfo p in partition_list){
+							if (p.device == dev){
+								root_device = p;
+								break;
+							}
+						}
+					}
+					else if (line.contains(" /home ")){
+						string dev = line.split(" ")[0].strip();
+						foreach(PartitionInfo p in partition_list){
+							if (p.device == dev){
+								home_device = p;
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+		catch(Error e){
+			log_error (_("Failed to detect root device!"));
+			log_error (e.message);
+			return false;
+		}
+		
+		return false;
 	}
 	
 	public TimeShiftBackup? get_latest_snapshot(string tag = ""){

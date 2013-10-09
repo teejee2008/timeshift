@@ -261,6 +261,7 @@ public class Main : GLib.Object{
 		exclude_list_default.add("/timeshift/*");
 		exclude_list_default.add("/home/*/.thumbnails");
 		exclude_list_default.add("/home/*/.cache");
+		exclude_list_default.add("/home/*/.gvfs");
 		exclude_list_default.add("/home/*/.mozilla/firefox/*.default/Cache");
 		exclude_list_default.add("/home/*/.mozilla/firefox/*.default/OfflineCache");
 		exclude_list_default.add("/home/*/.opera/cache");

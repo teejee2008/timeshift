@@ -302,7 +302,7 @@ public class SettingsWindow : Gtk.Dialog{
 		
 		btn_reset_exclude_list.is_important = false;
 		btn_reset_exclude_list.label = _("Reset");
-		btn_reset_exclude_list.set_tooltip_text (_("Reset this list to default state"));
+		btn_reset_exclude_list.set_tooltip_text (_("Clear the list"));
 
 		btn_reset_exclude_list.clicked.connect (btn_reset_exclude_list_clicked);
 		
@@ -871,12 +871,6 @@ public class SettingsWindow : Gtk.Dialog{
 		//create a temp exclude list ----------------------------
 		
 		temp_exclude_list = new Gee.ArrayList<string>();
-		
-		foreach(string path in App.exclude_list_user){
-			if (!temp_exclude_list.contains(path)){
-				temp_exclude_list.add(path);
-			}
-		}	
 		
 		//refresh treeview --------------------------
 		

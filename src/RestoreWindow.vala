@@ -492,13 +492,17 @@ public class RestoreWindow : Gtk.Dialog{
 	}
 
 	private void cell_exclude_text_edited (string path, string new_text) {
-		string entry;
+		string old_text;
 
 		TreeIter iter;
 		ListStore model = (ListStore) tv_exclude.model;
 		model.get_iter_from_string (out iter, path);
-		model.get (iter, 0, out entry, -1);
+		model.get (iter, 0, out old_text, -1);
 		model.set (iter, 0, new_text);
+		
+		int index = temp_exclude_list.index_of(old_text);
+		temp_exclude_list.remove(old_text);
+		temp_exclude_list.insert(index, new_text);
 	}
 
 

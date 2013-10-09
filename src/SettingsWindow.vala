@@ -402,7 +402,15 @@ public class SettingsWindow : Gtk.Dialog{
 
 		//initialize ------------------
 		
-		btn_reset_exclude_list_clicked();
+		temp_exclude_list = new Gee.ArrayList<string>();
+		
+		foreach(string path in App.exclude_list_user){
+			if (!temp_exclude_list.contains(path)){
+				temp_exclude_list.add(path);
+			}
+		}
+		
+		refresh_tv_exclude();
 		refresh_tv_schedule();
 		refresh_tv_remove();
 
@@ -502,17 +510,25 @@ public class SettingsWindow : Gtk.Dialog{
 	}
 	
 	private void cell_exclude_text_edited (string path, string new_text) {
-		string old_text;
-
+		string old_pattern;
+		string new_pattern;
+		
 		TreeIter iter;
 		ListStore model = (ListStore) tv_exclude.model;
 		model.get_iter_from_string (out iter, path);
-		model.get (iter, 0, out old_text, -1);
-		model.set (iter, 0, new_text);
+		model.get (iter, 0, out old_pattern, -1);
 		
-		int index = temp_exclude_list.index_of(old_text);
-		temp_exclude_list.remove(old_text);
-		temp_exclude_list.insert(index, new_text);
+		if (old_pattern.has_prefix("+ ")){
+			new_pattern = "+ " + new_text;
+		}
+		else{
+			new_pattern = new_text;
+		}
+		model.set (iter, 0, new_pattern);
+		
+		int index = temp_exclude_list.index_of(old_pattern);
+		temp_exclude_list.insert(index, new_pattern);
+		temp_exclude_list.remove(old_pattern);
 	}
 
 	private void refresh_tv_schedule(){
@@ -771,9 +787,9 @@ public class SettingsWindow : Gtk.Dialog{
 			foreach(string path in list){
 				
 				path = path.has_prefix("+ ") ? path : "+ " + path;
-				
+
 				if (!temp_exclude_list.contains(path)){
-					temp_exclude_list.add(path);
+					temp_exclude_list.add(path);	
 					tv_exclude_add_item(path);
 					App.first_snapshot_size = 0; //re-calculate
 				}

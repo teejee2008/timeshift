@@ -754,7 +754,7 @@ public class Main : GLib.Object{
 					progress_text = _("Cleaning up...");
 					log_msg(progress_text);
 					
-					cmd = "rm -rfd \"%s\"".printf(sync_path);
+					cmd = "rm -rf \"%s\"".printf(sync_path);
 					
 					if (SHOW_COMMANDS) { log_msg(cmd, true); }
 					
@@ -1553,7 +1553,7 @@ public class Main : GLib.Object{
 		try{
 			var f = File.new_for_path(snapshot_to_delete.path);
 			if(f.query_exists()){
-				cmd = "rm -rfd \"%s\"".printf(snapshot_to_delete.path);
+				cmd = "rm -rf \"%s\"".printf(snapshot_to_delete.path);
 				
 				if (SHOW_COMMANDS) { log_msg(cmd, true); }
 				

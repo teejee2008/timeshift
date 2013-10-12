@@ -7,6 +7,8 @@ cd $DIR
 sh ./build-source.sh
 cd ./installer
 
+echo "Building installer..."
+
 tgz="/home/teejee/projects/pbuilder/"
 dsc="/home/teejee/projects/builds/timeshift*.dsc"
 

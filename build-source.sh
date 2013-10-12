@@ -4,7 +4,7 @@ backup=`pwd`
 DIR="$( cd "$( dirname "$0" )" && pwd )"
 cd "$DIR"
 
-sh ./extract-strings.sh
+sh update-pot.sh
 
 rm -rf ../builds
 bzr builddeb --source --native --build-dir ../builds/temp --result-dir ../builds

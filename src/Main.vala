@@ -353,7 +353,7 @@ public class Main : GLib.Object{
 		
 		string[] dependencies = { "rsync","/sbin/blkid","df","du","mount","umount","fuser","crontab","cp","rm","touch","ln","sync"}; //"shutdown","chroot", 
 		
-		log_msg("Checking dependencies...");
+		log_msg(_("Checking dependencies..."));
 		
 		string path;
 		foreach(string cmd_tool in dependencies){
@@ -367,11 +367,11 @@ public class Main : GLib.Object{
 			msg = _("Following dependencies are missing:") + "\n\n" + msg + "\n";
 			msg += _("Please install the packages for the commands \nlisted above and try running TimeShift again.");
 			log_error(msg);
-			log_error("Missing dependencies");
+			log_error(_("Missing dependencies"));
 			return false;
 		}
 		else{
-			log_msg("All dependencies satisfied");
+			log_msg(_("All dependencies satisfied"));
 			return true;
 		}
 	}

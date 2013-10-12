@@ -1057,8 +1057,9 @@ class MainWindow : Gtk.Window{
 		//dialog.artists = {"", ""};
 		dialog.authors = {"Tony George"};
 		dialog.documenters = null; 
-		dialog.translator_credits = null; 
-
+		dialog.translator_credits = "tomberry88 (Italian)"; 
+		//dialog.add_credit_section("Sponsors", {"Colin Mills"});
+		
 		dialog.program_name = "TimeShift";
 		dialog.comments = _("A System Restore Utility for Linux");
 		dialog.copyright = "Copyright © 2013 Tony George (teejee2008@gmail.com)";
@@ -1071,10 +1072,7 @@ class MainWindow : Gtk.Window{
 	        log_error (e.message);
 	    }
 
-		dialog.license = 
-"""
-This program is free for personal and commercial use and comes with absolutely no warranty. You use this program entirely at your own risk. The author will not be liable for any damages arising from the use of this program.
-""";
+		dialog.license = "This program is free for personal and commercial use and comes with absolutely no warranty. You use this program entirely at your own risk. The author will not be liable for any damages arising from the use of this program.";
 		dialog.wrap_license = true;
 
 		dialog.website = "http://teejeetech.blogspot.in";

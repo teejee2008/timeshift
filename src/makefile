@@ -22,7 +22,8 @@ install:
 	mkdir -p "$(DESTDIR)$(launcherdir)"
 	mkdir -p "$(DESTDIR)$(sharedir)/timeshift"
 	mkdir -p "$(DESTDIR)$(sharedir)/pixmaps"
-
+	mkdir -p "$(DESTDIR)$(localedir)/it_IT/LC_MESSAGES"
+	
 	#binary
 	install -m 0755 timeshift "$(DESTDIR)$(bindir)"
 	
@@ -36,6 +37,9 @@ install:
 	#app icon
 	install -m 0755 ./share/pixmaps/timeshift.png "$(DESTDIR)$(sharedir)/pixmaps/"
 	
+	#translations
+	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/it_IT/LC_MESSAGES/timeshift.mo" ../po/timeshift-it.po
+
 uninstall:
 
 	#binary
@@ -49,3 +53,6 @@ uninstall:
 	
 	#app icon
 	rm -f "$(DESTDIR)$(sharedir)/pixmaps/timeshift.png"
+	
+	#translations
+	rm -f "$(DESTDIR)$(localedir)/it_IT/LC_MESSAGES/timeshift.mo"

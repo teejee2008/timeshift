@@ -1047,7 +1047,7 @@ namespace Utility
 		string output;
 		
 		try {
-			Process.spawn_command_line_sync("ps --ppid " + parentPid.to_string(), out output);
+			Process.spawn_command_line_sync("ps --ppid %d".printf(parentPid), out output);
 		}
 		catch(Error e){
 	        log_error (e.message);
@@ -1533,12 +1533,12 @@ namespace Utility
 	
 	public int process_pause (Pid procID)
 	{
-		return execute_command_sync ("kill -STOP " + procID.to_string());
+		return execute_command_sync ("kill -STOP %d".printf(procID));
 	}
 	
 	public int process_resume (Pid procID)
 	{
-		return execute_command_sync ("kill -CONT " + procID.to_string());
+		return execute_command_sync ("kill -CONT %d".printf(procID));
 	}
 
 	public int notify_send (string title, string message, int durationMillis, string urgency)

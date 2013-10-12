@@ -2321,7 +2321,8 @@ public class TimeShiftBackup : GLib.Object{
 			path = dir_path;
 			name = info.get_name();
 			description = "";
-			date = new DateTime.from_timeval_local(info.get_modification_time());
+			
+			date = new DateTime.from_unix_utc(0);
 			tags = new Gee.ArrayList<string>();
 			exclude_list = new Gee.ArrayList<string>();
 			

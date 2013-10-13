@@ -924,7 +924,7 @@ class MainWindow : Gtk.Window{
 		App.restore_target = App.root_device;
 
 		//show restore window -----------------
-		
+
 		var dialog = new RestoreWindow();
 		dialog.set_transient_for (this);
 		dialog.show_all();
@@ -937,7 +937,7 @@ class MainWindow : Gtk.Window{
 		else{ 
 			return; //cancel
 		}
-		
+
 		//update UI ----------------
 		
 		update_ui(false);
@@ -945,19 +945,32 @@ class MainWindow : Gtk.Window{
 		//take a snapshot if current system is being restored -----------------
 		
 		if (!App.is_live_system() && (App.restore_target.device == App.root_device.device) && (App.restore_target.uuid == App.root_device.uuid)){
-			statusbar_message(_("Taking snapshot..."));
-		
-			update_progress_start();
+
+			string msg = _("Do you want to take a snapshot of the current system before restoring the selected snapshot?");
 			
-			bool is_success = App.take_snapshot(true); 
+			var dialog2 = new Gtk.MessageDialog.with_markup(null, Gtk.DialogFlags.MODAL, Gtk.MessageType.QUESTION, Gtk.ButtonsType.YES_NO, msg);
+			dialog2.set_title(_("Take Snapshot"));
+			dialog2.set_default_size (200, -1);
+			dialog2.set_transient_for(this);
+			dialog2.set_modal(true);
+			response = dialog2.run();
+			dialog2.destroy();
+
+			if (response == Gtk.ResponseType.YES){
+				statusbar_message(_("Taking snapshot..."));
 			
-			update_progress_stop();
-			
-			if (is_success){
-				App.update_snapshot_list();
-				var latest = App.get_latest_snapshot("ondemand");
-				latest.description = _("Before restoring") + " '%s'".printf(App.snapshot_to_restore.name);
-				latest.update_control_file();
+				update_progress_start();
+				
+				bool is_success = App.take_snapshot(true); 
+				
+				update_progress_stop();
+				
+				if (is_success){
+					App.update_snapshot_list();
+					var latest = App.get_latest_snapshot("ondemand");
+					latest.description = _("Before restoring") + " '%s'".printf(App.snapshot_to_restore.name);
+					latest.update_control_file();
+				}
 			}
 		}
 

@@ -69,11 +69,11 @@ public class Main : GLib.Object{
 	public bool schedule_daily = true;
 	public bool schedule_hourly = false;
 	public bool schedule_boot = true;
-	public int count_monthly = 3;
-	public int count_weekly = 4;
-	public int count_daily = 10;
+	public int count_monthly = 2;
+	public int count_weekly = 3;
+	public int count_daily = 5;
 	public int count_hourly = 6;
-	public int count_boot = 10;
+	public int count_boot = 5;
 
 	public string app_mode = "";
 	public bool is_ondemand = false;

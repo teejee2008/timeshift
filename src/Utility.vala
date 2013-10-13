@@ -417,15 +417,7 @@ namespace Utility
 				return (free_mb == 0) ? "" : "%.1f GB".printf(free_mb/1024.0);
 			}
 		}
-		
-		public string disk_name{
-			owned get{
-				
-				return "";
-				
-			}
-		}
-		
+
 		public string partition_name{
 			owned get{
 				return device[5:device.length];

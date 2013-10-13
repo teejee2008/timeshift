@@ -1943,6 +1943,11 @@ public class Main : GLib.Object{
 					
 					log_msg(_("Unmounting device") + " '%s' ".printf(info.device) + _("from") + " '%s'".printf(info.mount_point));
 					
+					//sync before unmount
+					cmd = "sync";
+					Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
+					//ignore success/failure
+					
 					//unmount
 					cmd = "umount \"" + mount_point + "\"";
 					Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);

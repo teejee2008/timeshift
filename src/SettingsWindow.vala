@@ -503,10 +503,9 @@ public class SettingsWindow : Gtk.Dialog{
 	}
 
 	private void cell_exclude_text_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
-		string pattern, color;
-		model.get (iter, 0, out pattern, 2, out color, -1);
+		string pattern;
+		model.get (iter, 0, out pattern, -1);
 		(cell as Gtk.CellRendererText).text = pattern.has_prefix("+ ") ? pattern[2:pattern.length] : pattern;
-		(cell as Gtk.CellRendererText).foreground = color;
 	}
 	
 	private void cell_exclude_text_edited (string path, string new_text) {
@@ -618,7 +617,7 @@ public class SettingsWindow : Gtk.Dialog{
 	}
 	
 	private void refresh_tv_exclude(){
-		ListStore model = new ListStore(3, typeof(string), typeof(Gdk.Pixbuf), typeof(string));
+		ListStore model = new ListStore(2, typeof(string), typeof(Gdk.Pixbuf));
 		tv_exclude.model = model;
 		
 		foreach(string path in temp_exclude_list){
@@ -630,8 +629,7 @@ public class SettingsWindow : Gtk.Dialog{
 		Gdk.Pixbuf pix_exclude = null;
 		Gdk.Pixbuf pix_include = null;
 		Gdk.Pixbuf pix_selected = null;
-		string text_color;
-		
+
 		try{
 			pix_exclude = new Gdk.Pixbuf.from_file (App.share_folder + "/timeshift/images/item-gray.png");
 			pix_include = new Gdk.Pixbuf.from_file (App.share_folder + "/timeshift/images/item-blue.png");
@@ -650,15 +648,8 @@ public class SettingsWindow : Gtk.Dialog{
 		else{
 			pix_selected = pix_exclude;
 		}
-			
-		if (App.exclude_list_default.contains(path)){
-			text_color = "#0B610B";
-		}
-		else{
-			text_color = "#000000";
-		}
-		
-		model.set (iter, 0, path, 1, pix_selected, 2, text_color, -1);
+
+		model.set (iter, 0, path, 1, pix_selected, -1);
 		
 		Adjustment adj = tv_exclude.get_hadjustment();
 		adj.value = adj.upper;
@@ -703,27 +694,12 @@ public class SettingsWindow : Gtk.Dialog{
 	}
 	
 	private bool lnk_default_list_activate(){
-		string msg = "";
-		msg += "<b>" + _("Exclude List") + ":</b>\n\n";
-		msg += _("Files matching the following patterns will be <i>excluded</i>") + ":\n\n";
-		
-		foreach(string path in App.exclude_list_default){
-			msg += path + "\n";
-		}
-		msg += "\n";
-		
-		msg += "<b>" + _("Home Directory") + ":</b>\n\n";
-		msg += _("Hidden files and folders are included by default since \nthey contain user-specific configuration files.") + "\n";
-		msg += _("All other files and folders are excluded.") + "\n";
-
-		var dialog = new Gtk.MessageDialog.with_markup(null, Gtk.DialogFlags.MODAL, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, msg);
-		dialog.set_title(_("Default Entries"));
-		dialog.set_default_size (200, -1);
-		dialog.set_transient_for(this);
-		dialog.set_modal(true);
+		//show message window -----------------
+		var dialog = new ExcludeMessageWindow();
+		dialog.set_transient_for (this);
+		dialog.show_all();
 		dialog.run();
 		dialog.destroy();
-
 		return true;
 	}
 

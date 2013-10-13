@@ -43,7 +43,6 @@ public class RestoreWindow : Gtk.Dialog{
 	
 	//bootloader
 	private Label lbl_header_bootloader;
-	//private CheckButton chk_restore_grub2;
 	private ComboBox cmb_boot_device;
 	
 	//exclude
@@ -80,7 +79,7 @@ public class RestoreWindow : Gtk.Dialog{
         this.window_position = WindowPosition.CENTER_ON_PARENT;
         this.set_destroy_with_parent (true);
 		this.set_modal (true);
-        this.set_default_size (550, 450);
+        this.set_default_size (550, 500);
 
         //set app icon
 		try{
@@ -199,18 +198,6 @@ public class RestoreWindow : Gtk.Dialog{
 		hbox_grub.margin_right = 6;
         hbox_grub.margin_bottom = 6;
         vbox_target.add (hbox_grub);
-		
-		/*string grub_msg = _("Re-install GRUB2 bootloader on the target device (recommended)");
-		
-		//chk_restore_grub2
-		chk_restore_grub2 = new CheckButton.with_label(_("Re-install GRUB2") + ":");
-		chk_restore_grub2.active = true;
-		chk_restore_grub2.set_tooltip_markup(grub_msg);
-		hbox_grub.add(chk_restore_grub2);
-
-		chk_restore_grub2.toggled.connect(()=>{
-			cmb_boot_device.sensitive = chk_restore_grub2.active;
-		});*/
 
 		//cmb_boot_device
 		cmb_boot_device = new ComboBox ();
@@ -430,10 +417,6 @@ public class RestoreWindow : Gtk.Dialog{
 		refresh_cmb_boot_device();
 		
 		btn_reset_exclude_list_clicked();
-
-		//chk_restore_grub2.active = true; //keep enabled always
-		//chk_restore_grub2.sensitive = false; //don't allow user to disable
-		//cmb_boot_device.sensitive = chk_restore_grub2.active;
 	}
 
 
@@ -485,10 +468,9 @@ public class RestoreWindow : Gtk.Dialog{
 	}
 
 	private void cell_exclude_text_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
-		string pattern, color;
-		model.get (iter, 0, out pattern, 2, out color, -1);
+		string pattern;
+		model.get (iter, 0, out pattern, -1);
 		(cell as Gtk.CellRendererText).text = pattern.has_prefix("+ ") ? pattern[2:pattern.length] : pattern;
-		(cell as Gtk.CellRendererText).foreground = color;
 	}
 
 	private void cell_exclude_text_edited (string path, string new_text) {
@@ -577,7 +559,7 @@ public class RestoreWindow : Gtk.Dialog{
 	}
 	
 	private void refresh_tv_exclude(){
-		ListStore model = new ListStore(3, typeof(string), typeof(Gdk.Pixbuf), typeof(string));
+		ListStore model = new ListStore(2, typeof(string), typeof(Gdk.Pixbuf));
 		tv_exclude.model = model;
 		
 		foreach(string path in temp_exclude_list){
@@ -589,8 +571,7 @@ public class RestoreWindow : Gtk.Dialog{
 		Gdk.Pixbuf pix_exclude = null;
 		Gdk.Pixbuf pix_include = null;
 		Gdk.Pixbuf pix_selected = null;
-		string text_color;
-		
+
 		try{
 			pix_exclude = new Gdk.Pixbuf.from_file (App.share_folder + "/timeshift/images/item-gray.png");
 			pix_include = new Gdk.Pixbuf.from_file (App.share_folder + "/timeshift/images/item-blue.png");
@@ -609,42 +590,20 @@ public class RestoreWindow : Gtk.Dialog{
 		else{
 			pix_selected = pix_exclude;
 		}
-			
-		if (App.exclude_list_default.contains(path)){
-			text_color = "#0B610B";
-		}
-		else{
-			text_color = "#000000";
-		}
 		
-		model.set (iter, 0, path, 1, pix_selected, 2, text_color, -1);
+		model.set (iter, 0, path, 1, pix_selected, -1);
 		
 		Adjustment adj = tv_exclude.get_hadjustment();
 		adj.value = adj.upper;
 	}
 			
 	private bool lnk_default_list_activate(){
-		string msg = "";
-		msg += "<b>" + _("Exclude List") + ":</b>\n\n";
-		msg += _("Files matching the following patterns will be <i>excluded</i>") + ":\n\n";
-		
-		foreach(string path in App.exclude_list_default){
-			msg += path + "\n";
-		}
-		msg += "\n";
-		
-		msg += "<b>" + _("Home Directory") + ":</b>\n\n";
-		msg += _("Hidden files and folders are included by default since \nthey contain user-specific configuration files.") + "\n";
-		msg += _("All other files and folders are excluded.") + "\n";
-
-		var dialog = new Gtk.MessageDialog.with_markup(null, Gtk.DialogFlags.MODAL, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, msg);
-		dialog.set_title(_("Default Entries"));
-		dialog.set_default_size (200, -1);
-		dialog.set_transient_for(this);
-		dialog.set_modal(true);
+		//show message window -----------------
+		var dialog = new ExcludeMessageWindow();
+		dialog.set_transient_for (this);
+		dialog.show_all();
 		dialog.run();
 		dialog.destroy();
-
 		return true;
 	}
 

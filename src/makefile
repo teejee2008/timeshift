@@ -8,7 +8,7 @@ man1dir = $(mandir)/man1
 CFLAGS = --std=c99
 
 all:
-	valac -X -D'GETTEXT_PACKAGE="timeshift"' --Xcc="-lm" --thread "Main.vala" "Utility.vala" "MainWindow.vala" "SettingsWindow.vala" "RestoreWindow.vala" -o timeshift --pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix --pkg gtk+-3.0 --pkg gee-1.0 --pkg libsoup-2.4 --pkg json-glib-1.0 
+	valac -X -D'GETTEXT_PACKAGE="timeshift"' --Xcc="-lm" --thread "Main.vala" "Utility.vala" "MainWindow.vala" "SettingsWindow.vala" "RestoreWindow.vala" "ExcludeMessageWindow.vala" -o timeshift --pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix --pkg gtk+-3.0 --pkg gee-1.0 --pkg libsoup-2.4 --pkg json-glib-1.0 
 
 clean:
 	rm -rf *.o timeshift

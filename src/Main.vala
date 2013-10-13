@@ -259,6 +259,15 @@ public class Main : GLib.Object{
 		exclude_list_default.add("/var/lock/*");
 		exclude_list_default.add("/lost+found");
 		exclude_list_default.add("/timeshift/*");
+
+		exclude_list_default.add("/root/.thumbnails");
+		exclude_list_default.add("/root/.cache");
+		exclude_list_default.add("/root/.gvfs");
+		exclude_list_default.add("/root/.mozilla/firefox/*.default/Cache");
+		exclude_list_default.add("/root/.mozilla/firefox/*.default/OfflineCache");
+		exclude_list_default.add("/root/.opera/cache");
+		exclude_list_default.add("/root/.local/share/Trash");
+		
 		exclude_list_default.add("/home/*/.thumbnails");
 		exclude_list_default.add("/home/*/.cache");
 		exclude_list_default.add("/home/*/.gvfs");
@@ -266,6 +275,9 @@ public class Main : GLib.Object{
 		exclude_list_default.add("/home/*/.mozilla/firefox/*.default/OfflineCache");
 		exclude_list_default.add("/home/*/.opera/cache");
 		exclude_list_default.add("/home/*/.local/share/Trash");
+
+		exclude_list_home.add("+ /root/.**");
+		exclude_list_home.add("/root/**");
 		
 		exclude_list_home.add("+ /home/*/.**");
 		exclude_list_home.add("/home/*/**");

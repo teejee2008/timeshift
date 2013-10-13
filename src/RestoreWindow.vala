@@ -43,7 +43,7 @@ public class RestoreWindow : Gtk.Dialog{
 	
 	//bootloader
 	private Label lbl_header_bootloader;
-	private CheckButton chk_restore_grub2;
+	//private CheckButton chk_restore_grub2;
 	private ComboBox cmb_boot_device;
 	
 	//exclude
@@ -80,7 +80,7 @@ public class RestoreWindow : Gtk.Dialog{
         this.window_position = WindowPosition.CENTER_ON_PARENT;
         this.set_destroy_with_parent (true);
 		this.set_modal (true);
-        this.set_default_size (500, 400);
+        this.set_default_size (550, 450);
 
         //set app icon
 		try{
@@ -109,7 +109,7 @@ public class RestoreWindow : Gtk.Dialog{
         notebook.append_page (vbox_target, lbl_exclude);
         
 		//lbl_header_partitions
-		lbl_header_partitions = new Gtk.Label("<b>" + _("Target Device") + ":</b>");
+		lbl_header_partitions = new Gtk.Label(_("Device for Restoring Snapshot") + ":");
 		lbl_header_partitions.xalign = (float) 0.0;
 		lbl_header_partitions.set_use_markup(true);
 		vbox_target.add(lbl_header_partitions);
@@ -189,7 +189,7 @@ public class RestoreWindow : Gtk.Dialog{
 		//bootloader options -------------------------------------------
 		
 		//lbl_header_bootloader
-		lbl_header_bootloader = new Gtk.Label("<b>" +_("Bootloader") + ":</b>");
+		lbl_header_bootloader = new Gtk.Label(_("Device for Bootloader Installation") + ":");
 		lbl_header_bootloader.set_use_markup(true);
 		lbl_header_bootloader.xalign = (float) 0.0;
 		vbox_target.add(lbl_header_bootloader);
@@ -200,7 +200,7 @@ public class RestoreWindow : Gtk.Dialog{
         hbox_grub.margin_bottom = 6;
         vbox_target.add (hbox_grub);
 		
-		string grub_msg = _("Re-install GRUB2 bootloader on the target device (recommended)");
+		/*string grub_msg = _("Re-install GRUB2 bootloader on the target device (recommended)");
 		
 		//chk_restore_grub2
 		chk_restore_grub2 = new CheckButton.with_label(_("Re-install GRUB2") + ":");
@@ -210,7 +210,7 @@ public class RestoreWindow : Gtk.Dialog{
 
 		chk_restore_grub2.toggled.connect(()=>{
 			cmb_boot_device.sensitive = chk_restore_grub2.active;
-		});
+		});*/
 
 		//cmb_boot_device
 		cmb_boot_device = new ComboBox ();
@@ -431,9 +431,9 @@ public class RestoreWindow : Gtk.Dialog{
 		
 		btn_reset_exclude_list_clicked();
 
-		chk_restore_grub2.active = true; //keep enabled always
-		chk_restore_grub2.sensitive = false; //don't allow user to disable
-		cmb_boot_device.sensitive = chk_restore_grub2.active;
+		//chk_restore_grub2.active = true; //keep enabled always
+		//chk_restore_grub2.sensitive = false; //don't allow user to disable
+		//cmb_boot_device.sensitive = chk_restore_grub2.active;
 	}
 
 
@@ -441,10 +441,10 @@ public class RestoreWindow : Gtk.Dialog{
 		PartitionInfo pi;
 		model.get (iter, 0, out pi, -1);
 		if ((App.root_device != null) && (pi.device == App.root_device.device)){
-			(cell as Gtk.CellRendererText).text = pi.device_name_sdaX + " (" + _("sys") + ")";
+			(cell as Gtk.CellRendererText).text = pi.partition_name + " (" + _("sys") + ")";
 		}
 		else{
-			(cell as Gtk.CellRendererText).text = pi.device_name_sdaX;
+			(cell as Gtk.CellRendererText).text = pi.partition_name;
 		}
 	}
 
@@ -876,6 +876,13 @@ public class RestoreWindow : Gtk.Dialog{
 			return; 
 		}
 
+		//check if grub device selected ---------------
+
+		if (cmb_boot_device.active < 0){ 
+			messagebox_show(_("Select Boot Device"),_("Please select the boot device"), true);
+			return; 
+		}
+		
 		//get selected target partition ------------------
 		
 		PartitionInfo restore_target = null;
@@ -923,7 +930,8 @@ public class RestoreWindow : Gtk.Dialog{
 		
 		//save grub install options ----------------------
 		
-		App.reinstall_grub2 = chk_restore_grub2.active;
+		//App.reinstall_grub2 = chk_restore_grub2.active;
+		App.reinstall_grub2 = true;
 		
 		if (App.reinstall_grub2){
 			DeviceInfo dev;

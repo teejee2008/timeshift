@@ -418,15 +418,17 @@ namespace Utility
 			}
 		}
 		
-		public string device_name_sdaX{
+		public string disk_name{
 			owned get{
-				return device.split("/")[2];
+				
+				return "";
+				
 			}
 		}
 		
-		public string device_name_sda{
+		public string partition_name{
 			owned get{
-				return device.split("/")[2][0:3];
+				return device[5:device.length];
 			}
 		}
 		
@@ -609,7 +611,7 @@ namespace Utility
 					continue; 
 				}
 				
-				if (pi.device.has_prefix("/dev/sd") || pi.device.has_prefix("/dev/hd")) { 
+				if (pi.device.has_prefix("/dev/sd") || pi.device.has_prefix("/dev/hd") || pi.device.has_prefix("/dev/mapper/")) { 
 					//ok
 				}
 				else{

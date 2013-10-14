@@ -30,7 +30,7 @@ using Utility;
 
 public Main App;
 public const string AppName = "TimeShift";
-public const string AppVersion = "1.1";
+public const string AppVersion = "1.1.1";
 public const string AppAuthor = "Tony George";
 public const string AppAuthorEmail = "teejee2008@gmail.com";
 public bool LOG_ENABLE = true;

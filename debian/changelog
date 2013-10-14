@@ -1,17 +1,5 @@
-timeshift (1.1) quantal; urgency=medium
+timeshift (1.1.1) quantal; urgency=medium
 
-  * Added support for using LVM volumes as backup device
-
-  * Added user prompt for taking pre-restore snapshot
-  
-  * Added exclude entries for root user's home directory
-
-  * Updated command line options
-  
-  * Reduced the default number of backups for all backup levels
-
-  * Deleting all snapshots will delete the /timeshift directory
-  
-  * Moved code for estimating system size to separate thread
+  *  Added check - BTRFS volumes are not supported
 
  -- Tony George <tony.george.kol@gmail.com>  Mon, 14 Oct 2013 10:00:00 +0530

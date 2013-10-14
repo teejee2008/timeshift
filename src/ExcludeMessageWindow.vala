@@ -70,7 +70,7 @@ public class ExcludeMessageWindow : Gtk.Dialog{
 		vbox_main.add(lbl_header_exclude);
 		
 		//lbl_exclude
-		lbl_exclude = new Gtk.Label(_("Files matching the following patterns will be <i>excluded</i>") + ":");
+		lbl_exclude = new Gtk.Label(_("Files matching the following patterns will be excluded") + ":");
 		lbl_exclude.xalign = (float) 0.0;
 		lbl_exclude.set_use_markup(true);
 		vbox_main.add(lbl_exclude);
@@ -122,9 +122,10 @@ public class ExcludeMessageWindow : Gtk.Dialog{
 		lbl_home = new Gtk.Label("");
 		lbl_home.xalign = (float) 0.0;
 		lbl_home.set_use_markup(true);
+		lbl_home.wrap = true;
 		vbox_main.add(lbl_home);
 		
-		msg = _("Hidden files and folders are included by default since \nthey contain user-specific configuration files.") + "\n";
+		msg = _("Hidden files and folders are included by default since they contain user-specific configuration files.") + "\n";
 		msg += _("All other files and folders are excluded.") + "\n";
 		lbl_home.label =msg;
 		

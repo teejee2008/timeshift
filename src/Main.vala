@@ -2309,19 +2309,42 @@ public class Main : GLib.Object{
 		return false;
 	}
 
-	public long calculate_size_of_first_snapshot(){
-		string cmd = "";
-		string std_out;
-		string std_err;
-		int ret_val;
-		long required_space = 0;
 
+	public long calculate_size_of_first_snapshot(){
+		
 		if (this.first_snapshot_size > 0){
 			return this.first_snapshot_size;
 		}
 		else if (is_live_system()){
 			return 0;
 		}
+		
+		try {
+			in_progress = true;
+			is_success = false;
+			Thread.create<void> (calculate_size_of_first_snapshot_thread, true);
+		} catch (ThreadError e) {
+			in_progress = false;
+			is_success = false;
+			log_error (e.message);
+		}
+		
+		while (in_progress){
+			do_events ();
+			Thread.usleep((ulong) GLib.TimeSpan.MILLISECOND * 100);
+		}
+
+		return this.first_snapshot_size;
+	}
+	
+	public void calculate_size_of_first_snapshot_thread(){
+		in_progress = true;
+		
+		string cmd = "";
+		string std_out;
+		string std_err;
+		int ret_val;
+		long required_space = 0;
 
 		try{
 			
@@ -2338,18 +2361,20 @@ public class Main : GLib.Object{
 			if (ret_val != 0){
 				log_error (_("Failed to estimate system size"));
 				log_error (std_err);
-				return 0;
+				is_success = false;
 			}
 			else{
 				required_space = long.parse(std_out.replace("/","").strip());
 				required_space = required_space / 1024;
+				is_success = true;
 			}
 		}
 		catch(Error e){
 			log_error (e.message);
+			is_success = false;
 		}
 		
-		if (required_space == 0){
+		if ((required_space == 0) && (root_device != null)){
 			required_space = root_device.used_mb;
 		}
 		
@@ -2357,8 +2382,9 @@ public class Main : GLib.Object{
 		
 		debug("check first snapshot size: %ld MB".printf(required_space));
 		
-		return required_space;
+		in_progress = false;
 	}
+	
 	
 	public void clean_logs(){
 		

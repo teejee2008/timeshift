@@ -1,9 +1,17 @@
-timeshift (1.0.7) quantal; urgency=medium
+timeshift (1.1) quantal; urgency=medium
 
-  * Added Italian translation
+  * Added support for using LVM volumes as backup device
 
-  * Updated build scripts
+  * Added user prompt for taking pre-restore snapshot
   
-  * Fixed build errors on Ubuntu 12.04 (precise)
+  * Added exclude entries for root user's home directory
+
+  * Updated command line options
   
- -- Tony George <tony.george.kol@gmail.com>  Sat, 05 Oct 2013 10:00:00 +0530
+  * Reduced the default number of backups for all backup levels
+
+  * Deleting all snapshots will delete the /timeshift directory
+  
+  * Moved code for estimating system size to separate thread
+
+ -- Tony George <tony.george.kol@gmail.com>  Mon, 14 Oct 2013 10:00:00 +0530

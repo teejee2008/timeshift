@@ -22,11 +22,15 @@
  */
 
 /*
-public const string AppName = "";
-public const string AppVersion = "1.0";
-public const bool LogTimestamp = true;
-public const bool UseConsoleColors = true;
-public bool DEBUG_MODE = true;
+public const string AppName = "TimeShift";
+public const string AppVersion = "1.0.7";
+public const string AppAuthor = "Tony George";
+public const string AppAuthorEmail = "teejee2008@gmail.com";
+public bool LOG_ENABLE = true;
+public bool LOG_TIMESTAMP = true;
+public bool LOG_COLORS = true;
+public bool LOG_DEBUG = false;
+public bool LOG_COMMANDS = false;
 */
 
 using Gtk;
@@ -37,19 +41,21 @@ extern void exit(int exit_code);
 
 public void log_msg (string message, bool highlight = false)
 {
+	if (!LOG_ENABLE) { return; }
+	
 	string msg = "";
 	
-	if (highlight && UseConsoleColors){
+	if (highlight && LOG_COLORS){
 		msg += "\033[1;38;5;34m";
 	}
 	
-	if (LogTimestamp){
+	if (LOG_TIMESTAMP){
 		msg += "[" + Utility.timestamp() +  "] ";
 	}
 	
 	msg += message;
 	
-	if (highlight && UseConsoleColors){
+	if (highlight && LOG_COLORS){
 		msg += "\033[0m";
 	}
 	
@@ -69,13 +75,15 @@ public void log_msg (string message, bool highlight = false)
 
 public void log_error (string message, bool highlight = false, bool is_warning = false)
 {
+	if (!LOG_ENABLE) { return; }
+	
 	string msg = "";
 	
-	if (highlight && UseConsoleColors){
+	if (highlight && LOG_COLORS){
 		msg += "\033[1;38;5;160m";
 	}
 	
-	if (LogTimestamp){
+	if (LOG_TIMESTAMP){
 		msg += "[" + Utility.timestamp() +  "] ";
 	}
 	
@@ -83,7 +91,7 @@ public void log_error (string message, bool highlight = false, bool is_warning =
 	
 	msg += prefix + ": " + message;
 	
-	if (highlight && UseConsoleColors){
+	if (highlight && LOG_COLORS){
 		msg += "\033[0m";
 	}
 	
@@ -103,7 +111,9 @@ public void log_error (string message, bool highlight = false, bool is_warning =
 
 public void debug (string message)
 {
-	if (DEBUG_MODE){
+	if (!LOG_ENABLE) { return; }
+		
+	if (LOG_DEBUG){
 		log_msg (message);
 	}
 	else{

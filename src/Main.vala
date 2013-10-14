@@ -33,10 +33,11 @@ public const string AppName = "TimeShift";
 public const string AppVersion = "1.0.7";
 public const string AppAuthor = "Tony George";
 public const string AppAuthorEmail = "teejee2008@gmail.com";
-public const bool LogTimestamp = true;
-public bool UseConsoleColors = true;
-public bool DEBUG_MODE = false;
-public bool SHOW_COMMANDS = false;
+public bool LOG_ENABLE = true;
+public bool LOG_TIMESTAMP = true;
+public bool LOG_COLORS = true;
+public bool LOG_DEBUG = false;
+public bool LOG_COMMANDS = false;
 
 const string GETTEXT_PACKAGE = "";
 const string LOCALE_DIR = "/usr/share/locale";
@@ -103,6 +104,16 @@ public class Main : GLib.Object{
 	public static int main (string[] args) {
 		set_locale();
 
+		//show help and exit
+		if (args.length > 1) {
+			switch (args[1].down()) {
+				case "--help":
+				case "-h":
+					stdout.printf (Main.help_message ());
+					return 0;
+			}
+		}
+
 		App = new Main(args);
 		bool success = App.start_application(args);
 		App.exit_app();
@@ -119,6 +130,10 @@ public class Main : GLib.Object{
 	
 	public Main(string[] args){
 		string msg = "";
+
+		//parse arguments (initial) ------------
+		
+		parse_arguments(args);
 		
 		//init log ------------------
 		
@@ -144,11 +159,7 @@ public class Main : GLib.Object{
 			is_success = false;
 			log_error (e.message);
 		}
-		
-		//parse arguments (initial) ------------
-		
-		parse_arguments(args);
-		
+
 		//check admin access ------------------
 
 		if (!user_is_admin()){
@@ -312,11 +323,18 @@ public class Main : GLib.Object{
 					break;
 				
 				case "--show-commands":
-					SHOW_COMMANDS = true;
+					LOG_COMMANDS = true;
 					break;
 					
 				case "--debug":
-					DEBUG_MODE = true;
+					LOG_DEBUG = true;
+					break;
+				
+				case "--list":
+					app_mode = "list";
+					LOG_ENABLE = false;
+					LOG_TIMESTAMP = false;
+					LOG_DEBUG = false;
 					break;
 					
 				default:
@@ -343,7 +361,17 @@ public class Main : GLib.Object{
 					log_error(_("Failed to take snapshot."));
 				}
 				return is_success;
-
+				
+			case "list":
+				LOG_ENABLE = true;
+				LOG_TIMESTAMP = false;
+				log_msg(_("Snapshots") + ":");
+				foreach (TimeShiftBackup bak in this.snapshot_list){
+					log_msg("%s%s%s".printf(bak.name, " ~ " + bak.taglist, (bak.description.length > 0) ? " ~ " + bak.description : ""));
+				}
+				LOG_ENABLE = false;
+				return true;
+				
 			default:
 				//Initialize GTK
 				Gtk.init(ref args);
@@ -388,6 +416,30 @@ public class Main : GLib.Object{
 		}
 	}
 
+
+	public static string help_message (){
+		string msg = "\n" + AppName + " v" + AppVersion + " by Tony George (teejee2008@gmail.com)" + "\n";
+		msg += "\n";
+		msg += "Syntax: sudo timeshift [options]\n";
+		msg += "\n";
+		msg += _("Options") + ":\n";
+		msg += "\n";
+		msg += "  --backup          " + _("Take scheduled backup") + "\n";
+		msg += "  --backup-now      " + _("Take on-demand backup") + "\n";
+		msg += "  --list            " + _("List all snapshots") + "\n";
+		msg += "  --show-commands   " + _("Show commands") + "\n";
+		msg += "  --debug           " + _("Show additional debug messages") + "\n";
+		msg += "  --help            " + _("Show all options") + "\n";
+		msg += "\n";
+		msg += _("Notes") + ":\n";
+		msg += "\n";
+		msg += "  1) '--backup' will take a snapshot only if a scheduled snapshot is due\n";
+		msg += "  2) '--backup-now' will take an immediate (manual) snapshot\n";
+		msg += "\n";
+		return msg;
+	}
+	
+	
 	public bool create_lock(){
 		try{
 			
@@ -768,7 +820,7 @@ public class Main : GLib.Object{
 					
 					cmd = "rm -rf \"%s\"".printf(sync_path);
 					
-					if (SHOW_COMMANDS) { log_msg(cmd, true); }
+					if (LOG_COMMANDS) { log_msg(cmd, true); }
 					
 					ret_val = Posix.system(cmd);
 					if (ret_val != 0){
@@ -874,7 +926,7 @@ public class Main : GLib.Object{
 					
 						cmd = "cp -alp \"%s\" \"%s\"".printf(bak_restore.path + "/localhost/.", sync_path + "/localhost/");
 							
-						if (SHOW_COMMANDS) { log_msg(cmd, true); }
+						if (LOG_COMMANDS) { log_msg(cmd, true); }
 
 						Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
 						if (ret_val != 0){
@@ -901,7 +953,7 @@ public class Main : GLib.Object{
 				cmd = "touch \"%s\"".printf(sync_path);
 				Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
 				
-				if (SHOW_COMMANDS) { log_msg(cmd, true); }
+				if (LOG_COMMANDS) { log_msg(cmd, true); }
 
 				if (ret_val != 0){
 					log_error(std_err);
@@ -918,7 +970,7 @@ public class Main : GLib.Object{
 				cmd += " --exclude-from=\"%s\"".printf(list_file);
 				cmd += " /. \"%s\"".printf(sync_path + "/localhost/");
 				
-				if (SHOW_COMMANDS) { log_msg(cmd, true); }
+				if (LOG_COMMANDS) { log_msg(cmd, true); }
 
 				Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
 
@@ -946,7 +998,7 @@ public class Main : GLib.Object{
 				string new_path = snapshot_dir + "/" + new_name; 
 				cmd = "cp -alp \"%s\" \"%s\"".printf(sync_path, new_path);
 
-				if (SHOW_COMMANDS) { log_msg(cmd, true); }
+				if (LOG_COMMANDS) { log_msg(cmd, true); }
 
 				Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
 				if (ret_val != 0){
@@ -1116,7 +1168,7 @@ public class Main : GLib.Object{
 					path = mount_point_backup + "/timeshift/snapshots-%s".printf(tag);
 					cmd = "ln --symbolic --relative \"%s\" -t \"%s\"".printf(bak.path,path);	
 					
-					if (SHOW_COMMANDS) { log_msg(cmd, true); }
+					if (LOG_COMMANDS) { log_msg(cmd, true); }
 					
 					Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
 					if (ret_val != 0){
@@ -1146,7 +1198,7 @@ public class Main : GLib.Object{
 			if (f.query_exists()){
 				cmd = "rm -rf \"%s\"".printf(path + "/");	
 				
-				if (SHOW_COMMANDS) { log_msg(cmd, true); }
+				if (LOG_COMMANDS) { log_msg(cmd, true); }
 				
 				Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
 				if (ret_val != 0){
@@ -1567,7 +1619,7 @@ public class Main : GLib.Object{
 			if(f.query_exists()){
 				cmd = "rm -rf \"%s\"".printf(snapshot_to_delete.path);
 				
-				if (SHOW_COMMANDS) { log_msg(cmd, true); }
+				if (LOG_COMMANDS) { log_msg(cmd, true); }
 				
 				Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
 				

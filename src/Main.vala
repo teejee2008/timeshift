@@ -1646,7 +1646,50 @@ public class Main : GLib.Object{
 		
 		in_progress = false;
 	}
-	
+
+	public bool delete_all_snapshots(){
+		string cmd = "";
+		string std_out;
+		string std_err;
+		int ret_val;
+		bool success;
+		
+		//delete snapshots
+		foreach(TimeShiftBackup bak in snapshot_list){
+			success = delete_snapshot(bak);
+			if (!success){ return success; }
+		}
+		
+		//delete .sync
+		TimeShiftBackup bak_sync = new TimeShiftBackup(mount_point_backup + "/timeshift/snapshots/.sync");
+		success = delete_snapshot(bak_sync);
+		if (!success){ return success; }
+		
+		//delete /timeshift directory ------------
+		
+		try{
+			string timeshift_dir = mount_point_backup + "/timeshift";
+			
+			cmd = "rm -rf \"%s\"".printf(timeshift_dir);
+			
+			if (LOG_COMMANDS) { log_msg(cmd, true); }
+					
+			Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
+			
+			if (ret_val != 0){
+				log_error(_("Unable to delete") + ": '%s'".printf(timeshift_dir));
+				return false;
+			}
+			else{
+				log_msg(_("Deleted") + ": '%s'".printf(timeshift_dir));
+				return true;
+			}
+		}
+		catch(Error e){
+			log_error (e.message);
+			return false;
+		}
+	}
 	
 	public void save_app_config(){
 		var config = new Json.Object();

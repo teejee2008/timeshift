@@ -874,7 +874,12 @@ class MainWindow : Gtk.Window{
 			//remove iter from tv_backups
 			store.remove(iter_delete);
 		}
-
+		
+		App.update_snapshot_list();
+		if (App.snapshot_list.size == 0){
+			App.delete_all_snapshots();
+		}
+		
 		if (is_success){
 			statusbar_message_with_timeout(_("Snapshots deleted successfully"), true);
 		}

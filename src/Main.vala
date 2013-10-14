@@ -306,6 +306,24 @@ public class Main : GLib.Object{
 		update_partition_list();
 		detect_system_devices();
 		
+		//check for BTRFS volumes ---------------
+		
+		if ((root_device != null) && (root_device.type == "btrfs")){
+			msg = _("This system is installed on a BTRFS volume.") + "\n";
+			msg += _("BTRFS volumes are not supported!") + "\n";
+			
+			if (app_mode == ""){
+				Gtk.init (ref args);
+				messagebox_show(_("Not Supported"),msg,true);
+			}
+			else{
+				log_error(msg);
+			}
+			exit(0);
+		}
+		
+		//finish initialization --------------
+		
 		load_app_config();
 		update_snapshot_list();
 	}
@@ -1881,7 +1899,7 @@ public class Main : GLib.Object{
 		return list;
 	}
 	
-	public bool detect_system_devices(){
+	public void detect_system_devices(){
 		string cmd = "";
 		string std_out;
 		string std_err;
@@ -1893,7 +1911,6 @@ public class Main : GLib.Object{
 			if (ret_val != 0){
 				log_error (_("Failed to detect root device!"));
 				log_error (std_err);
-				return false;
 			}
 			else{
 				foreach(string line in std_out.split("\n")){
@@ -1921,10 +1938,7 @@ public class Main : GLib.Object{
 		catch(Error e){
 			log_error (_("Failed to detect root device!"));
 			log_error (e.message);
-			return false;
 		}
-		
-		return false;
 	}
 	
 	public TimeShiftBackup? get_latest_snapshot(string tag = ""){

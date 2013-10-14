@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timeshift 1.1\n"
 "Report-Msgid-Bugs-To: teejee2008@gmail.com\n"
-"POT-Creation-Date: 2013-10-14 11:06+0530\n"
+"POT-Creation-Date: 2013-10-14 16:16+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -73,12 +73,16 @@ msgstr ""
 msgid "App config saved"
 msgstr ""
 
-#: src/Main.vala:2110 src/Main.vala:2113
+#: src/Main.vala:2119 src/Main.vala:2122
 msgid "Application will exit!"
 msgstr ""
 
 #: src/SettingsWindow.vala:185
 msgid "Auto-Remove"
+msgstr ""
+
+#: src/Main.vala:1927
+msgid "BTRFS volumes are not supported!"
 msgstr ""
 
 #: src/MainWindow.vala:115
@@ -97,7 +101,7 @@ msgstr ""
 msgid "Backup Level"
 msgstr ""
 
-#: src/Main.vala:2279 src/MainWindow.vala:773 src/MainWindow.vala:1219
+#: src/Main.vala:2288 src/MainWindow.vala:773 src/MainWindow.vala:1219
 #: src/MainWindow.vala:1227
 msgid "Backup device does not have enough space!"
 msgstr ""
@@ -106,7 +110,7 @@ msgstr ""
 msgid "Backup device is not mounted!"
 msgstr ""
 
-#: src/Main.vala:2273
+#: src/Main.vala:2282
 msgid "Backup device not available!"
 msgstr ""
 
@@ -172,19 +176,19 @@ msgstr ""
 msgid "Continue with restore?"
 msgstr ""
 
-#: src/Main.vala:2109 src/Main.vala:2113
+#: src/Main.vala:2118 src/Main.vala:2122
 msgid "Critical Error"
 msgstr ""
 
-#: src/Main.vala:2215
+#: src/Main.vala:2224
 msgid "Cron job added"
 msgstr ""
 
-#: src/Main.vala:2240
+#: src/Main.vala:2249
 msgid "Cron job removed"
 msgstr ""
 
-#: src/Main.vala:2176
+#: src/Main.vala:2185
 msgid "Crontab is empty"
 msgstr ""
 
@@ -240,7 +244,7 @@ msgstr ""
 msgid "Device for Restoring Snapshot"
 msgstr ""
 
-#: src/Main.vala:2097 src/Main.vala:2120
+#: src/Main.vala:2106 src/Main.vala:2129
 msgid "Device unmounted"
 msgstr ""
 
@@ -325,7 +329,7 @@ msgstr ""
 msgid "Excluded Directories"
 msgstr ""
 
-#: src/Main.vala:2211
+#: src/Main.vala:2220
 msgid "Failed to add cron job"
 msgstr ""
 
@@ -345,11 +349,11 @@ msgstr ""
 msgid "Failed to delete symlinks"
 msgstr ""
 
-#: src/Main.vala:1894 src/Main.vala:1922
+#: src/Main.vala:1894 src/Main.vala:1921
 msgid "Failed to detect root device!"
 msgstr ""
 
-#: src/Main.vala:2362
+#: src/Main.vala:2371
 msgid "Failed to estimate system size"
 msgstr ""
 
@@ -365,19 +369,19 @@ msgstr ""
 msgid "Failed to hard-link last snapshot"
 msgstr ""
 
-#: src/Main.vala:2081
+#: src/Main.vala:2090
 msgid "Failed to kill process"
 msgstr ""
 
-#: src/Main.vala:2013
+#: src/Main.vala:2022
 msgid "Failed to mount device"
 msgstr ""
 
-#: src/Main.vala:1983
+#: src/Main.vala:1992
 msgid "Failed to mount unknown partition"
 msgstr ""
 
-#: src/Main.vala:2236
+#: src/Main.vala:2245
 msgid "Failed to remove cron job"
 msgstr ""
 
@@ -389,11 +393,11 @@ msgstr ""
 msgid "Failed to take snapshot."
 msgstr ""
 
-#: src/Main.vala:2064 src/Main.vala:2092
+#: src/Main.vala:2073 src/Main.vala:2101
 msgid "Failed to unmount device"
 msgstr ""
 
-#: src/Main.vala:2109 src/Main.vala:2113
+#: src/Main.vala:2118 src/Main.vala:2122
 msgid "Failed to unmount partition!!"
 msgstr ""
 
@@ -418,7 +422,7 @@ msgstr ""
 msgid "First Snapshot"
 msgstr ""
 
-#: src/Main.vala:2285
+#: src/Main.vala:2294
 msgid "First snapshot needs"
 msgstr ""
 
@@ -507,7 +511,7 @@ msgstr ""
 msgid "Keep one snapshot per week"
 msgstr ""
 
-#: src/Main.vala:2074
+#: src/Main.vala:2083
 msgid "Killing all processes using the mount-point..."
 msgstr ""
 
@@ -624,7 +628,7 @@ msgstr ""
 msgid "Monthly snapshot failed!"
 msgstr ""
 
-#: src/Main.vala:2018
+#: src/Main.vala:2027
 msgid "Mounted device"
 msgstr ""
 
@@ -648,6 +652,10 @@ msgstr ""
 msgid "No snapshots on device"
 msgstr ""
 
+#: src/Main.vala:1930
+msgid "Not Supported"
+msgstr ""
+
 #: src/Main.vala:434
 msgid "Notes"
 msgstr ""
@@ -656,7 +664,7 @@ msgstr ""
 msgid "Nothing to do!"
 msgstr ""
 
-#: src/Main.vala:2419
+#: src/Main.vala:2428
 msgid "Older log files removed"
 msgstr ""
 
@@ -1018,6 +1026,10 @@ msgid ""
 "responsibility for any damage arising from the use of this program."
 msgstr ""
 
+#: src/Main.vala:1926
+msgid "This system is installed on a BTRFS volume."
+msgstr ""
+
 #: src/MainWindow.vala:184
 msgid "TimeShift Logs"
 msgstr ""
@@ -1052,7 +1064,7 @@ msgstr ""
 msgid "Unknown snapshot type"
 msgstr ""
 
-#: src/Main.vala:2051
+#: src/Main.vala:2060
 msgid "Unmounting device"
 msgstr ""
 
@@ -1113,7 +1125,7 @@ msgstr ""
 msgid "When free space less than"
 msgstr ""
 
-#: src/Main.vala:2013 src/Main.vala:2018
+#: src/Main.vala:2022 src/Main.vala:2027
 msgid "at"
 msgstr ""
 
@@ -1125,11 +1137,11 @@ msgstr ""
 msgid "days..."
 msgstr ""
 
-#: src/Main.vala:2268
+#: src/Main.vala:2277
 msgid "free"
 msgstr ""
 
-#: src/Main.vala:2051 src/Main.vala:2092
+#: src/Main.vala:2060 src/Main.vala:2101
 msgid "from"
 msgstr ""
 

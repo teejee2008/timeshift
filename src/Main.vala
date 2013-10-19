@@ -26,7 +26,16 @@ using Gtk;
 using Gee;
 using Soup;
 using Json;
-using Utility;
+
+using TeeJee.Logging;
+using TeeJee.FileSystem;
+using TeeJee.DiskPartition;
+using TeeJee.JSON;
+using TeeJee.ProcessManagement;
+using TeeJee.GtkHelper;
+using TeeJee.Multimedia;
+using TeeJee.System;
+using TeeJee.Misc;
 
 public Main App;
 public const string AppName = "TimeShift";
@@ -41,6 +50,8 @@ public bool LOG_COMMANDS = false;
 
 const string GETTEXT_PACKAGE = "";
 const string LOCALE_DIR = "/usr/share/locale";
+
+extern void exit(int exit_code);
 
 public class Main : GLib.Object{
 	public string app_path = "";
@@ -168,7 +179,7 @@ public class Main : GLib.Object{
 				
 			if (app_mode == ""){
 				Gtk.init (ref args);
-				messagebox_show(_("Admin Access Required"),msg,true);
+				gtk_messagebox_show(_("Admin Access Required"),msg,true);
 			}
 			else{
 				log_error(msg);
@@ -183,7 +194,7 @@ public class Main : GLib.Object{
 		if (!check_dependencies(out message)){
 			if (app_mode == ""){
 				Gtk.init (ref args);
-				messagebox_show(_("Missing Dependencies"),message,true);
+				gtk_messagebox_show(_("Missing Dependencies"),message,true);
 			}
 			exit(0);
 		}
@@ -209,7 +220,7 @@ public class Main : GLib.Object{
 					msg += _("Please check if you have multiple windows open.") + "\n";
 				}
 				
-				messagebox_show("Error",msg,true);
+				gtk_messagebox_show("Error",msg,true);
 			}
 			else{
 				//already logged - do nothing
@@ -295,7 +306,7 @@ public class Main : GLib.Object{
 		
 		//check current linux distribution -----------------
 		
-		this.current_distro = get_dist_info("/");
+		this.current_distro = DistInfo.get_dist_info("/");
 		
 		//parse arguments (final) ------------
 		
@@ -314,7 +325,7 @@ public class Main : GLib.Object{
 			
 			if (app_mode == ""){
 				Gtk.init (ref args);
-				messagebox_show(_("Not Supported"),msg,true);
+				gtk_messagebox_show(_("Not Supported"),msg,true);
 			}
 			else{
 				log_error(msg);
@@ -537,7 +548,7 @@ public class Main : GLib.Object{
 			Thread.create<void> (take_snapshot_thread, true);
 
 			while (in_progress){
-				do_events ();
+				gtk_do_events ();
 				Thread.usleep((ulong) GLib.TimeSpan.MILLISECOND * 100);
 			}
 		} catch (Error e) {
@@ -1431,7 +1442,7 @@ public class Main : GLib.Object{
 		}
 		
 		while (in_progress){
-			do_events ();
+			gtk_do_events ();
 			Thread.usleep((ulong) GLib.TimeSpan.MILLISECOND * 100);
 		}
 		
@@ -1475,7 +1486,7 @@ public class Main : GLib.Object{
 					}
 					else{
 						log_error(_("Unable to mount target partition!"));
-						messagebox_show(_("Error"), _("Unable to mount target partition!") + "\n" + _("No changes were made to system"));
+						gtk_messagebox_show(_("Error"), _("Unable to mount target partition!") + "\n" + _("No changes were made to system"));
 						is_success = false;
 						in_progress = false;
 						return;
@@ -1567,7 +1578,7 @@ public class Main : GLib.Object{
 					msg += _("No changes were made to system.");
 					
 					log_error(msg);
-					messagebox_show(_("Error"), msg, true);
+					gtk_messagebox_show(_("Error"), msg, true);
 
 					is_success = false;
 					in_progress = false;
@@ -1615,7 +1626,7 @@ public class Main : GLib.Object{
 		}
 		
 		while (in_progress){
-			do_events ();
+			gtk_do_events ();
 			Thread.usleep((ulong) GLib.TimeSpan.MILLISECOND * 100);
 		}
 		
@@ -1856,7 +1867,7 @@ public class Main : GLib.Object{
 			return t1.date.compare(t2.date);
 		});
 		
-		debug(_("updated snapshot list"));
+		log_debug(_("updated snapshot list"));
 				
 		return false;
 	}
@@ -1872,14 +1883,14 @@ public class Main : GLib.Object{
 				snapshot_device = pi;
 			}
 			if (pi.is_mounted){
-				pi.dist_info = get_dist_info(pi.mount_point).full_name();
+				pi.dist_info = DistInfo.get_dist_info(pi.mount_point).full_name();
 			}
 		}
 		if (partition_list.size == 0){
 			log_error(_("Failed to get partition list."));
 		}
 
-		debug(_("updated partition list"));
+		log_debug(_("updated partition list"));
 	}
 
 	public Gee.ArrayList<TimeShiftBackup?> get_snapshot_list(string tag = ""){
@@ -2124,7 +2135,7 @@ public class Main : GLib.Object{
 								log_error (_("Application will exit!"));
 							}
 							else{
-								messagebox_show(_("Critical Error"),_("Failed to unmount partition!!") + "\n" + _("Application will exit!"),true);
+								gtk_messagebox_show(_("Critical Error"),_("Failed to unmount partition!!") + "\n" + _("Application will exit!"),true);
 							}
 							exit_app();
 							exit(1);
@@ -2187,7 +2198,7 @@ public class Main : GLib.Object{
 			cmd = "crontab -l";
 			Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
 			if (ret_val != 0){
-				debug(_("Crontab is empty"));
+				log_debug(_("Crontab is empty"));
 			}
 			else{
 				foreach(string line in std_out.split("\n")){
@@ -2307,7 +2318,7 @@ public class Main : GLib.Object{
 			}
 		}
 
-		debug("check backup device: status = %d".printf(status_code));
+		log_debug("check backup device: status = %d".printf(status_code));
 				
 		return status_code;
 	}
@@ -2344,7 +2355,7 @@ public class Main : GLib.Object{
 		}
 		
 		while (in_progress){
-			do_events ();
+			gtk_do_events ();
 			Thread.usleep((ulong) GLib.TimeSpan.MILLISECOND * 100);
 		}
 
@@ -2394,7 +2405,7 @@ public class Main : GLib.Object{
 		
 		this.first_snapshot_size = required_space;
 		
-		debug("check first snapshot size: %ld MB".printf(required_space));
+		log_debug("check first snapshot size: %ld MB".printf(required_space));
 		
 		in_progress = false;
 	}

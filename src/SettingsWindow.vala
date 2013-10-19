@@ -23,7 +23,16 @@
 
 using Gtk;
 using Gee;
-using Utility;
+
+using TeeJee.Logging;
+using TeeJee.FileSystem;
+using TeeJee.DiskPartition;
+using TeeJee.JSON;
+using TeeJee.ProcessManagement;
+using TeeJee.GtkHelper;
+using TeeJee.Multimedia;
+using TeeJee.System;
+using TeeJee.Misc;
 
 public class SettingsWindow : Gtk.Dialog{
 	private Box vbox_main;

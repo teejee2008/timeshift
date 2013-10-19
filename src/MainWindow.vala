@@ -23,7 +23,16 @@
  
 using Gtk;
 using Gee;
-using Utility;
+
+using TeeJee.Logging;
+using TeeJee.FileSystem;
+using TeeJee.DiskPartition;
+using TeeJee.JSON;
+using TeeJee.ProcessManagement;
+using TeeJee.GtkHelper;
+using TeeJee.Multimedia;
+using TeeJee.System;
+using TeeJee.Misc;
 
 class MainWindow : Gtk.Window{
 	
@@ -544,7 +553,7 @@ class MainWindow : Gtk.Window{
 				
 			case 0:
 				if (App.snapshot_device.uuid != snapshot_device_original.uuid){
-					debug(_("snapshot device changed"));
+					log_debug(_("snapshot device changed"));
 					
 					string msg = _("Scheduled snapshots will be saved to ") + "<b>%s</b>\n".printf(App.snapshot_device.device);
 					msg += _("Click 'OK' to confirm") + "\n";
@@ -728,7 +737,7 @@ class MainWindow : Gtk.Window{
 		cmb_backup_device.set_model (store);
 		cmb_backup_device.active = index_selected;
 		
-		debug("cmb_backup_device refreshed");
+		log_debug("cmb_backup_device refreshed");
 	}
 	
 	private void cmb_backup_device_changed(){
@@ -746,7 +755,7 @@ class MainWindow : Gtk.Window{
 			return; 
 		}
 
-		set_busy(true, this);
+		gtk_set_busy(true, this);
 
 		TreeIter iter;
 		PartitionInfo pi;
@@ -761,7 +770,7 @@ class MainWindow : Gtk.Window{
 		refresh_tv_backups();
 		check_status();
 
-		set_busy(false, this);
+		gtk_set_busy(false, this);
 	}
 	
 	private void btn_backup_clicked(){
@@ -770,7 +779,7 @@ class MainWindow : Gtk.Window{
 		string msg;
 		int status_code = App.check_backup_device(out msg);
 		if ((status_code == 1) || (status_code == 2)){
-			messagebox_show(_("Low Disk Space"),_("Backup device does not have enough space!"), true);
+			gtk_messagebox_show(_("Low Disk Space"),_("Backup device does not have enough space!"), true);
 			return;
 		}
 		
@@ -815,7 +824,7 @@ class MainWindow : Gtk.Window{
 		
 		sel = tv_backups.get_selection ();
 		if (sel.count_selected_rows() == 0){ 
-			messagebox_show(_("No Snapshots Selected"),_("Please select the snapshots to delete"),false);
+			gtk_messagebox_show(_("No Snapshots Selected"),_("Please select the snapshots to delete"),false);
 			return; 
 		}
 
@@ -902,11 +911,11 @@ class MainWindow : Gtk.Window{
 		
 		sel = tv_backups.get_selection ();
 		if (sel.count_selected_rows() == 0){ 
-			messagebox_show(_("No Snapshots Selected"), _("Please select the snapshot to restore"),false);
+			gtk_messagebox_show(_("No Snapshots Selected"), _("Please select the snapshot to restore"),false);
 			return; 
 		}
 		else if (sel.count_selected_rows() > 1){ 
-			messagebox_show(_("Multiple Snapshots Selected"), _("Please select a single snapshot"),false);
+			gtk_messagebox_show(_("Multiple Snapshots Selected"), _("Please select a single snapshot"),false);
 			return; 
 		}
 
@@ -986,11 +995,11 @@ class MainWindow : Gtk.Window{
 		bool is_success = App.restore_snapshot(); 
 		if (is_success){
 			statusbar_message_with_timeout(_("Snapshot restored successfully"), true);
-			messagebox_show(_("Restore Complete"), _("Snapshot restored successfully"),false);
+			gtk_messagebox_show(_("Restore Complete"), _("Snapshot restored successfully"),false);
 		}
 		else{
 			statusbar_message_with_timeout(_("Restore Failed!"), true);
-			messagebox_show(_("Restore Failed!"), _("Restore was not successful!"),false);
+			gtk_messagebox_show(_("Restore Failed!"), _("Restore was not successful!"),false);
 		}
 		
 		//update UI ----------------
@@ -1041,7 +1050,7 @@ class MainWindow : Gtk.Window{
 	private void btn_view_snapshot_log_clicked(){
 		TreeSelection sel = tv_backups.get_selection ();
 		if (sel.count_selected_rows() == 0){
-			messagebox_show(_("Select Snapshot"),_("Please select a snapshot to view the log!"),false);
+			gtk_messagebox_show(_("Select Snapshot"),_("Please select a snapshot to view the log!"),false);
 			return;
 		}
 		
@@ -1169,7 +1178,7 @@ class MainWindow : Gtk.Window{
 		hbox_device.sensitive = enable;
 		sw_backups.sensitive = enable;
 		show_statusbar_icons(enable);
-		set_busy(!enable, this);
+		gtk_set_busy(!enable, this);
 	}
 	
 	private void update_progress_start(){

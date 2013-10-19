@@ -21,130 +21,141 @@
  * 
  */
 
-/*
-public const string AppName = "TimeShift";
-public const string AppVersion = "1.0.7";
-public const string AppAuthor = "Tony George";
-public const string AppAuthorEmail = "teejee2008@gmail.com";
-public bool LOG_ENABLE = true;
-public bool LOG_TIMESTAMP = true;
-public bool LOG_COLORS = true;
-public bool LOG_DEBUG = false;
-public bool LOG_COMMANDS = false;
-*/
-
 using Gtk;
 using Json;
 
-public DataOutputStream dos_log;
+/*
+using TeeJee.Logging;
+using TeeJee.FileSystem;
+using TeeJee.DiskPartition;
+using TeeJee.JSON;
+using TeeJee.ProcessManagement;
+using TeeJee.GtkHelper;
+using TeeJee.Multimedia;
+using TeeJee.System;
+using TeeJee.Misc;
+
 extern void exit(int exit_code);
 
-public void log_msg (string message, bool highlight = false)
-{
-	if (!LOG_ENABLE) { return; }
-	
-	string msg = "";
-	
-	if (highlight && LOG_COLORS){
-		msg += "\033[1;38;5;34m";
-	}
-	
-	if (LOG_TIMESTAMP){
-		msg += "[" + Utility.timestamp() +  "] ";
-	}
-	
-	msg += message;
-	
-	if (highlight && LOG_COLORS){
-		msg += "\033[0m";
-	}
-	
-	msg += "\n";
-	
-	stdout.printf (msg);
-	
-	try {
-		if (dos_log != null){
-			dos_log.put_string ("[%s] %s\n".printf(Utility.timestamp(), message));
-		}
-	} 
-	catch (Error e) {
-		stdout.printf (e.message);
-	}
+public static int main (string[] args) {
+	return 0;
 }
+*/
 
-public void log_error (string message, bool highlight = false, bool is_warning = false)
-{
-	if (!LOG_ENABLE) { return; }
+namespace TeeJee.Logging{
 	
-	string msg = "";
-	
-	if (highlight && LOG_COLORS){
-		msg += "\033[1;38;5;160m";
-	}
-	
-	if (LOG_TIMESTAMP){
-		msg += "[" + Utility.timestamp() +  "] ";
-	}
-	
-	string prefix = (is_warning) ? _("Warning") : _("Error");
-	
-	msg += prefix + ": " + message;
-	
-	if (highlight && LOG_COLORS){
-		msg += "\033[0m";
-	}
-	
-	msg += "\n";
-	
-	stdout.printf (msg);
-	
-	try {
-		if (dos_log != null){
-			dos_log.put_string ("[%s] %s: %s\n".printf(Utility.timestamp(), prefix, message));
-		}
-	} 
-	catch (Error e) {
-		stdout.printf (e.message);
-	}
-}
+	/* Functions for logging messages to console and log files */
 
-public void debug (string message)
-{
-	if (!LOG_ENABLE) { return; }
+	using TeeJee.Misc;
+	
+	public DataOutputStream dos_log;
+	
+	public bool LOG_ENABLE = true;
+	public bool LOG_TIMESTAMP = true;
+	public bool LOG_COLORS = true;
+	public bool LOG_DEBUG = false;
+	public bool LOG_COMMANDS = false;
+
+	public void log_msg (string message, bool highlight = false){
+		if (!LOG_ENABLE) { return; }
 		
-	if (LOG_DEBUG){
-		log_msg (message);
-	}
-	else{
+		string msg = "";
+		
+		if (highlight && LOG_COLORS){
+			msg += "\033[1;38;5;34m";
+		}
+		
+		if (LOG_TIMESTAMP){
+			msg += "[" + timestamp() +  "] ";
+		}
+		
+		msg += message;
+		
+		if (highlight && LOG_COLORS){
+			msg += "\033[0m";
+		}
+		
+		msg += "\n";
+		
+		stdout.printf (msg);
+		
 		try {
 			if (dos_log != null){
-				dos_log.put_string ("[%s] %s\n".printf(Utility.timestamp(), message));
+				dos_log.put_string ("[%s] %s\n".printf(timestamp(), message));
 			}
 		} 
 		catch (Error e) {
 			stdout.printf (e.message);
 		}
 	}
+
+	public void log_error (string message, bool highlight = false, bool is_warning = false){
+		if (!LOG_ENABLE) { return; }
+		
+		string msg = "";
+		
+		if (highlight && LOG_COLORS){
+			msg += "\033[1;38;5;160m";
+		}
+		
+		if (LOG_TIMESTAMP){
+			msg += "[" + timestamp() +  "] ";
+		}
+		
+		string prefix = (is_warning) ? _("Warning") : _("Error");
+		
+		msg += prefix + ": " + message;
+		
+		if (highlight && LOG_COLORS){
+			msg += "\033[0m";
+		}
+		
+		msg += "\n";
+		
+		stdout.printf (msg);
+		
+		try {
+			if (dos_log != null){
+				dos_log.put_string ("[%s] %s: %s\n".printf(timestamp(), prefix, message));
+			}
+		} 
+		catch (Error e) {
+			stdout.printf (e.message);
+		}
+	}
+
+	public void log_debug (string message){
+		if (!LOG_ENABLE) { return; }
+			
+		if (LOG_DEBUG){
+			log_msg (message);
+		}
+		else{
+			try {
+				if (dos_log != null){
+					dos_log.put_string ("[%s] %s\n".printf(timestamp(), message));
+				}
+			} 
+			catch (Error e) {
+				stdout.printf (e.message);
+			}
+		}
+	}
 }
 
-namespace Utility 
-{
-	public void messagebox_show(string title, string message, bool is_error = false)
-	{
-		Gtk.MessageType type = Gtk.MessageType.INFO;
-		
-		if (is_error)
-			type = Gtk.MessageType.ERROR;
-			
-		var dialog = new Gtk.MessageDialog.with_markup(null,Gtk.DialogFlags.MODAL, type, Gtk.ButtonsType.OK, message);
-		dialog.set_title(title);
-		dialog.run();
-		dialog.destroy();
-	}	
+namespace TeeJee.FileSystem{
 	
-	public void file_delete(string filePath)
-	{
+	/* Convenience functions for handling files and directories */
+	
+	using TeeJee.Logging;
+	using TeeJee.FileSystem;
+	using TeeJee.ProcessManagement;
+	using TeeJee.Misc;
+	
+	public void file_delete(string filePath){
+		
+		/* Check and delete file */
+		
 		try {
 			var file = File.new_for_path (filePath);
 			if (file.query_exists ()) { 
@@ -155,214 +166,176 @@ namespace Utility
 	    }
 	}
 	
-	public class DistInfo : GLib.Object{
-		public string dist_id = "";
-		public string description = "";
-		public string release = "";
-		public string codename = "";
+	public bool file_exists (string filePath){
 		
-		public DistInfo(){
-			dist_id = "";
-			description = "";
-			release = "";
-			codename = "";
+		/* Check if file exists */
+		
+		return ( FileUtils.test(filePath, GLib.FileTest.EXISTS) && FileUtils.test(filePath, GLib.FileTest.IS_REGULAR));
+	}
+	
+	public bool dir_exists (string filePath){
+		
+		/* Check if directory exists */
+		
+		return ( FileUtils.test(filePath, GLib.FileTest.EXISTS) && FileUtils.test(filePath, GLib.FileTest.IS_DIR));
+	}
+	
+	public bool create_dir (string filePath){
+		
+		/* Creates a directory along with parents */
+		
+		try{
+			var dir = File.parse_name (filePath);
+			if (dir.query_exists () == false) {
+				dir.make_directory_with_parents (null);
+			}
+			return true;
 		}
-		
-		public string full_name(){
-			if (dist_id == ""){
-				return "";
-			}
-			else{
-				string val = "";
-				val += dist_id;
-				val += (release.length > 0) ? " " + release : "";
-				val += (codename.length > 0) ? " (" + codename + ")" : "";
-				return val;
-			}
+		catch (Error e) { 
+			log_error (e.message); 
+			return false;
 		}
 	}
 	
-	public DistInfo get_dist_info(string root_path)
-	{
-		DistInfo info = new DistInfo();
+	public bool move_file (string sourcePath, string destPath){
 		
-		string dist_file = root_path + "/etc/lsb-release";
-		var f = File.new_for_path(dist_file);
-		if (f.query_exists()){
-
-			/*
-				DISTRIB_ID=Ubuntu
-				DISTRIB_RELEASE=13.04
-				DISTRIB_CODENAME=raring
-				DISTRIB_DESCRIPTION="Ubuntu 13.04"
-			*/
-			
-			foreach(string line in read_file(dist_file).split("\n")){
-				
-				if (line.split("=").length != 2){ continue; }
-				
-				string key = line.split("=")[0].strip();
-				string val = line.split("=")[1].strip();
-				
-				if (val.has_prefix("\"")){
-					val = val[1:val.length];
-				}
-				
-				if (val.has_suffix("\"")){
-					val = val[0:val.length-1];
-				}
-				
-				switch (key){
-					case "DISTRIB_ID":
-						info.dist_id = val;
-						break;
-					case "DISTRIB_RELEASE":
-						info.release = val;
-						break;
-					case "DISTRIB_CODENAME":
-						info.codename = val;
-						break;
-					case "DISTRIB_DESCRIPTION":
-						info.description = val;
-						break;
-				}
-			}
+		/* Move file from one location to another */
+		
+		try{
+			File fromFile = File.new_for_path (sourcePath);
+			File toFile = File.new_for_path (destPath);
+			fromFile.move (toFile, FileCopyFlags.NONE);
+			return true;
 		}
-		else{
-			
-			dist_file = root_path + "/etc/os-release";
-			f = File.new_for_path(dist_file);
-			if (f.query_exists()){
-				
-				/*
-					NAME="Ubuntu"
-					VERSION="13.04, Raring Ringtail"
-					ID=ubuntu
-					ID_LIKE=debian
-					PRETTY_NAME="Ubuntu 13.04"
-					VERSION_ID="13.04"
-					HOME_URL="http://www.ubuntu.com/"
-					SUPPORT_URL="http://help.ubuntu.com/"
-					BUG_REPORT_URL="http://bugs.launchpad.net/ubuntu/"
-				*/
-				
-				foreach(string line in read_file(dist_file).split("\n")){
-				
-					if (line.split("=").length != 2){ continue; }
-					
-					string key = line.split("=")[0].strip();
-					string val = line.split("=")[1].strip();
-					
-					switch (key){
-						case "ID":
-							info.dist_id = val;
-							break;
-						case "VERSION_ID":
-							info.release = val;
-							break;
-						//case "DISTRIB_CODENAME":
-							//info.codename = val;
-							//break;
-						case "PRETTY_NAME":
-							info.description = val;
-							break;
-					}
-				}
-			}
+		catch (Error e) { 
+			log_error (e.message); 
+			return false;
 		}
-
-		return info;
 	}
 	
-	/* DistInfo get_dist_info()
-	{
-		DistInfo info = new DistInfo();
+	public bool copy_file (string sourcePath, string destPath){
 		
-		string std_out;
-		string std_err;
-		execute_command_script_sync("lsb_release -a 2>/dev/null", out std_out, out std_err);
-
-		string[] lines = std_out.split("\n");
-
-		if (lines.length == 5){
-			if (lines[0].index_of(":") != -1)
-				info.dist_id = lines[0].split(":")[1].strip();
-	
-			if (lines[1].index_of(":") != -1)
-				info.description = lines[1].split(":")[1].strip();
-				
-			if (lines[2].index_of(":") != -1)
-				info.release = lines[2].split(":")[1].strip();
-				
-			if (lines[3].index_of(":") != -1)
-				info.codename = lines[3].split(":")[1].strip();
+		/* Copy file from one location to another */
+		
+		try{
+			File fromFile = File.new_for_path (sourcePath);
+			File toFile = File.new_for_path (destPath);
+			fromFile.copy (toFile, FileCopyFlags.NONE);
+			return true;
 		}
-
-		return info;
+		catch (Error e) { 
+			log_error (e.message); 
+			return false;
+		}
 	}
 	
-	public DistInfo? get_dist_info_chroot(string path){
-		string sh = "";
+	public string? read_file (string file_path){
+		
+		/* Reads text from file */
+		
+		string txt;
+		size_t size;
+		
+		try{
+			GLib.FileUtils.get_contents (file_path, out txt, out size);
+			return txt;	
+		}
+		catch (Error e){
+	        log_error (e.message);
+	    }
+	    
+	    return null;
+	}
+	
+	public bool write_file (string file_path, string contents){
+		
+		/* Write text to file */
+		
+		try{
+			var file = File.new_for_path (file_path);
+			if (file.query_exists ()) { file.delete (); }
+			var file_stream = file.create (FileCreateFlags.REPLACE_DESTINATION);
+			var data_stream = new DataOutputStream (file_stream);
+			data_stream.put_string (contents);
+			data_stream.close();
+			return true;
+		}
+		catch (Error e) {
+	        log_error (e.message);
+	        return false;
+	    } 
+	}
+	
+	public long get_file_count(string path){
+				
+		/* Return total count of files and directories */
+		
+		string cmd = "";
 		string std_out;
 		string std_err;
 		int ret_val;
-
-		sh = "for i in /dev /proc /run /sys; do mount --bind \"$i\" \"%s$i\"; done \n".printf(path);
-		sh += "chroot \"%s\" lsb_release -a\n".printf(path);
-		sh += "for i in /dev /proc /run /sys; do umount -f \"%s$i\"; done \n".printf(path);
-
-		ret_val = execute_command_script_sync(sh, out std_out, out std_err);
-		if (ret_val != 0){
-			log_error("Failed to chroot snapshot");
-			return null;
-		}
 		
-		DistInfo info = new DistInfo();
-		string[] lines = std_out.split("\n");
-		if (lines.length == 5){
-			if (lines[0].index_of(":") != -1)
-				info.dist_id = lines[0].split(":")[1].strip();
-	
-			if (lines[1].index_of(":") != -1)
-				info.description = lines[1].split(":")[1].strip();
+		cmd = "find \"%s\" | wc -l".printf(path);
+		ret_val = execute_command_script_sync(cmd, out std_out, out std_err);
+		return long.parse(std_out);
+	}
+
+	public int chmod (string file, string permission){
 				
-			if (lines[2].index_of(":") != -1)
-				info.release = lines[2].split(":")[1].strip();
+		/* Change file permissions */
+		
+		return execute_command_sync ("chmod " + permission + " \"%s\"".printf(file));
+	}
+	
+	public string resolve_relative_path (string filePath){
 				
-			if (lines[3].index_of(":") != -1)
-				info.codename = lines[3].split(":")[1].strip();
+		/* Resolve the full path of given file using 'realpath' command */
+		
+		string filePath2 = filePath;
+		if (filePath2.has_prefix ("~")){
+			filePath2 = Environment.get_home_dir () + "/" + filePath2[2:filePath2.length];
 		}
-		return info;
+		
+		try {
+			string output = "";
+			Process.spawn_command_line_sync("realpath \"%s\"".printf(filePath2), out output);
+			output = output.strip ();
+			if (FileUtils.test(output, GLib.FileTest.EXISTS)){
+				return output;
+			}
+		}
+		catch(Error e){
+	        log_error (e.message);
+	    }
+	    
+	    return filePath2;
 	}
-	*/
 	
-	private void set_busy (bool busy, Gtk.Window win) 
-	{
-		Gdk.Cursor? cursor = null;
+	public int rsync (string sourceDirectory, string destDirectory, bool updateExisting, bool deleteExtra){
+				
+		/* Sync files with rsync */
+		
+		string cmd = "rsync --recursive --perms --chmod=a=rwx";
+		cmd += updateExisting ? "" : " --ignore-existing";
+		cmd += deleteExtra ? " --delete" : "";
+		cmd += " \"%s\"".printf(sourceDirectory + "//");
+		cmd += " \"%s\"".printf(destDirectory);
+		return execute_command_sync (cmd);
+	}
+}
 
-		if (busy){
-			cursor = new Gdk.Cursor(Gdk.CursorType.WATCH);
-		}
-		else{
-			cursor = new Gdk.Cursor(Gdk.CursorType.ARROW);
-		}
-		
-		var window = win.get_window ();
-		
-		if (window != null) {
-			window.set_cursor (cursor);
-		}
-		
-		do_events ();
-	}
+namespace TeeJee.DiskPartition{
 	
-	private void do_events ()
-    {
-		while(Gtk.events_pending ())
-			Gtk.main_iteration ();
-	}
-	
+	/* Functions and classes for handling disk partitions */
+		
+	using TeeJee.Logging;
+	using TeeJee.FileSystem;
+	using TeeJee.ProcessManagement;
+
 	public class PartitionInfo : GLib.Object{
+		
+		/* Class for storing partition information */
+		
 		public string device = "";
 		public string type = "";
 		public long size_mb = 0;
@@ -452,6 +425,9 @@ namespace Utility
 	}
 	
 	public class DeviceInfo : GLib.Object{
+		
+		/* Class for storing device information */
+		
 		public string device = "";
 		public bool removable = false;
 		public string vendor = "";
@@ -469,10 +445,11 @@ namespace Utility
 			}
 		}
 	}
-	
-	
-	public PartitionInfo get_partition_info(string path)
-	{
+
+	public PartitionInfo get_partition_info(string path){
+		
+		/* Returns partition info for specified path or device name */
+
 		PartitionInfo info = new PartitionInfo();
 		
 		string std_out = "";
@@ -526,6 +503,9 @@ namespace Utility
 	}
 
 	public Gee.ArrayList<PartitionInfo?> get_mounted_partitions(){
+		
+		/* Returns list of mounted partitions */
+		 
 		var list = new Gee.ArrayList<PartitionInfo?>();
 		
 		string std_out = "";
@@ -581,6 +561,9 @@ namespace Utility
 	}
 	
 	public Gee.ArrayList<PartitionInfo?> get_all_partitions(){
+		
+		/* Returns list of mounted/unmounted, physical/LVM partitions */
+		
 		var list = new Gee.ArrayList<PartitionInfo?>();
 		var list_mounted = get_mounted_partitions();
 		
@@ -656,6 +639,10 @@ namespace Utility
 	}
 	
 	public bool mount(string device, string mount_point){
+		
+		/* Mounts specified device at specified mount point.
+		   Other devices will be un-mounted from the mount point*/
+		
 		string cmd = "";
 		string std_out;
 		string std_err;
@@ -715,6 +702,9 @@ namespace Utility
 	}
 
 	public bool unmount(string mount_point){
+		
+		/* Un-mounts device at specified mount point */
+		
 		string cmd = "";
 		string std_out;
 		string std_err;
@@ -746,6 +736,9 @@ namespace Utility
 	}
 	
 	public Gee.ArrayList<DeviceInfo> get_block_devices(){
+		
+		/* Returns a list of all storage devices including vendor and model number */
+		
 		var device_list = new Gee.ArrayList<DeviceInfo>();
 		
 		string letters = "abcdefghijklmnopqrstuvwxyz";
@@ -797,6 +790,14 @@ namespace Utility
 		return device_list;
 	}
 	
+}
+
+namespace TeeJee.JSON{
+	
+	using TeeJee.Logging;
+
+	/* Convenience functions for reading and writing JSON files */
+	
 	public string json_get_string(Json.Object jobj, string member, string def_value){
 		if (jobj.has_member(member)){
 			return jobj.get_string_member(member);
@@ -827,146 +828,521 @@ namespace Utility
 		}
 	}
 	
-	public double get_system_uptime_seconds(){
+}
+
+namespace TeeJee.ProcessManagement{
+	
+	using TeeJee.Logging;
+	using TeeJee.FileSystem;
+	using TeeJee.Misc;
+	
+	/* Convenience functions for executing commands and managing processes */
+
+	public int execute_command_sync (string cmd){
+		
+		/* Executes single command synchronously and returns exit code 
+		 * Pipes and multiple commands are not supported */
+		
+		try {
+			int exitCode;
+			Process.spawn_command_line_sync(cmd, null, null, out exitCode);
+	        return exitCode;
+		}
+		catch (Error e){
+	        log_error (e.message);
+	        return -1;
+	    }
+	}
+	
+	public string execute_command_sync_get_output (string cmd){
+				
+		/* Executes single command synchronously and returns console output 
+		 * Pipes and multiple commands are not supported */
+		
+		try {
+			int exitCode;
+			string std_out;
+			Process.spawn_command_line_sync(cmd, out std_out, null, out exitCode);
+	        return std_out;
+		}
+		catch (Error e){
+	        log_error (e.message);
+	        return "";
+	    }
+	}
+
+	public bool execute_command_async (string cmd){
+				
+		/* Creates a temporary bash script with given commands and executes it asynchronously 
+		 * Return value indicates if script was started successfully */
+		
+		try {
+			
+			string scriptfile = create_temp_bash_script (cmd);
+			
+			string[] argv = new string[1];
+			argv[0] = scriptfile;
+			
+			Pid child_pid;
+			Process.spawn_async_with_pipes(
+			    null, //working dir
+			    argv, //argv
+			    null, //environment
+			    SpawnFlags.SEARCH_PATH,
+			    null,
+			    out child_pid);
+			return true;
+		}
+		catch (Error e){
+	        log_error (e.message);
+	        return false;
+	    }
+	}
+	
+	public string? create_temp_bash_script (string script_text){
+				
+		/* Creates a temporary bash script with given commands 
+		 * Returns the script file path */
+		
+		var sh = "";
+		sh += "#!/bin/bash\n";
+		sh += script_text;
+
+		string script_path = get_temp_file_path() + ".sh";
+
+		if (write_file (script_path, sh)){  // create file
+			chmod (script_path, "u+x");      // set execute permission
+			return script_path;
+		}
+		else{
+			return null;
+		}
+	}
+	
+	public string get_temp_file_path(){
+				
+		/* Generates temporary file path */
+		
+		return Environment.get_tmp_dir () + "/" + timestamp2() + (new Rand()).next_int().to_string();
+	}
+	
+	public int execute_command_script_sync (string script, out string std_out, out string std_err){
+				
+		/* Executes commands synchronously
+		 * Returns exit code, output messages and error messages.
+		 * Commands are written to a temporary bash script and executed. */
+		
+		string path = create_temp_bash_script(script);
+
+		try {
+			
+			string[] argv = new string[1];
+			argv[0] = path;
+		
+			int exit_code;
+			
+			Process.spawn_sync (
+			    Environment.get_tmp_dir (), //working dir
+			    argv, //argv
+			    null, //environment
+			    SpawnFlags.SEARCH_PATH,
+			    null,   // child_setup
+			    out std_out,
+			    out std_err,
+			    out exit_code
+			    );
+			    
+			return exit_code;
+		}
+		catch (Error e){
+	        log_error (e.message);
+	        return -1;
+	    }
+	}
+	
+	public bool execute_command_script_in_terminal_sync (string script){
+				
+		/* Executes a command script in a terminal window */
+		//TODO: Remove this
+		
+		try {
+			
+			string[] argv = new string[3];
+			argv[0] = "x-terminal-emulator";
+			argv[1] = "-e";
+			argv[2] = script;
+		
+			Process.spawn_sync (
+			    Environment.get_tmp_dir (), //working dir
+			    argv, //argv
+			    null, //environment
+			    SpawnFlags.SEARCH_PATH,
+			    null   // child_setup
+			    );
+			    
+			return true;
+		}
+		catch (Error e){
+	        log_error (e.message);
+	        return false;
+	    }
+	}
+
+	public int execute_bash_script_fullscreen_sync (string script_file){
+			
+		/* Executes a bash script synchronously.
+		 * Script is executed in a fullscreen terminal window */
+		
+		string path;
+		
+		path = get_cmd_path ("xfce4-terminal");
+		if ((path != null)&&(path != "")){
+			return execute_command_sync ("xfce4-terminal --fullscreen -e \"%s\"".printf(script_file));
+		}
+		
+		path = get_cmd_path ("gnome-terminal");
+		if ((path != null)&&(path != "")){
+			return execute_command_sync ("gnome-terminal --full-screen -e \"%s\"".printf(script_file));
+		}
+		
+		path = get_cmd_path ("xterm");
+		if ((path != null)&&(path != "")){
+			return execute_command_sync ("xterm --fullscreen -e \"%s\"".printf(script_file));
+		}
+		
+		//default terminal - unknown, normal window
+		path = get_cmd_path ("x-terminal-emulator");
+		if ((path != null)&&(path != "")){
+			return execute_command_sync ("x-terminal-emulator -e \"%s\"".printf(script_file));
+		}
+		
+		return -1;
+	}
+	
+	
+	public string get_cmd_path (string cmd){
+				
+		/* Returns the full path to a command */
+		
+		try {
+			int exitCode; 
+			string stdout, stderr;
+			Process.spawn_command_line_sync("which " + cmd, out stdout, out stderr, out exitCode);
+	        return stdout;
+		}
+		catch (Error e){
+	        log_error (e.message);
+	        return "";
+	    }
+	}
+
+	public int get_pid_by_name (string name){
+				
+		/* Get the process ID for a process with given name */
+		
+		try{
+			string output = "";
+			Process.spawn_command_line_sync("pidof \"%s\"".printf(name), out output);
+			if (output != null){
+				string[] arr = output.split ("\n");
+				if (arr.length > 0){
+					return int.parse (arr[0]);
+				}
+			}
+		} 
+		catch (Error e) { 
+			log_error (e.message); 
+		}
+		
+		return -1;
+	}
+	
+	public bool process_is_running(long pid){
+				
+		/* Checks if given process is running */
+		
 		string cmd = "";
 		string std_out;
 		string std_err;
 		int ret_val;
 		
 		try{
-			cmd = "cat /proc/uptime";
+			cmd = "ps --pid %ld".printf(pid);
 			Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-			string uptime = std_out.split(" ")[0];
-			double secs = double.parse(uptime);
-			return secs;
+		}
+		catch (Error e) { 
+			log_error (e.message); 
+			return false;
+		}
+		
+		return (ret_val == 0);
+	}
+
+	public int[] get_process_children (Pid parentPid){
+				
+		/* Returns the list of child processes spawned by given process */
+		
+		string output;
+		
+		try {
+			Process.spawn_command_line_sync("ps --ppid %d".printf(parentPid), out output);
 		}
 		catch(Error e){
-			log_error (e.message);
-			return 0;
+	        log_error (e.message);
+	    }
+			
+		int pid;
+		int[] procList = {};
+		string[] arr;
+		
+		foreach (string line in output.split ("\n")){
+			arr = line.strip().split (" ");
+			if (arr.length < 1) { continue; }
+			
+			pid = 0;
+			pid = int.parse (arr[0]);
+			
+			if (pid != 0){
+				procList += pid;
+			}
+		}
+		return procList;
+	}
+	
+	
+	public void process_kill(Pid process_pid, bool killChildren = true){
+				
+		/* Kills specified process and its children (optional) */
+		
+		int[] child_pids = get_process_children (process_pid);
+		Posix.kill (process_pid, 15);
+		
+		if (killChildren){
+			Pid childPid;
+			foreach (long pid in child_pids){
+				childPid = (Pid) pid;
+				Posix.kill (childPid, 15);
+			}
 		}
 	}
 	
-	public long get_file_count(string path){
-		string cmd = "";
-		string std_out;
-		string std_err;
-		int ret_val;
+	public int process_pause (Pid procID){
+				
+		/* Pause/Freeze a process */
 		
-		cmd = "find \"%s\" | wc -l".printf(path);
-		ret_val = execute_command_script_sync(cmd, out std_out, out std_err);
-		return long.parse(std_out);
+		return execute_command_sync ("kill -STOP %d".printf(procID));
 	}
 	
-	public static Gdk.RGBA hex_to_rgba (string hex_color){
-		string hex = hex_color.strip().down();
-		if (hex.has_prefix("#") == false){
-			hex = "#" + hex;
-		}
+	public int process_resume (Pid procID){
+				
+		/* Resume/Un-freeze a process*/
 		
-		Gdk.RGBA color = Gdk.RGBA();
-		if(color.parse(hex) == false){
-			color.parse("#000000");
-		}
-		color.alpha = 255;
-		
-		return color;
+		return execute_command_sync ("kill -CONT %d".printf(procID));
 	}
-	
-	public static string rgba_to_hex (Gdk.RGBA color, bool alpha = false, bool prefix_hash = true){
-		string hex = "";
-		
-		if (alpha){
-			hex = "%02x%02x%02x%02x".printf((uint)(Math.round(color.red*255)),
-									(uint)(Math.round(color.green*255)),
-									(uint)(Math.round(color.blue*255)),
-									(uint)(Math.round(color.alpha*255)))
-									.up();
-		}
-		else {														
-			hex = "%02x%02x%02x".printf((uint)(Math.round(color.red*255)),
-									(uint)(Math.round(color.green*255)),
-									(uint)(Math.round(color.blue*255)))
-									.up();
-		}	
-		
-		if (prefix_hash){
-			hex = "#" + hex;
-		}	
-		
-		return hex;													
-	}
-	public string get_desktop_name()
-	{
-		string s = execute_command_sync_get_output("ps -C xfdesktop");
-		if (s.split("\n").length > 2) {
-			return "Xfce";
-		}
-		
-		s = execute_command_sync_get_output("ps -C wingpanel");
-		if (s.split("\n").length > 2) {
-			return "Elementary";
-		}
-		
-		s = execute_command_sync_get_output("ps -C cinnamon");
-		if (s.split("\n").length > 2) {
-			return "Cinnamon";
-		}
-		
-		s = execute_command_sync_get_output("ps -C unity-panel-service");
-		if (s.split("\n").length > 2) {
-			return "Unity";
-		}
-		
-		return "Unknown";
-	}
-	
-	public string timestamp2 ()
-	{
-		return "%ld".printf((long) time_t ());
-	}
-	
-	public string timestamp ()
-	{
-		Time t = Time.local (time_t ());
-		return t.format ("%H:%M:%S");
-	}
-	
-	public string format_file_size (int64 size)
-	{
-		return "%0.1f MB".printf (size / (1024.0 * 1024));
-	}
-	
-	public string format_duration (long millis)
-	{
-	    double time = millis / 1000.0; // time in seconds
 
-	    double hr = Math.floor(time / (60.0 * 60));
-	    time = time - (hr * 60 * 60);
-	    double min = Math.floor(time / 60.0);
-	    time = time - (min * 60);
-	    double sec = Math.floor(time);
-	    
-        return "%02.0lf:%02.0lf:%02.0lf".printf (hr, min, sec);
+		
+	public void process_set_priority (Pid procID, int prio){
+				
+		/* Set process priority */
+		
+		if (Posix.getpriority (Posix.PRIO_PROCESS, procID) != prio)
+			Posix.setpriority (Posix.PRIO_PROCESS, procID, prio);
 	}
 	
-	public double parse_time (string time)
-	{
-		string[] arr = time.split (":");
-		double millis = 0;
-		if (arr.length >= 3){
-			millis += double.parse(arr[0]) * 60 * 60;
-			millis += double.parse(arr[1]) * 60;
-			millis += double.parse(arr[2]);
+	public int process_get_priority (Pid procID){
+				
+		/* Get process priority */
+		
+		return Posix.getpriority (Posix.PRIO_PROCESS, procID);
+	}
+	
+	public void process_set_priority_normal (Pid procID){
+				
+		/* Set normal priority for process */
+		
+		process_set_priority (procID, 0);
+	}
+	
+	public void process_set_priority_low (Pid procID){
+				
+		/* Set low priority for process */
+		
+		process_set_priority (procID, 5);
+	}
+	
+
+	public bool user_is_admin (){
+				
+		/* Check if current application is running with admin priviledges */
+		
+		try{
+			// create a process
+			string[] argv = { "sleep", "10" };
+			Pid procId;
+			Process.spawn_async(null, argv, null, SpawnFlags.SEARCH_PATH, null, out procId); 
+			
+			// try changing the priority
+			Posix.setpriority (Posix.PRIO_PROCESS, procId, -5);
+			
+			// check if priority was changed successfully
+			if (Posix.getpriority (Posix.PRIO_PROCESS, procId) == -5)
+				return true;
+			else
+				return false;
+		} 
+		catch (Error e) { 
+			log_error (e.message); 
+			return false;
 		}
-		return millis;
+	}
+
+	public string get_app_path (){
+				
+		/* Get path of current process */
+		
+		try{
+			return GLib.FileUtils.read_link ("/proc/self/exe");	
+		}
+		catch (Error e){
+	        log_error (e.message);
+	        return "";
+	    }
 	}
 	
-	public long get_file_duration(string filePath)
-	{
+	public string get_app_dir (){
+				
+		/* Get parent directory of current process */
+		
+		try{
+			return (File.new_for_path (GLib.FileUtils.read_link ("/proc/self/exe"))).get_parent ().get_path ();	
+		}
+		catch (Error e){
+	        log_error (e.message);
+	        return "";
+	    }
+	}
+
+}
+
+namespace TeeJee.GtkHelper{
+	
+	using Gtk;
+	
+	public void gtk_do_events (){
+				
+		/* Do pending events */
+		
+		while(Gtk.events_pending ())
+			Gtk.main_iteration ();
+	}
+
+	public void gtk_set_busy (bool busy, Gtk.Window win) {
+				
+		/* Show or hide busy cursor on window */
+		
+		Gdk.Cursor? cursor = null;
+
+		if (busy){
+			cursor = new Gdk.Cursor(Gdk.CursorType.WATCH);
+		}
+		else{
+			cursor = new Gdk.Cursor(Gdk.CursorType.ARROW);
+		}
+		
+		var window = win.get_window ();
+		
+		if (window != null) {
+			window.set_cursor (cursor);
+		}
+		
+		gtk_do_events ();
+	}
+	
+	public void gtk_messagebox_show(string title, string message, bool is_error = false){
+				
+		/* Conveniance function to show message box */
+		
+		Gtk.MessageType type = Gtk.MessageType.INFO;
+		
+		if (is_error)
+			type = Gtk.MessageType.ERROR;
+			
+		var dialog = new Gtk.MessageDialog.with_markup(null,Gtk.DialogFlags.MODAL, type, Gtk.ButtonsType.OK, message);
+		dialog.set_title(title);
+		dialog.run();
+		dialog.destroy();
+	}
+	
+	public bool gtk_combobox_set_value (ComboBox combo, int index, string val){
+		
+		/* Conveniance function to set combobox value */
+		
+		TreeIter iter;
+		string comboVal;
+		TreeModel model = (TreeModel) combo.model;
+		
+		bool iterExists = model.get_iter_first (out iter);
+		while (iterExists){
+			model.get(iter, 1, out comboVal);
+			if (comboVal == val){
+				combo.set_active_iter(iter);
+				return true;
+			}
+			iterExists = model.iter_next (ref iter);
+		} 
+		
+		return false;
+	}
+	
+	public string gtk_combobox_get_value (ComboBox combo, int index, string default_value){
+		
+		/* Conveniance function to get combobox value */
+		
+		if (combo.model == null) { return default_value; }
+		if (combo.active < 0) { return default_value; }
+		
+		TreeIter iter;
+		string val = "";
+		combo.get_active_iter (out iter);
+		TreeModel model = (TreeModel) combo.model;
+		model.get(iter, index, out val);
+			
+		return val;
+	}
+
+	public class CellRendererProgress2 : Gtk.CellRendererProgress{
+		public override void render (Cairo.Context cr, Gtk.Widget widget, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gtk.CellRendererState flags) {
+			if (text == "--") 
+				return;
+				
+			int diff = (int) ((cell_area.height - height)/2);
+			
+			// Apply the new height into the bar, and center vertically:
+			Gdk.Rectangle new_area = Gdk.Rectangle() ;
+			new_area.x = cell_area.x;
+			new_area.y = cell_area.y + diff;
+			new_area.width = width - 5;
+			new_area.height = height;
+			
+			base.render(cr, widget, background_area, new_area, flags);
+		}
+	} 
+}
+
+namespace TeeJee.Multimedia{
+	
+	using TeeJee.Logging;
+	
+	/* Functions for working with audio/video files */
+	
+	public long get_file_duration(string filePath){
+				
+		/* Returns the duration of an audio/video file using MediaInfo */
+		
 		string output = "0";
 		
 		try {
-			Process.spawn_command_line_sync("mediainfo \"--Inform=General;%Duration%\" " + double_quote (filePath), out output);
+			Process.spawn_command_line_sync("mediainfo \"--Inform=General;%Duration%\" \"" + filePath + "\"", out output);
 		}
 		catch(Error e){
 	        log_error (e.message);
@@ -975,13 +1351,15 @@ namespace Utility
 		return long.parse(output);
 	}
 	
-	public string get_file_crop_params (string filePath)
-	{
+	public string get_file_crop_params (string filePath){
+				
+		/* Returns cropping parameters for a video file using avconv */
+		
 		string output = "";
 		string error = "";
 		
 		try {
-			Process.spawn_command_line_sync("avconv -i " + double_quote (filePath) + " -vf cropdetect=30 -ss 5 -t 5 -f matroska -an -y /dev/null", out output, out error);
+			Process.spawn_command_line_sync("avconv -i \"%s\" -vf cropdetect=30 -ss 5 -t 5 -f matroska -an -y /dev/null".printf(filePath), out output, out error);
 		}
 		catch(Error e){
 	        log_error (e.message);
@@ -1032,12 +1410,14 @@ namespace Utility
 			return "%i:%i:%i:%i".printf(w,h,x,y);
 	}
 	
-	public string get_mediainfo (string filePath)
-	{
+	public string get_mediainfo (string filePath){
+				
+		/* Returns the multimedia properties of an audio/video file using MediaInfo */
+		
 		string output = "";
 		
 		try {
-			Process.spawn_command_line_sync("mediainfo " + double_quote (filePath), out output);
+			Process.spawn_command_line_sync("mediainfo \"%s\"".printf(filePath), out output);
 		}
 		catch(Error e){
 	        log_error (e.message);
@@ -1046,207 +1426,68 @@ namespace Utility
 		return output;
 	}
 	
-	public int[] get_process_children (Pid parentPid)
-	{
-		string output;
-		
-		try {
-			Process.spawn_command_line_sync("ps --ppid %d".printf(parentPid), out output);
-		}
-		catch(Error e){
-	        log_error (e.message);
-	    }
-			
-		int pid;
-		int[] procList = {};
-		string[] arr;
-		
-		foreach (string line in output.split ("\n")){
-			arr = line.strip().split (" ");
-			if (arr.length < 1) { continue; }
-			
-			pid = 0;
-			pid = int.parse (arr[0]);
-			
-			if (pid != 0){
-				procList += pid;
-			}
-		}
-		return procList;
-	}
 	
-	public bool process_is_running(long pid){
+
+}
+
+namespace TeeJee.System{
+	
+	using TeeJee.ProcessManagement;
+	using TeeJee.Logging;
+
+	public double get_system_uptime_seconds(){
+				
+		/* Returns the system up-time in seconds */
+		
 		string cmd = "";
 		string std_out;
 		string std_err;
 		int ret_val;
 		
 		try{
-			cmd = "ps --pid %ld".printf(pid);
+			cmd = "cat /proc/uptime";
 			Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-		}
-		catch (Error e) { 
-			log_error (e.message); 
-			return false;
-		}
-		
-		return (ret_val == 0);
-	}
-	
-	public void process_kill(Pid process_pid, bool killChildren = true)
-	{
-		int[] child_pids = get_process_children (process_pid);
-		Posix.kill (process_pid, 15);
-		
-		if (killChildren){
-			Pid childPid;
-			foreach (long pid in child_pids){
-				childPid = (Pid) pid;
-				Posix.kill (childPid, 15);
-			}
-		}
-	}
-	
-	public void process_set_priority (Pid procID, int prio)
-	{
-		if (Posix.getpriority (Posix.PRIO_PROCESS, procID) != prio)
-			Posix.setpriority (Posix.PRIO_PROCESS, procID, prio);
-	}
-	
-	public int process_get_priority (Pid procID)
-	{
-		return Posix.getpriority (Posix.PRIO_PROCESS, procID);
-	}
-	
-	public void process_set_priority_normal (Pid procID)
-	{
-		process_set_priority (procID, 0);
-	}
-	
-	public void process_set_priority_low (Pid procID)
-	{
-		process_set_priority (procID, 5);
-	}
-	
-	public bool file_exists (string filePath)
-	{
-		return ( FileUtils.test(filePath, GLib.FileTest.EXISTS) && FileUtils.test(filePath, GLib.FileTest.IS_REGULAR));
-	}
-	
-	public bool dir_exists (string filePath)
-	{
-		return ( FileUtils.test(filePath, GLib.FileTest.EXISTS) && FileUtils.test(filePath, GLib.FileTest.IS_DIR));
-	}
-	
-	public bool create_dir (string filePath)
-	{
-		try{
-			var dir = File.parse_name (filePath);
-			if (dir.query_exists () == false) {
-				dir.make_directory (null);
-			}
-			return true;
-		}
-		catch (Error e) { 
-			log_error (e.message); 
-			return false;
-		}
-	}
-	
-	public bool move_file (string sourcePath, string destPath)
-	{
-		try{
-			File fromFile = File.new_for_path (sourcePath);
-			File toFile = File.new_for_path (destPath);
-			fromFile.move (toFile, FileCopyFlags.NONE);
-			return true;
-		}
-		catch (Error e) { 
-			log_error (e.message); 
-			return false;
-		}
-	}
-	
-	public bool copy_file (string sourcePath, string destPath)
-	{
-		try{
-			File fromFile = File.new_for_path (sourcePath);
-			File toFile = File.new_for_path (destPath);
-			fromFile.copy (toFile, FileCopyFlags.NONE);
-			return true;
-		}
-		catch (Error e) { 
-			log_error (e.message); 
-			return false;
-		}
-	}
-	
-	public string resolve_relative_path (string filePath)
-	{
-		string filePath2 = filePath;
-		if (filePath2.has_prefix ("~")){
-			filePath2 = Environment.get_home_dir () + "/" + filePath2[2:filePath2.length];
-		}
-		
-		try {
-			string output = "";
-			Process.spawn_command_line_sync("realpath " + double_quote (filePath2), out output);
-			output = output.strip ();
-			if (FileUtils.test(output, GLib.FileTest.EXISTS)){
-				return output;
-			}
+			string uptime = std_out.split(" ")[0];
+			double secs = double.parse(uptime);
+			return secs;
 		}
 		catch(Error e){
-	        log_error (e.message);
-	    }
-	    
-	    return filePath2;
-	}
-	
-	public bool user_is_admin ()
-	{
-		try{
-			// create a process
-			string[] argv = { "sleep", "10" };
-			Pid procId;
-			Process.spawn_async(null, argv, null, SpawnFlags.SEARCH_PATH, null, out procId); 
-			
-			// try changing the priority
-			Posix.setpriority (Posix.PRIO_PROCESS, procId, -5);
-			
-			// check if priority was changed successfully
-			if (Posix.getpriority (Posix.PRIO_PROCESS, procId) == -5)
-				return true;
-			else
-				return false;
-		} 
-		catch (Error e) { 
-			log_error (e.message); 
-			return false;
+			log_error (e.message);
+			return 0;
 		}
 	}
 	
-	public int get_pid_by_name (string name)
-	{
-		try{
-			string output = "";
-			Process.spawn_command_line_sync("pidof " + double_quote (name), out output);
-			if (output != null){
-				string[] arr = output.split ("\n");
-				if (arr.length > 0){
-					return int.parse (arr[0]);
-				}
-			}
-		} 
-		catch (Error e) { 
-			log_error (e.message); 
+	public string get_desktop_name(){
+				
+		/* Return the names of the current Desktop environment */
+		
+		string s = execute_command_sync_get_output("ps -C xfdesktop");
+		if (s.split("\n").length > 2) {
+			return "Xfce";
 		}
 		
-		return -1;
+		s = execute_command_sync_get_output("ps -C wingpanel");
+		if (s.split("\n").length > 2) {
+			return "Elementary";
+		}
+		
+		s = execute_command_sync_get_output("ps -C cinnamon");
+		if (s.split("\n").length > 2) {
+			return "Cinnamon";
+		}
+		
+		s = execute_command_sync_get_output("ps -C unity-panel-service");
+		if (s.split("\n").length > 2) {
+			return "Unity";
+		}
+		
+		return "Unknown";
 	}
 	
-	public bool shutdown ()
-	{
+	public bool shutdown (){
+				
+		/* Shutdown the system immediately */
+		
 		try{
 			string[] argv = { "shutdown", "-h", "now" };
 			Pid procId;
@@ -1259,374 +1500,292 @@ namespace Utility
 		}
 	}
 	
-	public string double_quote (string txt)
-	{
-		return "\"" + txt.replace ("\"","\\\"") + "\"";
-	}
-
-	public int execute_command_sync (string cmd)
-	{
-		try {
-			int exitCode;
-			Process.spawn_command_line_sync(cmd, null, null, out exitCode);
-	        return exitCode;
-		}
-		catch (Error e){
-	        log_error (e.message);
-	        return -1;
-	    }
-	}
-	
-	public string execute_command_sync_get_output (string cmd)
-	{
-		try {
-			int exitCode;
-			string std_out;
-			Process.spawn_command_line_sync(cmd, out std_out, null, out exitCode);
-	        return std_out;
-		}
-		catch (Error e){
-	        log_error (e.message);
-	        return "";
-	    }
-	}
-
-	public bool execute_command_async (string cmd)
-	{
-		try {
-			
-			string scriptfile = create_temp_bash_script ("#!/bin/bash\n" + cmd);
-			
-			string[] argv = new string[1];
-			argv[0] = scriptfile;
-			
-			Pid child_pid;
-			Process.spawn_async_with_pipes(
-			    null, //working dir
-			    argv, //argv
-			    null, //environment
-			    SpawnFlags.SEARCH_PATH,
-			    null,
-			    out child_pid);
-			return true;
-		}
-		catch (Error e){
-	        log_error (e.message);
-	        return false;
-	    }
-	}
-	
-	public string? create_temp_bash_script (string script_text)
-	{
-		var sh = "";
-		sh += "#!/bin/bash\n";
-		sh += script_text;
-
-		string script_path = get_temp_file_path() + ".sh";
-
-		if (write_file (script_path, sh)){  // create file
-			chmod (script_path, "u+x");      // set execute permission
-			return script_path;
-		}
-		else{
-			return null;
-		}
-	}
-	
-	public string get_temp_file_path(){
-		return Environment.get_tmp_dir () + "/" + timestamp2() + (new Rand()).next_int().to_string();
+	public bool exo_open_folder (string dir_path){
+				
+		/* Tries to open the given directory in a file manager */
 		
-	}
-	public string? read_file (string file_path)
-	{
-		string txt;
-		size_t size;
-		
-		try{
-			GLib.FileUtils.get_contents (file_path, out txt, out size);
-			return txt;	
-		}
-		catch (Error e){
-	        log_error (e.message);
-	    }
-	    
-	    return null;
-	}
-	
-	public bool write_file (string file_path, string contents)
-	{
-		try{
-			var file = File.new_for_path (file_path);
-			var file_stream = file.create (FileCreateFlags.REPLACE_DESTINATION);
-			var data_stream = new DataOutputStream (file_stream);
-			data_stream.put_string (contents);
-			data_stream.close();
-			return true;
-		}
-		catch (Error e) {
-	        log_error (e.message);
-	        return false;
-	    } 
-	}
-	
-	public int execute_command_script_sync (string script, out string std_out, out string std_err)
-	{
-		string path = create_temp_bash_script(script);
-
-		try {
-			
-			string[] argv = new string[1];
-			argv[0] = path;
-		
-			int exit_code;
-			
-			Process.spawn_sync (
-			    Environment.get_tmp_dir (), //working dir
-			    argv, //argv
-			    null, //environment
-			    SpawnFlags.SEARCH_PATH,
-			    null,   // child_setup
-			    out std_out,
-			    out std_err,
-			    out exit_code
-			    );
-			    
-			return exit_code;
-		}
-		catch (Error e){
-	        log_error (e.message);
-	        return -1;
-	    }
-	}
-	
-	public bool execute_command_script_in_terminal_sync (string script)
-	{
-		try {
-			
-			string[] argv = new string[3];
-			argv[0] = "x-terminal-emulator";
-			argv[1] = "-e";
-			argv[2] = script;
-		
-			Process.spawn_sync (
-			    Environment.get_tmp_dir (), //working dir
-			    argv, //argv
-			    null, //environment
-			    SpawnFlags.SEARCH_PATH,
-			    null   // child_setup
-			    );
-			    
-			return true;
-		}
-		catch (Error e){
-	        log_error (e.message);
-	        return false;
-	    }
-	}
-	
-	public void setting_read (string section, string key)
-	{
-		//string config_file = get_app_dir () + "/config";
-		//string txt = read_file (config_file);
-		
-		//string section
-	}
-	
-	public void setting_write (string section, string key)
-	{
-		
-	}
-	
-	public string get_app_path ()
-	{
-		try{
-			return GLib.FileUtils.read_link ("/proc/self/exe");	
-		}
-		catch (Error e){
-	        log_error (e.message);
-	        return "";
-	    }
-	}
-	
-	public string get_app_dir ()
-	{
-		try{
-			return (File.new_for_path (GLib.FileUtils.read_link ("/proc/self/exe"))).get_parent ().get_path ();	
-		}
-		catch (Error e){
-	        log_error (e.message);
-	        return "";
-	    }
-	}
-	
-	public bool exo_open_folder (string txt)
-	{
 		string path;
 		
 		path = get_cmd_path ("exo-open");
 		if ((path != null)&&(path != "")){
-			return execute_command_async ("exo-open " + double_quote (txt));
+			return execute_command_async ("exo-open \"" + dir_path + "\"");
 		}
 
 		path = get_cmd_path ("nemo");
 		if ((path != null)&&(path != "")){
-			return execute_command_async ("nemo " + double_quote (txt));
+			return execute_command_async ("nemo \"" + dir_path + "\"");
 		}
 		
 		path = get_cmd_path ("nautilus");
 		if ((path != null)&&(path != "")){
-			return execute_command_async ("nautilus " + double_quote (txt));
+			return execute_command_async ("nautilus \"" + dir_path + "\"");
 		}
 		
 		path = get_cmd_path ("thunar");
 		if ((path != null)&&(path != "")){
-			return execute_command_async ("thunar " + double_quote (txt));
+			return execute_command_async ("thunar \"" + dir_path + "\"");
 		}
 
 		return false;
 	}
 
-	public int exo_open_textfile (string txt)
-	{
+	public int exo_open_textfile (string txt){
+				
+		/* Tries to open the given text file in a text editor */
+		
 		string path;
 		
 		path = get_cmd_path ("exo-open");
 		if ((path != null)&&(path != "")){
-			return execute_command_sync ("exo-open " + double_quote (txt));
+			return execute_command_sync ("exo-open \"" + txt + "\"");
 		}
 
 		path = get_cmd_path ("gedit");
 		if ((path != null)&&(path != "")){
-			return execute_command_sync ("gedit --new-document " + double_quote (txt));
+			return execute_command_sync ("gedit --new-document \"" + txt + "\"");
 		}
 
 		return -1;
 	}
-	
-	public int execute_bash_script_fullscreen_sync (string script_file){
-		string path;
-		
-		path = get_cmd_path ("xfce4-terminal");
-		if ((path != null)&&(path != "")){
-			return execute_command_sync ("xfce4-terminal --fullscreen -e \"%s\"".printf(script_file));
-		}
-		
-		path = get_cmd_path ("gnome-terminal");
-		if ((path != null)&&(path != "")){
-			return execute_command_sync ("gnome-terminal --full-screen -e \"%s\"".printf(script_file));
-		}
-		
-		path = get_cmd_path ("xterm");
-		if ((path != null)&&(path != "")){
-			return execute_command_sync ("xterm --fullscreen -e \"%s\"".printf(script_file));
-		}
-		
-		//default terminal - unknown, normal window
-		path = get_cmd_path ("x-terminal-emulator");
-		if ((path != null)&&(path != "")){
-			return execute_command_sync ("x-terminal-emulator -e \"%s\"".printf(script_file));
-		}
-		
-		return -1;
-	}
-	
-	public int chmod (string file, string permission)
-	{
-		return execute_command_sync ("chmod " + permission + " " + double_quote (file));
-	}
-	
-	public int process_pause (Pid procID)
-	{
-		return execute_command_sync ("kill -STOP %d".printf(procID));
-	}
-	
-	public int process_resume (Pid procID)
-	{
-		return execute_command_sync ("kill -CONT %d".printf(procID));
-	}
 
-	public int notify_send (string title, string message, int durationMillis, string urgency)
-	{
+	public int notify_send (string title, string message, int durationMillis, string urgency){
+				
+		/* Displays notification bubble on the desktop */
+		
 		string s = "notify-send -t %d -u %s -i %s \"%s\" \"%s\"".printf(durationMillis, urgency, Gtk.Stock.INFO, title, message);
 		return execute_command_sync (s);
 	}
-	
-	public int rsync (string sourceDirectory, string destDirectory, bool updateExisting, bool deleteExtra)
-	{
-		string cmd = "rsync --recursive --perms --chmod=a=rwx";
-		cmd += updateExisting ? "" : " --ignore-existing";
-		cmd += deleteExtra ? " --delete" : "";
-		cmd += " " + double_quote(sourceDirectory + "//");
-		cmd += " " + double_quote(destDirectory);
-		return execute_command_sync (cmd);
-	}
-	
+}
 
+namespace TeeJee.Misc {
 	
-	public string get_cmd_path (string cmd)
-	{
-		try {
-			int exitCode; 
-			string stdout, stderr;
-			Process.spawn_command_line_sync("which " + cmd, out stdout, out stderr, out exitCode);
-	        return stdout;
+	/* Various utility functions */
+	
+	using Gtk;
+	using TeeJee.Logging;
+	using TeeJee.FileSystem;
+	using TeeJee.ProcessManagement;
+	
+	public class DistInfo : GLib.Object{
+				
+		/* Class for storing information about linux distribution */
+		
+		public string dist_id = "";
+		public string description = "";
+		public string release = "";
+		public string codename = "";
+		
+		public DistInfo(){
+			dist_id = "";
+			description = "";
+			release = "";
+			codename = "";
 		}
-		catch (Error e){
-	        log_error (e.message);
-	        return "";
-	    }
-	}
-	
-	public bool Combo_SelectValue (ComboBox combo, int index, string val)
-	{
-		TreeIter iter;
-		string comboVal;
-		TreeModel model = (TreeModel) combo.model;
 		
-		bool iterExists = model.get_iter_first (out iter);
-		while (iterExists){
-			model.get(iter, 1, out comboVal);
-			if (comboVal == val){
-				combo.set_active_iter(iter);
-				return true;
+		public string full_name(){
+			if (dist_id == ""){
+				return "";
 			}
-			iterExists = model.iter_next (ref iter);
-		} 
+			else{
+				string val = "";
+				val += dist_id;
+				val += (release.length > 0) ? " " + release : "";
+				val += (codename.length > 0) ? " (" + codename + ")" : "";
+				return val;
+			}
+		}
 		
-		return false;
+		public static DistInfo get_dist_info(string root_path){
+				
+			/* Returns information about the Linux distribution 
+			 * installed at the given root path */
+		
+			DistInfo info = new DistInfo();
+			
+			string dist_file = root_path + "/etc/lsb-release";
+			var f = File.new_for_path(dist_file);
+			if (f.query_exists()){
+
+				/*
+					DISTRIB_ID=Ubuntu
+					DISTRIB_RELEASE=13.04
+					DISTRIB_CODENAME=raring
+					DISTRIB_DESCRIPTION="Ubuntu 13.04"
+				*/
+				
+				foreach(string line in read_file(dist_file).split("\n")){
+					
+					if (line.split("=").length != 2){ continue; }
+					
+					string key = line.split("=")[0].strip();
+					string val = line.split("=")[1].strip();
+					
+					if (val.has_prefix("\"")){
+						val = val[1:val.length];
+					}
+					
+					if (val.has_suffix("\"")){
+						val = val[0:val.length-1];
+					}
+					
+					switch (key){
+						case "DISTRIB_ID":
+							info.dist_id = val;
+							break;
+						case "DISTRIB_RELEASE":
+							info.release = val;
+							break;
+						case "DISTRIB_CODENAME":
+							info.codename = val;
+							break;
+						case "DISTRIB_DESCRIPTION":
+							info.description = val;
+							break;
+					}
+				}
+			}
+			else{
+				
+				dist_file = root_path + "/etc/os-release";
+				f = File.new_for_path(dist_file);
+				if (f.query_exists()){
+					
+					/*
+						NAME="Ubuntu"
+						VERSION="13.04, Raring Ringtail"
+						ID=ubuntu
+						ID_LIKE=debian
+						PRETTY_NAME="Ubuntu 13.04"
+						VERSION_ID="13.04"
+						HOME_URL="http://www.ubuntu.com/"
+						SUPPORT_URL="http://help.ubuntu.com/"
+						BUG_REPORT_URL="http://bugs.launchpad.net/ubuntu/"
+					*/
+					
+					foreach(string line in read_file(dist_file).split("\n")){
+					
+						if (line.split("=").length != 2){ continue; }
+						
+						string key = line.split("=")[0].strip();
+						string val = line.split("=")[1].strip();
+						
+						switch (key){
+							case "ID":
+								info.dist_id = val;
+								break;
+							case "VERSION_ID":
+								info.release = val;
+								break;
+							//case "DISTRIB_CODENAME":
+								//info.codename = val;
+								//break;
+							case "PRETTY_NAME":
+								info.description = val;
+								break;
+						}
+					}
+				}
+			}
+
+			return info;
+		}
+		
+	}
+
+	public static Gdk.RGBA hex_to_rgba (string hex_color){
+				
+		/* Converts the color in hex to RGBA */
+		
+		string hex = hex_color.strip().down();
+		if (hex.has_prefix("#") == false){
+			hex = "#" + hex;
+		}
+		
+		Gdk.RGBA color = Gdk.RGBA();
+		if(color.parse(hex) == false){
+			color.parse("#000000");
+		}
+		color.alpha = 255;
+		
+		return color;
 	}
 	
-	public string Combo_GetSelectedValue (ComboBox combo, int index, string default_value)
-	{
-		if (combo.model == null) { return default_value; }
-		if (combo.active < 0) { return default_value; }
+	public static string rgba_to_hex (Gdk.RGBA color, bool alpha = false, bool prefix_hash = true){
+				
+		/* Converts the color in RGBA to hex */
 		
-		TreeIter iter;
-		string val = "";
-		combo.get_active_iter (out iter);
-		TreeModel model = (TreeModel) combo.model;
-		model.get(iter, index, out val);
+		string hex = "";
+		
+		if (alpha){
+			hex = "%02x%02x%02x%02x".printf((uint)(Math.round(color.red*255)),
+									(uint)(Math.round(color.green*255)),
+									(uint)(Math.round(color.blue*255)),
+									(uint)(Math.round(color.alpha*255)))
+									.up();
+		}
+		else {														
+			hex = "%02x%02x%02x".printf((uint)(Math.round(color.red*255)),
+									(uint)(Math.round(color.green*255)),
+									(uint)(Math.round(color.blue*255)))
+									.up();
+		}	
+		
+		if (prefix_hash){
+			hex = "#" + hex;
+		}	
+		
+		return hex;													
+	}
+
+	public string timestamp2 (){
+				
+		/* Returns a numeric timestamp string */
+		
+		return "%ld".printf((long) time_t ());
+	}
+	
+	public string timestamp (){	
 			
-		return val;
+		/* Returns a formatted timestamp string */
+		
+		Time t = Time.local (time_t ());
+		return t.format ("%H:%M:%S");
+	}
+	
+	public string format_file_size (int64 size){
+				
+		/* Format file size in MB */
+		
+		return "%0.1f MB".printf (size / (1024.0 * 1024));
+	}
+	
+	public string format_duration (long millis){
+				
+		/* Converts time in milliseconds to format '00:00:00.0' */
+		
+	    double time = millis / 1000.0; // time in seconds
+
+	    double hr = Math.floor(time / (60.0 * 60));
+	    time = time - (hr * 60 * 60);
+	    double min = Math.floor(time / 60.0);
+	    time = time - (min * 60);
+	    double sec = Math.floor(time);
+	    
+        return "%02.0lf:%02.0lf:%02.0lf".printf (hr, min, sec);
+	}
+	
+	public double parse_time (string time){
+				
+		/* Converts time in format '00:00:00.0' to milliseconds */
+		
+		string[] arr = time.split (":");
+		double millis = 0;
+		if (arr.length >= 3){
+			millis += double.parse(arr[0]) * 60 * 60;
+			millis += double.parse(arr[1]) * 60;
+			millis += double.parse(arr[2]);
+		}
+		return millis;
 	}
 }
 
-public class CellRendererProgress2 : Gtk.CellRendererProgress
-{
-	public override void render (Cairo.Context cr, Gtk.Widget widget, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gtk.CellRendererState flags) 
-	{
-		if (text == "--") 
-			return;
-			
-        int diff = (int) ((cell_area.height - height)/2);
-        
-        // Apply the new height into the bar, and center vertically:
-        Gdk.Rectangle new_area = Gdk.Rectangle() ;
-        new_area.x = cell_area.x;
-        new_area.y = cell_area.y + diff;
-        new_area.width = width - 5;
-        new_area.height = height;
-        
-        base.render(cr, widget, background_area, new_area, flags);
-	}
-} 

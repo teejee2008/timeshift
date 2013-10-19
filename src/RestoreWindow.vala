@@ -23,7 +23,16 @@
 
 using Gtk;
 using Gee;
-using Utility;
+
+using TeeJee.Logging;
+using TeeJee.FileSystem;
+using TeeJee.DiskPartition;
+using TeeJee.JSON;
+using TeeJee.ProcessManagement;
+using TeeJee.GtkHelper;
+using TeeJee.Multimedia;
+using TeeJee.System;
+using TeeJee.Misc;
 
 public class RestoreWindow : Gtk.Dialog{
 	private Box vbox_main;
@@ -831,14 +840,14 @@ public class RestoreWindow : Gtk.Dialog{
 		
 		sel = tv_partitions.get_selection ();
 		if (sel.count_selected_rows() != 1){ 
-			messagebox_show(_("Select Target Device"),_("Please select the target device from the list"), true);
+			gtk_messagebox_show(_("Select Target Device"),_("Please select the target device from the list"), true);
 			return; 
 		}
 
 		//check if grub device selected ---------------
 
 		if (cmb_boot_device.active < 0){ 
-			messagebox_show(_("Select Boot Device"),_("Please select the boot device"), true);
+			gtk_messagebox_show(_("Select Boot Device"),_("Please select the boot device"), true);
 			return; 
 		}
 		

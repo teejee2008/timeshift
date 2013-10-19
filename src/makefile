@@ -55,4 +55,4 @@ uninstall:
 	rm -f "$(DESTDIR)$(sharedir)/pixmaps/timeshift.png"
 	
 	#translations
-	rm -f "$(DESTDIR)$(localedir)/it_IT/LC_MESSAGES/timeshift.mo"
+	rm -f "$(DESTDIR)$(localedir)/*/LC_MESSAGES/timeshift.mo"

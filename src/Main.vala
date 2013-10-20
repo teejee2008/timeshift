@@ -71,6 +71,7 @@ public class Main : GLib.Object{
 	public PartitionInfo snapshot_device;
 	public string mount_point_backup = "/mnt/timeshift";
 	public string mount_point_restore = "/mnt/timeshift-restore";
+	public string mount_point_test = "/mnt/timeshift-test";
 	public string snapshot_dir = "/mnt/timeshift/timeshift/snapshots";
 	public DistInfo current_distro;
 	
@@ -178,7 +179,6 @@ public class Main : GLib.Object{
 			msg += _("Please run the application as admin (using 'sudo')");
 				
 			if (app_mode == ""){
-				Gtk.init (ref args);
 				gtk_messagebox_show(_("Admin Access Required"),msg,true);
 			}
 			else{
@@ -193,7 +193,6 @@ public class Main : GLib.Object{
 		string message;
 		if (!check_dependencies(out message)){
 			if (app_mode == ""){
-				Gtk.init (ref args);
 				gtk_messagebox_show(_("Missing Dependencies"),message,true);
 			}
 			exit(0);
@@ -205,8 +204,6 @@ public class Main : GLib.Object{
 		lock_file = lock_dir + "/lock";
 		if (!create_lock()){
 			if (app_mode == ""){
-				Gtk.init (ref args);
-				
 				string txt = read_file(lock_file);
 				//string pid = txt.split(";")[0].strip();
 				string mode = txt.split(";")[1].strip();
@@ -269,7 +266,7 @@ public class Main : GLib.Object{
 		this.partition_list = new Gee.ArrayList<PartitionInfo>();
 		
 		//default exclude entries -------------------
-		
+
 		exclude_list_default.add("/dev/*");
 		exclude_list_default.add("/proc/*");
 		exclude_list_default.add("/sys/*");
@@ -281,7 +278,8 @@ public class Main : GLib.Object{
 		exclude_list_default.add("/var/lock/*");
 		exclude_list_default.add("/lost+found");
 		exclude_list_default.add("/timeshift/*");
-
+		exclude_list_default.add("/data/*");
+		
 		exclude_list_default.add("/root/.thumbnails");
 		exclude_list_default.add("/root/.cache");
 		exclude_list_default.add("/root/.gvfs");
@@ -308,31 +306,30 @@ public class Main : GLib.Object{
 		
 		this.current_distro = DistInfo.get_dist_info("/");
 		
-		//parse arguments (final) ------------
-		
-		parse_arguments(args);
-		
 		//initialize app --------------------
 		
 		update_partition_list();
 		detect_system_devices();
-		
-		//check for BTRFS volumes ---------------
+
+		//check if root device is a BTRFS volume ---------------
 		
 		if ((root_device != null) && (root_device.type == "btrfs")){
-			msg = _("This system is installed on a BTRFS volume.") + "\n";
-			msg += _("BTRFS volumes are not supported!") + "\n";
-			
-			if (app_mode == ""){
-				Gtk.init (ref args);
-				gtk_messagebox_show(_("Not Supported"),msg,true);
+			//check subvolume layout
+			if (check_btrfs_volume(root_device) == false){
+				msg = _("The system partition has an unsupported subvolume layout.") + " ";
+				msg += _("Only ubuntu-type layouts with @ and @home subvolumes are currently supported.") + "\n\n";
+				msg += _("Application will exit.") + "\n\n";
+				
+				if (app_mode == ""){
+					gtk_messagebox_show(_("Not Supported"),msg,true);
+				}
+				else{
+					log_error(msg);
+				}
+				exit(0);
 			}
-			else{
-				log_error(msg);
-			}
-			exit(0);
 		}
-		
+
 		//finish initialization --------------
 		
 		load_app_config();
@@ -367,9 +364,14 @@ public class Main : GLib.Object{
 					break;
 					
 				default:
-					//normal
+					//nothing
 					break;
 			}
+		}
+		
+		if (app_mode == ""){
+			//Initialize GTK
+			Gtk.init(ref args);
 		}
 	}
 	
@@ -402,9 +404,6 @@ public class Main : GLib.Object{
 				return true;
 				
 			default:
-				//Initialize GTK
-				Gtk.init(ref args);
-				
 				//Initialize main window
 				var window = new MainWindow ();
 				window.destroy.connect(Gtk.main_quit);
@@ -1456,7 +1455,7 @@ public class Main : GLib.Object{
 		int ret_val;
 		string temp_script;
 		bool reboot_after_restore = false;
-		
+
 		in_progress = true;
 
 		try{
@@ -1465,34 +1464,44 @@ public class Main : GLib.Object{
 			
 			//set target path ----------------
 			
-			string target_path = "/";
+			bool restore_current_system = false;
 			if ((root_device != null) && (restore_target.device == root_device.device)){
-				target_path = "/";
+				restore_current_system = true;
 			}
-			else{
-				if (restore_target.mount_point.length > 0){
-					target_path = restore_target.mount_point;
-				}
-				else{
-					//mount it somewhere
-					string target_mount_point = "/mnt/timeshift-restore";
-					var f = File.new_for_path(target_mount_point);
-					if (!f.query_exists()){
-						f.make_directory_with_parents();
-					}
+			
+			string target_path = "/"; //current system root
+			
+			if (!restore_current_system){
+				mount_target_device();
+				target_path = mount_point_restore;
+				
+				//check BTRFS volume
+				if (restore_target.type == "btrfs"){
+					
+					//check subvolume layout
+					if (check_btrfs_volume(restore_target) == false){
+						string msg = _("The target partition has an unsupported subvolume layout.") + " ";
+						msg += _("Only ubuntu-type layouts with @ and @home subvolumes are currently supported.") + "\n\n";
 
-					if (mount(restore_target.device,target_mount_point)){
-						target_path = target_mount_point;
-					}
-					else{
-						log_error(_("Unable to mount target partition!"));
-						gtk_messagebox_show(_("Error"), _("Unable to mount target partition!") + "\n" + _("No changes were made to system"));
+						if (app_mode == ""){
+							gtk_messagebox_show(_("Not Supported"),msg,true);
+						}
+						else{
+							log_error(msg);
+						}
+
 						is_success = false;
 						in_progress = false;
 						return;
 					}
+			
+					//mount subvolume @home under @/home
+					mount_device(restore_target, mount_point_restore + "/@/home", "subvol=@home");
+					target_path = mount_point_restore + "/@";
 				}
 			}
+			
+			//add trailing slash 
 			if (target_path[-1:target_path.length] != "/"){
 				target_path += "/";
 			}
@@ -1513,6 +1522,9 @@ public class Main : GLib.Object{
 			//run rsync ----------
 			
 			sh += "rsync -avir --exclude-from \"%s\" --force --delete-after \"%s\" \"%s\" \n".printf(source_path + "/exclude-restore.list", source_path + "/localhost/", target_path);
+
+			//sync file system ---------
+			
 			sh += "sync \n";
 			
 			//chroot and re-install grub2 --------
@@ -1980,7 +1992,8 @@ public class Main : GLib.Object{
 			return false;
 		}
 		else{
-			return mount_device(backup_device, mount_point_backup);
+			mount_device(backup_device, mount_point_backup, "");
+			return true;
 		}
 	}
 	
@@ -1989,173 +2002,43 @@ public class Main : GLib.Object{
 			return false;
 		}
 		else{
-			return mount_device(restore_target, mount_point_restore);
+			mount_device(restore_target, mount_point_restore, "");
+			return true;
 		}
 	}
 	
-	public bool mount_device(PartitionInfo dev, string mount_point){
-		string cmd = "";
-		string std_out;
-		string std_err;
-		int ret_val;
-		File file;
-
-		try{
-			
-			//check if device is specified -----------
-			
-			if (dev == null){
-				log_error (_("Failed to mount unknown partition"));
-				return false;
+	public void mount_device(PartitionInfo dev, string mount_point, string mount_options){
+		if (!mount(dev.device, mount_point, mount_options)){
+			if (app_mode == ""){
+				gtk_messagebox_show(_("Critical Error"), _("Failed to mount device!") + "\n" + _("Application will exit"));
 			}
-			
-			//check if mount point exists
-			file = File.new_for_path(mount_point);
-			if (!file.query_exists()){
-				file.make_directory_with_parents();
-			}
-			
-			update_partition_list();
-			
-			//check if mounted
-			bool mounted = false;
-			foreach(PartitionInfo info in partition_list){
-
-				if (info.mount_point == mount_point && info.device == dev.device){
-					mounted = true;
-					break;
-				}
-				else if (info.mount_point == mount_point && info.device != dev.device){
-					unmount_backup_device();
-				}
-			}
-
-			if (!mounted){
-				//mount
-				cmd = "mount \"" + dev.device + "\" \"" + mount_point + "\"";
-				Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-				if (ret_val != 0){
-					log_error (_("Failed to mount device") + " '%s' ".printf(dev.device) + _("at") + " '%s'".printf(mount_point));
-					log_error (std_err);
-					return false;
-				}
-				else{
-					log_msg (_("Mounted device") + " '%s' ".printf(dev.device) + _("at") + " '%s'".printf(mount_point));
-					update_partition_list();
-				}
-			}
+			exit_app();
+			exit(0);
 		}
-		catch(Error e){
-			log_error (e.message);
-			return false;
-		}
-		
-		return true;
 	}
 
-	public bool unmount_backup_device(bool force = true){
-		return unmount_device(mount_point_backup,force);
+	public void unmount_backup_device(bool force = true){
+		unmount_device(mount_point_backup,force);
 	}
 	
-	public bool unmount_target_device(bool force = true){
-		return unmount_device(mount_point_restore,force);
+	public void unmount_target_device(bool force = true){
+		unmount_device(mount_point_restore,force);
 	}
 	
-	public bool unmount_device(string mount_point, bool force = true){
-		string cmd = "";
-		string std_out;
-		string std_err;
-		int ret_val;
-		bool quit_app = false;
-		
-		try{
-			//check if mounted and unmount
-			foreach(PartitionInfo info in get_mounted_partitions()){
-				if (info.mount_point == mount_point){
-					
-					log_msg(_("Unmounting device") + " '%s' ".printf(info.device) + _("from") + " '%s'".printf(info.mount_point));
-					
-					//sync before unmount
-					cmd = "sync";
-					Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-					//ignore success/failure
-					
-					//unmount
-					cmd = "umount \"" + mount_point + "\"";
-					Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-					
-					if (ret_val != 0){
-						
-						log_error (_("Failed to unmount device"));
-						log_error (std_err);
-						
-						if (force){
-							//check if any process is using the mount_point
-							cmd = "fuser -m \"" + mount_point + "\"";
-							string proc_list = execute_command_sync_get_output(cmd);
-							
-							if ((proc_list != null) && (proc_list.length > 0)){
-								
-								log_msg (_("Killing all processes using the mount-point..."));
-								
-								//kill the process
-								cmd = "fuser -mk \"" + mount_point + "\"";
-								Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-								
-								if (ret_val != 0){
-									log_error (_("Failed to kill process"));
-									log_error (std_err);
-									quit_app = true;
-								}
-								else{
-
-									//ok, try again
-									cmd = "umount \"" + mount_point + "\"";
-									Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-									
-									if (ret_val != 0){
-										log_error (_("Failed to unmount device") + " '%s' ".printf(info.device) + _("from") + " '%s'".printf(info.mount_point));
-										log_error (std_err);
-										quit_app = true;
-									}
-									else{
-										log_msg (_("Device unmounted"));
-									}
-								}
-							}
-							else{
-								quit_app = true;
-							}
-						}
-
-						//critical error - exit application
-						if (quit_app){
-							if (app_mode.length > 0){
-								log_error ("** " + _("Critical Error") + " ** - " + _("Failed to unmount partition!!"));
-								log_error (_("Application will exit!"));
-							}
-							else{
-								gtk_messagebox_show(_("Critical Error"),_("Failed to unmount partition!!") + "\n" + _("Application will exit!"),true);
-							}
-							exit_app();
-							exit(1);
-						}
-					}
-					else{
-						log_msg (_("Device unmounted"));
-					}
+	public void unmount_device(string mount_point, bool force = true){
+		if (!unmount(mount_point, force)){
+			//exit application if a forced un-mount fails
+			if (force){
+				if (app_mode == ""){
+					gtk_messagebox_show(_("Critical Error"), _("Failed to unmount device!") + "\n" + _("Application will exit"));
 				}
+				exit_app();
+				exit(0);
 			}
 		}
-		catch(Error e){
-			log_error (e.message);
-			return false;
-		}
-		
-		return true;
 	}
-	
-	
+
+
 	public void cron_job_update(){
 		string crontab_entry = read_crontab_entry();
 		string required_entry = get_crontab_string();
@@ -2323,6 +2206,13 @@ public class Main : GLib.Object{
 		return status_code;
 	}
 	
+	public bool check_btrfs_volume(PartitionInfo dev){
+		mount_device(dev, mount_point_test, "");
+		bool is_supported = dir_exists(mount_point_test + "/@") && dir_exists(mount_point_test + "/@home");
+		unmount_device(mount_point_test);
+		return is_supported;
+	}
+	
 	public bool is_snapshot_device_online(){
 		//check if mounted
 		foreach(PartitionInfo info in get_mounted_partitions()){
@@ -2456,6 +2346,7 @@ public class Main : GLib.Object{
 		
 		//soft-unmount always
 		unmount_backup_device(false);
+		unmount_target_device(false);
 		
 		clean_logs();
 		remove_lock();

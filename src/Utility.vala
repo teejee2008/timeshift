@@ -638,7 +638,7 @@ namespace TeeJee.DiskPartition{
 		return list;
 	}
 	
-	public bool mount(string device, string mount_point){
+	public bool mount(string device, string mount_point, string mount_options = ""){
 		
 		/* Mounts specified device at specified mount point.
 		   Other devices will be un-mounted from the mount point*/
@@ -661,12 +661,13 @@ namespace TeeJee.DiskPartition{
 			foreach(PartitionInfo info in get_mounted_partitions()){
 
 				if (info.mount_point == mount_point && info.device == device){
+					//device is already mounted at mount point
 					mounted = true;
 					break;
 				}
 				else if (info.mount_point == mount_point && info.device != device){
-					//unmount
-					cmd = "sudo umount \"" + mount_point + "\"";
+					//another device is mounted at mount point - unmount it -------
+					cmd = "sudo umount \"%s\"".printf(mount_point);
 					Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
 					if (ret_val != 0){
 						log_error ("Failed to unmount device '%s' from mount point '%s'".printf(info.device, info.mount_point));
@@ -680,8 +681,14 @@ namespace TeeJee.DiskPartition{
 			}
 
 			if (!mounted){
-				//mount
-				cmd = "sudo mount \"" + device + "\" \"" + mount_point + "\"";
+				//mount --------------
+				if (mount_options.length > 0){
+					cmd = "sudo mount -o %s \"%s\" \"%s\"".printf(mount_options, device, mount_point);
+				} 
+				else{
+					cmd = "sudo mount \"%s\" \"%s\"".printf(device, mount_point);
+				}
+
 				Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
 				if (ret_val != 0){
 					log_error ("Failed to mount device '%s' at mount point '%s'".printf(device, mount_point));
@@ -701,28 +708,75 @@ namespace TeeJee.DiskPartition{
 		return true;
 	}
 
-	public bool unmount(string mount_point){
-		
-		/* Un-mounts device at specified mount point */
-		
+	public bool unmount(string mount_point, bool force = true){
 		string cmd = "";
 		string std_out;
 		string std_err;
 		int ret_val;
-
+		bool quit_app = false;
+		
 		try{
+			//check if mounted and unmount
 			foreach(PartitionInfo info in get_mounted_partitions()){
 				if (info.mount_point == mount_point){
-					//unmount
-					cmd = "sudo umount \"" + mount_point + "\"";
+					
+					log_msg(_("Unmounting device") + " '%s' ".printf(info.device) + _("from") + " '%s'".printf(info.mount_point));
+					
+					//sync before unmount
+					cmd = "sync";
 					Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
+					//ignore success/failure
+					
+					//unmount
+					cmd = "umount \"" + mount_point + "\"";
+					Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
+					
 					if (ret_val != 0){
-						log_error ("Failed to unmount device '%s' from mount point '%s'".printf(info.device, info.mount_point));
+						
+						log_error (_("Failed to unmount device"));
 						log_error (std_err);
-						return false;
+						
+						if (force){
+							//check if any process is using the mount_point
+							cmd = "fuser -m \"" + mount_point + "\"";
+							string proc_list = execute_command_sync_get_output(cmd);
+							
+							if ((proc_list != null) && (proc_list.length > 0)){
+								
+								log_msg (_("Killing all processes using the mount-point..."));
+								
+								//kill the process
+								cmd = "fuser -mk \"" + mount_point + "\"";
+								Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
+								
+								if (ret_val != 0){
+									log_error (_("Failed to kill process"));
+									log_error (std_err);
+									quit_app = true;
+								}
+								else{
+
+									//ok, try again
+									cmd = "umount \"" + mount_point + "\"";
+									Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
+									
+									if (ret_val != 0){
+										log_error (_("Failed to unmount device") + " '%s' ".printf(info.device) + _("from") + " '%s'".printf(info.mount_point));
+										log_error (std_err);
+										quit_app = true;
+									}
+									else{
+										log_msg (_("Device unmounted"));
+									}
+								}
+							}
+							else{
+								quit_app = true;
+							}
+						}
 					}
 					else{
-						log_msg ("Unmounted device '%s' from mount point '%s'".printf(info.device, info.mount_point));
+						log_msg (_("Device unmounted"));
 					}
 				}
 			}
@@ -734,7 +788,6 @@ namespace TeeJee.DiskPartition{
 		
 		return true;
 	}
-	
 	public Gee.ArrayList<DeviceInfo> get_block_devices(){
 		
 		/* Returns a list of all storage devices including vendor and model number */

@@ -4,8 +4,8 @@ backup=`pwd`
 DIR="$( cd "$( dirname "$0" )" && pwd )"
 cd $DIR
 
-sh ./build-source.sh
-cd ./installer
+sh build-source.sh
+cd installer
 
 echo "Building installer..."
 

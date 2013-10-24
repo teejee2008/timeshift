@@ -1541,6 +1541,7 @@ namespace TeeJee.GtkHelper{
 			
 		var dialog = new Gtk.MessageDialog.with_markup(null,Gtk.DialogFlags.MODAL, type, Gtk.ButtonsType.OK, message);
 		dialog.set_title(title);
+		dialog.set_modal(true);
 		dialog.run();
 		dialog.destroy();
 	}

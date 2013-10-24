@@ -962,13 +962,13 @@ class MainWindow : Gtk.Window{
 
 			string msg = _("Do you want to take a snapshot of the current system before restoring the selected snapshot?");
 			
-			var dialog2 = new Gtk.MessageDialog.with_markup(null, Gtk.DialogFlags.MODAL, Gtk.MessageType.QUESTION, Gtk.ButtonsType.YES_NO, msg);
-			dialog2.set_title(_("Take Snapshot"));
-			dialog2.set_default_size (200, -1);
-			dialog2.set_transient_for(this);
-			dialog2.set_modal(true);
-			response = dialog2.run();
-			dialog2.destroy();
+			var dlg = new Gtk.MessageDialog.with_markup(null, Gtk.DialogFlags.MODAL, Gtk.MessageType.QUESTION, Gtk.ButtonsType.YES_NO, msg);
+			dlg.set_title(_("Take Snapshot"));
+			dlg.set_default_size (200, -1);
+			dlg.set_transient_for(this);
+			dlg.set_modal(true);
+			response = dlg.run();
+			dlg.destroy();
 
 			if (response == Gtk.ResponseType.YES){
 				statusbar_message(_("Taking snapshot..."));
@@ -993,13 +993,29 @@ class MainWindow : Gtk.Window{
 		statusbar_message(_("Restoring snapshot") + ": '%s'...".printf(App.snapshot_to_restore.name));
 
 		bool is_success = App.restore_snapshot(); 
+		
+		string msg;
 		if (is_success){
-			statusbar_message_with_timeout(_("Snapshot restored successfully"), true);
-			gtk_messagebox_show(_("Restore Complete"), _("Snapshot restored successfully"),false);
+			msg = _("Snapshot restored successfully");
+			statusbar_message_with_timeout(msg, true);
+			
+			var dlg = new Gtk.MessageDialog.with_markup(null,Gtk.DialogFlags.MODAL, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, msg);
+			dlg.set_title(_("Restore Complete"));
+			dlg.set_modal(true);
+			dlg.set_transient_for(this);
+			dlg.run();
+			dlg.destroy();
 		}
 		else{
+			msg = _("Restore was not successful!");
 			statusbar_message_with_timeout(_("Restore Failed!"), true);
-			gtk_messagebox_show(_("Restore Failed!"), _("Restore was not successful!"),false);
+
+			var dlg = new Gtk.MessageDialog.with_markup(null,Gtk.DialogFlags.MODAL, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK, msg);
+			dlg.set_title(_("Error"));
+			dlg.set_modal(true);
+			dlg.set_transient_for(this);
+			dlg.run();
+			dlg.destroy();
 		}
 		
 		//update UI ----------------

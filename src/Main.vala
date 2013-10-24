@@ -1515,8 +1515,7 @@ public class Main : GLib.Object{
 			sh += " --exclude-from=\"%s\"".printf(source_path + "/exclude-restore.list");
 			sh += " \"%s\" \"%s\" \n".printf(source_path + "/localhost/", target_path);
 
-			//sync file system ---------
-			
+			//sync file system
 			sh += "sync \n";
 			
 			//chroot and re-install grub2 --------
@@ -1535,6 +1534,9 @@ public class Main : GLib.Object{
 				sh += "echo '' \n";
 				sh += "echo '" + _("Cleaning up...") + "' \n";
 				sh += "for i in /dev /proc /run /sys; do umount -f \"%s$i\"; done \n".printf(target_path);
+				
+				//sync file system
+				sh += "sync \n";
 			}
 
 			//reboot if required --------

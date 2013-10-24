@@ -44,8 +44,6 @@ if [ $? -ne 0 ]; then
 	exit 1
 fi
 
-cp -p --no-preserve=ownership -t /home/teejee/Dropbox/Public/linux ./timeshift-latest-${arch}.run
-
 done
 
 cd "$backup"

@@ -23,8 +23,6 @@
 
 using Gtk;
 using Json;
-
-/*
 using TeeJee.Logging;
 using TeeJee.FileSystem;
 using TeeJee.DiskPartition;
@@ -35,11 +33,8 @@ using TeeJee.Multimedia;
 using TeeJee.System;
 using TeeJee.Misc;
 
+/*
 extern void exit(int exit_code);
-
-public static int main (string[] args) {
-	return 0;
-}
 */
 
 namespace TeeJee.Logging{
@@ -344,21 +339,34 @@ namespace TeeJee.DiskPartition{
 		public string uuid = "";
 		public string available = "";
 		public string used_percent = "";
-		public string mount_point = "";
 		public string dist_info = "";
+		public Gee.ArrayList<string> mount_point_list;
+		
+		public PartitionInfo(){
+			mount_point_list = new Gee.ArrayList<string>();
+		}
 		
 		public string description(){
 			string s = "";
 			s += device;
 			s += (type.length > 0) ? " ~ " + type : "";
-			s += (used.length > 0) ? " ~ " + used + " / " + size + " used (" + used_percent + ")" : "";
+			s += (used.length > 0) ? " ~ " + used + " / " + size + " GB used (" + used_percent + ")" : "";
 			return s;
 		}
 		
-		public string description_device(){
+		public string description_full(){
 			string s = "";
 			s += device;
-			s += (uuid.length == 0) ? "" : ", UUID=" + uuid;
+			s += (uuid.length > 0) ? " ~ " + uuid : "";
+			s += (type.length > 0) ? " ~ " + type : "";
+			s += (used.length > 0) ? " ~ " + used + " / " + size + " GB used (" + used_percent + ")" : "";
+			
+			string mps = "";
+			foreach(string mp in mount_point_list){
+				mps += mp + " ";
+			}
+			s += (mps.length > 0) ? " ~ " + mps.strip() : "";
+			
 			return s;
 		}
 		
@@ -373,13 +381,13 @@ namespace TeeJee.DiskPartition{
 		
 		public string size{
 			owned get{
-				return (size_mb == 0) ? "" : "%.1f GB".printf(size_mb/1024.0);
+				return (size_mb == 0) ? "" : "%.1f".printf(size_mb/1024.0);
 			}
 		}
 		
 		public string used{
 			owned get{
-				return (used_mb == 0) ? "" : "%.1f GB".printf(used_mb/1024.0);
+				return (used_mb == 0) ? "" : "%.1f".printf(used_mb/1024.0);
 			}
 		}
 		
@@ -391,7 +399,7 @@ namespace TeeJee.DiskPartition{
 		
 		public bool is_mounted{
 			get{
-				return (mount_point.length > 0);
+				return (mount_point_list.size > 0);
 			}
 		}
 		
@@ -446,65 +454,11 @@ namespace TeeJee.DiskPartition{
 		}
 	}
 
-	public PartitionInfo get_partition_info(string path){
+
+	public Gee.ArrayList<PartitionInfo?> get_mounted_partitions_using_df(bool exclude_unknown = true){
 		
-		/* Returns partition info for specified path or device name */
-
-		PartitionInfo info = new PartitionInfo();
-		
-		string std_out = "";
-		string std_err = "";
-		int exit_code = execute_command_script_sync("df -T -BM \"" + path + "\"| uniq -w 12", out std_out, out std_err);
-		if (exit_code != 0){ return info; }
-
-		string[] lines = std_out.split("\n");
-
-		int k = 1;
-		if (lines.length == 3){
-			foreach(string part in lines[1].split(" ")){
-				
-				if (part.strip().length == 0){ continue; }
-				
-				switch(k++){
-					case 1:
-						info.device = part.strip();
-						break;
-					case 2:
-						info.type = part.strip();
-						break;
-					case 3:
-						info.size_mb = long.parse(part.strip().replace("M",""));
-						break;
-					case 4:
-						info.used_mb = long.parse(part.strip().replace("M",""));
-						break;
-					case 5:
-						info.available = part.strip();
-						break;
-					case 6:
-						info.used_percent = part.strip();
-						break;
-					case 7:
-						info.mount_point = part.strip();
-						break;
-				}
-			}
-		}
-
-		foreach(PartitionInfo pi in get_all_partitions()){
-			if (pi.device == info.device){
-				info.label = pi.label;
-				info.uuid = pi.uuid;
-				break;
-			}
-		}
-		
-		return info;
-	}
-
-	public Gee.ArrayList<PartitionInfo?> get_mounted_partitions(){
-		
-		/* Returns list of mounted partitions */
+		/* Returns list of mounted partitions using 'df' command 
+		   Populates device, type, size, used and mount_point_list */
 		 
 		var list = new Gee.ArrayList<PartitionInfo?>();
 		
@@ -514,6 +468,23 @@ namespace TeeJee.DiskPartition{
 		
 		if (exit_code != 0){ return list; }
 		
+		if (exit_code != 0){ 
+			log_error ("Failed to get list of partitions");
+			return list; //return empty list
+		}
+		
+		/*
+		sample output
+		-----------------
+		Filesystem     Type     1M-blocks    Used Available Use% Mounted on
+		/dev/sda3      ext4        25070M  19508M     4282M  83% /
+		none           tmpfs           1M      0M        1M   0% /sys/fs/cgroup
+		udev           devtmpfs     3903M      1M     3903M   1% /dev
+		tmpfs          tmpfs         789M      1M      788M   1% /run
+		none           tmpfs           5M      0M        5M   0% /run/lock
+		/dev/sda3      ext4        25070M  19508M     4282M  83% /mnt/timeshift
+		*/
+		
 		string[] lines = std_out.split("\n");
 
 		int line_num = 0;
@@ -522,69 +493,197 @@ namespace TeeJee.DiskPartition{
 			if (++line_num == 1) { continue; }
 			if (line.strip().length == 0) { continue; }
 			
-			PartitionInfo info = new PartitionInfo();
+			PartitionInfo pi = new PartitionInfo();
+			
+			//parse & populate fields ------------------
 			
 			int k = 1;
-			foreach(string part in line.split(" ")){
+			foreach(string val in line.split(" ")){
 				
-				if (part.strip().length == 0){ continue; }
+				if (val.strip().length == 0){ continue; }
 
 				switch(k++){
 					case 1:
-						info.device = part.strip();
+						pi.device = val.strip();
 						break;
 					case 2:
-						info.type = part.strip();
+						pi.type = val.strip();
 						break;
 					case 3:
-						info.size_mb = long.parse(part.strip().replace("M",""));
+						pi.size_mb = long.parse(val.strip().replace("M",""));
 						break;
 					case 4:
-						info.used_mb = long.parse(part.strip().replace("M",""));
+						pi.used_mb = long.parse(val.strip().replace("M",""));
 						break;
 					case 5:
-						info.available = part.strip();
+						pi.available = val.strip();
 						break;
 					case 6:
-						info.used_percent = part.strip();
+						pi.used_percent = val.strip();
 						break;
 					case 7:
-						info.mount_point = part.strip();
+						string mount_point = val.strip();
+						if (!pi.mount_point_list.contains(mount_point)){
+							pi.mount_point_list.add(mount_point);
+						}
 						break;
 				}
 			}
-
-			list.add(info);
+			
+			//exclude unknown devices
+			if (exclude_unknown){
+				if (!(pi.device.has_prefix("/dev/sd") || pi.device.has_prefix("/dev/hd") || pi.device.has_prefix("/dev/mapper/"))) { 
+					continue;
+				}
+			}
+			
+			//check for duplicates
+			bool found = false;
+			foreach(PartitionInfo pm in list){
+				if (pm.device == pi.device){
+					//add mount points and continue
+					foreach(string mount_point in pi.mount_point_list){
+						if (!pm.mount_point_list.contains(mount_point)){
+							pm.mount_point_list.add(mount_point);
+						}
+					}
+					found = true;
+					//don't break
+				}
+			}
+			
+			//add to list
+			if (!found){
+				list.add(pi);
+			}
 		}
 		
 		return list;
 	}
-	
-	public Gee.ArrayList<PartitionInfo?> get_all_partitions(){
+
+	public Gee.ArrayList<PartitionInfo?> get_mounted_partitions_using_mount(bool exclude_unknown = true){
 		
-		/* Returns list of mounted/unmounted, physical/LVM partitions */
+		/* Returns list of mounted partitions using 'mount' command 
+		   Populates device, type and mount_point_list */
+
+		var list = new Gee.ArrayList<PartitionInfo?>();
+		
+		string std_out = "";
+		string std_err = "";
+		
+		int exit_code = execute_command_script_sync("mount", out std_out, out std_err);
+
+		if (exit_code != 0){ 
+			log_error ("Failed to get list of partitions");
+			return list; //return empty list
+		}
+		
+		/*
+		sample output
+		-----------------
+		/dev/sda3 on / type ext4 (rw,errors=remount-ro)
+		proc on /proc type proc (rw,noexec,nosuid,nodev)
+		sysfs on /sys type sysfs (rw,noexec,nosuid,nodev)
+		none on /sys/fs/cgroup type tmpfs (rw)
+		none on /sys/fs/fuse/connections type fusectl (rw)
+		*/
+				
+		foreach(string line in std_out.split("\n")){
+
+			if (line.strip().length == 0) { continue; }
+			
+			PartitionInfo pi = new PartitionInfo();
+
+			//parse & populate fields ------------------
+							
+			int k = 1;
+			foreach(string val in line.split(" ")){
+				if (val.strip().length == 0){ continue; }
+				switch(k++){
+					case 1:
+						pi.device = val.strip();
+						break;
+					case 2:
+						//'on' ignore
+						break;
+					case 3:
+						string mount_point = val.strip();
+						if (!pi.mount_point_list.contains(mount_point)){
+							pi.mount_point_list.add(mount_point);
+						}
+						break;
+					case 4:
+						//'type' ignore
+						break;
+					case 5:
+						pi.type = val.strip();
+						break;
+					default:
+						//ignore
+						break;
+				}
+			}
+			
+			//exclude unknown devices
+			if (exclude_unknown){
+				if (!(pi.device.has_prefix("/dev/sd") || pi.device.has_prefix("/dev/hd") || pi.device.has_prefix("/dev/mapper/"))) { 
+					continue;
+				}
+			}
+
+			//check for duplicates
+			bool found = false;
+			foreach(PartitionInfo pm in list){
+				if (pm.device == pi.device){
+					//add mount points and continue
+					foreach(string mount_point in pi.mount_point_list){
+						if (!pm.mount_point_list.contains(mount_point)){
+							pm.mount_point_list.add(mount_point);
+						}
+					}
+					found = true;
+					//don't break
+				}
+			}
+			
+			//add to list
+			if (!found){
+				list.add(pi);
+			}
+		}
+
+		return list;
+	}
+	
+	public Gee.ArrayList<PartitionInfo?> get_partitions_using_blkid(bool exclude_unknown = true){
+		
+		/* Returns list of mounted/unmounted, physical/LVM partitions 
+		 * Populates device, uuid, type and label */
 		
 		var list = new Gee.ArrayList<PartitionInfo?>();
-		var list_mounted = get_mounted_partitions();
-		
-		string cmd = "";
+
 		string std_out;
 		string std_err;
 		int ret_val;
 		Regex rex;
 		MatchInfo match;
 			
+		ret_val = execute_command_script_sync("/sbin/blkid", out std_out, out std_err);
+		
+		if (ret_val != 0){
+			log_error ("Failed to get list of partitions");
+			return list; //return empty list
+		}
+			
+		/*
+		sample output
+		-----------------
+		/dev/sda1: LABEL="System Reserved" UUID="F476B08076B04560" TYPE="ntfs" 
+		/dev/sda2: LABEL="windows" UUID="BE00B6DB00B69A3B" TYPE="ntfs" 
+		/dev/sda3: UUID="03f3f35d-71fa-4dff-b740-9cca19e7555f" TYPE="ext4"
+		*/
+		
 		try{
-			
-			cmd = "/sbin/blkid";
-			ret_val = execute_command_script_sync(cmd, out std_out, out std_err);
-			
-			if (ret_val != 0){
-				log_error ("Failed to get list of partitions");
-				log_error (std_err);
-				return list_mounted; //return list of mounted devices
-			}
-
 			foreach(string line in std_out.split("\n")){
 				if (line.strip().length == 0) { continue; }
 				
@@ -592,16 +691,16 @@ namespace TeeJee.DiskPartition{
 				
 				pi.device = line.split(":")[0].strip();
 				
-				if (pi.device.length == 0) { 
-					continue; 
+				if (pi.device.length == 0) { continue; }
+				
+				//exclude unknown devices
+				if (exclude_unknown){
+					if (!(pi.device.has_prefix("/dev/sd") || pi.device.has_prefix("/dev/hd") || pi.device.has_prefix("/dev/mapper/"))) { 
+						continue;
+					}
 				}
 				
-				if (pi.device.has_prefix("/dev/sd") || pi.device.has_prefix("/dev/hd") || pi.device.has_prefix("/dev/mapper/")) { 
-					//ok
-				}
-				else{
-					continue; 
-				}
+				//parse & populate fields ------------------
 				
 				rex = new Regex("""LABEL=\"([^\"]*)\"""");
 				if (rex.match (line, 0, out match)){
@@ -618,17 +717,25 @@ namespace TeeJee.DiskPartition{
 					pi.type = match.fetch(1).strip();
 				}
 				
-				//get usage info 
-				foreach(PartitionInfo pm in list_mounted){
+				//check for duplicates
+				bool found = false;
+				foreach(PartitionInfo pm in list){
 					if (pm.device == pi.device){
-						pi.size_mb = pm.size_mb;
-						pi.used_mb = pm.used_mb;
-						pi.used_percent = pm.used_percent;
-						pi.mount_point = pm.mount_point;
+						//add mount points and continue
+						foreach(string mount_point in pi.mount_point_list){
+							if (!pm.mount_point_list.contains(mount_point)){
+								pm.mount_point_list.add(mount_point);
+							}
+						}
+						found = true;
+						//don't break
 					}
 				}
 				
-				list.add(pi);
+				//add to list
+				if (!found){
+					list.add(pi);
+				}
 			}
 		}
 		catch(Error e){
@@ -637,7 +744,118 @@ namespace TeeJee.DiskPartition{
 
 		return list;
 	}
-	
+
+	public Gee.ArrayList<PartitionInfo?> get_all_partitions(bool exclude_unknown = true, bool get_usage = true){
+		
+		/* Returns list of mounted/unmounted, physical/logical partitions */
+		
+		var list = new Gee.ArrayList<PartitionInfo?>();
+
+		// get initial list --------
+		
+		var list_blkid = get_partitions_using_blkid(exclude_unknown);
+		
+		foreach (PartitionInfo pi in list_blkid){
+			list.add(pi);
+		}
+		
+		// add more devices ----------
+
+		var list_mount = get_mounted_partitions_using_mount(exclude_unknown);
+		
+		foreach (PartitionInfo pm in list_mount){
+			bool found = false;
+			
+			foreach (PartitionInfo pi in list){
+				if (pi.device == pm.device){
+					//add more mount points
+					foreach(string mount_point in pm.mount_point_list){
+						if (!pi.mount_point_list.contains(mount_point)){
+							pi.mount_point_list.add(mount_point);
+						}
+					}
+					found = true;
+					//don't break
+				}
+			}
+			
+			if(!found){
+				list.add(pm);
+			}
+		}
+		
+		// get usage info -------------
+
+		if (get_usage){
+			
+			var list_df = get_mounted_partitions_using_df(exclude_unknown);
+
+			for(int k = 0; k < list.size; k++){
+				PartitionInfo pi = list[k];
+				foreach(PartitionInfo pm in list_df){
+					if (pm.device == pi.device){
+						pi.size_mb = pm.size_mb;
+						pi.used_mb = pm.used_mb;
+						pi.used_percent = pm.used_percent;
+						
+						foreach(string mount_point in pm.mount_point_list){
+							if (!pi.mount_point_list.contains(mount_point)){
+								pi.mount_point_list.add(mount_point);
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		return list;
+	}
+
+	public PartitionInfo refresh_partition_usage_info(PartitionInfo pi){
+		
+		/* Updates and returns the given PartitionInfo object */
+
+		string std_out = "";
+		string std_err = "";
+		
+		int exit_code = execute_command_script_sync("df -T -BM \"" + pi.device + "\"| uniq -w 12", out std_out, out std_err);
+		
+		if (exit_code != 0){ 
+			return pi; 
+		}
+
+		string[] lines = std_out.split("\n");
+
+		int k = 1;
+		if (lines.length == 3){
+			foreach(string part in lines[1].split(" ")){
+				
+				if (part.strip().length == 0){ continue; }
+				
+				switch(k++){
+					case 3:
+						pi.size_mb = long.parse(part.strip().replace("M",""));
+						break;
+					case 4:
+						pi.used_mb = long.parse(part.strip().replace("M",""));
+						break;
+					case 5:
+						pi.available = part.strip();
+						break;
+					case 6:
+						pi.used_percent = part.strip();
+						break;
+					default:
+						//ignore
+						break;
+				}
+			}
+		}
+
+		return pi;
+	}
+
+
 	public bool mount(string device, string mount_point, string mount_options = ""){
 		
 		/* Mounts specified device at specified mount point.
@@ -658,24 +876,24 @@ namespace TeeJee.DiskPartition{
 
 			//check if mounted
 			bool mounted = false;
-			foreach(PartitionInfo info in get_mounted_partitions()){
+			foreach(PartitionInfo info in get_mounted_partitions_using_df()){
 
-				if (info.mount_point == mount_point && info.device == device){
+				if (info.mount_point_list.contains(mount_point) && info.device == device){
 					//device is already mounted at mount point
 					mounted = true;
 					break;
 				}
-				else if (info.mount_point == mount_point && info.device != device){
+				else if (info.mount_point_list.contains(mount_point) && info.device != device){
 					//another device is mounted at mount point - unmount it -------
 					cmd = "sudo umount \"%s\"".printf(mount_point);
 					Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
 					if (ret_val != 0){
-						log_error ("Failed to unmount device '%s' from mount point '%s'".printf(info.device, info.mount_point));
+						log_error ("Failed to unmount device '%s' from mount point '%s'".printf(info.device, mount_point));
 						log_error (std_err);
 						return false;
 					}
 					else{
-						log_msg ("Unmounted device '%s' from mount point '%s'".printf(info.device, info.mount_point));
+						log_msg ("Unmounted device '%s' from mount point '%s'".printf(info.device, mount_point));
 					}
 				}
 			}
@@ -717,10 +935,10 @@ namespace TeeJee.DiskPartition{
 		
 		try{
 			//check if mounted and unmount
-			foreach(PartitionInfo info in get_mounted_partitions()){
-				if (info.mount_point == mount_point){
+			foreach(PartitionInfo info in get_mounted_partitions_using_df()){
+				if (info.mount_point_list.contains(mount_point)){
 					
-					log_msg(_("Unmounting device") + " '%s' ".printf(info.device) + _("from") + " '%s'".printf(info.mount_point));
+					log_msg(_("Unmounting device") + " '%s' ".printf(info.device) + _("from") + " '%s'".printf(mount_point));
 					
 					//sync before unmount
 					cmd = "sync";
@@ -761,7 +979,7 @@ namespace TeeJee.DiskPartition{
 									Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
 									
 									if (ret_val != 0){
-										log_error (_("Failed to unmount device") + " '%s' ".printf(info.device) + _("from") + " '%s'".printf(info.mount_point));
+										log_error (_("Failed to unmount device") + " '%s' ".printf(info.device) + _("from") + " '%s'".printf(mount_point));
 										log_error (std_err);
 										quit_app = true;
 									}
@@ -788,6 +1006,7 @@ namespace TeeJee.DiskPartition{
 		
 		return true;
 	}
+	
 	public Gee.ArrayList<DeviceInfo> get_block_devices(){
 		
 		/* Returns a list of all storage devices including vendor and model number */
@@ -924,7 +1143,7 @@ namespace TeeJee.ProcessManagement{
 	    }
 	}
 
-	public bool execute_command_async (string cmd){
+	public bool execute_command_script_async (string cmd){
 				
 		/* Creates a temporary bash script with given commands and executes it asynchronously 
 		 * Return value indicates if script was started successfully */
@@ -1561,28 +1780,28 @@ namespace TeeJee.System{
 		
 		path = get_cmd_path ("exo-open");
 		if ((path != null)&&(path != "")){
-			return execute_command_async ("exo-open \"" + dir_path + "\"");
+			return execute_command_script_async ("exo-open \"" + dir_path + "\"");
 		}
 
 		path = get_cmd_path ("nemo");
 		if ((path != null)&&(path != "")){
-			return execute_command_async ("nemo \"" + dir_path + "\"");
+			return execute_command_script_async ("nemo \"" + dir_path + "\"");
 		}
 		
 		path = get_cmd_path ("nautilus");
 		if ((path != null)&&(path != "")){
-			return execute_command_async ("nautilus \"" + dir_path + "\"");
+			return execute_command_script_async ("nautilus \"" + dir_path + "\"");
 		}
 		
 		path = get_cmd_path ("thunar");
 		if ((path != null)&&(path != "")){
-			return execute_command_async ("thunar \"" + dir_path + "\"");
+			return execute_command_script_async ("thunar \"" + dir_path + "\"");
 		}
 
 		return false;
 	}
 
-	public int exo_open_textfile (string txt){
+	public bool exo_open_textfile (string txt){
 				
 		/* Tries to open the given text file in a text editor */
 		
@@ -1590,15 +1809,15 @@ namespace TeeJee.System{
 		
 		path = get_cmd_path ("exo-open");
 		if ((path != null)&&(path != "")){
-			return execute_command_sync ("exo-open \"" + txt + "\"");
+			return execute_command_script_async ("exo-open \"" + txt + "\"");
 		}
 
 		path = get_cmd_path ("gedit");
 		if ((path != null)&&(path != "")){
-			return execute_command_sync ("gedit --new-document \"" + txt + "\"");
+			return execute_command_script_async ("gedit --new-document \"" + txt + "\"");
 		}
 
-		return -1;
+		return false;
 	}
 
 	public int notify_send (string title, string message, int durationMillis, string urgency){

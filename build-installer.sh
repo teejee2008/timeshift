@@ -24,11 +24,25 @@ mkdir -p ${arch}
 
 sudo pbuilder --build  --buildresult ${arch} --basetgz "${tgz}base-${arch}.tgz" ${dsc}
 
+#check for errors
+if [ $? -ne 0 ]; then
+	cd "$backup"
+	echo "Failed"
+	exit 1
+fi
+
 dpkg-deb -x ${arch}/timeshift*.deb ${arch}/extracted
 
 cp -p --no-preserve=ownership -t ${arch}/extracted ./install.sh
 
 makeself ${arch}/extracted ./timeshift-latest-${arch}.run "TimeShift (${arch})" ./install.sh 
+
+#check for errors
+if [ $? -ne 0 ]; then
+	cd "$backup"
+	echo "Failed"
+	exit 1
+fi
 
 cp -p --no-preserve=ownership -t /home/teejee/Dropbox/Public/linux ./timeshift-latest-${arch}.run
 

@@ -921,7 +921,7 @@ public class SettingsWindow : Gtk.Dialog{
 			iterExists = store.iter_next (ref iter);
 		}
 		
-		if (!App.is_live_system()){
+		if (!App.live_system()){
 			App.is_scheduled = switch_schedule.active;
 		}
 	}

@@ -6,8 +6,24 @@ cd "$DIR"
 
 sh update-pot.sh
 
+#check for errors
+if [ $? -ne 0 ]; then
+	cd "$backup"
+	echo "Failed"
+	exit 1
+fi
+
 rm -rf ../builds
+
 bzr builddeb --source --native --build-dir ../builds/temp --result-dir ../builds
+
+#check for errors
+if [ $? -ne 0 ]; then
+	cd "$backup"
+	echo "Failed"
+	exit 1
+fi
+
 ls -l ../builds
 
 cd "$backup"

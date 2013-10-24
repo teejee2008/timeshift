@@ -530,7 +530,7 @@ public class Main : GLib.Object{
 		}
 	}
 	
-	public bool is_live_system(){
+	public bool live_system(){
 		return (root_device == null);
 	}
 	
@@ -1845,8 +1845,6 @@ public class Main : GLib.Object{
 		
 		snapshot_list.clear();
 
-		if (is_snapshot_device_online() == false){ return false; }
-		
 		string path = mount_point_backup + "/timeshift/snapshots";
 
 		if (dir_exists(path)){
@@ -1890,12 +1888,11 @@ public class Main : GLib.Object{
 
 		foreach(PartitionInfo pi in partition_list){
 			//root_device and home_device will be detected by detect_system_devices()
-			
-			if (pi.mount_point == "/mnt/timeshift"){
+			if (pi.mount_point_list.contains("/mnt/timeshift")){
 				snapshot_device = pi;
 			}
 			if (pi.is_mounted){
-				pi.dist_info = DistInfo.get_dist_info(pi.mount_point).full_name();
+				pi.dist_info = DistInfo.get_dist_info(pi.mount_point_list[0]).full_name();
 			}
 		}
 		if (partition_list.size == 0){
@@ -1936,24 +1933,29 @@ public class Main : GLib.Object{
 				log_error (std_err);
 			}
 			else{
+				string dev_root = "";
+				string dev_home = "";
+				
 				foreach(string line in std_out.split("\n")){
 					if (line.contains(" / ")){
-						string dev = line.split(" ")[0].strip();
-						foreach(PartitionInfo p in partition_list){
-							if (p.device == dev){
-								root_device = p;
-								break;
-							}
-						}
+						dev_root = line.split(" ")[0].strip();
 					}
 					else if (line.contains(" /home ")){
-						string dev = line.split(" ")[0].strip();
-						foreach(PartitionInfo p in partition_list){
-							if (p.device == dev){
-								home_device = p;
-								break;
-							}
-						}
+						dev_home = line.split(" ")[0].strip();
+					}
+				}
+				
+				foreach(PartitionInfo p in partition_list){
+					if (p.device == dev_root){
+						root_device = p;
+						break;
+					}
+				}
+				
+				foreach(PartitionInfo p in partition_list){
+					if (p.device == dev_home){
+						home_device = p;
+						break;
 					}
 				}
 			}
@@ -2105,7 +2107,7 @@ public class Main : GLib.Object{
 		string std_err;
 		int ret_val;
 		
-		if (is_live_system()) { return false; }
+		if (live_system()) { return false; }
 		
 		try{
 			string temp_file = get_temp_file_path();
@@ -2152,9 +2154,9 @@ public class Main : GLib.Object{
 	
 	
 	public PartitionInfo? get_backup_device(){
-		var list = get_mounted_partitions();
+		var list = get_mounted_partitions_using_df();
 		foreach(PartitionInfo info in list){
-			if (info.mount_point == "/mnt/timeshift"){
+			if (info.mount_point_list.contains("/mnt/timeshift")){
 				return info;
 			}
 		}
@@ -2176,8 +2178,8 @@ public class Main : GLib.Object{
 		message = "%s ".printf(snapshot_device.free) + _("free");
 		message = message.strip();
 			
-		if (!is_live_system()){
-			if (is_snapshot_device_online() == false){
+		if (!live_system()){
+			if (!backup_device_online()){
 				message = _("Backup device not available!");
 				status_code = -1;
 			}
@@ -2213,10 +2215,10 @@ public class Main : GLib.Object{
 		return is_supported;
 	}
 	
-	public bool is_snapshot_device_online(){
+	public bool backup_device_online(){
 		//check if mounted
-		foreach(PartitionInfo info in get_mounted_partitions()){
-			if (info.mount_point == mount_point_backup){
+		foreach(PartitionInfo info in get_mounted_partitions_using_df()){
+			if (info.mount_point_list.contains(mount_point_backup)){
 				return true;
 			}
 		}
@@ -2224,13 +2226,12 @@ public class Main : GLib.Object{
 		return false;
 	}
 
-
 	public long calculate_size_of_first_snapshot(){
 		
 		if (this.first_snapshot_size > 0){
 			return this.first_snapshot_size;
 		}
-		else if (is_live_system()){
+		else if (live_system()){
 			return 0;
 		}
 		

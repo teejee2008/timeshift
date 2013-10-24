@@ -438,7 +438,7 @@ class MainWindow : Gtk.Window{
         
         snapshot_device_original = App.snapshot_device;
         
-        if (App.is_live_system()){
+        if (App.live_system()){
 			btn_backup.sensitive = false;
 			btn_settings.sensitive = false;
 			btn_view_app_logs.sensitive = false;
@@ -455,7 +455,7 @@ class MainWindow : Gtk.Window{
 		
 		update_ui(false);
 		
-		if (App.is_live_system()){
+		if (App.live_system()){
 			statusbar_message(_("Checking backup device..."));
 		}
 		else{
@@ -575,7 +575,7 @@ class MainWindow : Gtk.Window{
 				
 			case -1:
 				string msg = _("The backup device is not set or unavailable.") + "\n";
-				msg += _("Scheduled snapshots will be disabled.");
+				msg += _("Scheduled snapshots will be disabled.") + "\n";
 				msg += _("Do you want to select another device?");
 
 				var dialog = new Gtk.MessageDialog.with_markup(null, Gtk.DialogFlags.MODAL, Gtk.MessageType.INFO, Gtk.ButtonsType.OK_CANCEL, msg);
@@ -958,7 +958,7 @@ class MainWindow : Gtk.Window{
 		
 		//take a snapshot if current system is being restored -----------------
 		
-		if (!App.is_live_system() && (App.restore_target.device == App.root_device.device) && (App.restore_target.uuid == App.root_device.uuid)){
+		if (!App.live_system() && (App.restore_target.device == App.root_device.device) && (App.restore_target.uuid == App.root_device.uuid)){
 
 			string msg = _("Do you want to take a snapshot of the current system before restoring the selected snapshot?");
 			
@@ -1258,7 +1258,7 @@ class MainWindow : Gtk.Window{
 		
 		//status - scheduled snapshots -----------
 		
-		if (App.is_live_system()){
+		if (App.live_system()){
 			img_status_scheduled.file = img_dot_green;
 			lbl_status_scheduled.label = _("Running from Live CD/USB");
 			lbl_status_scheduled.set_tooltip_text(_("TimeShift is running in a live system"));

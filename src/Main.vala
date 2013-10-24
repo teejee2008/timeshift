@@ -993,8 +993,15 @@ public class Main : GLib.Object{
 				
 				progress_text = _("Synching files...");
 				log_msg(progress_text);
-						
+				
+				var log_path = sync_path + "/rsync-log";
+				f = File.new_for_path(log_path);
+				if (f.query_exists()){
+					f.delete();
+				}
+			
 				cmd = "rsync -ai --delete --numeric-ids --relative --delete-excluded";
+				cmd += " --log-file=\"%s\"".printf(log_path);
 				cmd += " --exclude-from=\"%s\"".printf(list_file);
 				cmd += " /. \"%s\"".printf(sync_path + "/localhost/");
 				
@@ -1009,10 +1016,6 @@ public class Main : GLib.Object{
 					return false;
 				}
 
-				//write rsync log --------
-				
-				write_rsync_log_file(sync_path, std_out, std_err);
-				
 				//write control file ----------
 				
 				write_snapshot_control_file(sync_path, dt_created, tag);
@@ -1401,28 +1404,6 @@ public class Main : GLib.Object{
 	    }
 	}
 	
-	public void write_rsync_log_file(string snapshot_path, string std_out, string std_err){
-		try{
-			var log_path = snapshot_path + "/rsync-log";
-			var f = File.new_for_path(log_path);
-			if (f.query_exists()){
-				f.delete();
-			}
-			write_file(log_path, std_out);
-			
-			log_path = snapshot_path + "/rsync-log-error";
-			f = File.new_for_path(log_path);
-			if (f.query_exists()){
-				f.delete();
-			}
-			write_file(log_path, std_err);
-			
-		} catch (Error e) {
-	        log_error (e.message);
-	    }
-	}
-	
-	
 	public bool restore_snapshot(){
 		
 		if (snapshot_to_restore == null){
@@ -1506,10 +1487,11 @@ public class Main : GLib.Object{
 				target_path += "/";
 			}
 			
-			//save exclude list for restore ----------
-			
+			//save exclude list for restore
 			save_exclude_list_for_restore(snapshot_to_restore);
-
+			
+			//create script -------------
+			
 			sh = "";
 			sh += "echo ''\n";
 			sh += "echo '" + _("Please do not interrupt the restore process!") + "'\n";
@@ -1519,9 +1501,19 @@ public class Main : GLib.Object{
 			sh += "echo ''\n";
 			sh += "sleep 3s\n";
 			
+			//log file
+			var log_path = source_path + "/rsync-log-restore";
+			var f = File.new_for_path(log_path);
+			if (f.query_exists()){
+				f.delete();
+			}
+			
 			//run rsync ----------
 			
-			sh += "rsync -avir --exclude-from \"%s\" --force --delete-after \"%s\" \"%s\" \n".printf(source_path + "/exclude-restore.list", source_path + "/localhost/", target_path);
+			sh += "rsync -avir --force --delete-after";
+			sh += " --log-file=\"%s\"".printf(log_path);
+			sh += " --exclude-from=\"%s\"".printf(source_path + "/exclude-restore.list");
+			sh += " \"%s\" \"%s\" \n".printf(source_path + "/localhost/", target_path);
 
 			//sync file system ---------
 			
@@ -1561,7 +1553,7 @@ public class Main : GLib.Object{
 			string sync_path = snapshot_dir + "/" + sync_name; 
 			string control_file_path = sync_path + "/info.json";
 			
-			var f = File.new_for_path(control_file_path);
+			f = File.new_for_path(control_file_path);
 			if(f.query_exists()){
 				f.delete(); //delete the control file
 			}

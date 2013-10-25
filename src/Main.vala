@@ -1913,49 +1913,14 @@ public class Main : GLib.Object{
 	}
 	
 	public void detect_system_devices(){
-		string cmd = "";
-		string std_out;
-		string std_err;
-		int ret_val;
-
-		try{
-			cmd = "mount";
-			Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-			if (ret_val != 0){
-				log_error (_("Failed to detect root device!"));
-				log_error (std_err);
+		foreach(PartitionInfo pi in partition_list){
+			if (pi.mount_point_list.contains("/")){
+				root_device = pi;
 			}
-			else{
-				string dev_root = "";
-				string dev_home = "";
-				
-				foreach(string line in std_out.split("\n")){
-					if (line.contains(" / ")){
-						dev_root = line.split(" ")[0].strip();
-					}
-					else if (line.contains(" /home ")){
-						dev_home = line.split(" ")[0].strip();
-					}
-				}
-				
-				foreach(PartitionInfo p in partition_list){
-					if (p.device == dev_root){
-						root_device = p;
-						break;
-					}
-				}
-				
-				foreach(PartitionInfo p in partition_list){
-					if (p.device == dev_home){
-						home_device = p;
-						break;
-					}
-				}
+			
+			if (pi.mount_point_list.contains("/home")){
+				home_device = pi;
 			}
-		}
-		catch(Error e){
-			log_error (_("Failed to detect root device!"));
-			log_error (e.message);
 		}
 	}
 	

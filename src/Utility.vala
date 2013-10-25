@@ -52,6 +52,7 @@ namespace TeeJee.Logging{
 	public bool LOG_COMMANDS = false;
 
 	public void log_msg (string message, bool highlight = false){
+
 		if (!LOG_ENABLE) { return; }
 		
 		string msg = "";

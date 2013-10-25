@@ -42,11 +42,6 @@ public const string AppName = "TimeShift";
 public const string AppVersion = "1.1.1";
 public const string AppAuthor = "Tony George";
 public const string AppAuthorEmail = "teejee2008@gmail.com";
-public bool LOG_ENABLE = true;
-public bool LOG_TIMESTAMP = true;
-public bool LOG_COLORS = true;
-public bool LOG_DEBUG = false;
-public bool LOG_COMMANDS = false;
 
 const string GETTEXT_PACKAGE = "";
 const string LOCALE_DIR = "/usr/share/locale";
@@ -114,6 +109,7 @@ public class Main : GLib.Object{
 	public string progress_text;
 
 	public static int main (string[] args) {
+
 		set_locale();
 
 		//show help and exit
@@ -146,7 +142,7 @@ public class Main : GLib.Object{
 		//parse arguments (initial) ------------
 		
 		parse_arguments(args);
-		
+
 		//init log ------------------
 		
 		try {
@@ -188,6 +184,7 @@ public class Main : GLib.Object{
 			exit(0);
 		}
 		
+
 		//check dependencies ---------------------
 		
 		string message;
@@ -394,8 +391,10 @@ public class Main : GLib.Object{
 				return is_success;
 				
 			case "list":
+
 				LOG_ENABLE = true;
 				LOG_TIMESTAMP = false;
+
 				log_msg(_("Snapshots") + ":");
 				foreach (TimeShiftBackup bak in this.snapshot_list){
 					log_msg("%s%s%s".printf(bak.name, " ~ " + bak.taglist, (bak.description.length > 0) ? " ~ " + bak.description : ""));

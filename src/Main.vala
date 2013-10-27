@@ -1196,7 +1196,7 @@ public class Main : GLib.Object{
 			foreach(TimeShiftBackup bak in snapshot_list){
 				foreach(string tag in bak.tags){
 					path = mount_point_backup + "/timeshift/snapshots-%s".printf(tag);
-					cmd = "ln --symbolic --relative \"%s\" -t \"%s\"".printf(bak.path,path);	
+					cmd = "ln --symbolic \"%s\" -t \"%s\"".printf(bak.path,path);	
 					
 					if (LOG_COMMANDS) { log_msg(cmd, true); }
 					

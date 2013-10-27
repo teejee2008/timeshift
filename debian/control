@@ -13,8 +13,7 @@ Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, libgtk-3-0, libgee2, rsync, gksu, libblkid1
 #Recommends: 
 Description: A system restore utility for Linux
- TimeShift is a utility which provides features similar to "System Restore"
- in Windows and "Time Machine" in Mac OS. Snapshots of the file system are taken 
- at regular intervals which can be restored at a later date
- to undo system changes. Snapshots can be restored from the running system 
- or by booting from a Live CD.
+ TimeShift is a system restore utility which takes snapshots
+ of the system at regular intervals. These snapshots can be restored
+ at a later date to undo all changes that were made after the snapshot
+ was taken.

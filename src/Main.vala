@@ -611,18 +611,13 @@ public class Main : GLib.Object{
 					log_error(_("On-demand snapshot failed!"));
 					is_success = false;
 					in_progress = false;
-					
-				}
-				else{
-					is_success = true;
-					in_progress = false;
 					return;
 				}
-				
-				return;
+				else{
+					update_symlinks = true;
+				}
 			}
-			
-			if (is_scheduled){
+			else if (is_scheduled){
 				TimeShiftBackup last_snapshot_boot = get_latest_snapshot("boot");
 				TimeShiftBackup last_snapshot_hourly = get_latest_snapshot("hourly");
 				TimeShiftBackup last_snapshot_daily = get_latest_snapshot("daily");
@@ -1196,7 +1191,7 @@ public class Main : GLib.Object{
 			foreach(TimeShiftBackup bak in snapshot_list){
 				foreach(string tag in bak.tags){
 					path = mount_point_backup + "/timeshift/snapshots-%s".printf(tag);
-					cmd = "ln --symbolic \"%s\" -t \"%s\"".printf(bak.path,path);	
+					cmd = "ln --symbolic \"../snapshots/%s\" -t \"%s\"".printf(bak.name, path);	
 					
 					if (LOG_COMMANDS) { log_msg(cmd, true); }
 					

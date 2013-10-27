@@ -143,6 +143,23 @@ public class Main : GLib.Object{
 		
 		parse_arguments(args);
 
+		//check for admin access before logging is initialized
+		//since writing to log directory requires admin access
+		
+		if (!user_is_admin()){
+			msg = _("TimeShift needs admin access to backup and restore system files.") + "\n";
+			msg += _("Please run the application as admin (using 'sudo')");
+				
+			if (app_mode == ""){
+				gtk_messagebox_show(_("Admin Access Required"),msg,true);
+			}
+			else{
+				log_error(msg);
+			}
+			
+			exit(0);
+		}
+		
 		//init log ------------------
 		
 		try {
@@ -167,23 +184,6 @@ public class Main : GLib.Object{
 			is_success = false;
 			log_error (e.message);
 		}
-
-		//check admin access ------------------
-
-		if (!user_is_admin()){
-			msg = _("TimeShift needs admin access to backup and restore system files.") + "\n";
-			msg += _("Please run the application as admin (using 'sudo')");
-				
-			if (app_mode == ""){
-				gtk_messagebox_show(_("Admin Access Required"),msg,true);
-			}
-			else{
-				log_error(msg);
-			}
-			
-			exit(0);
-		}
-		
 
 		//check dependencies ---------------------
 		

@@ -1,7 +1,9 @@
-timeshift (1.2) quantal; urgency=medium
+timeshift (1.2.1) quantal; urgency=medium
 
-  * Added support for BTRFS volumes with ubuntu-type subvolume layout
+  * Fixed: '--relative' option is not supported by 'ln' command on Ubuntu 12.04
   
-  * Fixed: Root partition is not detected and backups are disabled on Debian
+  * Fixed: Default exclude list is not scrollable with overlay scrollbars
 
- -- Tony George <tony.george.kol@gmail.com>  Mon, 14 Oct 2013 10:00:00 +0530
+  * Fixed: Update symlinks and auto-remove older snaphots after taking on-demand snapshots
+  
+ -- Tony George <tony.george.kol@gmail.com>  Sun, 27 Oct 2013 10:00:00 +0530

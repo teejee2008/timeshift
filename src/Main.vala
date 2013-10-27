@@ -844,7 +844,7 @@ public class Main : GLib.Object{
 					
 					if (LOG_COMMANDS) { log_msg(cmd, true); }
 					
-					ret_val = Posix.system(cmd);
+					Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
 					if (ret_val != 0){
 						log_error(_("Failed to delete incomplete snapshot") + ": '.sync'");
 						return false;

@@ -91,9 +91,7 @@ public class ExcludeMessageWindow : Gtk.Dialog{
 		tv_exclude.get_selection().mode = SelectionMode.MULTIPLE;
 		tv_exclude.headers_visible = false;
 		tv_exclude.set_rules_hint (true);
-		tv_exclude.sensitive = false;
-		//tv_exclude.row_activated.connect(tv_exclude_row_activated);
-		
+
 		//sw_exclude
 		sw_exclude = new ScrolledWindow(null, null);
 		sw_exclude.set_shadow_type (ShadowType.ETCHED_IN);

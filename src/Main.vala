@@ -276,7 +276,7 @@ public class Main : GLib.Object{
 		exclude_list_default.add("/lost+found");
 		exclude_list_default.add("/timeshift/*");
 		exclude_list_default.add("/data/*");
-		
+
 		exclude_list_default.add("/root/.thumbnails");
 		exclude_list_default.add("/root/.cache");
 		exclude_list_default.add("/root/.gvfs");

@@ -1800,6 +1800,16 @@ namespace TeeJee.System{
 			return execute_command_script_async ("thunar \"" + dir_path + "\"");
 		}
 
+		path = get_cmd_path ("pantheon-files");
+		if ((path != null)&&(path != "")){
+			return execute_command_script_async ("pantheon-files \"" + dir_path + "\"");
+		}
+		
+		path = get_cmd_path ("marlin");
+		if ((path != null)&&(path != "")){
+			return execute_command_script_async ("marlin \"" + dir_path + "\"");
+		}
+		
 		return false;
 	}
 

@@ -283,6 +283,8 @@ public class Main : GLib.Object{
 		exclude_list_default.add("/root/.mozilla/firefox/*.default/Cache");
 		exclude_list_default.add("/root/.mozilla/firefox/*.default/OfflineCache");
 		exclude_list_default.add("/root/.opera/cache");
+		exclude_list_default.add("/root/.kde/share/apps/kio_http/cache");
+		exclude_list_default.add("/root/.kde/share/cache/http");
 		exclude_list_default.add("/root/.local/share/Trash");
 		
 		exclude_list_default.add("/home/*/.thumbnails");
@@ -291,6 +293,8 @@ public class Main : GLib.Object{
 		exclude_list_default.add("/home/*/.mozilla/firefox/*.default/Cache");
 		exclude_list_default.add("/home/*/.mozilla/firefox/*.default/OfflineCache");
 		exclude_list_default.add("/home/*/.opera/cache");
+		exclude_list_default.add("/home/*/.kde/share/apps/kio_http/cache");
+		exclude_list_default.add("/home/*/.kde/share/cache/http");
 		exclude_list_default.add("/home/*/.local/share/Trash");
 
 		exclude_list_home.add("+ /root/.**");
@@ -298,6 +302,18 @@ public class Main : GLib.Object{
 		
 		exclude_list_home.add("+ /home/*/.**");
 		exclude_list_home.add("/home/*/**");
+		
+		/*
+		Most web browsers store their cache under ~/.cache and /tmp
+		These files will be excluded by the entries for ~/.cache and /tmp
+		There is no need to add special entries.
+		
+		~/.cache/google-chrome			-- Google Chrome
+		~/.cache/chromium				-- Chromium
+		~/.cache/epiphany-browser		-- Epiphany
+		~/.cache/midori/web				-- Midori
+		/var/tmp/kdecache-$USER/http	-- Rekonq
+		*/
 		
 		//check current linux distribution -----------------
 		

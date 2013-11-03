@@ -1777,12 +1777,19 @@ namespace TeeJee.System{
 	public bool exo_open_folder (string dir_path){
 				
 		/* Tries to open the given directory in a file manager */
+
+		/*
+		xdg-open is a desktop-independent tool for configuring the default applications of a user.
+		Inside a desktop environment (e.g. GNOME, KDE, Xfce), xdg-open simply passes the arguments 
+		to that desktop environment's file-opener application (gvfs-open, kde-open, exo-open, respectively).
+		We will first try using xdg-open and then check for specific file managers if it fails. 
+		*/
 		
 		string path;
 		
-		path = get_cmd_path ("exo-open");
+		path = get_cmd_path ("xdg-open");
 		if ((path != null)&&(path != "")){
-			return execute_command_script_async ("exo-open \"" + dir_path + "\"");
+			return execute_command_script_async ("xdg-open \"" + dir_path + "\"");
 		}
 
 		path = get_cmd_path ("nemo");

@@ -14,10 +14,9 @@ if [ $? -eq 0 ]; then
 	echo "Start TimeShift using the shortcut in the application menu"
 	echo "or by running the command: sudo timeshift"	
 	echo ""
-	echo "If it fails to start, please check if the following packages"
-	echo "are installed on your system:"
+	echo "Following packages are required for TimeShift to function correctly:"
 	echo "- libgtk-3 libgee2 libsoup libjson-glib rsync"
-	echo ""
+	echo "Please ensure that these packages are installed and up-to-date"
 else
 	echo "Installation failed!"
 	exit 1

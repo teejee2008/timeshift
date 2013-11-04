@@ -262,59 +262,7 @@ public class Main : GLib.Object{
 		this.exclude_list_restore = new Gee.ArrayList<string>();
 		this.partition_list = new Gee.ArrayList<PartitionInfo>();
 		
-		//default exclude entries -------------------
-
-		exclude_list_default.add("/dev/*");
-		exclude_list_default.add("/proc/*");
-		exclude_list_default.add("/sys/*");
-		exclude_list_default.add("/media/*");
-		exclude_list_default.add("/mnt/*");
-		exclude_list_default.add("/tmp/*");
-		exclude_list_default.add("/run/*");
-		exclude_list_default.add("/var/run/*");
-		exclude_list_default.add("/var/lock/*");
-		exclude_list_default.add("/lost+found");
-		exclude_list_default.add("/timeshift/*");
-		exclude_list_default.add("/data/*");
-		exclude_list_default.add("/cdrom/*");
-		
-		exclude_list_default.add("/root/.thumbnails");
-		exclude_list_default.add("/root/.cache");
-		exclude_list_default.add("/root/.gvfs");
-		exclude_list_default.add("/root/.mozilla/firefox/*.default/Cache");
-		exclude_list_default.add("/root/.mozilla/firefox/*.default/OfflineCache");
-		exclude_list_default.add("/root/.opera/cache");
-		exclude_list_default.add("/root/.kde/share/apps/kio_http/cache");
-		exclude_list_default.add("/root/.kde/share/cache/http");
-		exclude_list_default.add("/root/.local/share/Trash");
-		
-		exclude_list_default.add("/home/*/.thumbnails");
-		exclude_list_default.add("/home/*/.cache");
-		exclude_list_default.add("/home/*/.gvfs");
-		exclude_list_default.add("/home/*/.mozilla/firefox/*.default/Cache");
-		exclude_list_default.add("/home/*/.mozilla/firefox/*.default/OfflineCache");
-		exclude_list_default.add("/home/*/.opera/cache");
-		exclude_list_default.add("/home/*/.kde/share/apps/kio_http/cache");
-		exclude_list_default.add("/home/*/.kde/share/cache/http");
-		exclude_list_default.add("/home/*/.local/share/Trash");
-
-		exclude_list_home.add("+ /root/.**");
-		exclude_list_home.add("/root/**");
-		
-		exclude_list_home.add("+ /home/*/.**");
-		exclude_list_home.add("/home/*/**");
-		
-		/*
-		Most web browsers store their cache under ~/.cache and /tmp
-		These files will be excluded by the entries for ~/.cache and /tmp
-		There is no need to add special entries.
-		
-		~/.cache/google-chrome			-- Google Chrome
-		~/.cache/chromium				-- Chromium
-		~/.cache/epiphany-browser		-- Epiphany
-		~/.cache/midori/web				-- Midori
-		/var/tmp/kdecache-$USER/http	-- Rekonq
-		*/
+		add_default_exclude_entries();
 		
 		//check current linux distribution -----------------
 		
@@ -460,6 +408,66 @@ public class Main : GLib.Object{
 		}
 	}
 
+	public void add_default_exclude_entries(){
+		
+		exclude_list_default.clear();
+		exclude_list_home.clear();
+		
+		//add default exclude entries -------------------
+
+		exclude_list_default.add("/dev/*");
+		exclude_list_default.add("/proc/*");
+		exclude_list_default.add("/sys/*");
+		exclude_list_default.add("/media/*");
+		exclude_list_default.add("/mnt/*");
+		exclude_list_default.add("/tmp/*");
+		exclude_list_default.add("/run/*");
+		exclude_list_default.add("/var/run/*");
+		exclude_list_default.add("/var/lock/*");
+		exclude_list_default.add("/lost+found");
+		exclude_list_default.add("/timeshift/*");
+		exclude_list_default.add("/data/*");
+		exclude_list_default.add("/cdrom/*");
+		
+		exclude_list_default.add("/root/.thumbnails");
+		exclude_list_default.add("/root/.cache");
+		exclude_list_default.add("/root/.gvfs");
+		exclude_list_default.add("/root/.mozilla/firefox/*.default/Cache");
+		exclude_list_default.add("/root/.mozilla/firefox/*.default/OfflineCache");
+		exclude_list_default.add("/root/.opera/cache");
+		exclude_list_default.add("/root/.kde/share/apps/kio_http/cache");
+		exclude_list_default.add("/root/.kde/share/cache/http");
+		exclude_list_default.add("/root/.local/share/Trash");
+		
+		exclude_list_default.add("/home/*/.thumbnails");
+		exclude_list_default.add("/home/*/.cache");
+		exclude_list_default.add("/home/*/.gvfs");
+		exclude_list_default.add("/home/*/.mozilla/firefox/*.default/Cache");
+		exclude_list_default.add("/home/*/.mozilla/firefox/*.default/OfflineCache");
+		exclude_list_default.add("/home/*/.opera/cache");
+		exclude_list_default.add("/home/*/.kde/share/apps/kio_http/cache");
+		exclude_list_default.add("/home/*/.kde/share/cache/http");
+		exclude_list_default.add("/home/*/.local/share/Trash");
+
+		exclude_list_home.add("+ /root/.**");
+		exclude_list_home.add("/root/**");
+		
+		exclude_list_home.add("+ /home/*/.**");
+		exclude_list_home.add("/home/*/**");
+		
+		/*
+		Most web browsers store their cache under ~/.cache and /tmp
+		These files will be excluded by the entries for ~/.cache and /tmp
+		There is no need to add special entries.
+		
+		~/.cache/google-chrome			-- Google Chrome
+		~/.cache/chromium				-- Chromium
+		~/.cache/epiphany-browser		-- Epiphany
+		~/.cache/midori/web				-- Midori
+		/var/tmp/kdecache-$USER/http	-- Rekonq
+		*/
+		
+	}
 
 	public static string help_message (){
 		string msg = "\n" + AppName + " v" + AppVersion + " by Tony George (teejee2008@gmail.com)" + "\n";

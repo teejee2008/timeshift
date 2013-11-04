@@ -60,6 +60,7 @@ public class Main : GLib.Object{
 	public Gee.ArrayList<string> exclude_list_default;
 	public Gee.ArrayList<string> exclude_list_home;
 	public Gee.ArrayList<string> exclude_list_restore;
+	public Gee.ArrayList<AppExcludeEntry> exclude_list_apps;
 	
 	public PartitionInfo root_device;
 	public PartitionInfo home_device;
@@ -255,14 +256,16 @@ public class Main : GLib.Object{
 
 		//initialize lists -------------------------
 		
-		this.snapshot_list = new Gee.ArrayList<TimeShiftBackup>();
-		this.exclude_list_user = new Gee.ArrayList<string>();
-		this.exclude_list_default = new Gee.ArrayList<string>();
-		this.exclude_list_home = new Gee.ArrayList<string>();
-		this.exclude_list_restore = new Gee.ArrayList<string>();
-		this.partition_list = new Gee.ArrayList<PartitionInfo>();
-		
+		snapshot_list = new Gee.ArrayList<TimeShiftBackup>();
+		exclude_list_user = new Gee.ArrayList<string>();
+		exclude_list_default = new Gee.ArrayList<string>();
+		exclude_list_home = new Gee.ArrayList<string>();
+		exclude_list_restore = new Gee.ArrayList<string>();
+		exclude_list_apps = new Gee.ArrayList<AppExcludeEntry>();
+		partition_list = new Gee.ArrayList<PartitionInfo>();
+
 		add_default_exclude_entries();
+		add_app_exclude_entries();
 		
 		//check current linux distribution -----------------
 		
@@ -468,7 +471,66 @@ public class Main : GLib.Object{
 		*/
 		
 	}
+	
+	public void add_app_exclude_entries(){
+		exclude_list_apps.clear();
+		
+		string home;
+		string user_name;
+		
+		string cmd = "echo ${SUDO_USER:-$(whoami)}";
+		string std_out;
+		string std_err;
+		int ret_val;
+		ret_val = execute_command_script_sync(cmd, out std_out, out std_err);
 
+		if ((std_out == null) || (std_out.length == 0)){
+			user_name = "root";
+			home = Environment.get_home_dir();
+		}
+		else{
+			user_name = std_out.strip();
+			home = "/home/%s".printf(user_name);
+		}
+
+		try
+		{
+			File f_home = File.new_for_path (home);
+	        FileEnumerator enumerator = f_home.enumerate_children (FileAttribute.STANDARD_NAME, 0);
+	        FileInfo file;
+	        while ((file = enumerator.next_file ()) != null) {
+				string name = file.get_name();
+				string item = home + "/" + name;
+				if (!name.has_prefix(".")){ continue; }
+				if (name == ".config"){ continue; }
+				if (!dir_exists(item)) { continue; }
+				
+				AppExcludeEntry entry = new AppExcludeEntry("~/.%s/**".printf(name), name[1:name.length]);
+				exclude_list_apps.add(entry);
+	        }
+	        
+	        File f_home_config = File.new_for_path (home + "/.config");
+	        enumerator = f_home_config.enumerate_children (FileAttribute.STANDARD_NAME, 0);
+	        while ((file = enumerator.next_file ()) != null) {
+				string name = file.get_name();
+				string item = home + "/.config/" + name;
+				if (!dir_exists(item)) { continue; }
+				
+				AppExcludeEntry entry = new AppExcludeEntry("~/.config/%s/**".printf(name), name);
+				exclude_list_apps.add(entry);
+	        }
+        }
+        catch(Error e){
+	        log_error (e.message);
+	    }
+
+		//sort the list
+		CompareFunc<AppExcludeEntry> entry_compare = (a, b) => {
+			return strcmp(a.name,b.name);
+		};
+		exclude_list_apps.sort(entry_compare);
+	}
+	
 	public static string help_message (){
 		string msg = "\n" + AppName + " v" + AppVersion + " by Tony George (teejee2008@gmail.com)" + "\n";
 		msg += "\n";
@@ -1323,13 +1385,29 @@ public class Main : GLib.Object{
 		
 		try{
 			string list_file = snapshot.path + "/exclude.list";
-
+			string pattern;
+			
 			if (exclude_list_restore.size == 0){
 				
 				//add default entries
 				foreach(string path in exclude_list_default){
 					if (!exclude_list_restore.contains(path)){
 						exclude_list_restore.add(path);
+					}
+				}
+				
+				//add app entries
+				foreach(AppExcludeEntry entry in exclude_list_apps){
+					if (entry.enabled){
+						pattern = entry.path.replace("~","/home/*") + "/**";
+						if (!exclude_list_restore.contains(pattern)){
+							exclude_list_restore.add(pattern);
+						}
+						
+						pattern = entry.path.replace("~","/root") + "/**";
+						if (!exclude_list_restore.contains(pattern)){
+							exclude_list_restore.add(pattern);
+						}
 					}
 				}
 				
@@ -2474,6 +2552,32 @@ public class TimeShiftBackup : GLib.Object{
 		}
 	}
 }
+
+public class AppExcludeEntry : GLib.Object{
+	public string path = "";
+	public string name = "";
+	public bool is_include = false;
+	public bool enabled = false;
+	
+	public AppExcludeEntry(string exclude_pattern, string entry_name = ""){
+		pattern = exclude_pattern;
+		name = entry_name;
+	}
+	
+	public string pattern{
+		owned get{
+			string str = (is_include) ? "+ " : "";
+			str += path;
+			return str.strip();
+		}
+		set{
+			path = value.has_prefix("+ ") ? value[2:value.length] : value;
+			is_include = value.has_prefix("+ ") ? true : false;
+		}
+	}
+	
+}
+
 	
 
 

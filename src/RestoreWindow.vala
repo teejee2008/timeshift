@@ -53,6 +53,14 @@ public class RestoreWindow : Gtk.Dialog{
 	//bootloader
 	private Label lbl_header_bootloader;
 	private ComboBox cmb_boot_device;
+
+	//apps
+	private Label lbl_app;
+	private Box vbox_app;
+	private Label lbl_app_message;
+	private TreeView tv_app;
+	private ScrolledWindow sw_app;
+	private TreeViewColumn col_app;
 	
 	//exclude
 	private Label lbl_exclude;
@@ -224,8 +232,63 @@ public class RestoreWindow : Gtk.Dialog{
 		CellRendererText cell_device_grub = new CellRendererText();
         cmb_boot_device.pack_start(cell_device_grub, false );
         cmb_boot_device.set_cell_data_func (cell_device_grub, cell_device_grub_render);
-        
-        //Exclude tab ---------------------------------------------
+
+        //Exclude Apps tab ---------------------------------------------
+		
+		//lbl_apps
+		lbl_app = new Label (_("Exclude"));
+
+        //vbox_apps
+        vbox_app = new Box(Gtk.Orientation.VERTICAL, 6);
+        vbox_app.margin = 6;
+        notebook.append_page (vbox_app, lbl_app);
+		
+		//lbl_app_message
+		string msg = _("Select the applications for which the current settings should be kept.") + "\n";
+		msg += _("For all other applications, settings will be restored from the selected snapshot.");
+		lbl_app_message = new Label (msg);
+		lbl_app_message.xalign = (float) 0.0;
+		vbox_app.add(lbl_app_message);
+		
+		//tv_app-----------------------------------------------
+
+		//tv_app
+		tv_app = new TreeView();
+		tv_app.get_selection().mode = SelectionMode.MULTIPLE;
+		tv_app.headers_visible = false;
+		tv_app.set_rules_hint (true);
+
+		//sw_app
+		sw_app = new ScrolledWindow(null, null);
+		sw_app.set_shadow_type (ShadowType.ETCHED_IN);
+		sw_app.add (tv_app);
+		sw_app.expand = true;
+		vbox_app.add(sw_app);
+
+        //col_app
+		col_app = new TreeViewColumn();
+		col_app.title = _("Application");
+		col_app.expand = true;
+		tv_app.append_column(col_app);
+		
+		CellRendererText cell_app_margin = new CellRendererText ();
+		cell_app_margin.text = "";
+		col_app.pack_start (cell_app_margin, false);
+		
+		CellRendererToggle cell_app_enabled = new CellRendererToggle ();
+		cell_app_enabled.radio = false;
+		cell_app_enabled.activatable = true;
+		//cell_app_enabled.width = 50;
+		col_app.pack_start (cell_app_enabled, false);
+		col_app.set_cell_data_func (cell_app_enabled, cell_app_enabled_render);
+		
+		cell_app_enabled.toggled.connect (cell_app_enabled_toggled);
+		
+		CellRendererText cell_app_text = new CellRendererText ();
+		col_app.pack_start (cell_app_text, false);
+		col_app.set_cell_data_func (cell_app_text, cell_app_text_render);
+
+        //Advanced tab ---------------------------------------------
 		
 		//lbl_exclude
 		lbl_exclude = new Label (_("Advanced"));
@@ -421,11 +484,13 @@ public class RestoreWindow : Gtk.Dialog{
         btn_cancel.clicked.connect (btn_cancel_clicked);
 
 		//initialize -----------------------------------------
+
+		btn_reset_exclude_list_clicked();
 		
 		refresh_tv_partitions();
 		refresh_cmb_boot_device();
-		
-		btn_reset_exclude_list_clicked();
+		refresh_tv_exclude();
+		refresh_tv_apps();
 	}
 
 
@@ -470,11 +535,13 @@ public class RestoreWindow : Gtk.Dialog{
 		(cell as Gtk.CellRendererText).text = pi.dist_info;
 	}
 	
+	
 	private void cell_device_grub_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
 		DeviceInfo info;
 		model.get (iter, 0, out info, -1);
 		(cell as Gtk.CellRendererText).text = info.description;
 	}
+
 
 	private void cell_exclude_text_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
 		string pattern;
@@ -505,6 +572,28 @@ public class RestoreWindow : Gtk.Dialog{
 	}
 
 
+	private void cell_app_enabled_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
+		AppExcludeEntry entry;
+		model.get (iter, 0, out entry, -1);
+		(cell as Gtk.CellRendererToggle).active = entry.enabled;
+	}
+	
+	private void cell_app_text_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
+		AppExcludeEntry entry;
+		model.get (iter, 0, out entry, -1);
+		(cell as Gtk.CellRendererText).text = entry.name;
+	}
+
+	private void cell_app_enabled_toggled (string path){
+		AppExcludeEntry entry;
+		TreeIter iter;
+		ListStore model = (ListStore) tv_app.model; //get model
+		model.get_iter_from_string (out iter, path); //get selected iter
+		model.get (iter, 0, out entry, -1); //get entry
+		entry.enabled = !entry.enabled;
+	}
+	
+	
 	private void refresh_cmb_boot_device(){
 		ListStore store = new ListStore(1, typeof(DeviceInfo));
 
@@ -573,6 +662,17 @@ public class RestoreWindow : Gtk.Dialog{
 		
 		foreach(string path in temp_exclude_list){
 			tv_exclude_add_item(path);
+		}
+	}
+
+	private void refresh_tv_apps(){
+		ListStore model = new ListStore(1, typeof(AppExcludeEntry));
+		tv_app.model = model;
+		
+		foreach(AppExcludeEntry entry in App.exclude_list_apps){
+			TreeIter iter;
+			model.append(out iter);
+			model.set (iter, 0, entry, -1);
 		}
 	}
 

@@ -1550,7 +1550,16 @@ public class Main : GLib.Object{
 			string target_path = "/"; //current system root
 			
 			if (!restore_current_system){
-				mount_target_device();
+				
+				bool status = mount_target_device();
+				
+				if (status == false){
+					log_error ("Failed to mount target device");
+					is_success = false;
+					in_progress = false;
+					return;
+				}
+				
 				target_path = mount_point_restore;
 				
 				//check BTRFS volume
@@ -1882,6 +1891,7 @@ public class Main : GLib.Object{
         var config = node.get_object();
         
         string uuid = json_get_string(config,"backup_device_uuid","");
+
         foreach(PartitionInfo pi in partition_list){
 			if (pi.uuid == uuid){
 				snapshot_device = pi;
@@ -1889,7 +1899,7 @@ public class Main : GLib.Object{
 			}
 		}
 		
-		if (snapshot_device == null){
+		if ((uuid.length == 0) || (snapshot_device == null)){
 			log_msg (_("Warning: Backup device not set! Defaulting to system device"));
 			snapshot_device = root_device;
 		}
@@ -1938,39 +1948,40 @@ public class Main : GLib.Object{
 
 		string path = mount_point_backup + "/timeshift/snapshots";
 
-		if (dir_exists(path)){
+		if (!dir_exists(path)){
+			return false;
+		}
 
-			try{
-				var dir = File.new_for_path (path);
-				var enumerator = dir.enumerate_children ("*", 0);
-				
-				var info = enumerator.next_file ();
-				while (info != null) {
-					if (info.get_file_type() == FileType.DIRECTORY) {
-						if (info.get_name() != ".sync") {
-							TimeShiftBackup bak = new TimeShiftBackup(path + "/" + info.get_name());
+		try{
+			var dir = File.new_for_path (path);
+			var enumerator = dir.enumerate_children ("*", 0);
+			
+			var info = enumerator.next_file ();
+			while (info != null) {
+				if (info.get_file_type() == FileType.DIRECTORY) {
+					if (info.get_name() != ".sync") {
+						TimeShiftBackup bak = new TimeShiftBackup(path + "/" + info.get_name());
+						if (bak.is_valid){
 							snapshot_list.add(bak);
 						}
 					}
-					info = enumerator.next_file ();
 				}
-				
-				return true;
-			}
-			catch(Error e){
-				log_error (e.message);
+				info = enumerator.next_file ();
 			}
 		}
-		
+		catch(Error e){
+			log_error (e.message);
+			return false;
+		}
+
 		snapshot_list.sort((a,b) => { 
 			TimeShiftBackup t1 = (TimeShiftBackup) a;
 			TimeShiftBackup t2 = (TimeShiftBackup) b;
 			return t1.date.compare(t2.date);
 		});
-		
+
 		log_debug(_("updated snapshot list"));
-				
-		return false;
+		return true;
 	}
 	
 	public void update_partition_list(){
@@ -2050,8 +2061,7 @@ public class Main : GLib.Object{
 			return false;
 		}
 		else{
-			mount_device(backup_device, mount_point_backup, "");
-			return true;
+			return mount_device(backup_device, mount_point_backup, "");
 		}
 	}
 	
@@ -2060,19 +2070,18 @@ public class Main : GLib.Object{
 			return false;
 		}
 		else{
-			mount_device(restore_target, mount_point_restore, "");
-			return true;
+			return mount_device(restore_target, mount_point_restore, "");
 		}
 	}
 	
-	public void mount_device(PartitionInfo dev, string mount_point, string mount_options){
-		if (!mount(dev.device, mount_point, mount_options)){
+	public bool mount_device(PartitionInfo dev, string mount_point, string mount_options){
+		bool status = mount(dev.device, mount_point, mount_options);
+		if (status == false){
 			if (app_mode == ""){
-				gtk_messagebox_show(_("Critical Error"), _("Failed to mount device!") + "\n" + _("Application will exit"));
+				gtk_messagebox_show(_("Error"), _("Failed to mount device") + ": %s".printf(dev.device));
 			}
-			exit_app();
-			exit(0);
 		}
+		return status;
 	}
 
 	public void unmount_backup_device(bool force = true){
@@ -2236,7 +2245,14 @@ public class Main : GLib.Object{
 			
 		if (!live_system()){
 			if (!backup_device_online()){
-				message = _("Backup device not available!");
+				
+				if (snapshot_device == null){
+					message = _("Please select the backup device");
+				}
+				else{
+					message = _("Backup device not available");
+				}
+				
 				status_code = -1;
 			}
 			else{
@@ -2422,6 +2438,7 @@ public class TimeShiftBackup : GLib.Object{
 	public string description = "";
 	public Gee.ArrayList<string> tags;
 	public Gee.ArrayList<string> exclude_list;
+	public bool is_valid = true;
 	
 	public TimeShiftBackup(string dir_path){
 		
@@ -2483,6 +2500,7 @@ public class TimeShiftBackup : GLib.Object{
 	
 	public void read_control_file(){
 		string ctl_file = path + "/info.json";
+		
 		var f = File.new_for_path(ctl_file);
 		if (f.query_exists()) {
 			var parser = new Json.Parser();
@@ -2493,6 +2511,12 @@ public class TimeShiftBackup : GLib.Object{
 			}
 			var node = parser.get_root();
 			var config = node.get_object();
+			
+			
+			if ((node == null)||(config == null)){
+				is_valid = false;
+				return;
+			}
 			
 			string val = json_get_string(config,"created","");
 			if (val.length > 0) {  
@@ -2506,17 +2530,27 @@ public class TimeShiftBackup : GLib.Object{
 			description = json_get_string(config,"comments","");
 			app_version = json_get_string(config,"app-version","");
 		}
+		else{
+			is_valid = false;
+		}
 	}
 	
 	public void read_exclude_list(){
 		string list_file = path + "/exclude.list";
 		
 		exclude_list.clear();
-		foreach(string path in read_file(list_file).split("\n")){
-			path = path.strip();
-			if (!exclude_list.contains(path) && path.length > 0){
-				exclude_list.add(path);
+		
+		var f = File.new_for_path(list_file);
+		if (f.query_exists()) {
+			foreach(string path in read_file(list_file).split("\n")){
+				path = path.strip();
+				if (!exclude_list.contains(path) && path.length > 0){
+					exclude_list.add(path);
+				}
 			}
+		}
+		else{
+			is_valid = false;
 		}
 	}
 	

@@ -88,6 +88,7 @@ class MainWindow : Gtk.Window{
 	
 	//other
 	private PartitionInfo snapshot_device_original;
+	private int cmb_backup_device_index_default = -1;
 	
 	public MainWindow () {
 		this.title = AppName + " v" + AppVersion + " by " + AppAuthor + " (" + "teejeetech.blogspot.in" + ")";
@@ -706,7 +707,7 @@ class MainWindow : Gtk.Window{
 
 		int index = -1;
 		int index_selected = -1;
-		int index_default = -1;
+		cmb_backup_device_index_default = -1;
 		
 		foreach(PartitionInfo pi in App.partition_list) {
 			
@@ -717,7 +718,7 @@ class MainWindow : Gtk.Window{
 
 			index++;
 			if ((App.root_device != null) && (pi.device == App.root_device.device)){
-				index_default = index;
+				cmb_backup_device_index_default = index;
 			}
 			if ((App.snapshot_device != null) && (pi.device == App.snapshot_device.device)){
 				index_selected = index;
@@ -727,8 +728,8 @@ class MainWindow : Gtk.Window{
 		if (index_selected > -1){
 			//ok
 		}
-		else if (index_default > -1){
-			index_selected = index_default;
+		else if (cmb_backup_device_index_default > -1){
+			index_selected = cmb_backup_device_index_default;
 		}
 		else if (index > -1){
 			index_selected = 0;
@@ -736,7 +737,7 @@ class MainWindow : Gtk.Window{
 		
 		cmb_backup_device.set_model (store);
 		cmb_backup_device.active = index_selected;
-		
+
 		log_debug("cmb_backup_device refreshed");
 	}
 	
@@ -763,11 +764,20 @@ class MainWindow : Gtk.Window{
 		TreeModel model = (TreeModel) combo.model;
 		model.get(iter, 0, out pi);
 		
+		//try changing backup device ------------------
+		
 		App.snapshot_device = pi;
-		App.mount_backup_device();
+
+		bool status = App.mount_backup_device();
+
+		if (status == false){
+			cmb_backup_device.active = cmb_backup_device_index_default;
+		}
+
 		App.update_snapshot_list();
 
 		refresh_tv_backups();
+
 		check_status();
 
 		gtk_set_busy(false, this);
@@ -1234,7 +1244,12 @@ class MainWindow : Gtk.Window{
 
 		switch(status_code){
 			case -1:
-				txt = _("Backup device is not mounted!");
+				if (App.snapshot_device == null){
+					txt = _("Please select the backup device");
+				}
+				else{
+					txt = _("Backup device not available");
+				}
 				txt = "<span foreground=\"#8A0808\">" + txt + "</span>";
 				lbl_backup_device_warning.label = txt;
 				lbl_backup_device_warning.visible = true;
@@ -1249,8 +1264,8 @@ class MainWindow : Gtk.Window{
 				
 			case 2:
 				long required = App.calculate_size_of_first_snapshot();
-				txt = _("Backup device does not have enough space!");
-				txt += " %.1f GB ".printf(required/1024.0) + _("is needed for first snapshot.");
+				txt = _("Backup device does not have enough space!") + " ";
+				txt += _("First snapshot needs") + " %.1f GB".printf(required/1024.0);
 				txt = "<span foreground=\"#8A0808\">" + txt + "</span>";
 				lbl_backup_device_warning.label = txt;
 				lbl_backup_device_warning.visible = true;

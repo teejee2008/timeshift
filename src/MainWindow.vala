@@ -771,6 +771,16 @@ class MainWindow : Gtk.Window{
 		bool status = App.mount_backup_device();
 
 		if (status == false){
+			
+			string msg = _("Failed to mount device") + ": %s".printf(App.snapshot_device.device);
+			var dlg = new Gtk.MessageDialog.with_markup(null, Gtk.DialogFlags.MODAL, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK, msg);
+			dlg.set_title(_("Error"));
+			dlg.set_default_size (200, -1);
+			dlg.set_transient_for(this);
+			dlg.set_modal(true);
+			dlg.run();
+			dlg.destroy();
+
 			cmb_backup_device.active = cmb_backup_device_index_default;
 		}
 
@@ -1248,7 +1258,7 @@ class MainWindow : Gtk.Window{
 					txt = _("Please select the backup device");
 				}
 				else{
-					txt = _("Backup device not available");
+					txt = _("Backup device is not mounted!");;
 				}
 				txt = "<span foreground=\"#8A0808\">" + txt + "</span>";
 				lbl_backup_device_warning.label = txt;

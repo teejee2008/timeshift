@@ -2076,11 +2076,6 @@ public class Main : GLib.Object{
 	
 	public bool mount_device(PartitionInfo dev, string mount_point, string mount_options){
 		bool status = mount(dev.device, mount_point, mount_options);
-		if (status == false){
-			if (app_mode == ""){
-				gtk_messagebox_show(_("Error"), _("Failed to mount device") + ": %s".printf(dev.device));
-			}
-		}
 		return status;
 	}
 

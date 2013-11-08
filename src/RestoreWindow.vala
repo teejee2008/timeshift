@@ -492,7 +492,7 @@ public class RestoreWindow : Gtk.Dialog{
 		
 		refresh_tv_partitions();
 		refresh_cmb_boot_device();
-		refresh_tv_exclude();
+		//refresh_tv_exclude(); //called by btn_reset_exclude_list_clicked()
 		//refresh_tv_apps();
 	}
 

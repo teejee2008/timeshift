@@ -265,7 +265,7 @@ public class Main : GLib.Object{
 		partition_list = new Gee.ArrayList<PartitionInfo>();
 
 		add_default_exclude_entries();
-		add_app_exclude_entries();
+		//add_app_exclude_entries();
 		
 		//check current linux distribution -----------------
 		

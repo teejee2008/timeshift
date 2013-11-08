@@ -232,7 +232,8 @@ public class RestoreWindow : Gtk.Dialog{
 		CellRendererText cell_device_grub = new CellRendererText();
         cmb_boot_device.pack_start(cell_device_grub, false );
         cmb_boot_device.set_cell_data_func (cell_device_grub, cell_device_grub_render);
-
+		
+		/*
         //Exclude Apps tab ---------------------------------------------
 		
 		//lbl_apps
@@ -287,7 +288,9 @@ public class RestoreWindow : Gtk.Dialog{
 		CellRendererText cell_app_text = new CellRendererText ();
 		col_app.pack_start (cell_app_text, false);
 		col_app.set_cell_data_func (cell_app_text, cell_app_text_render);
-
+		
+		*/
+		
         //Advanced tab ---------------------------------------------
 		
 		//lbl_exclude
@@ -490,7 +493,7 @@ public class RestoreWindow : Gtk.Dialog{
 		refresh_tv_partitions();
 		refresh_cmb_boot_device();
 		refresh_tv_exclude();
-		refresh_tv_apps();
+		//refresh_tv_apps();
 	}
 
 

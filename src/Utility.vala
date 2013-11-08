@@ -342,6 +342,7 @@ namespace TeeJee.DiskPartition{
 		public string used_percent = "";
 		public string dist_info = "";
 		public Gee.ArrayList<string> mount_point_list;
+		public string mount_options = "";
 		
 		public PartitionInfo(){
 			mount_point_list = new Gee.ArrayList<string>();
@@ -562,34 +563,61 @@ namespace TeeJee.DiskPartition{
 		return list;
 	}
 
-	public Gee.ArrayList<PartitionInfo?> get_mounted_partitions_using_mount(bool exclude_unknown = true){
+	public Gee.ArrayList<PartitionInfo?> get_mounted_partitions_using_mtab(bool exclude_unknown = true){
 		
 		/* Returns list of mounted partitions using 'mount' command 
 		   Populates device, type and mount_point_list */
 
 		var list = new Gee.ArrayList<PartitionInfo?>();
 		
-		string std_out = "";
-		string std_err = "";
+		string mtab_path = "/etc/mtab";
+		string mtab_lines = "";;
 		
-		int exit_code = execute_command_script_sync("mount", out std_out, out std_err);
-
-		if (exit_code != 0){ 
-			log_error ("Failed to get list of partitions");
-			return list; //return empty list
+		File f;
+		
+		//find mtab file -----------
+		
+		mtab_path = "/etc/mtab";
+		f = File.new_for_path(mtab_path);
+		if(!f.query_exists()){
+			mtab_path = "/proc/mounts";
+			f = File.new_for_path(mtab_path);
+			if(!f.query_exists()){
+				mtab_path = "/proc/self/mounts";
+				f = File.new_for_path(mtab_path);
+				if(!f.query_exists()){
+					return list; //empty list
+				}
+			}
 		}
 		
+		//read -----------
+		
+		mtab_lines = read_file(mtab_path);
+		
 		/*
-		sample output
+		sample mtab
 		-----------------
-		/dev/sda3 on / type ext4 (rw,errors=remount-ro)
-		proc on /proc type proc (rw,noexec,nosuid,nodev)
-		sysfs on /sys type sysfs (rw,noexec,nosuid,nodev)
-		none on /sys/fs/cgroup type tmpfs (rw)
-		none on /sys/fs/fuse/connections type fusectl (rw)
+		/dev/sda3 / ext4 rw,errors=remount-ro 0 0
+		proc /proc proc rw,noexec,nosuid,nodev 0 0
+		sysfs /sys sysfs rw,noexec,nosuid,nodev 0 0
+		none /sys/fs/cgroup tmpfs rw 0 0
+		none /sys/fs/fuse/connections fusectl rw 0 0
+		none /sys/kernel/debug debugfs rw 0 0
+		none /sys/kernel/security securityfs rw 0 0
+		udev /dev devtmpfs rw,mode=0755 0 0
+
+		device - the device or remote filesystem that is mounted.
+		mountpoint - the place in the filesystem the device was mounted.
+		filesystemtype - the type of filesystem mounted.
+		options - the mount options for the filesystem
+		dump - used by dump to decide if the filesystem needs dumping.
+		fsckorder - used by fsck to detrmine the fsck pass to use. 
 		*/
-				
-		foreach(string line in std_out.split("\n")){
+		
+		//parse ------------
+		
+		foreach(string line in mtab_lines.split("\n")){
 
 			if (line.strip().length == 0) { continue; }
 			
@@ -601,23 +629,20 @@ namespace TeeJee.DiskPartition{
 			foreach(string val in line.split(" ")){
 				if (val.strip().length == 0){ continue; }
 				switch(k++){
-					case 1:
+					case 1: //device
 						pi.device = val.strip();
 						break;
-					case 2:
-						//'on' ignore
-						break;
-					case 3:
+					case 2: //mountpoint
 						string mount_point = val.strip();
 						if (!pi.mount_point_list.contains(mount_point)){
 							pi.mount_point_list.add(mount_point);
 						}
 						break;
-					case 4:
-						//'type' ignore
-						break;
-					case 5:
+					case 3: //filesystemtype
 						pi.type = val.strip();
+						break;
+					case 4: //options
+						pi.mount_options = val.strip();
 						break;
 					default:
 						//ignore
@@ -625,7 +650,7 @@ namespace TeeJee.DiskPartition{
 				}
 			}
 			
-			//exclude unknown devices
+			//exclude unknown device names
 			if (exclude_unknown){
 				if (!(pi.device.has_prefix("/dev/sd") || pi.device.has_prefix("/dev/hd") || pi.device.has_prefix("/dev/mapper/"))) { 
 					continue;
@@ -762,7 +787,7 @@ namespace TeeJee.DiskPartition{
 		
 		// add more devices ----------
 
-		var list_mount = get_mounted_partitions_using_mount(exclude_unknown);
+		var list_mount = get_mounted_partitions_using_mtab(exclude_unknown);
 		
 		foreach (PartitionInfo pm in list_mount){
 			bool found = false;
@@ -877,7 +902,7 @@ namespace TeeJee.DiskPartition{
 
 			//check if mounted
 			bool mounted = false;
-			foreach(PartitionInfo info in get_mounted_partitions_using_df()){
+			foreach(PartitionInfo info in get_mounted_partitions_using_mtab()){
 
 				if (info.mount_point_list.contains(mount_point) && info.device == device){
 					//device is already mounted at mount point
@@ -936,7 +961,7 @@ namespace TeeJee.DiskPartition{
 		
 		try{
 			//check if mounted and unmount
-			foreach(PartitionInfo info in get_mounted_partitions_using_df()){
+			foreach(PartitionInfo info in get_mounted_partitions_using_mtab()){
 				if (info.mount_point_list.contains(mount_point)){
 					
 					log_msg(_("Unmounting device") + " '%s' ".printf(info.device) + _("from") + " '%s'".printf(mount_point));

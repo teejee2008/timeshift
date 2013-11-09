@@ -185,7 +185,12 @@ public class Main : GLib.Object{
 			is_success = false;
 			log_error (e.message);
 		}
-
+		
+		//log dist info -----------------------
+		
+		DistInfo info = DistInfo.get_dist_info("/");
+		log_msg(_("Distribution") + ": " + info.full_name());
+		
 		//check dependencies ---------------------
 		
 		string message;

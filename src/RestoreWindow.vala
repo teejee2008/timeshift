@@ -53,7 +53,8 @@ public class RestoreWindow : Gtk.Dialog{
 	//bootloader
 	private Label lbl_header_bootloader;
 	private ComboBox cmb_boot_device;
-
+	
+	/*
 	//apps
 	private Label lbl_app;
 	private Box vbox_app;
@@ -61,6 +62,7 @@ public class RestoreWindow : Gtk.Dialog{
 	private TreeView tv_app;
 	private ScrolledWindow sw_app;
 	private TreeViewColumn col_app;
+	*/
 	
 	//exclude
 	private Label lbl_exclude;
@@ -574,7 +576,7 @@ public class RestoreWindow : Gtk.Dialog{
 		temp_exclude_list.remove(old_pattern);
 	}
 
-
+	/*
 	private void cell_app_enabled_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
 		AppExcludeEntry entry;
 		model.get (iter, 0, out entry, -1);
@@ -595,7 +597,7 @@ public class RestoreWindow : Gtk.Dialog{
 		model.get (iter, 0, out entry, -1); //get entry
 		entry.enabled = !entry.enabled;
 	}
-	
+	*/
 	
 	private void refresh_cmb_boot_device(){
 		ListStore store = new ListStore(1, typeof(DeviceInfo));
@@ -667,7 +669,8 @@ public class RestoreWindow : Gtk.Dialog{
 			tv_exclude_add_item(path);
 		}
 	}
-
+	
+	/*
 	private void refresh_tv_apps(){
 		ListStore model = new ListStore(1, typeof(AppExcludeEntry));
 		tv_app.model = model;
@@ -678,7 +681,8 @@ public class RestoreWindow : Gtk.Dialog{
 			model.set (iter, 0, entry, -1);
 		}
 	}
-
+	*/
+	
 	private void tv_exclude_add_item(string path){
 		Gdk.Pixbuf pix_exclude = null;
 		Gdk.Pixbuf pix_include = null;

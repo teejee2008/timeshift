@@ -501,7 +501,7 @@ public class Main : GLib.Object{
 		try
 		{
 			File f_home = File.new_for_path (home);
-	        FileEnumerator enumerator = f_home.enumerate_children (FileAttribute.STANDARD_NAME, 0);
+	        FileEnumerator enumerator = f_home.enumerate_children (GLib.FileAttribute.STANDARD_NAME, 0);
 	        FileInfo file;
 	        while ((file = enumerator.next_file ()) != null) {
 				string name = file.get_name();
@@ -515,7 +515,7 @@ public class Main : GLib.Object{
 	        }
 	        
 	        File f_home_config = File.new_for_path (home + "/.config");
-	        enumerator = f_home_config.enumerate_children (FileAttribute.STANDARD_NAME, 0);
+	        enumerator = f_home_config.enumerate_children (GLib.FileAttribute.STANDARD_NAME, 0);
 	        while ((file = enumerator.next_file ()) != null) {
 				string name = file.get_name();
 				string item = home + "/.config/" + name;

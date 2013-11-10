@@ -2219,7 +2219,7 @@ public class Main : GLib.Object{
 	
 	
 	public PartitionInfo? get_backup_device(){
-		var list = get_mounted_partitions_using_df();
+		var list = get_mounted_partitions_using_mtab();
 		foreach(PartitionInfo info in list){
 			if (info.mount_point_list.contains("/mnt/timeshift")){
 				return info;
@@ -2289,7 +2289,7 @@ public class Main : GLib.Object{
 	
 	public bool backup_device_online(){
 		//check if mounted
-		foreach(PartitionInfo info in get_mounted_partitions_using_df()){
+		foreach(PartitionInfo info in get_mounted_partitions_using_mtab()){
 			if (info.mount_point_list.contains(mount_point_backup)){
 				return true;
 			}

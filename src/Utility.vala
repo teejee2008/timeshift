@@ -457,7 +457,7 @@ namespace TeeJee.DiskPartition{
 	}
 
 
-	public Gee.ArrayList<PartitionInfo?> get_mounted_partitions_using_df(bool exclude_unknown = true){
+	public Gee.ArrayList<PartitionInfo?> get_partition_usage(bool exclude_unknown = true){
 		
 		/* Returns list of mounted partitions using 'df' command 
 		   Populates device, type, size, used and mount_point_list */
@@ -539,7 +539,7 @@ namespace TeeJee.DiskPartition{
 				}
 			}
 			
-			//check for duplicates
+			//check for duplicates - no need to match uuids
 			bool found = false;
 			foreach(PartitionInfo pm in list){
 				if (pm.device == pi.device){
@@ -652,12 +652,19 @@ namespace TeeJee.DiskPartition{
 			
 			//exclude unknown device names
 			if (exclude_unknown){
-				if (!(pi.device.has_prefix("/dev/sd") || pi.device.has_prefix("/dev/hd") || pi.device.has_prefix("/dev/mapper/"))) { 
-					continue;
+				if (pi.device.has_prefix("/dev/sd") || pi.device.has_prefix("/dev/hd") || pi.device.has_prefix("/dev/mapper/")) { 
+					//ok
+				}
+				else if (pi.device.has_prefix("/dev/disk/by-uuid/")){
+					//ok - get uuid
+					pi.uuid = pi.device.replace("/dev/disk/by-uuid/","");
+				}
+				else{
+					continue; //skip
 				}
 			}
 
-			//check for duplicates
+			//check for duplicates - no need to match uuids
 			bool found = false;
 			foreach(PartitionInfo pm in list){
 				if (pm.device == pi.device){
@@ -743,7 +750,7 @@ namespace TeeJee.DiskPartition{
 					pi.type = match.fetch(1).strip();
 				}
 				
-				//check for duplicates
+				//check for duplicates - no need to match uuids
 				bool found = false;
 				foreach(PartitionInfo pm in list){
 					if (pm.device == pi.device){
@@ -791,9 +798,9 @@ namespace TeeJee.DiskPartition{
 		
 		foreach (PartitionInfo pm in list_mount){
 			bool found = false;
-			
 			foreach (PartitionInfo pi in list){
-				if (pi.device == pm.device){
+				if ((pm.device == pi.device) ||
+				((pm.uuid.length > 0) && (pm.uuid == pi.uuid))){
 					//add more mount points
 					foreach(string mount_point in pm.mount_point_list){
 						if (!pi.mount_point_list.contains(mount_point)){
@@ -814,7 +821,7 @@ namespace TeeJee.DiskPartition{
 
 		if (get_usage){
 			
-			var list_df = get_mounted_partitions_using_df(exclude_unknown);
+			var list_df = get_partition_usage(exclude_unknown);
 
 			for(int k = 0; k < list.size; k++){
 				PartitionInfo pi = list[k];

@@ -71,7 +71,7 @@ public class Main : GLib.Object{
 	public string snapshot_dir = "/mnt/timeshift/timeshift/snapshots";
 	public DistInfo current_distro;
 	
-	public bool _is_scheduled = true;
+	public bool _is_scheduled = false;
 	
 	public bool schedule_monthly = false;
 	public bool schedule_weekly = false;

@@ -413,7 +413,7 @@ namespace TeeJee.DiskPartition{
 
 		public string partition_name{
 			owned get{
-				return device[5:device.length];
+				return device.replace("/dev/mapper/","").replace("/dev/","");
 			}
 		}
 		
@@ -964,72 +964,72 @@ namespace TeeJee.DiskPartition{
 		string std_out;
 		string std_err;
 		int ret_val;
-		bool quit_app = false;
+		
+		bool mounted = false;
+			
+		//check if mounted
+		foreach(PartitionInfo info in get_mounted_partitions_using_mtab()){
+			if (info.mount_point_list.contains(mount_point)){
+				mounted = true;
+				break;
+			}
+		}
+			
+		if (!mounted) { return true; }
 		
 		try{
-			//check if mounted and unmount
-			foreach(PartitionInfo info in get_mounted_partitions_using_mtab()){
-				if (info.mount_point_list.contains(mount_point)){
+			string cmd_unmount = "cat /proc/mounts | awk '{print $2}' | grep '%s' | sort -r | xargs umount".printf(mount_point);
+			
+			log_msg(_("Unmounting from") + ": '%s'".printf(mount_point));
+			
+			//sync before unmount
+			cmd = "sync";
+			Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
+			//ignore success/failure
+			
+			//unmount
+			ret_val = execute_command_script_sync(cmd_unmount, out std_out, out std_err);
+			
+			if (ret_val != 0){
+				
+				log_error (_("Failed to unmount"));
+				log_error (std_err);
+				
+				if (force){
+					//check if any process is using the mount_point
+					cmd = "fuser -m \"" + mount_point + "\"";
+					string proc_list = execute_command_sync_get_output(cmd);
 					
-					log_msg(_("Unmounting device") + " '%s' ".printf(info.device) + _("from") + " '%s'".printf(mount_point));
-					
-					//sync before unmount
-					cmd = "sync";
-					Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-					//ignore success/failure
-					
-					//unmount
-					cmd = "umount \"" + mount_point + "\"";
-					Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-					
-					if (ret_val != 0){
+					if ((proc_list != null) && (proc_list.length > 0)){
 						
-						log_error (_("Failed to unmount device"));
-						log_error (std_err);
+						log_msg (_("Killing all processes using the mount-point..."));
 						
-						if (force){
-							//check if any process is using the mount_point
-							cmd = "fuser -m \"" + mount_point + "\"";
-							string proc_list = execute_command_sync_get_output(cmd);
-							
-							if ((proc_list != null) && (proc_list.length > 0)){
-								
-								log_msg (_("Killing all processes using the mount-point..."));
-								
-								//kill the process
-								cmd = "fuser -mk \"" + mount_point + "\"";
-								Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-								
-								if (ret_val != 0){
-									log_error (_("Failed to kill process"));
-									log_error (std_err);
-									quit_app = true;
-								}
-								else{
+						//kill the process
+						cmd = "fuser -mk \"" + mount_point + "\"";
+						Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
+						
+						if (ret_val != 0){
+							log_error (_("Failed to kill process"));
+							log_error (std_err);
+						}
+						else{
 
-									//ok, try again
-									cmd = "umount \"" + mount_point + "\"";
-									Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-									
-									if (ret_val != 0){
-										log_error (_("Failed to unmount device") + " '%s' ".printf(info.device) + _("from") + " '%s'".printf(mount_point));
-										log_error (std_err);
-										quit_app = true;
-									}
-									else{
-										log_msg (_("Device unmounted"));
-									}
-								}
+							//ok, try again
+							ret_val = execute_command_script_sync(cmd_unmount, out std_out, out std_err);
+							
+							if (ret_val != 0){
+								log_error (_("Failed to unmount"));
+								log_error (std_err);
 							}
 							else{
-								quit_app = true;
+								//log_msg (_("Unmounted"));
 							}
 						}
 					}
-					else{
-						log_msg (_("Device unmounted"));
-					}
 				}
+			}
+			else{
+				//log_msg (_("Unmounted"));
 			}
 		}
 		catch(Error e){
@@ -1037,7 +1037,16 @@ namespace TeeJee.DiskPartition{
 			return false;
 		}
 		
-		return true;
+		//check if unmounted
+		mounted = false;
+		foreach(PartitionInfo info in get_mounted_partitions_using_mtab()){
+			if (info.mount_point_list.contains(mount_point)){
+				mounted = true;
+				break;
+			}
+		}
+			
+		return !mounted;
 	}
 	
 	public Gee.ArrayList<DeviceInfo> get_block_devices(){
@@ -1563,20 +1572,27 @@ namespace TeeJee.GtkHelper{
 		gtk_do_events ();
 	}
 	
-	public void gtk_messagebox_show(string title, string message, bool is_error = false){
+	public void gtk_messagebox(string title, string message, Gtk.Window? parent_win, bool is_error = false){
 				
-		/* Conveniance function to show message box */
-		
+		/* Shows a simple message box */
+
 		Gtk.MessageType type = Gtk.MessageType.INFO;
-		
-		if (is_error)
+		if (is_error){
 			type = Gtk.MessageType.ERROR;
-			
-		var dialog = new Gtk.MessageDialog.with_markup(null,Gtk.DialogFlags.MODAL, type, Gtk.ButtonsType.OK, message);
-		dialog.set_title(title);
-		dialog.set_modal(true);
-		dialog.run();
-		dialog.destroy();
+		}
+		else{
+			type = Gtk.MessageType.INFO;
+		}
+		
+		var dlg = new Gtk.MessageDialog.with_markup(null, Gtk.DialogFlags.MODAL, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK, message);
+		dlg.title = title;
+		dlg.set_default_size (200, -1);
+		if (parent_win != null){
+			dlg.set_transient_for(parent_win);
+			dlg.set_modal(true);
+		}
+		dlg.run();
+		dlg.destroy();
 	}
 	
 	public bool gtk_combobox_set_value (ComboBox combo, int index, string val){

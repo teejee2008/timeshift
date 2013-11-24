@@ -41,20 +41,23 @@ public class RestoreWindow : Gtk.Dialog{
 
     //target device
     private Label lbl_header_partitions;
+    private RadioButton radio_sys;
+    private RadioButton radio_other;
     private TreeView tv_partitions;
 	private ScrolledWindow sw_partitions;
 	private TreeViewColumn col_device_target;
+	private TreeViewColumn col_mount;
 	private TreeViewColumn col_fs;
 	private TreeViewColumn col_size;
 	private TreeViewColumn col_used;
 	private TreeViewColumn col_label;
 	private TreeViewColumn col_dist;
+	private CellRendererCombo cell_mount;
 	
 	//bootloader
 	private Label lbl_header_bootloader;
 	private ComboBox cmb_boot_device;
 	
-	/*
 	//apps
 	private Label lbl_app;
 	private Box vbox_app;
@@ -62,8 +65,7 @@ public class RestoreWindow : Gtk.Dialog{
 	private TreeView tv_app;
 	private ScrolledWindow sw_app;
 	private TreeViewColumn col_app;
-	*/
-	
+
 	//exclude
 	private Label lbl_exclude;
 	private Box vbox_exclude;
@@ -126,11 +128,44 @@ public class RestoreWindow : Gtk.Dialog{
         vbox_target.margin = 6;
         notebook.append_page (vbox_target, lbl_exclude);
         
+        //hbox_device
+        Box hbox_device = new Box (Orientation.HORIZONTAL, 6);
+        hbox_device.margin = 6;
+		vbox_target.add(hbox_device);
+
 		//lbl_header_partitions
 		lbl_header_partitions = new Gtk.Label(_("Device for Restoring Snapshot") + ":");
 		lbl_header_partitions.xalign = (float) 0.0;
 		lbl_header_partitions.set_use_markup(true);
-		vbox_target.add(lbl_header_partitions);
+		hbox_device.add(lbl_header_partitions);
+
+		radio_sys = new RadioButton(null);
+		hbox_device.add(radio_sys);
+		radio_sys.label = "Current System";
+		
+		radio_other = new RadioButton.from_widget(radio_sys);
+		hbox_device.add(radio_other);
+		radio_other.label = "Other Device";
+
+		if (App.live_system()){
+			radio_other.active = true;
+			radio_sys.sensitive = false;
+		}
+		else{
+			radio_sys.sensitive = true;
+			radio_sys.active = true;
+		}
+		
+		radio_sys.toggled.connect(() => {
+			sw_partitions.sensitive = radio_other.active;
+			
+			if (radio_sys.active){
+				App.restore_target = App.root_device;
+			}
+			
+			tv_partitions_select_target(); 
+			cmb_boot_device_select_default();
+		});
 		
 		//tv_partitions
 		tv_partitions = new TreeView();
@@ -160,6 +195,45 @@ public class RestoreWindow : Gtk.Dialog{
 		col_device_target.set_cell_data_func (cell_device_target, cell_device_target_render);
 		
 		tv_partitions.append_column(col_device_target);
+
+		//col_mount
+		col_mount = new TreeViewColumn();
+		col_mount.title = _("Mount");
+		cell_mount = new CellRendererCombo();
+		cell_mount.xalign = (float) 0.0;
+		cell_mount.editable = true;
+		cell_mount.width = 70;
+		col_mount.pack_start (cell_mount, false);
+		tv_partitions.append_column(col_mount);
+		
+		cell_mount.set_property ("text-column", 0);
+		col_mount.add_attribute (cell_mount, "text", 1);
+
+		//populate combo
+		ListStore model = new ListStore(1, typeof(string));
+		cell_mount.model = model;
+		
+		TreeIter iter;
+		model.append(out iter);
+		model.set (iter, 0, "/");
+		model.append(out iter);
+		model.set (iter, 0, "/home");
+		model.append(out iter);
+		model.set (iter, 0, "/boot");
+
+		cell_mount.changed.connect((path, iter_new) => {
+			string val;
+			cell_mount.model.get (iter_new, 0, out val);
+			model = (ListStore) tv_partitions.model;
+			model.get_iter_from_string (out iter, path);
+			model.set (iter, 1, val);
+		});
+		
+		cell_mount.edited.connect((path, new_text) => {
+			model = (ListStore) tv_partitions.model;
+			model.get_iter_from_string (out iter, path);
+			model.set (iter, 1, new_text);
+		});
 		
 		//col_fs
 		col_fs = new TreeViewColumn();
@@ -178,15 +252,15 @@ public class RestoreWindow : Gtk.Dialog{
 		col_size.pack_start (cell_size, false);
 		col_size.set_cell_data_func (cell_size, cell_size_render);
 		tv_partitions.append_column(col_size);
-		
+				
 		//col_used
 		col_used = new TreeViewColumn();
 		col_used.title = _("Used");
 		CellRendererText cell_used = new CellRendererText ();
 		cell_used.xalign = (float) 1.0;
 		col_used.pack_start (cell_used, false);
-		col_used.set_cell_data_func (cell_used, cell_used_render);
-		tv_partitions.append_column(col_used);
+		/*col_used.set_cell_data_func (cell_used, cell_used_render);
+		tv_partitions.append_column(col_used);*/
 		
 		//col_label
 		col_label = new TreeViewColumn();
@@ -235,7 +309,6 @@ public class RestoreWindow : Gtk.Dialog{
         cmb_boot_device.pack_start(cell_device_grub, false );
         cmb_boot_device.set_cell_data_func (cell_device_grub, cell_device_grub_render);
 		
-		/*
         //Exclude Apps tab ---------------------------------------------
 		
 		//lbl_apps
@@ -247,8 +320,8 @@ public class RestoreWindow : Gtk.Dialog{
         notebook.append_page (vbox_app, lbl_app);
 		
 		//lbl_app_message
-		string msg = _("Select the applications for which the current settings should be kept.") + "\n";
-		msg += _("For all other applications, settings will be restored from the selected snapshot.");
+		string msg = _("Select the applications for which current settings should be kept.") + "\n";
+		msg += _("For all other applications, settings will be restored from selected snapshot.");
 		lbl_app_message = new Label (msg);
 		lbl_app_message.xalign = (float) 0.0;
 		vbox_app.add(lbl_app_message);
@@ -290,9 +363,7 @@ public class RestoreWindow : Gtk.Dialog{
 		CellRendererText cell_app_text = new CellRendererText ();
 		col_app.pack_start (cell_app_text, false);
 		col_app.set_cell_data_func (cell_app_text, cell_app_text_render);
-		
-		*/
-		
+
         //Advanced tab ---------------------------------------------
 		
 		//lbl_exclude
@@ -495,7 +566,42 @@ public class RestoreWindow : Gtk.Dialog{
 		refresh_tv_partitions();
 		refresh_cmb_boot_device();
 		//refresh_tv_exclude(); //called by btn_reset_exclude_list_clicked()
-		//refresh_tv_apps();
+		refresh_tv_apps();
+
+		sw_partitions.sensitive = radio_other.active;
+		
+		notebook.switch_page.connect((page, new_page_index) => {
+			uint old_page_index = notebook.page;
+			//log_msg("%u -> %u".printf(old_page_index, new_page_index));
+			if (new_page_index == 1){
+				bool ok = check_and_mount_devices();
+				if (!ok){
+					notebook.page = (int) old_page_index;
+				}
+				
+				//save current app selections
+				Gee.ArrayList<string> selected_app_list = new Gee.ArrayList<string>();
+				foreach(AppExcludeEntry entry in App.exclude_list_apps){
+					if (entry.enabled){
+						selected_app_list.add(entry.path);
+					}
+				}
+				
+				//refresh the list
+				App.add_app_exclude_entries();
+				
+				//restore app selections
+				foreach(AppExcludeEntry entry in App.exclude_list_apps){
+					if (selected_app_list.contains(entry.path)){
+						entry.enabled = true;
+					}
+				}
+				
+				//refresh treeview
+				refresh_tv_apps();
+				
+			}
+		});
 	}
 
 
@@ -522,11 +628,13 @@ public class RestoreWindow : Gtk.Dialog{
 		(cell as Gtk.CellRendererText).text = pi.size;
 	}
 	
+	/*
 	private void cell_used_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
 		PartitionInfo pi;
 		model.get (iter, 0, out pi, -1);
 		(cell as Gtk.CellRendererText).text = pi.used;
 	}
+	*/
 	
 	private void cell_label_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
 		PartitionInfo pi;
@@ -576,7 +684,6 @@ public class RestoreWindow : Gtk.Dialog{
 		temp_exclude_list.remove(old_pattern);
 	}
 
-	/*
 	private void cell_app_enabled_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
 		AppExcludeEntry entry;
 		model.get (iter, 0, out entry, -1);
@@ -597,40 +704,51 @@ public class RestoreWindow : Gtk.Dialog{
 		model.get (iter, 0, out entry, -1); //get entry
 		entry.enabled = !entry.enabled;
 	}
-	*/
-	
+
 	private void refresh_cmb_boot_device(){
 		ListStore store = new ListStore(1, typeof(DeviceInfo));
 
 		TreeIter iter;
-
-		int index = -1;
-		int selected_index = -1;
-		int default_index = -1;
-		
 		foreach(DeviceInfo di in get_block_devices()) {
 			store.append(out iter);
 			store.set (iter, 0, di);
+		}
 
+		cmb_boot_device.set_model (store);
+		cmb_boot_device_select_default();
+	}
+
+	private void cmb_boot_device_select_default(){
+		if (App.restore_target == null){ 
+			cmb_boot_device.active = -1;
+			return; 
+		}
+		
+		TreeIter iter;
+		ListStore store = (ListStore) cmb_boot_device.model;
+		int index = -1;
+		
+		for (bool next = store.get_iter_first (out iter); next; next = store.iter_next (ref iter)) {
+			DeviceInfo dev;
+			store.get(iter, 0, out dev);
 			index++;
-			if ((App.restore_target != null) && (di.device == App.restore_target.device[0:-1])){
-				selected_index = index;
+			if (dev.device == App.restore_target.device[0:8]){
+				cmb_boot_device.active = index;
 			}
 		}
 		
-		if (selected_index == -1){
-			selected_index = default_index;
+		//un-select if not found
+		if (index == -1){
+			cmb_boot_device.active = -1;
 		}
-		
-		cmb_boot_device.set_model (store);
-		cmb_boot_device.active = selected_index;
 	}
 	
 	private void refresh_tv_partitions(){
 		
 		App.update_partition_list();
 		
-		ListStore model = new ListStore(1, typeof(PartitionInfo));
+		ListStore model = new ListStore(2, typeof(PartitionInfo), typeof(string));
+		tv_partitions.set_model (model);
 		
 		var list = App.partition_list;
 		list.sort((a,b) => { 
@@ -641,24 +759,35 @@ public class RestoreWindow : Gtk.Dialog{
 				});
 
 		TreeIter iter;
-		TreePath path_selected = null;
-		
 		foreach(PartitionInfo pi in list) {
 			if (!pi.has_linux_filesystem()) { continue; }
-			
 			model.append(out iter);
-			model.set (iter, 0, pi);
-			
-			if ((App.restore_target != null) && (App.restore_target.device == pi.device)){
-				path_selected = model.get_path(iter);
+			model.set (iter, 0, pi, 1, "");
+		}
+		
+		tv_partitions_select_target();
+	}
+	
+	private void tv_partitions_select_target(){
+		
+		if (App.restore_target == null){ 
+			tv_partitions.get_selection().unselect_all();
+			return; 
+		}
+		
+		TreeIter iter;
+		ListStore store = (ListStore) tv_partitions.model;
+		
+		for (bool next = store.get_iter_first (out iter); next; next = store.iter_next (ref iter)) {
+			PartitionInfo pi;
+			string mount_point;
+			store.get(iter, 0, out pi);
+			store.get(iter, 1, out mount_point);
+			if (pi.device == App.restore_target.device){
+				TreePath path = store.get_path(iter);
+				tv_partitions.get_selection().select_path(path);
 			}
 		}
-			
-		tv_partitions.set_model (model);
-		if (path_selected != null){
-			tv_partitions.get_selection().select_path(path_selected);
-		}
-		//tv_partitions.columns_autosize ();
 	}
 	
 	private void refresh_tv_exclude(){
@@ -669,8 +798,7 @@ public class RestoreWindow : Gtk.Dialog{
 			tv_exclude_add_item(path);
 		}
 	}
-	
-	/*
+
 	private void refresh_tv_apps(){
 		ListStore model = new ListStore(1, typeof(AppExcludeEntry));
 		tv_app.model = model;
@@ -681,8 +809,7 @@ public class RestoreWindow : Gtk.Dialog{
 			model.set (iter, 0, entry, -1);
 		}
 	}
-	*/
-	
+
 	private void tv_exclude_add_item(string path){
 		Gdk.Pixbuf pix_exclude = null;
 		Gdk.Pixbuf pix_include = null;
@@ -743,8 +870,8 @@ public class RestoreWindow : Gtk.Dialog{
 		}
 		App.restore_target = restore_target;
 
-		//select grub target device
-		refresh_cmb_boot_device(); 
+		//select grub device
+		cmb_boot_device_select_default(); 
 
 		return false;
 	}
@@ -892,7 +1019,6 @@ public class RestoreWindow : Gtk.Dialog{
 
 	private void btn_warning_clicked(){
 		string msg = "";
-		msg += _("Please do NOT modify this list unless you have a very good reason for doing so.") + " ";
 		msg += _("By default, any item that was included/excluded at the time of taking the snapshot will be included/excluded.") + " ";
 		msg += _("Any exclude patterns in the current exclude list will also be excluded.") + " ";
 		msg += _("To see which files are included in the snapshot use the 'Browse' button on the main window.");
@@ -907,8 +1033,7 @@ public class RestoreWindow : Gtk.Dialog{
 	}
 	
 	private void btn_reset_exclude_list_clicked(){
-		//create a temp exclude list ----------------------------
-		
+		//create a temp exclude list
 		temp_exclude_list = new Gee.ArrayList<string>();
 		
 		//add all include/exclude items from snapshot list
@@ -928,8 +1053,7 @@ public class RestoreWindow : Gtk.Dialog{
 			}
 		}		
 		
-		//refresh treeview --------------------------
-		
+		//refresh treeview
 		refresh_tv_exclude();
 	}
 	
@@ -938,40 +1062,10 @@ public class RestoreWindow : Gtk.Dialog{
 		
 		//Note: A successful restore will reboot the system if target device is same as system device
 		
-		TreeIter iter;
-		ListStore store;
-		TreeSelection sel;
-		bool iterExists;
-		
-		//check single target partition selected ---------------
-		
-		sel = tv_partitions.get_selection ();
-		if (sel.count_selected_rows() != 1){ 
-			gtk_messagebox_show(_("Select Target Device"),_("Please select the target device from the list"), true);
-			return; 
+		bool ok = check_and_mount_devices();
+		if (!ok){
+			return;
 		}
-
-		//check if grub device selected ---------------
-
-		if (cmb_boot_device.active < 0){ 
-			gtk_messagebox_show(_("Select Boot Device"),_("Please select the boot device"), true);
-			return; 
-		}
-		
-		//get selected target partition ------------------
-		
-		PartitionInfo restore_target = null;
-		sel = tv_partitions.get_selection ();
-		store = (ListStore) tv_partitions.model;
-		iterExists = store.get_iter_first (out iter);
-		while (iterExists) { 
-			if (sel.iter_is_selected (iter)){
-				store.get (iter, 0, out restore_target);
-				break;
-			}
-			iterExists = store.iter_next (ref iter);
-		}
-		App.restore_target = restore_target;
 		
 		//save modified exclude list ----------------------
 		
@@ -984,6 +1078,21 @@ public class RestoreWindow : Gtk.Dialog{
 			}
 		}
 		
+		//add app entries
+		foreach(AppExcludeEntry entry in App.exclude_list_apps){
+			if (entry.enabled){
+				string pattern = entry.path.replace("~","/home/*");
+				if (!App.exclude_list_restore.contains(pattern)){
+					App.exclude_list_restore.add(pattern);
+				}
+				
+				pattern = entry.path.replace("~","/root");
+				if (!App.exclude_list_restore.contains(pattern)){
+					App.exclude_list_restore.add(pattern);
+				}
+			}
+		}
+				
 		//add modified user entries
 		foreach(string path in temp_exclude_list){
 			if (!App.exclude_list_restore.contains(path) && !App.exclude_list_home.contains(path)){
@@ -1008,6 +1117,7 @@ public class RestoreWindow : Gtk.Dialog{
 		//App.reinstall_grub2 = chk_restore_grub2.active;
 		App.reinstall_grub2 = true;
 		
+		TreeIter iter;
 		if (App.reinstall_grub2){
 			DeviceInfo dev;
 			cmb_boot_device.get_active_iter (out iter);
@@ -1026,6 +1136,131 @@ public class RestoreWindow : Gtk.Dialog{
 		}
 	}
 
+	private bool check_and_mount_devices(){
+		TreeIter iter;
+		ListStore store;
+		TreeSelection sel;
+		
+		//check if grub device selected ---------------
+
+		if (cmb_boot_device.active < 0){ 
+			string title =_("Boot device not selected");
+			string msg = _("Please select the boot device");
+			gtk_messagebox(title, msg, this, true);
+			return false; 
+		}
+
+		if (radio_sys.active){
+			//we are restoring the current system - no need to mount devices
+			App.restore_target = App.root_device;
+			return true;
+		}
+		else{
+			//we are restoring to another disk - mount selected devices
+
+			App.restore_target = null;
+			bool no_mount_points_set_by_user = true;
+			
+			//find the root mount point set by user
+			store = (ListStore) tv_partitions.model;
+			for (bool next = store.get_iter_first (out iter); next; next = store.iter_next (ref iter)) {
+				PartitionInfo pi;
+				string mount_point;
+				store.get(iter, 0, out pi);
+				store.get(iter, 1, out mount_point);
+				
+				if ((mount_point != null) && (mount_point.length > 0)){
+					mount_point = mount_point.strip();
+					no_mount_points_set_by_user = false;
+					
+					if (mount_point == "/"){
+						App.restore_target = pi;
+						break;
+					}					
+				}
+			}
+			
+			if (App.restore_target == null){
+				//no root mount point was set by user
+				
+				if (no_mount_points_set_by_user){
+					//user has not set any mount points
+					
+					//check if a device is selected in treeview
+					sel = tv_partitions.get_selection ();
+					if (sel.count_selected_rows() == 1){ 
+						//use selected device as the root mount point
+						for (bool next = store.get_iter_first (out iter); next; next = store.iter_next (ref iter)) {
+							if (sel.iter_is_selected (iter)){
+								PartitionInfo pi;
+								store.get(iter, 0, out pi);
+								App.restore_target = pi;
+								break;
+							}
+						}
+					}
+					else{
+						//no device selected and no mount points set by user
+						string title = _("Select Target Device");
+						string msg = _("Please select the target device from the list");
+						gtk_messagebox(title, msg, this, true);
+						return false; 
+					}
+				}
+				else{
+					//user has set some mount points but not set the root mount point
+					string title = _("Select Root Device");
+					string msg = _("Please select the root device (/)");
+					gtk_messagebox(title, msg, this, true);
+					return false; 
+				}
+			}
+			
+			//check BTRFS subvolume layout
+			if (App.restore_target.type == "btrfs"){
+				if (App.check_btrfs_volume(App.restore_target) == false){
+					string title = _("Unsupported Subvolume Layout");
+					string msg = _("The target partition has an unsupported subvolume layout.") + " ";
+					msg += _("Only ubuntu-type layouts with @ and @home subvolumes are currently supported.") + "\n\n";
+					gtk_messagebox(title, msg, this, true);
+					return false; 
+				}
+			}
+			
+			//mount the root device
+			bool status = App.mount_target_device();
+			if (status == false){
+				string title = _("Error");
+				string msg = _("Failed to mount device") + ": %s".printf(App.restore_target.device);
+				gtk_messagebox(title, msg, this, true);
+				return false; 
+			}
+
+			//mount remaining devices
+			for (bool next = store.get_iter_first (out iter); next; next = store.iter_next (ref iter)) {
+				PartitionInfo pi;
+				string mount_point;
+				store.get(iter, 0, out pi);
+				store.get(iter, 1, out mount_point);
+				
+				if ((mount_point != null) && (mount_point.length > 0)){
+					mount_point = mount_point.strip();
+					if (mount_point != "/"){
+						status = App.mount_device(pi, App.mount_point_restore + mount_point, "");
+						if (status == false){
+							string title = _("Error");
+							string msg = _("Failed to mount device") + ": %s".printf(pi.device);
+							gtk_messagebox(title, msg, this, true);
+							return false; 
+						}
+					}					
+				}
+			}
+		}
+
+		return true;
+	}
+	
 	private int show_disclaimer(){
 		string msg = "";
 		msg += "<b>" + _("WARNING") + ":</b>\n\n";
@@ -1055,6 +1290,7 @@ public class RestoreWindow : Gtk.Dialog{
 	}
 
 	private void btn_cancel_clicked(){
+		App.unmount_target_device();
 		this.response(Gtk.ResponseType.CANCEL);
 		return;	
 	}

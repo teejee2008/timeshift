@@ -152,7 +152,8 @@ public class Main : GLib.Object{
 			msg += _("Please run the application as admin (using 'sudo')");
 				
 			if (app_mode == ""){
-				gtk_messagebox_show(_("Admin Access Required"),msg,true);
+				string title = _("Admin Access Required");
+				gtk_messagebox(title, msg, null, true);
 			}
 			else{
 				log_error(msg);
@@ -196,7 +197,8 @@ public class Main : GLib.Object{
 		string message;
 		if (!check_dependencies(out message)){
 			if (app_mode == ""){
-				gtk_messagebox_show(_("Missing Dependencies"),message,true);
+				string title = _("Missing Dependencies");
+				gtk_messagebox(title, msg, null, true);
 			}
 			exit(0);
 		}
@@ -220,7 +222,8 @@ public class Main : GLib.Object{
 					msg += _("Please check if you have multiple windows open.") + "\n";
 				}
 				
-				gtk_messagebox_show("Error",msg,true);
+				string title = _("Error");
+				gtk_messagebox(title, msg, null, true);
 			}
 			else{
 				//already logged - do nothing
@@ -289,9 +292,10 @@ public class Main : GLib.Object{
 				msg = _("The system partition has an unsupported subvolume layout.") + " ";
 				msg += _("Only ubuntu-type layouts with @ and @home subvolumes are currently supported.") + "\n\n";
 				msg += _("Application will exit.") + "\n\n";
+				string title = _("Not Supported");
 				
 				if (app_mode == ""){
-					gtk_messagebox_show(_("Not Supported"),msg,true);
+					gtk_messagebox(title, msg, null, true);
 				}
 				else{
 					log_error(msg);
@@ -491,13 +495,17 @@ public class Main : GLib.Object{
 
 		if ((std_out == null) || (std_out.length == 0)){
 			user_name = "root";
-			home = Environment.get_home_dir();
+			home = "/root";
 		}
 		else{
 			user_name = std_out.strip();
 			home = "/home/%s".printf(user_name);
 		}
-
+		
+		if ((root_device == null) || ((restore_target.device != root_device.device) && (restore_target.uuid != root_device.uuid))){
+			home = mount_point_restore + home;
+		}
+		
 		try
 		{
 			File f_home = File.new_for_path (home);
@@ -510,7 +518,7 @@ public class Main : GLib.Object{
 				if (name == ".config"){ continue; }
 				if (!dir_exists(item)) { continue; }
 				
-				AppExcludeEntry entry = new AppExcludeEntry("~/.%s/**".printf(name), name[1:name.length]);
+				AppExcludeEntry entry = new AppExcludeEntry("~/%s/**".printf(name), name[1:name.length]);
 				exclude_list_apps.add(entry);
 	        }
 	        
@@ -1404,12 +1412,12 @@ public class Main : GLib.Object{
 				//add app entries
 				foreach(AppExcludeEntry entry in exclude_list_apps){
 					if (entry.enabled){
-						pattern = entry.path.replace("~","/home/*") + "/**";
+						pattern = entry.path.replace("~","/home/*");
 						if (!exclude_list_restore.contains(pattern)){
 							exclude_list_restore.add(pattern);
 						}
 						
-						pattern = entry.path.replace("~","/root") + "/**";
+						pattern = entry.path.replace("~","/root");
 						if (!exclude_list_restore.contains(pattern)){
 							exclude_list_restore.add(pattern);
 						}
@@ -1507,7 +1515,6 @@ public class Main : GLib.Object{
 	}
 	
 	public bool restore_snapshot(){
-		
 		if (snapshot_to_restore == null){
 			log_error(_("Snapshot to restore not specified!"));
 			return false;
@@ -1547,58 +1554,15 @@ public class Main : GLib.Object{
 			
 			//set target path ----------------
 			
-			bool restore_current_system = false;
-			if ((root_device != null) && (restore_target.device == root_device.device)){
-				restore_current_system = true;
+			string target_path = "/";
+			bool restore_current_system = true;
+			if ((root_device == null) || (restore_target.device != root_device.device)){
+				restore_current_system = false;
+				target_path = mount_point_restore + "/";
 			}
-			
-			string target_path = "/"; //current system root
-			
-			if (!restore_current_system){
-				
-				bool status = mount_target_device();
-				
-				if (status == false){
-					log_error ("Failed to mount target device");
-					is_success = false;
-					in_progress = false;
-					return;
-				}
-				
-				target_path = mount_point_restore;
-				
-				//check BTRFS volume
-				if (restore_target.type == "btrfs"){
-					
-					//check subvolume layout
-					if (check_btrfs_volume(restore_target) == false){
-						string msg = _("The target partition has an unsupported subvolume layout.") + " ";
-						msg += _("Only ubuntu-type layouts with @ and @home subvolumes are currently supported.") + "\n\n";
 
-						if (app_mode == ""){
-							gtk_messagebox_show(_("Not Supported"),msg,true);
-						}
-						else{
-							log_error(msg);
-						}
-
-						is_success = false;
-						in_progress = false;
-						return;
-					}
+			//save exclude list for restore --------------
 			
-					//mount subvolume @home under @/home
-					mount_device(restore_target, mount_point_restore + "/@/home", "subvol=@home");
-					target_path = mount_point_restore + "/@";
-				}
-			}
-			
-			//add trailing slash 
-			if (target_path[-1:target_path.length] != "/"){
-				target_path += "/";
-			}
-			
-			//save exclude list for restore
 			save_exclude_list_for_restore(snapshot_to_restore);
 			
 			//create script -------------
@@ -1606,7 +1570,7 @@ public class Main : GLib.Object{
 			sh = "";
 			sh += "echo ''\n";
 			sh += "echo '" + _("Please do not interrupt the restore process!") + "'\n";
-			if ((root_device != null) && (restore_target.device == root_device.device) && (restore_target.uuid == root_device.uuid)){
+			if ((root_device != null) && ((restore_target.device == root_device.device) || (restore_target.uuid == root_device.uuid))){
 				sh += "echo '" + _("System will reboot after files are restored") + "'\n";
 			}
 			sh += "echo ''\n";
@@ -1695,7 +1659,9 @@ public class Main : GLib.Object{
 					msg += _("No changes were made to system.");
 					
 					log_error(msg);
-					gtk_messagebox_show(_("Error"), msg, true);
+
+					string title = _("Error");
+					gtk_messagebox(title, msg, null, true);
 
 					is_success = false;
 					in_progress = false;
@@ -1720,6 +1686,9 @@ public class Main : GLib.Object{
 				is_success = true;
 				in_progress = false;
 			}
+			
+			//unmount if system is still up
+			unmount_target_device();
 		}
 		catch(Error e){
 			log_error (e.message);
@@ -1727,7 +1696,6 @@ public class Main : GLib.Object{
 			in_progress = false;
 		}
 	}
-
 
 	public bool delete_snapshot(TimeShiftBackup bak){
 		snapshot_to_delete = bak;
@@ -2075,7 +2043,49 @@ public class Main : GLib.Object{
 			return false;
 		}
 		else{
-			return mount_device(restore_target, mount_point_restore, "");
+			unmount_device(mount_point_restore);
+
+			//check BTRFS volume
+			if (restore_target.type == "btrfs"){
+				
+				//check subvolume layout
+				if (check_btrfs_volume(restore_target) == false){
+					string msg = _("The target partition has an unsupported subvolume layout.") + "\n";
+					msg += _("Only ubuntu-type layouts with @ and @home subvolumes are currently supported.");
+
+					if (app_mode == ""){
+						string title = _("Unsupported Subvolume Layout");
+						gtk_messagebox(title, msg, null, true);
+					}
+					else{
+						log_error("\n" + msg);
+					}
+					
+					return false;
+				}
+
+				//mount subvolumes
+				bool success = mount_device(restore_target, mount_point_restore, "subvol=@");
+				if (!success){
+					//string title = _("Error");
+					string msg = _("Failed to mount BTRFS subvolume") + ": @";
+					log_error(msg);
+					return false;
+				}
+				
+				success = mount_device(restore_target, mount_point_restore + "/home", "subvol=@home");
+				if (!success){
+					//string title = _("Error");
+					string msg = _("Failed to mount BTRFS subvolume") + ": @home";
+					log_error(msg);
+					return false;
+				}
+			}
+			else{
+				mount_device(restore_target, mount_point_restore, "");
+			}
+			
+			return true;
 		}
 	}
 	
@@ -2097,7 +2107,9 @@ public class Main : GLib.Object{
 			//exit application if a forced un-mount fails
 			if (force){
 				if (app_mode == ""){
-					gtk_messagebox_show(_("Critical Error"), _("Failed to unmount device!") + "\n" + _("Application will exit"));
+					string title = _("Critical Error");
+					string msg = _("Failed to unmount device!") + "\n" + _("Application will exit");
+					gtk_messagebox(title, msg, null, true);
 				}
 				exit_app();
 				exit(0);
@@ -2283,7 +2295,7 @@ public class Main : GLib.Object{
 	public bool check_btrfs_volume(PartitionInfo dev){
 		mount_device(dev, mount_point_test, "");
 		bool is_supported = dir_exists(mount_point_test + "/@") && dir_exists(mount_point_test + "/@home");
-		unmount_device(mount_point_test);
+		unmount_device(mount_point_test);		
 		return is_supported;
 	}
 	

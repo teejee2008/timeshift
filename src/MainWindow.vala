@@ -799,7 +799,7 @@ class MainWindow : Gtk.Window{
 		string msg;
 		int status_code = App.check_backup_device(out msg);
 		if ((status_code == 1) || (status_code == 2)){
-			gtk_messagebox_show(_("Low Disk Space"),_("Backup device does not have enough space!"), true);
+			gtk_messagebox(_("Low Disk Space"),_("Backup device does not have enough space"),null, true);
 			return;
 		}
 		
@@ -844,7 +844,7 @@ class MainWindow : Gtk.Window{
 		
 		sel = tv_backups.get_selection ();
 		if (sel.count_selected_rows() == 0){ 
-			gtk_messagebox_show(_("No Snapshots Selected"),_("Please select the snapshots to delete"),false);
+			gtk_messagebox(_("No Snapshots Selected"),_("Please select the snapshots to delete"),null,false);
 			return; 
 		}
 
@@ -931,11 +931,11 @@ class MainWindow : Gtk.Window{
 		
 		sel = tv_backups.get_selection ();
 		if (sel.count_selected_rows() == 0){ 
-			gtk_messagebox_show(_("No Snapshots Selected"), _("Please select the snapshot to restore"),false);
+			gtk_messagebox(_("No Snapshots Selected"), _("Please select the snapshot to restore"),null,false);
 			return; 
 		}
 		else if (sel.count_selected_rows() > 1){ 
-			gtk_messagebox_show(_("Multiple Snapshots Selected"), _("Please select a single snapshot"),false);
+			gtk_messagebox(_("Multiple Snapshots Selected"), _("Please select a single snapshot"),null,false);
 			return; 
 		}
 
@@ -1086,7 +1086,7 @@ class MainWindow : Gtk.Window{
 	private void btn_view_snapshot_log_clicked(){
 		TreeSelection sel = tv_backups.get_selection ();
 		if (sel.count_selected_rows() == 0){
-			gtk_messagebox_show(_("Select Snapshot"),_("Please select a snapshot to view the log!"),false);
+			gtk_messagebox(_("Select Snapshot"),_("Please select a snapshot to view the log!"),null,false);
 			return;
 		}
 		

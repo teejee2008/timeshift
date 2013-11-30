@@ -49,8 +49,6 @@ public class RestoreWindow : Gtk.Dialog{
 	private TreeViewColumn col_mount;
 	private TreeViewColumn col_fs;
 	private TreeViewColumn col_size;
-	private TreeViewColumn col_used;
-	private TreeViewColumn col_label;
 	private TreeViewColumn col_dist;
 	private CellRendererCombo cell_mount;
 	
@@ -184,7 +182,8 @@ public class RestoreWindow : Gtk.Dialog{
 		col_device_target = new TreeViewColumn();
 		col_device_target.title = _("Device");
 		col_device_target.spacing = 1;
-
+		tv_partitions.append_column(col_device_target);
+		
 		CellRendererPixbuf cell_device_icon = new CellRendererPixbuf ();
 		cell_device_icon.stock_id = Stock.HARDDISK;
 		cell_device_icon.xpad = 1;
@@ -193,8 +192,15 @@ public class RestoreWindow : Gtk.Dialog{
 		CellRendererText cell_device_target = new CellRendererText ();
 		col_device_target.pack_start (cell_device_target, false);
 		col_device_target.set_cell_data_func (cell_device_target, cell_device_target_render);
-		
-		tv_partitions.append_column(col_device_target);
+
+		//col_fs
+		col_fs = new TreeViewColumn();
+		col_fs.title = _("Type");
+		CellRendererText cell_fs = new CellRendererText ();
+		cell_fs.xalign = (float) 0.5;
+		col_fs.pack_start (cell_fs, false);
+		col_fs.set_cell_data_func (cell_fs, cell_fs_render);
+		tv_partitions.append_column(col_fs);
 
 		//col_mount
 		col_mount = new TreeViewColumn();
@@ -234,15 +240,6 @@ public class RestoreWindow : Gtk.Dialog{
 			model.get_iter_from_string (out iter, path);
 			model.set (iter, 1, new_text);
 		});
-		
-		//col_fs
-		col_fs = new TreeViewColumn();
-		col_fs.title = _("Type");
-		CellRendererText cell_fs = new CellRendererText ();
-		cell_fs.xalign = (float) 0.5;
-		col_fs.pack_start (cell_fs, false);
-		col_fs.set_cell_data_func (cell_fs, cell_fs_render);
-		tv_partitions.append_column(col_fs);
 
 		//col_size
 		col_size = new TreeViewColumn();
@@ -253,23 +250,6 @@ public class RestoreWindow : Gtk.Dialog{
 		col_size.set_cell_data_func (cell_size, cell_size_render);
 		tv_partitions.append_column(col_size);
 				
-		//col_used
-		col_used = new TreeViewColumn();
-		col_used.title = _("Used");
-		CellRendererText cell_used = new CellRendererText ();
-		cell_used.xalign = (float) 1.0;
-		col_used.pack_start (cell_used, false);
-		/*col_used.set_cell_data_func (cell_used, cell_used_render);
-		tv_partitions.append_column(col_used);*/
-		
-		//col_label
-		col_label = new TreeViewColumn();
-		col_label.title = _("Label");
-		CellRendererText cell_label = new CellRendererText ();
-		col_label.pack_start (cell_label, false);
-		col_label.set_cell_data_func (cell_label, cell_label_render);
-		tv_partitions.append_column(col_label);
-		
 		//col_dist
 		col_dist = new TreeViewColumn();
 		col_dist.title = _("System");
@@ -277,6 +257,8 @@ public class RestoreWindow : Gtk.Dialog{
 		col_dist.pack_start (cell_dist, false);
 		col_dist.set_cell_data_func (cell_dist, cell_dist_render);
 		tv_partitions.append_column(col_dist);
+
+		tv_partitions.set_tooltip_column(2);
 		
 		//bootloader options -------------------------------------------
 		
@@ -354,7 +336,6 @@ public class RestoreWindow : Gtk.Dialog{
 		CellRendererToggle cell_app_enabled = new CellRendererToggle ();
 		cell_app_enabled.radio = false;
 		cell_app_enabled.activatable = true;
-		//cell_app_enabled.width = 50;
 		col_app.pack_start (cell_app_enabled, false);
 		col_app.set_cell_data_func (cell_app_enabled, cell_app_enabled_render);
 		
@@ -625,23 +606,9 @@ public class RestoreWindow : Gtk.Dialog{
 	private void cell_size_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
 		PartitionInfo pi;
 		model.get (iter, 0, out pi, -1);
-		(cell as Gtk.CellRendererText).text = pi.size;
+		(cell as Gtk.CellRendererText).text = (pi.size_mb > 0) ? "%s GB".printf(pi.size) : "";
 	}
 	
-	/*
-	private void cell_used_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
-		PartitionInfo pi;
-		model.get (iter, 0, out pi, -1);
-		(cell as Gtk.CellRendererText).text = pi.used;
-	}
-	*/
-	
-	private void cell_label_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
-		PartitionInfo pi;
-		model.get (iter, 0, out pi, -1);
-		(cell as Gtk.CellRendererText).text = pi.label;
-	}
-
 	private void cell_dist_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
 		PartitionInfo pi;
 		model.get (iter, 0, out pi, -1);
@@ -747,7 +714,7 @@ public class RestoreWindow : Gtk.Dialog{
 		
 		App.update_partition_list();
 		
-		ListStore model = new ListStore(2, typeof(PartitionInfo), typeof(string));
+		ListStore model = new ListStore(3, typeof(PartitionInfo), typeof(string), typeof(string));
 		tv_partitions.set_model (model);
 		
 		var list = App.partition_list;
@@ -761,8 +728,17 @@ public class RestoreWindow : Gtk.Dialog{
 		TreeIter iter;
 		foreach(PartitionInfo pi in list) {
 			if (!pi.has_linux_filesystem()) { continue; }
+			
+			string tt = _("Device") + "\t: %s\n".printf(pi.device);
+			tt += _("UUID") + "\t: %s\n".printf(pi.uuid);
+			tt += _("Type") + "\t: %s\n".printf(pi.type);
+			tt += _("Label") + "\t: %s\n".printf(pi.label);
+			tt += _("Size") + "\t: %s\n".printf((pi.size_mb > 0) ? "%s GB".printf(pi.size) : "");
+			tt += _("Used") + "\t: %s\n".printf((pi.used_mb > 0) ? "%s GB".printf(pi.used) : "");
+			tt += _("System") + "\t: %s".printf(pi.dist_info);
+			
 			model.append(out iter);
-			model.set (iter, 0, pi, 1, "");
+			model.set (iter,0,pi,1,"",2,tt);
 		}
 		
 		tv_partitions_select_target();

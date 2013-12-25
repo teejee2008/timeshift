@@ -167,7 +167,7 @@ public class Main : GLib.Object{
 		try {
 			DateTime now = new DateTime.now_local();
 			log_dir = "/var/log/timeshift";
-			log_file = log_dir + "/" + now.format("%Y-%m-%d %H-%M-%S") + ".log";
+			log_file = log_dir + "/" + now.format("%Y-%m-%d_%H-%M-%S") + ".log";
 			
 			var file = File.new_for_path (log_dir);
 			if (!file.query_exists ()) {
@@ -918,7 +918,7 @@ public class Main : GLib.Object{
 		string msg;
 		File f;
 
-		string time_stamp = dt_created.format("%Y-%m-%d %H-%M-%S");
+		string time_stamp = dt_created.format("%Y-%m-%d_%H-%M-%S");
 		DateTime now = new DateTime.now_local();
 		bool backup_taken = false;
 		

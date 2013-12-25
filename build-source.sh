@@ -4,8 +4,6 @@ backup=`pwd`
 DIR="$( cd "$( dirname "$0" )" && pwd )"
 cd "$DIR"
 
-sh update-pot.sh
-
 #check for errors
 if [ $? -ne 0 ]; then
 	cd "$backup"

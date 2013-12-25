@@ -142,7 +142,7 @@ public class ExcludeMessageWindow : Gtk.Dialog{
         hbox_action = (Box) get_action_area ();
 
         //btn_ok
-        btn_ok = new Button.from_stock(Gtk.Stock.OK);
+        btn_ok = new Button.from_stock("gtk-ok");
         hbox_action.add(btn_ok);
         btn_ok.clicked.connect (btn_ok_clicked);
 

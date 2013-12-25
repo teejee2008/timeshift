@@ -280,7 +280,7 @@ public class SettingsWindow : Gtk.Dialog{
 		btn_include.set_icon_widget(new Gtk.Image.from_file (png_include));
 		
 		//btn_remove
-		btn_remove = new Gtk.ToolButton.from_stock(Gtk.Stock.REMOVE);
+		btn_remove = new Gtk.ToolButton.from_stock("gtk-remove");
 		toolbar_exclude.add(btn_remove);
 		
 		btn_remove.is_important = true;
@@ -290,7 +290,7 @@ public class SettingsWindow : Gtk.Dialog{
 		btn_remove.clicked.connect (btn_remove_clicked);
 
 		//btn_warning
-		btn_warning = new Gtk.ToolButton.from_stock(Gtk.Stock.DIALOG_WARNING);
+		btn_warning = new Gtk.ToolButton.from_stock("gtk-dialog-warning");
 		toolbar_exclude.add(btn_warning);
 		
 		btn_warning.is_important = true;
@@ -306,7 +306,7 @@ public class SettingsWindow : Gtk.Dialog{
 		toolbar_exclude.add(separator);
 		
 		//btn_reset_exclude_list
-		btn_reset_exclude_list = new Gtk.ToolButton.from_stock(Gtk.Stock.REFRESH);
+		btn_reset_exclude_list = new Gtk.ToolButton.from_stock("gtk-refresh");
 		toolbar_exclude.add(btn_reset_exclude_list);
 		
 		btn_reset_exclude_list.is_important = false;
@@ -426,11 +426,11 @@ public class SettingsWindow : Gtk.Dialog{
 		// Actions ----------------------------------------------
 		
         //btn_save
-        btn_save = (Button) add_button (Stock.SAVE, Gtk.ResponseType.ACCEPT);
+        btn_save = (Button) add_button ("gtk-save", Gtk.ResponseType.ACCEPT);
         btn_save.clicked.connect (btn_save_clicked);
         
         //btn_cancel
-        btn_cancel = (Button) add_button (Stock.CANCEL, Gtk.ResponseType.CANCEL);
+        btn_cancel = (Button) add_button ("gtk-cancel", Gtk.ResponseType.CANCEL);
         btn_cancel.clicked.connect (btn_cancel_clicked);
 	}
 
@@ -803,8 +803,8 @@ public class SettingsWindow : Gtk.Dialog{
 
 	private SList<string> browse_files(){
 		var dialog = new Gtk.FileChooserDialog(_("Select file(s)"), this, Gtk.FileChooserAction.OPEN,
-							Gtk.Stock.CANCEL, Gtk.ResponseType.CANCEL,
-							Gtk.Stock.OPEN, Gtk.ResponseType.ACCEPT);
+							"gtk-cancel", Gtk.ResponseType.CANCEL,
+							"gtk-open", Gtk.ResponseType.ACCEPT);
 		dialog.action = FileChooserAction.OPEN;
 		dialog.set_transient_for(this);
 		dialog.local_only = true;
@@ -820,8 +820,8 @@ public class SettingsWindow : Gtk.Dialog{
 
 	private SList<string> browse_folder(){
 		var dialog = new Gtk.FileChooserDialog(_("Select directory"), this, Gtk.FileChooserAction.OPEN,
-							Gtk.Stock.CANCEL, Gtk.ResponseType.CANCEL,
-							Gtk.Stock.OPEN, Gtk.ResponseType.ACCEPT);
+							"gtk-cancel", Gtk.ResponseType.CANCEL,
+							"gtk-open", Gtk.ResponseType.ACCEPT);
 		dialog.action = FileChooserAction.SELECT_FOLDER;
 		dialog.local_only = true;
 		dialog.set_transient_for(this);

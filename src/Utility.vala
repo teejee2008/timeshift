@@ -1891,7 +1891,7 @@ namespace TeeJee.System{
 				
 		/* Displays notification bubble on the desktop */
 		
-		string s = "notify-send -t %d -u %s -i %s \"%s\" \"%s\"".printf(durationMillis, urgency, Gtk.Stock.INFO, title, message);
+		string s = "notify-send -t %d -u %s -i %s \"%s\" \"%s\"".printf(durationMillis, urgency, "gtk-dialog-info", title, message);
 		return execute_command_sync (s);
 	}
 }

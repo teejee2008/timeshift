@@ -185,7 +185,7 @@ public class RestoreWindow : Gtk.Dialog{
 		tv_partitions.append_column(col_device_target);
 		
 		CellRendererPixbuf cell_device_icon = new CellRendererPixbuf ();
-		cell_device_icon.stock_id = Stock.HARDDISK;
+		cell_device_icon.stock_id = "gtk-harddisk";
 		cell_device_icon.xpad = 1;
 		col_device_target.pack_start (cell_device_icon, false);
 
@@ -284,7 +284,7 @@ public class RestoreWindow : Gtk.Dialog{
 		cmb_boot_device.pack_start (cell_dev_margin, false);
 		
 		CellRendererPixbuf cell_dev_icon = new CellRendererPixbuf ();
-		cell_dev_icon.stock_id = Stock.HARDDISK;
+		cell_dev_icon.stock_id = "gtk-harddisk";
 		cmb_boot_device.pack_start (cell_dev_icon, false);
 		
 		CellRendererText cell_device_grub = new CellRendererText();
@@ -384,7 +384,7 @@ public class RestoreWindow : Gtk.Dialog{
 		btn_include.set_icon_widget(new Gtk.Image.from_file (png_include));
 		
 		//btn_remove
-		btn_remove = new Gtk.ToolButton.from_stock(Gtk.Stock.REMOVE);
+		btn_remove = new Gtk.ToolButton.from_stock("gtk-remove");
 		toolbar_exclude.add(btn_remove);
 		
 		btn_remove.is_important = true;
@@ -394,7 +394,7 @@ public class RestoreWindow : Gtk.Dialog{
 		btn_remove.clicked.connect (btn_remove_clicked);
 
 		//btn_warning
-		btn_warning = new Gtk.ToolButton.from_stock(Gtk.Stock.DIALOG_WARNING);
+		btn_warning = new Gtk.ToolButton.from_stock("gtk-dialog-warning");
 		toolbar_exclude.add(btn_warning);
 		
 		btn_warning.is_important = true;
@@ -410,7 +410,7 @@ public class RestoreWindow : Gtk.Dialog{
 		toolbar_exclude.add(separator);
 		
 		//btn_reset_exclude_list
-		btn_reset_exclude_list = new Gtk.ToolButton.from_stock(Gtk.Stock.REFRESH);
+		btn_reset_exclude_list = new Gtk.ToolButton.from_stock("gtk-refresh");
 		toolbar_exclude.add(btn_reset_exclude_list);
 		
 		btn_reset_exclude_list.is_important = false;
@@ -526,7 +526,7 @@ public class RestoreWindow : Gtk.Dialog{
         
         btn_restore.set_label (" " + _("Restore"));
         btn_restore.set_tooltip_text (_("Restore"));
-        Gtk.Image img_restore = new Image.from_stock(Gtk.Stock.GO_FORWARD, Gtk.IconSize.BUTTON);
+        Gtk.Image img_restore = new Image.from_stock("gtk-go-forward", Gtk.IconSize.BUTTON);
 		btn_restore.set_image(img_restore);
         btn_restore.clicked.connect (btn_restore_clicked);
 
@@ -536,7 +536,7 @@ public class RestoreWindow : Gtk.Dialog{
         
         btn_cancel.set_label (" " + _("Cancel"));
         btn_cancel.set_tooltip_text (_("Cancel"));
-        Gtk.Image img_cancel = new Image.from_stock(Gtk.Stock.CANCEL, Gtk.IconSize.BUTTON);
+        Gtk.Image img_cancel = new Image.from_stock("gtk-cancel", Gtk.IconSize.BUTTON);
 		btn_cancel.set_image(img_cancel);
         btn_cancel.clicked.connect (btn_cancel_clicked);
 
@@ -943,8 +943,8 @@ public class RestoreWindow : Gtk.Dialog{
 
 	private SList<string> browse_files(){
 		var dialog = new Gtk.FileChooserDialog(_("Select file(s)"), this, Gtk.FileChooserAction.OPEN,
-							Gtk.Stock.CANCEL, Gtk.ResponseType.CANCEL,
-							Gtk.Stock.OPEN, Gtk.ResponseType.ACCEPT);
+							"gtk-cancel", Gtk.ResponseType.CANCEL,
+							"gtk-open", Gtk.ResponseType.ACCEPT);
 		dialog.action = FileChooserAction.OPEN;
 		dialog.set_transient_for(this);
 		dialog.local_only = true;
@@ -960,8 +960,8 @@ public class RestoreWindow : Gtk.Dialog{
 
 	private SList<string> browse_folder(){
 		var dialog = new Gtk.FileChooserDialog(_("Select directory"), this, Gtk.FileChooserAction.OPEN,
-							Gtk.Stock.CANCEL, Gtk.ResponseType.CANCEL,
-							Gtk.Stock.OPEN, Gtk.ResponseType.ACCEPT);
+							"gtk-cancel", Gtk.ResponseType.CANCEL,
+							"gtk-open", Gtk.ResponseType.ACCEPT);
 		dialog.action = FileChooserAction.SELECT_FOLDER;
 		dialog.local_only = true;
 		dialog.set_transient_for(this);

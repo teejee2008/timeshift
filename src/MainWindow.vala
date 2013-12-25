@@ -120,7 +120,7 @@ class MainWindow : Gtk.Window{
 		vbox_main.add(toolbar);
 
 		//btn_backup
-		btn_backup = new Gtk.ToolButton.from_stock (Gtk.Stock.SAVE);
+		btn_backup = new Gtk.ToolButton.from_stock ("gtk-save");
 		btn_backup.is_important = true;
 		btn_backup.label = _("Backup");
 		btn_backup.set_tooltip_text (_("Take a manual (ondemand) snapshot"));
@@ -129,7 +129,7 @@ class MainWindow : Gtk.Window{
         btn_backup.clicked.connect (btn_backup_clicked);
 
 		//btn_restore
-		btn_restore = new Gtk.ToolButton.from_stock (Gtk.Stock.APPLY);
+		btn_restore = new Gtk.ToolButton.from_stock ("gtk-apply");
 		btn_restore.is_important = true;
 		btn_restore.label = _("Restore");
 		btn_restore.set_tooltip_text (_("Restore Snapshot"));
@@ -138,7 +138,7 @@ class MainWindow : Gtk.Window{
 		btn_restore.clicked.connect (btn_restore_clicked);
 		
 	    //btn_browse_snapshot
-		btn_browse_snapshot = new Gtk.ToolButton.from_stock (Gtk.Stock.DIRECTORY);
+		btn_browse_snapshot = new Gtk.ToolButton.from_stock ("gtk-directory");
 		btn_browse_snapshot.is_important = true;
 		btn_browse_snapshot.label = _("Browse");
 		btn_browse_snapshot.set_tooltip_text (_("Browse Snapshot"));
@@ -147,7 +147,7 @@ class MainWindow : Gtk.Window{
         btn_browse_snapshot.clicked.connect (btn_browse_snapshot_clicked);
         
 		//btn_delete_snapshot
-		btn_delete_snapshot = new Gtk.ToolButton.from_stock (Gtk.Stock.DELETE);
+		btn_delete_snapshot = new Gtk.ToolButton.from_stock ("gtk-delete");
 		btn_delete_snapshot.is_important = true;
 		btn_delete_snapshot.label = _("Delete");
 		btn_delete_snapshot.set_tooltip_text (_("Delete Snapshot"));
@@ -156,7 +156,7 @@ class MainWindow : Gtk.Window{
         btn_delete_snapshot.clicked.connect (btn_delete_snapshot_clicked);
 
         //btn_settings
-		btn_settings = new Gtk.ToolButton.from_stock (Gtk.Stock.PREFERENCES);
+		btn_settings = new Gtk.ToolButton.from_stock ("gtk-preferences");
 		btn_settings.is_important = true;
 		btn_settings.label = _("Settings");
 		btn_settings.set_tooltip_text (_("Settings"));
@@ -171,7 +171,7 @@ class MainWindow : Gtk.Window{
 		toolbar.add (separator);
 
         //btn_refresh_snapshots
-        btn_refresh_snapshots = new Gtk.ToolButton.from_stock (Gtk.Stock.REFRESH);
+        btn_refresh_snapshots = new Gtk.ToolButton.from_stock ("gtk-refresh");
 		btn_refresh_snapshots.label = _("Refresh");
 		btn_refresh_snapshots.set_tooltip_text (_("Refresh Snapshot List"));
         toolbar.add(btn_refresh_snapshots);
@@ -182,7 +182,7 @@ class MainWindow : Gtk.Window{
 		});
 
 		//btn_view_snapshot_log
-        btn_view_snapshot_log = new Gtk.ToolButton.from_stock (Gtk.Stock.FILE);
+        btn_view_snapshot_log = new Gtk.ToolButton.from_stock ("gtk-file");
 		btn_view_snapshot_log.label = _("Log");
 		btn_view_snapshot_log.set_tooltip_text (_("View rsync log for selected snapshot"));
         toolbar.add(btn_view_snapshot_log);
@@ -190,7 +190,7 @@ class MainWindow : Gtk.Window{
         btn_view_snapshot_log.clicked.connect (btn_view_snapshot_log_clicked);
 		
 		//btn_view_app_logs
-        btn_view_app_logs = new Gtk.ToolButton.from_stock (Gtk.Stock.FILE);
+        btn_view_app_logs = new Gtk.ToolButton.from_stock ("gtk-file");
 		btn_view_app_logs.label = _("TimeShift Logs");
 		btn_view_app_logs.set_tooltip_text (_("View TimeShift Logs"));
         toolbar.add(btn_view_app_logs);
@@ -198,7 +198,7 @@ class MainWindow : Gtk.Window{
         btn_view_app_logs.clicked.connect (btn_view_app_logs_clicked);
         
 		//btn_about
-        btn_about = new Gtk.ToolButton.from_stock (Gtk.Stock.ABOUT);
+        btn_about = new Gtk.ToolButton.from_stock ("gtk-about");
 		btn_about.label = _("About");
 		btn_about.set_tooltip_text (_("About TimeShift"));
         toolbar.add(btn_about);
@@ -230,7 +230,7 @@ class MainWindow : Gtk.Window{
 		cmb_backup_device.pack_start (cell_backup_dev_margin, false);
 		
 		CellRendererPixbuf cell_backup_dev_icon = new CellRendererPixbuf ();
-		cell_backup_dev_icon.stock_id = Stock.HARDDISK;
+		cell_backup_dev_icon.stock_id = "gtk-harddisk";
 		cmb_backup_device.pack_start (cell_backup_dev_icon, false);
 		
 		CellRendererText cell_backup_device = new CellRendererText();
@@ -287,7 +287,7 @@ class MainWindow : Gtk.Window{
 		col_date.spacing = 1;
 		
 		CellRendererPixbuf cell_backup_icon = new CellRendererPixbuf ();
-		cell_backup_icon.stock_id = Stock.FLOPPY;
+		cell_backup_icon.stock_id = "gtk-floppy";
 		cell_backup_icon.xpad = 1;
 		col_date.pack_start (cell_backup_icon, false);
 		

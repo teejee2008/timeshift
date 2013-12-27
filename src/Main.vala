@@ -39,7 +39,7 @@ using TeeJee.Misc;
 
 public Main App;
 public const string AppName = "TimeShift";
-public const string AppVersion = "1.3.2";
+public const string AppVersion = "1.3.3";
 public const string AppAuthor = "Tony George";
 public const string AppAuthorEmail = "teejee2008@gmail.com";
 

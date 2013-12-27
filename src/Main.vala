@@ -2437,6 +2437,30 @@ public class Main : GLib.Object{
 
 		//Gtk.main_quit ();
 	}
+	
+	public bool is_rsync_running(){
+		string cmd = "rsync -ai --delete --numeric-ids --relative --delete-excluded";
+		string txt = execute_command_sync_get_output ("ps w -C rsync");
+		foreach(string line in txt.split("\n")){
+			if (line.index_of(cmd) != -1){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public void kill_rsync(){
+		string cmd = "rsync -ai --delete --numeric-ids --relative --delete-excluded";
+		string txt = execute_command_sync_get_output ("ps w -C rsync");
+		string pid = "";
+		foreach(string line in txt.split("\n")){
+			if (line.index_of(cmd) != -1){
+				pid = line.strip().split(" ")[0];
+				Posix.kill ((Pid) int.parse(pid), 15);
+				log_msg(_("Terminating rsync process") + ": [PID=" + pid + "] ");
+			}
+		}
+	}
 }
 
 public class TimeShiftBackup : GLib.Object{

@@ -475,7 +475,12 @@ class MainWindow : Gtk.Window{
 	private bool on_delete_event(Gdk.EventAny event){
 		
 		this.delete_event.disconnect(on_delete_event); //disconnect this handler
-		
+
+		if (App.is_rsync_running()){
+			log_error (_("Main window closed by user"));
+			App.kill_rsync();
+		}
+
 		if (!App.is_scheduled){
 			return false; //close window
 		}

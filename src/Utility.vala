@@ -62,7 +62,7 @@ namespace TeeJee.Logging{
 		}
 		
 		if (LOG_TIMESTAMP){
-			msg += "[" + timestamp() +  "] ";
+			msg += timestamp() +  " ";
 		}
 		
 		msg += message;
@@ -95,7 +95,7 @@ namespace TeeJee.Logging{
 		}
 		
 		if (LOG_TIMESTAMP){
-			msg += "[" + timestamp() +  "] ";
+			msg += timestamp() +  " ";
 		}
 		
 		string prefix = (is_warning) ? _("Warning") : _("Error");

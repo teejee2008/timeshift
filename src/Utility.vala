@@ -1510,6 +1510,29 @@ namespace TeeJee.ProcessManagement{
 		}
 	}
 
+	public string get_user_login(){
+		/* 
+		Returns Login ID of current user.
+		If running as 'sudo' it will return Login ID of the actual user.
+		*/
+
+		string cmd = "echo ${SUDO_USER:-$(whoami)}";
+		string std_out;
+		string std_err;
+		int ret_val;
+		ret_val = execute_command_script_sync(cmd, out std_out, out std_err);
+		
+		string user_name;
+		if ((std_out == null) || (std_out.length == 0)){
+			user_name = "root";
+		}
+		else{
+			user_name = std_out.strip();
+		}
+		
+		return user_name;
+	}
+	
 	public string get_app_path (){
 				
 		/* Get path of current process */

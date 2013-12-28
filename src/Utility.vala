@@ -1333,6 +1333,17 @@ namespace TeeJee.ProcessManagement{
 		return -1;
 	}
 	
+	public int execute_bash_script_sync (string script_file){
+			
+		/* Executes a bash script synchronously in the default terminal window */
+		
+		string path = get_cmd_path ("x-terminal-emulator");
+		if ((path != null)&&(path != "")){
+			return execute_command_sync ("x-terminal-emulator -e \"%s\"".printf(script_file));
+		}
+		
+		return -1;
+	}
 	
 	public string get_cmd_path (string cmd){
 				

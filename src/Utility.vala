@@ -1618,7 +1618,7 @@ namespace TeeJee.GtkHelper{
 			type = Gtk.MessageType.INFO;
 		}
 		
-		var dlg = new Gtk.MessageDialog.with_markup(null, Gtk.DialogFlags.MODAL, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK, message);
+		var dlg = new Gtk.MessageDialog.with_markup(null, Gtk.DialogFlags.MODAL, type, Gtk.ButtonsType.OK, message);
 		dlg.title = title;
 		dlg.set_default_size (200, -1);
 		if (parent_win != null){

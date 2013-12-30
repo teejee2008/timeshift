@@ -690,7 +690,9 @@ public class Main : GLib.Object{
 			
 			//check space
 			if ((status_code == 1) || (status_code == 2)){
+				is_scheduled = false;
 				log_error(msg);
+				log_error(_("Scheduled snapshots will be disabled till another device is selected."));
 				is_success = false;
 				in_progress = false;
 				return;

@@ -1,11 +1,16 @@
-timeshift (1.3.3) quantal; urgency=medium
+timeshift (1.4) quantal; urgency=medium
 
   * Terminate rsync when user closes main window
   
-  * Fix build errors on Ubuntu 12.04 (precise)
+  * Fixed build errors on Ubuntu 12.04 (precise)
   
   * Removed space from log file and snapshot directory names
   
   * Removed references to Gtk.Stock
+
+  * Restore window: Added tooltip descriptions
+
+  * Scheduled snapshots will be disabled if backup device is running 
+  out of space
   
- -- Tony George <tony.george.kol@gmail.com>  Fri, 27 Dec 2013 10:00:00 +0530
+ -- Tony George <tony.george.kol@gmail.com>  Wed, 01 Jan 2013 10:00:00 +0530

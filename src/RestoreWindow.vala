@@ -729,13 +729,14 @@ public class RestoreWindow : Gtk.Dialog{
 		foreach(PartitionInfo pi in list) {
 			if (!pi.has_linux_filesystem()) { continue; }
 			
-			string tt = _("Device") + "\t: %s\n".printf(pi.device);
-			tt += _("UUID") + "\t: %s\n".printf(pi.uuid);
-			tt += _("Type") + "\t: %s\n".printf(pi.type);
-			tt += _("Label") + "\t: %s\n".printf(pi.label);
-			tt += _("Size") + "\t: %s\n".printf((pi.size_mb > 0) ? "%s GB".printf(pi.size) : "");
-			tt += _("Used") + "\t: %s\n".printf((pi.used_mb > 0) ? "%s GB".printf(pi.used) : "");
-			tt += _("System") + "\t: %s".printf(pi.dist_info);
+			string tt = "";
+			tt += "%-7s".printf(_("Device")) + "\t: %s\n".printf(pi.device);
+			tt += "%-7s".printf(_("UUID")) + "\t: %s\n".printf(pi.uuid);
+			tt += "%-7s".printf(_("Type")) + "\t: %s\n".printf(pi.type);
+			tt += "%-7s".printf(_("Label")) + "\t: %s\n".printf(pi.label);
+			tt += "%-7s".printf(_("Size")) + "\t: %s\n".printf((pi.size_mb > 0) ? "%s GB".printf(pi.size) : "");
+			tt += "%-7s".printf(_("Used")) + "\t: %s\n".printf((pi.used_mb > 0) ? "%s GB".printf(pi.used) : "");
+			tt += "%-7s".printf(_("System")) + "\t: %s".printf(pi.dist_info);
 			
 			model.append(out iter);
 			model.set (iter,0,pi,1,"",2,tt);

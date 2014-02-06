@@ -193,7 +193,7 @@ public class SettingsWindow : Gtk.Dialog{
 		//lbl_auto_remove
 		lbl_auto_remove = new Label (_("Auto-Remove"));
 
-        //grid_auto_remove
+        //vbox_auto_remove
         vbox_auto_remove = new Box(Gtk.Orientation.VERTICAL, 6);
         vbox_auto_remove.margin = 6;
         notebook.append_page (vbox_auto_remove, lbl_auto_remove);

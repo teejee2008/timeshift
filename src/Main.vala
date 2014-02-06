@@ -198,7 +198,7 @@ public class Main : GLib.Object{
 		if (!check_dependencies(out message)){
 			if (app_mode == ""){
 				string title = _("Missing Dependencies");
-				gtk_messagebox(title, msg, null, true);
+				gtk_messagebox(title, message, null, true);
 			}
 			exit(0);
 		}
@@ -401,19 +401,17 @@ public class Main : GLib.Object{
 		foreach(string cmd_tool in dependencies){
 			path = get_cmd_path (cmd_tool);
 			if ((path == null) || (path.length == 0)){
-				msg += cmd_tool + "\n";
+				msg += " * " + cmd_tool + "\n";
 			}
 		}
 		
 		if (msg.length > 0){
-			msg = _("Following dependencies are missing:") + "\n\n" + msg + "\n";
-			msg += _("Please install the packages for the commands \nlisted above and try running TimeShift again.");
+			msg = _("Commands listed below are not available on this system") + ":\n\n" + msg + "\n";
+			msg += _("Please install required packages and try running TimeShift again");
 			log_error(msg);
-			log_error(_("Missing dependencies"));
 			return false;
 		}
 		else{
-			log_msg(_("All dependencies satisfied"));
 			return true;
 		}
 	}

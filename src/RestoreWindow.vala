@@ -99,7 +99,8 @@ public class RestoreWindow : Gtk.Dialog{
         this.set_destroy_with_parent (true);
 		this.set_modal (true);
         this.set_default_size (550, 500);
-
+		this.skip_taskbar_hint = true;
+		
         //set app icon
 		try{
 			this.icon = new Gdk.Pixbuf.from_file (App.share_folder + """/pixmaps/timeshift.png""");

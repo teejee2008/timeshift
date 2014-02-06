@@ -911,6 +911,7 @@ class MainWindow : Gtk.Window{
 		
 		App.update_snapshot_list();
 		if (App.snapshot_list.size == 0){
+			statusbar_message(_("Deleting snapshot") + ": '.sync'...");
 			App.delete_all_snapshots();
 		}
 		

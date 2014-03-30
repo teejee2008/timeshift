@@ -91,20 +91,13 @@ class MainWindow : Gtk.Window{
 	private int cmb_backup_device_index_default = -1;
 	
 	public MainWindow () {
-		this.title = AppName + " v" + AppVersion + " by " + AppAuthor + " (" + "teejeetech.blogspot.in" + ")";
+		this.title = AppName + " v" + AppVersion; // + " by " + AppAuthor + " (" + "teejeetech.blogspot.in" + ")";
         this.window_position = WindowPosition.CENTER;
         this.modal = true;
         this.set_default_size (700, 500);
 		this.delete_event.connect(on_delete_event);
-		
-        //set app icon
-		try{
-			this.icon = new Gdk.Pixbuf.from_file (App.share_folder + """/pixmaps/timeshift.png""");
-		}
-        catch(Error e){
-	        log_error (e.message);
-	    }
-	    
+		this.icon = App.get_app_icon(16);
+
 	    //vboxMain
         vbox_main = new Box (Orientation.VERTICAL, 0);
         vbox_main.margin = 0;
@@ -1133,13 +1126,7 @@ class MainWindow : Gtk.Window{
 		dialog.comments = _("A System Restore Utility for Linux");
 		dialog.copyright = "Copyright © 2013 Tony George (teejee2008@gmail.com)";
 		dialog.version = AppVersion;
-		
-		try{
-			dialog.logo = new Gdk.Pixbuf.from_file (App.share_folder + """/pixmaps/timeshift.png""");
-		}
-        catch(Error e){
-	        log_error (e.message);
-	    }
+		dialog.logo = App.get_app_icon(128);
 
 		dialog.license = "This program is free for personal and commercial use and comes with absolutely no warranty. You use this program entirely at your own risk. The author will not be liable for any damages arising from the use of this program.";
 		dialog.wrap_license = true;

@@ -2461,6 +2461,24 @@ public class Main : GLib.Object{
 			}
 		}
 	}
+
+	public Gdk.Pixbuf? get_app_icon(int icon_size){
+		try {
+			Gtk.IconTheme icon_theme = Gtk.IconTheme.get_default();
+			Gdk.Pixbuf theme_icon = icon_theme.load_icon ("timeshift", icon_size, 0);
+			if (theme_icon != null){ 
+				return theme_icon; 
+			}
+			else{
+				Gdk.Pixbuf def_icon = new Gdk.Pixbuf.from_file (App.share_folder + """/pixmaps/timeshift.png""");
+				return def_icon;
+			}
+		} catch (Error e) {
+			log_error (e.message);
+		}
+		
+		return null;
+	}
 }
 
 public class TimeShiftBackup : GLib.Object{

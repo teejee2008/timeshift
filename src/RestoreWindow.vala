@@ -100,15 +100,8 @@ public class RestoreWindow : Gtk.Dialog{
 		this.set_modal (true);
         this.set_default_size (550, 500);
 		this.skip_taskbar_hint = true;
+		this.icon = App.get_app_icon(16);
 		
-        //set app icon
-		try{
-			this.icon = new Gdk.Pixbuf.from_file (App.share_folder + """/pixmaps/timeshift.png""");
-		}
-        catch(Error e){
-	        log_error (e.message);
-	    }
-	    
 	    //vbox_main
         vbox_main = get_content_area ();
 

@@ -558,7 +558,7 @@ public class RestoreWindow : Gtk.Dialog{
 				Gee.ArrayList<string> selected_app_list = new Gee.ArrayList<string>();
 				foreach(AppExcludeEntry entry in App.exclude_list_apps){
 					if (entry.enabled){
-						selected_app_list.add(entry.path);
+						selected_app_list.add(entry.relpath);
 					}
 				}
 				
@@ -567,7 +567,7 @@ public class RestoreWindow : Gtk.Dialog{
 				
 				//restore app selections
 				foreach(AppExcludeEntry entry in App.exclude_list_apps){
-					if (selected_app_list.contains(entry.path)){
+					if (selected_app_list.contains(entry.relpath)){
 						entry.enabled = true;
 					}
 				}
@@ -654,7 +654,7 @@ public class RestoreWindow : Gtk.Dialog{
 	private void cell_app_text_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
 		AppExcludeEntry entry;
 		model.get (iter, 0, out entry, -1);
-		(cell as Gtk.CellRendererText).text = entry.name;
+		(cell as Gtk.CellRendererText).text = entry.relpath;
 	}
 
 	private void cell_app_enabled_toggled (string path){
@@ -1052,12 +1052,12 @@ public class RestoreWindow : Gtk.Dialog{
 		//add app entries
 		foreach(AppExcludeEntry entry in App.exclude_list_apps){
 			if (entry.enabled){
-				string pattern = entry.path.replace("~","/home/*");
+				string pattern = entry.pattern();
 				if (!App.exclude_list_restore.contains(pattern)){
 					App.exclude_list_restore.add(pattern);
 				}
 				
-				pattern = entry.path.replace("~","/root");
+				pattern = entry.pattern(true);
 				if (!App.exclude_list_restore.contains(pattern)){
 					App.exclude_list_restore.add(pattern);
 				}
@@ -1082,7 +1082,7 @@ public class RestoreWindow : Gtk.Dialog{
 		if (!App.exclude_list_restore.contains(timeshift_path)){
 			App.exclude_list_restore.add(timeshift_path);
 		}
-		
+
 		//save grub install options ----------------------
 		
 		//App.reinstall_grub2 = chk_restore_grub2.active;

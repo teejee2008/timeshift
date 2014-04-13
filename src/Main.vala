@@ -512,10 +512,18 @@ public class Main : GLib.Object{
 				string item = home + "/" + name;
 				if (!name.has_prefix(".")){ continue; }
 				if (name == ".config"){ continue; }
-				if (!dir_exists(item)) { continue; }
+				if (name == ".local"){ continue; }
+				if (name == ".gvfs"){ continue; }
+				if (name.has_suffix(".lock")){ continue; }
 				
-				AppExcludeEntry entry = new AppExcludeEntry("~/%s/**".printf(name), name[1:name.length]);
-				exclude_list_apps.add(entry);
+				if (dir_exists(item)) {
+					AppExcludeEntry entry = new AppExcludeEntry("~/" + name, false);
+					exclude_list_apps.add(entry);
+				}
+				else{
+					AppExcludeEntry entry = new AppExcludeEntry("~/" + name, true);
+					exclude_list_apps.add(entry);
+				}
 	        }
 	        
 	        File f_home_config = File.new_for_path (home + "/.config");
@@ -523,10 +531,33 @@ public class Main : GLib.Object{
 	        while ((file = enumerator.next_file ()) != null) {
 				string name = file.get_name();
 				string item = home + "/.config/" + name;
-				if (!dir_exists(item)) { continue; }
+				if (name.has_suffix(".lock")){ continue; }
 				
-				AppExcludeEntry entry = new AppExcludeEntry("~/.config/%s/**".printf(name), name);
-				exclude_list_apps.add(entry);
+				if (dir_exists(item)) {
+					AppExcludeEntry entry = new AppExcludeEntry("~/.config/" + name, false);
+					exclude_list_apps.add(entry);
+				}
+				else{
+					AppExcludeEntry entry = new AppExcludeEntry("~/.config/" + name, true);
+					exclude_list_apps.add(entry);
+				}
+	        }
+	        
+	        File f_home_local = File.new_for_path (home + "/.local/share");
+	        enumerator = f_home_local.enumerate_children ("standard::*", 0);
+	        while ((file = enumerator.next_file ()) != null) {
+				string name = file.get_name();
+				string item = home + "/.local/share/" + name;
+				if (name.has_suffix(".lock")){ continue; }
+				
+				if (dir_exists(item)) {
+					AppExcludeEntry entry = new AppExcludeEntry("~/.local/share/" + name, false);
+					exclude_list_apps.add(entry);
+				}
+				else{
+					AppExcludeEntry entry = new AppExcludeEntry("~/.local/share/" + name, true);
+					exclude_list_apps.add(entry);
+				}
 	        }
         }
         catch(Error e){
@@ -535,7 +566,7 @@ public class Main : GLib.Object{
 
 		//sort the list
 		CompareFunc<AppExcludeEntry> entry_compare = (a, b) => {
-			return strcmp(a.name,b.name);
+			return strcmp(a.relpath,b.relpath);
 		};
 		exclude_list_apps.sort(entry_compare);
 	}
@@ -1410,12 +1441,12 @@ public class Main : GLib.Object{
 				//add app entries
 				foreach(AppExcludeEntry entry in exclude_list_apps){
 					if (entry.enabled){
-						pattern = entry.path.replace("~","/home/*");
+						pattern = entry.pattern();
 						if (!exclude_list_restore.contains(pattern)){
 							exclude_list_restore.add(pattern);
 						}
 						
-						pattern = entry.path.replace("~","/root");
+						pattern = entry.pattern(true);
 						if (!exclude_list_restore.contains(pattern)){
 							exclude_list_restore.add(pattern);
 						}
@@ -2655,26 +2686,23 @@ public class TimeShiftBackup : GLib.Object{
 }
 
 public class AppExcludeEntry : GLib.Object{
-	public string path = "";
-	public string name = "";
+	public string relpath = "";
 	public bool is_include = false;
+	public bool is_file = false;
 	public bool enabled = false;
 	
-	public AppExcludeEntry(string exclude_pattern, string entry_name = ""){
-		pattern = exclude_pattern;
-		name = entry_name;
+	public AppExcludeEntry(string _relpath, bool _is_file, bool _is_include = false){
+		relpath = _relpath;
+		is_file = _is_file;
+		is_include = _is_include;
 	}
 	
-	public string pattern{
-		owned get{
-			string str = (is_include) ? "+ " : "";
-			str += path;
-			return str.strip();
-		}
-		set{
-			path = value.has_prefix("+ ") ? value[2:value.length] : value;
-			is_include = value.has_prefix("+ ") ? true : false;
-		}
+	public string pattern(bool root_home = false){
+		string str = (is_include) ? "+ " : "";
+		str += (root_home) ? "/root" : "/home/*";
+		str += relpath[1:relpath.length];
+		str += (is_file) ? "" : "/**";
+		return str.strip();	
 	}
 	
 }

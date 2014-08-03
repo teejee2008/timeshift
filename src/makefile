@@ -29,13 +29,14 @@ install:
 	
 	#binary
 	install -m 0755 timeshift "$(DESTDIR)$(bindir)"
+	install -m 0755 timeshift-uninstall "$(DESTDIR)$(bindir)"
 	
 	#shared files
 	cp -dpr --no-preserve=ownership -t "$(DESTDIR)$(sharedir)/timeshift" ./share/timeshift/*
 	chmod --recursive 0755 $(DESTDIR)$(sharedir)/timeshift/*
 	
 	#launcher
-	install -m 0755 TimeShift.desktop "$(DESTDIR)$(launcherdir)"
+	install -m 0755 timeshift.desktop "$(DESTDIR)$(launcherdir)"
 	
 	#app icon
 	install -m 0755 ./share/pixmaps/timeshift.png "$(DESTDIR)$(sharedir)/pixmaps/"
@@ -47,15 +48,16 @@ uninstall:
 
 	#binary
 	rm -f "$(DESTDIR)$(bindir)/timeshift"
+	rm -f "$(DESTDIR)$(bindir)/timeshift-uninstall"
 	
 	#shared files
 	rm -rf "$(DESTDIR)$(sharedir)/timeshift"
 	
 	#launcher
-	rm -f "$(DESTDIR)$(launcherdir)/TimeShift.desktop"
+	rm -f "$(DESTDIR)$(launcherdir)/timeshift.desktop"
 	
 	#app icon
 	rm -f "$(DESTDIR)$(sharedir)/pixmaps/timeshift.png"
 	
 	#translations
-	rm -f "$(DESTDIR)$(localedir)/*/LC_MESSAGES/timeshift.mo"
+	rm -f $(DESTDIR)$(localedir)/*/LC_MESSAGES/timeshift.mo

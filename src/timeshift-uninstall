@@ -91,11 +91,12 @@ RUN_AS_ADMIN
 
 if [ ! -z "${app_name}" ]; then
 	rm -f  "/usr/bin/${app_name}"
+	rm -f  "/usr/bin/${app_name}-uninstall"
 	rm -f  "/usr/share/applications/${app_name}.desktop"
 	rm -f  "/usr/share/pixmaps/${app_name}.png"
 	rm -rf "/usr/share/${app_name}"
 	rm -rf "/usr/share/doc/${app_name}"
-	rm -f  "/usr/share/locale/*/LC_MESSAGES/${app_name}.mo"
+	rm -f  /usr/share/locale/*/LC_MESSAGES/${app_name}.mo
 fi
 
 if [ $? -eq 0 ]; then

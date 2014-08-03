@@ -1,0 +1,109 @@
+#!/bin/bash
+
+app_name='timeshift'
+app_fullname='Timeshift'
+
+Reset='\e[0m'
+Red='\e[1;31m'
+Green='\e[1;32m'
+Yellow='\e[1;33m'
+
+CHECK_COLOR_SUPPORT() {
+	colors=`tput colors`
+	if [ $colors -gt 1 ]; then
+		COLORS_SUPPORTED=0
+	else
+		COLORS_SUPPORTED=1
+	fi
+}
+
+MSG_INFO() {
+	if [ $COLORS_SUPPORTED -eq 0 ]; then
+        echo -e "[${Yellow}*${Reset}] ${Green}$1${Reset}"
+    else
+        echo -e "[*] $1"
+    fi
+}
+
+MSG_WARNING() {
+	if [ $COLORS_SUPPORTED -eq 0 ]; then
+        echo -e "[${Red}!${Reset}] ${Yellow}$1${Reset}"
+    else
+        echo -e "[!] $1"
+    fi
+}
+
+MSG_ERROR() {
+    if [ $COLORS_SUPPORTED -eq 0 ]; then
+        echo -e "[${Red}X${Reset}] ${Yellow}$1${Reset}"
+    else
+        echo -e "[X] $1"
+    fi
+}
+
+CD_PUSH() {
+	cd_backup=`pwd`
+}
+
+CD_POP() {
+	if [ ! -z "${cd_backup}" ]; then
+		cd "${cd_backup}"
+	fi
+}
+
+EXIT(){
+	CD_POP
+	exit $1
+}
+
+WAIT_FOR_INPUT() {
+	echo ""
+	echo "Press any key to exit..."
+	read dummy
+}
+
+GET_SCRIPT_PATH(){
+	SCRIPTPATH="$(cd "$(dirname "$0")" && pwd)"
+	SCRIPTNAME=`basename $0`
+}
+
+RUN_AS_ADMIN() {
+	if [ ! `id -u` -eq 0 ]; then
+		GET_SCRIPT_PATH
+		if command -v sudo >/dev/null 2>&1; then
+			sudo "${SCRIPTPATH}/${SCRIPTNAME}"
+			EXIT $?
+		elif command -v su >/dev/null 2>&1; then
+			su -c "${SCRIPTPATH}/${SCRIPTNAME}"
+			EXIT $?
+		else
+			echo ""
+			MSG_ERROR "** Uninstaller must be run as Admin (using 'sudo' or 'su') **"
+			echo ""
+			EXIT 1
+		fi
+	fi
+}
+
+CD_PUSH
+CHECK_COLOR_SUPPORT
+RUN_AS_ADMIN
+
+if [ ! -z "${app_name}" ]; then
+	rm -f  "/usr/bin/${app_name}"
+	rm -f  "/usr/share/applications/${app_name}.desktop"
+	rm -f  "/usr/share/pixmaps/${app_name}.png"
+	rm -rf "/usr/share/${app_name}"
+	rm -rf "/usr/share/doc/${app_name}"
+	rm -f  "/usr/share/locale/*/LC_MESSAGES/${app_name}.mo"
+fi
+
+if [ $? -eq 0 ]; then
+	echo "${app_fullname} was uninstalled successfully."
+	EXIT 0
+else
+	echo "Uninstalled completed (some files could not be removed)"
+	EXIT 1
+fi
+
+CD_POP

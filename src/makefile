@@ -1,11 +1,11 @@
-prefix = /usr
-bindir = $(prefix)/bin
-sharedir = $(prefix)/share
-localedir = $(sharedir)/locale
-launcherdir = $(sharedir)/applications
-mandir = $(sharedir)/man
-man1dir = $(mandir)/man1
-CFLAGS = --std=c99
+prefix=/usr
+bindir=$(prefix)/bin
+sharedir=$(prefix)/share
+localedir=$(sharedir)/locale
+launcherdir=$(sharedir)/applications
+mandir=$(sharedir)/man
+man1dir=$(mandir)/man1
+CFLAGS=--std=c99
 
 all:
 	#timeshift
@@ -18,7 +18,6 @@ clean:
 	rm -rf *.o timeshift
 
 install:
-	mkdir -p "$(DESTDIR)"
 	mkdir -p "$(DESTDIR)$(bindir)"
 	mkdir -p "$(DESTDIR)$(sharedir)"
 	mkdir -p "$(DESTDIR)$(mandir)"

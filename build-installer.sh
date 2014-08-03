@@ -9,8 +9,8 @@ cd installer
 
 echo "Building installer..."
 
-tgz="/home/teejee/projects/pbuilder/"
-dsc="/home/teejee/projects/builds/timeshift*.dsc"
+tgz="../../pbuilder/"
+dsc="../../builds/timeshift*.dsc"
 
 chmod u+x ./install.sh
 

@@ -28,26 +28,41 @@ CHECK_COLOR_SUPPORT() {
 }
 
 MSG_INFO() {
+	add_newline=''
+	if [ "$2" == 0 ]; then
+		add_newline='-n'
+	fi
+	
 	if [ $COLORS_SUPPORTED -eq 0 ]; then
-        echo -e "[${Yellow}*${Reset}] ${Green}$1${Reset}"
+        echo -e ${add_newline} "[${Yellow}*${Reset}] ${Green}$1${Reset}"
     else
-        echo -e "[*] $1"
+        echo -e ${add_newline} "[*] $1"
     fi
 }
 
 MSG_WARNING() {
+	add_newline=''
+	if [ "$2" == 0 ]; then
+		add_newline='-n'
+	fi
+	
 	if [ $COLORS_SUPPORTED -eq 0 ]; then
-        echo -e "[${Red}!${Reset}] ${Yellow}$1${Reset}"
+        echo -e ${add_newline} "[${Red}!${Reset}] ${Yellow}$1${Reset}"
     else
-        echo -e "[!] $1"
+        echo -e ${add_newline} "[!] $1"
     fi
 }
 
 MSG_ERROR() {
+	add_newline=''
+	if [ "$2" == 0 ]; then
+		add_newline='-n'
+	fi
+	
     if [ $COLORS_SUPPORTED -eq 0 ]; then
-        echo -e "[${Red}X${Reset}] ${Yellow}$1${Reset}"
+        echo -e ${add_newline} "[${Red}X${Reset}] ${Yellow}$1${Reset}"
     else
-        echo -e "[X] $1"
+        echo -e ${add_newline} "[X] $1"
     fi
 }
 
@@ -135,8 +150,22 @@ echo ""
 
 RESET_IFS
 
-if [ -f /etc/debian_version ]; then
-	if command -v apt-get >/dev/null 2>&1; then
+install_dependencies=y
+
+if command -v apt-get >/dev/null 2>&1; then
+
+	if [ -f /etc/debian_version ]; then
+		install_dependencies=y
+	else
+		MSG_INFO "Found 'apt-get' package manager" 
+		MSG_INFO "Install dependencies with 'apt-get'? (y/n):" "0"
+		read install_dependencies
+		if [ "$install_dependencies" == "" ]; then
+			install_dependencies=y
+		fi
+	fi
+	
+	if [ "$install_dependencies" == "y" ]; then
 		MSG_INFO "Installing Debian packages..."
 		echo ""
 		for i in "${debian_depends[@]}"; do
@@ -145,8 +174,21 @@ if [ -f /etc/debian_version ]; then
 		  echo ""
 		done
 	fi
-elif [ -f /etc/redhat-release ]; then
-	if command -v yum >/dev/null 2>&1; then
+	
+elif command -v yum >/dev/null 2>&1; then
+
+	if [ -f /etc/redhat-release ]; then
+		install_dependencies=y
+	else
+		MSG_INFO "Found 'yum' package manager" 
+		MSG_INFO "Install dependencies with 'yum'? (y/n):" "0"
+		read install_dependencies
+		if [ "$install_dependencies" == "" ]; then
+			install_dependencies=y
+		fi
+	fi
+	
+	if [ "$install_dependencies" == "y" ]; then
 		MSG_INFO "Installing RedHat packages..."
 		echo ""
 		for i in "${redhat_depends[@]}"; do
@@ -155,8 +197,21 @@ elif [ -f /etc/redhat-release ]; then
 		  echo ""
 		done
 	fi
-elif [ -f /etc/arch-release ] || [ -f /etc/manjaro-release ]; then
-	if command -v pacman >/dev/null 2>&1; then
+	
+elif command -v pacman >/dev/null 2>&1; then
+
+	if [ -f /etc/arch-release ] || [ -f /etc/manjaro-release ]; then
+		install_dependencies=y
+	else
+		MSG_INFO "Found 'pacman' package manager" 
+		MSG_INFO "Install dependencies with 'pacman'? (y/n):" "0"
+		read install_dependencies
+		if [ "$install_dependencies" == "" ]; then
+			install_dependencies=y
+		fi
+	fi
+
+	if [ "$install_dependencies" == "y" ]; then
 		MSG_INFO "Installing ArchLinux packages..."
 		echo ""
 		for i in "${arch_depends[@]}"; do
@@ -170,10 +225,12 @@ echo ""
 
 MSG_INFO "Install completed."
 echo ""
-MSG_INFO "Start ${app_fullname} using the shortcut in the Applications Menu"
-MSG_INFO "or by running the command: sudo ${app_name}"	
-MSG_INFO "If it fails to start, check and install following packages:"
-MSG_WARNING "Required: " `echo "${generic_depends[@]}"`
-#MSG_WARNING "Optional: ${generic_recommends[@]}"
+echo "******************************************************************"
+echo "Start ${app_fullname} using the shortcut in the Applications Menu"
+echo "or by running the command: sudo ${app_name}"	
+echo "If it fails to start, check and install the following packages:"
+echo "Required: ${generic_depends[@]}"
+echo "Optional: (none)"
+echo "******************************************************************"
 WAIT_FOR_INPUT
 EXIT 0

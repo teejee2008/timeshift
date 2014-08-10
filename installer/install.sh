@@ -173,7 +173,7 @@ echo ""
 MSG_INFO "Start ${app_fullname} using the shortcut in the Applications Menu"
 MSG_INFO "or by running the command: sudo ${app_name}"	
 MSG_INFO "If it fails to start, check and install following packages:"
-MSG_WARNING "Required: ${generic_depends[@]}"
+MSG_WARNING "Required: " `echo "${generic_depends[@]}"`
 #MSG_WARNING "Optional: ${generic_recommends[@]}"
 WAIT_FOR_INPUT
 EXIT 0

@@ -97,6 +97,15 @@ if [ ! -z "${app_name}" ]; then
 	rm -rf "/usr/share/${app_name}"
 	rm -rf "/usr/share/doc/${app_name}"
 	rm -f  /usr/share/locale/*/LC_MESSAGES/${app_name}.mo
+	
+	MSG_INFO "Remove backups on system partition? (y/n):"
+	read install_extra
+	
+	if [ "$install_extra" == "y" ]; then
+		MSG_INFO "Freeing disk space..."
+		echo ""
+		rm -rf "/timeshift"
+	fi
 fi
 
 if [ $? -eq 0 ]; then

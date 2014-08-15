@@ -49,7 +49,8 @@ class MainWindow : Gtk.Window{
 	private ToolButton btn_view_snapshot_log;
 	private ToolButton btn_view_app_logs;
 	private ToolButton btn_about;
-	
+    private ToolButton btn_donate;
+    
 	//backup device
 	private Box hbox_device;
 	private Label lbl_backup_device;
@@ -89,6 +90,7 @@ class MainWindow : Gtk.Window{
 	//other
 	private PartitionInfo snapshot_device_original;
 	private int cmb_backup_device_index_default = -1;
+	int icon_size_toolbar = 32;
 	
 	public MainWindow () {
 		this.title = AppName + " v" + AppVersion; // + " by " + AppAuthor + " (" + "teejeetech.blogspot.in" + ")";
@@ -190,6 +192,40 @@ class MainWindow : Gtk.Window{
 
         btn_view_app_logs.clicked.connect (btn_view_app_logs_clicked);
         
+		//btn_donate
+        btn_donate = new Gtk.ToolButton.from_stock ("gtk-missing-image");
+		btn_donate.label = _("Donate");
+		btn_donate.set_tooltip_text (_("Donate"));
+        toolbar.add(btn_donate);
+		
+		btn_donate.clicked.connect(btn_donate_clicked);
+		
+		try{
+			var pix = new Gdk.Pixbuf.from_file_at_size(App.share_folder + "/timeshift/images/donate.svg",icon_size_toolbar,icon_size_toolbar);
+			var img = new Gtk.Image.from_pixbuf(pix);
+			btn_donate.set_icon_widget(img);
+		}
+        catch(Error e){
+	        log_error (e.message);
+	    }
+
+		//btn_about
+        btn_about = new Gtk.ToolButton.from_stock ("gtk-about");
+		btn_about.label = _("About");
+		btn_about.set_tooltip_text (_("Application Info"));
+        toolbar.add(btn_about);
+
+        btn_about.clicked.connect (btn_about_clicked);
+
+		try{
+			var pix = new Gdk.Pixbuf.from_file_at_size(App.share_folder + "/timeshift/images/help-info.svg",icon_size_toolbar,icon_size_toolbar);
+			var img = new Gtk.Image.from_pixbuf(pix);
+			btn_about.set_icon_widget(img);
+		}
+        catch(Error e){
+	        log_error (e.message);
+	    }
+	    
 		//btn_about
         btn_about = new Gtk.ToolButton.from_stock ("gtk-about");
 		btn_about.label = _("About");
@@ -1108,39 +1144,43 @@ class MainWindow : Gtk.Window{
 	private void btn_view_app_logs_clicked(){
 		exo_open_folder(App.log_dir);
 	}
+
+	public void btn_donate_clicked(){
+		var dialog = new DonationWindow();
+		dialog.set_transient_for(this);
+		dialog.show_all();
+		dialog.run();
+		dialog.destroy();
+	}
 	
 	private void btn_about_clicked (){
-		
-		var dialog = new Gtk.AboutDialog();
-		dialog.set_destroy_with_parent (true);
+		var dialog = new AboutWindow();
 		dialog.set_transient_for (this);
-		dialog.set_modal (true);
+
+		dialog.authors = { 
+			"Tony George:teejeetech@gmail.com" 
+		};
 		
-		//dialog.artists = {"", ""};
-		dialog.authors = {"Tony George"};
+		dialog.translators = {
+			"tomberry88 (Italian):launchpad.net/~tomberry"
+		}; 
+		
 		dialog.documenters = null; 
-		dialog.translator_credits = "tomberry88 (Italian)"; 
-		//dialog.add_credit_section("Sponsors", {"Colin Mills"});
-		
-		dialog.program_name = "TimeShift";
+		dialog.artists = null;
+		dialog.donations = null;
+
+		dialog.program_name = AppName;
 		dialog.comments = _("A System Restore Utility for Linux");
-		dialog.copyright = "Copyright © 2013 Tony George (teejee2008@gmail.com)";
+		dialog.copyright = "Copyright © 2014 Tony George (%s)".printf(AppAuthorEmail);
 		dialog.version = AppVersion;
-		dialog.logo = App.get_app_icon(128);
+		dialog.logo = get_app_icon(128);
 
 		dialog.license = "This program is free for personal and commercial use and comes with absolutely no warranty. You use this program entirely at your own risk. The author will not be liable for any damages arising from the use of this program.";
-		dialog.wrap_license = true;
-
-		dialog.website = "http://teejeetech.blogspot.in";
+		dialog.website = "http://teejeetech.in";
 		dialog.website_label = "http://teejeetech.blogspot.in";
 
-		dialog.response.connect ((response_id) => {
-			if (response_id == Gtk.ResponseType.CANCEL || response_id == Gtk.ResponseType.DELETE_EVENT) {
-				dialog.hide_on_delete ();
-			}
-		});
-
-		dialog.present ();
+		dialog.initialize();
+		dialog.show_all();
 	}
 
 

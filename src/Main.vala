@@ -39,6 +39,7 @@ using TeeJee.Misc;
 
 public Main App;
 public const string AppName = "TimeShift";
+public const string AppShortName = "timeshift";
 public const string AppVersion = "1.4.2";
 public const string AppAuthor = "Tony George";
 public const string AppAuthorEmail = "teejee2008@gmail.com";
@@ -122,7 +123,10 @@ public class Main : GLib.Object{
 					return 0;
 			}
 		}
-
+		
+		//init TMP
+		init_tmp();
+		
 		App = new Main(args);
 		bool success = App.start_application(args);
 		App.exit_app();

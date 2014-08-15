@@ -30,6 +30,7 @@ install:
 	#binary
 	install -m 0755 timeshift "$(DESTDIR)$(bindir)"
 	install -m 0755 timeshift-uninstall "$(DESTDIR)$(bindir)"
+	install -m 0755 timeshift-launcher "$(DESTDIR)$(bindir)"
 	
 	#shared files
 	cp -dpr --no-preserve=ownership -t "$(DESTDIR)$(sharedir)/timeshift" ./share/timeshift/*
@@ -49,6 +50,7 @@ uninstall:
 	#binary
 	rm -f "$(DESTDIR)$(bindir)/timeshift"
 	rm -f "$(DESTDIR)$(bindir)/timeshift-uninstall"
+	rm -f "$(DESTDIR)$(bindir)/timeshift-launcher"
 	
 	#shared files
 	rm -rf "$(DESTDIR)$(sharedir)/timeshift"

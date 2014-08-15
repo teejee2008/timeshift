@@ -351,6 +351,7 @@ namespace TeeJee.DiskPartition{
 		public string description(){
 			string s = "";
 			s += device;
+			s += (label.length > 0) ? " (" + label + ")": "";
 			s += (type.length > 0) ? " ~ " + type : "";
 			s += (used.length > 0) ? " ~ " + used + " / " + size + " GB used (" + used_percent + ")" : "";
 			return s;
@@ -359,6 +360,7 @@ namespace TeeJee.DiskPartition{
 		public string description_full(){
 			string s = "";
 			s += device;
+			s += (label.length > 0) ? " (" + label + ")": "";
 			s += (uuid.length > 0) ? " ~ " + uuid : "";
 			s += (type.length > 0) ? " ~ " + type : "";
 			s += (used.length > 0) ? " ~ " + used + " / " + size + " GB used (" + used_percent + ")" : "";

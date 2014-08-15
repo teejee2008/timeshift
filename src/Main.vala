@@ -149,7 +149,7 @@ public class Main : GLib.Object{
 		
 		if (!user_is_admin()){
 			msg = _("TimeShift needs admin access to backup and restore system files.") + "\n";
-			msg += _("Please run the application as admin (using 'sudo')");
+			msg += _("Please run the application as admin (using 'sudo' or 'su')");
 				
 			if (app_mode == ""){
 				string title = _("Admin Access Required");
@@ -574,7 +574,7 @@ public class Main : GLib.Object{
 	public static string help_message (){
 		string msg = "\n" + AppName + " v" + AppVersion + " by Tony George (teejee2008@gmail.com)" + "\n";
 		msg += "\n";
-		msg += "Syntax: sudo timeshift [options]\n";
+		msg += "Syntax: timeshift [options]\n";
 		msg += "\n";
 		msg += _("Options") + ":\n";
 		msg += "\n";

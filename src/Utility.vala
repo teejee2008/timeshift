@@ -918,7 +918,7 @@ namespace TeeJee.DiskPartition{
 				}
 				else if (info.mount_point_list.contains(mount_point) && info.device != device){
 					//another device is mounted at mount point - unmount it -------
-					cmd = "sudo umount \"%s\"".printf(mount_point);
+					cmd = "umount \"%s\"".printf(mount_point);
 					Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
 					if (ret_val != 0){
 						log_error ("Failed to unmount device '%s' from mount point '%s'".printf(info.device, mount_point));
@@ -934,10 +934,10 @@ namespace TeeJee.DiskPartition{
 			if (!mounted){
 				//mount --------------
 				if (mount_options.length > 0){
-					cmd = "sudo mount -o %s \"%s\" \"%s\"".printf(mount_options, device, mount_point);
+					cmd = "mount -o %s \"%s\" \"%s\"".printf(mount_options, device, mount_point);
 				} 
 				else{
-					cmd = "sudo mount \"%s\" \"%s\"".printf(device, mount_point);
+					cmd = "mount \"%s\" \"%s\"".printf(device, mount_point);
 				}
 
 				Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);

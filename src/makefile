@@ -44,7 +44,9 @@ install:
 	
 	#translations
 	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/it_IT/LC_MESSAGES/timeshift.mo" ../po/timeshift-it.po
-
+	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/ko_KR/LC_MESSAGES/timeshift.mo" ../po/timeshift-ko.po
+	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/fr_FR/LC_MESSAGES/timeshift.mo" ../po/timeshift-fr.po
+	
 uninstall:
 
 	#binary

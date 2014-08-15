@@ -1138,7 +1138,9 @@ class MainWindow : Gtk.Window{
 		};
 		
 		dialog.translators = {
-			"tomberry88 (Italian):launchpad.net/~tomberry"
+			"Debaru, Nikos, alienus (French):launchpad.net/~lp-l10n-fr",
+			"tomberry88 (Italian):launchpad.net/~tomberry",
+			"박정규(Jung-Kyu Park) (Korean):bagjunggyu@gmail.com"
 		}; 
 		
 		dialog.documenters = null; 

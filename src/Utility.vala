@@ -62,7 +62,7 @@ namespace TeeJee.Logging{
 		}
 		
 		if (LOG_TIMESTAMP){
-			msg += timestamp() +  " ";
+			msg += "[" + timestamp() +  "] ";
 		}
 		
 		msg += message;
@@ -289,6 +289,30 @@ namespace TeeJee.FileSystem{
 		return long.parse(std_out);
 	}
 
+	public long get_file_size(string path){
+				
+		/* Returns size of files and directories in KB*/
+		
+		string cmd = "";
+		string output = "";
+		
+		cmd = "du -s \"%s\"".printf(path);
+		output = execute_command_sync_get_output(cmd);
+		return long.parse(output.split("\t")[0]);
+	}
+
+	public string get_file_size_formatted(string path){
+				
+		/* Returns size of files and directories in KB*/
+		
+		string cmd = "";
+		string output = "";
+		
+		cmd = "du -s -h \"%s\"".printf(path);
+		output = execute_command_sync_get_output(cmd);
+		return output.split("\t")[0].strip();
+	}
+	
 	public int chmod (string file, string permission){
 				
 		/* Change file permissions */
@@ -1200,7 +1224,7 @@ namespace TeeJee.ProcessManagement{
 	
 	public string execute_command_sync_get_output (string cmd){
 				
-		/* Executes single command synchronously and returns console output 
+		/* Executes single command synchronously and returns std_out
 		 * Pipes and multiple commands are not supported */
 		
 		try {
@@ -1793,7 +1817,7 @@ namespace TeeJee.GtkHelper{
 namespace TeeJee.Multimedia{
 	
 	using TeeJee.Logging;
-
+	
 	/* Functions for working with audio/video files */
 	
 	public long get_file_duration(string filePath){
@@ -1895,7 +1919,6 @@ namespace TeeJee.System{
 	
 	using TeeJee.ProcessManagement;
 	using TeeJee.Logging;
-	
 
 	public double get_system_uptime_seconds(){
 				
@@ -2139,6 +2162,28 @@ namespace TeeJee.System{
 
 		return retVal;
 	}
+	
+	public bool set_directory_ownership(string dir_name, string login_name){
+		try {
+			string cmd = "chown %s -R %s".printf(login_name, dir_name);
+			int exit_code;
+			Process.spawn_command_line_sync(cmd, null, null, out exit_code);
+			
+			if (exit_code == 0){
+				//log_msg(_("Ownership changed to '%s' for files in directory '%s'").printf(login_name, dir_name));
+				return true;
+			}
+			else{
+				log_error(_("Failed to set ownership") + ": %s, %s".printf(login_name, dir_name));
+				return false;
+			}
+		}
+		catch (Error e){
+			log_error (e.message);
+			return false;
+		}
+	}
+
 }
 
 namespace TeeJee.Misc {

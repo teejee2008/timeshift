@@ -26,6 +26,8 @@ install:
 	mkdir -p "$(DESTDIR)$(sharedir)/timeshift"
 	mkdir -p "$(DESTDIR)$(sharedir)/pixmaps"
 	mkdir -p "$(DESTDIR)$(localedir)/it_IT/LC_MESSAGES"
+	mkdir -p "$(DESTDIR)$(localedir)/ko_KR/LC_MESSAGES"
+	mkdir -p "$(DESTDIR)$(localedir)/fr_FR/LC_MESSAGES"
 	
 	#binary
 	install -m 0755 timeshift "$(DESTDIR)$(bindir)"

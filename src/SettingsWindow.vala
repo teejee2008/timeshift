@@ -95,7 +95,7 @@ public class SettingsWindow : Gtk.Dialog{
         this.set_destroy_with_parent (true);
 		this.set_modal (true);
         this.set_default_size (450, 500);	
-		this.icon = App.get_app_icon(16);
+		this.icon = get_app_icon(16);
 		
 	    //vboxMain
         vbox_main = get_content_area ();

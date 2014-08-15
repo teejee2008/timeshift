@@ -98,7 +98,7 @@ class MainWindow : Gtk.Window{
         this.modal = true;
         this.set_default_size (700, 500);
 		this.delete_event.connect(on_delete_event);
-		this.icon = App.get_app_icon(16);
+		this.icon = get_app_icon(16);
 
 	    //vboxMain
         vbox_main = new Box (Orientation.VERTICAL, 0);
@@ -196,44 +196,20 @@ class MainWindow : Gtk.Window{
         btn_donate = new Gtk.ToolButton.from_stock ("gtk-missing-image");
 		btn_donate.label = _("Donate");
 		btn_donate.set_tooltip_text (_("Donate"));
+		btn_donate.icon_widget = get_shared_icon("donate","donate.svg",24);
         toolbar.add(btn_donate);
 		
 		btn_donate.clicked.connect(btn_donate_clicked);
-		
-		try{
-			var pix = new Gdk.Pixbuf.from_file_at_size(App.share_folder + "/timeshift/images/donate.svg",icon_size_toolbar,icon_size_toolbar);
-			var img = new Gtk.Image.from_pixbuf(pix);
-			btn_donate.set_icon_widget(img);
-		}
-        catch(Error e){
-	        log_error (e.message);
-	    }
 
 		//btn_about
         btn_about = new Gtk.ToolButton.from_stock ("gtk-about");
 		btn_about.label = _("About");
 		btn_about.set_tooltip_text (_("Application Info"));
+		btn_about.icon_widget = get_shared_icon("","help-info.svg",24);
         toolbar.add(btn_about);
 
         btn_about.clicked.connect (btn_about_clicked);
 
-		try{
-			var pix = new Gdk.Pixbuf.from_file_at_size(App.share_folder + "/timeshift/images/help-info.svg",icon_size_toolbar,icon_size_toolbar);
-			var img = new Gtk.Image.from_pixbuf(pix);
-			btn_about.set_icon_widget(img);
-		}
-        catch(Error e){
-	        log_error (e.message);
-	    }
-	    
-		//btn_about
-        btn_about = new Gtk.ToolButton.from_stock ("gtk-about");
-		btn_about.label = _("About");
-		btn_about.set_tooltip_text (_("About TimeShift"));
-        toolbar.add(btn_about);
-
-        btn_about.clicked.connect (btn_about_clicked);
-        
 		//backup device ------------------------------------------------
 		
 		//hbox_device

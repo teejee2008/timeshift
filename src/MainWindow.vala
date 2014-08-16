@@ -83,7 +83,6 @@ class MainWindow : Gtk.Window{
 	
 	//timers
 	private uint timer_status_message;
-	private uint timer_status_check;
 	private uint timer_progress;
 	private uint timer_backup_device_init;
 	
@@ -171,6 +170,7 @@ class MainWindow : Gtk.Window{
         toolbar.add(btn_refresh_snapshots);
 
         btn_refresh_snapshots.clicked.connect (() => {
+			if (!check_backup_device_online()) { return; }
 			App.update_snapshot_list();
 			refresh_tv_backups();
 		});
@@ -450,7 +450,7 @@ class MainWindow : Gtk.Window{
 		}
 
 		timer_backup_device_init = Timeout.add(100, initialize_backup_device);
-		timer_status_check = Timeout.add_seconds(60, check_status);
+		//timer_status_check = Timeout.add_seconds(60, check_status);
     }
 
 	private bool initialize_backup_device(){
@@ -803,15 +803,23 @@ class MainWindow : Gtk.Window{
 	}
 	
 	private void btn_backup_clicked(){
+		
 		//check snapshot device -----------
 		
 		string msg;
 		int status_code = App.check_backup_device(out msg);
-		if ((status_code == 1) || (status_code == 2)){
-			gtk_messagebox(_("Low Disk Space"),_("Backup device does not have enough space"),null, true);
-			return;
-		}
 		
+		switch(status_code){
+			case -1:
+				check_backup_device_online();
+				return;
+			case 1:
+			case 2:
+				gtk_messagebox(_("Low Disk Space"),_("Backup device does not have enough space"),null, true);
+				check_status();
+				return;
+		}
+
 		//update UI ------------------
 		
 		update_ui(false);
@@ -849,6 +857,9 @@ class MainWindow : Gtk.Window{
 		TreeSelection sel;
 		bool is_success = true;
 		
+		//check if device is online
+		if (!check_backup_device_online()) { return; }
+		
 		//check selected count ----------------
 		
 		sel = tv_backups.get_selection ();
@@ -856,7 +867,7 @@ class MainWindow : Gtk.Window{
 			gtk_messagebox(_("No Snapshots Selected"),_("Please select the snapshots to delete"),null,false);
 			return; 
 		}
-
+		
 		//update UI ------------------
 		
 		update_ui(false);
@@ -936,6 +947,9 @@ class MainWindow : Gtk.Window{
 	private void btn_restore_clicked(){
 		TreeIter iter;
 		TreeSelection sel;
+
+		//check if backup device is online
+		if (!check_backup_device_online()) { return; }
 		
 		//check if single snapshot is selected -------------
 		
@@ -948,7 +962,7 @@ class MainWindow : Gtk.Window{
 			gtk_messagebox(_("Multiple Snapshots Selected"), _("Please select a single snapshot"),null,false);
 			return; 
 		}
-
+		
 		//get selected snapshot ------------------
 		
 		TimeShiftBackup snapshot_to_restore = null;
@@ -977,11 +991,18 @@ class MainWindow : Gtk.Window{
 		
 		if (response == Gtk.ResponseType.OK){
 			//ok
+			log_msg("Restoring snapshot '%s' to device '%s'".printf(App.snapshot_to_restore.name,App.restore_target.device),true);
+			if (App.reinstall_grub2){
+				log_msg("GRUB will be installed on '%s'".printf(App.grub_device),true);
+			}
 		}
 		else{ 
 			return; //cancel
 		}
-
+		
+		//check if backup device is online for the last time
+		if (!check_backup_device_online()) { return; }
+			
 		//update UI ----------------
 		
 		update_ui(false);
@@ -1068,6 +1089,10 @@ class MainWindow : Gtk.Window{
 	}
 	
 	private void btn_browse_snapshot_clicked(){
+		
+		//check if device is online
+		if (!check_backup_device_online()) { return; }
+		
 		TreeSelection sel = tv_backups.get_selection ();
 		if (sel.count_selected_rows() == 0){
 			var f = File.new_for_path(App.snapshot_dir);
@@ -1249,7 +1274,17 @@ class MainWindow : Gtk.Window{
 			timer_progress = 0;
 		}
 	}
-
+	
+	private bool check_backup_device_online(){
+		if (!App.backup_device_online()){
+			gtk_messagebox(_("Device Offline"),_("Backup device is not available"), null, true);
+			check_status();
+			return false;
+		}
+		else{
+			return true;
+		}
+	}
 
 	private bool check_status(){
 		
@@ -1338,20 +1373,10 @@ class MainWindow : Gtk.Window{
 		}
 		else{
 			float days = ((float) now.difference(last_snapshot_date) / TimeSpan.DAY);
-			float hours = ((float) now.difference(last_snapshot_date) / TimeSpan.HOUR);
-			float minutes = ((float) now.difference(last_snapshot_date) / TimeSpan.MINUTE);
-			
+
 			if (days > 1){
 				img_status_latest.file = img_dot_red;
 				lbl_status_latest.label = _("Last snapshot is") +  " %.0f ".printf(days) + _("days old") + "!";
-			}
-			else if (hours > 1){
-				img_status_latest.file = img_dot_green;
-				lbl_status_latest.label = _("Last snapshot is") + " %.0f ".printf(hours) + _("hours old");
-			}
-			else{
-				img_status_latest.file = img_dot_green;
-				lbl_status_latest.label = _("Last snapshot is") + " %.0f ".printf(minutes) + _("mins old");
 			}
 		}
 		

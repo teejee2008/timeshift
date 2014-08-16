@@ -1071,6 +1071,9 @@ public class RestoreWindow : Gtk.Dialog{
 	
 
 	private void btn_restore_clicked(){
+
+		//check if backup device is online
+		if (!check_backup_device_online()) { return; }
 		
 		//Note: A successful restore will reboot the system if target device is same as system device
 		
@@ -1142,16 +1145,22 @@ public class RestoreWindow : Gtk.Dialog{
 		
 		if (show_disclaimer() == Gtk.ResponseType.YES){
 			this.response(Gtk.ResponseType.OK);
-			log_msg("Restoring snapshot '%s' to device '%s'".printf(App.snapshot_to_restore.name,App.restore_target.device),true);
-			if (App.reinstall_grub2){
-				log_msg("GRUB will be installed on '%s'".printf(App.grub_device),true);
-			}
 		}
 		else{
 			this.response(Gtk.ResponseType.CANCEL);
 		}
 	}
 
+	private bool check_backup_device_online(){
+		if (!App.backup_device_online()){
+			gtk_messagebox(_("Device Offline"),_("Backup device is not available"), null, true);
+			return false;
+		}
+		else{
+			return true;
+		}
+	}
+	
 	private bool check_and_mount_devices(){
 		TreeIter iter;
 		ListStore store;

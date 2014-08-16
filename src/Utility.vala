@@ -162,12 +162,15 @@ namespace TeeJee.FileSystem{
 	}
 	
 	public bool file_exists (string filePath){
-		
 		/* Check if file exists */
-		
 		return ( FileUtils.test(filePath, GLib.FileTest.EXISTS) && FileUtils.test(filePath, GLib.FileTest.IS_REGULAR));
 	}
-
+	
+	public bool device_exists (string filePath){
+		/* Check if device exists */
+		return (FileUtils.test(filePath, GLib.FileTest.EXISTS));
+	}
+	
 	public void file_copy (string src_file, string dest_file){
 		try{
 			var file_src = File.new_for_path (src_file);
@@ -597,6 +600,15 @@ namespace TeeJee.DiskPartition{
 				list.add(pi);
 			}
 		}
+		
+		/*
+		//debug
+		string list = "";
+		foreach(string mp in info.mount_point_list){
+			list += mp + ";";
+		}
+		stdout.printf(info.device + "=" + list + "\n");
+		*/
 		
 		return list;
 	}

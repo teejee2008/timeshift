@@ -2340,7 +2340,9 @@ public class Main : GLib.Object{
 		//check if mounted
 		foreach(PartitionInfo info in get_mounted_partitions_using_mtab()){
 			if (info.mount_point_list.contains(mount_point_backup)){
-				return true;
+				if (device_exists(snapshot_device.device)){
+					return true;
+				}
 			}
 		}
 		

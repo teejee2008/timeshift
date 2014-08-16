@@ -106,7 +106,7 @@ public class Main : GLib.Object{
 	public TimeShiftBackup snapshot_to_restore;
 	public PartitionInfo restore_target;
 	public bool reinstall_grub2 = false;
-	public DeviceInfo grub_device;
+	public string grub_device;
 	
 	public string progress_text;
 
@@ -194,7 +194,7 @@ public class Main : GLib.Object{
 		//log dist info -----------------------
 		
 		DistInfo info = DistInfo.get_dist_info("/");
-		log_msg(_("Distribution") + ": " + info.full_name());
+		log_msg(_("Distribution") + ": " + info.full_name(),true);
 		
 		//check dependencies ---------------------
 		
@@ -326,11 +326,8 @@ public class Main : GLib.Object{
 					app_mode = "ondemand";
 					break;
 				
-				case "--show-commands":
-					LOG_COMMANDS = true;
-					break;
-					
 				case "--debug":
+					LOG_COMMANDS = true;
 					LOG_DEBUG = true;
 					break;
 				
@@ -585,7 +582,6 @@ public class Main : GLib.Object{
 		msg += "  --backup          " + _("Take scheduled backup") + "\n";
 		msg += "  --backup-now      " + _("Take on-demand backup") + "\n";
 		msg += "  --list            " + _("List all snapshots") + "\n";
-		msg += "  --show-commands   " + _("Show commands") + "\n";
 		msg += "  --debug           " + _("Show additional debug messages") + "\n";
 		msg += "  --help            " + _("Show all options") + "\n";
 		msg += "\n";
@@ -975,7 +971,7 @@ public class Main : GLib.Object{
 					
 					cmd = "rm -rf \"%s\"".printf(sync_path);
 					
-					if (LOG_COMMANDS) { log_msg(cmd, true); }
+					if (LOG_COMMANDS) { log_debug(cmd); }
 					
 					Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
 					if (ret_val != 0){
@@ -1081,7 +1077,7 @@ public class Main : GLib.Object{
 					
 						cmd = "cp -alp \"%s\" \"%s\"".printf(bak_restore.path + "/localhost/.", sync_path + "/localhost/");
 							
-						if (LOG_COMMANDS) { log_msg(cmd, true); }
+						if (LOG_COMMANDS) { log_debug(cmd); }
 
 						Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
 						if (ret_val != 0){
@@ -1108,7 +1104,7 @@ public class Main : GLib.Object{
 				cmd = "touch \"%s\"".printf(sync_path);
 				Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
 				
-				if (LOG_COMMANDS) { log_msg(cmd, true); }
+				if (LOG_COMMANDS) { log_debug(cmd); }
 
 				if (ret_val != 0){
 					log_error(std_err);
@@ -1132,7 +1128,7 @@ public class Main : GLib.Object{
 				cmd += " --exclude-from=\"%s\"".printf(list_file);
 				cmd += " /. \"%s\"".printf(sync_path + "/localhost/");
 				
-				if (LOG_COMMANDS) { log_msg(cmd, true); }
+				if (LOG_COMMANDS) { log_debug(cmd); }
 
 				Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
 
@@ -1156,7 +1152,7 @@ public class Main : GLib.Object{
 				string new_path = snapshot_dir + "/" + new_name; 
 				cmd = "cp -alp \"%s\" \"%s\"".printf(sync_path, new_path);
 
-				if (LOG_COMMANDS) { log_msg(cmd, true); }
+				if (LOG_COMMANDS) { log_debug(cmd); }
 
 				Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
 				if (ret_val != 0){
@@ -1326,7 +1322,7 @@ public class Main : GLib.Object{
 					path = mount_point_backup + "/timeshift/snapshots-%s".printf(tag);
 					cmd = "ln --symbolic \"../snapshots/%s\" -t \"%s\"".printf(bak.name, path);	
 					
-					if (LOG_COMMANDS) { log_msg(cmd, true); }
+					if (LOG_COMMANDS) { log_debug(cmd); }
 					
 					Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
 					if (ret_val != 0){
@@ -1356,7 +1352,7 @@ public class Main : GLib.Object{
 			if (f.query_exists()){
 				cmd = "rm -rf \"%s\"".printf(path + "/");	
 				
-				if (LOG_COMMANDS) { log_msg(cmd, true); }
+				if (LOG_COMMANDS) { log_debug(cmd); }
 				
 				Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
 				if (ret_val != 0){
@@ -1632,9 +1628,9 @@ public class Main : GLib.Object{
 				sh += "echo '' \n";
 				sh += "echo '" + _("Re-installing GRUB2 bootloader...") + "' \n";
 				sh += "for i in /dev /proc /run /sys; do mount --bind \"$i\" \"%s$i\"; done \n".printf(target_path);
-				sh += "chroot \"%s\" grub-install --recheck %s \n".printf(target_path, grub_device.device);
+				sh += "chroot \"%s\" grub-install --recheck %s \n".printf(target_path, grub_device);
 				sh += "chroot \"%s\" update-grub \n".printf(target_path);
-				
+
 				sh += "echo '' \n";
 				sh += "echo '" + _("Synching file systems...") + "' \n";
 				sh += "sync \n";
@@ -1678,7 +1674,7 @@ public class Main : GLib.Object{
 			}
 			
 			write_file(control_file_path, snapshot_to_restore.path); //save snapshot name
-
+						
 			//run the script --------------------
 			
 			if (reboot_after_restore){
@@ -1766,7 +1762,7 @@ public class Main : GLib.Object{
 			if(f.query_exists()){
 				cmd = "rm -rf \"%s\"".printf(snapshot_to_delete.path);
 				
-				if (LOG_COMMANDS) { log_msg(cmd, true); }
+				if (LOG_COMMANDS) { log_debug(cmd); }
 				
 				Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
 				
@@ -1819,7 +1815,7 @@ public class Main : GLib.Object{
 			
 			cmd = "rm -rf \"%s\"".printf(timeshift_dir);
 			
-			if (LOG_COMMANDS) { log_msg(cmd, true); }
+			if (LOG_COMMANDS) { log_debug(cmd); }
 					
 			Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
 			
@@ -2678,6 +2674,16 @@ public class AppExcludeEntry : GLib.Object{
 		return str.strip();	
 	}
 	
+}
+
+public class BootDeviceEntry : GLib.Object{
+	public string device = "";
+	public string description = "";
+	
+	public BootDeviceEntry(string _device, string _description){
+		this.device = _device;
+		this.description = _description;
+	}
 }
 
 	

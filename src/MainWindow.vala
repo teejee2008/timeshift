@@ -90,8 +90,7 @@ class MainWindow : Gtk.Window{
 	//other
 	private PartitionInfo snapshot_device_original;
 	private int cmb_backup_device_index_default = -1;
-	int icon_size_toolbar = 32;
-	
+
 	public MainWindow () {
 		this.title = AppName + " v" + AppVersion; // + " by " + AppAuthor + " (" + "teejeetech.blogspot.in" + ")";
         this.window_position = WindowPosition.CENTER;

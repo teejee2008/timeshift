@@ -92,7 +92,9 @@ public class RestoreWindow : Gtk.Dialog{
 	//actions
 	private Button btn_cancel;
 	private Button btn_restore;
-
+	
+	private PartitionInfo selected_target = null;
+	
 	public RestoreWindow () {
 		this.title = _("Restore");
         this.window_position = WindowPosition.CENTER_ON_PARENT;
@@ -611,9 +613,14 @@ public class RestoreWindow : Gtk.Dialog{
 	
 	
 	private void cell_device_grub_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
-		DeviceInfo info;
-		model.get (iter, 0, out info, -1);
-		(cell as Gtk.CellRendererText).text = info.description;
+		BootDeviceEntry entry;
+		model.get (iter, 0, out entry, -1);
+		if (entry.description.contains("(MBR)")){
+			(cell as Gtk.CellRendererText).markup = "<b>" + entry.description + "</b>";
+		}
+		else{
+			(cell as Gtk.CellRendererText).text = entry.description;
+		}
 	}
 
 
@@ -667,12 +674,37 @@ public class RestoreWindow : Gtk.Dialog{
 	}
 
 	private void refresh_cmb_boot_device(){
-		ListStore store = new ListStore(1, typeof(DeviceInfo));
-
-		TreeIter iter;
+		ListStore store = new ListStore(1, typeof(BootDeviceEntry));
+		
+		//add devices
+		Gee.ArrayList<BootDeviceEntry> device_list = new Gee.ArrayList<BootDeviceEntry>();
 		foreach(DeviceInfo di in get_block_devices()) {
+			device_list.add(new BootDeviceEntry(di.device,di.description + " (MBR)"));
+		}
+		
+		//add partitions
+		var list = App.partition_list;
+		foreach(PartitionInfo pi in list) {
+			if (!pi.has_linux_filesystem()) { continue; }
+			string desc = pi.device;
+			desc += (pi.type.length > 0) ? " ~ " + pi.type: "";
+			desc += (pi.label.length > 0) ? " ~ " + pi.label: "";
+			desc += (pi.dist_info.length > 0) ? " ~ " + pi.dist_info: "";
+			device_list.add(new BootDeviceEntry(pi.device,desc));
+		}
+		
+		//sort
+		device_list.sort((a,b) => { 
+					BootDeviceEntry p1 = (BootDeviceEntry) a;
+					BootDeviceEntry p2 = (BootDeviceEntry) b;
+					
+					return strcmp(p1.device,p2.device);
+				});
+				
+		TreeIter iter;
+		foreach(BootDeviceEntry entry in device_list) {
 			store.append(out iter);
-			store.set (iter, 0, di);
+			store.set (iter, 0, entry);
 		}
 
 		cmb_boot_device.set_model (store);
@@ -690,7 +722,7 @@ public class RestoreWindow : Gtk.Dialog{
 		int index = -1;
 		
 		for (bool next = store.get_iter_first (out iter); next; next = store.iter_next (ref iter)) {
-			DeviceInfo dev;
+			BootDeviceEntry dev;
 			store.get(iter, 0, out dev);
 			index++;
 			if (dev.device == App.restore_target.device[0:8]){
@@ -840,10 +872,19 @@ public class RestoreWindow : Gtk.Dialog{
 			iterExists = store.iter_next (ref iter);
 		}
 		App.restore_target = restore_target;
-
+		
 		//select grub device
-		cmb_boot_device_select_default(); 
-
+		if (selected_target == null){
+			cmb_boot_device_select_default();
+		}
+		else if (selected_target.device != restore_target.device){
+			cmb_boot_device_select_default(); 
+		}
+		else{
+			//target device has not changed - do not reset to default boot device
+		}
+		selected_target = restore_target;
+		
 		return false;
 	}
 
@@ -1090,17 +1131,21 @@ public class RestoreWindow : Gtk.Dialog{
 		
 		TreeIter iter;
 		if (App.reinstall_grub2){
-			DeviceInfo dev;
+			BootDeviceEntry entry;
 			cmb_boot_device.get_active_iter (out iter);
 			TreeModel model = (TreeModel) cmb_boot_device.model;
-			model.get(iter, 0, out dev);
-			App.grub_device = dev;
+			model.get(iter, 0, out entry);
+			App.grub_device = entry.device;
 		}
 		
 		//last option to quit - show disclaimer ------------
 		
 		if (show_disclaimer() == Gtk.ResponseType.YES){
 			this.response(Gtk.ResponseType.OK);
+			log_msg("Restoring snapshot '%s' to device '%s'".printf(App.snapshot_to_restore.name,App.restore_target.device),true);
+			if (App.reinstall_grub2){
+				log_msg("GRUB will be installed on '%s'".printf(App.grub_device),true);
+			}
 		}
 		else{
 			this.response(Gtk.ResponseType.CANCEL);

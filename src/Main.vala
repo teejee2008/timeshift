@@ -125,8 +125,16 @@ public class Main : GLib.Object{
 		}
 		
 		//init TMP
+		LOG_ENABLE = false;
 		init_tmp();
+		LOG_ENABLE = true;
 		
+		/*
+		 * Note:
+		 * init_tmp() will fail if timeshift is run as normal user
+		 * logging will be disabled temporarily so that the error is not displayed to user
+		 */
+
 		App = new Main(args);
 		bool success = App.start_application(args);
 		App.exit_app();
@@ -154,15 +162,15 @@ public class Main : GLib.Object{
 		if (!user_is_admin()){
 			msg = _("TimeShift needs admin access to backup and restore system files.") + "\n";
 			msg += _("Please run the application as admin (using 'sudo' or 'su')");
-				
+			
+			LOG_TIMESTAMP = false;
+			log_error(msg);
+			
 			if (app_mode == ""){
 				string title = _("Admin Access Required");
 				gtk_messagebox(title, msg, null, true);
 			}
-			else{
-				log_error(msg);
-			}
-			
+
 			exit(0);
 		}
 		

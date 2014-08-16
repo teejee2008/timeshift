@@ -1196,7 +1196,7 @@ namespace TeeJee.ProcessManagement{
 		
 		TEMP_DIR = Environment.get_tmp_dir() + "/" + AppShortName;
 		create_dir(TEMP_DIR);
-		
+
 		execute_command_script_sync("echo 'ok'",out std_out,out std_err);
 		if ((std_out == null)||(std_out.strip() != "ok")){
 			TEMP_DIR = Environment.get_home_dir() + "/.temp/" + AppShortName;
@@ -1586,7 +1586,7 @@ namespace TeeJee.ProcessManagement{
 				return false;
 		} 
 		catch (Error e) { 
-			log_error (e.message); 
+			//log_error (e.message); 
 			return false;
 		}
 	}

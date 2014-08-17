@@ -2156,7 +2156,10 @@ public class Main : GLib.Object{
 
 
 	public void cron_job_update(){
-		string crontab_entry = read_crontab_entry();
+		
+		if (live_system()) { return; }
+		
+		string crontab_entry = crontab_read_entry("timeshift");
 		string required_entry = get_crontab_string();
 		
 		if (is_scheduled && snapshot_list.size > 0){
@@ -2165,17 +2168,17 @@ public class Main : GLib.Object{
 					return;
 				}
 				else{
-					cron_job_remove();
-					cron_job_add();
+					crontab_remove_job();
+					crontab_add_job();
 				}
 			}
 			else{
-				cron_job_add();
+				crontab_add_job();
 			}
 		}
 		else{
 			if (crontab_entry.length > 0){
-				cron_job_remove();
+				crontab_remove_job();
 			}
 			else{
 				//do nothing
@@ -2186,87 +2189,33 @@ public class Main : GLib.Object{
 	private string get_crontab_string(){
 		return "*/%d * * * * timeshift --backup".printf(cron_job_interval_mins);
 	}
-	
-	private string read_crontab_entry(){
-		string cmd = "";
-		string std_out;
-		string std_err;
-		int ret_val;
-		
-		try{
-			cmd = "crontab -l";
-			Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-			if (ret_val != 0){
-				log_debug(_("Crontab is empty"));
-			}
-			else{
-				foreach(string line in std_out.split("\n")){
-					if (line.contains("timeshift")){
-						return line.strip();
-					}
-				}
-			}
 
-			return "";
-		}
-		catch(Error e){
-			log_error (e.message);
-			return "";
-		}
-	}
-	
-	private bool cron_job_add(){
-		string cmd = "";
-		string std_out;
-		string std_err;
-		int ret_val;
-		
+	private bool crontab_add_job(){
 		if (live_system()) { return false; }
 		
-		try{
-			string temp_file = get_temp_file_path();
-			write_file(temp_file, get_crontab_string() + "\n");
-
-			cmd = "crontab \"%s\"".printf(temp_file);
-			Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-			
-			if (ret_val != 0){
-				log_error(std_err);
-				log_error(_("Failed to add cron job"));
-				return false;
-			}
-			else{
-				log_msg(_("Cron job added"));
-				return true;
-			}
+		if (crontab_add(get_crontab_string())){
+			log_msg(_("Cron job added"));
+			return true;
 		}
-		catch(Error e){
-			log_error (e.message);
+		else {
+			log_error(_("Failed to add cron job"));
 			return false;
 		}
 	}
 	
-	private bool cron_job_remove(){
+	private bool crontab_remove_job(){
+		if (live_system()) { return false; }
 		
-		string cmd = "";
-		string std_out;
-		string std_err;
-		int ret_val;
-		
-		cmd = "crontab -l | sed '/timeshift/d' | crontab -";
-		ret_val = execute_command_script_sync(cmd, out std_out, out std_err);
-		
-		if (ret_val != 0){
-			log_error(_("Failed to remove cron job"));
-			return false;
-		}
-		else{
+		if (crontab_remove("timeshift")){
 			log_msg(_("Cron job removed"));
 			return true;
 		}
+		else{
+			log_error(_("Failed to remove cron job"));
+			return false;
+		}
 	}
-	
-	
+
 	public PartitionInfo? get_backup_device(){
 		var list = get_mounted_partitions_using_mtab();
 		foreach(PartitionInfo info in list){

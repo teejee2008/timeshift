@@ -2194,7 +2194,106 @@ namespace TeeJee.System{
 			return false;
 		}
 	}
+	
+	public bool crontab_remove(string line){
+		string cmd = "";
+		string std_out;
+		string std_err;
+		int ret_val;
+		
+		cmd = "crontab -l | sed '/%s/d' | crontab -".printf(line);
+		ret_val = execute_command_script_sync(cmd, out std_out, out std_err);
+		
+		if (ret_val != 0){
+			log_error(std_err);
+			return false;
+		}
+		else{
+			return true;
+		}
+	}
+	
+	public bool crontab_add(string entry){
+		string cmd = "";
+		string std_out;
+		string std_err;
+		int ret_val;
+		
+		try{
+			string crontab = crontab_read_all();
+			crontab += "\n" + entry + "\n";
+			crontab = crontab.replace("\n\n","\n");
+			
+			string temp_file = get_temp_file_path();
+			write_file(temp_file, crontab);
 
+			cmd = "crontab \"%s\"".printf(temp_file);
+			Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
+			
+			if (ret_val != 0){
+				log_error(std_err);
+				return false;
+			}
+			else{
+				return true;
+			}
+		}
+		catch(Error e){
+			log_error (e.message);
+			return false;
+		}
+	}
+
+	public string crontab_read_all(){
+		string cmd = "";
+		string std_out;
+		string std_err;
+		int ret_val;
+		
+		try {
+			cmd = "crontab -l";
+			Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
+			if (ret_val != 0){
+				log_debug(_("Crontab is empty"));
+				return "";
+			}
+			else{
+				return std_out;
+			}
+		}
+		catch (Error e){
+			log_error (e.message);
+			return "";
+		}
+	}
+	
+	public string crontab_read_entry(string search_string){
+		string cmd = "";
+		string std_out;
+		string std_err;
+		int ret_val;
+		
+		try{
+			cmd = "crontab -l";
+			Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
+			if (ret_val != 0){
+				log_debug(_("Crontab is empty"));
+			}
+			else{
+				foreach(string line in std_out.split("\n")){
+					if (line.contains(search_string)){
+						return line.strip();
+					}
+				}
+			}
+
+			return "";
+		}
+		catch(Error e){
+			log_error (e.message);
+			return "";
+		}
+	}
 }
 
 namespace TeeJee.Misc {

@@ -878,6 +878,7 @@ public class SettingsWindow : Gtk.Dialog{
 		tv_exclude_save_changes();
 
 		App.save_app_config();
+		App.cron_job_update();
 		
 		this.destroy();
 	}

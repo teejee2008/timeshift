@@ -93,6 +93,7 @@ public class Main : GLib.Object{
 	public bool in_progress = false;
 
 	public int cron_job_interval_mins = 30;
+	public int startup_delay_interval_mins = 10;
 	public int retain_snapshots_max_days = 200;
 	public int minimum_free_disk_space_mb = 2048;
 	public long first_snapshot_size = 0;
@@ -2159,42 +2160,104 @@ public class Main : GLib.Object{
 		
 		if (live_system()) { return; }
 		
-		string crontab_entry = crontab_read_entry("timeshift");
-		string required_entry = get_crontab_string();
+		string current_entry = "";
+		string new_entry = "";
+		bool new_entry_exists = false;
+		string search_string = "";
 		
-		if (is_scheduled && snapshot_list.size > 0){
-			if (crontab_entry.length > 0){
-				if (crontab_entry == required_entry){
-					return;
-				}
-				else{
-					crontab_remove_job();
-					crontab_add_job();
-				}
+		//scheduled job ----------------------------------
+		
+		new_entry = get_crontab_entry_scheduled();
+		new_entry_exists = false;
+		
+		//check for every entry
+		foreach(string interval in new string[] {"@monthly","@weekly","@daily","@hourly"}){
+			
+			search_string = "%s timeshift --backup".printf(interval);
+			
+			//read
+			current_entry = crontab_read_entry(search_string);
+			
+			if (current_entry.length == 0) { continue; } //not found
+			
+			//check
+			if (current_entry == new_entry){
+				//keep entry
+				new_entry_exists = true;
 			}
 			else{
-				crontab_add_job();
+				//remove current entry
+				crontab_remove_job(search_string);
 			}
 		}
-		else{
-			if (crontab_entry.length > 0){
-				crontab_remove_job();
+		
+		//add new entry if missing
+		if (!new_entry_exists && new_entry.length > 0){
+			crontab_add_job(new_entry);
+		}
+		
+		//boot job ----------------------------------
+		
+		search_string = "&& timeshift";
+		
+		new_entry = get_crontab_entry_boot();
+		new_entry_exists = false;
+		
+		//read
+		current_entry = crontab_read_entry(search_string);
+		
+		if (current_entry.length > 0) {
+			//check
+			if (current_entry == new_entry){
+				//keep entry
+				new_entry_exists = true;
 			}
 			else{
-				//do nothing
+				//remove current entry
+				crontab_remove_job(search_string);
 			}
+		}
+		
+		//add new entry if missing
+		if (!new_entry_exists && new_entry.length > 0){
+			crontab_add_job(new_entry);
 		}
 	}
 
-	private string get_crontab_string(){
-		return "*/%d * * * * timeshift --backup".printf(cron_job_interval_mins);
+	private string get_crontab_entry_scheduled(){
+		if (is_scheduled && (snapshot_list.size > 0)){
+			if (schedule_hourly){
+				return "@hourly timeshift --backup"; 
+			}
+			else if (schedule_daily){
+				return "@daily timeshift --backup";
+			}
+			else if (schedule_weekly){
+				return "@weekly timeshift --backup";
+			}
+			else if (schedule_monthly){
+				return "@monthly timeshift --backup";
+			}
+		}
+		
+		return "";
 	}
 
-	private bool crontab_add_job(){
+	private string get_crontab_entry_boot(){
+		if (is_scheduled && (snapshot_list.size > 0)){
+			if (schedule_boot){
+				return "@reboot sleep %dm && timeshift --backup".printf(startup_delay_interval_mins);
+			}
+		}
+		
+		return "";
+	}
+	
+	private bool crontab_add_job(string entry){
 		if (live_system()) { return false; }
 		
-		if (crontab_add(get_crontab_string())){
-			log_msg(_("Cron job added"));
+		if (crontab_add(entry)){
+			log_msg(_("Cron job added") + ": %s".printf(entry));
 			return true;
 		}
 		else {
@@ -2203,11 +2266,11 @@ public class Main : GLib.Object{
 		}
 	}
 	
-	private bool crontab_remove_job(){
+	private bool crontab_remove_job(string search_string){
 		if (live_system()) { return false; }
 		
-		if (crontab_remove("timeshift")){
-			log_msg(_("Cron job removed"));
+		if (crontab_remove(search_string)){
+			log_msg(_("Cron job removed") + ": %s".printf(search_string));
 			return true;
 		}
 		else{

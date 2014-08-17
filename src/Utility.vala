@@ -2221,8 +2221,12 @@ namespace TeeJee.System{
 		
 		try{
 			string crontab = crontab_read_all();
-			crontab += "\n" + entry + "\n";
-			crontab = crontab.replace("\n\n","\n");
+			crontab += crontab.has_suffix("\n") ? "" : "\n";
+			crontab += entry + "\n";
+			
+			//remove empty lines
+			crontab = crontab.replace("\n\n","\n"); //remove empty lines in middle
+			crontab = crontab.has_prefix("\n") ? crontab[1:crontab.length] : crontab; //remove empty lines in beginning
 			
 			string temp_file = get_temp_file_path();
 			write_file(temp_file, crontab);

@@ -1632,7 +1632,7 @@ public class Main : GLib.Object{
 			
 			//chroot and re-install grub2 --------
 			
-			if (reinstall_grub2 && grub_device != null){
+			if (reinstall_grub2 && (grub_device != null) && (grub_device.length > 0)){
 				sh += "echo '' \n";
 				sh += "echo '" + _("Re-installing GRUB2 bootloader...") + "' \n";
 				sh += "for i in /dev /proc /run /sys; do mount --bind \"$i\" \"%s$i\"; done \n".printf(target_path);

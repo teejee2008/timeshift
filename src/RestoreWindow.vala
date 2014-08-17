@@ -55,6 +55,7 @@ public class RestoreWindow : Gtk.Dialog{
 	//bootloader
 	private Label lbl_header_bootloader;
 	private ComboBox cmb_boot_device;
+	private CheckButton chk_skip_grub_install;
 	
 	//apps
 	private Label lbl_app;
@@ -124,7 +125,7 @@ public class RestoreWindow : Gtk.Dialog{
         
         //hbox_device
         Box hbox_device = new Box (Orientation.HORIZONTAL, 6);
-        hbox_device.margin = 6;
+        //hbox_device.margin = 6;
 		vbox_target.add(hbox_device);
 
 		//lbl_header_partitions
@@ -157,7 +158,8 @@ public class RestoreWindow : Gtk.Dialog{
 				App.restore_target = App.root_device;
 			}
 			
-			tv_partitions_select_target(); 
+			refresh_tv_partitions();
+			//tv_partitions_select_target(); 
 			cmb_boot_device_select_default();
 		});
 		
@@ -267,7 +269,7 @@ public class RestoreWindow : Gtk.Dialog{
 		//hbox_grub
 		Box hbox_grub = new Box (Orientation.HORIZONTAL, 6);
 		hbox_grub.margin_right = 6;
-        hbox_grub.margin_bottom = 6;
+        //hbox_grub.margin_bottom = 6;
         vbox_target.add (hbox_grub);
 
 		//cmb_boot_device
@@ -286,6 +288,18 @@ public class RestoreWindow : Gtk.Dialog{
 		CellRendererText cell_device_grub = new CellRendererText();
         cmb_boot_device.pack_start(cell_device_grub, false );
         cmb_boot_device.set_cell_data_func (cell_device_grub, cell_device_grub_render);
+		
+		string tt = "<b>" + _("** Advanced Users **") + "</b>\n\n"+ _("Skips bootloader (re)installation on target device.\nFiles in /boot directory on target partition will remain untouched.\n\nIf you are restoring a system that was bootable previously then it should boot successfully.\nOtherwise the system may fail to boot.");
+		
+		//chk_skip_grub_install
+		chk_skip_grub_install = new CheckButton.with_label(_("Skip bootloader installation (not recommended)"));
+		chk_skip_grub_install.active = false;
+		chk_skip_grub_install.set_tooltip_markup(tt);
+		vbox_target.add (chk_skip_grub_install);
+		
+		chk_skip_grub_install.toggled.connect(()=>{
+			cmb_boot_device.sensitive = !chk_skip_grub_install.active;
+		});
 		
         //Exclude Apps tab ---------------------------------------------
 		
@@ -591,24 +605,41 @@ public class RestoreWindow : Gtk.Dialog{
 		else{
 			(cell as Gtk.CellRendererText).text = pi.partition_name;
 		}
+		
+		Gtk.CellRendererText ctxt = (cell as Gtk.CellRendererText);
+		set_cell_text_color(ref ctxt);
 	}
-
+	
+	private void set_cell_text_color(ref CellRendererText cell){
+		string span = "<span>";
+		if (!sw_partitions.sensitive){
+			span = "<span foreground=\"#585858\">";
+		}
+		cell.markup = span + cell.text + "</span>";
+	}
+	
 	private void cell_fs_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
 		PartitionInfo pi;
 		model.get (iter, 0, out pi, -1);
 		(cell as Gtk.CellRendererText).text = pi.type;
+		Gtk.CellRendererText ctxt = (cell as Gtk.CellRendererText);
+		set_cell_text_color(ref ctxt);
 	}
 	
 	private void cell_size_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
 		PartitionInfo pi;
 		model.get (iter, 0, out pi, -1);
 		(cell as Gtk.CellRendererText).text = (pi.size_mb > 0) ? "%s GB".printf(pi.size) : "";
+		Gtk.CellRendererText ctxt = (cell as Gtk.CellRendererText);
+		set_cell_text_color(ref ctxt);
 	}
 	
 	private void cell_dist_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
 		PartitionInfo pi;
 		model.get (iter, 0, out pi, -1);
 		(cell as Gtk.CellRendererText).text = pi.dist_info;
+		Gtk.CellRendererText ctxt = (cell as Gtk.CellRendererText);
+		set_cell_text_color(ref ctxt);
 	}
 	
 	
@@ -1081,6 +1112,22 @@ public class RestoreWindow : Gtk.Dialog{
 		if (!ok){
 			return;
 		}
+
+		//save grub install options ----------------------
+		
+		App.reinstall_grub2 = !chk_skip_grub_install.active;
+
+		TreeIter iter;
+		if (App.reinstall_grub2){
+			BootDeviceEntry entry;
+			cmb_boot_device.get_active_iter (out iter);
+			TreeModel model = (TreeModel) cmb_boot_device.model;
+			model.get(iter, 0, out entry);
+			App.grub_device = entry.device;
+		}
+		else{
+			App.grub_device = "";
+		}
 		
 		//save modified exclude list ----------------------
 		
@@ -1122,23 +1169,15 @@ public class RestoreWindow : Gtk.Dialog{
 			}
 		}
 		
+		//exclude timeshift backups
 		string timeshift_path = "/timeshift/*";
 		if (!App.exclude_list_restore.contains(timeshift_path)){
 			App.exclude_list_restore.add(timeshift_path);
 		}
-
-		//save grub install options ----------------------
 		
-		//App.reinstall_grub2 = chk_restore_grub2.active;
-		App.reinstall_grub2 = true;
-		
-		TreeIter iter;
-		if (App.reinstall_grub2){
-			BootDeviceEntry entry;
-			cmb_boot_device.get_active_iter (out iter);
-			TreeModel model = (TreeModel) cmb_boot_device.model;
-			model.get(iter, 0, out entry);
-			App.grub_device = entry.device;
+		//exclude boot directory if grub install is skipped
+		if (!App.reinstall_grub2){
+			App.exclude_list_restore.add("/boot/*");
 		}
 		
 		//last option to quit - show disclaimer ------------

@@ -208,6 +208,7 @@ public class RestoreWindow : Gtk.Dialog{
 		cell_mount.editable = true;
 		cell_mount.width = 70;
 		col_mount.pack_start (cell_mount, false);
+		col_mount.set_cell_data_func (cell_mount, cell_mount_render);
 		tv_partitions.append_column(col_mount);
 		
 		cell_mount.set_property ("text-column", 0);
@@ -632,6 +633,10 @@ public class RestoreWindow : Gtk.Dialog{
 		(cell as Gtk.CellRendererText).text = (pi.size_mb > 0) ? "%s GB".printf(pi.size) : "";
 		Gtk.CellRendererText ctxt = (cell as Gtk.CellRendererText);
 		set_cell_text_color(ref ctxt);
+	}
+	
+	private void cell_mount_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
+		(cell as Gtk.CellRendererCombo).background = "#F2F5A9";
 	}
 	
 	private void cell_dist_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){

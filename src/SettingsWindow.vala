@@ -462,6 +462,7 @@ public class SettingsWindow : Gtk.Dialog{
 		string units;
 		model.get (iter, 1, out val, 2, out units, -1);
 		(cell as Gtk.CellRendererText).text = (units == "GB") ? "%.0f".printf(val/1024.0) : val.to_string();
+		(cell as Gtk.CellRendererText).background = "#F2F5A9";
 	}
 	
 	private void cell_remove_units_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){

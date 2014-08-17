@@ -1,13 +1,17 @@
-timeshift (1.4.4) trusty; urgency=medium
+timeshift (1.5) trusty; urgency=medium
 
-  * Updated build and install scripts
+  * Added option to install bootloader on partition VBR
 
-  * Added uninstaller
+  * Added option to skip bootloader installation
 
-  * Updated desktop launcher to use pkexec where available
+  * Fixed: Enabling automatic snapshots removes existing cron jobs
+
+  * Fixed an issue where the backup device status was not detected correctly
   
-  * Removed dependency on 'sudo'
+  * Backup jobs now run at the minimum backup interval selected by user
+
+  * Use regular expression matching for searching crontab entries
   
-  * Added Korean and French translations
+  * Various fixes and improvements
   
- -- Tony George <tony.george.kol@gmail.com>  Fri, 15 Aug 2014 11:00:00 +0530
+ -- Tony George <tony.george.kol@gmail.com>  Sun, 17 Aug 2014 11:00:00 +0530

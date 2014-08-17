@@ -2186,7 +2186,7 @@ public class Main : GLib.Object{
 			}
 			else{
 				//remove current entry
-				crontab_remove_job(search_string);
+				crontab_remove_job(current_entry);
 			}
 		}
 		
@@ -2197,13 +2197,13 @@ public class Main : GLib.Object{
 		
 		//boot job ----------------------------------
 		
-		search_string = "&& timeshift";
+		search_string = """@reboot sleep [0-9]*m && timeshift --backup""";
 		
 		new_entry = get_crontab_entry_boot();
 		new_entry_exists = false;
 		
 		//read
-		current_entry = crontab_read_entry(search_string);
+		current_entry = crontab_read_entry(search_string, true);
 		
 		if (current_entry.length > 0) {
 			//check
@@ -2213,7 +2213,7 @@ public class Main : GLib.Object{
 			}
 			else{
 				//remove current entry
-				crontab_remove_job(search_string);
+				crontab_remove_job(current_entry);
 			}
 		}
 		

@@ -2271,13 +2271,19 @@ namespace TeeJee.System{
 		}
 	}
 	
-	public string crontab_read_entry(string search_string){
+	public string crontab_read_entry(string search_string, bool use_regex_matching = false){
 		string cmd = "";
 		string std_out;
 		string std_err;
 		int ret_val;
 		
 		try{
+			Regex rex = null;
+			MatchInfo match;
+			if (use_regex_matching){
+				rex = new Regex(search_string);
+			}
+
 			cmd = "crontab -l";
 			Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
 			if (ret_val != 0){
@@ -2285,8 +2291,15 @@ namespace TeeJee.System{
 			}
 			else{
 				foreach(string line in std_out.split("\n")){
-					if (line.contains(search_string)){
-						return line.strip();
+					if (use_regex_matching && (rex != null)){
+						if (rex.match (line, 0, out match)){
+							return line.strip();
+						}
+					}
+					else {
+						if (line.contains(search_string)){
+							return line.strip();
+						}
 					}
 				}
 			}

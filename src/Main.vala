@@ -2244,7 +2244,7 @@ public class Main : GLib.Object{
 
 	private string get_crontab_entry_boot(){
 		if (is_scheduled && (snapshot_list.size > 0)){
-			if (schedule_boot){
+			if (schedule_boot || schedule_hourly || schedule_daily || schedule_weekly || schedule_monthly){
 				return "@reboot sleep %dm && timeshift --backup".printf(startup_delay_interval_mins);
 			}
 		}

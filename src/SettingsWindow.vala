@@ -141,7 +141,7 @@ public class SettingsWindow : Gtk.Dialog{
         switch_schedule.notify["active"].connect(switch_schedule_changed);
 		
 		//tv_schedule -----------------------------------------------
-		
+
         //tv_schedule
 		tv_schedule = new TreeView();
 		tv_schedule.get_selection().mode = SelectionMode.MULTIPLE;
@@ -190,6 +190,11 @@ public class SettingsWindow : Gtk.Dialog{
         vbox_auto_remove = new Box(Gtk.Orientation.VERTICAL, 6);
         vbox_auto_remove.margin = 6;
         notebook.append_page (vbox_auto_remove, lbl_auto_remove);
+
+		//lbl_auto_remove_msg
+		Label lbl_auto_remove_msg = new Label (_("Snapshots matching following rules will be removed automatically"));
+		lbl_auto_remove_msg.xalign = (float) 0.0;
+		vbox_auto_remove.add(lbl_auto_remove_msg);
 
 		//tv_remove
 		tv_remove = new TreeView();

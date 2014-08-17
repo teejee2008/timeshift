@@ -92,7 +92,6 @@ public class Main : GLib.Object{
 	public bool is_success = false;
 	public bool in_progress = false;
 
-	public int cron_job_interval_mins = 30;
 	public int startup_delay_interval_mins = 10;
 	public int retain_snapshots_max_days = 200;
 	public int minimum_free_disk_space_mb = 2048;

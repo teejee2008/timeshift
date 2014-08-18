@@ -2173,7 +2173,16 @@ public class Main : GLib.Object{
 		new_entry = get_crontab_entry_scheduled();
 		new_entry_exists = false;
 		
-		//check for every entry
+		//check and remove crontab entries created by previous versions of timeshift
+		
+		search_string = "*/30 * * * * timeshift --backup";
+		current_entry = crontab_read_entry(search_string);
+		if (current_entry.length > 0) {
+			//remove entry
+			crontab_remove_job(current_entry);
+		} 
+		
+		//check for regular entries
 		foreach(string interval in new string[] {"@monthly","@weekly","@daily","@hourly"}){
 			
 			search_string = "%s timeshift --backup".printf(interval);

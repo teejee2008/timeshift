@@ -1994,7 +1994,7 @@ public class Main : GLib.Object{
 			return t1.date.compare(t2.date);
 		});
 
-		log_debug(_("updated snapshot list"));
+		//log_debug(_("Updated snapshot list"));
 		return true;
 	}
 	
@@ -2015,7 +2015,7 @@ public class Main : GLib.Object{
 			log_error(_("Failed to get partition list."));
 		}
 
-		log_debug(_("updated partition list"));
+		log_debug(_("Updated partition list"));
 	}
 
 	public Gee.ArrayList<TimeShiftBackup?> get_snapshot_list(string tag = ""){
@@ -2339,7 +2339,7 @@ public class Main : GLib.Object{
 			}
 		}
 
-		log_debug("check backup device: status = %d".printf(status_code));
+		log_debug("Checked backup device (status=%d)".printf(status_code));
 				
 		return status_code;
 	}

@@ -746,8 +746,6 @@ class MainWindow : Gtk.Window{
 		
 		cmb_backup_device.set_model (store);
 		cmb_backup_device.active = index_selected;
-
-		log_debug("cmb_backup_device refreshed");
 	}
 	
 	private void cmb_backup_device_changed(){

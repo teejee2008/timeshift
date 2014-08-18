@@ -1069,7 +1069,7 @@ public class Main : GLib.Object{
 					}
 					
 					if (bak_restore == null){
-						//use latest snapshot
+						//select latest snapshot for hard-linking
 						for(int k = snapshot_list.size -1; k >= 0; k--){
 							TimeShiftBackup bak = snapshot_list[k];
 							bak_restore = bak; //TODO: check dist type
@@ -1079,7 +1079,6 @@ public class Main : GLib.Object{
 					
 					//hard-link selected snapshot
 					if (bak_restore != null){
-						
 						progress_text = _("Hard-linking files from previous snapshot...");
 						log_msg(progress_text);
 					
@@ -1660,29 +1659,34 @@ public class Main : GLib.Object{
 				sh += "shutdown -r now \n";
 				reboot_after_restore = true;
 			}
+
+			//check if current system is being restored and do some housekeeping ---------
 			
-			//invalidate the .sync snapshot --------------------
-			
-			string sync_name = ".sync"; 
-			string sync_path = snapshot_dir + "/" + sync_name; 
-			string control_file_path = sync_path + "/info.json";
-			
-			f = File.new_for_path(control_file_path);
-			if(f.query_exists()){
-				f.delete(); //delete the control file
+			if (reboot_after_restore){
+				
+				//invalidate the .sync snapshot  -------
+				
+				string sync_name = ".sync"; 
+				string sync_path = snapshot_dir + "/" + sync_name; 
+				string control_file_path = sync_path + "/info.json";
+				
+				f = File.new_for_path(control_file_path);
+				if(f.query_exists()){
+					f.delete(); //delete the control file
+				}
+				
+				//save a control file for updating the .sync snapshot -----
+				
+				control_file_path = snapshot_dir + "/.sync-restore";
+				
+				f = File.new_for_path(control_file_path);
+				if(f.query_exists()){
+					f.delete(); //delete existing file
+				}
+				
+				write_file(control_file_path, snapshot_to_restore.path); //save snapshot name
 			}
-			
-			//save a control file for updating the .sync snapshot --------------------
-			
-			control_file_path = snapshot_dir + "/.sync-restore";
-			
-			f = File.new_for_path(control_file_path);
-			if(f.query_exists()){
-				f.delete(); //delete existing file
-			}
-			
-			write_file(control_file_path, snapshot_to_restore.path); //save snapshot name
-						
+		
 			//run the script --------------------
 			
 			if (reboot_after_restore){

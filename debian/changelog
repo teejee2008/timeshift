@@ -1,17 +1,11 @@
-timeshift (1.5.1) trusty; urgency=medium
+timeshift (1.5.2) trusty; urgency=medium
 
-  * Added option to install bootloader on partition VBR
+  * Fixed: Debug messages were written to log twice
 
-  * Added option to skip bootloader installation
+  * Fixed: Do not invalidate .sync when snapshot is restored to another device
 
-  * Fixed: Enabling automatic snapshots removes existing cron jobs
-
-  * Fixed an issue where the backup device status was not detected correctly
+  * Fixed: Remove crontab entries created by previous versions of timeshift
   
-  * Backup jobs now run at the minimum backup interval selected by user
+  * Clean up log messages
 
-  * Use regular expression matching for searching crontab entries
-  
-  * Various fixes and improvements
-  
- -- Tony George <tony.george.kol@gmail.com>  Sun, 17 Aug 2014 11:00:00 +0530
+ -- Tony George <tony.george.kol@gmail.com>  Mon, 18 Aug 2014 11:00:00 +0530

@@ -40,7 +40,7 @@ using TeeJee.Misc;
 public Main App;
 public const string AppName = "TimeShift";
 public const string AppShortName = "timeshift";
-public const string AppVersion = "1.5.1";
+public const string AppVersion = "1.5.2";
 public const string AppAuthor = "Tony George";
 public const string AppAuthorEmail = "teejee2008@gmail.com";
 
@@ -1340,7 +1340,7 @@ public class Main : GLib.Object{
 				}
 			}
 			
-			log_msg (_("symlinks updated"));
+			log_msg (_("Symlinks updated"));
 		} 
 		catch (Error e) {
 	        log_error (e.message);
@@ -2015,7 +2015,7 @@ public class Main : GLib.Object{
 			log_error(_("Failed to get partition list."));
 		}
 
-		log_debug(_("Updated partition list"));
+		log_debug(_("Partition list updated"));
 	}
 
 	public Gee.ArrayList<TimeShiftBackup?> get_snapshot_list(string tag = ""){

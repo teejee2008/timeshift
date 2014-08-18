@@ -124,16 +124,19 @@ namespace TeeJee.Logging{
 		if (!LOG_ENABLE) { return; }
 			
 		if (LOG_DEBUG){
+			//display output and write to log
 			log_msg (message);
 		}
-
-		try {
-			if (dos_log != null){
-				dos_log.put_string ("[%s] %s\n".printf(timestamp(), message));
+		else{
+			//write to log only
+			try {
+				if (dos_log != null){
+					dos_log.put_string ("[%s] %s\n".printf(timestamp(), message));
+				}
+			} 
+			catch (Error e) {
+				stdout.printf (e.message);
 			}
-		} 
-		catch (Error e) {
-			stdout.printf (e.message);
 		}
 	}
 }

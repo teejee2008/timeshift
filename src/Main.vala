@@ -71,9 +71,9 @@ public class Main : GLib.Object{
 	public string mount_point_test = "/mnt/timeshift-test";
 	public string snapshot_dir = "/mnt/timeshift/timeshift/snapshots";
 	public DistInfo current_distro;
+	public bool mirror_system = false;
 	
 	public bool _is_scheduled = false;
-	
 	public bool schedule_monthly = false;
 	public bool schedule_weekly = false;
 	public bool schedule_daily = true;

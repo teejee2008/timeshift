@@ -40,7 +40,7 @@ using TeeJee.Misc;
 public Main App;
 public const string AppName = "TimeShift";
 public const string AppShortName = "timeshift";
-public const string AppVersion = "1.5.2";
+public const string AppVersion = "1.5.x";
 public const string AppAuthor = "Tony George";
 public const string AppAuthorEmail = "teejee2008@gmail.com";
 
@@ -1624,7 +1624,13 @@ public class Main : GLib.Object{
 			sh += "rsync -avir --force --delete-after";
 			sh += " --log-file=\"%s\"".printf(log_path);
 			sh += " --exclude-from=\"%s\"".printf(source_path + "/exclude-restore.list");
-			sh += " \"%s\" \"%s\" \n".printf(source_path + "/localhost/", target_path);
+			
+			if (mirror_system){
+				sh += " \"%s\" \"%s\" \n".printf("/", target_path);
+			}
+			else{
+				sh += " \"%s\" \"%s\" \n".printf(source_path + "/localhost/", target_path);
+			}
 
 			//sync file system
 			sh += "sync \n";
@@ -2415,21 +2421,40 @@ public class Main : GLib.Object{
 			if (f.query_exists()){
 				f.delete();
 			}
-
+			
+			f = File.new_for_path("/tmp/rsync.log");
+			if (f.query_exists()){
+				f.delete();
+			}
+			
+			f = File.new_for_path("/tmp/empty");
+			if (!f.query_exists()){
+				create_dir("/tmp/empty");
+			}
+			
 			save_exclude_list("/tmp");
 			
-			cmd = "du --summarize --one-file-system --exclude-from=/tmp/exclude.list /";
+			cmd  = "LC_ALL=C ; rsync -ai --delete --numeric-ids --relative --stats --dry-run --delete-excluded --exclude-from=/tmp/exclude.list /. /tmp/empty/ &> /tmp/rsync.log";
 			
-			Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-			if (ret_val != 0){
+			ret_val = execute_command_script_sync(cmd, out std_out, out std_err);
+			if (ret_val == 0){
+				cmd = "cat /tmp/rsync.log | awk '/Total file size/ {print $4}'";
+				ret_val = execute_command_script_sync(cmd, out std_out, out std_err);
+				if (ret_val == 0){
+					required_space = long.parse(std_out.replace(",","").strip());
+					required_space = required_space / (1024 * 1024);
+					is_success = true;
+				}
+				else{
+					log_error (_("Failed to estimate system size"));
+					log_error (std_err);
+					is_success = false;
+				}
+			}
+			else{
 				log_error (_("Failed to estimate system size"));
 				log_error (std_err);
 				is_success = false;
-			}
-			else{
-				required_space = long.parse(std_out.replace("/","").strip());
-				required_space = required_space / 1024;
-				is_success = true;
 			}
 		}
 		catch(Error e){
@@ -2443,7 +2468,7 @@ public class Main : GLib.Object{
 		
 		this.first_snapshot_size = required_space;
 		
-		log_debug("check first snapshot size: %ld MB".printf(required_space));
+		log_debug("First snapshot size: %ld MB".printf(required_space));
 		
 		in_progress = false;
 	}

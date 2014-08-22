@@ -613,7 +613,7 @@ class MainWindow : Gtk.Window{
 	private void cell_date_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
 		TimeShiftBackup bak;
 		model.get (iter, 0, out bak, -1);
-		(cell as Gtk.CellRendererText).text = bak.date.format ("%Y-%m-%d %H:%M:%S");
+		(cell as Gtk.CellRendererText).text = bak.date.format ("%Y-%m-%d %I:%M %p");
 	}
 	
 	private void cell_tags_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){

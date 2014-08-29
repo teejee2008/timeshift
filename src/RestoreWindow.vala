@@ -129,7 +129,7 @@ public class RestoreWindow : Gtk.Dialog{
 		vbox_target.add(hbox_device);
 
 		//lbl_header_partitions
-		lbl_header_partitions = new Gtk.Label(_("Device for Restoring Snapshot") + ":");
+		lbl_header_partitions = new Gtk.Label((App.mirror_system ? _("Device for Cloning System") : _("Device for Restoring Snapshot")) + ":");
 		lbl_header_partitions.xalign = (float) 0.0;
 		lbl_header_partitions.set_use_markup(true);
 		hbox_device.add(lbl_header_partitions);
@@ -142,7 +142,7 @@ public class RestoreWindow : Gtk.Dialog{
 		hbox_device.add(radio_other);
 		radio_other.label = "Other Device";
 
-		if (App.live_system()){
+		if (App.live_system() || App.mirror_system){
 			radio_other.active = true;
 			radio_sys.sensitive = false;
 		}
@@ -554,7 +554,7 @@ public class RestoreWindow : Gtk.Dialog{
 		//initialize -----------------------------------------
 
 		btn_reset_exclude_list_clicked();
-		
+
 		refresh_tv_partitions();
 		refresh_cmb_boot_device();
 		//refresh_tv_exclude(); //called by btn_reset_exclude_list_clicked()
@@ -562,15 +562,15 @@ public class RestoreWindow : Gtk.Dialog{
 
 		sw_partitions.sensitive = radio_other.active;
 		
-		notebook.switch_page.connect((page, new_page_index) => {
-			uint old_page_index = notebook.page;
-			//log_msg("%u -> %u".printf(old_page_index, new_page_index));
+		notebook.switch_page.connect_after((page, new_page_index) => {
 			if (new_page_index == 1){
 				bool ok = check_and_mount_devices();
 				if (!ok){
-					notebook.page = (int) old_page_index;
+					notebook.set_current_page(0);
+					gtk_do_events();
+					return;
 				}
-				
+
 				//save current app selections
 				Gee.ArrayList<string> selected_app_list = new Gee.ArrayList<string>();
 				foreach(AppExcludeEntry entry in App.exclude_list_apps){
@@ -591,12 +591,23 @@ public class RestoreWindow : Gtk.Dialog{
 				
 				//refresh treeview
 				refresh_tv_apps();
-				
 			}
 		});
+		
+		set_app_page_state();
 	}
-
-
+	
+	private void set_app_page_state(){
+		if (App.restore_target == null){
+			lbl_app.sensitive = false;
+			vbox_app.sensitive = false;
+		}
+		else{
+			lbl_app.sensitive = true;
+			vbox_app.sensitive = true;
+		}
+	}
+	
 	private void cell_device_target_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
 		PartitionInfo pi;
 		model.get (iter, 0, out pi, -1);
@@ -790,6 +801,7 @@ public class RestoreWindow : Gtk.Dialog{
 		TreeIter iter;
 		foreach(PartitionInfo pi in list) {
 			if (!pi.has_linux_filesystem()) { continue; }
+			if (!radio_sys.sensitive && (App.root_device != null) && ((pi.device == App.root_device.device)||(pi.uuid == App.root_device.uuid))) { continue; }
 			
 			string tt = "";
 			tt += "%-7s".printf(_("Device")) + "\t: %s\n".printf(pi.device);
@@ -920,6 +932,8 @@ public class RestoreWindow : Gtk.Dialog{
 			//target device has not changed - do not reset to default boot device
 		}
 		selected_target = restore_target;
+		
+		set_app_page_state();
 		
 		return false;
 	}
@@ -1085,9 +1099,11 @@ public class RestoreWindow : Gtk.Dialog{
 		temp_exclude_list = new Gee.ArrayList<string>();
 		
 		//add all include/exclude items from snapshot list
-		foreach(string path in App.snapshot_to_restore.exclude_list){
-			if (!temp_exclude_list.contains(path) && !App.exclude_list_default.contains(path) && !App.exclude_list_home.contains(path)){
-				temp_exclude_list.add(path);
+		if (App.snapshot_to_restore != null){
+			foreach(string path in App.snapshot_to_restore.exclude_list){
+				if (!temp_exclude_list.contains(path) && !App.exclude_list_default.contains(path) && !App.exclude_list_home.contains(path)){
+					temp_exclude_list.add(path);
+				}
 			}
 		}
 		
@@ -1210,14 +1226,7 @@ public class RestoreWindow : Gtk.Dialog{
 		ListStore store;
 		TreeSelection sel;
 		
-		//check if grub device selected ---------------
-
-		if (cmb_boot_device.active < 0){ 
-			string title =_("Boot device not selected");
-			string msg = _("Please select the boot device");
-			gtk_messagebox(title, msg, this, true);
-			return false; 
-		}
+		//check if target device selected ---------------
 
 		if (radio_sys.active){
 			//we are restoring the current system - no need to mount devices
@@ -1228,8 +1237,9 @@ public class RestoreWindow : Gtk.Dialog{
 			//we are restoring to another disk - mount selected devices
 
 			App.restore_target = null;
+			App.mount_list.clear();
 			bool no_mount_points_set_by_user = true;
-			
+
 			//find the root mount point set by user
 			store = (ListStore) tv_partitions.model;
 			for (bool next = store.get_iter_first (out iter); next; next = store.iter_next (ref iter)) {
@@ -1237,10 +1247,12 @@ public class RestoreWindow : Gtk.Dialog{
 				string mount_point;
 				store.get(iter, 0, out pi);
 				store.get(iter, 1, out mount_point);
-				
+
 				if ((mount_point != null) && (mount_point.length > 0)){
 					mount_point = mount_point.strip();
 					no_mount_points_set_by_user = false;
+					
+					App.mount_list.add(new MountEntry(pi,mount_point));
 					
 					if (mount_point == "/"){
 						App.restore_target = pi;
@@ -1264,6 +1276,7 @@ public class RestoreWindow : Gtk.Dialog{
 								PartitionInfo pi;
 								store.get(iter, 0, out pi);
 								App.restore_target = pi;
+								App.mount_list.add(new MountEntry(pi,"/"));
 								break;
 							}
 						}
@@ -1326,7 +1339,16 @@ public class RestoreWindow : Gtk.Dialog{
 				}
 			}
 		}
+	
+		//check if grub device selected ---------------
 
+		if (!chk_skip_grub_install.active && cmb_boot_device.active < 0){ 
+			string title =_("Boot device not selected");
+			string msg = _("Please select the boot device");
+			gtk_messagebox(title, msg, this, true);
+			return false; 
+		}
+		
 		return true;
 	}
 	

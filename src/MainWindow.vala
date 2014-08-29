@@ -45,6 +45,7 @@ class MainWindow : Gtk.Window{
 	private ToolButton btn_delete_snapshot;
 	private ToolButton btn_browse_snapshot;
 	private ToolButton btn_settings;
+	private ToolButton btn_clone;
 	private ToolButton btn_refresh_snapshots;
 	private ToolButton btn_view_snapshot_log;
 	private ToolButton btn_view_app_logs;
@@ -163,6 +164,15 @@ class MainWindow : Gtk.Window{
 		separator.set_expand (true);
 		toolbar.add (separator);
 
+		//btn_clone
+		btn_clone = new Gtk.ToolButton.from_stock ("gtk-copy");
+		btn_clone.is_important = false;
+		btn_clone.label = _("Clone");
+		btn_clone.set_tooltip_text (_("Clone the current system on another device"));
+        toolbar.add(btn_clone);
+
+        btn_clone.clicked.connect (btn_clone_clicked);
+        
         //btn_refresh_snapshots
         btn_refresh_snapshots = new Gtk.ToolButton.from_stock ("gtk-refresh");
 		btn_refresh_snapshots.label = _("Refresh");
@@ -444,7 +454,7 @@ class MainWindow : Gtk.Window{
         snapshot_device_original = App.snapshot_device;
         
         if (App.live_system()){
-			btn_backup.sensitive = false;
+			//btn_backup.sensitive = false;
 			btn_settings.sensitive = false;
 			btn_view_app_logs.sensitive = false;
 		}
@@ -456,6 +466,7 @@ class MainWindow : Gtk.Window{
 	private bool initialize_backup_device(){
 		if (timer_backup_device_init > 0){
 			Source.remove(timer_backup_device_init);
+			timer_backup_device_init = -1;
 		}
 		
 		update_ui(false);
@@ -943,42 +954,61 @@ class MainWindow : Gtk.Window{
 	}
 	
 	private void btn_restore_clicked(){
+		App.mirror_system = false;
+		restore();
+	}
+	
+	private void btn_clone_clicked(){
+		App.mirror_system = true;
+		restore();
+	}
+	
+	private void restore(){
 		TreeIter iter;
 		TreeSelection sel;
+		
+		if (!App.mirror_system){
+			//check if backup device is online (check #1)
+			if (!check_backup_device_online()) { return; }
+		}
+		
+		if (!App.mirror_system){
 
-		//check if backup device is online
-		if (!check_backup_device_online()) { return; }
-		
-		//check if single snapshot is selected -------------
-		
-		sel = tv_backups.get_selection ();
-		if (sel.count_selected_rows() == 0){ 
-			gtk_messagebox(_("No Snapshots Selected"), _("Please select the snapshot to restore"),null,false);
-			return; 
-		}
-		else if (sel.count_selected_rows() > 1){ 
-			gtk_messagebox(_("Multiple Snapshots Selected"), _("Please select a single snapshot"),null,false);
-			return; 
-		}
-		
-		//get selected snapshot ------------------
-		
-		TimeShiftBackup snapshot_to_restore = null;
-		
-		ListStore store = (ListStore) tv_backups.model;
-		sel = tv_backups.get_selection();
-		bool iterExists = store.get_iter_first (out iter);
-		while (iterExists) { 
-			if (sel.iter_is_selected (iter)){
-				store.get (iter, 0, out snapshot_to_restore);
-				break;
+			//check if single snapshot is selected -------------
+			
+			sel = tv_backups.get_selection ();
+			if (sel.count_selected_rows() == 0){ 
+				gtk_messagebox(_("No Snapshots Selected"), _("Please select the snapshot to restore"),null,false);
+				return; 
 			}
-			iterExists = store.iter_next (ref iter);
+			else if (sel.count_selected_rows() > 1){ 
+				gtk_messagebox(_("Multiple Snapshots Selected"), _("Please select a single snapshot"),null,false);
+				return; 
+			}
+			
+			//get selected snapshot ------------------
+			
+			TimeShiftBackup snapshot_to_restore = null;
+			
+			ListStore store = (ListStore) tv_backups.model;
+			sel = tv_backups.get_selection();
+			bool iterExists = store.get_iter_first (out iter);
+			while (iterExists) { 
+				if (sel.iter_is_selected (iter)){
+					store.get (iter, 0, out snapshot_to_restore);
+					break;
+				}
+				iterExists = store.iter_next (ref iter);
+			}
+			
+			App.snapshot_to_restore = snapshot_to_restore;
+			App.restore_target = App.root_device;
+		}
+		else{
+			App.snapshot_to_restore = null;
+			App.restore_target = null;
 		}
 		
-		App.snapshot_to_restore = snapshot_to_restore;
-		App.restore_target = App.root_device;
-
 		//show restore window -----------------
 
 		var dialog = new RestoreWindow();
@@ -987,20 +1017,16 @@ class MainWindow : Gtk.Window{
 		int response = dialog.run();
 		dialog.destroy();
 		
-		if (response == Gtk.ResponseType.OK){
-			//ok
-			log_msg("Restoring snapshot '%s' to device '%s'".printf(App.snapshot_to_restore.name,App.restore_target.device),true);
-			if (App.reinstall_grub2){
-				log_msg("GRUB will be installed on '%s'".printf(App.grub_device),true);
-			}
-		}
-		else{ 
+		if (response != Gtk.ResponseType.OK){
+			App.unmount_target_device();
 			return; //cancel
 		}
 		
-		//check if backup device is online for the last time
-		if (!check_backup_device_online()) { return; }
-			
+		if (!App.mirror_system){
+			//check if backup device is online (check #2)
+			if (!check_backup_device_online()) { return; }
+		}
+		
 		//update UI ----------------
 		
 		update_ui(false);
@@ -1037,27 +1063,54 @@ class MainWindow : Gtk.Window{
 			}
 		}
 
-		//restore the snapshot --------------------
+		if (!App.mirror_system){
+			//check if backup device is online (check #3)
+			if (!check_backup_device_online()) { return; }
+		}
 		
-		statusbar_message(_("Restoring snapshot") + ": '%s'...".printf(App.snapshot_to_restore.name));
+		//restore the snapshot --------------------
+
+		if (App.snapshot_to_restore != null){
+			log_msg("Restoring snapshot '%s' to device '%s'".printf(App.snapshot_to_restore.name,App.restore_target.device),true);
+			statusbar_message(_("Restoring snapshot..."));
+		}
+		else{
+			log_msg("Cloning current system to device '%s'".printf(App.restore_target.device),true);
+			statusbar_message(_("Cloning system..."));
+		}
+		
+		if (App.reinstall_grub2){
+			log_msg("GRUB will be installed on '%s'".printf(App.grub_device),true);
+		}
 
 		bool is_success = App.restore_snapshot(); 
 		
 		string msg;
 		if (is_success){
-			msg = _("Snapshot restored successfully");
+			if (App.mirror_system){
+				msg = _("System was cloned successfully on target device");
+			}
+			else{
+				msg = _("Snapshot was restored successfully on target device");
+			}
 			statusbar_message_with_timeout(msg, true);
 			
 			var dlg = new Gtk.MessageDialog.with_markup(null,Gtk.DialogFlags.MODAL, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, msg);
-			dlg.set_title(_("Restore Complete"));
+			dlg.set_title(_("Finished"));
 			dlg.set_modal(true);
 			dlg.set_transient_for(this);
 			dlg.run();
 			dlg.destroy();
 		}
 		else{
-			msg = _("Restore was not successful!");
-			statusbar_message_with_timeout(_("Restore Failed!"), true);
+			if (App.mirror_system){
+				msg = _("Cloning Failed!");
+			}
+			else{
+				msg = _("Restore Failed!");
+			}
+
+			statusbar_message_with_timeout(msg, true);
 
 			var dlg = new Gtk.MessageDialog.with_markup(null,Gtk.DialogFlags.MODAL, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK, msg);
 			dlg.set_title(_("Error"));
@@ -1071,7 +1124,7 @@ class MainWindow : Gtk.Window{
 		
 		update_ui(true);
 	}
-	
+
 	private void btn_settings_clicked(){
 		var dialog = new SettingsWindow();
 		dialog.set_transient_for (this);
@@ -1207,6 +1260,7 @@ class MainWindow : Gtk.Window{
 	private void statusbar_message (string message){
 		if (timer_status_message > 0){
 			Source.remove (timer_status_message);
+			timer_status_message = -1;
 		}
 
 		lbl_status.label = message;
@@ -1215,6 +1269,7 @@ class MainWindow : Gtk.Window{
 	private void statusbar_message_with_timeout (string message, bool success){
 		if (timer_status_message > 0){
 			Source.remove (timer_status_message);
+			timer_status_message = -1;
 		}
 
 		lbl_status.label = message;
@@ -1236,6 +1291,7 @@ class MainWindow : Gtk.Window{
     private bool statusbar_clear (){
 		if (timer_status_message > 0){
 			Source.remove (timer_status_message);
+			timer_status_message = -1;
 		}
 		lbl_status.label = "";
 		show_statusbar_icons(true);
@@ -1337,6 +1393,9 @@ class MainWindow : Gtk.Window{
 			img_status_device.file = img_dot_red;
 		}
 		lbl_status_device.label = message;
+		
+		img_status_device.visible = (message.strip().length > 0);
+		lbl_status_device.visible = (message.strip().length > 0);
 		
 		// statusbar icons ---------------------------------------------------------
 		

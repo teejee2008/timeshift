@@ -500,7 +500,95 @@ namespace TeeJee.DiskPartition{
 		}
 	}
 
+	public class FsTabEntry : GLib.Object{
+		public bool is_comment = false;
+		public bool is_empty_line = false;
+		public string device = "";
+		public string mount_point = "";
+		public string type = "";
+		public string options = "defaults";
+		public string dump = "0";
+		public string pass = "0";
+		public string line = "";
+		
+		public static Gee.List<FsTabEntry> read_fstab_file(string fstab_file_path){
+			Gee.ArrayList<FsTabEntry> list = new Gee.ArrayList<FsTabEntry>();
 
+			string text = read_file(fstab_file_path);
+			string[] lines = text.split("\n");
+			foreach(string line in lines){
+				FsTabEntry entry = new FsTabEntry();
+				list.add(entry);
+				
+				entry.is_comment = line.strip().has_prefix("#");
+				entry.is_empty_line = (line.strip().length == 0);
+				
+				if (entry.is_comment){
+					entry.line = line;
+				}
+				else if (entry.is_empty_line){
+					entry.line = "";
+				}
+				else{
+					entry.line = line;
+					
+					string[] parts = line.replace("\t"," ").split(" ");
+					int part_num = -1;
+					foreach(string part in parts){
+						if (part.strip().length == 0) { continue; }
+						switch (++part_num){
+							case 0:
+								entry.device = part.strip();
+								break;
+							case 1:
+								entry.mount_point = part.strip();
+								break;
+							case 2:
+								entry.type = part.strip();
+								break;
+							case 3:
+								entry.options = part.strip();
+								break;
+							case 4:
+								entry.dump = part.strip();
+								break;
+							case 5:
+								entry.pass = part.strip();
+								break;
+						}
+					}
+				}
+			}
+			
+			return list;
+		}
+		
+		public static string create_fstab_file(FsTabEntry[] fstab_entries, bool keep_comments_and_empty_lines = true){
+			string text = "";
+			foreach(FsTabEntry entry in fstab_entries){
+				if (entry.is_comment || entry.is_empty_line){
+					if (keep_comments_and_empty_lines){
+						text += "%s\n".printf(entry.line);
+					}
+				}
+				else {
+					text += "%s\t%s\t%s\t%s\t%s\t%s\n".printf(entry.device, entry.mount_point, entry.type, entry.options, entry.dump, entry.pass);
+				}
+			}
+			return text;
+		}
+	}
+	
+	public class MountEntry : GLib.Object{
+		public PartitionInfo device = null;
+		public string mount_point = "";
+		
+		public MountEntry(PartitionInfo device, string mount_point){
+			this.device = device;
+			this.mount_point = mount_point;
+		}
+	}
+	
 	public Gee.ArrayList<PartitionInfo?> get_partition_usage(bool exclude_unknown = true){
 		
 		/* Returns list of mounted partitions using 'df' command 

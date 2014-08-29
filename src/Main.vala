@@ -40,7 +40,7 @@ using TeeJee.Misc;
 public Main App;
 public const string AppName = "TimeShift";
 public const string AppShortName = "timeshift";
-public const string AppVersion = "1.5.x";
+public const string AppVersion = "1.5.3";
 public const string AppAuthor = "Tony George";
 public const string AppAuthorEmail = "teejee2008@gmail.com";
 
@@ -62,7 +62,8 @@ public class Main : GLib.Object{
 	public Gee.ArrayList<string> exclude_list_home;
 	public Gee.ArrayList<string> exclude_list_restore;
 	public Gee.ArrayList<AppExcludeEntry> exclude_list_apps;
-	
+	public Gee.ArrayList<MountEntry> mount_list;
+
 	public PartitionInfo root_device;
 	public PartitionInfo home_device;
 	public PartitionInfo snapshot_device;
@@ -283,6 +284,7 @@ public class Main : GLib.Object{
 		exclude_list_restore = new Gee.ArrayList<string>();
 		exclude_list_apps = new Gee.ArrayList<AppExcludeEntry>();
 		partition_list = new Gee.ArrayList<PartitionInfo>();
+		mount_list = new Gee.ArrayList<MountEntry>();
 
 		add_default_exclude_entries();
 		//add_app_exclude_entries();
@@ -1130,7 +1132,7 @@ public class Main : GLib.Object{
 					f.delete();
 				}
 			
-				cmd = "rsync -ai --delete --numeric-ids --relative --delete-excluded";
+				cmd = "rsync -ai --delete --numeric-ids --stats --relative --delete-excluded";
 				cmd += " --log-file=\"%s\"".printf(log_path);
 				cmd += " --exclude-from=\"%s\"".printf(list_file);
 				cmd += " /. \"%s\"".printf(sync_path + "/localhost/");
@@ -1430,10 +1432,9 @@ public class Main : GLib.Object{
 	    }
 	}
 	
-	public void save_exclude_list_for_restore(TimeShiftBackup snapshot){
+	public void save_exclude_list_for_restore(string file_path){
 		
 		try{
-			string list_file = snapshot.path + "/exclude.list";
 			string pattern;
 			
 			if (exclude_list_restore.size == 0){
@@ -1468,9 +1469,12 @@ public class Main : GLib.Object{
 				}
 				
 				//add user entries from snapshot exclude list
-				foreach(string path in read_file(list_file).split("\n")){
-					if (!exclude_list_restore.contains(path) && !exclude_list_home.contains(path)){
-						exclude_list_restore.add(path);
+				string list_file = file_path + "/exclude.list";
+				if (file_exists(list_file)){
+					foreach(string path in read_file(list_file).split("\n")){
+						if (!exclude_list_restore.contains(path) && !exclude_list_home.contains(path)){
+							exclude_list_restore.add(path);
+						}
 					}
 				}
 				
@@ -1500,7 +1504,7 @@ public class Main : GLib.Object{
 			//write file -----------
 
 			string file_text = "";
-			string list_file_restore = snapshot.path + "/exclude-restore.list";
+			string list_file_restore = file_path + "/exclude-restore.list";
 			
 			var f = File.new_for_path(list_file_restore);
 			if (f.query_exists()){
@@ -1551,7 +1555,7 @@ public class Main : GLib.Object{
 	}
 	
 	public bool restore_snapshot(){
-		if (snapshot_to_restore == null){
+		if (!mirror_system && (snapshot_to_restore == null)){
 			log_error(_("Snapshot to restore not specified!"));
 			return false;
 		}
@@ -1576,30 +1580,45 @@ public class Main : GLib.Object{
 		return is_success;
 	}
 
+
 	public void restore_snapshot_thread(){
 		string sh = "";
-		int ret_val;
+		int ret_val = -1;
 		string temp_script;
-		bool reboot_after_restore = false;
 
 		in_progress = true;
 
 		try{
 			
-			string source_path = snapshot_to_restore.path;
+			string source_path = "";
+			
+			if (snapshot_to_restore != null){
+				source_path = snapshot_to_restore.path;
+			}
+			else{
+				source_path = "/tmp/timeshift";
+				if (!dir_exists(source_path)){
+					create_dir(source_path);
+				}
+			}
 			
 			//set target path ----------------
 			
-			string target_path = "/";
-			bool restore_current_system = true;
-			if ((root_device == null) || (restore_target.device != root_device.device)){
+			bool restore_current_system;
+			string target_path;
+			
+			if ((root_device != null) && ((restore_target.device == root_device.device) || (restore_target.uuid == root_device.uuid))){
+				restore_current_system = true;
+				target_path = "/";
+			}
+			else{
 				restore_current_system = false;
 				target_path = mount_point_restore + "/";
 			}
 
 			//save exclude list for restore --------------
 			
-			save_exclude_list_for_restore(snapshot_to_restore);
+			save_exclude_list_for_restore(source_path);
 			
 			//create script -------------
 			
@@ -1641,6 +1660,7 @@ public class Main : GLib.Object{
 				sh += "echo '' \n";
 				sh += "echo '" + _("Re-installing GRUB2 bootloader...") + "' \n";
 				sh += "for i in /dev /proc /run /sys; do mount --bind \"$i\" \"%s$i\"; done \n".printf(target_path);
+				sh += "chroot \"%s\" os-prober \n".printf(target_path);
 				sh += "chroot \"%s\" grub-install --recheck %s \n".printf(target_path, grub_device);
 				sh += "chroot \"%s\" update-grub \n".printf(target_path);
 
@@ -1655,20 +1675,19 @@ public class Main : GLib.Object{
 				//sync file system
 				sh += "sync \n";
 			}
-
+			
 			//reboot if required --------
 			
-			if ((root_device != null) && (restore_target.device == root_device.device) && (restore_target.uuid == root_device.uuid)){
+			if (restore_current_system){
 				sh += "echo '' \n";
 				sh += "echo '" + _("Rebooting system...") + "' \n";
 				//sh += "reboot -f \n";
 				sh += "shutdown -r now \n";
-				reboot_after_restore = true;
 			}
 
 			//check if current system is being restored and do some housekeeping ---------
 			
-			if (reboot_after_restore){
+			if (restore_current_system){
 				
 				//invalidate the .sync snapshot  -------
 				
@@ -1695,7 +1714,7 @@ public class Main : GLib.Object{
 		
 			//run the script --------------------
 			
-			if (reboot_after_restore){
+			if (restore_current_system){
 				temp_script = create_temp_bash_script(sh);
 				ret_val = execute_bash_script_fullscreen_sync(temp_script);
 				
@@ -1716,9 +1735,18 @@ public class Main : GLib.Object{
 				}
 			}
 			else{
+				if (snapshot_to_restore != null){
+					log_msg(_("Restoring snapshot..."));
+				}
+				else{
+					log_msg(_("Cloning system..."));
+				}
+		
 				string std_out;
 				string std_err;
 				ret_val = execute_command_script_sync(sh,out std_out, out std_err);
+				log_msg(std_out);
+				log_error(std_err);
 			}
 			
 			//check for errors ----------------------
@@ -1732,6 +1760,67 @@ public class Main : GLib.Object{
 				log_msg(_("Restore completed without errors"));
 				is_success = true;
 				in_progress = false;
+			}
+
+						
+			//update /etc/fstab on restored system when disk is cloned
+
+			if (!restore_current_system){
+				
+				log_msg(_("Updated /etc/fstab on target device"));
+				
+				if (mirror_system){
+					//fstab_path = 
+				}
+				else{
+					//fstab_path = "/etc/fstab";
+				}
+				
+				string fstab_path = target_path + "etc/fstab";
+				var list = FsTabEntry.read_fstab_file(fstab_path);
+				bool root_entry_found = false;
+				for(int i = 0; i < list.size; i++){
+					FsTabEntry entry = list[i];
+					if (!entry.is_comment){
+						if (entry.mount_point == "/home"){
+							list.remove(entry);
+						}
+						else if (entry.mount_point == "/"){
+							entry.device = "UUID=%s".printf(restore_target.uuid);
+							entry.type = restore_target.type;
+							root_entry_found = true;
+						}
+					}
+				}
+				
+				foreach(MountEntry m_entry in mount_list){
+					if (m_entry.mount_point == "/"){
+						if (!root_entry_found){
+							FsTabEntry fs_entry = new FsTabEntry();
+							fs_entry.device = "UUID=%s".printf(m_entry.device.uuid);
+							fs_entry.mount_point = m_entry.mount_point;
+							fs_entry.type = m_entry.device.type;
+							list.add(fs_entry);
+						}
+						else{
+							//ignore
+						}
+					}
+					else{
+						FsTabEntry fs_entry = new FsTabEntry();
+						fs_entry.device = "UUID=%s".printf(m_entry.device.uuid);
+						fs_entry.mount_point = m_entry.mount_point;
+						fs_entry.type = (m_entry.device.type == "ntfs") ? "ntfs-3g" : m_entry.device.type;
+						list.add(fs_entry);
+					}
+				}
+				
+				string text = "# <file system> <mount point> <type> <options> <dump> <pass>\n\n";
+				text += FsTabEntry.create_fstab_file(list.to_array(), false);
+				if (file_exists(fstab_path)){
+					file_delete(fstab_path);
+				}
+				write_file(fstab_path, text);
 			}
 			
 			//unmount if system is still up
@@ -2164,7 +2253,6 @@ public class Main : GLib.Object{
 		}
 	}
 
-
 	public void cron_job_update(){
 		
 		if (live_system()) { return; }
@@ -2319,9 +2407,16 @@ public class Main : GLib.Object{
 		*/
 
 		int status_code = 0;
-		message = "%s ".printf(snapshot_device.free) + _("free");
-		message = message.strip();
-			
+		
+		//free space message
+		if (snapshot_device.free.length > 0){
+			message = "%s ".printf(snapshot_device.free) + _("free");
+			message = message.strip();
+		}
+		else{
+			message = "";
+		}
+		
 		if (!live_system()){
 			if (!backup_device_online()){
 				

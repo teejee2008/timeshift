@@ -281,6 +281,7 @@ public class Main : GLib.Object{
 		snapshot_list = new Gee.ArrayList<TimeShiftBackup>();
 		exclude_list_user = new Gee.ArrayList<string>();
 		exclude_list_default = new Gee.ArrayList<string>();
+		exclude_list_default_extra = new Gee.ArrayList<string>();
 		exclude_list_home = new Gee.ArrayList<string>();
 		exclude_list_restore = new Gee.ArrayList<string>();
 		exclude_list_apps = new Gee.ArrayList<AppExcludeEntry>();

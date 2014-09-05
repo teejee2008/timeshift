@@ -459,9 +459,9 @@ class MainWindow : Gtk.Window{
 			btn_settings.sensitive = false;
 			btn_view_app_logs.sensitive = false;
 		}
-
+		
+		refresh_cmb_backup_device();
 		timer_backup_device_init = Timeout.add(100, initialize_backup_device);
-		//timer_status_check = Timeout.add_seconds(60, check_status);
     }
 
 	private bool initialize_backup_device(){
@@ -479,13 +479,12 @@ class MainWindow : Gtk.Window{
 			statusbar_message(_("Estimating system size..."));
 		}
 		
-		refresh_cmb_backup_device();
+		//refresh_cmb_backup_device();
 		refresh_tv_backups();
 		check_status();
-
 		update_ui(true);
 		
-		return true;
+		return false;
 	}
 	
 	private bool on_delete_event(Gdk.EventAny event){
@@ -802,14 +801,13 @@ class MainWindow : Gtk.Window{
 
 			cmb_backup_device.active = cmb_backup_device_index_default;
 		}
-
-		App.update_snapshot_list();
-
-		refresh_tv_backups();
-
-		check_status();
-
+		
 		gtk_set_busy(false, this);
+		
+		timer_backup_device_init = Timeout.add(100, initialize_backup_device);
+		//App.update_snapshot_list();
+		//refresh_tv_backups();
+		//check_status();
 	}
 	
 	private void btn_backup_clicked(){

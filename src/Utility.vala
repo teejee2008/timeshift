@@ -717,14 +717,14 @@ namespace TeeJee.DiskPartition{
 		File f;
 		
 		//find mtab file -----------
-		
-		mtab_path = "/etc/mtab";
+		 
+		mtab_path = "/proc/mounts";
 		f = File.new_for_path(mtab_path);
 		if(!f.query_exists()){
-			mtab_path = "/proc/mounts";
+			mtab_path = "/proc/self/mounts";
 			f = File.new_for_path(mtab_path);
 			if(!f.query_exists()){
-				mtab_path = "/proc/self/mounts";
+				mtab_path = "/etc/mtab";
 				f = File.new_for_path(mtab_path);
 				if(!f.query_exists()){
 					return list; //empty list
@@ -732,6 +732,12 @@ namespace TeeJee.DiskPartition{
 			}
 		}
 		
+		/* Note:
+		 * /etc/mtab represents what 'mount' passed to the kernel 
+		 * whereas /proc/mounts shows the data as seen inside the kernel
+		 * Hence /proc/mounts is always up-to-date whereas /etc/mtab might not be
+		 * */
+		 
 		//read -----------
 		
 		mtab_lines = read_file(mtab_path);
@@ -1477,7 +1483,7 @@ namespace TeeJee.ProcessManagement{
 		
 		path = get_cmd_path ("xterm");
 		if ((path != null)&&(path != "")){
-			return execute_command_sync ("xterm --fullscreen -e \"%s\"".printf(script_file));
+			return execute_command_sync ("xterm -fullscreen -e \"%s\"".printf(script_file));
 		}
 		
 		//default terminal - unknown, normal window

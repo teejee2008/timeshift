@@ -454,7 +454,8 @@ class MainWindow : Gtk.Window{
         snapshot_device_original = App.snapshot_device;
         
         if (App.live_system()){
-			//btn_backup.sensitive = false;
+			btn_backup.sensitive = false;
+			btn_clone.sensitive = false;
 			btn_settings.sensitive = false;
 			btn_view_app_logs.sensitive = false;
 		}

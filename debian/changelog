@@ -1,11 +1,15 @@
 timeshift (1.5.2) trusty; urgency=medium
 
-  * Fixed: Debug messages were written to log twice
-
-  * Fixed: Do not invalidate .sync when snapshot is restored to another device
-
-  * Fixed: Remove crontab entries created by previous versions of timeshift
+  * New option to clone current system
   
-  * Clean up log messages
+  * Fixed: Restore fails with Xterm terminal
+
+  * Fixed: Install libgee2 on ArchLinux instead of libgee
+  
+  * Snapshot date will be displayed in 12-hour fomat
+
+  * Removed dependency on 'du' utility
+  
+  * Improved first snapshot size estimation
 
  -- Tony George <tony.george.kol@gmail.com>  Mon, 18 Aug 2014 11:00:00 +0530

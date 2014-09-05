@@ -40,7 +40,7 @@ using TeeJee.Misc;
 public Main App;
 public const string AppName = "TimeShift";
 public const string AppShortName = "timeshift";
-public const string AppVersion = "1.5.3";
+public const string AppVersion = "1.5.3 BETA";
 public const string AppAuthor = "Tony George";
 public const string AppAuthorEmail = "teejee2008@gmail.com";
 
@@ -384,7 +384,7 @@ public class Main : GLib.Object{
 				LOG_TIMESTAMP = false;
 
 				log_msg(_("Snapshots") + ":");
-				foreach (TimeShiftBackup bak in this.snapshot_list){
+				foreach (TimeShiftBackup bak in snapshot_list){
 					log_msg("%s%s%s".printf(bak.name, " ~ " + bak.taglist, (bak.description.length > 0) ? " ~ " + bak.description : ""));
 				}
 				LOG_ENABLE = false;
@@ -1660,10 +1660,10 @@ public class Main : GLib.Object{
 				sh += "echo '' \n";
 				sh += "echo '" + _("Re-installing GRUB2 bootloader...") + "' \n";
 				sh += "for i in /dev /proc /run /sys; do mount --bind \"$i\" \"%s$i\"; done \n".printf(target_path);
-				sh += "chroot \"%s\" os-prober \n".printf(target_path);
+				//sh += "chroot \"%s\" os-prober \n".printf(target_path);
 				sh += "chroot \"%s\" grub-install --recheck %s \n".printf(target_path, grub_device);
+				//sh += "chroot \"%s\" grub-mkconfig -o /boot/grub/grub.cfg \n".printf(target_path);
 				sh += "chroot \"%s\" update-grub \n".printf(target_path);
-
 				sh += "echo '' \n";
 				sh += "echo '" + _("Synching file systems...") + "' \n";
 				sh += "sync \n";
@@ -1763,60 +1763,80 @@ public class Main : GLib.Object{
 			}
 
 						
-			//update /etc/fstab on restored system when disk is cloned
-
+			//update /etc/fstab when restoring to another device
 			if (!restore_current_system){
 				
 				log_msg(_("Updated /etc/fstab on target device"));
 				
-				if (mirror_system){
+				//if (mirror_system){
 					//fstab_path = 
-				}
-				else{
+				//}
+				//else{
 					//fstab_path = "/etc/fstab";
-				}
+				//}
+				
+				//update and remove existing entries ---------------
 				
 				string fstab_path = target_path + "etc/fstab";
-				var list = FsTabEntry.read_fstab_file(fstab_path);
-				bool root_entry_found = false;
-				for(int i = 0; i < list.size; i++){
-					FsTabEntry entry = list[i];
-					if (!entry.is_comment){
-						if (entry.mount_point == "/home"){
-							list.remove(entry);
+				var fstab_list = FsTabEntry.read_fstab_file(fstab_path);
+
+				foreach(MountEntry mount_entry in mount_list){
+					
+					bool found = false;
+					foreach(FsTabEntry fstab_entry in fstab_list){
+						if (fstab_entry.mount_point == mount_entry.mount_point){
+							found = true;
+							//update fstab entry
+							fstab_entry.device = "UUID=%s".printf(mount_entry.device.uuid);
+							fstab_entry.type = mount_entry.device.type;
 						}
-						else if (entry.mount_point == "/"){
-							entry.device = "UUID=%s".printf(restore_target.uuid);
-							entry.type = restore_target.type;
-							root_entry_found = true;
-						}
+					}
+					
+					if (!found){
+						//add new fstab entry
+						FsTabEntry fstab_entry = new FsTabEntry();
+						fstab_entry.device = "UUID=%s".printf(mount_entry.device.uuid);
+						fstab_entry.mount_point = mount_entry.mount_point;
+						fstab_entry.type = mount_entry.device.type;
+						fstab_list.add(fstab_entry);
 					}
 				}
 				
-				foreach(MountEntry m_entry in mount_list){
-					if (m_entry.mount_point == "/"){
-						if (!root_entry_found){
-							FsTabEntry fs_entry = new FsTabEntry();
-							fs_entry.device = "UUID=%s".printf(m_entry.device.uuid);
-							fs_entry.mount_point = m_entry.mount_point;
-							fs_entry.type = m_entry.device.type;
-							list.add(fs_entry);
-						}
-						else{
-							//ignore
-						}
-					}
-					else{
-						FsTabEntry fs_entry = new FsTabEntry();
-						fs_entry.device = "UUID=%s".printf(m_entry.device.uuid);
-						fs_entry.mount_point = m_entry.mount_point;
-						fs_entry.type = (m_entry.device.type == "ntfs") ? "ntfs-3g" : m_entry.device.type;
-						list.add(fs_entry);
+				/* 
+				 * If user has not mounted /home, and /home is mounted on another device (according to the fstab file)
+				 * then remove the /home mount entry from the fstab.
+				 * This is required - otherwise when the user boots the restored system they will continue to see
+				 * the existing device as /home and instead of seeing the files restored to /home on the *root* device.
+				 * We will do this fix only for /home and leave all other mount points untouched.
+				 * */
+				
+				bool found_home_in_fstab = false;
+				FsTabEntry fstab_home_entry = null;
+				foreach(FsTabEntry fstab_entry in fstab_list){
+					if (fstab_entry.mount_point == "/home"){
+						found_home_in_fstab = true;
+						fstab_home_entry = fstab_entry;
+						break;
 					}
 				}
+				
+				bool found_home_in_mount_list = false;
+				foreach(MountEntry mount_entry in mount_list){
+					if (mount_entry.mount_point == "/home"){
+						found_home_in_mount_list = true;
+						break;
+					}
+				}
+
+				if (found_home_in_fstab && !found_home_in_mount_list){
+					//remove fstab entry for /home
+					fstab_list.remove(fstab_home_entry);
+				}
+				
+				//write the updated file --------------
 				
 				string text = "# <file system> <mount point> <type> <options> <dump> <pass>\n\n";
-				text += FsTabEntry.create_fstab_file(list.to_array(), false);
+				text += FsTabEntry.create_fstab_file(fstab_list.to_array(), false);
 				if (file_exists(fstab_path)){
 					file_delete(fstab_path);
 				}

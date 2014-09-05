@@ -59,6 +59,7 @@ public class Main : GLib.Object{
 	public Gee.ArrayList<PartitionInfo?> partition_list;
 	public Gee.ArrayList<string> exclude_list_user;
 	public Gee.ArrayList<string> exclude_list_default;
+	public Gee.ArrayList<string> exclude_list_default_extra;
 	public Gee.ArrayList<string> exclude_list_home;
 	public Gee.ArrayList<string> exclude_list_restore;
 	public Gee.ArrayList<AppExcludeEntry> exclude_list_apps;
@@ -432,7 +433,7 @@ public class Main : GLib.Object{
 		exclude_list_default.clear();
 		exclude_list_home.clear();
 		
-		//add default exclude entries -------------------
+		//default exclude entries -------------------
 
 		exclude_list_default.add("/dev/*");
 		exclude_list_default.add("/proc/*");
@@ -451,23 +452,29 @@ public class Main : GLib.Object{
 		exclude_list_default.add("/root/.thumbnails");
 		exclude_list_default.add("/root/.cache");
 		exclude_list_default.add("/root/.gvfs");
-		exclude_list_default.add("/root/.mozilla/firefox/*.default/Cache");
-		exclude_list_default.add("/root/.mozilla/firefox/*.default/OfflineCache");
-		exclude_list_default.add("/root/.opera/cache");
-		exclude_list_default.add("/root/.kde/share/apps/kio_http/cache");
-		exclude_list_default.add("/root/.kde/share/cache/http");
 		exclude_list_default.add("/root/.local/share/Trash");
 		
 		exclude_list_default.add("/home/*/.thumbnails");
 		exclude_list_default.add("/home/*/.cache");
 		exclude_list_default.add("/home/*/.gvfs");
-		exclude_list_default.add("/home/*/.mozilla/firefox/*.default/Cache");
-		exclude_list_default.add("/home/*/.mozilla/firefox/*.default/OfflineCache");
-		exclude_list_default.add("/home/*/.opera/cache");
-		exclude_list_default.add("/home/*/.kde/share/apps/kio_http/cache");
-		exclude_list_default.add("/home/*/.kde/share/cache/http");
 		exclude_list_default.add("/home/*/.local/share/Trash");
+		
+		//default extra ------------------
 
+		exclude_list_default_extra.add("/root/.mozilla/firefox/*.default/Cache");
+		exclude_list_default_extra.add("/root/.mozilla/firefox/*.default/OfflineCache");
+		exclude_list_default_extra.add("/root/.opera/cache");
+		exclude_list_default_extra.add("/root/.kde/share/apps/kio_http/cache");
+		exclude_list_default_extra.add("/root/.kde/share/cache/http");
+		
+		exclude_list_default_extra.add("/home/*/.mozilla/firefox/*.default/Cache");
+		exclude_list_default_extra.add("/home/*/.mozilla/firefox/*.default/OfflineCache");
+		exclude_list_default_extra.add("/home/*/.opera/cache");
+		exclude_list_default_extra.add("/home/*/.kde/share/apps/kio_http/cache");
+		exclude_list_default_extra.add("/home/*/.kde/share/cache/http");
+		
+		//default home ----------------
+		
 		exclude_list_home.add("+ /root/.**");
 		exclude_list_home.add("/root/**");
 		
@@ -1392,6 +1399,13 @@ public class Main : GLib.Object{
 				}
 			}
 			
+			//add default extra entries
+			foreach(string path in exclude_list_default_extra){
+				if (!combined_list.contains(path)){
+					combined_list.add(path);
+				}
+			}
+			
 			//add user entries from current settings
 			foreach(string path in exclude_list_user){
 				if (!combined_list.contains(path)){
@@ -1443,6 +1457,15 @@ public class Main : GLib.Object{
 				foreach(string path in exclude_list_default){
 					if (!exclude_list_restore.contains(path)){
 						exclude_list_restore.add(path);
+					}
+				}
+				
+				if (!mirror_system){
+					//add default_extra entries
+					foreach(string path in exclude_list_default_extra){
+						if (!exclude_list_restore.contains(path)){
+							exclude_list_restore.add(path);
+						}
 					}
 				}
 				

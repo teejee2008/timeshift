@@ -2188,7 +2188,7 @@ public class Main : GLib.Object{
 	
 	public TimeShiftBackup? get_latest_snapshot(string tag = ""){
 		var list = get_snapshot_list(tag);
-		
+
 		if (list.size > 0)
 			return list[list.size - 1];
 		else

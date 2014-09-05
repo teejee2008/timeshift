@@ -787,7 +787,7 @@ class MainWindow : Gtk.Window{
 		App.snapshot_device = pi;
 
 		bool status = App.mount_backup_device();
-
+		
 		if (status == false){
 			
 			string msg = _("Failed to mount device") + ": %s".printf(App.snapshot_device.device);
@@ -802,12 +802,11 @@ class MainWindow : Gtk.Window{
 			cmb_backup_device.active = cmb_backup_device_index_default;
 		}
 		
+		App.update_partition_list(); //refresh free space on device
+				
 		gtk_set_busy(false, this);
-		
+
 		timer_backup_device_init = Timeout.add(100, initialize_backup_device);
-		//App.update_snapshot_list();
-		//refresh_tv_backups();
-		//check_status();
 	}
 	
 	private void btn_backup_clicked(){
@@ -1340,7 +1339,6 @@ class MainWindow : Gtk.Window{
 	}
 
 	private bool check_status(){
-		
 		string img_dot_red = App.share_folder + "/timeshift/images/item-red.png";
 		string img_dot_green = App.share_folder + "/timeshift/images/item-green.png";
 		
@@ -1419,6 +1417,7 @@ class MainWindow : Gtk.Window{
 
 		//status - last snapshot -----------
 		
+		
 		DateTime now = new DateTime.now_local();
 		TimeShiftBackup last_snapshot = App.get_latest_snapshot();
 		DateTime last_snapshot_date = (last_snapshot == null) ? null : last_snapshot.date;
@@ -1429,10 +1428,19 @@ class MainWindow : Gtk.Window{
 		}
 		else{
 			float days = ((float) now.difference(last_snapshot_date) / TimeSpan.DAY);
-
+			float hours = ((float) now.difference(last_snapshot_date) / TimeSpan.HOUR);
+			
 			if (days > 1){
 				img_status_latest.file = img_dot_red;
 				lbl_status_latest.label = _("Last snapshot is") +  " %.0f ".printf(days) + _("days old") + "!";
+			}
+			else if (hours > 1){
+				img_status_latest.file = img_dot_green;
+				lbl_status_latest.label = _("Last snapshot is") +  " %.0f ".printf(hours) + _("hours old");
+			}
+			else{
+				img_status_latest.file = img_dot_green;
+				lbl_status_latest.label = _("Last snapshot is less than 1 hour old");
 			}
 		}
 		

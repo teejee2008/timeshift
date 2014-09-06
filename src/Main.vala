@@ -1648,8 +1648,8 @@ public class Main : GLib.Object{
 			
 			sh = "";
 			sh += "echo ''\n";
-			sh += "echo '" + _("Please do not interrupt the restore process!") + "'\n";
-			if ((root_device != null) && ((restore_target.device == root_device.device) || (restore_target.uuid == root_device.uuid))){
+			if (restore_current_system){
+				sh += "echo '" + _("Please do not interrupt the restore process!") + "'\n";
 				sh += "echo '" + _("System will reboot after files are restored") + "'\n";
 			}
 			sh += "echo ''\n";
@@ -1770,7 +1770,7 @@ public class Main : GLib.Object{
 				string std_err;
 				ret_val = execute_command_script_sync(sh,out std_out, out std_err);
 				log_msg(std_out);
-				log_error(std_err);
+				log_msg(std_err);
 			}
 			
 			//check for errors ----------------------
@@ -1785,27 +1785,14 @@ public class Main : GLib.Object{
 				is_success = true;
 				in_progress = false;
 			}
-
-						
-			//update /etc/fstab when restoring to another device
+	
+			//update /etc/fstab when restoring to another device --------------------
+			
 			if (!restore_current_system){
-				
-				log_msg(_("Updated /etc/fstab on target device"));
-				
-				//if (mirror_system){
-					//fstab_path = 
-				//}
-				//else{
-					//fstab_path = "/etc/fstab";
-				//}
-				
-				//update and remove existing entries ---------------
-				
 				string fstab_path = target_path + "etc/fstab";
 				var fstab_list = FsTabEntry.read_fstab_file(fstab_path);
 
 				foreach(MountEntry mount_entry in mount_list){
-					
 					bool found = false;
 					foreach(FsTabEntry fstab_entry in fstab_list){
 						if (fstab_entry.mount_point == mount_entry.mount_point){
@@ -1865,8 +1852,22 @@ public class Main : GLib.Object{
 					file_delete(fstab_path);
 				}
 				write_file(fstab_path, text);
+				
+				log_msg(_("Updated /etc/fstab on target device"));
+				
+				//create folders for mount points in /etc/fstab (to prevent mount errors during boot) ---------
+				
+				foreach(FsTabEntry fstab_entry in fstab_list){
+					string mount_path = target_path + fstab_entry.mount_point[1:fstab_entry.mount_point.length];
+					if (fstab_entry.is_comment || fstab_entry.is_empty_line || (mount_path.length == 0)){ continue; }
+
+					if (!dir_exists(mount_path)){
+						log_msg("Created mount point on target device: %s".printf(fstab_entry.mount_point));
+						create_dir(mount_path);
+					}
+				}
 			}
-			
+
 			//unmount if system is still up
 			unmount_target_device();
 		}

@@ -210,6 +210,23 @@ namespace TeeJee.FileSystem{
 			return false;
 		}
 	}
+
+	public bool check_and_create_dir_with_parents (string filePath){
+		
+		/* Creates a directory along with parents */
+		
+		try{
+			var dir = File.parse_name (filePath);
+			if (dir.query_exists () == false) {
+				dir.make_directory_with_parents (null);
+			}
+			return true;
+		}
+		catch (Error e) { 
+			log_error (e.message); 
+			return false;
+		}
+	}
 	
 	public bool move_file (string sourcePath, string destPath){
 		
@@ -383,12 +400,8 @@ namespace TeeJee.DiskPartition{
 		public string available = "";
 		public string used_percent = "";
 		public string dist_info = "";
-		public Gee.ArrayList<string> mount_point_list;
+		public string mount_point = "";
 		public string mount_options = "";
-		
-		public PartitionInfo(){
-			mount_point_list = new Gee.ArrayList<string>();
-		}
 		
 		public string description(){
 			string s = "";
@@ -406,13 +419,7 @@ namespace TeeJee.DiskPartition{
 			s += (uuid.length > 0) ? " ~ " + uuid : "";
 			s += (type.length > 0) ? " ~ " + type : "";
 			s += (used.length > 0) ? " ~ " + used + " / " + size + " GB used (" + used_percent + ")" : "";
-			
-			string mps = "";
-			foreach(string mp in mount_point_list){
-				mps += mp + " ";
-			}
-			s += (mps.length > 0) ? " ~ " + mps.strip() : "";
-			
+			s += (mount_point.length > 0) ? " ~ " + mount_point.strip() : "";
 			return s;
 		}
 		
@@ -445,7 +452,7 @@ namespace TeeJee.DiskPartition{
 		
 		public bool is_mounted{
 			get{
-				return (mount_point_list.size > 0);
+				return (mount_point.length > 0);
 			}
 		}
 		
@@ -475,6 +482,432 @@ namespace TeeJee.DiskPartition{
 				default:
 					return false;
 			}
+		}
+
+		public static Gee.HashMap<string,PartitionInfo> get_block_devices_using_blkid(string device_alias = "", bool exclude_unknown = false){
+				
+			/* Returns list of mounted/unmounted, physical/logical filesystems 
+			 * Populates device, uuid, type, label and mount points */
+			
+			var map = new Gee.HashMap<string,PartitionInfo>();
+
+			string std_out;
+			string std_err;
+			string cmd;
+			int ret_val;
+			Regex rex;
+			MatchInfo match;
+			
+			cmd = "/sbin/blkid" + ((device_alias.length > 0) ? " " + device_alias: "");
+			ret_val = execute_command_script_sync(cmd, out std_out, out std_err);
+			if (ret_val != 0){
+				log_error ("Failed to get list of partitions");
+				return map; //return empty map
+			}
+				
+			/*
+			sample output
+			-----------------
+			/dev/sda1: LABEL="System Reserved" UUID="F476B08076B04560" TYPE="ntfs" 
+			/dev/sda2: LABEL="windows" UUID="BE00B6DB00B69A3B" TYPE="ntfs" 
+			/dev/sda3: UUID="03f3f35d-71fa-4dff-b740-9cca19e7555f" TYPE="ext4"
+			*/
+			
+			//parse output and build filesystem map -------------
+
+			foreach(string line in std_out.split("\n")){
+				if (line.strip().length == 0) { continue; }
+				
+				PartitionInfo pi = new PartitionInfo();
+				
+				pi.device = line.split(":")[0].strip();
+				
+				if (pi.device.length == 0) { continue; }
+				
+				//exclude non-standard devices --------------------
+
+				if (!pi.device.has_prefix("/dev/")){
+					continue;
+				}
+				
+				if (exclude_unknown){
+					if (pi.device.has_prefix("/dev/sd") || pi.device.has_prefix("/dev/hd") || pi.device.has_prefix("/dev/mapper/") || pi.device.has_prefix("/dev/dm")) { 
+						//ok
+					}
+					else if (pi.device.has_prefix("/dev/disk/by-uuid/")){
+						//ok, get uuid
+						pi.uuid = pi.device.replace("/dev/disk/by-uuid/","");
+					}
+					else{
+						continue; //skip
+					}
+				}
+				
+				//parse & populate fields ------------------
+				
+				try{
+					rex = new Regex("""LABEL=\"([^\"]*)\"""");
+					if (rex.match (line, 0, out match)){
+						pi.label = match.fetch(1).strip();
+					}
+					
+					rex = new Regex("""UUID=\"([^\"]*)\"""");
+					if (rex.match (line, 0, out match)){
+						pi.uuid = match.fetch(1).strip();
+					}
+					
+					rex = new Regex("""TYPE=\"([^\"]*)\"""");
+					if (rex.match (line, 0, out match)){
+						pi.type = match.fetch(1).strip();
+					}
+				}
+				catch(Error e){
+					log_error (e.message);
+				}
+							
+				//add to map -------------------------
+				
+				if (!map.has_key(pi.uuid)){
+					map.set(pi.uuid, pi);
+				}
+			}
+			
+			return map;
+		}
+
+		public static Gee.HashMap<string,PartitionInfo> get_disk_space_using_df(string device_or_mount_point = "", bool exclude_unknown = false){
+			
+			/* Returns list of mounted partitions using 'df' command 
+			   Populates device, type, size, used and mount_point_list */
+			 
+			var map = new Gee.HashMap<string,PartitionInfo>();
+			
+			string std_out;
+			string std_err;
+			string cmd;
+			int ret_val;
+			
+			cmd = "df -T -BM" + ((device_or_mount_point.length > 0) ? " \"%s\"".printf(device_or_mount_point): "");
+			ret_val = execute_command_script_sync(cmd, out std_out, out std_err);
+			if (ret_val != 0){
+				log_error ("Failed to get list of partitions");
+				return map; //return empty map
+			}
+			
+			/*
+			sample output
+			-----------------
+			Filesystem     Type     1M-blocks    Used Available Use% Mounted on
+			/dev/sda3      ext4        25070M  19508M     4282M  83% /
+			none           tmpfs           1M      0M        1M   0% /sys/fs/cgroup
+			udev           devtmpfs     3903M      1M     3903M   1% /dev
+			tmpfs          tmpfs         789M      1M      788M   1% /run
+			none           tmpfs           5M      0M        5M   0% /run/lock
+			/dev/sda3      ext4        25070M  19508M     4282M  83% /mnt/timeshift
+			*/
+			
+			string[] lines = std_out.split("\n");
+
+			int line_num = 0;
+			foreach(string line in lines){
+
+				if (++line_num == 1) { continue; }
+				if (line.strip().length == 0) { continue; }
+				
+				PartitionInfo pi = new PartitionInfo();
+				
+				//parse & populate fields ------------------
+				
+				int k = 1;
+				foreach(string val in line.split(" ")){
+					
+					if (val.strip().length == 0){ continue; }
+
+					switch(k++){
+						case 1:
+							pi.device = val.strip();
+							break;
+						case 2:
+							pi.type = val.strip();
+							break;
+						case 3:
+							pi.size_mb = long.parse(val.strip().replace("M",""));
+							break;
+						case 4:
+							pi.used_mb = long.parse(val.strip().replace("M",""));
+							break;
+						case 5:
+							pi.available = val.strip();
+							break;
+						case 6:
+							pi.used_percent = val.strip();
+							break;
+						case 7:
+							pi.mount_point = val.strip();
+							break;
+					}
+				}
+				
+				//exclude non-standard devices --------------------
+				
+				if (!pi.device.has_prefix("/dev/")){
+					continue;
+				}
+					
+				if (exclude_unknown){
+					if (pi.device.has_prefix("/dev/sd") || pi.device.has_prefix("/dev/hd") || pi.device.has_prefix("/dev/mapper/") || pi.device.has_prefix("/dev/dm")) { 
+						//ok
+					}
+					else if (pi.device.has_prefix("/dev/disk/by-uuid/")){
+						//ok, get uuid
+						pi.uuid = pi.device.replace("/dev/disk/by-uuid/","");
+					}
+					else{
+						continue; //skip
+					}
+				}
+
+				//get uuid ---------------------------
+				
+				pi.uuid = get_device_uuid(pi.device);
+
+				//add to map -------------------------
+				
+				if (!map.has_key(pi.uuid)){
+					map.set(pi.uuid, pi);
+				}
+			}
+
+			return map;
+		}
+
+		public static Gee.HashMap<string,PartitionInfo> get_mounted_filesystems_using_mtab(bool exclude_unknown = false){
+			
+			/* Returns list of mounted partitions using 'mount' command 
+			   Populates device, type and mount_point_list */
+
+			var map = new Gee.HashMap<string,PartitionInfo>();
+			
+			string mtab_path = "/etc/mtab";
+			string mtab_lines = "";
+			
+			File f;
+			
+			//find mtab file -----------
+			 
+			mtab_path = "/proc/mounts";
+			f = File.new_for_path(mtab_path);
+			if(!f.query_exists()){
+				mtab_path = "/proc/self/mounts";
+				f = File.new_for_path(mtab_path);
+				if(!f.query_exists()){
+					mtab_path = "/etc/mtab";
+					f = File.new_for_path(mtab_path);
+					if(!f.query_exists()){
+						return map; //empty list
+					}
+				}
+			}
+			
+			/* Note:
+			 * /etc/mtab represents what 'mount' passed to the kernel 
+			 * whereas /proc/mounts shows the data as seen inside the kernel
+			 * Hence /proc/mounts is always up-to-date whereas /etc/mtab might not be
+			 * */
+			 
+			//read -----------
+			
+			mtab_lines = read_file(mtab_path);
+			
+			/*
+			sample mtab
+			-----------------
+			/dev/sda3 / ext4 rw,errors=remount-ro 0 0
+			proc /proc proc rw,noexec,nosuid,nodev 0 0
+			sysfs /sys sysfs rw,noexec,nosuid,nodev 0 0
+			none /sys/fs/cgroup tmpfs rw 0 0
+			none /sys/fs/fuse/connections fusectl rw 0 0
+			none /sys/kernel/debug debugfs rw 0 0
+			none /sys/kernel/security securityfs rw 0 0
+			udev /dev devtmpfs rw,mode=0755 0 0
+
+			device - the device or remote filesystem that is mounted.
+			mountpoint - the place in the filesystem the device was mounted.
+			filesystemtype - the type of filesystem mounted.
+			options - the mount options for the filesystem
+			dump - used by dump to decide if the filesystem needs dumping.
+			fsckorder - used by fsck to detrmine the fsck pass to use. 
+			*/
+			
+			/* Note:
+			 * We are interested only in the last device that was mounted at a given mount point
+			 * Hence the lines must be parsed in reverse order (from last to first)
+			 * */
+			 
+			//parse ------------
+			
+			string[] lines = mtab_lines.split("\n");
+			var mount_list = new Gee.ArrayList<string>();
+			
+			for (int i = lines.length - 1; i >= 0; i--){
+				
+				string line = lines[i].strip();
+				if (line.length == 0) { continue; }
+				
+				PartitionInfo pi = new PartitionInfo();
+
+				//parse & populate fields ------------------
+								
+				int k = 1;
+				foreach(string val in line.split(" ")){
+					if (val.strip().length == 0){ continue; }
+					switch(k++){
+						case 1: //device
+							pi.device = val.strip();
+							break;
+						case 2: //mountpoint
+							if (!mount_list.contains(val.strip())){
+								pi.mount_point = val.strip();
+								mount_list.add(val.strip());
+							}
+							break;
+						case 3: //filesystemtype
+							pi.type = val.strip();
+							break;
+						case 4: //options
+							pi.mount_options = val.strip();
+							break;
+						default:
+							//ignore
+							break;
+					}
+				}
+				
+				//exclude unknown device names ----------------
+
+				if (!pi.device.has_prefix("/dev/")){
+					continue;
+				}
+				
+				if (exclude_unknown){
+					if (pi.device.has_prefix("/dev/sd") || pi.device.has_prefix("/dev/hd") || pi.device.has_prefix("/dev/mapper/") || pi.device.has_prefix("/dev/dm")) { 
+						//ok
+					}
+					else if (pi.device.has_prefix("/dev/disk/by-uuid/")){
+						//ok, get uuid
+						pi.uuid = pi.device.replace("/dev/disk/by-uuid/","");
+					}
+					else{
+						continue; //skip
+					}
+				}
+
+				//get uuid ---------------------------
+				
+				pi.uuid = get_device_uuid(pi.device);
+				
+				//add to map -------------------------
+				
+				if (!map.has_key(pi.uuid)){
+					map.set(pi.uuid, pi);
+				}
+			}
+
+			return map;
+		}
+	
+		public static Gee.HashMap<string,PartitionInfo> get_filesystems(bool get_space = true, bool get_mounts = true){
+			
+			//get block devices
+			var map = get_block_devices_using_blkid();
+			
+			if (get_space){
+				//get used space for mounted filesystems
+				var map_df = get_disk_space_using_df("",false);
+				foreach(string key in map_df.keys){
+					if (map.has_key(key)){
+						var pi = map.get(key);
+						var pi_df = map_df.get(key);
+						pi.size_mb = pi_df.size_mb;
+						pi.used_mb = pi_df.used_mb;
+						pi.available = pi_df.available;
+						pi.used_percent = pi_df.used_percent;
+						
+						if (pi.device.has_prefix("/dev/disk/by-uuid/") || pi.device.length > 25){
+							//check if df has a more friendly device name 
+							if (pi_df.device.has_prefix("/dev/hd") || pi_df.device.has_prefix("/dev/sd") || pi_df.device.has_prefix("/dev/mapper/") || pi_df.device.has_prefix("/dev/dm")){
+								//get device name from df
+								pi.device = pi_df.device;
+							}
+						}
+					}
+				}
+			}
+			
+			if (get_mounts){
+				//get mount points
+				var map_mt = get_mounted_filesystems_using_mtab();
+				foreach(string key in map.keys){
+					if (map_mt.has_key(key)){
+						var pi = map.get(key);
+						var pi_mt = map_mt.get(key);
+						pi.mount_point = pi_mt.mount_point;
+					}
+				}
+			}
+
+			return map;
+		}
+		
+		public static PartitionInfo refresh_partition_usage_info(PartitionInfo pi){
+		
+			/* Updates disk space info and returns the given PartitionInfo object */
+			
+			var map_df = get_disk_space_using_df(pi.device);
+			if (map_df.has_key(pi.uuid)){
+				var pi_df = map_df.get(pi.uuid);
+				pi.size_mb = pi_df.size_mb;
+				pi.used_mb = pi_df.used_mb;
+				pi.available = pi_df.available;
+				pi.used_percent = pi_df.used_percent;
+			}
+
+			return pi;
+		}
+		
+		public static string get_device_uuid(string device){
+			var map = get_block_devices_using_blkid(device);
+			if (map.size == 1){
+				var pi = map.values.to_array()[0];
+				return pi.uuid;
+			}
+			else{
+				return "";
+			}
+		}
+
+		public static string get_mount_point(string device_or_uuid){
+			string device = "";
+			string uuid = "";
+			
+			if (device_or_uuid.has_prefix("/dev")){
+				device = device_or_uuid;
+				uuid = get_device_uuid(device_or_uuid);
+			}
+			else{
+				uuid = device_or_uuid;
+				device = "/dev/disk/by-uuid/%s".printf(uuid);
+			}
+				
+			var map = get_mounted_filesystems_using_mtab();
+			if (map.has_key(uuid)){
+				var pi = map.get(uuid);
+				if (pi.mount_point.length > 0){
+					return pi.mount_point;
+				}
+			}
+			
+			return "";
 		}
 	}
 	
@@ -588,514 +1021,65 @@ namespace TeeJee.DiskPartition{
 			this.mount_point = mount_point;
 		}
 	}
-	
-	public Gee.ArrayList<PartitionInfo?> get_partition_usage(bool exclude_unknown = true){
-		
-		/* Returns list of mounted partitions using 'df' command 
-		   Populates device, type, size, used and mount_point_list */
-		 
-		var list = new Gee.ArrayList<PartitionInfo?>();
-		
-		string std_out = "";
-		string std_err = "";
-		int exit_code = execute_command_script_sync("df -T -BM", out std_out, out std_err);// | uniq -w 12
-		
-		if (exit_code != 0){ return list; }
-		
-		if (exit_code != 0){ 
-			log_error ("Failed to get list of partitions");
-			return list; //return empty list
-		}
-		
-		/*
-		sample output
-		-----------------
-		Filesystem     Type     1M-blocks    Used Available Use% Mounted on
-		/dev/sda3      ext4        25070M  19508M     4282M  83% /
-		none           tmpfs           1M      0M        1M   0% /sys/fs/cgroup
-		udev           devtmpfs     3903M      1M     3903M   1% /dev
-		tmpfs          tmpfs         789M      1M      788M   1% /run
-		none           tmpfs           5M      0M        5M   0% /run/lock
-		/dev/sda3      ext4        25070M  19508M     4282M  83% /mnt/timeshift
-		*/
-		
-		string[] lines = std_out.split("\n");
 
-		int line_num = 0;
-		foreach(string line in lines){
-
-			if (++line_num == 1) { continue; }
-			if (line.strip().length == 0) { continue; }
-			
-			PartitionInfo pi = new PartitionInfo();
-			
-			//parse & populate fields ------------------
-			
-			int k = 1;
-			foreach(string val in line.split(" ")){
-				
-				if (val.strip().length == 0){ continue; }
-
-				switch(k++){
-					case 1:
-						pi.device = val.strip();
-						break;
-					case 2:
-						pi.type = val.strip();
-						break;
-					case 3:
-						pi.size_mb = long.parse(val.strip().replace("M",""));
-						break;
-					case 4:
-						pi.used_mb = long.parse(val.strip().replace("M",""));
-						break;
-					case 5:
-						pi.available = val.strip();
-						break;
-					case 6:
-						pi.used_percent = val.strip();
-						break;
-					case 7:
-						string mount_point = val.strip();
-						if (!pi.mount_point_list.contains(mount_point)){
-							pi.mount_point_list.add(mount_point);
-						}
-						break;
-				}
-			}
-			
-			//exclude unknown devices
-			if (exclude_unknown){
-				if (!(pi.device.has_prefix("/dev/sd") || pi.device.has_prefix("/dev/hd") || pi.device.has_prefix("/dev/mapper/"))) { 
-					continue;
-				}
-			}
-			
-			//check for duplicates - no need to match uuids
-			bool found = false;
-			foreach(PartitionInfo pm in list){
-				if (pm.device == pi.device){
-					//add mount points and continue
-					foreach(string mount_point in pi.mount_point_list){
-						if (!pm.mount_point_list.contains(mount_point)){
-							pm.mount_point_list.add(mount_point);
-						}
-					}
-					found = true;
-					//don't break
-				}
-			}
-			
-			//add to list
-			if (!found){
-				list.add(pi);
-			}
-		}
-		
-		/*
-		//debug
-		string list = "";
-		foreach(string mp in info.mount_point_list){
-			list += mp + ";";
-		}
-		stdout.printf(info.device + "=" + list + "\n");
-		*/
-		
-		return list;
-	}
-
-	public Gee.ArrayList<PartitionInfo?> get_mounted_partitions_using_mtab(bool exclude_unknown = true){
-		
-		/* Returns list of mounted partitions using 'mount' command 
-		   Populates device, type and mount_point_list */
-
-		var list = new Gee.ArrayList<PartitionInfo?>();
-		
-		string mtab_path = "/etc/mtab";
-		string mtab_lines = "";;
-		
-		File f;
-		
-		//find mtab file -----------
-		 
-		mtab_path = "/proc/mounts";
-		f = File.new_for_path(mtab_path);
-		if(!f.query_exists()){
-			mtab_path = "/proc/self/mounts";
-			f = File.new_for_path(mtab_path);
-			if(!f.query_exists()){
-				mtab_path = "/etc/mtab";
-				f = File.new_for_path(mtab_path);
-				if(!f.query_exists()){
-					return list; //empty list
-				}
-			}
-		}
-		
-		/* Note:
-		 * /etc/mtab represents what 'mount' passed to the kernel 
-		 * whereas /proc/mounts shows the data as seen inside the kernel
-		 * Hence /proc/mounts is always up-to-date whereas /etc/mtab might not be
-		 * */
-		 
-		//read -----------
-		
-		mtab_lines = read_file(mtab_path);
-		
-		/*
-		sample mtab
-		-----------------
-		/dev/sda3 / ext4 rw,errors=remount-ro 0 0
-		proc /proc proc rw,noexec,nosuid,nodev 0 0
-		sysfs /sys sysfs rw,noexec,nosuid,nodev 0 0
-		none /sys/fs/cgroup tmpfs rw 0 0
-		none /sys/fs/fuse/connections fusectl rw 0 0
-		none /sys/kernel/debug debugfs rw 0 0
-		none /sys/kernel/security securityfs rw 0 0
-		udev /dev devtmpfs rw,mode=0755 0 0
-
-		device - the device or remote filesystem that is mounted.
-		mountpoint - the place in the filesystem the device was mounted.
-		filesystemtype - the type of filesystem mounted.
-		options - the mount options for the filesystem
-		dump - used by dump to decide if the filesystem needs dumping.
-		fsckorder - used by fsck to detrmine the fsck pass to use. 
-		*/
-		
-		//parse ------------
-		
-		foreach(string line in mtab_lines.split("\n")){
-
-			if (line.strip().length == 0) { continue; }
-			
-			PartitionInfo pi = new PartitionInfo();
-
-			//parse & populate fields ------------------
-							
-			int k = 1;
-			foreach(string val in line.split(" ")){
-				if (val.strip().length == 0){ continue; }
-				switch(k++){
-					case 1: //device
-						pi.device = val.strip();
-						break;
-					case 2: //mountpoint
-						string mount_point = val.strip();
-						if (!pi.mount_point_list.contains(mount_point)){
-							pi.mount_point_list.add(mount_point);
-						}
-						break;
-					case 3: //filesystemtype
-						pi.type = val.strip();
-						break;
-					case 4: //options
-						pi.mount_options = val.strip();
-						break;
-					default:
-						//ignore
-						break;
-				}
-			}
-			
-			//exclude unknown device names
-			if (exclude_unknown){
-				if (pi.device.has_prefix("/dev/sd") || pi.device.has_prefix("/dev/hd") || pi.device.has_prefix("/dev/mapper/")) { 
-					//ok
-				}
-				else if (pi.device.has_prefix("/dev/disk/by-uuid/")){
-					//ok - get uuid
-					pi.uuid = pi.device.replace("/dev/disk/by-uuid/","");
-				}
-				else{
-					continue; //skip
-				}
-			}
-
-			//check for duplicates - no need to match uuids
-			bool found = false;
-			foreach(PartitionInfo pm in list){
-				if (pm.device == pi.device){
-					//add mount points and continue
-					foreach(string mount_point in pi.mount_point_list){
-						if (!pm.mount_point_list.contains(mount_point)){
-							pm.mount_point_list.add(mount_point);
-						}
-					}
-					found = true;
-					//don't break
-				}
-			}
-			
-			//add to list
-			if (!found){
-				list.add(pi);
-			}
-		}
-
-		return list;
-	}
-	
-	public Gee.ArrayList<PartitionInfo?> get_partitions_using_blkid(bool exclude_unknown = true){
-		
-		/* Returns list of mounted/unmounted, physical/LVM partitions 
-		 * Populates device, uuid, type and label */
-		
-		var list = new Gee.ArrayList<PartitionInfo?>();
-
-		string std_out;
-		string std_err;
-		int ret_val;
-		Regex rex;
-		MatchInfo match;
-			
-		ret_val = execute_command_script_sync("/sbin/blkid", out std_out, out std_err);
-		
-		if (ret_val != 0){
-			log_error ("Failed to get list of partitions");
-			return list; //return empty list
-		}
-			
-		/*
-		sample output
-		-----------------
-		/dev/sda1: LABEL="System Reserved" UUID="F476B08076B04560" TYPE="ntfs" 
-		/dev/sda2: LABEL="windows" UUID="BE00B6DB00B69A3B" TYPE="ntfs" 
-		/dev/sda3: UUID="03f3f35d-71fa-4dff-b740-9cca19e7555f" TYPE="ext4"
-		*/
-		
-		try{
-			foreach(string line in std_out.split("\n")){
-				if (line.strip().length == 0) { continue; }
-				
-				PartitionInfo pi = new PartitionInfo();
-				
-				pi.device = line.split(":")[0].strip();
-				
-				if (pi.device.length == 0) { continue; }
-				
-				//exclude unknown devices
-				if (exclude_unknown){
-					if (!(pi.device.has_prefix("/dev/sd") || pi.device.has_prefix("/dev/hd") || pi.device.has_prefix("/dev/mapper/"))) { 
-						continue;
-					}
-				}
-				
-				//parse & populate fields ------------------
-				
-				rex = new Regex("""LABEL=\"([^\"]*)\"""");
-				if (rex.match (line, 0, out match)){
-					pi.label = match.fetch(1).strip();
-				}
-				
-				rex = new Regex("""UUID=\"([^\"]*)\"""");
-				if (rex.match (line, 0, out match)){
-					pi.uuid = match.fetch(1).strip();
-				}
-				
-				rex = new Regex("""TYPE=\"([^\"]*)\"""");
-				if (rex.match (line, 0, out match)){
-					pi.type = match.fetch(1).strip();
-				}
-				
-				//check for duplicates - no need to match uuids
-				bool found = false;
-				foreach(PartitionInfo pm in list){
-					if (pm.device == pi.device){
-						//add mount points and continue
-						foreach(string mount_point in pi.mount_point_list){
-							if (!pm.mount_point_list.contains(mount_point)){
-								pm.mount_point_list.add(mount_point);
-							}
-						}
-						found = true;
-						//don't break
-					}
-				}
-				
-				//add to list
-				if (!found){
-					list.add(pi);
-				}
-			}
-		}
-		catch(Error e){
-	        log_error (e.message);
-	    }
-
-		return list;
-	}
-
-	public Gee.ArrayList<PartitionInfo?> get_all_partitions(bool exclude_unknown = true, bool get_usage = true){
-		
-		/* Returns list of mounted/unmounted, physical/logical partitions */
-		
-		var list = new Gee.ArrayList<PartitionInfo?>();
-
-		// get initial list --------
-		
-		var list_blkid = get_partitions_using_blkid(exclude_unknown);
-		
-		foreach (PartitionInfo pi in list_blkid){
-			list.add(pi);
-		}
-		
-		// add more devices ----------
-
-		var list_mount = get_mounted_partitions_using_mtab(exclude_unknown);
-		
-		foreach (PartitionInfo pm in list_mount){
-			bool found = false;
-			foreach (PartitionInfo pi in list){
-				if ((pm.device == pi.device) ||
-				((pm.uuid.length > 0) && (pm.uuid == pi.uuid))){
-					//add more mount points
-					foreach(string mount_point in pm.mount_point_list){
-						if (!pi.mount_point_list.contains(mount_point)){
-							pi.mount_point_list.add(mount_point);
-						}
-					}
-					found = true;
-					//don't break
-				}
-			}
-			
-			if(!found){
-				list.add(pm);
-			}
-		}
-		
-		// get usage info -------------
-
-		if (get_usage){
-			
-			var list_df = get_partition_usage(exclude_unknown);
-
-			for(int k = 0; k < list.size; k++){
-				PartitionInfo pi = list[k];
-				foreach(PartitionInfo pm in list_df){
-					if (pm.device == pi.device){
-						pi.size_mb = pm.size_mb;
-						pi.used_mb = pm.used_mb;
-						pi.used_percent = pm.used_percent;
-						
-						foreach(string mount_point in pm.mount_point_list){
-							if (!pi.mount_point_list.contains(mount_point)){
-								pi.mount_point_list.add(mount_point);
-							}
-						}
-					}
-				}
-			}
-		}
-		
-		return list;
-	}
-
-	public PartitionInfo refresh_partition_usage_info(PartitionInfo pi){
-		
-		/* Updates and returns the given PartitionInfo object */
-
-		string std_out = "";
-		string std_err = "";
-		
-		int exit_code = execute_command_script_sync("df -T -BM \"" + pi.device + "\"| uniq -w 12", out std_out, out std_err);
-		
-		if (exit_code != 0){ 
-			return pi; 
-		}
-
-		string[] lines = std_out.split("\n");
-
-		int k = 1;
-		if (lines.length == 3){
-			foreach(string part in lines[1].split(" ")){
-				
-				if (part.strip().length == 0){ continue; }
-				
-				switch(k++){
-					case 3:
-						pi.size_mb = long.parse(part.strip().replace("M",""));
-						break;
-					case 4:
-						pi.used_mb = long.parse(part.strip().replace("M",""));
-						break;
-					case 5:
-						pi.available = part.strip();
-						break;
-					case 6:
-						pi.used_percent = part.strip();
-						break;
-					default:
-						//ignore
-						break;
-				}
-			}
-		}
-
-		return pi;
-	}
-
-
-	public bool mount(string device, string mount_point, string mount_options = ""){
+	public bool mount(string device_or_uuid, string mount_point, string mount_options = ""){
 		
 		/* Mounts specified device at specified mount point.
-		   Other devices will be un-mounted from the mount point*/
+		 * */
 		
 		string cmd = "";
 		string std_out;
 		string std_err;
 		int ret_val;
-		File file;
+		string device = "";
+		string uuid = "";
+
+		//get uuid -----------------------------
 		
+		if (device_or_uuid.has_prefix("/dev")){
+			device = device_or_uuid;
+			uuid = PartitionInfo.get_device_uuid(device_or_uuid);
+		}
+		else{
+			uuid = device_or_uuid;
+			device = "/dev/disk/by-uuid/%s".printf(uuid);
+		}
+		
+		//check if already mounted -------------
+		
+		var map = PartitionInfo.get_mounted_filesystems_using_mtab();
+		if (map.has_key(uuid)){
+			var pi = map.get(uuid);
+			if (pi.mount_point == mount_point){
+				return true;
+			}
+		}
+			
 		try{
-			//check if mount point exists
-			file = File.new_for_path(mount_point);
+			//check and create mount point -------------------
+			
+			File file = File.new_for_path(mount_point);
 			if (!file.query_exists()){
 				file.make_directory_with_parents();
 			}
 
-			//check if mounted
-			bool mounted = false;
-			foreach(PartitionInfo info in get_mounted_partitions_using_mtab()){
+			//mount the device --------------------
 
-				if (info.mount_point_list.contains(mount_point) && info.device == device){
-					//device is already mounted at mount point
-					mounted = true;
-					break;
-				}
-				else if (info.mount_point_list.contains(mount_point) && info.device != device){
-					//another device is mounted at mount point - unmount it -------
-					cmd = "umount \"%s\"".printf(mount_point);
-					Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-					if (ret_val != 0){
-						log_error ("Failed to unmount device '%s' from mount point '%s'".printf(info.device, mount_point));
-						log_error (std_err);
-						return false;
-					}
-					else{
-						log_msg ("Unmounted device '%s' from mount point '%s'".printf(info.device, mount_point));
-					}
-				}
+			if (mount_options.length > 0){
+				cmd = "mount -o %s \"%s\" \"%s\"".printf(mount_options, device, mount_point);
+			} 
+			else{
+				cmd = "mount \"%s\" \"%s\"".printf(device, mount_point);
 			}
 
-			if (!mounted){
-				//mount --------------
-				if (mount_options.length > 0){
-					cmd = "mount -o %s \"%s\" \"%s\"".printf(mount_options, device, mount_point);
-				} 
-				else{
-					cmd = "mount \"%s\" \"%s\"".printf(device, mount_point);
-				}
-
-				Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-				if (ret_val != 0){
-					log_error ("Failed to mount device '%s' at mount point '%s'".printf(device, mount_point));
-					log_error (std_err);
-					return false;
-				}
-				else{
-					log_msg ("Mounted device '%s' at mount point '%s'".printf(device, mount_point));
-				}
+			Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
+			if (ret_val != 0){
+				log_error ("Failed to mount device '%s' at mount point '%s'".printf(device, mount_point));
+				log_error (std_err);
+				return false;
+			}
+			else{
+				log_debug ("Mounted device '%s' at mount point '%s'".printf(device, mount_point));
 			}
 		}
 		catch(Error e){
@@ -1103,31 +1087,101 @@ namespace TeeJee.DiskPartition{
 			return false;
 		}
 		
-		return true;
+		//check if mounted successfully -------------
+			
+		map = PartitionInfo.get_mounted_filesystems_using_mtab();
+		if (map.has_key(uuid)){
+			var pi = map.get(uuid);
+			if (pi.mount_point == mount_point){
+				return true;
+			}
+		}
+		return false;
 	}
+	
+	public string automount(string device_or_uuid, string mount_options = "", string mount_prefix = "/mnt"){
+		
+		/* Returns the mount point of specified device.
+		 * If unmounted, mounts the device to /mnt/<uuid> and returns the mount point.
+		 * */
+		 
+		string device = "";
+		string uuid = "";
+		
+		//get uuid -----------------------------
+			
+		if (device_or_uuid.has_prefix("/dev")){
+			device = device_or_uuid;
+			uuid = PartitionInfo.get_device_uuid(device_or_uuid);
+		}
+		else{
+			uuid = device_or_uuid;
+			device = "/dev/disk/by-uuid/%s".printf(uuid);
+		}
+		
+		//check if already mounted and return mount point -------------
+		
+		var map = PartitionInfo.get_mounted_filesystems_using_mtab();
+		if (map.has_key(uuid)){
+			var pi = map.get(uuid);
+			if (pi.mount_point.length > 0){
+				return pi.mount_point;
+			}
+		}
+		
+		//check and create mount point -------------------
+		
+		string mount_point = "%s/%s".printf(mount_prefix, uuid);
+		
+		try{
+			File file = File.new_for_path(mount_point);
+			if (!file.query_exists()){
+				file.make_directory_with_parents();
+			}
+		}
+		catch(Error e){
+			log_error (e.message);
+			return "";
+		}
+		
+		//mount the device and return mount_point --------------------
 
-	public bool unmount(string mount_point, bool force = true){
+		if (mount(uuid, mount_point, mount_options)){
+			return mount_point;
+		}
+		else{
+			return "";
+		}
+	}
+	
+	public bool unmount(string mount_point){
+		
+		/* Recursively unmounts all devices at given mount_point and subdirectories
+		 * */
+
 		string cmd = "";
 		string std_out;
 		string std_err;
 		int ret_val;
-		
-		bool mounted = false;
+
+		//check if mounted -------------
 			
-		//check if mounted
-		foreach(PartitionInfo info in get_mounted_partitions_using_mtab()){
-			if (info.mount_point_list.contains(mount_point)){
+		bool mounted = false;
+		var map = PartitionInfo.get_mounted_filesystems_using_mtab();
+		foreach (PartitionInfo pi in map.values){
+			if (pi.mount_point.has_prefix(mount_point)){ //check for any mount_point at or under the given mount_point
 				mounted = true;
-				break;
 			}
 		}
-			
 		if (!mounted) { return true; }
 		
+		//try to unmount ------------------
+		
 		try{
+			
 			string cmd_unmount = "cat /proc/mounts | awk '{print $2}' | grep '%s' | sort -r | xargs umount".printf(mount_point);
 			
-			log_msg(_("Unmounting from") + ": '%s'".printf(mount_point));
+			log_debug(_("Unmounting from") + ": '%s'".printf(mount_point));
 			
 			//sync before unmount
 			cmd = "sync";
@@ -1138,45 +1192,8 @@ namespace TeeJee.DiskPartition{
 			ret_val = execute_command_script_sync(cmd_unmount, out std_out, out std_err);
 			
 			if (ret_val != 0){
-				
 				log_error (_("Failed to unmount"));
 				log_error (std_err);
-				
-				if (force){
-					//check if any process is using the mount_point
-					cmd = "fuser -m \"" + mount_point + "\"";
-					string proc_list = execute_command_sync_get_output(cmd);
-					
-					if ((proc_list != null) && (proc_list.length > 0)){
-						
-						log_msg (_("Killing all processes using the mount-point..."));
-						
-						//kill the process
-						cmd = "fuser -mk \"" + mount_point + "\"";
-						Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-						
-						if (ret_val != 0){
-							log_error (_("Failed to kill process"));
-							log_error (std_err);
-						}
-						else{
-
-							//ok, try again
-							ret_val = execute_command_script_sync(cmd_unmount, out std_out, out std_err);
-							
-							if (ret_val != 0){
-								log_error (_("Failed to unmount"));
-								log_error (std_err);
-							}
-							else{
-								//log_msg (_("Unmounted"));
-							}
-						}
-					}
-				}
-			}
-			else{
-				//log_msg (_("Unmounted"));
 			}
 		}
 		catch(Error e){
@@ -1184,16 +1201,48 @@ namespace TeeJee.DiskPartition{
 			return false;
 		}
 		
-		//check if unmounted
+		//check if unmounted --------------------------
+		
 		mounted = false;
-		foreach(PartitionInfo info in get_mounted_partitions_using_mtab()){
-			if (info.mount_point_list.contains(mount_point)){
+		map = PartitionInfo.get_mounted_filesystems_using_mtab();
+		foreach (PartitionInfo pi in map.values){
+			if (pi.mount_point.has_prefix(mount_point)){
 				mounted = true;
-				break;
 			}
 		}
 			
 		return !mounted;
+	}
+	
+	public string get_device_mount_point(string device_or_uuid){
+		/* Returns the mount point of specified device.
+		 * If unmounted, mounts the device to /mnt/<uuid> and returns the mount point.
+		 * */
+		 
+		string device = "";
+		string uuid = "";
+		
+		//get uuid -----------------------------
+			
+		if (device_or_uuid.has_prefix("/dev")){
+			device = device_or_uuid;
+			uuid = PartitionInfo.get_device_uuid(device_or_uuid);
+		}
+		else{
+			uuid = device_or_uuid;
+			device = "/dev/disk/by-uuid/%s".printf(uuid);
+		}
+		
+		//check if already mounted and return mount point -------------
+		
+		var map = PartitionInfo.get_mounted_filesystems_using_mtab();
+		if (map.has_key(uuid)){
+			var pi = map.get(uuid);
+			if (pi.mount_point.length > 0){
+				return pi.mount_point;
+			}
+		}
+		return "";
 	}
 	
 	public Gee.ArrayList<DeviceInfo> get_block_devices(){

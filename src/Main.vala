@@ -56,7 +56,8 @@ public class Main : GLib.Object{
 	public string app_conf_path = "";
 
 	public Gee.ArrayList<TimeShiftBackup?> snapshot_list;
-	public Gee.ArrayList<PartitionInfo?> partition_list;
+	public Gee.HashMap<string,PartitionInfo> partition_map;
+
 	public Gee.ArrayList<string> exclude_list_user;
 	public Gee.ArrayList<string> exclude_list_default;
 	public Gee.ArrayList<string> exclude_list_default_extra;
@@ -68,10 +69,11 @@ public class Main : GLib.Object{
 	public PartitionInfo root_device;
 	public PartitionInfo home_device;
 	public PartitionInfo snapshot_device;
-	public string mount_point_backup = "/mnt/timeshift";
-	public string mount_point_restore = "/mnt/timeshift-restore";
-	public string mount_point_test = "/mnt/timeshift-test";
-	public string snapshot_dir = "/mnt/timeshift/timeshift/snapshots";
+	
+	public string mount_point_backup = "";
+	public string mount_point_restore = "";
+	public string mount_point_app = "/mnt/timeshift";
+	
 	public DistInfo current_distro;
 	public bool mirror_system = false;
 	
@@ -136,7 +138,16 @@ public class Main : GLib.Object{
 		 * init_tmp() will fail if timeshift is run as normal user
 		 * logging will be disabled temporarily so that the error is not displayed to user
 		 */
-
+		
+		/*
+		var map = PartitionInfo.get_mounted_filesystems_using_mtab();
+		foreach(PartitionInfo pi in map.values){
+			LOG_TIMESTAMP = false;
+			log_msg(pi.description_full());
+		}
+		exit(0);
+		*/
+		
 		App = new Main(args);
 		bool success = App.start_application(args);
 		App.exit_app();
@@ -285,7 +296,7 @@ public class Main : GLib.Object{
 		exclude_list_home = new Gee.ArrayList<string>();
 		exclude_list_restore = new Gee.ArrayList<string>();
 		exclude_list_apps = new Gee.ArrayList<AppExcludeEntry>();
-		partition_list = new Gee.ArrayList<PartitionInfo>();
+		partition_map = new Gee.HashMap<string,PartitionInfo>();
 		mount_list = new Gee.ArrayList<MountEntry>();
 
 		add_default_exclude_entries();
@@ -294,12 +305,12 @@ public class Main : GLib.Object{
 		//check current linux distribution -----------------
 		
 		this.current_distro = DistInfo.get_dist_info("/");
-		
+
 		//initialize app --------------------
 		
 		update_partition_list();
 		detect_system_devices();
-
+		
 		//check if root device is a BTRFS volume ---------------
 		
 		if ((root_device != null) && (root_device.type == "btrfs")){
@@ -607,10 +618,24 @@ public class Main : GLib.Object{
 		msg += "\n";
 		msg += "  1) '--backup' will take a snapshot only if a scheduled snapshot is due\n";
 		msg += "  2) '--backup-now' will take an immediate (manual) snapshot\n";
+		msg += "  3) '--backup' will not take snapshots till the first snapshot has been taken with --backup-now\n";
 		msg += "\n";
 		return msg;
 	}
 	
+	public string snapshot_dir {
+		owned get{
+			if (mount_point_backup == "/"){
+				return "/timeshift/snapshots";
+			}
+			else if (mount_point_backup.length > 0){
+				return "%s/timeshift/snapshots".printf(mount_point_backup);
+			}
+			else{
+				return "";
+			}
+		}
+	}
 	
 	public bool create_lock(){
 		try{
@@ -744,7 +769,7 @@ public class Main : GLib.Object{
 				in_progress = false;
 				return;
 			}
-			
+
 			//create snapshot root if missing
 			var f = File.new_for_path(snapshot_dir);
 			if (!f.query_exists()){
@@ -2138,24 +2163,40 @@ public class Main : GLib.Object{
 		return true;
 	}
 	
+	public Gee.ArrayList<PartitionInfo> partition_list {
+		owned get{
+			var list = new Gee.ArrayList<PartitionInfo>();
+			foreach(PartitionInfo pi in partition_map.values) {
+				list.add(pi);
+			}
+			list.sort((a,b) => { 
+					PartitionInfo p1 = (PartitionInfo) a;
+					PartitionInfo p2 = (PartitionInfo) b;
+					
+					return strcmp(p1.device,p2.device);
+				});
+			return list;
+		}
+	}
+	
 	public void update_partition_list(){
-		partition_list.clear();
-		partition_list = get_all_partitions();
+		partition_map.clear();
+		partition_map = PartitionInfo.get_filesystems();
 
-		foreach(PartitionInfo pi in partition_list){
+		foreach(PartitionInfo pi in partition_map.values){
 			//root_device and home_device will be detected by detect_system_devices()
-			if (pi.mount_point_list.contains("/mnt/timeshift")){
+			if ((snapshot_device != null) && (pi.uuid == snapshot_device.uuid)){
 				snapshot_device = pi;
 			}
 			if (pi.is_mounted){
-				pi.dist_info = DistInfo.get_dist_info(pi.mount_point_list[0]).full_name();
+				pi.dist_info = DistInfo.get_dist_info(pi.mount_point).full_name();
 			}
 		}
-		if (partition_list.size == 0){
+		if (partition_map.size == 0){
 			log_error(_("Failed to get partition list."));
 		}
 
-		log_debug(_("Partition list updated"));
+		//log_debug(_("Partition list updated"));
 	}
 
 	public Gee.ArrayList<TimeShiftBackup?> get_snapshot_list(string tag = ""){
@@ -2177,11 +2218,11 @@ public class Main : GLib.Object{
 	
 	public void detect_system_devices(){
 		foreach(PartitionInfo pi in partition_list){
-			if (pi.mount_point_list.contains("/")){
+			if (pi.mount_point == "/"){
 				root_device = pi;
 			}
 			
-			if (pi.mount_point_list.contains("/home")){
+			if (pi.mount_point == "/home"){
 				home_device = pi;
 			}
 		}
@@ -2215,7 +2256,16 @@ public class Main : GLib.Object{
 			return false;
 		}
 		else{
-			return mount_device(backup_device, mount_point_backup, "");
+			if (get_device_mount_point(backup_device.uuid) != mount_point_backup){
+				unmount_backup_device(false);
+				/* Note: Unmount errors can be ignored.
+				 * The old device will be hidden completely after the new device is mounted at the mount_point
+				 * */
+				mount_point_backup = automount(backup_device.device,"", mount_point_app);
+				log_msg("Backup path changed to '%s/timeshift'".printf((mount_point_backup == "/") ? "" : mount_point_backup));
+			}
+
+			return (mount_point_backup.length > 0);
 		}
 	}
 	
@@ -2224,12 +2274,12 @@ public class Main : GLib.Object{
 			return false;
 		}
 		else{
-			unmount_device(mount_point_restore);
-
-			//check BTRFS volume
+			//check BTRFS volume --------------
+			
 			if (restore_target.type == "btrfs"){
+
+				//check subvolume layout ---------
 				
-				//check subvolume layout
 				if (check_btrfs_volume(restore_target) == false){
 					string msg = _("The target partition has an unsupported subvolume layout.") + "\n";
 					msg += _("Only ubuntu-type layouts with @ and @home subvolumes are currently supported.");
@@ -2244,49 +2294,81 @@ public class Main : GLib.Object{
 					
 					return false;
 				}
+				
+				//check and create restore mount_point ------
+				
+				mount_point_restore = mount_point_app + "/restore";
+				check_and_create_dir_with_parents(mount_point_restore);
+				unmount(mount_point_restore); //unmount existing devices (required)
 
-				//mount subvolumes
-				bool success = mount_device(restore_target, mount_point_restore, "subvol=@");
-				if (!success){
-					//string title = _("Error");
+				//mount @ subvolume -----------
+				
+				if (!mount(restore_target.uuid, mount_point_restore, "subvol=@")){
 					string msg = _("Failed to mount BTRFS subvolume") + ": @";
 					log_error(msg);
 					return false;
 				}
+
+				//mount @home subvolume -----------
 				
-				success = mount_device(restore_target, mount_point_restore + "/home", "subvol=@home");
-				if (!success){
-					//string title = _("Error");
+				if (!mount(restore_target.uuid, mount_point_restore + "/home", "subvol=@home")){
 					string msg = _("Failed to mount BTRFS subvolume") + ": @home";
 					log_error(msg);
 					return false;
 				}
+
+				return true;
 			}
 			else{
-				mount_device(restore_target, mount_point_restore, "");
+				//check and create restore mount_point ------
+				
+				mount_point_restore = mount_point_app + "/restore";
+				check_and_create_dir_with_parents(mount_point_restore);
+				unmount(mount_point_restore); //unmount existing devices (required)
+				if (mount(restore_target.uuid, mount_point_restore, "")){
+					return true;
+				}
+
+				/* Note:
+				 * Do not automount non-BTRFS filesystems.
+				 * Later we need to mount other devices in sub-directories under mount_point_restore
+				 * */
 			}
-			
-			return true;
+		}
+		
+		return false;
+	}
+
+	public void unmount_backup_device(bool exit_on_error = true){
+		//unmount the backup device only if it was mounted by application
+		if (mount_point_backup.has_prefix(mount_point_app)){
+			if (unmount_device(mount_point_backup, false)){
+				file_delete(mount_point_backup);
+				log_debug(_("Removed mount directory: '%s'").printf(mount_point_backup));
+			}
+			else{
+				//ignore
+			}
+		}
+		else{
+			//don't unmount
 		}
 	}
 	
-	public bool mount_device(PartitionInfo dev, string mount_point, string mount_options){
-		bool status = mount(dev.device, mount_point, mount_options);
-		return status;
-	}
-
-	public void unmount_backup_device(bool force = true){
-		unmount_device(mount_point_backup,force);
-	}
-	
-	public void unmount_target_device(bool force = true){
-		unmount_device(mount_point_restore,force);
+	public void unmount_target_device(bool exit_on_error = true){
+		//unmount the target device only if it was mounted by application
+		if (mount_point_restore.has_prefix(mount_point_app)){   //always true
+			unmount_device(mount_point_restore,exit_on_error);
+		}
+		else{
+			//don't unmount
+		}
 	}
 	
-	public void unmount_device(string mount_point, bool force = true){
-		if (!unmount(mount_point, force)){
-			//exit application if a forced un-mount fails
-			if (force){
+	public bool unmount_device(string mount_point, bool exit_on_error = true){
+		bool is_unmounted = unmount(mount_point);
+		if (!is_unmounted){
+			if (exit_on_error){
 				if (app_mode == ""){
 					string title = _("Critical Error");
 					string msg = _("Failed to unmount device!") + "\n" + _("Application will exit");
@@ -2296,6 +2378,7 @@ public class Main : GLib.Object{
 				exit(0);
 			}
 		}
+		return is_unmounted;
 	}
 
 	public void cron_job_update(){
@@ -2430,17 +2513,6 @@ public class Main : GLib.Object{
 		}
 	}
 
-	public PartitionInfo? get_backup_device(){
-		var list = get_mounted_partitions_using_mtab();
-		foreach(PartitionInfo info in list){
-			if (info.mount_point_list.contains("/mnt/timeshift")){
-				return info;
-			}
-		}
-		
-		return null;
-	}
-	
 	public int check_backup_device(out string message){
 		
 		/* 
@@ -2500,23 +2572,30 @@ public class Main : GLib.Object{
 	}
 	
 	public bool check_btrfs_volume(PartitionInfo dev){
-		mount_device(dev, mount_point_test, "");
-		bool is_supported = dir_exists(mount_point_test + "/@") && dir_exists(mount_point_test + "/@home");
-		unmount_device(mount_point_test);		
+		string mnt_btrfs = mount_point_app + "/btrfs";
+		check_and_create_dir_with_parents(mnt_btrfs);
+		
+		unmount(mnt_btrfs);
+		mount(dev.uuid, mnt_btrfs);
+		
+		bool is_supported = dir_exists(mnt_btrfs + "/@") && dir_exists(mnt_btrfs + "/@home");
+		
+		if (unmount(mnt_btrfs)){
+			file_delete(mnt_btrfs);
+			log_debug(_("Removed mount directory: '%s'").printf(mnt_btrfs));
+		}
+				
 		return is_supported;
 	}
 	
 	public bool backup_device_online(){
-		//check if mounted
-		foreach(PartitionInfo info in get_mounted_partitions_using_mtab()){
-			if (info.mount_point_list.contains(mount_point_backup)){
-				if (device_exists(snapshot_device.device)){
-					return true;
-				}
-			}
+		mount_backup_device();
+		if (PartitionInfo.get_mount_point(snapshot_device.uuid).length > 0){
+			return true;
 		}
-		
-		return false;
+		else{
+			return false;
+		}
 	}
 
 	public long calculate_size_of_first_snapshot(){
@@ -2658,7 +2737,6 @@ public class Main : GLib.Object{
 		
 		cron_job_update();
 		
-		//soft-unmount always
 		unmount_backup_device(false);
 		unmount_target_device(false);
 		

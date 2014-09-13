@@ -789,17 +789,9 @@ public class RestoreWindow : Gtk.Dialog{
 		
 		ListStore model = new ListStore(3, typeof(PartitionInfo), typeof(string), typeof(string));
 		tv_partitions.set_model (model);
-		
-		var list = App.partition_list;
-		list.sort((a,b) => { 
-					PartitionInfo p1 = (PartitionInfo) a;
-					PartitionInfo p2 = (PartitionInfo) b;
-					
-					return strcmp(p1.device,p2.device);
-				});
 
 		TreeIter iter;
-		foreach(PartitionInfo pi in list) {
+		foreach(PartitionInfo pi in App.partition_list) {
 			if (!pi.has_linux_filesystem()) { continue; }
 			if (!radio_sys.sensitive && (App.root_device != null) && ((pi.device == App.root_device.device)||(pi.uuid == App.root_device.uuid))) { continue; }
 			
@@ -1328,8 +1320,7 @@ public class RestoreWindow : Gtk.Dialog{
 				if ((mount_point != null) && (mount_point.length > 0)){
 					mount_point = mount_point.strip();
 					if (mount_point != "/"){
-						status = App.mount_device(pi, App.mount_point_restore + mount_point, "");
-						if (status == false){
+						if (!mount(pi.uuid, App.mount_point_restore + mount_point)){
 							string title = _("Error");
 							string msg = _("Failed to mount device") + ": %s".printf(pi.device);
 							gtk_messagebox(title, msg, this, true);

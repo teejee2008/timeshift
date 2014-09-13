@@ -728,7 +728,7 @@ class MainWindow : Gtk.Window{
 		int index = -1;
 		int index_selected = -1;
 		cmb_backup_device_index_default = -1;
-		
+
 		foreach(PartitionInfo pi in App.partition_list) {
 			
 			if (!pi.has_linux_filesystem()) { continue; }
@@ -1140,13 +1140,18 @@ class MainWindow : Gtk.Window{
 	private void btn_browse_snapshot_clicked(){
 		
 		//check if device is online
-		if (!check_backup_device_online()) { return; }
+		if (!check_backup_device_online()) { 
+			return; 
+		}
 		
 		TreeSelection sel = tv_backups.get_selection ();
 		if (sel.count_selected_rows() == 0){
 			var f = File.new_for_path(App.snapshot_dir);
 			if (f.query_exists()){
 				exo_open_folder(App.snapshot_dir);
+			}
+			else{
+				exo_open_folder(App.mount_point_backup);
 			}
 			return;
 		}

@@ -483,7 +483,7 @@ class MainWindow : Gtk.Window{
 		refresh_tv_backups();
 		check_status();
 		update_ui(true);
-		
+
 		return false;
 	}
 	
@@ -785,7 +785,7 @@ class MainWindow : Gtk.Window{
 		
 		App.snapshot_device = pi;
 		
-		bool refresh_combobox_after_mounting = (pi.size_mb == 0);
+		long size_before = App.snapshot_device.size_mb;
 
 		bool status = App.mount_backup_device();
 		if (status == false){
@@ -797,19 +797,19 @@ class MainWindow : Gtk.Window{
 			dlg.set_modal(true);
 			dlg.run();
 			dlg.destroy();
-			
-			refresh_combobox_after_mounting = false;
+
 			cmb_backup_device.active = cmb_backup_device_index_default;
 			gtk_set_busy(false, this);
 			return;
 		}
 		
-		App.update_partition_list(); //refresh disk space info
-
+		//get disk space after mounting
+		App.update_partition_list();
+		long size_after = App.snapshot_device.size_mb;
+		
 		gtk_set_busy(false, this);
 		
-		if (refresh_combobox_after_mounting){
-			refresh_combobox_after_mounting = false;
+		if (size_after > size_before){
 			refresh_cmb_backup_device();
 		}
 		else{

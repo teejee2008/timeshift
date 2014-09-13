@@ -2082,7 +2082,7 @@ public class Main : GLib.Object{
 			log_msg (_("Warning: Backup device not set! Defaulting to system device"));
 			snapshot_device = root_device;
 		}
-		
+
 		if (mount_backup_device(snapshot_device)){
 			update_partition_list();
 		}
@@ -2193,7 +2193,7 @@ public class Main : GLib.Object{
 			}
 		}
 		if (partition_map.size == 0){
-			log_error(_("Failed to get partition list."));
+			log_error("ts: " + _("Failed to get partition list."));
 		}
 
 		//log_debug(_("Partition list updated"));
@@ -2256,19 +2256,27 @@ public class Main : GLib.Object{
 			return false;
 		}
 		else{
-			if ((mount_point_backup.length == 0) || (get_device_mount_point(backup_device.uuid) != mount_point_backup)){
+			string backup_device_mount_point = get_device_mount_point(backup_device.uuid);
+
+			if ((mount_point_backup.length == 0) || (backup_device_mount_point != mount_point_backup)){
 				unmount_backup_device(false);
-				
+
 				/* Note: Unmount errors can be ignored.
 				 * Old device will be hidden if new device is mounted successfully
 				 * */
-				 
-				mount_point_backup = automount(backup_device.device,"", mount_point_app);
-				log_msg("Backup path changed to '%s/timeshift'".printf((mount_point_backup == "/") ? "" : mount_point_backup));
+
+				mount_point_backup = automount(backup_device.uuid,"", mount_point_app);
+				if (mount_point_backup.length > 0){
+					log_msg("Backup path changed to '%s/timeshift'".printf((mount_point_backup == "/") ? "" : mount_point_backup));
+				}
+				else{
+					App.update_partition_list();
+				}
 			}
 
 			return (mount_point_backup.length > 0);
 		}
+		
 	}
 	
 	public bool mount_target_device(){
@@ -2549,20 +2557,29 @@ public class Main : GLib.Object{
 				status_code = -1;
 			}
 			else{
-				if (snapshot_list.size > 0){
-					if (snapshot_device.free_mb < minimum_free_disk_space_mb){
-						message = _("Backup device does not have enough space!");
-						status_code = 1;
-					}
+				if (snapshot_device.size_mb == 0){
+					message = _("Backup device not available");
+					status_code = -1;
 				}
-				else {
-					long required_space = calculate_size_of_first_snapshot();
-					message = _("First snapshot needs") + " %.1f GB".printf(required_space/1024.0);
-					if (snapshot_device.free_mb < required_space){
-						status_code = 2;
+				else{
+					if (snapshot_list.size > 0){
+						if (snapshot_device.free_mb < minimum_free_disk_space_mb){
+							message = _("Backup device does not have enough space!");
+							status_code = 1;
+						}
+						else{
+							//ok
+						}
 					}
-					else{
-						status_code = 3;
+					else {
+						long required_space = calculate_size_of_first_snapshot();
+						message = _("First snapshot needs") + " %.1f GB".printf(required_space/1024.0);
+						if (snapshot_device.free_mb < required_space){
+							status_code = 2;
+						}
+						else{
+							status_code = 3;
+						}
 					}
 				}
 			}

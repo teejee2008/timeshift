@@ -85,13 +85,13 @@ namespace TeeJee.Logging{
 		}
 	}
 
-	public void log_error (string message, bool highlight = false, bool is_warning = false){
+	public void log_error (string message, bool highlight = true, bool is_warning = false){
 		if (!LOG_ENABLE) { return; }
 		
 		string msg = "";
 		
 		if (highlight && LOG_COLORS){
-			msg += "\033[1;38;5;160m";
+			msg += "\033[1;38;5;9m";
 		}
 		
 		if (LOG_TIMESTAMP){
@@ -501,7 +501,7 @@ namespace TeeJee.DiskPartition{
 			cmd = "/sbin/blkid" + ((device_alias.length > 0) ? " " + device_alias: "");
 			ret_val = execute_command_script_sync(cmd, out std_out, out std_err);
 			if (ret_val != 0){
-				log_error ("Failed to get list of partitions");
+				log_error ("blkid: " + _("Failed to get partition list") + ((device_alias.length > 0) ? ": " + device_alias : ""));
 				return map; //return empty map
 			}
 				
@@ -567,7 +567,7 @@ namespace TeeJee.DiskPartition{
 							
 				//add to map -------------------------
 				
-				if (!map.has_key(pi.uuid)){
+				if ((pi.uuid.length > 0) && !map.has_key(pi.uuid)){
 					map.set(pi.uuid, pi);
 				}
 			}
@@ -590,7 +590,7 @@ namespace TeeJee.DiskPartition{
 			cmd = "df -T -BM" + ((device_or_mount_point.length > 0) ? " \"%s\"".printf(device_or_mount_point): "");
 			ret_val = execute_command_script_sync(cmd, out std_out, out std_err);
 			if (ret_val != 0){
-				log_error ("Failed to get list of partitions");
+				log_error ("df: " + _("Failed to get partition list"));
 				return map; //return empty map
 			}
 			
@@ -673,7 +673,7 @@ namespace TeeJee.DiskPartition{
 
 				//add to map -------------------------
 				
-				if (!map.has_key(pi.uuid)){
+				if ((pi.uuid.length > 0) && !map.has_key(pi.uuid)){
 					map.set(pi.uuid, pi);
 				}
 			}
@@ -808,7 +808,7 @@ namespace TeeJee.DiskPartition{
 				
 				//add to map -------------------------
 				
-				if (!map.has_key(pi.uuid)){
+				if ((pi.uuid.length > 0) && !map.has_key(pi.uuid)){
 					map.set(pi.uuid, pi);
 				}
 			}
@@ -820,7 +820,7 @@ namespace TeeJee.DiskPartition{
 			
 			//get block devices
 			var map = get_block_devices_using_blkid();
-			
+
 			if (get_space){
 				//get used space for mounted filesystems
 				var map_df = get_disk_space_using_df("",false);
@@ -1121,10 +1121,10 @@ namespace TeeJee.DiskPartition{
 		
 		//check if already mounted and return mount point -------------
 		
-		var map = PartitionInfo.get_mounted_filesystems_using_mtab();
+		var map = PartitionInfo.get_filesystems();
 		if (map.has_key(uuid)){
 			var pi = map.get(uuid);
-			if (pi.mount_point.length > 0){
+			if ((pi.mount_point.length > 0) && (pi.size_mb > 0)){
 				return pi.mount_point;
 			}
 		}

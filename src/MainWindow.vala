@@ -737,14 +737,14 @@ class MainWindow : Gtk.Window{
 			store.set (iter, 0, pi);
 
 			index++;
-			if ((App.root_device != null) && (pi.device == App.root_device.device)){
+			if ((App.root_device != null) && (pi.uuid == App.root_device.uuid)){
 				cmb_backup_device_index_default = index;
 			}
-			if ((App.snapshot_device != null) && (pi.device == App.snapshot_device.device)){
+			if ((App.snapshot_device != null) && (pi.uuid == App.snapshot_device.uuid)){
 				index_selected = index;
 			}
 		}
-		
+
 		if (index_selected > -1){
 			//ok
 		}
@@ -764,7 +764,6 @@ class MainWindow : Gtk.Window{
 		if (combo.model == null) { return; }
 		
 		string txt;
-
 		if (combo.active < 0) { 
 			txt = "<b>" + _("WARNING:") + "</b>\n";
 			txt += "Ø " + _("Please select a device for saving snapshots.") + "\n";
@@ -785,11 +784,11 @@ class MainWindow : Gtk.Window{
 		//try changing backup device ------------------
 		
 		App.snapshot_device = pi;
+		
+		bool refresh_combobox_after_mounting = (pi.size_mb == 0);
 
 		bool status = App.mount_backup_device();
-		
 		if (status == false){
-			
 			string msg = _("Failed to mount device") + ": %s".printf(App.snapshot_device.device);
 			var dlg = new Gtk.MessageDialog.with_markup(null, Gtk.DialogFlags.MODAL, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK, msg);
 			dlg.set_title(_("Error"));
@@ -798,15 +797,24 @@ class MainWindow : Gtk.Window{
 			dlg.set_modal(true);
 			dlg.run();
 			dlg.destroy();
-
+			
+			refresh_combobox_after_mounting = false;
 			cmb_backup_device.active = cmb_backup_device_index_default;
+			gtk_set_busy(false, this);
+			return;
 		}
 		
-		App.update_partition_list(); //refresh free space on device
-				
-		gtk_set_busy(false, this);
+		App.update_partition_list(); //refresh disk space info
 
-		timer_backup_device_init = Timeout.add(100, initialize_backup_device);
+		gtk_set_busy(false, this);
+		
+		if (refresh_combobox_after_mounting){
+			refresh_combobox_after_mounting = false;
+			refresh_cmb_backup_device();
+		}
+		else{
+			timer_backup_device_init = Timeout.add(100, initialize_backup_device);
+		}
 	}
 	
 	private void btn_backup_clicked(){

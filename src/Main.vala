@@ -2256,11 +2256,13 @@ public class Main : GLib.Object{
 			return false;
 		}
 		else{
-			if (get_device_mount_point(backup_device.uuid) != mount_point_backup){
+			if ((mount_point_backup.length == 0) || (get_device_mount_point(backup_device.uuid) != mount_point_backup)){
 				unmount_backup_device(false);
+				
 				/* Note: Unmount errors can be ignored.
-				 * The old device will be hidden completely after the new device is mounted at the mount_point
+				 * Old device will be hidden if new device is mounted successfully
 				 * */
+				 
 				mount_point_backup = automount(backup_device.device,"", mount_point_app);
 				log_msg("Backup path changed to '%s/timeshift'".printf((mount_point_backup == "/") ? "" : mount_point_backup));
 			}

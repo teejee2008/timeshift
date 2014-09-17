@@ -2189,7 +2189,7 @@ public class Main : GLib.Object{
 				snapshot_device = pi;
 			}
 			if (pi.is_mounted){
-				pi.dist_info = DistInfo.get_dist_info(pi.mount_point).full_name();
+				pi.dist_info = DistInfo.get_dist_info(pi.mount_points[0]).full_name();
 			}
 		}
 		if (partition_map.size == 0){
@@ -2218,11 +2218,11 @@ public class Main : GLib.Object{
 	
 	public void detect_system_devices(){
 		foreach(PartitionInfo pi in partition_list){
-			if (pi.mount_point == "/"){
+			if (pi.mount_points.contains("/")){
 				root_device = pi;
 			}
 			
-			if (pi.mount_point == "/home"){
+			if (pi.mount_points.contains("/home")){
 				home_device = pi;
 			}
 		}
@@ -2609,7 +2609,7 @@ public class Main : GLib.Object{
 	
 	public bool backup_device_online(){
 		mount_backup_device();
-		if (PartitionInfo.get_mount_point(snapshot_device.uuid).length > 0){
+		if (PartitionInfo.get_mount_points(snapshot_device.uuid).size > 0){
 			return true;
 		}
 		else{

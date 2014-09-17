@@ -400,8 +400,12 @@ namespace TeeJee.DiskPartition{
 		public string available = "";
 		public string used_percent = "";
 		public string dist_info = "";
-		public string mount_point = "";
+		public Gee.ArrayList<string> mount_points;
 		public string mount_options = "";
+		
+		public PartitionInfo(){
+			mount_points = new Gee.ArrayList<string>();
+		}
 		
 		public string description(){
 			string s = "";
@@ -419,7 +423,13 @@ namespace TeeJee.DiskPartition{
 			s += (uuid.length > 0) ? " ~ " + uuid : "";
 			s += (type.length > 0) ? " ~ " + type : "";
 			s += (used.length > 0) ? " ~ " + used + " / " + size + " GB used (" + used_percent + ")" : "";
-			s += (mount_point.length > 0) ? " ~ " + mount_point.strip() : "";
+			
+			string mps = "";
+			foreach(string mp in mount_points){
+				mps += mp + " ";
+			}
+			s += (mps.length > 0) ? " ~ " + mps.strip() : "";
+			
 			return s;
 		}
 		
@@ -452,7 +462,7 @@ namespace TeeJee.DiskPartition{
 		
 		public bool is_mounted{
 			get{
-				return (mount_point.length > 0);
+				return (mount_points.size > 0);
 			}
 		}
 		
@@ -643,11 +653,21 @@ namespace TeeJee.DiskPartition{
 							pi.used_percent = val.strip();
 							break;
 						case 7:
-							pi.mount_point = val.strip();
+							//string mount_point = val.strip();
+							//if (!pi.mount_point_list.contains(mount_point)){
+							//	pi.mount_point_list.add(mount_point);
+							//}
 							break;
 					}
 				}
 				
+				/* Note: 
+				 * The mount points displayed by 'df' are not reliable.
+				 * For example, if same device is mounted at 2 locations, 'df' displays only the first location.
+				 * Hence, we will not populate the 'mount_points' field in PartitionInfo object
+				 * Use get_mounted_filesystems_using_mtab() if mount info is required
+				 * */
+				 
 				//exclude non-standard devices --------------------
 				
 				if (!pi.device.has_prefix("/dev/")){
@@ -766,9 +786,12 @@ namespace TeeJee.DiskPartition{
 							pi.device = val.strip();
 							break;
 						case 2: //mountpoint
-							if (!mount_list.contains(val.strip())){
-								pi.mount_point = val.strip();
-								mount_list.add(val.strip());
+							string mount_point = val.strip();
+							if (!mount_list.contains(mount_point)){
+								mount_list.add(mount_point);
+								if (!pi.mount_points.contains(mount_point)){
+									pi.mount_points.add(mount_point);
+								}
 							}
 							break;
 						case 3: //filesystemtype
@@ -805,11 +828,20 @@ namespace TeeJee.DiskPartition{
 				//get uuid ---------------------------
 				
 				pi.uuid = get_device_uuid(pi.device);
-				
+
 				//add to map -------------------------
 				
-				if ((pi.uuid.length > 0) && !map.has_key(pi.uuid)){
-					map.set(pi.uuid, pi);
+				if (pi.uuid.length > 0){
+					if (!map.has_key(pi.uuid)){
+						map.set(pi.uuid, pi);
+					}
+					else{
+						//append mount points
+						var pi2 = map.get(pi.uuid);
+						foreach(string mp in pi.mount_points){
+							pi2.mount_points.add(mp);
+						}
+					}
 				}
 			}
 
@@ -851,7 +883,7 @@ namespace TeeJee.DiskPartition{
 					if (map_mt.has_key(key)){
 						var pi = map.get(key);
 						var pi_mt = map_mt.get(key);
-						pi.mount_point = pi_mt.mount_point;
+						pi.mount_points = pi_mt.mount_points;
 					}
 				}
 			}
@@ -886,7 +918,7 @@ namespace TeeJee.DiskPartition{
 			}
 		}
 
-		public static string get_mount_point(string device_or_uuid){
+		public static Gee.ArrayList<string> get_mount_points(string device_or_uuid){
 			string device = "";
 			string uuid = "";
 			
@@ -902,12 +934,10 @@ namespace TeeJee.DiskPartition{
 			var map = get_mounted_filesystems_using_mtab();
 			if (map.has_key(uuid)){
 				var pi = map.get(uuid);
-				if (pi.mount_point.length > 0){
-					return pi.mount_point;
-				}
+				return pi.mount_points;
 			}
 			
-			return "";
+			return (new Gee.ArrayList<string>());
 		}
 	}
 	
@@ -1050,7 +1080,7 @@ namespace TeeJee.DiskPartition{
 		var map = PartitionInfo.get_mounted_filesystems_using_mtab();
 		if (map.has_key(uuid)){
 			var pi = map.get(uuid);
-			if (pi.mount_point == mount_point){
+			if (pi.mount_points.contains(mount_point)){
 				return true;
 			}
 		}
@@ -1092,7 +1122,7 @@ namespace TeeJee.DiskPartition{
 		map = PartitionInfo.get_mounted_filesystems_using_mtab();
 		if (map.has_key(uuid)){
 			var pi = map.get(uuid);
-			if (pi.mount_point == mount_point){
+			if (pi.mount_points.contains(mount_point)){
 				return true;
 			}
 		}
@@ -1124,8 +1154,8 @@ namespace TeeJee.DiskPartition{
 		var map = PartitionInfo.get_filesystems();
 		if (map.has_key(uuid)){
 			var pi = map.get(uuid);
-			if ((pi.mount_point.length > 0) && (pi.size_mb > 0)){
-				return pi.mount_point;
+			if ((pi.mount_points.size > 0) && (pi.size_mb > 0)){
+				return pi.mount_points[0];
 			}
 		}
 		
@@ -1169,8 +1199,10 @@ namespace TeeJee.DiskPartition{
 		bool mounted = false;
 		var map = PartitionInfo.get_mounted_filesystems_using_mtab();
 		foreach (PartitionInfo pi in map.values){
-			if (pi.mount_point.has_prefix(mount_point)){ //check for any mount_point at or under the given mount_point
-				mounted = true;
+			foreach (string mp in pi.mount_points){
+				if (mp.has_prefix(mount_point)){ //check for any mount_point at or under the given mount_point
+					mounted = true;
+				}
 			}
 		}
 		if (!mounted) { return true; }
@@ -1206,8 +1238,10 @@ namespace TeeJee.DiskPartition{
 		mounted = false;
 		map = PartitionInfo.get_mounted_filesystems_using_mtab();
 		foreach (PartitionInfo pi in map.values){
-			if (pi.mount_point.has_prefix(mount_point)){
-				mounted = true;
+			foreach (string mp in pi.mount_points){
+				if (mp.has_prefix(mount_point)){ //check for any mount_point at or under the given mount_point
+					mounted = true;
+				}
 			}
 		}
 			
@@ -1238,8 +1272,8 @@ namespace TeeJee.DiskPartition{
 		var map = PartitionInfo.get_mounted_filesystems_using_mtab();
 		if (map.has_key(uuid)){
 			var pi = map.get(uuid);
-			if (pi.mount_point.length > 0){
-				return pi.mount_point;
+			if (pi.mount_points.size > 0){
+				return pi.mount_points[0];
 			}
 		}
 		return "";

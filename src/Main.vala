@@ -2247,6 +2247,12 @@ public class Main : GLib.Object{
 	}
 
 	public bool mount_backup_device(PartitionInfo? dev = null){
+		/* Note:
+		 * If backup device is BTRFS then it will be explicitly mounted to /mnt/timeshift/backup
+		 * Otherwise existing mount point will be used.
+		 * This is required since we need to mount the root subvolume of the BTRFS filesystem
+		 * */
+		 
 		PartitionInfo backup_device = dev;
 		if (backup_device == null){
 			backup_device = snapshot_device;
@@ -2256,36 +2262,56 @@ public class Main : GLib.Object{
 			return false;
 		}
 		else{
-			string backup_device_mount_point = get_device_mount_point(backup_device.uuid);
+			if (backup_device.type == "btrfs"){
+				//unmount
+				unmount_backup_device();
 
-			if ((mount_point_backup.length == 0) || (backup_device_mount_point != mount_point_backup)){
-				unmount_backup_device(false);
-
-				/* Note: Unmount errors can be ignored.
-				 * Old device will be hidden if new device is mounted successfully
-				 * */
-
-				mount_point_backup = automount(backup_device.uuid,"", mount_point_app);
-				if (mount_point_backup.length > 0){
-					log_msg("Backup path changed to '%s/timeshift'".printf((mount_point_backup == "/") ? "" : mount_point_backup));
+				//mount
+				mount_point_backup = mount_point_app + "/backup";
+				check_and_create_dir_with_parents(mount_point_backup);
+				if (mount(backup_device.uuid, mount_point_backup, "")){
+					return true;
 				}
 				else{
-					App.update_partition_list();
+					return false;
 				}
 			}
+			else{
+				string backup_device_mount_point = get_device_mount_point(backup_device.uuid);
+				if ((mount_point_backup.length == 0) || (backup_device_mount_point != mount_point_backup)){
+					//unmount
+					unmount_backup_device(false);
 
-			return (mount_point_backup.length > 0);
+					/* Note: Unmount errors can be ignored.
+					 * Old device will be hidden if new device is mounted successfully
+					 * */
+					
+					//automount
+					mount_point_backup = automount(backup_device.uuid,"", mount_point_app);
+					if (mount_point_backup.length > 0){
+						log_msg("Backup path changed to '%s/timeshift'".printf((mount_point_backup == "/") ? "" : mount_point_backup));
+					}
+					else{
+						App.update_partition_list();
+					}
+				}
+
+				return (mount_point_backup.length > 0);
+			}
 		}
 		
 	}
 	
 	public bool mount_target_device(){
+		/* Note:
+		 * Target device will be mounted explicitly to /mnt/timeshift/restore
+		 * Existing mount points are not used since we need to mount other devices in sub-directories
+		 * */
+				 
 		if (restore_target == null){
 			return false;
 		}
 		else{
-			//check BTRFS volume --------------
-			
 			if (restore_target.type == "btrfs"){
 
 				//check subvolume layout ---------
@@ -2305,11 +2331,12 @@ public class Main : GLib.Object{
 					return false;
 				}
 				
-				//check and create restore mount_point ------
+				//unmount
+				unmount_target_device();
 				
+				//check and create restore mount point for restore
 				mount_point_restore = mount_point_app + "/restore";
 				check_and_create_dir_with_parents(mount_point_restore);
-				unmount(mount_point_restore); //unmount existing devices (required)
 
 				//mount @ subvolume -----------
 				
@@ -2330,19 +2357,15 @@ public class Main : GLib.Object{
 				return true;
 			}
 			else{
-				//check and create restore mount_point ------
+				//unmount
+				unmount_target_device();
 				
+				//check and create restore mount point for restore
 				mount_point_restore = mount_point_app + "/restore";
 				check_and_create_dir_with_parents(mount_point_restore);
-				unmount(mount_point_restore); //unmount existing devices (required)
 				if (mount(restore_target.uuid, mount_point_restore, "")){
 					return true;
 				}
-
-				/* Note:
-				 * Do not automount non-BTRFS filesystems.
-				 * Later we need to mount other devices in sub-directories under mount_point_restore
-				 * */
 			}
 		}
 		

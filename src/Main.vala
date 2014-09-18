@@ -147,7 +147,7 @@ public class Main : GLib.Object{
 		}
 		exit(0);
 		*/
-		
+
 		App = new Main(args);
 		bool success = App.start_application(args);
 		App.exit_app();
@@ -1825,6 +1825,22 @@ public class Main : GLib.Object{
 							//update fstab entry
 							fstab_entry.device = "UUID=%s".printf(mount_entry.device.uuid);
 							fstab_entry.type = mount_entry.device.type;
+							
+							//fix mount options for / and /home
+							if (restore_target.type != "btrfs"){
+								if ((fstab_entry.mount_point == "/") && fstab_entry.options.contains("subvol=@")){
+									fstab_entry.options = fstab_entry.options.replace("subvol=@","").strip();
+									if (fstab_entry.options.has_suffix(",")){
+										fstab_entry.options = fstab_entry.options[0:fstab_entry.options.length - 1];
+									}
+								}
+								else if ((fstab_entry.mount_point == "/home") && fstab_entry.options.contains("subvol=@home")){
+									fstab_entry.options = fstab_entry.options.replace("subvol=@home","").strip();
+									if (fstab_entry.options.has_suffix(",")){
+										fstab_entry.options = fstab_entry.options[0:fstab_entry.options.length - 1];
+									}
+								}
+							}
 						}
 					}
 					
@@ -1868,7 +1884,7 @@ public class Main : GLib.Object{
 					//remove fstab entry for /home
 					fstab_list.remove(fstab_home_entry);
 				}
-				
+
 				//write the updated file --------------
 				
 				string text = "# <file system> <mount point> <type> <options> <dump> <pass>\n\n";
@@ -1880,7 +1896,7 @@ public class Main : GLib.Object{
 				
 				log_msg(_("Updated /etc/fstab on target device"));
 				
-				//create folders for mount points in /etc/fstab (to prevent mount errors during boot) ---------
+				//create folders for mount points in /etc/fstab to prevent mount errors during boot ---------
 				
 				foreach(FsTabEntry fstab_entry in fstab_list){
 					string mount_path = target_path + fstab_entry.mount_point[1:fstab_entry.mount_point.length];
@@ -2220,10 +2236,12 @@ public class Main : GLib.Object{
 		foreach(PartitionInfo pi in partition_list){
 			if (pi.mount_points.contains("/")){
 				root_device = pi;
+				log_msg(_("/ is mapped to device: %s, UUID=%s").printf(pi.device,pi.uuid));
 			}
 			
 			if (pi.mount_points.contains("/home")){
 				home_device = pi;
+				log_msg(_("/home is mapped to device: %s, UUID=%s").printf(pi.device,pi.uuid));
 			}
 		}
 	}
@@ -2270,9 +2288,11 @@ public class Main : GLib.Object{
 				mount_point_backup = mount_point_app + "/backup";
 				check_and_create_dir_with_parents(mount_point_backup);
 				if (mount(backup_device.uuid, mount_point_backup, "")){
+					log_msg(_("Backup path changed to '%s/timeshift'").printf((mount_point_backup == "/") ? "" : mount_point_backup));
 					return true;
 				}
 				else{
+					mount_point_backup = "";
 					return false;
 				}
 			}
@@ -2289,7 +2309,7 @@ public class Main : GLib.Object{
 					//automount
 					mount_point_backup = automount(backup_device.uuid,"", mount_point_app);
 					if (mount_point_backup.length > 0){
-						log_msg("Backup path changed to '%s/timeshift'".printf((mount_point_backup == "/") ? "" : mount_point_backup));
+						log_msg(_("Backup path changed to '%s/timeshift'").printf((mount_point_backup == "/") ? "" : mount_point_backup));
 					}
 					else{
 						App.update_partition_list();

@@ -8,10 +8,10 @@ man1dir=$(mandir)/man1
 CFLAGS=--std=c99
 
 all:
-	#timeshift
+	#build binaries
 	valac -X -D'GETTEXT_PACKAGE="timeshift"' --Xcc="-lm" --thread "Main.vala" "Utility.vala" "MainWindow.vala" "SettingsWindow.vala" "RestoreWindow.vala" "ExcludeMessageWindow.vala" "AboutWindow.vala" "DonationWindow.vala" -o timeshift --pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix --pkg gtk+-3.0 --pkg gee-1.0 --pkg libsoup-2.4 --pkg json-glib-1.0 
 	
-	#timeshift.pot
+	#update translation template
 	xgettext --language=C --keyword=_ --copyright-holder='Tony George (teejee2008@gmail.com)' --package-name='timeshift' --package-version='1.6' --msgid-bugs-address='teejee2008@gmail.com' --escape --sort-output -o ../timeshift.pot *.vala
 
 clean:

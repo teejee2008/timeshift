@@ -2095,8 +2095,10 @@ public class Main : GLib.Object{
 		}
 		
 		if ((uuid.length == 0) || (snapshot_device == null)){
-			log_msg (_("Warning: Backup device not set! Defaulting to system device"));
-			snapshot_device = root_device;
+			if (root_device != null){
+				log_msg (_("Warning: Backup device not set! Defaulting to system device"));
+				snapshot_device = root_device;
+			}
 		}
 
 		if (mount_backup_device(snapshot_device)){

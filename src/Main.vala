@@ -310,26 +310,6 @@ public class Main : GLib.Object{
 		
 		update_partition_list();
 		detect_system_devices();
-		
-		//check if root device is a BTRFS volume ---------------
-		
-		if ((root_device != null) && (root_device.type == "btrfs")){
-			//check subvolume layout
-			if (check_btrfs_volume(root_device) == false){
-				msg = _("The system partition has an unsupported subvolume layout.") + " ";
-				msg += _("Only ubuntu-type layouts with @ and @home subvolumes are currently supported.") + "\n\n";
-				msg += _("Application will exit.") + "\n\n";
-				string title = _("Not Supported");
-				
-				if (app_mode == ""){
-					gtk_messagebox(title, msg, null, true);
-				}
-				else{
-					log_error(msg);
-				}
-				exit(0);
-			}
-		}
 
 		//finish initialization --------------
 		
@@ -439,7 +419,30 @@ public class Main : GLib.Object{
 			return true;
 		}
 	}
-
+	
+	public bool check_btrfs_root_layout(){	
+		//check if root device is a BTRFS volume
+		if ((root_device != null) && (root_device.type == "btrfs")){
+			//check subvolume layout
+			if (check_btrfs_volume(root_device) == false){
+				string msg = _("The system partition has an unsupported subvolume layout.") + " ";
+				msg += _("Only ubuntu-type layouts with @ and @home subvolumes are currently supported.") + "\n\n";
+				msg += _("Application will exit.") + "\n\n";
+				string title = _("Not Supported");
+				
+				if (app_mode == ""){
+					gtk_messagebox(title, msg, null, true);
+				}
+				else{
+					log_error(msg);
+				}
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
 	public void add_default_exclude_entries(){
 		
 		exclude_list_default.clear();
@@ -705,6 +708,9 @@ public class Main : GLib.Object{
 	
 	
 	public bool take_snapshot(bool ondemand = false, string comments = ""){
+		if (check_btrfs_root_layout() == false){
+			return false;
+		}
 
 		in_progress = true;
 		

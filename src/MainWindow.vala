@@ -819,6 +819,12 @@ class MainWindow : Gtk.Window{
 	
 	private void btn_backup_clicked(){
 		
+		//check root device --------------
+		
+		if (App.check_btrfs_root_layout() == false){
+			return;
+		}
+		
 		//check snapshot device -----------
 		
 		string msg;

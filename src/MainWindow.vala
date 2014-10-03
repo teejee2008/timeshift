@@ -280,6 +280,7 @@ class MainWindow : Gtk.Window{
 		tv_backups = new TreeView();
 		tv_backups.get_selection().mode = SelectionMode.MULTIPLE;
 		tv_backups.headers_clickable = true;
+		tv_backups.has_tooltip = true;
 		tv_backups.set_rules_hint (true);
 		
 		//sw_backups

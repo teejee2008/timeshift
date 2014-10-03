@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timeshift 1.6\n"
 "Report-Msgid-Bugs-To: teejee2008@gmail.com\n"
-"POT-Creation-Date: 2014-09-24 19:20+0530\n"
+"POT-Creation-Date: 2014-10-03 08:38+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,7 +31,31 @@ msgstr ""
 msgid "/home is mapped to device: %s, UUID=%s"
 msgstr ""
 
-#: MainWindow.vala:1243
+#: MainWindow.vala:409
+msgid ""
+"<b>Backup Levels</b>\n"
+"\n"
+"O\tOn demand (manual)\n"
+"B\tBoot\n"
+"H\tHourly\n"
+"D\tDaily\n"
+"W\tWeekly\n"
+"M\tMonthly"
+msgstr ""
+
+#: MainWindow.vala:401
+msgid "<b>Comments</b> (double-click to edit)"
+msgstr ""
+
+#: MainWindow.vala:397
+msgid "<b>Snapshot Date:</b> Date on which snapshot was created"
+msgstr ""
+
+#: MainWindow.vala:405
+msgid "<b>System:</b> Installed Linux distribution"
+msgstr ""
+
+#: MainWindow.vala:1279
 msgid "A System Restore Utility for Linux"
 msgstr ""
 
@@ -87,7 +111,7 @@ msgstr ""
 msgid "Application Info"
 msgstr ""
 
-#: Main.vala:2435
+#: Main.vala:2437
 msgid "Application will exit"
 msgstr ""
 
@@ -121,7 +145,7 @@ msgstr ""
 msgid "Backup Device"
 msgstr ""
 
-#: MainWindow.vala:583 MainWindow.vala:603
+#: MainWindow.vala:615 MainWindow.vala:635
 msgid "Backup Device Changed"
 msgstr ""
 
@@ -129,23 +153,23 @@ msgstr ""
 msgid "Backup Level"
 msgstr ""
 
-#: MainWindow.vala:839
+#: MainWindow.vala:875
 msgid "Backup device does not have enough space"
 msgstr ""
 
-#: Main.vala:2618 MainWindow.vala:1384 MainWindow.vala:1392
+#: Main.vala:2620 MainWindow.vala:1420 MainWindow.vala:1428
 msgid "Backup device does not have enough space!"
 msgstr ""
 
-#: MainWindow.vala:1351 RestoreWindow.vala:1208
+#: MainWindow.vala:1387 RestoreWindow.vala:1208
 msgid "Backup device is not available"
 msgstr ""
 
-#: MainWindow.vala:1376
+#: MainWindow.vala:1412
 msgid "Backup device is not mounted!"
 msgstr ""
 
-#: Main.vala:2605 Main.vala:2612
+#: Main.vala:2607 Main.vala:2614
 msgid "Backup device not available"
 msgstr ""
 
@@ -154,7 +178,7 @@ msgstr ""
 msgid "Backup path changed to '%s/timeshift'"
 msgstr ""
 
-#: MainWindow.vala:1072
+#: MainWindow.vala:1108
 msgid "Before restoring"
 msgstr ""
 
@@ -192,7 +216,7 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: MainWindow.vala:476
+#: MainWindow.vala:508
 msgid "Checking backup device..."
 msgstr ""
 
@@ -204,7 +228,7 @@ msgstr ""
 msgid "Clear the list"
 msgstr ""
 
-#: MainWindow.vala:580
+#: MainWindow.vala:612
 msgid "Click 'OK' to confirm"
 msgstr ""
 
@@ -216,11 +240,11 @@ msgstr ""
 msgid "Clone the current system on another device"
 msgstr ""
 
-#: MainWindow.vala:1119
+#: MainWindow.vala:1155
 msgid "Cloning Failed!"
 msgstr ""
 
-#: Main.vala:1797 MainWindow.vala:1091
+#: Main.vala:1797 MainWindow.vala:1127
 msgid "Cloning system..."
 msgstr ""
 
@@ -244,15 +268,15 @@ msgstr ""
 msgid "Credits"
 msgstr ""
 
-#: Main.vala:2434
+#: Main.vala:2436
 msgid "Critical Error"
 msgstr ""
 
-#: Main.vala:2555
+#: Main.vala:2557
 msgid "Cron job added"
 msgstr ""
 
-#: Main.vala:2568
+#: Main.vala:2570
 msgid "Cron job removed"
 msgstr ""
 
@@ -292,7 +316,7 @@ msgstr ""
 msgid "Deleted incomplete snapshot"
 msgstr ""
 
-#: MainWindow.vala:935 MainWindow.vala:950
+#: MainWindow.vala:971 MainWindow.vala:986
 msgid "Deleting snapshot"
 msgstr ""
 
@@ -305,7 +329,7 @@ msgstr ""
 msgid "Device"
 msgstr ""
 
-#: MainWindow.vala:1351 RestoreWindow.vala:1208
+#: MainWindow.vala:1387 RestoreWindow.vala:1208
 msgid "Device Offline"
 msgstr ""
 
@@ -340,11 +364,11 @@ msgid ""
 "teejeetech@gmail.com"
 msgstr ""
 
-#: MainWindow.vala:514 MainWindow.vala:536
+#: MainWindow.vala:546 MainWindow.vala:568
 msgid "Disable Scheduled Snapshots"
 msgstr ""
 
-#: MainWindow.vala:1432
+#: MainWindow.vala:1468
 msgid "Disabled"
 msgstr ""
 
@@ -352,21 +376,21 @@ msgstr ""
 msgid "Distribution"
 msgstr ""
 
-#: MainWindow.vala:533
+#: MainWindow.vala:565
 msgid "Do you want to select another device now?"
 msgstr ""
 
-#: MainWindow.vala:600
+#: MainWindow.vala:632
 msgid "Do you want to select another device?"
 msgstr ""
 
-#: MainWindow.vala:1050
+#: MainWindow.vala:1086
 msgid ""
 "Do you want to take a snapshot of the current system before restoring the "
 "selected snapshot?"
 msgstr ""
 
-#: MainWindow.vala:555
+#: MainWindow.vala:587
 msgid "Do you want to take the first snapshot now?"
 msgstr ""
 
@@ -398,24 +422,24 @@ msgstr ""
 msgid "Enable"
 msgstr ""
 
-#: MainWindow.vala:1428
+#: MainWindow.vala:1464
 msgid "Enabled"
 msgstr ""
 
-#: Main.vala:250 Main.vala:1784 MainWindow.vala:794 MainWindow.vala:1128
+#: Main.vala:250 Main.vala:1784 MainWindow.vala:830 MainWindow.vala:1164
 #: RestoreWindow.vala:1307 RestoreWindow.vala:1324 Utility.vala:101
 msgid "Error"
 msgstr ""
 
-#: MainWindow.vala:940
+#: MainWindow.vala:976
 msgid "Error: Unable to delete snapshot"
 msgstr ""
 
-#: MainWindow.vala:862
+#: MainWindow.vala:898
 msgid "Error: Unable to save snapshot"
 msgstr ""
 
-#: MainWindow.vala:479
+#: MainWindow.vala:511
 msgid "Estimating system size..."
 msgstr ""
 
@@ -444,7 +468,7 @@ msgstr ""
 msgid "Excluded Directories"
 msgstr ""
 
-#: Main.vala:2559
+#: Main.vala:2561
 msgid "Failed to add cron job"
 msgstr ""
 
@@ -464,7 +488,7 @@ msgstr ""
 msgid "Failed to delete symlinks"
 msgstr ""
 
-#: Main.vala:2738 Main.vala:2744
+#: Main.vala:2740 Main.vala:2746
 msgid "Failed to estimate system size"
 msgstr ""
 
@@ -488,11 +512,11 @@ msgstr ""
 msgid "Failed to mount BTRFS subvolume"
 msgstr ""
 
-#: MainWindow.vala:792 RestoreWindow.vala:1308 RestoreWindow.vala:1325
+#: MainWindow.vala:828 RestoreWindow.vala:1308 RestoreWindow.vala:1325
 msgid "Failed to mount device"
 msgstr ""
 
-#: Main.vala:2572
+#: Main.vala:2574
 msgid "Failed to remove cron job"
 msgstr ""
 
@@ -512,7 +536,7 @@ msgstr ""
 msgid "Failed to unmount"
 msgstr ""
 
-#: Main.vala:2435
+#: Main.vala:2437
 msgid "Failed to unmount device!"
 msgstr ""
 
@@ -533,15 +557,15 @@ msgstr ""
 msgid "Files will be overwritten on the target device!"
 msgstr ""
 
-#: MainWindow.vala:1111
+#: MainWindow.vala:1147
 msgid "Finished"
 msgstr ""
 
-#: MainWindow.vala:558
+#: MainWindow.vala:590
 msgid "First Snapshot"
 msgstr ""
 
-#: Main.vala:2627 MainWindow.vala:1393
+#: Main.vala:2629 MainWindow.vala:1429
 msgid "First snapshot needs"
 msgstr ""
 
@@ -688,11 +712,11 @@ msgstr ""
 msgid "Last monthly snapshot not found"
 msgstr ""
 
-#: MainWindow.vala:1454 MainWindow.vala:1458
+#: MainWindow.vala:1490 MainWindow.vala:1494
 msgid "Last snapshot is"
 msgstr ""
 
-#: MainWindow.vala:1462
+#: MainWindow.vala:1498
 msgid "Last snapshot is less than 1 hour old"
 msgstr ""
 
@@ -721,11 +745,11 @@ msgstr ""
 msgid "Log"
 msgstr ""
 
-#: MainWindow.vala:839
+#: MainWindow.vala:875
 msgid "Low Disk Space"
 msgstr ""
 
-#: MainWindow.vala:495
+#: MainWindow.vala:527
 msgid "Main window closed by user"
 msgstr ""
 
@@ -757,11 +781,11 @@ msgstr ""
 msgid "Mount"
 msgstr ""
 
-#: MainWindow.vala:997
+#: MainWindow.vala:1033
 msgid "Multiple Snapshots Selected"
 msgstr ""
 
-#: MainWindow.vala:888 MainWindow.vala:993
+#: MainWindow.vala:924 MainWindow.vala:1029
 msgid "No Snapshots Selected"
 msgstr ""
 
@@ -769,7 +793,7 @@ msgstr ""
 msgid "No changes were made to system."
 msgstr ""
 
-#: MainWindow.vala:1446
+#: MainWindow.vala:1482
 msgid "No snapshots on device"
 msgstr ""
 
@@ -785,7 +809,7 @@ msgstr ""
 msgid "Nothing to do!"
 msgstr ""
 
-#: Main.vala:2796
+#: Main.vala:2798
 msgid "Older log files removed"
 msgstr ""
 
@@ -832,19 +856,19 @@ msgstr ""
 msgid "Please save your work and close all applications."
 msgstr ""
 
-#: MainWindow.vala:769
+#: MainWindow.vala:801
 msgid "Please select a device for saving snapshots."
 msgstr ""
 
-#: MainWindow.vala:997
+#: MainWindow.vala:1033
 msgid "Please select a single snapshot"
 msgstr ""
 
-#: MainWindow.vala:1192
+#: MainWindow.vala:1228
 msgid "Please select a snapshot to view the log!"
 msgstr ""
 
-#: Main.vala:2602 MainWindow.vala:1373
+#: Main.vala:2604 MainWindow.vala:1409
 msgid "Please select the backup device"
 msgstr ""
 
@@ -856,11 +880,11 @@ msgstr ""
 msgid "Please select the root device (/)"
 msgstr ""
 
-#: MainWindow.vala:993
+#: MainWindow.vala:1029
 msgid "Please select the snapshot to restore"
 msgstr ""
 
-#: MainWindow.vala:888
+#: MainWindow.vala:924
 msgid "Please select the snapshots to delete"
 msgstr ""
 
@@ -904,7 +928,7 @@ msgstr ""
 msgid "Remove selected items"
 msgstr ""
 
-#: Main.vala:2408 Main.vala:2655
+#: Main.vala:2409 Main.vala:2657
 #, c-format
 msgid "Removed mount directory: '%s'"
 msgstr ""
@@ -917,7 +941,7 @@ msgstr ""
 msgid "Removing older backups to free disk space"
 msgstr ""
 
-#: MainWindow.vala:896
+#: MainWindow.vala:932
 msgid "Removing selected snapshots..."
 msgstr ""
 
@@ -938,7 +962,7 @@ msgstr ""
 msgid "Restore"
 msgstr ""
 
-#: MainWindow.vala:1122
+#: MainWindow.vala:1158
 msgid "Restore Failed!"
 msgstr ""
 
@@ -954,7 +978,7 @@ msgstr ""
 msgid "Restore failed with exit code"
 msgstr ""
 
-#: Main.vala:1794 MainWindow.vala:1087
+#: Main.vala:1794 MainWindow.vala:1123
 msgid "Restoring snapshot..."
 msgstr ""
 
@@ -962,7 +986,7 @@ msgstr ""
 msgid "Rule"
 msgstr ""
 
-#: MainWindow.vala:1422
+#: MainWindow.vala:1458
 msgid "Running from Live CD/USB"
 msgstr ""
 
@@ -978,11 +1002,11 @@ msgstr ""
 msgid "Scheduled Snapshots"
 msgstr ""
 
-#: MainWindow.vala:553
+#: MainWindow.vala:585
 msgid "Scheduled jobs will be enabled only after the first snapshot is taken."
 msgstr ""
 
-#: MainWindow.vala:1428 MainWindow.vala:1432
+#: MainWindow.vala:1464 MainWindow.vala:1468
 msgid "Scheduled snapshots"
 msgstr ""
 
@@ -990,15 +1014,15 @@ msgstr ""
 msgid "Scheduled snapshots are disabled"
 msgstr ""
 
-#: Main.vala:773 MainWindow.vala:532
+#: Main.vala:773 MainWindow.vala:564
 msgid "Scheduled snapshots will be disabled till another device is selected."
 msgstr ""
 
-#: MainWindow.vala:511 MainWindow.vala:599
+#: MainWindow.vala:543 MainWindow.vala:631
 msgid "Scheduled snapshots will be disabled."
 msgstr ""
 
-#: MainWindow.vala:579
+#: MainWindow.vala:611
 msgid "Scheduled snapshots will be saved to "
 msgstr ""
 
@@ -1006,7 +1030,7 @@ msgstr ""
 msgid "Select Root Device"
 msgstr ""
 
-#: MainWindow.vala:1192
+#: MainWindow.vala:1228
 msgid "Select Snapshot"
 msgstr ""
 
@@ -1026,7 +1050,7 @@ msgstr ""
 msgid "Select the applications for which current settings should be kept."
 msgstr ""
 
-#: MainWindow.vala:531
+#: MainWindow.vala:563
 msgid "Selected device does not have enough space."
 msgstr ""
 
@@ -1078,7 +1102,7 @@ msgstr ""
 msgid "Snapshot deleted"
 msgstr ""
 
-#: Main.vala:1215 MainWindow.vala:859
+#: Main.vala:1215 MainWindow.vala:895
 msgid "Snapshot saved successfully"
 msgstr ""
 
@@ -1086,7 +1110,7 @@ msgstr ""
 msgid "Snapshot to restore not specified!"
 msgstr ""
 
-#: MainWindow.vala:1106
+#: MainWindow.vala:1142
 msgid "Snapshot was restored successfully on target device"
 msgstr ""
 
@@ -1094,7 +1118,7 @@ msgstr ""
 msgid "Snapshots"
 msgstr ""
 
-#: MainWindow.vala:955
+#: MainWindow.vala:991
 msgid "Snapshots deleted successfully"
 msgstr ""
 
@@ -1131,11 +1155,11 @@ msgstr ""
 msgid "System"
 msgstr ""
 
-#: MainWindow.vala:1429
+#: MainWindow.vala:1465
 msgid "System snapshots will be taken at regular intervals"
 msgstr ""
 
-#: MainWindow.vala:1103
+#: MainWindow.vala:1139
 msgid "System was cloned successfully on target device"
 msgstr ""
 
@@ -1151,7 +1175,7 @@ msgstr ""
 msgid "Tags"
 msgstr ""
 
-#: MainWindow.vala:1053
+#: MainWindow.vala:1089
 msgid "Take Snapshot"
 msgstr ""
 
@@ -1167,7 +1191,7 @@ msgstr ""
 msgid "Take scheduled backup"
 msgstr ""
 
-#: MainWindow.vala:848 MainWindow.vala:1061
+#: MainWindow.vala:884 MainWindow.vala:1097
 msgid "Taking snapshot..."
 msgstr ""
 
@@ -1175,11 +1199,11 @@ msgstr ""
 msgid "Target"
 msgstr ""
 
-#: Main.vala:2838
+#: Main.vala:2840
 msgid "Terminating rsync process"
 msgstr ""
 
-#: MainWindow.vala:598
+#: MainWindow.vala:630
 msgid "The backup device is not set or unavailable."
 msgstr ""
 
@@ -1201,7 +1225,7 @@ msgstr ""
 msgid "TimeShift Logs"
 msgstr ""
 
-#: MainWindow.vala:1423
+#: MainWindow.vala:1459
 msgid "TimeShift is running in a live system"
 msgstr ""
 
@@ -1279,7 +1303,7 @@ msgstr ""
 msgid "WARNING"
 msgstr ""
 
-#: MainWindow.vala:768
+#: MainWindow.vala:800
 msgid "WARNING:"
 msgstr ""
 
@@ -1312,7 +1336,7 @@ msgstr ""
 msgid "When free space less than"
 msgstr ""
 
-#: MainWindow.vala:1454
+#: MainWindow.vala:1490
 msgid "days old"
 msgstr ""
 
@@ -1320,11 +1344,11 @@ msgstr ""
 msgid "days..."
 msgstr ""
 
-#: Main.vala:2591
+#: Main.vala:2593
 msgid "free"
 msgstr ""
 
-#: MainWindow.vala:1458
+#: MainWindow.vala:1494
 msgid "hours old"
 msgstr ""
 
@@ -1332,7 +1356,7 @@ msgstr ""
 msgid "rsync returned an error"
 msgstr ""
 
-#: MainWindow.vala:577
+#: MainWindow.vala:609
 msgid "snapshot device changed"
 msgstr ""
 

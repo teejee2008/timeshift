@@ -383,6 +383,38 @@ class MainWindow : Gtk.Window{
 		
 		cell_desc.edited.connect (cell_desc_edited);
 		
+		//tooltips
+		tv_backups.query_tooltip.connect ((x, y, keyboard_tooltip, tooltip) => {
+			TreeModel model;
+			TreePath path;
+			TreeIter iter;
+			TreeViewColumn col;
+			if (tv_backups.get_tooltip_context (ref x, ref y, keyboard_tooltip, out model, out path, out iter)){
+				int bx, by;
+				tv_backups.convert_widget_to_bin_window_coords(x, y, out bx, out by);
+				if (tv_backups.get_path_at_pos (bx, by, null, out col, null, null)){
+					if (col == col_date){
+						tooltip.set_markup(_("<b>Snapshot Date:</b> Date on which snapshot was created"));
+						return true;
+					}
+					else if (col == col_desc){
+						tooltip.set_markup(_("<b>Comments</b> (double-click to edit)"));
+						return true;
+					}
+					else if (col == col_system){
+						tooltip.set_markup(_("<b>System:</b> Installed Linux distribution"));
+						return true;
+					}
+					else if (col == col_tags){
+						tooltip.set_markup(_("<b>Backup Levels</b>\n\nO	On demand (manual)\nB	Boot\nH	Hourly\nD	Daily\nW	Weekly\nM	Monthly"));
+						return true;
+					}
+				}
+			}
+
+			return false;
+		});
+		
 		//hbox_statusbar
 		hbox_statusbar = new Box (Orientation.HORIZONTAL, 6);
         hbox_statusbar.margin_bottom = 1;
@@ -510,7 +542,7 @@ class MainWindow : Gtk.Window{
 				string msg = message + "\n";
 				msg += _("Scheduled snapshots will be disabled.");
 
-				var dialog = new Gtk.MessageDialog.with_markup(null, Gtk.DialogFlags.MODAL, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK_CANCEL, msg);
+				var dialog = new Gtk.MessageDialog.with_markup(this, Gtk.DialogFlags.MODAL, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK_CANCEL, msg);
 				dialog.set_title(_("Disable Scheduled Snapshots"));
 				dialog.set_default_size (300, -1);
 				dialog.set_transient_for(this);
@@ -532,7 +564,7 @@ class MainWindow : Gtk.Window{
 				msg += _("Scheduled snapshots will be disabled till another device is selected.") + "\n";
 				msg += _("Do you want to select another device now?") + "\n";
 				
-				var dialog = new Gtk.MessageDialog.with_markup(null, Gtk.DialogFlags.MODAL, Gtk.MessageType.WARNING, Gtk.ButtonsType.YES_NO, msg);
+				var dialog = new Gtk.MessageDialog.with_markup(this, Gtk.DialogFlags.MODAL, Gtk.MessageType.WARNING, Gtk.ButtonsType.YES_NO, msg);
 				dialog.set_title(_("Disable Scheduled Snapshots"));
 				dialog.set_default_size (300, -1);
 				dialog.set_transient_for(this);
@@ -554,7 +586,7 @@ class MainWindow : Gtk.Window{
 				msg += message + (" space and 10 minutes to complete.") + "\n";
 				msg += _("Do you want to take the first snapshot now?") + "\n";
 				
-				var dialog = new Gtk.MessageDialog.with_markup(null, Gtk.DialogFlags.MODAL, Gtk.MessageType.WARNING, Gtk.ButtonsType.YES_NO, msg);
+				var dialog = new Gtk.MessageDialog.with_markup(this, Gtk.DialogFlags.MODAL, Gtk.MessageType.WARNING, Gtk.ButtonsType.YES_NO, msg);
 				dialog.set_title(_("First Snapshot"));
 				dialog.set_default_size (300, -1);
 				dialog.set_transient_for(this);
@@ -579,7 +611,7 @@ class MainWindow : Gtk.Window{
 					string msg = _("Scheduled snapshots will be saved to ") + "<b>%s</b>\n".printf(App.snapshot_device.device);
 					msg += _("Click 'OK' to confirm") + "\n";
 					
-					var dialog = new Gtk.MessageDialog.with_markup(null, Gtk.DialogFlags.MODAL, Gtk.MessageType.INFO, Gtk.ButtonsType.OK_CANCEL, msg);
+					var dialog = new Gtk.MessageDialog.with_markup(this, Gtk.DialogFlags.MODAL, Gtk.MessageType.INFO, Gtk.ButtonsType.OK_CANCEL, msg);
 					dialog.set_title(_("Backup Device Changed"));
 					dialog.set_default_size (300, -1);
 					dialog.set_transient_for(this);
@@ -599,7 +631,7 @@ class MainWindow : Gtk.Window{
 				msg += _("Scheduled snapshots will be disabled.") + "\n";
 				msg += _("Do you want to select another device?");
 
-				var dialog = new Gtk.MessageDialog.with_markup(null, Gtk.DialogFlags.MODAL, Gtk.MessageType.INFO, Gtk.ButtonsType.OK_CANCEL, msg);
+				var dialog = new Gtk.MessageDialog.with_markup(this, Gtk.DialogFlags.MODAL, Gtk.MessageType.INFO, Gtk.ButtonsType.OK_CANCEL, msg);
 				dialog.set_title(_("Backup Device Changed"));
 				dialog.set_default_size (300, -1);
 				dialog.set_transient_for(this);
@@ -630,7 +662,7 @@ class MainWindow : Gtk.Window{
 	private void cell_tags_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
 		TimeShiftBackup bak;
 		model.get (iter, 0, out bak, -1);
-		(cell as Gtk.CellRendererText).text = bak.taglist;
+		(cell as Gtk.CellRendererText).text = bak.taglist_short;
 	}
 
 	private void cell_system_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
@@ -773,13 +805,17 @@ class MainWindow : Gtk.Window{
 			return; 
 		}
 
-		gtk_set_busy(true, this);
-
+		//get new device reference
 		TreeIter iter;
 		PartitionInfo pi;
 		combo.get_active_iter (out iter);
 		TreeModel model = (TreeModel) combo.model;
 		model.get(iter, 0, out pi);
+		
+		//check if device has changed
+		if ((App.snapshot_device != null) && (pi.uuid == App.snapshot_device.uuid)){ return; }
+
+		gtk_set_busy(true, this);
 		
 		//try changing backup device ------------------
 		
@@ -790,7 +826,7 @@ class MainWindow : Gtk.Window{
 		bool status = App.mount_backup_device();
 		if (status == false){
 			string msg = _("Failed to mount device") + ": %s".printf(App.snapshot_device.device);
-			var dlg = new Gtk.MessageDialog.with_markup(null, Gtk.DialogFlags.MODAL, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK, msg);
+			var dlg = new Gtk.MessageDialog.with_markup(this, Gtk.DialogFlags.MODAL, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK, msg);
 			dlg.set_title(_("Error"));
 			dlg.set_default_size (200, -1);
 			dlg.set_transient_for(this);
@@ -1049,7 +1085,7 @@ class MainWindow : Gtk.Window{
 
 			string msg = _("Do you want to take a snapshot of the current system before restoring the selected snapshot?");
 			
-			var dlg = new Gtk.MessageDialog.with_markup(null, Gtk.DialogFlags.MODAL, Gtk.MessageType.QUESTION, Gtk.ButtonsType.YES_NO, msg);
+			var dlg = new Gtk.MessageDialog.with_markup(this, Gtk.DialogFlags.MODAL, Gtk.MessageType.QUESTION, Gtk.ButtonsType.YES_NO, msg);
 			dlg.set_title(_("Take Snapshot"));
 			dlg.set_default_size (200, -1);
 			dlg.set_transient_for(this);
@@ -1107,7 +1143,7 @@ class MainWindow : Gtk.Window{
 			}
 			statusbar_message_with_timeout(msg, true);
 			
-			var dlg = new Gtk.MessageDialog.with_markup(null,Gtk.DialogFlags.MODAL, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, msg);
+			var dlg = new Gtk.MessageDialog.with_markup(this,Gtk.DialogFlags.MODAL, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, msg);
 			dlg.set_title(_("Finished"));
 			dlg.set_modal(true);
 			dlg.set_transient_for(this);
@@ -1124,7 +1160,7 @@ class MainWindow : Gtk.Window{
 
 			statusbar_message_with_timeout(msg, true);
 
-			var dlg = new Gtk.MessageDialog.with_markup(null,Gtk.DialogFlags.MODAL, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK, msg);
+			var dlg = new Gtk.MessageDialog.with_markup(this,Gtk.DialogFlags.MODAL, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK, msg);
 			dlg.set_title(_("Error"));
 			dlg.set_modal(true);
 			dlg.set_transient_for(this);
@@ -1436,31 +1472,36 @@ class MainWindow : Gtk.Window{
 
 		//status - last snapshot -----------
 		
-		
-		DateTime now = new DateTime.now_local();
-		TimeShiftBackup last_snapshot = App.get_latest_snapshot();
-		DateTime last_snapshot_date = (last_snapshot == null) ? null : last_snapshot.date;
-		
-		if (last_snapshot == null){
-			img_status_latest.file = img_dot_red;
-			lbl_status_latest.label = _("No snapshots on device");
-		}
-		else{
-			float days = ((float) now.difference(last_snapshot_date) / TimeSpan.DAY);
-			float hours = ((float) now.difference(last_snapshot_date) / TimeSpan.HOUR);
+		if (status_code >= 0){
+			DateTime now = new DateTime.now_local();
+			TimeShiftBackup last_snapshot = App.get_latest_snapshot();
+			DateTime last_snapshot_date = (last_snapshot == null) ? null : last_snapshot.date;
 			
-			if (days > 1){
+			if (last_snapshot == null){
 				img_status_latest.file = img_dot_red;
-				lbl_status_latest.label = _("Last snapshot is") +  " %.0f ".printf(days) + _("days old") + "!";
-			}
-			else if (hours > 1){
-				img_status_latest.file = img_dot_green;
-				lbl_status_latest.label = _("Last snapshot is") +  " %.0f ".printf(hours) + _("hours old");
+				lbl_status_latest.label = _("No snapshots on device");
 			}
 			else{
-				img_status_latest.file = img_dot_green;
-				lbl_status_latest.label = _("Last snapshot is less than 1 hour old");
+				float days = ((float) now.difference(last_snapshot_date) / TimeSpan.DAY);
+				float hours = ((float) now.difference(last_snapshot_date) / TimeSpan.HOUR);
+				
+				if (days > 1){
+					img_status_latest.file = img_dot_red;
+					lbl_status_latest.label = _("Last snapshot is") +  " %.0f ".printf(days) + _("days old") + "!";
+				}
+				else if (hours > 1){
+					img_status_latest.file = img_dot_green;
+					lbl_status_latest.label = _("Last snapshot is") +  " %.0f ".printf(hours) + _("hours old");
+				}
+				else{
+					img_status_latest.file = img_dot_green;
+					lbl_status_latest.label = _("Last snapshot is less than 1 hour old");
+				}
 			}
+		}
+		else{
+			img_status_latest.visible = false;
+			lbl_status_latest.visible = false;
 		}
 		
 		return true;

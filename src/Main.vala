@@ -2404,8 +2404,10 @@ public class Main : GLib.Object{
 		//unmount the backup device only if it was mounted by application
 		if (mount_point_backup.has_prefix(mount_point_app)){
 			if (unmount_device(mount_point_backup, false)){
-				file_delete(mount_point_backup);
-				log_debug(_("Removed mount directory: '%s'").printf(mount_point_backup));
+				if (dir_exists(mount_point_backup)){
+					file_delete(mount_point_backup);
+					log_debug(_("Removed mount directory: '%s'").printf(mount_point_backup));
+				}
 			}
 			else{
 				//ignore
@@ -2587,7 +2589,7 @@ public class Main : GLib.Object{
 		int status_code = 0;
 		
 		//free space message
-		if (snapshot_device.free.length > 0){
+		if ((snapshot_device != null) && (snapshot_device.free.length > 0)){
 			message = "%s ".printf(snapshot_device.free) + _("free");
 			message = message.strip();
 		}
@@ -2659,13 +2661,13 @@ public class Main : GLib.Object{
 	}
 	
 	public bool backup_device_online(){
-		mount_backup_device();
-		if (PartitionInfo.get_mount_points(snapshot_device.uuid).size > 0){
-			return true;
+		if (snapshot_device != null){
+			mount_backup_device();
+			if (PartitionInfo.get_mount_points(snapshot_device.uuid).size > 0){
+				return true;
+			}
 		}
-		else{
-			return false;
-		}
+		return false;
 	}
 
 	public long calculate_size_of_first_snapshot(){
@@ -2891,6 +2893,16 @@ public class TimeShiftBackup : GLib.Object{
 					tags.add(tag.strip());
 				}
 			}
+		}
+	}
+	
+	public string taglist_short{
+		owned get{
+			string str = "";
+			foreach(string tag in tags){
+				str += " " + tag.replace("ondemand","O").replace("boot","B").replace("hourly","H").replace("daily","D").replace("weekly","W").replace("monthly","M");
+			}
+			return str.strip();
 		}
 	}
 	

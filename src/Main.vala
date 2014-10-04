@@ -186,7 +186,7 @@ public class Main : GLib.Object{
 
 			exit(0);
 		}
-		
+
 		//init log ------------------
 		
 		try {
@@ -205,17 +205,21 @@ public class Main : GLib.Object{
 			}
         
 			dos_log = new DataOutputStream (file.create(FileCreateFlags.REPLACE_DESTINATION));
-			log_msg(_("Session log file") + ": %s".printf(log_file));
+			if ((app_mode == "")||(LOG_DEBUG)){
+				log_msg(_("Session log file") + ": %s".printf(log_file));
+			}
 		} 
 		catch (Error e) {
 			is_success = false;
 			log_error (e.message);
 		}
-		
+
 		//log dist info -----------------------
 		
 		DistInfo info = DistInfo.get_dist_info("/");
-		log_msg(_("Distribution") + ": " + info.full_name(),true);
+		if ((app_mode == "")||(LOG_DEBUG)){
+			log_msg(_("Distribution") + ": " + info.full_name(),true);
+		}
 		
 		//check dependencies ---------------------
 		
@@ -314,7 +318,7 @@ public class Main : GLib.Object{
 		//finish initialization --------------
 		
 		load_app_config();
-		update_snapshot_list();
+		update_snapshot_list();		
 	}
 	
 	private void parse_arguments(string[] args){
@@ -323,6 +327,10 @@ public class Main : GLib.Object{
 			switch (args[k].down ()){
 				case "--backup":
 					app_mode = "backup";
+					break;
+
+				case "--restore":
+					app_mode = "restore";
 					break;
 					
 				case "--backup-now":
@@ -336,7 +344,7 @@ public class Main : GLib.Object{
 				
 				case "--list":
 					app_mode = "list";
-					LOG_ENABLE = false;
+					//LOG_ENABLE = false;
 					LOG_TIMESTAMP = false;
 					LOG_DEBUG = false;
 					break;
@@ -355,7 +363,7 @@ public class Main : GLib.Object{
 	
 	public bool start_application(string[] args){
 		bool is_success = true;
-		
+			
 		switch(app_mode){
 			case "backup":
 				is_success = take_snapshot();
@@ -363,7 +371,14 @@ public class Main : GLib.Object{
 					log_error(_("Failed to take snapshot."));
 				}
 				return is_success;
-			
+
+			case "restore":
+				//is_success = restore();
+				if(!is_success){
+					log_error(_("Failed to take snapshot."));
+				}
+				return is_success;
+				
 			case "ondemand":
 				is_success = take_snapshot(true);
 				if(!is_success){
@@ -372,13 +387,11 @@ public class Main : GLib.Object{
 				return is_success;
 				
 			case "list":
-
 				LOG_ENABLE = true;
 				LOG_TIMESTAMP = false;
-
 				log_msg(_("Snapshots") + ":");
 				foreach (TimeShiftBackup bak in snapshot_list){
-					log_msg("%s%s%s".printf(bak.name, " ~ " + bak.taglist, (bak.description.length > 0) ? " ~ " + bak.description : ""));
+					log_msg("%s%s%s".printf(bak.name, " ~ " + bak.taglist_short, (bak.description.length > 0) ? " ~ " + bak.description : ""));
 				}
 				LOG_ENABLE = false;
 				return true;
@@ -1576,10 +1589,8 @@ public class Main : GLib.Object{
 	        log_error (e.message);
 	    }
 	}
-	
 
 	public void write_snapshot_control_file(string snapshot_path, DateTime dt_created, string tag){
-		
 		var ctl_path = snapshot_path + "/info.json";
 		var config = new Json.Object();
 
@@ -1607,6 +1618,7 @@ public class Main : GLib.Object{
 		} catch (Error e) {
 	        log_error (e.message);
 	    }
+	    		
 	}
 	
 	public bool restore_snapshot(){
@@ -2075,7 +2087,9 @@ public class Main : GLib.Object{
 	        log_error (e.message);
 	    }
 	    
-	    log_msg(_("App config saved") + ": '%s'".printf(this.app_conf_path));
+	    if ((app_mode == "")||(LOG_DEBUG)){
+			log_msg(_("App config saved") + ": '%s'".printf(this.app_conf_path));
+		}
 	}
 	
 	public void load_app_config(){
@@ -2141,7 +2155,9 @@ public class Main : GLib.Object{
 			}
 		}
 		
-		log_msg(_("App config loaded") + ": '%s'".printf(this.app_conf_path));
+		if ((app_mode == "")||(LOG_DEBUG)){
+			log_msg(_("App config loaded") + ": '%s'".printf(this.app_conf_path));
+		}
 	}
 
 
@@ -2244,12 +2260,16 @@ public class Main : GLib.Object{
 		foreach(PartitionInfo pi in partition_list){
 			if (pi.mount_points.contains("/")){
 				root_device = pi;
-				log_msg(_("/ is mapped to device: %s, UUID=%s").printf(pi.device,pi.uuid));
+				if ((app_mode == "")||(LOG_DEBUG)){
+					log_msg(_("/ is mapped to device: %s, UUID=%s").printf(pi.device,pi.uuid));
+				}
 			}
 			
 			if (pi.mount_points.contains("/home")){
 				home_device = pi;
-				log_msg(_("/home is mapped to device: %s, UUID=%s").printf(pi.device,pi.uuid));
+				if ((app_mode == "")||(LOG_DEBUG)){
+					log_msg(_("/home is mapped to device: %s, UUID=%s").printf(pi.device,pi.uuid));
+				}
 			}
 		}
 	}
@@ -2296,7 +2316,9 @@ public class Main : GLib.Object{
 				mount_point_backup = mount_point_app + "/backup";
 				check_and_create_dir_with_parents(mount_point_backup);
 				if (mount(backup_device.uuid, mount_point_backup, "")){
-					log_msg(_("Backup path changed to '%s/timeshift'").printf((mount_point_backup == "/") ? "" : mount_point_backup));
+					if ((app_mode == "")||(LOG_DEBUG)){
+						log_msg(_("Backup path changed to '%s/timeshift'").printf((mount_point_backup == "/") ? "" : mount_point_backup));
+					}
 					return true;
 				}
 				else{
@@ -2317,7 +2339,9 @@ public class Main : GLib.Object{
 					//automount
 					mount_point_backup = automount(backup_device.uuid,"", mount_point_app);
 					if (mount_point_backup.length > 0){
-						log_msg(_("Backup path changed to '%s/timeshift'").printf((mount_point_backup == "/") ? "" : mount_point_backup));
+						if ((app_mode == "")||(LOG_DEBUG)){
+							log_msg(_("Backup path changed to '%s/timeshift'").printf((mount_point_backup == "/") ? "" : mount_point_backup));
+						}
 					}
 					else{
 						App.update_partition_list();

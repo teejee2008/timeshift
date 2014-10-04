@@ -351,7 +351,7 @@ class MainWindow : Gtk.Window{
 		col_tags = new TreeViewColumn();
 		col_tags.title = _("Tags");
 		col_tags.resizable = true;
-		col_tags.min_width = 80;
+		//col_tags.min_width = 80;
 		col_tags.clickable = true;
 		CellRendererText cell_tags = new CellRendererText ();
 		cell_tags.ellipsize = Pango.EllipsizeMode.END;

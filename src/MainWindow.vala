@@ -26,7 +26,7 @@ using Gee;
 
 using TeeJee.Logging;
 using TeeJee.FileSystem;
-using TeeJee.DiskPartition;
+using TeeJee.Devices;
 using TeeJee.JSON;
 using TeeJee.ProcessManagement;
 using TeeJee.GtkHelper;
@@ -88,7 +88,7 @@ class MainWindow : Gtk.Window{
 	private uint timer_backup_device_init;
 	
 	//other
-	private PartitionInfo snapshot_device_original;
+	private Device snapshot_device_original;
 	private int cmb_backup_device_index_default = -1;
 
 	public MainWindow () {
@@ -690,7 +690,7 @@ class MainWindow : Gtk.Window{
 	}
 
 	private void cell_backup_device_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
-		PartitionInfo info;
+		Device info;
 		model.get (iter, 0, out info, -1);
 		(cell as Gtk.CellRendererText).text = info.description();
 	}
@@ -754,7 +754,7 @@ class MainWindow : Gtk.Window{
 	}
 
 	private void refresh_cmb_backup_device(){
-		ListStore store = new ListStore(1, typeof(PartitionInfo));
+		ListStore store = new ListStore(1, typeof(Device));
 
 		TreeIter iter;
 
@@ -762,7 +762,7 @@ class MainWindow : Gtk.Window{
 		int index_selected = -1;
 		cmb_backup_device_index_default = -1;
 
-		foreach(PartitionInfo pi in App.partition_list) {
+		foreach(Device pi in App.partition_list) {
 			
 			if (!pi.has_linux_filesystem()) { continue; }
 
@@ -808,7 +808,7 @@ class MainWindow : Gtk.Window{
 
 		//get new device reference
 		TreeIter iter;
-		PartitionInfo pi;
+		Device pi;
 		combo.get_active_iter (out iter);
 		TreeModel model = (TreeModel) combo.model;
 		model.get(iter, 0, out pi);
@@ -1270,6 +1270,11 @@ class MainWindow : Gtk.Window{
 			"Debaru, Nikos, alienus (French):launchpad.net/~lp-l10n-fr",
 			"tomberry88 (Italian):launchpad.net/~tomberry",
 			"박정규(Jung-Kyu Park) (Korean):bagjunggyu@gmail.com"
+		}; 
+		
+		dialog.third_party = {
+			"Timeshift is powered by the following tools and components. Please visit the links for more information.",
+			"rsync by Andrew Tridgell, Wayne Davison, and others.:http://rsync.samba.org/"
 		}; 
 		
 		dialog.documenters = null; 

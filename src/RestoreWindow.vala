@@ -26,7 +26,7 @@ using Gee;
 
 using TeeJee.Logging;
 using TeeJee.FileSystem;
-using TeeJee.DiskPartition;
+using TeeJee.Devices;
 using TeeJee.JSON;
 using TeeJee.ProcessManagement;
 using TeeJee.GtkHelper;
@@ -94,7 +94,7 @@ public class RestoreWindow : Gtk.Dialog{
 	private Button btn_cancel;
 	private Button btn_restore;
 	
-	private PartitionInfo selected_target = null;
+	private Device selected_target = null;
 	
 	public RestoreWindow () {
 		this.title = _("Restore");
@@ -609,13 +609,13 @@ public class RestoreWindow : Gtk.Dialog{
 	}
 	
 	private void cell_device_target_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
-		PartitionInfo pi;
+		Device pi;
 		model.get (iter, 0, out pi, -1);
 		if ((App.root_device != null) && (pi.device == App.root_device.device)){
-			(cell as Gtk.CellRendererText).text = pi.partition_name + " (" + _("sys") + ")";
+			(cell as Gtk.CellRendererText).text = pi.name + " (" + _("sys") + ")";
 		}
 		else{
-			(cell as Gtk.CellRendererText).text = pi.partition_name;
+			(cell as Gtk.CellRendererText).text = pi.name;
 		}
 		
 		Gtk.CellRendererText ctxt = (cell as Gtk.CellRendererText);
@@ -631,7 +631,7 @@ public class RestoreWindow : Gtk.Dialog{
 	}
 	
 	private void cell_fs_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
-		PartitionInfo pi;
+		Device pi;
 		model.get (iter, 0, out pi, -1);
 		(cell as Gtk.CellRendererText).text = pi.type;
 		Gtk.CellRendererText ctxt = (cell as Gtk.CellRendererText);
@@ -639,7 +639,7 @@ public class RestoreWindow : Gtk.Dialog{
 	}
 	
 	private void cell_size_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
-		PartitionInfo pi;
+		Device pi;
 		model.get (iter, 0, out pi, -1);
 		(cell as Gtk.CellRendererText).text = (pi.size_mb > 0) ? "%s GB".printf(pi.size) : "";
 		Gtk.CellRendererText ctxt = (cell as Gtk.CellRendererText);
@@ -651,7 +651,7 @@ public class RestoreWindow : Gtk.Dialog{
 	}
 	
 	private void cell_dist_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
-		PartitionInfo pi;
+		Device pi;
 		model.get (iter, 0, out pi, -1);
 		(cell as Gtk.CellRendererText).text = pi.dist_info;
 		Gtk.CellRendererText ctxt = (cell as Gtk.CellRendererText);
@@ -660,16 +660,15 @@ public class RestoreWindow : Gtk.Dialog{
 	
 	
 	private void cell_device_grub_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
-		BootDeviceEntry entry;
-		model.get (iter, 0, out entry, -1);
-		if (entry.description.contains("(MBR)")){
-			(cell as Gtk.CellRendererText).markup = "<b>" + entry.description + "</b>";
+		Device dev;
+		model.get (iter, 0, out dev, -1);
+		if (dev.devtype == "disk"){
+			(cell as Gtk.CellRendererText).markup = "<b>" + dev.description() + " (MBR)</b>";
 		}
 		else{
-			(cell as Gtk.CellRendererText).text = entry.description;
+			(cell as Gtk.CellRendererText).text = dev.description();
 		}
 	}
-
 
 	private void cell_exclude_text_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
 		string pattern;
@@ -721,35 +720,31 @@ public class RestoreWindow : Gtk.Dialog{
 	}
 
 	private void refresh_cmb_boot_device(){
-		ListStore store = new ListStore(1, typeof(BootDeviceEntry));
+		ListStore store = new ListStore(1, typeof(Device));
 		
 		//add devices
-		Gee.ArrayList<BootDeviceEntry> device_list = new Gee.ArrayList<BootDeviceEntry>();
-		foreach(DeviceInfo di in get_block_devices()) {
-			device_list.add(new BootDeviceEntry(di.device,di.description + " (MBR)"));
+		Gee.ArrayList<Device> device_list = new Gee.ArrayList<Device>();
+		foreach(Device di in get_block_devices()) {
+			device_list.add(di);
 		}
 		
 		//add partitions
 		var list = App.partition_list;
-		foreach(PartitionInfo pi in list) {
+		foreach(Device pi in list) {
 			if (!pi.has_linux_filesystem()) { continue; }
-			string desc = pi.device;
-			desc += (pi.type.length > 0) ? " ~ " + pi.type: "";
-			desc += (pi.label.length > 0) ? " ~ " + pi.label: "";
-			desc += (pi.dist_info.length > 0) ? " ~ " + pi.dist_info: "";
-			device_list.add(new BootDeviceEntry(pi.device,desc));
+			device_list.add(pi);
 		}
 		
 		//sort
 		device_list.sort((a,b) => { 
-					BootDeviceEntry p1 = (BootDeviceEntry) a;
-					BootDeviceEntry p2 = (BootDeviceEntry) b;
+					Device p1 = (Device) a;
+					Device p2 = (Device) b;
 					
 					return strcmp(p1.device,p2.device);
 				});
 				
 		TreeIter iter;
-		foreach(BootDeviceEntry entry in device_list) {
+		foreach(Device entry in device_list) {
 			store.append(out iter);
 			store.set (iter, 0, entry);
 		}
@@ -769,7 +764,7 @@ public class RestoreWindow : Gtk.Dialog{
 		int index = -1;
 		
 		for (bool next = store.get_iter_first (out iter); next; next = store.iter_next (ref iter)) {
-			BootDeviceEntry dev;
+			Device dev;
 			store.get(iter, 0, out dev);
 			index++;
 			if (dev.device == App.restore_target.device[0:8]){
@@ -787,11 +782,11 @@ public class RestoreWindow : Gtk.Dialog{
 		
 		App.update_partition_list();
 		
-		ListStore model = new ListStore(3, typeof(PartitionInfo), typeof(string), typeof(string));
+		ListStore model = new ListStore(3, typeof(Device), typeof(string), typeof(string));
 		tv_partitions.set_model (model);
 
 		TreeIter iter;
-		foreach(PartitionInfo pi in App.partition_list) {
+		foreach(Device pi in App.partition_list) {
 			if (!pi.has_linux_filesystem()) { continue; }
 			if (!radio_sys.sensitive && (App.root_device != null) && ((pi.device == App.root_device.device)||(pi.uuid == App.root_device.uuid))) { continue; }
 			
@@ -822,7 +817,7 @@ public class RestoreWindow : Gtk.Dialog{
 		ListStore store = (ListStore) tv_partitions.model;
 		
 		for (bool next = store.get_iter_first (out iter); next; next = store.iter_next (ref iter)) {
-			PartitionInfo pi;
+			Device pi;
 			string mount_point;
 			store.get(iter, 0, out pi);
 			store.get(iter, 1, out mount_point);
@@ -900,7 +895,7 @@ public class RestoreWindow : Gtk.Dialog{
 		bool iterExists;
 		
 		//get selected target device
-		PartitionInfo restore_target = null;
+		Device restore_target = null;
 		sel = tv_partitions.get_selection ();
 		store = (ListStore) tv_partitions.model;
 		iterExists = store.get_iter_first (out iter);
@@ -1132,7 +1127,7 @@ public class RestoreWindow : Gtk.Dialog{
 
 		TreeIter iter;
 		if (App.reinstall_grub2){
-			BootDeviceEntry entry;
+			Device entry;
 			cmb_boot_device.get_active_iter (out iter);
 			TreeModel model = (TreeModel) cmb_boot_device.model;
 			model.get(iter, 0, out entry);
@@ -1235,7 +1230,7 @@ public class RestoreWindow : Gtk.Dialog{
 			//find the root mount point set by user
 			store = (ListStore) tv_partitions.model;
 			for (bool next = store.get_iter_first (out iter); next; next = store.iter_next (ref iter)) {
-				PartitionInfo pi;
+				Device pi;
 				string mount_point;
 				store.get(iter, 0, out pi);
 				store.get(iter, 1, out mount_point);
@@ -1265,7 +1260,7 @@ public class RestoreWindow : Gtk.Dialog{
 						//use selected device as the root mount point
 						for (bool next = store.get_iter_first (out iter); next; next = store.iter_next (ref iter)) {
 							if (sel.iter_is_selected (iter)){
-								PartitionInfo pi;
+								Device pi;
 								store.get(iter, 0, out pi);
 								App.restore_target = pi;
 								App.mount_list.add(new MountEntry(pi,"/"));
@@ -1312,7 +1307,7 @@ public class RestoreWindow : Gtk.Dialog{
 
 			//mount remaining devices
 			for (bool next = store.get_iter_first (out iter); next; next = store.iter_next (ref iter)) {
-				PartitionInfo pi;
+				Device pi;
 				string mount_point;
 				store.get(iter, 0, out pi);
 				store.get(iter, 1, out mount_point);
@@ -1344,21 +1339,8 @@ public class RestoreWindow : Gtk.Dialog{
 	}
 	
 	private int show_disclaimer(){
-		string msg = "";
-		msg += "<b>" + _("WARNING") + ":</b>\n\n";
-		msg += _("Files will be overwritten on the target device!") + "\n";
-		msg += _("If the restore fails for any reason and you are unable to boot the system, \nplease boot from the Ubuntu Live CD and try again.") + "\n";
-		
-		if ((App.root_device != null) && (App.restore_target.device == App.root_device.device)){
-			msg += "\n<b>" + _("Please save your work and close all applications.") + "\n";
-			msg += _("System will reboot to complete the restore process.") + "</b>\n";
-		}
-		
-		msg += "\n";
-		msg += "<b>" + _("DISCLAIMER") + ":</b>\n\n";
-		msg += _("This software comes without absolutely NO warranty and the author takes no responsibility for any damage arising from the use of this program.");
-		msg += " " + _("If these terms are not acceptable to you, please do not proceed beyond this point!") + "\n";
-		msg += "\n";
+		string msg = App.disclaimer_pre_restore();
+		msg += "\n\n";
 		msg += "<b>" + _("Continue with restore?") + "</b>\n";
 		
 		var dialog = new Gtk.MessageDialog.with_markup(null, Gtk.DialogFlags.MODAL, Gtk.MessageType.WARNING, Gtk.ButtonsType.YES_NO, msg);

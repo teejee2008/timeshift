@@ -25,7 +25,7 @@ using Gtk;
 using Json;
 using TeeJee.Logging;
 using TeeJee.FileSystem;
-using TeeJee.DiskPartition;
+using TeeJee.Devices;
 using TeeJee.JSON;
 using TeeJee.ProcessManagement;
 using TeeJee.GtkHelper;
@@ -50,6 +50,11 @@ namespace TeeJee.Logging{
 	public bool LOG_COLORS = true;
 	public bool LOG_DEBUG = false;
 	public bool LOG_COMMANDS = false;
+	
+	public const string TERM_COLOR_YELLOW = "\033[" + "1;33" + "m";
+	public const string TERM_COLOR_GREEN = "\033[" + "1;32" + "m";
+	public const string TERM_COLOR_RED = "\033[" + "1;31" + "m";
+	public const string TERM_COLOR_RESET = "\033[" + "0" + "m";
 
 	public void log_msg (string message, bool highlight = false){
 
@@ -379,7 +384,7 @@ namespace TeeJee.FileSystem{
 	}
 }
 
-namespace TeeJee.DiskPartition{
+namespace TeeJee.Devices{
 	
 	/* Functions and classes for handling disk partitions */
 		
@@ -387,32 +392,99 @@ namespace TeeJee.DiskPartition{
 	using TeeJee.FileSystem;
 	using TeeJee.ProcessManagement;
 
-	public class PartitionInfo : GLib.Object{
+	public class Device : GLib.Object{
 		
-		/* Class for storing partition information */
+		/* Class for storing disk information */
 		
+		GUdev.Device udev_device;
 		public string device = "";
 		public string type = "";
-		public long size_mb = 0;
-		public long used_mb = 0;
 		public string label = "";
 		public string uuid = "";
+
+		public string vendor = "";
+		public string model = "";
+		public bool removable = false;
+		public string devtype = ""; //disk or partition
+		
+		public long size_mb = 0;
+		public long used_mb = 0;
+
 		public string available = "";
 		public string used_percent = "";
 		public string dist_info = "";
 		public Gee.ArrayList<string> mount_points;
+		public Gee.ArrayList<string> symlinks;
 		public string mount_options = "";
 		
-		public PartitionInfo(){
+		public static Gee.HashMap<string,Device> device_list_master;
+		
+		public Device(){
 			mount_points = new Gee.ArrayList<string>();
+			symlinks = new Gee.ArrayList<string>();
+		}
+		
+		public Device.from_udev(GUdev.Device d){
+			mount_points = new Gee.ArrayList<string>();
+			symlinks = new Gee.ArrayList<string>();
+			
+			udev_device = d;
+			
+			device = d.get_device_file();
+			
+			devtype = d.get_devtype();
+			//change devtype to 'partition' for device mapper disks
+			if (device.has_prefix("/dev/dm-")){
+				devtype = "partition";
+			}
+			
+			label = d.get_property("ID_FS_LABEL");
+			label = (label == null) ? "" : label;
+			
+			uuid = d.get_property("ID_FS_UUID");
+			uuid = (uuid == null) ? "" : uuid;
+			
+			type = d.get_property("ID_FS_TYPE");
+			type = (type == null) ? "" : type;
+			
+			foreach (string symlink in d.get_device_file_symlinks()){
+				symlinks.add(symlink);
+			}
+		}
+		
+		public string name{
+			owned get{
+				if (devtype == "partition"){
+					return udev_device.get_name();
+				}
+				else{
+					return device.replace("/dev/","").replace("/dev/mapper/","");
+				}
+			}
+		}
+		
+		public void print_properties(){
+			if (udev_device != null){
+				foreach(string key in udev_device.get_property_keys()){
+					stdout.printf("%-50s %s\n".printf(key, udev_device.get_property(key)));
+				}
+			}
 		}
 		
 		public string description(){
 			string s = "";
-			s += device;
-			s += (label.length > 0) ? " (" + label + ")": "";
-			s += (type.length > 0) ? " ~ " + type : "";
-			s += (used.length > 0) ? " ~ " + used + " / " + size + " GB used (" + used_percent + ")" : "";
+			
+			if (devtype == "disk"){
+				s += device;
+				s += ((vendor.length > 0)||(model.length > 0)) ? (" ~ " + vendor + " " + model) : "";
+			}
+			else{
+				s += device;
+				s += (label.length > 0) ? " (" + label + ")": "";
+				s += (type.length > 0) ? " ~ " + type : "";
+				s += (used.length > 0) ? " ~ " + used + " / " + size + " GB used (" + used_percent + ")" : "";
+			}
+			
 			return s;
 		}
 		
@@ -472,12 +544,6 @@ namespace TeeJee.DiskPartition{
 			}
 		}
 
-		public string partition_name{
-			owned get{
-				return device.replace("/dev/mapper/","").replace("/dev/","");
-			}
-		}
-		
 		public bool has_linux_filesystem(){
 			switch(type){
 				case "ext2":
@@ -494,12 +560,29 @@ namespace TeeJee.DiskPartition{
 			}
 		}
 
-		public static Gee.HashMap<string,PartitionInfo> get_block_devices_using_blkid(string device_alias = "", bool exclude_unknown = false){
-				
-			/* Returns list of mounted/unmounted, physical/logical filesystems 
-			 * Populates device, uuid, type, label and mount points */
+		public static Gee.HashMap<string,Device> get_block_devices_using_udev(){
+			var map = new Gee.HashMap<string,Device>();
+			var uc = new GUdev.Client(null);
+			GLib.List<GUdev.Device> devs = uc.query_by_subsystem("block");
+
+			foreach (GUdev.Device d in devs){
+				Device dev = new Device.from_udev(d);
+				if ((dev.uuid.length > 0) && !map.has_key(dev.uuid)){
+					map.set(dev.uuid, dev);
+				}
+			}
 			
-			var map = new Gee.HashMap<string,PartitionInfo>();
+			device_list_master = map;
+			
+			return map;
+		}
+		
+		public static Gee.HashMap<string,Device> get_block_devices_using_blkid(string device_file){
+
+			/* Returns list of mounted partitions using 'blkid' command 
+			   Populates device, type, uuid, label */
+
+			var map = new Gee.HashMap<string,Device>();
 
 			string std_out;
 			string std_err;
@@ -508,10 +591,10 @@ namespace TeeJee.DiskPartition{
 			Regex rex;
 			MatchInfo match;
 			
-			cmd = "/sbin/blkid" + ((device_alias.length > 0) ? " " + device_alias: "");
+			cmd = "/sbin/blkid" + ((device_file.length > 0) ? " " + device_file: "");
 			ret_val = execute_command_script_sync(cmd, out std_out, out std_err);
 			if (ret_val != 0){
-				log_error ("blkid: " + _("Failed to get partition list") + ((device_alias.length > 0) ? ": " + device_alias : ""));
+				log_error ("blkid: " + _("Failed to get partition list") + ((device_file.length > 0) ? ": " + device_file : ""));
 				return map; //return empty map
 			}
 				
@@ -528,7 +611,7 @@ namespace TeeJee.DiskPartition{
 			foreach(string line in std_out.split("\n")){
 				if (line.strip().length == 0) { continue; }
 				
-				PartitionInfo pi = new PartitionInfo();
+				Device pi = new Device();
 				
 				pi.device = line.split(":")[0].strip();
 				
@@ -540,19 +623,17 @@ namespace TeeJee.DiskPartition{
 					continue;
 				}
 				
-				if (exclude_unknown){
-					if (pi.device.has_prefix("/dev/sd") || pi.device.has_prefix("/dev/hd") || pi.device.has_prefix("/dev/mapper/") || pi.device.has_prefix("/dev/dm")) { 
-						//ok
-					}
-					else if (pi.device.has_prefix("/dev/disk/by-uuid/")){
-						//ok, get uuid
-						pi.uuid = pi.device.replace("/dev/disk/by-uuid/","");
-					}
-					else{
-						continue; //skip
-					}
+				if (pi.device.has_prefix("/dev/sd") || pi.device.has_prefix("/dev/hd") || pi.device.has_prefix("/dev/mapper/") || pi.device.has_prefix("/dev/dm")) { 
+					//ok
 				}
-				
+				else if (pi.device.has_prefix("/dev/disk/by-uuid/")){
+					//ok, get uuid
+					pi.uuid = pi.device.replace("/dev/disk/by-uuid/","");
+				}
+				else{
+					continue; //skip
+				}
+
 				//parse & populate fields ------------------
 				
 				try{
@@ -585,12 +666,12 @@ namespace TeeJee.DiskPartition{
 			return map;
 		}
 
-		public static Gee.HashMap<string,PartitionInfo> get_disk_space_using_df(string device_or_mount_point = "", bool exclude_unknown = false){
+		public static Gee.HashMap<string,Device> get_disk_space_using_df(string device_or_mount_point = ""){
 			
 			/* Returns list of mounted partitions using 'df' command 
 			   Populates device, type, size, used and mount_point_list */
 			 
-			var map = new Gee.HashMap<string,PartitionInfo>();
+			var map = new Gee.HashMap<string,Device>();
 			
 			string std_out;
 			string std_err;
@@ -624,7 +705,7 @@ namespace TeeJee.DiskPartition{
 				if (++line_num == 1) { continue; }
 				if (line.strip().length == 0) { continue; }
 				
-				PartitionInfo pi = new PartitionInfo();
+				Device pi = new Device();
 				
 				//parse & populate fields ------------------
 				
@@ -664,7 +745,7 @@ namespace TeeJee.DiskPartition{
 				/* Note: 
 				 * The mount points displayed by 'df' are not reliable.
 				 * For example, if same device is mounted at 2 locations, 'df' displays only the first location.
-				 * Hence, we will not populate the 'mount_points' field in PartitionInfo object
+				 * Hence, we will not populate the 'mount_points' field in Device object
 				 * Use get_mounted_filesystems_using_mtab() if mount info is required
 				 * */
 				 
@@ -674,17 +755,15 @@ namespace TeeJee.DiskPartition{
 					continue;
 				}
 					
-				if (exclude_unknown){
-					if (pi.device.has_prefix("/dev/sd") || pi.device.has_prefix("/dev/hd") || pi.device.has_prefix("/dev/mapper/") || pi.device.has_prefix("/dev/dm")) { 
-						//ok
-					}
-					else if (pi.device.has_prefix("/dev/disk/by-uuid/")){
-						//ok, get uuid
-						pi.uuid = pi.device.replace("/dev/disk/by-uuid/","");
-					}
-					else{
-						continue; //skip
-					}
+				if (pi.device.has_prefix("/dev/sd") || pi.device.has_prefix("/dev/hd") || pi.device.has_prefix("/dev/mapper/") || pi.device.has_prefix("/dev/dm")) { 
+					//ok
+				}
+				else if (pi.device.has_prefix("/dev/disk/by-uuid/")){
+					//ok, get uuid
+					pi.uuid = pi.device.replace("/dev/disk/by-uuid/","");
+				}
+				else{
+					continue; //skip
 				}
 
 				//get uuid ---------------------------
@@ -701,12 +780,12 @@ namespace TeeJee.DiskPartition{
 			return map;
 		}
 
-		public static Gee.HashMap<string,PartitionInfo> get_mounted_filesystems_using_mtab(bool exclude_unknown = false){
+		public static Gee.HashMap<string,Device> get_mounted_filesystems_using_mtab(){
 			
-			/* Returns list of mounted partitions using 'mount' command 
+			/* Returns list of mounted partitions by reading /proc/mounts
 			   Populates device, type and mount_point_list */
 
-			var map = new Gee.HashMap<string,PartitionInfo>();
+			var map = new Gee.HashMap<string,Device>();
 			
 			string mtab_path = "/etc/mtab";
 			string mtab_lines = "";
@@ -774,7 +853,7 @@ namespace TeeJee.DiskPartition{
 				string line = lines[i].strip();
 				if (line.length == 0) { continue; }
 				
-				PartitionInfo pi = new PartitionInfo();
+				Device pi = new Device();
 
 				//parse & populate fields ------------------
 								
@@ -812,17 +891,15 @@ namespace TeeJee.DiskPartition{
 					continue;
 				}
 				
-				if (exclude_unknown){
-					if (pi.device.has_prefix("/dev/sd") || pi.device.has_prefix("/dev/hd") || pi.device.has_prefix("/dev/mapper/") || pi.device.has_prefix("/dev/dm")) { 
-						//ok
-					}
-					else if (pi.device.has_prefix("/dev/disk/by-uuid/")){
-						//ok, get uuid
-						pi.uuid = pi.device.replace("/dev/disk/by-uuid/","");
-					}
-					else{
-						continue; //skip
-					}
+				if (pi.device.has_prefix("/dev/sd") || pi.device.has_prefix("/dev/hd") || pi.device.has_prefix("/dev/mapper/") || pi.device.has_prefix("/dev/dm")) { 
+					//ok
+				}
+				else if (pi.device.has_prefix("/dev/disk/by-uuid/")){
+					//ok, get uuid
+					pi.uuid = pi.device.replace("/dev/disk/by-uuid/","");
+				}
+				else{
+					continue; //skip
 				}
 
 				//get uuid ---------------------------
@@ -848,14 +925,16 @@ namespace TeeJee.DiskPartition{
 			return map;
 		}
 	
-		public static Gee.HashMap<string,PartitionInfo> get_filesystems(bool get_space = true, bool get_mounts = true){
+		public static Gee.HashMap<string,Device> get_filesystems(bool get_space = true, bool get_mounts = true){
 			
-			//get block devices
-			var map = get_block_devices_using_blkid();
+			/* Returns list of block devices
+			   Populates all fields in Device class */
+			   
+			var map = get_block_devices_using_udev();
 
 			if (get_space){
 				//get used space for mounted filesystems
-				var map_df = get_disk_space_using_df("",false);
+				var map_df = get_disk_space_using_df();
 				foreach(string key in map_df.keys){
 					if (map.has_key(key)){
 						var pi = map.get(key);
@@ -891,9 +970,9 @@ namespace TeeJee.DiskPartition{
 			return map;
 		}
 		
-		public static PartitionInfo refresh_partition_usage_info(PartitionInfo pi){
+		public static Device refresh_partition_usage_info(Device pi){
 		
-			/* Updates disk space info and returns the given PartitionInfo object */
+			/* Updates disk space info and returns the given Device object */
 			
 			var map_df = get_disk_space_using_df(pi.device);
 			if (map_df.has_key(pi.uuid)){
@@ -908,14 +987,24 @@ namespace TeeJee.DiskPartition{
 		}
 		
 		public static string get_device_uuid(string device){
-			var map = get_block_devices_using_blkid(device);
-			if (map.size == 1){
-				var pi = map.values.to_array()[0];
-				return pi.uuid;
+			if (device_list_master == null){
+				get_block_devices_using_udev();
 			}
-			else{
-				return "";
+			
+			foreach(Device dev in device_list_master.values){
+				if (dev.device == device){
+					return dev.uuid;
+				}
+				else{
+					foreach(string symlink in dev.symlinks){
+						if (symlink == device){
+							return dev.uuid;
+						}
+					}
+				}
 			}
+			
+			return "";
 		}
 
 		public static Gee.ArrayList<string> get_mount_points(string device_or_uuid){
@@ -939,28 +1028,7 @@ namespace TeeJee.DiskPartition{
 			
 			return (new Gee.ArrayList<string>());
 		}
-	}
-	
-	public class DeviceInfo : GLib.Object{
-		
-		/* Class for storing device information */
-		
-		public string device = "";
-		public bool removable = false;
-		public string vendor = "";
-		public string model = "";
 
-		public string name{
-			owned get{
-				return vendor + " " + model;
-			}
-		}
-		
-		public string description{
-			owned get{
-				return device + " ~ " + vendor + " " + model;
-			}
-		}
 	}
 
 	public class FsTabEntry : GLib.Object{
@@ -1043,10 +1111,10 @@ namespace TeeJee.DiskPartition{
 	}
 	
 	public class MountEntry : GLib.Object{
-		public PartitionInfo device = null;
+		public Device device = null;
 		public string mount_point = "";
 		
-		public MountEntry(PartitionInfo device, string mount_point){
+		public MountEntry(Device device, string mount_point){
 			this.device = device;
 			this.mount_point = mount_point;
 		}
@@ -1068,7 +1136,7 @@ namespace TeeJee.DiskPartition{
 		
 		if (device_or_uuid.has_prefix("/dev")){
 			device = device_or_uuid;
-			uuid = PartitionInfo.get_device_uuid(device_or_uuid);
+			uuid = Device.get_device_uuid(device_or_uuid);
 		}
 		else{
 			uuid = device_or_uuid;
@@ -1077,7 +1145,7 @@ namespace TeeJee.DiskPartition{
 		
 		//check if already mounted -------------
 		
-		var map = PartitionInfo.get_mounted_filesystems_using_mtab();
+		var map = Device.get_mounted_filesystems_using_mtab();
 		if (map.has_key(uuid)){
 			var pi = map.get(uuid);
 			if (pi.mount_points.contains(mount_point)){
@@ -1119,7 +1187,7 @@ namespace TeeJee.DiskPartition{
 		
 		//check if mounted successfully -------------
 			
-		map = PartitionInfo.get_mounted_filesystems_using_mtab();
+		map = Device.get_mounted_filesystems_using_mtab();
 		if (map.has_key(uuid)){
 			var pi = map.get(uuid);
 			if (pi.mount_points.contains(mount_point)){
@@ -1142,7 +1210,7 @@ namespace TeeJee.DiskPartition{
 			
 		if (device_or_uuid.has_prefix("/dev")){
 			device = device_or_uuid;
-			uuid = PartitionInfo.get_device_uuid(device_or_uuid);
+			uuid = Device.get_device_uuid(device_or_uuid);
 		}
 		else{
 			uuid = device_or_uuid;
@@ -1151,7 +1219,7 @@ namespace TeeJee.DiskPartition{
 		
 		//check if already mounted and return mount point -------------
 		
-		var map = PartitionInfo.get_filesystems();
+		var map = Device.get_filesystems();
 		if (map.has_key(uuid)){
 			var pi = map.get(uuid);
 			if ((pi.mount_points.size > 0) && (pi.size_mb > 0)){
@@ -1197,8 +1265,8 @@ namespace TeeJee.DiskPartition{
 		//check if mounted -------------
 			
 		bool mounted = false;
-		var map = PartitionInfo.get_mounted_filesystems_using_mtab();
-		foreach (PartitionInfo pi in map.values){
+		var map = Device.get_mounted_filesystems_using_mtab();
+		foreach (Device pi in map.values){
 			foreach (string mp in pi.mount_points){
 				if (mp.has_prefix(mount_point)){ //check for any mount_point at or under the given mount_point
 					mounted = true;
@@ -1236,8 +1304,8 @@ namespace TeeJee.DiskPartition{
 		//check if unmounted --------------------------
 		
 		mounted = false;
-		map = PartitionInfo.get_mounted_filesystems_using_mtab();
-		foreach (PartitionInfo pi in map.values){
+		map = Device.get_mounted_filesystems_using_mtab();
+		foreach (Device pi in map.values){
 			foreach (string mp in pi.mount_points){
 				if (mp.has_prefix(mount_point)){ //check for any mount_point at or under the given mount_point
 					mounted = true;
@@ -1260,7 +1328,7 @@ namespace TeeJee.DiskPartition{
 			
 		if (device_or_uuid.has_prefix("/dev")){
 			device = device_or_uuid;
-			uuid = PartitionInfo.get_device_uuid(device_or_uuid);
+			uuid = Device.get_device_uuid(device_or_uuid);
 		}
 		else{
 			uuid = device_or_uuid;
@@ -1269,7 +1337,7 @@ namespace TeeJee.DiskPartition{
 		
 		//check if already mounted and return mount point -------------
 		
-		var map = PartitionInfo.get_mounted_filesystems_using_mtab();
+		var map = Device.get_mounted_filesystems_using_mtab();
 		if (map.has_key(uuid)){
 			var pi = map.get(uuid);
 			if (pi.mount_points.size > 0){
@@ -1279,11 +1347,11 @@ namespace TeeJee.DiskPartition{
 		return "";
 	}
 	
-	public Gee.ArrayList<DeviceInfo> get_block_devices(){
+	public Gee.ArrayList<Device> get_block_devices(){
 		
 		/* Returns a list of all storage devices including vendor and model number */
 		
-		var device_list = new Gee.ArrayList<DeviceInfo>();
+		var device_list = new Gee.ArrayList<Device>();
 		
 		string letters = "abcdefghijklmnopqrstuvwxyz";
 		string letter = "";
@@ -1321,11 +1389,12 @@ namespace TeeJee.DiskPartition{
 				}
 
 				if ((vendor.length > 0) || (model.length > 0)){
-					var dev = new DeviceInfo();
+					var dev = new Device();
 					dev.device = "/dev/sd%s".printf(letter);
 					dev.vendor = vendor.strip();
 					dev.model = model.strip();
 					dev.removable = (removable == "0") ? false : true;
+					dev.devtype = "disk";
 					device_list.add(dev);
 				}
 			}

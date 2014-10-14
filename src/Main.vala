@@ -38,7 +38,7 @@ using TeeJee.System;
 using TeeJee.Misc;
 
 public Main App;
-public const string AppName = "TimeShift";
+public const string AppName = "Timeshift RSYNC";
 public const string AppShortName = "timeshift";
 public const string AppVersion = "1.6.2";
 public const string AppAuthor = "Tony George";
@@ -126,6 +126,7 @@ public class Main : GLib.Object{
 	public string prompt_type = "";
 	public bool prompt_user = false;
 	public bool prompt_break = false;
+	public int snapshot_list_start_index = 0;
 	
 	//initialization
 
@@ -358,7 +359,7 @@ public class Main : GLib.Object{
 				LOG_TIMESTAMP = false;
 				if (snapshot_list.size > 0){
 					log_msg(_("Snapshots") + ":");
-					list_snapshots();
+					list_snapshots(false);
 					return true;
 				}
 				else{
@@ -810,6 +811,25 @@ public class Main : GLib.Object{
 							exit_app();
 							exit(0);
 						}
+						else if (line.down() == "p"){
+							snapshot_list_start_index -= 10;
+							if (snapshot_list_start_index < 0){
+								snapshot_list_start_index = 0;
+							}
+							log_msg("");
+							list_snapshots(true);
+							log_msg("");
+							prompt_break = true;
+						}
+						else if (line.down() == "n"){
+							if ((snapshot_list_start_index + 10) < snapshot_list.size){
+								snapshot_list_start_index += 10;
+							}
+							log_msg("");
+							list_snapshots(true);
+							log_msg("");
+							prompt_break = true;
+						}
 						else if (line.contains("_")||line.contains("-")){
 							//TODO
 							log_error("Invalid input");
@@ -1010,35 +1030,16 @@ public class Main : GLib.Object{
 				}
 				break;
 		}
-		
-		/*
-		if (){
-			Source.remove (shutdownTimerID);
-			WaitingForShutdown = false;
-			return;
-		}
-		else if ((ch == 'q')||(ch == 'Q')){
-			if (Status == AppStatus.RUNNING){
-				stop_batch();
-			}
-		}
-		else if ((ch == 'p')||(ch == 'P')){
-			if (Status == AppStatus.RUNNING){
-				pause();
-			}
-		}
-		else if ((ch == 'r')||(ch == 'R')){
-			if (Status == AppStatus.PAUSED){
-				resume();
-			}
-		}*/
 	}
 
-	public void list_snapshots(){
+	public void list_snapshots(bool paginate){
 		LOG_TIMESTAMP = false;
 		int index = -1;
 		foreach (TimeShiftBackup bak in snapshot_list){
-			log_msg("%4d > %s%s%s".printf(++index, bak.name, " ~ " + bak.taglist_short, (bak.description.length > 0) ? " ~ " + bak.description : ""));
+			index++;
+			if (!paginate || ((index >= snapshot_list_start_index) && (index < snapshot_list_start_index + 10))){
+				log_msg("%4d > %s%s%s".printf(index, bak.name, " ~ " + bak.taglist_short, (bak.description.length > 0) ? " ~ " + bak.description : ""));
+			}
 		}
 	}
 	
@@ -1969,7 +1970,7 @@ public class Main : GLib.Object{
 					
 					log_msg("");
 					log_msg(TERM_COLOR_YELLOW + _("Select snapshot to restore") + ":\n" + TERM_COLOR_RESET);
-					list_snapshots();
+					list_snapshots(true);
 					log_msg("");
 					
 					prompt_type = "snapshot-restore";
@@ -1977,7 +1978,7 @@ public class Main : GLib.Object{
 					prompt_break = false;
 					
 					while (prompt_user){
-						stdout.printf(TERM_COLOR_YELLOW + _("Enter snapshot number (a=Abort)") + ": " + TERM_COLOR_RESET);
+						stdout.printf(TERM_COLOR_YELLOW + _("Enter snapshot number (a=Abort, p=Previous, n=Next)") + ": " + TERM_COLOR_RESET);
 						stdout.flush();
 						while (snapshot_to_restore == null){
 							Thread.usleep((ulong) GLib.TimeSpan.MILLISECOND * 100);

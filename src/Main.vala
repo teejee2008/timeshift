@@ -2216,7 +2216,7 @@ public class Main : GLib.Object{
 			}
 		}
 
-		if (cmd_confirm == false){
+		if ((app_mode != "")&&(cmd_confirm == false)){
 			string msg = disclaimer_pre_restore();
 			msg += "\n";
 			msg = msg.replace("<b>",TERM_COLOR_RED).replace("</b>",TERM_COLOR_RESET);
@@ -2365,9 +2365,8 @@ public class Main : GLib.Object{
 				
 				sh += "echo '' \n";
 				sh += "echo '" + _("Cleaning up...") + "' \n";
+				sh += "sync \n";
 				sh += "for i in /dev /proc /run /sys; do umount -f \"%s$i\"; done \n".printf(target_path);
-				
-				//sync file system
 				sh += "sync \n";
 			}
 			
@@ -2409,41 +2408,58 @@ public class Main : GLib.Object{
 		
 			//run the script --------------------
 			
-			if (restore_current_system){
-				temp_script = create_temp_bash_script(sh);
-				ret_val = execute_bash_script_fullscreen_sync(temp_script);
-				
-				if (ret_val == -1){
-					string msg = _("Failed to find a terminal emulator on this system!") + "\n";
-					msg += _("Please install one of the following terminal emulators and try again") + ":\n";
-					msg += "xfce4-terminal gnome-terminal xterm konsole\n\n";
-					msg += _("No changes were made to system.");
-					
-					log_error(msg);
-
-					string title = _("Error");
-					gtk_messagebox(title, msg, null, true);
-
-					thr_success = false;
-					thr_running = false;
-					return;
-				}
+			if (snapshot_to_restore != null){
+				log_msg(_("Restoring snapshot..."));
 			}
 			else{
-				if (snapshot_to_restore != null){
-					log_msg(_("Restoring snapshot..."));
+				log_msg(_("Cloning system..."));
+			}
+				
+			if (app_mode == ""){ //gui
+				if (restore_current_system){
+					//current system, gui, fullscreen
+					temp_script = create_temp_bash_script(sh);
+					ret_val = execute_bash_script_fullscreen_sync(temp_script);
+					
+					if (ret_val == -1){
+						string msg = _("Failed to find a terminal emulator on this system!") + "\n";
+						msg += _("Please install one of the following terminal emulators and try again") + ":\n";
+						msg += "xfce4-terminal gnome-terminal xterm konsole\n\n";
+						msg += _("No changes were made to system.");
+						
+						log_error(msg);
+
+						string title = _("Error");
+						gtk_messagebox(title, msg, null, true);
+
+						thr_success = false;
+						thr_running = false;
+						return;
+					}
 				}
 				else{
-					log_msg(_("Cloning system..."));
+					//other system, gui
+					string std_out, std_err;
+					ret_val = execute_script_sync_get_output(sh, out std_out, out std_err);
+					log_msg_to_file(std_out);
+					log_msg_to_file(std_err);
 				}
-		
-				string std_out;
-				string std_err;
-				ret_val = execute_command_script_sync(sh,out std_out, out std_err);
-				log_msg(std_out);
-				log_msg(std_err);
 			}
-			
+			else{ //console
+				if (cmd_verbose){
+					//current/other system, console, verbose
+					ret_val = execute_script_sync(sh, false);
+					log_empty_line();
+				}
+				else{
+					//current/other system, console, quiet
+					string std_out, std_err;
+					ret_val = execute_script_sync_get_output(sh, out std_out, out std_err);
+					log_msg_to_file(std_out);
+					log_msg_to_file(std_err);
+				}
+			}
+
 			//check for errors ----------------------
 			
 			if (ret_val != 0){
@@ -2545,6 +2561,8 @@ public class Main : GLib.Object{
 				//create folders for mount points in /etc/fstab to prevent mount errors during boot ---------
 				
 				foreach(FsTabEntry fstab_entry in fstab_list){
+					if (fstab_entry.mount_point.length == 0){ continue; }
+
 					string mount_path = target_path + fstab_entry.mount_point[1:fstab_entry.mount_point.length];
 					if (fstab_entry.is_comment || fstab_entry.is_empty_line || (mount_path.length == 0)){ continue; }
 

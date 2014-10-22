@@ -79,7 +79,7 @@ namespace TeeJee.Logging{
 		msg += "\n";
 		
 		stdout.printf (msg);
-		
+
 		try {
 			if (dos_log != null){
 				dos_log.put_string ("[%s] %s\n".printf(timestamp(), message));
@@ -89,7 +89,18 @@ namespace TeeJee.Logging{
 			stdout.printf (e.message);
 		}
 	}
-
+	
+	public void log_msg_to_file (string message, bool highlight = false){
+		try {
+			if (dos_log != null){
+				dos_log.put_string ("[%s] %s\n".printf(timestamp(), message));
+			}
+		} 
+		catch (Error e) {
+			stdout.printf (e.message);
+		}
+	}
+	
 	public void log_error (string message, bool highlight = true, bool is_warning = false){
 		if (!LOG_ENABLE) { return; }
 		
@@ -696,10 +707,7 @@ namespace TeeJee.Devices{
 			
 			cmd = "df -T -BM" + ((device_or_mount_point.length > 0) ? " \"%s\"".printf(device_or_mount_point): "");
 			ret_val = execute_command_script_sync(cmd, out std_out, out std_err);
-			if (ret_val != 0){
-				log_error ("df: " + _("Failed to get partition list"));
-				return map; //return empty map
-			}
+			//ret_val is not reliable, no need to check
 			
 			/*
 			sample output
@@ -1596,6 +1604,91 @@ namespace TeeJee.ProcessManagement{
 			    out exit_code
 			    );
 			    
+			return exit_code;
+		}
+		catch (Error e){
+	        log_error (e.message);
+	        return -1;
+	    }
+	}
+
+	public int execute_script_sync_get_output (string script, out string std_out, out string std_err){
+				
+		/* Executes commands synchronously
+		 * Returns exit code, output messages and error messages.
+		 * Commands are written to a temporary bash script and executed. */
+		
+		string path = create_temp_bash_script(script);
+
+		try {
+			
+			string[] argv = new string[1];
+			argv[0] = path;
+		
+			int exit_code;
+			
+			Process.spawn_sync (
+			    TEMP_DIR, //working dir
+			    argv, //argv
+			    null, //environment
+			    SpawnFlags.SEARCH_PATH,
+			    null,   // child_setup
+			    out std_out,
+			    out std_err,
+			    out exit_code
+			    );
+			    
+			return exit_code;
+		}
+		catch (Error e){
+	        log_error (e.message);
+	        return -1;
+	    }
+	}
+	
+	public int execute_script_sync(string script, bool suppress_output){
+				
+		/* Executes commands synchronously
+		 * Returns exit code, output messages and error messages.
+		 * Commands are written to a temporary bash script and executed. */
+		
+		string path = create_temp_bash_script(script);
+
+		try {
+			
+			string[] argv = new string[1];
+			argv[0] = path;
+		
+			int exit_code;
+			string std_out, std_err;
+			
+			if (suppress_output){
+				//output will be suppressed
+				Process.spawn_sync (
+					TEMP_DIR, //working dir
+					argv, //argv
+					null, //environment
+					SpawnFlags.SEARCH_PATH,
+					null,        //child_setup
+					out std_out, //stdout
+					out std_err, //stderr
+					out exit_code
+					);
+			}
+			else{
+				//output will be displayed on terminal window if visible
+				Process.spawn_sync (
+					TEMP_DIR, //working dir
+					argv, //argv
+					null, //environment
+					SpawnFlags.SEARCH_PATH,
+					null, //child_setup
+					null, //stdout
+					null, //stderr
+					out exit_code
+					);
+			}
+
 			return exit_code;
 		}
 		catch (Error e){

@@ -144,6 +144,22 @@ namespace TeeJee.Logging{
 			}
 		}
 	}
+	
+	public void log_empty_line(){
+		if (!LOG_ENABLE) { return; }
+			
+		stdout.printf ("\n");
+		stdout.flush();
+
+		try {
+			if (dos_log != null){
+				dos_log.put_string ("\n");
+			}
+		} 
+		catch (Error e) {
+			stdout.printf (e.message);
+		}
+	}
 }
 
 namespace TeeJee.FileSystem{
@@ -1694,6 +1710,37 @@ namespace TeeJee.ProcessManagement{
 		}
 		
 		return -1;
+	}
+	
+	public int[] get_pid_by_command (string proc_name, string command){
+				
+		/* Get the process IDs for given process name and command string */
+		
+		int[] proc_list = {};
+		
+		//'ps' output strips double and single quotes so we will remove it too for matching with output
+		string cmd = command.replace("\"","").replace("'",""); 
+
+		try{
+			Regex rex = new Regex("""^[ \t]*([0-9]*)[ \t]*""");
+			MatchInfo match;
+			
+			string txt = execute_command_sync_get_output ("ps ew -C " + proc_name); //ew = all users 
+			
+			log_msg(txt);
+			foreach(string line in txt.split("\n")){
+				if (line.index_of(cmd) != -1){
+					if (rex.match (line, 0, out match)){
+						proc_list += int.parse(match.fetch(1).strip());
+					}
+				}
+			}
+		} 
+		catch (Error e) { 
+			log_error (e.message); 
+		}
+		
+		return proc_list;
 	}
 	
 	public bool process_is_running(long pid){

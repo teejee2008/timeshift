@@ -24,7 +24,6 @@
 using GLib;
 using Gtk;
 using Gee;
-using Soup;
 using Json;
 
 using TeeJee.Logging;
@@ -93,12 +92,13 @@ public class Main : GLib.Object{
 	public int count_boot = 5;
 
 	public string app_mode = "";
-	public bool is_ondemand = false;
-
-	public string snapshot_comments = "";
-	public bool is_success = false;
-	public bool in_progress = false;
-
+	
+	//global vars for controlling threads
+	public bool thr_success = false;
+	public bool thr_running = false;
+	public int thr_retval = -1;
+	public string thr_arg1 = "";
+	
 	public int startup_delay_interval_mins = 10;
 	public int retain_snapshots_max_days = 200;
 	public int minimum_free_disk_space_mb = 2048;
@@ -121,17 +121,20 @@ public class Main : GLib.Object{
 	public string cmd_backup_device = "";
 	public string cmd_snapshot = "";
 	public bool cmd_confirm = false;
+	public bool cmd_verbose = true;
 	
 	public string progress_text = "";
 	public string prompt_type = "";
 	public bool prompt_user = false;
 	public bool prompt_break = false;
 	public int snapshot_list_start_index = 0;
-	
+
 	//initialization
 
 	public static int main (string[] args) {
-
+		
+		
+		
 		set_locale();
 
 		//show help and exit
@@ -165,6 +168,7 @@ public class Main : GLib.Object{
 		*/
 
 		App = new Main(args);
+
 		bool success = App.start_application(args);
 		App.exit_app();
 		
@@ -226,7 +230,6 @@ public class Main : GLib.Object{
 			}
 		} 
 		catch (Error e) {
-			is_success = false;
 			log_error (e.message);
 		}
 
@@ -348,6 +351,16 @@ public class Main : GLib.Object{
 			case "restore":
 				start_input_thread();
 				is_success = restore_snapshot();
+				return is_success;
+
+			case "delete":
+				start_input_thread();
+				is_success = delete_snapshot();
+				return is_success;
+
+			case "delete-all":
+				start_input_thread();
+				is_success = delete_all_snapshots();
 				return is_success;
 				
 			case "ondemand":
@@ -677,10 +690,16 @@ public class Main : GLib.Object{
 		msg += "  --grub[-device] <device>   " + _("Specify device for installing GRUB2 bootloader") + "\n";
 		msg += "  --skip-grub                " + _("Skip GRUB2 reinstall") + "\n";
 		msg += "\n";
+		msg += _("Delete") + ":\n";
+		msg += "  --delete                   " + _("Delete snapshot") + "\n";
+		msg += "  --delete-all               " + _("Delete all snapshots") + "\n";
+		msg += "\n";
 		msg += _("Global") + ":\n";
 		msg += "  --backup-device <device>   " + _("Specify backup device") + "\n";
 		msg += "  --yes                      " + _("Answer YES to all confirmation prompts") + "\n";
 		msg += "  --debug                    " + _("Show additional debug messages") + "\n";
+		msg += "  --verbose                  " + _("Show rsync output (default)") + "\n";
+		msg += "  --quiet                    " + _("Hide rsync output") + "\n";
 		msg += "  --help                     " + _("Show all options") + "\n";
 		msg += "\n";
 		
@@ -691,6 +710,8 @@ public class Main : GLib.Object{
 		msg += "timeshift --backup-now \n";
 		msg += "timeshift --restore \n";
 		msg += "timeshift --restore --snapshot '2014-10-12_16-29-08' --target /dev/sda1 --skip-grub\n";
+		msg += "timeshift --delete  --snapshot '2014-10-12_16-29-08'\n";
+		msg += "timeshift --delete-all \n";
 		msg += "\n";
 		
 		msg += _("Notes") + ":\n";
@@ -711,7 +732,15 @@ public class Main : GLib.Object{
 				case "--backup":
 					app_mode = "backup";
 					break;
+					
+				case "--delete":
+					app_mode = "delete";
+					break;
 
+				case "--delete-all":
+					app_mode = "delete-all";
+					break;
+					
 				case "--restore":
 					app_mode = "restore";
 					break;
@@ -723,7 +752,15 @@ public class Main : GLib.Object{
 				case "--skip-grub":
 					cmd_skip_grub = true;
 					break;
+				
+				case "--verbose":
+					cmd_verbose = true;
+					break;
 
+				case "--quiet":
+					cmd_verbose = false;
+					break;
+					
 				case "--yes":
 					cmd_confirm = true;
 					break;
@@ -781,6 +818,7 @@ public class Main : GLib.Object{
 			//Initialize GTK
 			Gtk.init(ref args);
 		}
+		
 	}
 	
 	public void start_input_thread(){
@@ -804,8 +842,12 @@ public class Main : GLib.Object{
 
 		switch(app_mode){
 			case "restore":
+			case "delete":
 				switch (prompt_type){
 					case "snapshot-restore":
+					case "snapshot-delete":
+						TimeShiftBackup selected_snapshot = null;
+					
 						if (line.down() == "a"){
 							log_msg("Aborted.");
 							exit_app();
@@ -843,8 +885,7 @@ public class Main : GLib.Object{
 							int64 index;
 							if (int64.try_parse(line, out index)){
 								if (index < snapshot_list.size){
-									prompt_user = false;
-									snapshot_to_restore = snapshot_list[(int) index];
+									selected_snapshot = snapshot_list[(int) index];
 								}
 								else{
 									log_error("Invalid input");
@@ -855,6 +896,23 @@ public class Main : GLib.Object{
 								log_error("Invalid input");
 								prompt_break = true;
 							}
+						}
+						
+						switch (prompt_type){
+							case "snapshot-restore":
+								if (selected_snapshot != null){
+									prompt_user = false;
+									snapshot_to_restore = selected_snapshot;
+									prompt_type = ""; //exit current prompt mode
+								}
+								break;
+							case "snapshot-delete":
+								if (selected_snapshot != null){
+									prompt_user = false;
+									snapshot_to_delete = selected_snapshot;
+									prompt_type = ""; //exit current prompt mode
+								}
+								break;
 						}
 						break;
 						
@@ -876,6 +934,7 @@ public class Main : GLib.Object{
 									restore_target = pi;
 									found = true;
 									prompt_user = false;
+									prompt_type = ""; //exit current prompt mode
 									break;
 								}
 								else {
@@ -884,6 +943,7 @@ public class Main : GLib.Object{
 											restore_target = pi;
 											found = true;
 											prompt_user = false;
+											prompt_type = ""; //exit current prompt mode
 											break;
 										}
 									}
@@ -906,6 +966,7 @@ public class Main : GLib.Object{
 										restore_target = pi;
 										prompt_user = false;
 										found = true;
+										prompt_type = ""; //exit current prompt mode
 										break;
 									}
 								}
@@ -934,6 +995,7 @@ public class Main : GLib.Object{
 									grub_device = dev.device;
 									found = true;
 									prompt_user = false;
+									prompt_type = ""; //exit current prompt mode
 									break;
 								}
 								else {
@@ -942,6 +1004,7 @@ public class Main : GLib.Object{
 											grub_device = dev.device;
 											found = true;
 											prompt_user = false;
+											prompt_type = ""; //exit current prompt mode
 											break;
 										}
 									}
@@ -963,6 +1026,7 @@ public class Main : GLib.Object{
 										grub_device = entry.device;
 										prompt_user = false;
 										found = true;
+										prompt_type = ""; //exit current prompt mode
 										break;
 									}
 								}
@@ -988,11 +1052,13 @@ public class Main : GLib.Object{
 							cmd_skip_grub = false;
 							reinstall_grub2 = true;
 							prompt_user = false;
+							prompt_type = ""; //exit current prompt mode
 						}
 						else if (line.down() == "n"){
 							cmd_skip_grub = true;
 							reinstall_grub2 = false;
 							prompt_user = false;
+							prompt_type = ""; //exit current prompt mode
 						}
 						else if ((line == null)||(line.length == 0)){
 							log_error("Invalid input");
@@ -1017,6 +1083,7 @@ public class Main : GLib.Object{
 						else if (line.down() == "y"){
 							cmd_confirm = true;
 							prompt_user = false;
+							prompt_type = ""; //exit current prompt mode
 						}
 						else if ((line == null)||(line.length == 0)){
 							log_error("Invalid input");
@@ -1120,38 +1187,14 @@ public class Main : GLib.Object{
 	
 	//backup
 	
-	public bool take_snapshot(bool ondemand = false, string comments = ""){
+	public bool take_snapshot (bool is_ondemand = false, string snapshot_comments = ""){
 		if (check_btrfs_root_layout() == false){
 			return false;
 		}
-
-		in_progress = true;
 		
-		is_ondemand = ondemand;
-		snapshot_comments = comments;
-		
-		try {
-			is_success = false;
-			Thread.create<void> (take_snapshot_thread, true);
-
-			while (in_progress){
-				gtk_do_events ();
-				Thread.usleep((ulong) GLib.TimeSpan.MILLISECOND * 100);
-			}
-		} catch (Error e) {
-			is_success = false;
-			log_error (e.message);
-		}
-		
-		in_progress = false;
-		
-		return is_success;
-	}
-	
-	public void take_snapshot_thread(){
 		bool status;
 		bool update_symlinks = false;
-		
+
 		try
 		{
 			//create a timestamp
@@ -1159,9 +1202,7 @@ public class Main : GLib.Object{
 
 			//mount_backup_device
 			if (!mount_backup_device()){
-				is_success = false;
-				in_progress = false;
-				return; 
+				return false;
 			}
 			
 			//check backup device
@@ -1173,9 +1214,7 @@ public class Main : GLib.Object{
 				if (status_code == 2){
 					log_error(msg);
 					log_error(_("Please take the first snapshot by running 'sudo timeshift --backup-now'"));
-					is_success = false;
-					in_progress = false;
-					return;
+					return false;
 				}
 			}
 			
@@ -1184,9 +1223,7 @@ public class Main : GLib.Object{
 				is_scheduled = false;
 				log_error(msg);
 				log_error(_("Scheduled snapshots will be disabled till another device is selected."));
-				is_success = false;
-				in_progress = false;
-				return;
+				return false;
 			}
 
 			//create snapshot root if missing
@@ -1197,12 +1234,9 @@ public class Main : GLib.Object{
 
 			//ondemand
 			if (is_ondemand){
-				is_success = backup_and_rotate ("ondemand",now);
-				if(!is_success){
-					log_error(_("On-demand snapshot failed!"));
-					is_success = false;
-					in_progress = false;
-					return;
+				bool ok = backup_and_rotate ("ondemand",now);
+				if(!ok){
+					return false;
 				}
 				else{
 					update_symlinks = true;
@@ -1240,9 +1274,7 @@ public class Main : GLib.Object{
 						status = backup_and_rotate ("boot",now);
 						if(!status){
 							log_error(_("Boot snapshot failed!"));
-							is_success = false;
-							in_progress = false;
-							return;
+							return false;
 						}
 						else{
 							update_symlinks = true;
@@ -1272,9 +1304,7 @@ public class Main : GLib.Object{
 						status = backup_and_rotate ("hourly",now);
 						if(!status){
 							log_error(_("Hourly snapshot failed!"));
-							is_success = false;	
-							in_progress = false;				
-							return;
+							return false;
 						}
 						else{
 							update_symlinks = true;
@@ -1304,9 +1334,7 @@ public class Main : GLib.Object{
 						status = backup_and_rotate ("daily",now);
 						if(!status){
 							log_error(_("Daily snapshot failed!"));
-							is_success = false;
-							in_progress = false;
-							return;
+							return false;
 						}
 						else{
 							update_symlinks = true;
@@ -1336,9 +1364,7 @@ public class Main : GLib.Object{
 						status = backup_and_rotate ("weekly",now);
 						if(!status){
 							log_error(_("Weekly snapshot failed!"));
-							is_success = false;
-							in_progress = false;
-							return;
+							return false;
 						}
 						else{
 							update_symlinks = true;
@@ -1368,9 +1394,7 @@ public class Main : GLib.Object{
 						status = backup_and_rotate ("monthly",now);
 						if(!status){
 							log_error(_("Monthly snapshot failed!"));
-							is_success = false;
-							in_progress = false;
-							return;
+							return false;
 						}
 						else{
 							update_symlinks = true;
@@ -1393,21 +1417,17 @@ public class Main : GLib.Object{
 		}
 		catch(Error e){
 			log_error (e.message);
-			is_success = false;
-			in_progress = false;
-			return;
+			return false;
 		}
-		
-		is_success = true;
-		in_progress = false;
-		return;
+
+		return true;
 	}
 	
 	public bool backup_and_rotate(string tag, DateTime dt_created){
 		string cmd = "";
 		string std_out;
 		string std_err;
-		int ret_val;
+		int ret_val = -1;
 		string msg;
 		File f;
 
@@ -1431,17 +1451,8 @@ public class Main : GLib.Object{
 					progress_text = _("Cleaning up...");
 					log_msg(progress_text);
 					
-					cmd = "rm -rf \"%s\"".printf(sync_path);
-					
-					if (LOG_COMMANDS) { log_debug(cmd); }
-					
-					Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-					if (ret_val != 0){
-						log_error(_("Failed to delete incomplete snapshot") + ": '.sync'");
+					if (!delete_directory(sync_path)){
 						return false;
-					}
-					else{
-						log_msg(_("Deleted incomplete snapshot") + ": '.sync'");
 					}
 				}
 			}
@@ -1584,17 +1595,14 @@ public class Main : GLib.Object{
 					f.delete();
 				}
 			
-				cmd = "rsync -ai --delete --numeric-ids --stats --relative --delete-excluded";
+				cmd = "rsync -ai %s --delete --numeric-ids --stats --relative --delete-excluded".printf(cmd_verbose ? "--verbose" : "--quiet");
 				cmd += " --log-file=\"%s\"".printf(log_path);
 				cmd += " --exclude-from=\"%s\"".printf(list_file);
 				cmd += " /. \"%s\"".printf(sync_path + "/localhost/");
-				
-				if (LOG_COMMANDS) { log_debug(cmd); }
 
-				Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
+				ret_val = run_rsync(cmd);
 
 				if (ret_val != 0){
-					log_error (std_err);
 					log_error(_("rsync returned an error") + ": %d".printf(ret_val));
 					log_error(_("Failed to create new snapshot"));
 					return false;
@@ -1611,8 +1619,9 @@ public class Main : GLib.Object{
 						
 				string new_name = time_stamp; 
 				string new_path = snapshot_dir + "/" + new_name; 
-				cmd = "cp -alp \"%s\" \"%s\"".printf(sync_path, new_path);
 
+				cmd = "cp -alp \"%s\" \"%s\"".printf(sync_path, new_path);
+				
 				if (LOG_COMMANDS) { log_debug(cmd); }
 
 				Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
@@ -1621,7 +1630,7 @@ public class Main : GLib.Object{
 					log_error (std_err);
 					return false;
 				}
-				
+
 				DateTime dt_end = new DateTime.now_local();
 				TimeSpan elapsed = dt_end.difference(dt_begin);
 				long seconds = (long)(elapsed * 1.0 / TimeSpan.SECOND);
@@ -1640,6 +1649,48 @@ public class Main : GLib.Object{
 		}
 
 		return true;
+	}
+
+	public int run_rsync(string cmd){
+		thr_arg1 = cmd;
+		
+		try {
+			thr_running = true;
+			Thread.create<void> (run_rsync_thread, true);
+
+			while (thr_running){
+				gtk_do_events ();
+				Thread.usleep((ulong) GLib.TimeSpan.MILLISECOND * 100);
+			}
+		} catch (Error e) {
+			log_error (e.message);
+			thr_retval = -1;
+		}
+
+		return thr_retval;
+	}
+
+	public void run_rsync_thread(){
+		if (LOG_COMMANDS) { log_debug(thr_arg1); }
+		
+		int ret_val = -1;
+
+		try{
+			if (cmd_verbose){ log_empty_line(); }
+			Process.spawn_command_line_sync(thr_arg1, null, null, out ret_val);
+			if (cmd_verbose){ log_empty_line(); }
+		}
+		catch(Error e){
+			log_error (e.message);
+			thr_success = false;
+			thr_running = false;
+			thr_retval = -1;
+			return;
+		}
+
+		thr_retval = ret_val;
+		thr_success = (ret_val == 0);
+		thr_running = false;
 	}
 
 	public void auto_delete_backups(){
@@ -2189,24 +2240,24 @@ public class Main : GLib.Object{
 		LOG_TIMESTAMP = true;
 		
 		try {
-			in_progress = true;
-			is_success = false;
+			thr_running = true;
+			thr_success = false;
 			Thread.create<void> (restore_snapshot_thread, true);
 		} 
 		catch (ThreadError e) {
-			in_progress = false;
-			is_success = false;
+			thr_running = false;
+			thr_success = false;
 			log_error (e.message);
 		}
 		
-		while (in_progress){
+		while (thr_running){
 			gtk_do_events ();
 			Thread.usleep((ulong) GLib.TimeSpan.MILLISECOND * 100);
 		}
 		
 		snapshot_to_restore = null;
 		
-		return is_success;
+		return thr_success;
 	}
 	
 	public string disclaimer_pre_restore(){
@@ -2231,8 +2282,6 @@ public class Main : GLib.Object{
 		string sh = "";
 		int ret_val = -1;
 		string temp_script;
-
-		in_progress = true;
 
 		try{
 			
@@ -2375,8 +2424,8 @@ public class Main : GLib.Object{
 					string title = _("Error");
 					gtk_messagebox(title, msg, null, true);
 
-					is_success = false;
-					in_progress = false;
+					thr_success = false;
+					thr_running = false;
 					return;
 				}
 			}
@@ -2399,13 +2448,13 @@ public class Main : GLib.Object{
 			
 			if (ret_val != 0){
 				log_error(_("Restore failed with exit code") + ": %d".printf(ret_val));
-				is_success = false;
-				in_progress = false;
+				thr_success = false;
+				thr_running = false;
 			}
 			else{
 				log_msg(_("Restore completed without errors"));
-				is_success = true;
-				in_progress = false;
+				thr_success = true;
+				thr_running = false;
 			}
 	
 			//update /etc/fstab when restoring to another device --------------------
@@ -2511,8 +2560,8 @@ public class Main : GLib.Object{
 		}
 		catch(Error e){
 			log_error (e.message);
-			is_success = false;
-			in_progress = false;
+			thr_success = false;
+			thr_running = false;
 		}
 	}
 
@@ -2617,27 +2666,91 @@ public class Main : GLib.Object{
 
 	//delete
 	
-	public bool delete_snapshot(TimeShiftBackup bak){
-		snapshot_to_delete = bak;
+	public bool delete_snapshot(TimeShiftBackup? snapshot = null){
+		bool found = false;
+		snapshot_to_delete = snapshot;
+
+		//set snapshot -----------------------------------------------
+
+		if (app_mode != ""){ //command-line mode
+			
+			if (cmd_snapshot.length > 0){ 
+				
+				//check command line arguments
+				found = false;
+				foreach(TimeShiftBackup bak in snapshot_list) {
+					if (bak.name == cmd_snapshot){
+						snapshot_to_delete = bak;
+						found = true;
+						break;
+					}
+				}
+				
+				//check if found
+				if (!found){
+					log_error(_("Could not find snapshot") + ": '%s'".printf(cmd_snapshot));
+					return false;
+				}
+			}
+			
+			//prompt user for snapshot
+			if (snapshot_to_delete == null){
+				
+				if (snapshot_list.size == 0){
+					log_error(_("No snapshots found on device") + ": '%s'".printf(snapshot_device.device));
+					return false;
+				}
+				
+				LOG_TIMESTAMP = false;
+								
+				log_msg("");
+				log_msg(TERM_COLOR_YELLOW + _("Select snapshot to delete") + ":\n" + TERM_COLOR_RESET);
+				list_snapshots(true);
+				log_msg("");
+				
+				prompt_type = "snapshot-delete";
+				prompt_user = true;
+				prompt_break = false;
+				
+				while (prompt_user){
+					stdout.printf(TERM_COLOR_YELLOW + _("Enter snapshot number (a=Abort, p=Previous, n=Next)") + ": " + TERM_COLOR_RESET);
+					stdout.flush();
+					while (snapshot_to_delete == null){
+						Thread.usleep((ulong) GLib.TimeSpan.MILLISECOND * 100);
+						if (prompt_break){  break; }
+					}
+					prompt_break = false;
+				}
+				log_msg("");
+				
+				LOG_TIMESTAMP = true;
+			}
+		}
 		
+		if (snapshot_to_delete == null){
+			//print error
+			log_error(_("Snapshot to delete not specified!"));
+			return false;
+		}
+
 		try {
-			in_progress = true;
-			is_success = false;
+			thr_running = true;
+			thr_success = false;
 			Thread.create<void> (delete_snapshot_thread, true);
 		} catch (ThreadError e) {
-			in_progress = false;
-			is_success = false;
+			thr_running = false;
+			thr_success = false;
 			log_error (e.message);
 		}
 		
-		while (in_progress){
+		while (thr_running){
 			gtk_do_events ();
 			Thread.usleep((ulong) GLib.TimeSpan.MILLISECOND * 100);
 		}
 		
 		snapshot_to_delete = null;
 		
-		return is_success;
+		return thr_success;
 	}
 	
 	public void delete_snapshot_thread(){
@@ -2646,8 +2759,8 @@ public class Main : GLib.Object{
 		string std_err;
 		int ret_val;
 
-		in_progress = true;
-
+		log_msg(_("Removing snapshot") + " '%s'...".printf(snapshot_to_delete.name));
+		
 		try{
 			var f = File.new_for_path(snapshot_to_delete.path);
 			if(f.query_exists()){
@@ -2658,72 +2771,125 @@ public class Main : GLib.Object{
 				Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
 				
 				if (ret_val != 0){
-					log_error(_("Unable to delete") + ": '%s'".printf(snapshot_to_delete.name));
-					is_success = false;
-					in_progress = false;
+					log_error(_("Failed to remove") + ": '%s'".printf(snapshot_to_delete.path));
+					thr_success = false;
+					thr_running = false;
 					return;
 				}
 				else{
-					log_msg(_("Snapshot deleted") + ": '%s'".printf(snapshot_to_delete.name));
-					is_success = true;
-					in_progress = false;
+					log_msg(_("Removed") + ": '%s'".printf(snapshot_to_delete.path));
+					thr_success = true;
+					thr_running = false;
 					return;
 				}
+			}
+			else{
+				log_error(_("Directory not found") + ": '%s'".printf(snapshot_to_delete.path));
+				thr_success = true;
+				thr_running = false;
 			}
 		}
 		catch(Error e){
 			log_error (e.message);
-			is_success = false;
-			in_progress = false;
+			thr_success = false;
+			thr_running = false;
 			return;
 		}
-		
-		in_progress = false;
 	}
 
 	public bool delete_all_snapshots(){
+		string timeshift_dir = mount_point_backup + "/timeshift";
+		string sync_dir = mount_point_backup + "/timeshift/snapshots/.sync";
+		
+		if (dir_exists(timeshift_dir)){ 
+			//delete snapshots
+			foreach(TimeShiftBackup bak in snapshot_list){
+				if (!delete_snapshot(bak)){ 
+					return false; 
+				}
+			}
+			
+			//delete .sync
+			if (dir_exists(sync_dir)){
+				if (!delete_directory(sync_dir)){ 
+					return false; 
+				}
+			}
+			
+			//delete /timeshift
+			return delete_directory(timeshift_dir);
+		}
+		else{
+			log_msg(("No snapshots found on device '%s'").printf(snapshot_device.device));
+			return true; 
+		}
+	}
+
+	public bool delete_directory(string dir_path){
+		thr_arg1 = dir_path;
+		
+		try {
+			thr_running = true;
+			thr_success = false;
+			Thread.create<void> (delete_directory_thread, true);
+		} catch (ThreadError e) {
+			thr_running = false;
+			thr_success = false;
+			log_error (e.message);
+		}
+		
+		while (thr_running){
+			gtk_do_events ();
+			Thread.usleep((ulong) GLib.TimeSpan.MILLISECOND * 100);
+		}
+		
+		thr_arg1 = null;
+		
+		return thr_success;
+	}
+	
+	public void delete_directory_thread(){
 		string cmd = "";
 		string std_out;
 		string std_err;
 		int ret_val;
-		bool success;
-		
-		//delete snapshots
-		foreach(TimeShiftBackup bak in snapshot_list){
-			success = delete_snapshot(bak);
-			if (!success){ return success; }
-		}
-		
-		//delete .sync
-		TimeShiftBackup bak_sync = new TimeShiftBackup(mount_point_backup + "/timeshift/snapshots/.sync");
-		success = delete_snapshot(bak_sync);
-		if (!success){ return success; }
-		
-		//delete /timeshift directory ------------
-		
+
 		try{
-			string timeshift_dir = mount_point_backup + "/timeshift";
-			
-			cmd = "rm -rf \"%s\"".printf(timeshift_dir);
-			
-			if (LOG_COMMANDS) { log_debug(cmd); }
-					
-			Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-			
-			if (ret_val != 0){
-				log_error(_("Unable to delete") + ": '%s'".printf(timeshift_dir));
-				return false;
+			var f = File.new_for_path(thr_arg1);
+			if(f.query_exists()){
+				cmd = "rm -rf \"%s\"".printf(thr_arg1);
+				
+				if (LOG_COMMANDS) { log_debug(cmd); }
+				
+				Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
+				
+				if (ret_val != 0){
+					log_error(_("Failed to remove") + ": '%s'".printf(thr_arg1));
+					thr_success = false;
+					thr_running = false;
+					return;
+				}
+				else{
+					log_msg(_("Removed") + ": '%s'".printf(thr_arg1));
+					thr_success = true;
+					thr_running = false;
+					return;
+				}
 			}
 			else{
-				log_msg(_("Deleted") + ": '%s'".printf(timeshift_dir));
-				return true;
+				log_error(_("Directory not found") + ": '%s'".printf(thr_arg1));
+				thr_success = true;
+				thr_running = false;
 			}
 		}
 		catch(Error e){
 			log_error (e.message);
-			return false;
+			thr_success = false;
+			thr_running = false;
+			return;
 		}
 	}
+
 
 	//app config
 	
@@ -3283,16 +3449,16 @@ public class Main : GLib.Object{
 		}
 		
 		try {
-			in_progress = true;
-			is_success = false;
+			thr_running = true;
+			thr_success = false;
 			Thread.create<void> (calculate_size_of_first_snapshot_thread, true);
 		} catch (ThreadError e) {
-			in_progress = false;
-			is_success = false;
+			thr_running = false;
+			thr_success = false;
 			log_error (e.message);
 		}
 		
-		while (in_progress){
+		while (thr_running){
 			gtk_do_events ();
 			Thread.usleep((ulong) GLib.TimeSpan.MILLISECOND * 100);
 		}
@@ -3301,7 +3467,7 @@ public class Main : GLib.Object{
 	}
 	
 	public void calculate_size_of_first_snapshot_thread(){
-		in_progress = true;
+		thr_running = true;
 		
 		string cmd = "";
 		string std_out;
@@ -3337,23 +3503,23 @@ public class Main : GLib.Object{
 				if (ret_val == 0){
 					required_space = long.parse(std_out.replace(",","").strip());
 					required_space = required_space / (1024 * 1024);
-					is_success = true;
+					thr_success = true;
 				}
 				else{
 					log_error (_("Failed to estimate system size"));
 					log_error (std_err);
-					is_success = false;
+					thr_success = false;
 				}
 			}
 			else{
 				log_error (_("Failed to estimate system size"));
 				log_error (std_err);
-				is_success = false;
+				thr_success = false;
 			}
 		}
 		catch(Error e){
 			log_error (e.message);
-			is_success = false;
+			thr_success = false;
 		}
 		
 		if ((required_space == 0) && (root_device != null)){
@@ -3364,7 +3530,7 @@ public class Main : GLib.Object{
 		
 		log_debug("First snapshot size: %ld MB".printf(required_space));
 		
-		in_progress = false;
+		thr_running = false;
 	}
 
 	//cron jobs

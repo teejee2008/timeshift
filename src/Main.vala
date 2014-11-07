@@ -1979,11 +1979,22 @@ public class Main : GLib.Object{
 		bool found = false;
 		LOG_TIMESTAMP = false;
 		
-		if (snapshot_device != null){
-			//print snapshot_device name
-			log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
-			log_msg(_("Backup Device") + ": %s".printf(snapshot_device.device), true);
-			log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
+		//set snapshot device -----------------------------------------------
+		
+		if (!mirror_system){
+			if (snapshot_device != null){
+				//print snapshot_device name
+				log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
+				log_msg(_("Backup Device") + ": %s".printf(snapshot_device.device), true);
+				log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
+				mount_backup_device();
+				update_snapshot_list();
+			}
+			else{
+				//print error
+				log_error(_("Backup device not specified!"));
+				return false;
+			}
 		}
 		
 		//set snapshot -----------------------------------------------
@@ -2119,6 +2130,7 @@ public class Main : GLib.Object{
 			log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
 			log_msg(_("Target Device") + ": %s".printf(restore_target.device), true);
 			log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
+			mount_target_device();
 		}
 		else{
 			//print error
@@ -2309,6 +2321,13 @@ public class Main : GLib.Object{
 			else{
 				restore_current_system = false;
 				target_path = mount_point_restore + "/";
+				
+				if (mount_point_restore.strip().length == 0){
+					log_error(_("Target device is not mounted"));
+					thr_success = false;
+					thr_running = false;
+					return;
+				}
 			}
 
 			//save exclude list for restore --------------
@@ -2556,7 +2575,7 @@ public class Main : GLib.Object{
 				}
 				write_file(fstab_path, text);
 				
-				log_msg(_("Updated /etc/fstab on target device"));
+				log_msg(_("Updated /etc/fstab on target device") + ": %s".printf(fstab_path));
 				
 				//create folders for mount points in /etc/fstab to prevent mount errors during boot ---------
 				
@@ -2573,8 +2592,7 @@ public class Main : GLib.Object{
 				}
 			}
 
-			//unmount if system is still up
-			unmount_target_device();
+			unmount_target_device(false);
 		}
 		catch(Error e){
 			log_error (e.message);

@@ -685,6 +685,7 @@ public class Main : GLib.Object{
 		msg += "\n";
 		msg += _("Restore") + ":\n";
 		msg += "  --restore                  " + _("Restore snapshot") + "\n";
+		msg += "  --clone                    " + _("Clone current system") + "\n";
 		msg += "  --snapshot <name>          " + _("Specify snapshot to restore") + "\n";
 		msg += "  --target[-device] <device> " + _("Specify target device") + "\n";
 		msg += "  --grub[-device] <device>   " + _("Specify device for installing GRUB2 bootloader") + "\n";
@@ -742,9 +743,15 @@ public class Main : GLib.Object{
 					break;
 					
 				case "--restore":
+					mirror_system = false;
 					app_mode = "restore";
 					break;
 					
+				case "--clone":
+					mirror_system = true;
+					app_mode = "restore";
+					break;
+
 				case "--backup-now":
 					app_mode = "ondemand";
 					break;
@@ -1134,7 +1141,7 @@ public class Main : GLib.Object{
 		}
 		
 		//add partitions
-		var list = App.partition_list;
+		var list = partition_list;
 		foreach(Device pi in list) {
 			if (!pi.has_linux_filesystem()) { continue; }
 			grub_device_list.add(pi);
@@ -2131,6 +2138,14 @@ public class Main : GLib.Object{
 			log_msg(_("Target Device") + ": %s".printf(restore_target.device), true);
 			log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
 			mount_target_device();
+			
+			bool status = mount_target_device();
+			if (status == false){
+				return false;
+			}
+			
+			mount_list.clear();
+			mount_list.add(new MountEntry(restore_target,"/"));
 		}
 		else{
 			//print error
@@ -3257,7 +3272,7 @@ public class Main : GLib.Object{
 						}
 					}
 					else{
-						App.update_partition_list();
+						update_partition_list();
 					}
 				}
 

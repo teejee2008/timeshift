@@ -124,17 +124,12 @@ public class Main : GLib.Object{
 	public bool cmd_verbose = true;
 	
 	public string progress_text = "";
-	public string prompt_type = "";
-	public bool prompt_user = false;
-	public bool prompt_break = false;
 	public int snapshot_list_start_index = 0;
 
 	//initialization
 
 	public static int main (string[] args) {
-		
-		
-		
+
 		set_locale();
 
 		//show help and exit
@@ -342,24 +337,21 @@ public class Main : GLib.Object{
 
 	public bool start_application(string[] args){
 		bool is_success = true;
-			
+
 		switch(app_mode){
 			case "backup":
 				is_success = take_snapshot();
 				return is_success;
 
 			case "restore":
-				start_input_thread();
 				is_success = restore_snapshot();
 				return is_success;
 
 			case "delete":
-				start_input_thread();
 				is_success = delete_snapshot();
 				return is_success;
 
 			case "delete-all":
-				start_input_thread();
 				is_success = delete_all_snapshots();
 				return is_success;
 				
@@ -827,284 +819,6 @@ public class Main : GLib.Object{
 		}
 		
 	}
-	
-	public void start_input_thread(){
-		try {
-			//start thread for reading user input
-			Thread.create<void> (wait_for_user_input_thread, true);
-		} catch (ThreadError e) {
-			log_error (e.message);
-		}
-	}
-	
-	private void wait_for_user_input_thread(){
-		while (true){  // loop runs for entire application lifetime
-			wait_for_user_input();
-		}
-	}
-	
-	private void wait_for_user_input(){
-		string? line = stdin.read_line();
-		line = (line != null) ? line.strip() : line;
-
-		switch(app_mode){
-			case "restore":
-			case "delete":
-				switch (prompt_type){
-					case "snapshot-restore":
-					case "snapshot-delete":
-						TimeShiftBackup selected_snapshot = null;
-					
-						if (line.down() == "a"){
-							log_msg("Aborted.");
-							exit_app();
-							exit(0);
-						}
-						else if (line.down() == "p"){
-							snapshot_list_start_index -= 10;
-							if (snapshot_list_start_index < 0){
-								snapshot_list_start_index = 0;
-							}
-							log_msg("");
-							list_snapshots(true);
-							log_msg("");
-							prompt_break = true;
-						}
-						else if (line.down() == "n"){
-							if ((snapshot_list_start_index + 10) < snapshot_list.size){
-								snapshot_list_start_index += 10;
-							}
-							log_msg("");
-							list_snapshots(true);
-							log_msg("");
-							prompt_break = true;
-						}
-						else if (line.contains("_")||line.contains("-")){
-							//TODO
-							log_error("Invalid input");
-							prompt_break = true;
-						}
-						else if ((line == null)||(line.length == 0)){
-							log_error("Invalid input");
-							prompt_break = true;
-						}
-						else{
-							int64 index;
-							if (int64.try_parse(line, out index)){
-								if (index < snapshot_list.size){
-									selected_snapshot = snapshot_list[(int) index];
-								}
-								else{
-									log_error("Invalid input");
-									prompt_break = true;
-								}
-							}
-							else{
-								log_error("Invalid input");
-								prompt_break = true;
-							}
-						}
-						
-						switch (prompt_type){
-							case "snapshot-restore":
-								if (selected_snapshot != null){
-									prompt_user = false;
-									snapshot_to_restore = selected_snapshot;
-									prompt_type = ""; //exit current prompt mode
-								}
-								break;
-							case "snapshot-delete":
-								if (selected_snapshot != null){
-									prompt_user = false;
-									snapshot_to_delete = selected_snapshot;
-									prompt_type = ""; //exit current prompt mode
-								}
-								break;
-						}
-						break;
-						
-					case "target-device":
-						if (line.down() == "a"){
-							log_msg("Aborted.");
-							exit_app();
-							exit(0);
-						}
-						else if ((line == null)||(line.length == 0)){
-							log_error("Invalid input");
-							prompt_break = true;
-						}
-						else if (line.contains("/")){
-							bool found = false;
-							foreach(Device pi in partition_list) {
-								if (!pi.has_linux_filesystem()) { continue; }
-								if (pi.device == line){
-									restore_target = pi;
-									found = true;
-									prompt_user = false;
-									prompt_type = ""; //exit current prompt mode
-									break;
-								}
-								else {
-									foreach(string symlink in pi.symlinks){
-										if (symlink == line){
-											restore_target = pi;
-											found = true;
-											prompt_user = false;
-											prompt_type = ""; //exit current prompt mode
-											break;
-										}
-									}
-									if (found){ break; }
-								}
-							}
-							if (!found){
-								log_error("Invalid input");
-								prompt_break = true;
-							}
-						}
-						else{
-							int64 index;
-							bool found = false;
-							if (int64.try_parse(line, out index)){
-								int i = -1;
-								foreach(Device pi in partition_list) {
-									if (!pi.has_linux_filesystem()) { continue; }
-									if (++i == index){
-										restore_target = pi;
-										prompt_user = false;
-										found = true;
-										prompt_type = ""; //exit current prompt mode
-										break;
-									}
-								}
-							}
-							if (!found){
-								log_error("Invalid input");
-								prompt_break = true;
-							}
-						}
-						break;
-						
-					case "grub-device":
-						if (line.down() == "a"){
-							log_msg("Aborted.");
-							exit_app();
-							exit(0);
-						}
-						else if ((line == null)||(line.length == 0)){
-							log_error("Invalid input");
-							prompt_break = true;
-						}
-						else if (line.contains("/")){
-							bool found = false;
-							foreach(Device dev in grub_device_list) {
-								if (dev.device == line){
-									grub_device = dev.device;
-									found = true;
-									prompt_user = false;
-									prompt_type = ""; //exit current prompt mode
-									break;
-								}
-								else {
-									foreach(string symlink in dev.symlinks){
-										if (symlink == line){
-											grub_device = dev.device;
-											found = true;
-											prompt_user = false;
-											prompt_type = ""; //exit current prompt mode
-											break;
-										}
-									}
-									if (found){ break; }
-								}
-							}
-							if (!found){
-								log_error("Invalid input");
-								prompt_break = true;
-							}
-						}
-						else{
-							int64 index;
-							bool found = false;
-							if (int64.try_parse(line, out index)){
-								int i = -1;
-								foreach(Device entry in grub_device_list) {
-									if (++i == index){
-										grub_device = entry.device;
-										prompt_user = false;
-										found = true;
-										prompt_type = ""; //exit current prompt mode
-										break;
-									}
-								}
-							}
-							if (!found){
-								log_error("Invalid input");
-								prompt_break = true;
-							}
-						}
-						break;
-						
-					case "grub-install":
-						if (line.down() == "a"){
-							log_msg("Aborted.");
-							exit_app();
-							exit(0);
-						}
-						else if ((line == null)||(line.length == 0)){
-							log_error("Invalid input");
-							prompt_break = true;
-						}
-						else if (line.down() == "y"){
-							cmd_skip_grub = false;
-							reinstall_grub2 = true;
-							prompt_user = false;
-							prompt_type = ""; //exit current prompt mode
-						}
-						else if (line.down() == "n"){
-							cmd_skip_grub = true;
-							reinstall_grub2 = false;
-							prompt_user = false;
-							prompt_type = ""; //exit current prompt mode
-						}
-						else if ((line == null)||(line.length == 0)){
-							log_error("Invalid input");
-							prompt_break = true;
-						}
-						else{
-							log_error("Invalid input");
-							prompt_break = true;
-						}
-						break;
-						
-					case "restore-confirm":
-						if ((line.down() == "a")||(line.down() == "n")){
-							log_msg("Aborted.");
-							exit_app();
-							exit(0);
-						}
-						else if ((line == null)||(line.length == 0)){
-							log_error("Invalid input");
-							prompt_break = true;
-						}
-						else if (line.down() == "y"){
-							cmd_confirm = true;
-							prompt_user = false;
-							prompt_type = ""; //exit current prompt mode
-						}
-						else if ((line == null)||(line.length == 0)){
-							log_error("Invalid input");
-							prompt_break = true;
-						}
-						else{
-							log_error("Invalid input");
-							prompt_break = true;
-						}
-						break;
-				}
-				break;
-		}
-	}
 
 	public void list_snapshots(bool paginate){
 		LOG_TIMESTAMP = false;
@@ -1160,6 +874,181 @@ public class Main : GLib.Object{
 			foreach(Device entry in grub_device_list) {
 				log_msg("%4d > %-15s ~ %s".printf(++index, entry.device, entry.description().split("~")[1].strip()));
 			}
+		}
+	}
+	
+	public Device read_stdin_device(Gee.ArrayList<Device> device_list){
+		string? line = stdin.read_line();
+		line = (line != null) ? line.strip() : line;
+		
+		Device selected_device = null;
+		
+		if (line.down() == "a"){
+			log_msg("Aborted.");
+			exit_app();
+			exit(0);
+		}
+		else if ((line == null)||(line.length == 0)){
+			log_error("Invalid input");
+		}
+		else if (line.contains("/")){
+			bool found = false;
+			foreach(Device pi in device_list) {
+				if (!pi.has_linux_filesystem()) { continue; }
+				if (pi.device == line){
+					selected_device = pi;
+					found = true;
+					break;
+				}
+				else {
+					foreach(string symlink in pi.symlinks){
+						if (symlink == line){
+							selected_device = pi;
+							found = true;
+							break;
+						}
+					}
+					if (found){ break; }
+				}
+			}
+			if (!found){
+				log_error("Invalid input");
+			}
+		}
+		else{
+			int64 index;
+			bool found = false;
+			if (int64.try_parse(line, out index)){
+				int i = -1;
+				foreach(Device pi in device_list) {
+					if ((pi.devtype == "partition") && !pi.has_linux_filesystem()) { continue; }
+					if (++i == index){
+						selected_device = pi;
+						found = true;
+						break;
+					}
+				}
+			}
+			if (!found){
+				log_error("Invalid input");
+			}
+		}
+		
+		return selected_device;
+	}
+
+	public TimeShiftBackup read_stdin_snapshot(){
+		string? line = stdin.read_line();
+		line = (line != null) ? line.strip() : line;
+		
+		TimeShiftBackup selected_snapshot = null;
+	
+		if (line.down() == "a"){
+			log_msg("Aborted.");
+			exit_app();
+			exit(0);
+		}
+		else if (line.down() == "p"){
+			snapshot_list_start_index -= 10;
+			if (snapshot_list_start_index < 0){
+				snapshot_list_start_index = 0;
+			}
+			log_msg("");
+			list_snapshots(true);
+			log_msg("");
+		}
+		else if (line.down() == "n"){
+			if ((snapshot_list_start_index + 10) < snapshot_list.size){
+				snapshot_list_start_index += 10;
+			}
+			log_msg("");
+			list_snapshots(true);
+			log_msg("");
+		}
+		else if (line.contains("_")||line.contains("-")){
+			//TODO
+			log_error("Invalid input");
+		}
+		else if ((line == null)||(line.length == 0)){
+			log_error("Invalid input");
+		}
+		else{
+			int64 index;
+			if (int64.try_parse(line, out index)){
+				if (index < snapshot_list.size){
+					selected_snapshot = snapshot_list[(int) index];
+				}
+				else{
+					log_error("Invalid input");
+				}
+			}
+			else{
+				log_error("Invalid input");
+			}
+		}
+		
+		return selected_snapshot;
+	}
+	
+	public bool read_stdin_grub_install(){
+		string? line = stdin.read_line();
+		line = (line != null) ? line.strip() : line;
+		
+		if (line.down() == "a"){
+			log_msg("Aborted.");
+			exit_app();
+			exit(0);
+			return true;
+		}
+		else if ((line == null)||(line.length == 0)){
+			log_error("Invalid input");
+			return false;
+		}
+		else if (line.down() == "y"){
+			cmd_skip_grub = false;
+			reinstall_grub2 = true;
+			return true;
+		}
+		else if (line.down() == "n"){
+			cmd_skip_grub = true;
+			reinstall_grub2 = false;
+			return true;
+		}
+		else if ((line == null)||(line.length == 0)){
+			log_error("Invalid input");
+			return false;
+		}
+		else{
+			log_error("Invalid input");
+			return false;
+		}
+	}
+
+	public bool read_stdin_restore_confirm(){
+		string? line = stdin.read_line();
+		line = (line != null) ? line.strip() : line;
+		
+		if ((line.down() == "a")||(line.down() == "n")){
+			log_msg("Aborted.");
+			exit_app();
+			exit(0);
+			return true;
+		}
+		else if ((line == null)||(line.length == 0)){
+			log_error("Invalid input");
+			return false;
+		}
+		else if (line.down() == "y"){
+			cmd_confirm = true;
+			return true;
+		}
+		else if ((line == null)||(line.length == 0)){
+			log_error("Invalid input");
+			return false;
+		}
+		else{
+			log_error("Invalid input");
+			return false;
 		}
 	}
 	
@@ -2041,19 +1930,11 @@ public class Main : GLib.Object{
 					log_msg(TERM_COLOR_YELLOW + _("Select snapshot to restore") + ":\n" + TERM_COLOR_RESET);
 					list_snapshots(true);
 					log_msg("");
-					
-					prompt_type = "snapshot-restore";
-					prompt_user = true;
-					prompt_break = false;
-					
-					while (prompt_user){
+
+					while (snapshot_to_restore == null){
 						stdout.printf(TERM_COLOR_YELLOW + _("Enter snapshot number (a=Abort, p=Previous, n=Next)") + ": " + TERM_COLOR_RESET);
 						stdout.flush();
-						while (snapshot_to_restore == null){
-							Thread.usleep((ulong) GLib.TimeSpan.MILLISECOND * 100);
-							if (prompt_break){  break; }
-						}
-						prompt_break = false;
+						snapshot_to_restore = read_stdin_snapshot();
 					}
 					log_msg("");
 				}
@@ -2114,28 +1995,38 @@ public class Main : GLib.Object{
 				log_msg(TERM_COLOR_YELLOW + _("Select target device") + ":\n" + TERM_COLOR_RESET);
 				list_devices();
 				log_msg("");
-				
-				prompt_type = "target-device";
-				prompt_user = true;
-				prompt_break = false;
-				
-				while (prompt_user){
+
+				while (restore_target == null){
 					stdout.printf(TERM_COLOR_YELLOW + _("Enter device name or number (a=Abort)") + ": " + TERM_COLOR_RESET);
 					stdout.flush();
-					while (restore_target == null){
-						Thread.usleep((ulong) GLib.TimeSpan.MILLISECOND * 100);
-						if (prompt_break){  break; }
-					}
-					prompt_break = false;
+					restore_target = read_stdin_device(partition_list);
 				}
 				log_msg("");
 			}
 		}
 		
 		if (restore_target != null){
+			
+			//unlock encrypted device
+			if (restore_target.type == "luks"){
+				restore_target = unlock_and_find_device(restore_target, null);
+				//exit if not found
+				if (restore_target == null){
+					log_error(_("Target device not specified!"));
+					return false;
+				}
+			}
+			
+			string symlink = "";
+			foreach(string sym in restore_target.symlinks){
+				if (sym.has_prefix("/dev/mapper/")){
+					symlink = sym;
+				}
+			}
+			
 			//print target device name
 			log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
-			log_msg(_("Target Device") + ": %s".printf(restore_target.device), true);
+			log_msg(_("Target Device") + ": %s".printf(restore_target.device + ((symlink.length > 0) ? " → " + symlink : "")), true);
 			log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
 			mount_target_device();
 			
@@ -2194,19 +2085,11 @@ public class Main : GLib.Object{
 			
 			if ((cmd_skip_grub == false) && (reinstall_grub2 == false)){
 				log_msg("");
-				
-				prompt_type = "grub-install";
-				prompt_user = true;
-				prompt_break = false;
-				
-				while (prompt_user){
+
+				while ((cmd_skip_grub == false) && (reinstall_grub2 == false)){
 					stdout.printf(TERM_COLOR_YELLOW + _("Re-install GRUB2 bootloader? (y/n)") + ": " + TERM_COLOR_RESET);
 					stdout.flush();
-					while ((cmd_skip_grub == false) && (reinstall_grub2 == false)){
-						Thread.usleep((ulong) GLib.TimeSpan.MILLISECOND * 100);
-						if (prompt_break){  break; }
-					}
-					prompt_break = false;
+					read_stdin_grub_install();
 				}
 			}	
 			
@@ -2215,18 +2098,12 @@ public class Main : GLib.Object{
 				log_msg(TERM_COLOR_YELLOW + _("Select GRUB device") + ":\n" + TERM_COLOR_RESET);
 				list_grub_devices();
 				log_msg("");
-					
-				prompt_type = "grub-device";
-				prompt_user = true;
-				prompt_break = false;
-				while (prompt_user){
+
+				while (grub_device.length == 0){
 					stdout.printf(TERM_COLOR_YELLOW + _("Enter device name or number (a=Abort)") + ": " + TERM_COLOR_RESET);
 					stdout.flush();
-					while (grub_device.length == 0){
-						Thread.usleep((ulong) GLib.TimeSpan.MILLISECOND * 100);
-						if (prompt_break){  break; }
-					}
-					prompt_break = false;
+					Device dev = read_stdin_device(grub_device_list);
+					if (dev != null) { grub_device = dev.device; }
 				}
 				log_msg("");
 			}
@@ -2249,18 +2126,10 @@ public class Main : GLib.Object{
 			msg = msg.replace("<b>",TERM_COLOR_RED).replace("</b>",TERM_COLOR_RESET);
 			log_msg(msg);
 					
-			prompt_type = "restore-confirm";
-			prompt_user = true;
-			prompt_break = false;
-			
-			while (prompt_user){
+			while (cmd_confirm == false){
 				stdout.printf(TERM_COLOR_YELLOW + _("Continue with restore? (y/n): ") + TERM_COLOR_RESET);
 				stdout.flush();
-				while (cmd_confirm == false){
-					Thread.usleep((ulong) GLib.TimeSpan.MILLISECOND * 100);
-					if (prompt_break){  break; }
-				}
-				prompt_break = false;
+				read_stdin_restore_confirm();
 			}
 		}
 
@@ -2285,6 +2154,102 @@ public class Main : GLib.Object{
 		snapshot_to_restore = null;
 		
 		return thr_success;
+	}
+	
+	public string unlock_encrypted_device(Device dev, Gtk.Window? parent_win){
+		string mapped_name = dev.name + "_unlocked";
+		string mapped_device = "/dev/mapper/%s".printf(mapped_name);
+
+		if ((parent_win == null)&&(app_mode != "")){
+			
+			if (!device_exists(mapped_device)){
+				
+				string cmd = "cryptsetup luksOpen '%s' '%s'".printf(dev.device, mapped_name);
+				int retval = Posix.system(cmd);
+				log_msg("");
+
+				switch (retval){
+					case 512: //invalid passphrase
+						log_msg(_("Wrong Passphrase") + ": " + _("Failed to unlock device"));
+						return ""; //return
+					case 1280: //already unlocked
+						log_msg(_("Unlocked device is mapped to '%s'").printf(mapped_name));
+						break;
+					case 0: //success
+						log_msg(_("Unlocked device is mapped to '%s'").printf(mapped_name));
+						break;
+					default: //unknown error
+						log_msg(_("Failed to unlock device"));
+						return ""; //return
+				}
+
+				update_partition_list();
+				return mapped_name;
+			}
+			else{
+				//already unlocked
+				log_msg(_("Unlocked device is mapped to '%s'").printf(mapped_name));
+				log_msg("");
+				return mapped_name;
+			}
+		}
+		else{
+			string passphrase = "";
+			if (!device_exists(mapped_device)){
+				passphrase = gtk_inputbox("Encrypted Device","Enter passphrase to unlock", parent_win, true);
+				string cmd = "echo '%s' | cryptsetup luksOpen '%s' '%s'".printf(passphrase, dev.device, mapped_name);
+				int retval = execute_script_sync(cmd, false);
+				log_debug("cryptsetup:" + retval.to_string());
+				
+				switch(retval){
+					case 512: //invalid passphrase
+						gtk_messagebox(_("Wrong Passphrase"),_("Wrong Passphrase") + ": " + _("Failed to unlock device"), parent_win);
+						return ""; //return
+					case 1280: //already unlocked
+						gtk_messagebox(_("Encrypted Device"),_("Unlocked device is mapped to '%s'.").printf(mapped_name), parent_win);
+						break;
+					case 0: //success
+						gtk_messagebox(_("Unlocked Successfully"),_("Unlocked device is mapped to '%s'.").printf(mapped_name), parent_win);
+						break;
+					default: //unknown error
+						gtk_messagebox(_("Error"),_("Failed to unlock device"), parent_win, true);
+						return ""; //return
+				}
+
+				update_partition_list();
+				return mapped_name;
+			}
+			else{
+				//already unlocked
+				gtk_messagebox(_("Encrypted Device"),_("Unlocked device is mapped to '%s'.").printf(mapped_name), parent_win);
+				return mapped_name;
+			}
+		}
+	}
+	
+	public Device? unlock_and_find_device(Device enc_dev, Gtk.Window? parent_win){
+		if (enc_dev.type == "luks"){
+			string mapped_name = unlock_encrypted_device(enc_dev, parent_win);
+			string mapped_device = "/dev/mapper/%s".printf(mapped_name);
+			if (mapped_name.length == 0) { return null; }
+			enc_dev = null;
+			
+			//find unlocked device
+			if (mapped_name.length > 0){
+				foreach(Device dev in partition_list){
+					foreach(string sym in dev.symlinks){
+						if (sym == mapped_device){
+							return dev;
+						}
+					}
+				}
+			}
+	
+			return null;
+		}
+		else{
+			return enc_dev;
+		}
 	}
 	
 	public string disclaimer_pre_restore(){
@@ -2758,19 +2723,11 @@ public class Main : GLib.Object{
 				log_msg(TERM_COLOR_YELLOW + _("Select snapshot to delete") + ":\n" + TERM_COLOR_RESET);
 				list_snapshots(true);
 				log_msg("");
-				
-				prompt_type = "snapshot-delete";
-				prompt_user = true;
-				prompt_break = false;
-				
-				while (prompt_user){
+
+				while (snapshot_to_delete == null){
 					stdout.printf(TERM_COLOR_YELLOW + _("Enter snapshot number (a=Abort, p=Previous, n=Next)") + ": " + TERM_COLOR_RESET);
 					stdout.flush();
-					while (snapshot_to_delete == null){
-						Thread.usleep((ulong) GLib.TimeSpan.MILLISECOND * 100);
-						if (prompt_break){  break; }
-					}
-					prompt_break = false;
+					snapshot_to_delete = read_stdin_snapshot();
 				}
 				log_msg("");
 				
@@ -3047,7 +3004,9 @@ public class Main : GLib.Object{
 				snapshot_device = root_device;
 			}
 		}
-
+		
+		snapshot_device = unlock_and_find_device(snapshot_device, null);
+		
 		if (mount_backup_device(snapshot_device)){
 			update_partition_list();
 		}

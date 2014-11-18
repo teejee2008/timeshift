@@ -611,11 +611,19 @@ public class RestoreWindow : Gtk.Dialog{
 	private void cell_device_target_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
 		Device pi;
 		model.get (iter, 0, out pi, -1);
+		
+		string symlink = "";
+		foreach(string sym in pi.symlinks){
+			if (sym.has_prefix("/dev/mapper/")){
+				symlink = sym.replace("/dev/mapper/","");
+			}
+		}
+
 		if ((App.root_device != null) && (pi.device == App.root_device.device)){
-			(cell as Gtk.CellRendererText).text = pi.name + " (" + _("sys") + ")";
+			(cell as Gtk.CellRendererText).text = pi.name + " (" + _("sys") + ")" + ((symlink.length > 0) ? " → " + symlink : "");
 		}
 		else{
-			(cell as Gtk.CellRendererText).text = pi.name;
+			(cell as Gtk.CellRendererText).text = pi.name + ((symlink.length > 0) ? " → " + symlink : "");
 		}
 		
 		Gtk.CellRendererText ctxt = (cell as Gtk.CellRendererText);
@@ -790,8 +798,15 @@ public class RestoreWindow : Gtk.Dialog{
 			if (!pi.has_linux_filesystem()) { continue; }
 			if (!radio_sys.sensitive && (App.root_device != null) && ((pi.device == App.root_device.device)||(pi.uuid == App.root_device.uuid))) { continue; }
 			
+			string symlink = "";
+			foreach(string sym in pi.symlinks){
+				if (sym.has_prefix("/dev/mapper/")){
+					symlink = sym;
+				}
+			}
+			
 			string tt = "";
-			tt += "%-7s".printf(_("Device")) + "\t: %s\n".printf(pi.device);
+			tt += "%-7s".printf(_("Device")) + "\t: %s\n".printf(pi.device + ((symlink.length > 0) ? " → " + symlink : ""));
 			tt += "%-7s".printf(_("UUID")) + "\t: %s\n".printf(pi.uuid);
 			tt += "%-7s".printf(_("Type")) + "\t: %s\n".printf(pi.type);
 			tt += "%-7s".printf(_("Label")) + "\t: %s\n".printf(pi.label);
@@ -1222,7 +1237,7 @@ public class RestoreWindow : Gtk.Dialog{
 		}
 		else{
 			//we are restoring to another disk - mount selected devices
-
+			
 			App.restore_target = null;
 			App.mount_list.clear();
 			bool no_mount_points_set_by_user = true;
@@ -1285,7 +1300,8 @@ public class RestoreWindow : Gtk.Dialog{
 				}
 			}
 			
-			//check BTRFS subvolume layout
+			//check BTRFS subvolume layout --------------
+			
 			if (App.restore_target.type == "btrfs"){
 				if (App.check_btrfs_volume(App.restore_target) == false){
 					string title = _("Unsupported Subvolume Layout");
@@ -1296,7 +1312,16 @@ public class RestoreWindow : Gtk.Dialog{
 				}
 			}
 			
-			//mount the root device
+			//unlock encrypted devices ------------------------
+
+			if (App.restore_target.type == "luks"){
+				App.restore_target = App.unlock_and_find_device(App.restore_target, this);
+				refresh_tv_partitions();
+				if (App.restore_target == null) { return false; }
+			}
+			
+			//mount target device -------------
+			
 			bool status = App.mount_target_device();
 			if (status == false){
 				string title = _("Error");

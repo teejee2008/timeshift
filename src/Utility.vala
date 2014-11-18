@@ -469,10 +469,11 @@ namespace TeeJee.Devices{
 			label = (label == null) ? "" : label;
 			
 			uuid = d.get_property("ID_FS_UUID");
-			uuid = (uuid == null) ? "" : uuid;
+			uuid = (uuid == null) ? "" : uuid.down();
 			
 			type = d.get_property("ID_FS_TYPE");
-			type = (type == null) ? "" : type;
+			type = (type == null) ? "" : type.down();
+			type = (type == "crypto_luks") ? "luks" : type;
 			
 			foreach (string symlink in d.get_device_file_symlinks()){
 				symlinks.add(symlink);
@@ -506,7 +507,15 @@ namespace TeeJee.Devices{
 				s += ((vendor.length > 0)||(model.length > 0)) ? (" ~ " + vendor + " " + model) : "";
 			}
 			else{
-				s += device;
+				
+				string symlink = "";
+				foreach(string sym in symlinks){
+					if (sym.has_prefix("/dev/mapper/")){
+						symlink = sym.replace("/dev/mapper/","");
+					}
+				}
+		
+				s += "<b>" + device.replace("/dev/","") + ((symlink.length > 0) ? " → " + symlink : "") + "</b>" ;
 				s += (label.length > 0) ? " (" + label + ")": "";
 				s += (type.length > 0) ? " ~ " + type : "";
 				s += (used.length > 0) ? " ~ " + used + " / " + size + " GB used (" + used_percent + ")" : "";
@@ -581,6 +590,8 @@ namespace TeeJee.Devices{
 				case "xfs":
 				case "jfs":
 				case "btrfs":
+				case "crypto_luks":
+				case "luks":
 					return true;
 				default:
 					return false;
@@ -2107,13 +2118,72 @@ namespace TeeJee.GtkHelper{
 		
 		var dlg = new Gtk.MessageDialog.with_markup(null, Gtk.DialogFlags.MODAL, type, Gtk.ButtonsType.OK, message);
 		dlg.title = title;
-		dlg.set_default_size (200, -1);
+		dlg.set_default_size (300, -1);
 		if (parent_win != null){
 			dlg.set_transient_for(parent_win);
 			dlg.set_modal(true);
 		}
 		dlg.run();
 		dlg.destroy();
+	}
+
+	public string gtk_inputbox(string title, string message, Gtk.Window? parent_win, bool mask_password = false){
+				
+		/* Shows a simple input prompt */
+		
+		//vbox_main
+        Gtk.Box vbox_main = new Box (Orientation.VERTICAL, 0);
+        vbox_main.margin = 6;
+        
+		//lbl_input
+		Gtk.Label lbl_input = new Gtk.Label(title);
+		lbl_input.xalign = (float) 0.0;
+		lbl_input.label = message;
+		
+		//txt_input
+		Gtk.Entry txt_input = new Gtk.Entry();
+		txt_input.margin_top = 3;
+		txt_input.set_visibility(false);
+		
+		//create dialog
+		var dlg = new Gtk.Dialog.with_buttons(title, parent_win, DialogFlags.MODAL);
+		dlg.title = title;
+		dlg.set_default_size (300, -1);
+		if (parent_win != null){
+			dlg.set_transient_for(parent_win);
+			dlg.set_modal(true);
+		}
+		
+		//add widgets
+		Gtk.Box content = (Box) dlg.get_content_area ();
+		vbox_main.pack_start (lbl_input, false, true, 0);
+		vbox_main.pack_start (txt_input, false, true, 0);
+		content.add(vbox_main);
+		
+		//add buttons
+		dlg.add_button(_("OK"),Gtk.ResponseType.OK);
+		dlg.add_button(_("Cancel"),Gtk.ResponseType.CANCEL);
+		
+		//keyboard shortcuts
+		txt_input.key_press_event.connect ((w, event) => {
+			if (event.keyval == 65293) {
+				dlg.response(Gtk.ResponseType.OK);
+				return true;
+			}
+			return false;
+		});
+		
+		dlg.show_all();
+		int response = dlg.run();
+		string input_text = txt_input.text;
+		dlg.destroy();
+		
+		if (response == Gtk.ResponseType.CANCEL){
+			return "";
+		}
+		else{
+			return input_text;
+		}
 	}
 	
 	public bool gtk_combobox_set_value (ComboBox combo, int index, string val){

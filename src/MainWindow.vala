@@ -98,7 +98,7 @@ class MainWindow : Gtk.Window{
         this.set_default_size (700, 500);
 		this.delete_event.connect(on_delete_event);
 		this.icon = get_app_icon(16);
-
+		
 	    //vboxMain
         vbox_main = new Box (Orientation.VERTICAL, 0);
         vbox_main.margin = 0;
@@ -494,10 +494,13 @@ class MainWindow : Gtk.Window{
 		}
 		
 		refresh_cmb_backup_device();
-		timer_backup_device_init = Timeout.add(100, initialize_backup_device);
+		timer_backup_device_init = Timeout.add(100, init_backup_device);
     }
 
-	private bool initialize_backup_device(){
+	private bool init_backup_device(){
+		
+		/* updates statusbar messages and snapshot list after backup device is changed */
+		
 		if (timer_backup_device_init > 0){
 			Source.remove(timer_backup_device_init);
 			timer_backup_device_init = -1;
@@ -514,7 +517,7 @@ class MainWindow : Gtk.Window{
 		
 		//refresh_cmb_backup_device();
 		refresh_tv_backups();
-		check_status();
+		update_statusbar();
 		update_ui(true);
 
 		return false;
@@ -692,7 +695,8 @@ class MainWindow : Gtk.Window{
 	private void cell_backup_device_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
 		Device info;
 		model.get (iter, 0, out info, -1);
-		(cell as Gtk.CellRendererText).text = info.description();
+
+		(cell as Gtk.CellRendererText).markup = info.description();
 	}
 
 	private void refresh_tv_backups(){
@@ -805,7 +809,7 @@ class MainWindow : Gtk.Window{
 			App.snapshot_device = null;
 			return; 
 		}
-
+		
 		//get new device reference
 		TreeIter iter;
 		Device pi;
@@ -813,16 +817,37 @@ class MainWindow : Gtk.Window{
 		TreeModel model = (TreeModel) combo.model;
 		model.get(iter, 0, out pi);
 		
-		//check if device has changed
+		change_backup_device(pi);
+	}
+	
+	private void change_backup_device(Device pi){
+		//return if device has not changed
 		if ((App.snapshot_device != null) && (pi.uuid == App.snapshot_device.uuid)){ return; }
 
 		gtk_set_busy(true, this);
 		
-		//try changing backup device ------------------
+		//check for encrypted device ---------------------------
 		
-		App.snapshot_device = pi;
+		if (pi.type == "luks"){
+			
+			//try to unlock
+			Device dev = App.unlock_and_find_device(pi, this);
+			if (dev == null) { 
+				refresh_cmb_backup_device();
+				return; 
+			}
+			else{
+				App.snapshot_device = dev;
+				//App.update_partition_list(); //needs to be updated again after changing snapshot device
+				refresh_cmb_backup_device();
+			}
+		}
+		else{ 
+			//set snapshot_device
+			App.snapshot_device = pi;
+		}
 		
-		long size_before = App.snapshot_device.size_mb;
+		//try mounting the device ------------------
 
 		bool status = App.mount_backup_device();
 		if (status == false){
@@ -840,18 +865,12 @@ class MainWindow : Gtk.Window{
 			return;
 		}
 		
-		//get disk space after mounting
+		//update disk space after mounting
 		App.update_partition_list();
-		long size_after = App.snapshot_device.size_mb;
-		
+
 		gtk_set_busy(false, this);
-		
-		if (size_after > size_before){
-			refresh_cmb_backup_device();
-		}
-		else{
-			timer_backup_device_init = Timeout.add(100, initialize_backup_device);
-		}
+
+		timer_backup_device_init = Timeout.add(100, init_backup_device);
 	}
 	
 	private void btn_backup_clicked(){
@@ -874,7 +893,7 @@ class MainWindow : Gtk.Window{
 			case 1:
 			case 2:
 				gtk_messagebox(_("Low Disk Space"),_("Backup device does not have enough space"),null, true);
-				check_status();
+				update_statusbar();
 				return;
 		}
 
@@ -904,7 +923,7 @@ class MainWindow : Gtk.Window{
 		App.update_partition_list();
 		refresh_cmb_backup_device();
 		refresh_tv_backups();
-		check_status();
+		update_statusbar();
 		
 		update_ui(true);
 	}
@@ -997,7 +1016,7 @@ class MainWindow : Gtk.Window{
 		App.update_partition_list();
 		refresh_cmb_backup_device();
 		refresh_tv_backups();
-		check_status();
+		update_statusbar();
 
 		update_ui(true);
 	}
@@ -1185,7 +1204,7 @@ class MainWindow : Gtk.Window{
 		
 		dialog.show_all();
 		dialog.run();
-		check_status();
+		update_statusbar();
 	}
 	
 	private void btn_browse_snapshot_clicked(){
@@ -1391,7 +1410,7 @@ class MainWindow : Gtk.Window{
 	private bool check_backup_device_online(){
 		if (!App.backup_device_online()){
 			gtk_messagebox(_("Device Offline"),_("Backup device is not available"), null, true);
-			check_status();
+			update_statusbar();
 			return false;
 		}
 		else{
@@ -1399,7 +1418,7 @@ class MainWindow : Gtk.Window{
 		}
 	}
 
-	private bool check_status(){
+	private void update_statusbar(){
 		string img_dot_red = App.share_folder + "/timeshift/images/item-red.png";
 		string img_dot_green = App.share_folder + "/timeshift/images/item-green.png";
 		
@@ -1509,8 +1528,6 @@ class MainWindow : Gtk.Window{
 			img_status_latest.visible = false;
 			lbl_status_latest.visible = false;
 		}
-		
-		return true;
 	}
 	
 }

@@ -771,18 +771,26 @@ public class RestoreWindow : Gtk.Dialog{
 		ListStore store = (ListStore) cmb_boot_device.model;
 		int index = -1;
 		
+		int first_mbr_device_index = -1;
 		for (bool next = store.get_iter_first (out iter); next; next = store.iter_next (ref iter)) {
 			Device dev;
 			store.get(iter, 0, out dev);
+			
 			index++;
+			
 			if (dev.device == App.restore_target.device[0:8]){
 				cmb_boot_device.active = index;
+				break;
+			}
+			
+			if ((first_mbr_device_index == -1) && (dev.device.length == "/dev/sdX".length)){
+				first_mbr_device_index = index;
 			}
 		}
 		
-		//un-select if not found
-		if (index == -1){
-			cmb_boot_device.active = -1;
+		//select first MBR device if not found
+		if (cmb_boot_device.active == -1){
+			cmb_boot_device.active = first_mbr_device_index;
 		}
 	}
 	

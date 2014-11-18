@@ -2006,17 +2006,6 @@ public class Main : GLib.Object{
 		}
 		
 		if (restore_target != null){
-			
-			//unlock encrypted device
-			if (restore_target.type == "luks"){
-				restore_target = unlock_and_find_device(restore_target, null);
-				//exit if not found
-				if (restore_target == null){
-					log_error(_("Target device not specified!"));
-					return false;
-				}
-			}
-			
 			string symlink = "";
 			foreach(string sym in restore_target.symlinks){
 				if (sym.has_prefix("/dev/mapper/")){
@@ -2028,15 +2017,21 @@ public class Main : GLib.Object{
 			log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
 			log_msg(_("Target Device") + ": %s".printf(restore_target.device + ((symlink.length > 0) ? " → " + symlink : "")), true);
 			log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
-			mount_target_device();
-			
-			bool status = mount_target_device();
-			if (status == false){
-				return false;
+
+			if (app_mode != ""){ //commandline mode
+				//init mount list
+				mount_list.clear();
+				mount_list.add(new MountEntry(restore_target,"/"));
+
+				//mount target device
+				bool status = mount_target_device(null);
+				if (status == false){
+					return false;
+				}
 			}
-			
-			mount_list.clear();
-			mount_list.add(new MountEntry(restore_target,"/"));
+			else{
+				//mounting is already done
+			}
 		}
 		else{
 			//print error
@@ -2157,73 +2152,77 @@ public class Main : GLib.Object{
 	}
 	
 	public string unlock_encrypted_device(Device dev, Gtk.Window? parent_win){
-		string mapped_name = dev.name + "_unlocked";
-		string mapped_device = "/dev/mapper/%s".printf(mapped_name);
-
+		string mapped_name = "%s_unlocked".printf(dev.name);
+		string[] name_list = { "%s_unlocked".printf(dev.name), "%s_crypt".printf(dev.name), "luks-%s".printf(dev.uuid)};
+		
 		if ((parent_win == null)&&(app_mode != "")){
 			
-			if (!device_exists(mapped_device)){
-				
-				string cmd = "cryptsetup luksOpen '%s' '%s'".printf(dev.device, mapped_name);
-				int retval = Posix.system(cmd);
-				log_msg("");
-
-				switch (retval){
-					case 512: //invalid passphrase
-						log_msg(_("Wrong Passphrase") + ": " + _("Failed to unlock device"));
-						return ""; //return
-					case 1280: //already unlocked
-						log_msg(_("Unlocked device is mapped to '%s'").printf(mapped_name));
-						break;
-					case 0: //success
-						log_msg(_("Unlocked device is mapped to '%s'").printf(mapped_name));
-						break;
-					default: //unknown error
-						log_msg(_("Failed to unlock device"));
-						return ""; //return
+			//check if unlocked
+			foreach(string name in name_list){
+				if (device_exists("/dev/mapper/%s".printf(name))){
+					//already unlocked
+					log_msg(_("Unlocked device is mapped to '%s'").printf(name));
+					log_msg("");
+					return name;
 				}
+			}
+			
+			//prompt user to unlock
+			string cmd = "cryptsetup luksOpen '%s' '%s'".printf(dev.device, mapped_name);
+			int retval = Posix.system(cmd);
+			log_msg("");
 
-				update_partition_list();
-				return mapped_name;
+			switch (retval){
+				case 512: //invalid passphrase
+					log_msg(_("Wrong Passphrase") + ": " + _("Failed to unlock device"));
+					return ""; //return
+				case 1280: //already unlocked
+					log_msg(_("Unlocked device is mapped to '%s'").printf(mapped_name));
+					break;
+				case 0: //success
+					log_msg(_("Unlocked device is mapped to '%s'").printf(mapped_name));
+					break;
+				default: //unknown error
+					log_msg(_("Failed to unlock device"));
+					return ""; //return
 			}
-			else{
-				//already unlocked
-				log_msg(_("Unlocked device is mapped to '%s'").printf(mapped_name));
-				log_msg("");
-				return mapped_name;
-			}
+
+			update_partition_list();
+			return mapped_name;
 		}
 		else{
-			string passphrase = "";
-			if (!device_exists(mapped_device)){
-				passphrase = gtk_inputbox("Encrypted Device","Enter passphrase to unlock", parent_win, true);
-				string cmd = "echo '%s' | cryptsetup luksOpen '%s' '%s'".printf(passphrase, dev.device, mapped_name);
-				int retval = execute_script_sync(cmd, false);
-				log_debug("cryptsetup:" + retval.to_string());
-				
-				switch(retval){
-					case 512: //invalid passphrase
-						gtk_messagebox(_("Wrong Passphrase"),_("Wrong Passphrase") + ": " + _("Failed to unlock device"), parent_win);
-						return ""; //return
-					case 1280: //already unlocked
-						gtk_messagebox(_("Encrypted Device"),_("Unlocked device is mapped to '%s'.").printf(mapped_name), parent_win);
-						break;
-					case 0: //success
-						gtk_messagebox(_("Unlocked Successfully"),_("Unlocked device is mapped to '%s'.").printf(mapped_name), parent_win);
-						break;
-					default: //unknown error
-						gtk_messagebox(_("Error"),_("Failed to unlock device"), parent_win, true);
-						return ""; //return
+			//check if unlocked
+			foreach(string name in name_list){
+				if (device_exists("/dev/mapper/%s".printf(name))){
+					//already unlocked
+					gtk_messagebox(_("Encrypted Device"),_("Unlocked device is mapped to '%s'.").printf(name), parent_win);
+					return name;
 				}
+			}
+			
+			//prompt user to unlock
+			string passphrase = gtk_inputbox("Encrypted Device","Enter passphrase to unlock", parent_win, true);
+			string cmd = "echo '%s' | cryptsetup luksOpen '%s' '%s'".printf(passphrase, dev.device, mapped_name);
+			int retval = execute_script_sync(cmd, false);
+			log_debug("cryptsetup:" + retval.to_string());
+			
+			switch(retval){
+				case 512: //invalid passphrase
+					gtk_messagebox(_("Wrong Passphrase"),_("Wrong Passphrase") + ": " + _("Failed to unlock device"), parent_win);
+					return ""; //return
+				case 1280: //already unlocked
+					gtk_messagebox(_("Encrypted Device"),_("Unlocked device is mapped to '%s'.").printf(mapped_name), parent_win);
+					break;
+				case 0: //success
+					gtk_messagebox(_("Unlocked Successfully"),_("Unlocked device is mapped to '%s'.").printf(mapped_name), parent_win);
+					break;
+				default: //unknown error
+					gtk_messagebox(_("Error"),_("Failed to unlock device"), parent_win, true);
+					return ""; //return
+			}
 
-				update_partition_list();
-				return mapped_name;
-			}
-			else{
-				//already unlocked
-				gtk_messagebox(_("Encrypted Device"),_("Unlocked device is mapped to '%s'.").printf(mapped_name), parent_win);
-				return mapped_name;
-			}
+			update_partition_list();
+			return mapped_name;
 		}
 	}
 	
@@ -3241,7 +3240,7 @@ public class Main : GLib.Object{
 		
 	}
 	
-	public bool mount_target_device(){
+	public bool mount_target_device(Gtk.Window? parent_win){
 		/* Note:
 		 * Target device will be mounted explicitly to /mnt/timeshift/restore
 		 * Existing mount points are not used since we need to mount other devices in sub-directories
@@ -3251,10 +3250,36 @@ public class Main : GLib.Object{
 			return false;
 		}
 		else{
+			//unmount
+			unmount_target_device();
+				
+			//check and create restore mount point for restore
+			mount_point_restore = mount_point_app + "/restore";
+			check_and_create_dir_with_parents(mount_point_restore);
+			
+			//unlock encrypted device
+			if (restore_target.type == "luks"){
+				restore_target = unlock_and_find_device(restore_target, parent_win);
+
+				//exit if not found
+				if (restore_target == null){
+					log_error(_("Target device not specified!"));
+					return false;
+				}
+				
+				//update mount entry
+				foreach (MountEntry mnt in mount_list) {
+					if (mnt.mount_point == "/"){
+						mnt.device = restore_target;	
+						break;		
+					}
+				}
+			}
+			
+			//mount root device
 			if (restore_target.type == "btrfs"){
 
-				//check subvolume layout ---------
-				
+				//check subvolume layout
 				if (check_btrfs_volume(restore_target) == false){
 					string msg = _("The target partition has an unsupported subvolume layout.") + "\n";
 					msg += _("Only ubuntu-type layouts with @ and @home subvolumes are currently supported.");
@@ -3269,46 +3294,36 @@ public class Main : GLib.Object{
 					
 					return false;
 				}
-				
-				//unmount
-				unmount_target_device();
-				
-				//check and create restore mount point for restore
-				mount_point_restore = mount_point_app + "/restore";
-				check_and_create_dir_with_parents(mount_point_restore);
 
-				//mount @ subvolume -----------
-				
+				//mount @ 
 				if (!mount(restore_target.uuid, mount_point_restore, "subvol=@")){
-					string msg = _("Failed to mount BTRFS subvolume") + ": @";
-					log_error(msg);
+					log_error(_("Failed to mount BTRFS subvolume") + ": @");
 					return false;
 				}
 
-				//mount @home subvolume -----------
-				
+				//mount @home 
 				if (!mount(restore_target.uuid, mount_point_restore + "/home", "subvol=@home")){
-					string msg = _("Failed to mount BTRFS subvolume") + ": @home";
-					log_error(msg);
+					log_error(_("Failed to mount BTRFS subvolume") + ": @home");
 					return false;
 				}
-
-				return true;
 			}
 			else{
-				//unmount
-				unmount_target_device();
-				
-				//check and create restore mount point for restore
-				mount_point_restore = mount_point_app + "/restore";
-				check_and_create_dir_with_parents(mount_point_restore);
-				if (mount(restore_target.uuid, mount_point_restore, "")){
-					return true;
+				if (!mount(restore_target.uuid, mount_point_restore, "")){
+					return false;
+				}
+			}
+			
+			//mount remaining devices
+			foreach (MountEntry mnt in mount_list) {
+				if (mnt.mount_point != "/"){
+					if (!mount(mnt.device.uuid, mount_point_restore + mnt.mount_point)){
+						return false; 
+					}					
 				}
 			}
 		}
 		
-		return false;
+		return true;
 	}
 
 	public void unmount_backup_device(bool exit_on_error = true){

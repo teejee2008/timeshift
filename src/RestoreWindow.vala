@@ -1311,43 +1311,15 @@ public class RestoreWindow : Gtk.Dialog{
 					return false; 
 				}
 			}
-			
-			//unlock encrypted devices ------------------------
 
-			if (App.restore_target.type == "luks"){
-				App.restore_target = App.unlock_and_find_device(App.restore_target, this);
-				refresh_tv_partitions();
-				if (App.restore_target == null) { return false; }
-			}
-			
 			//mount target device -------------
 			
-			bool status = App.mount_target_device();
+			bool status = App.mount_target_device(this);
 			if (status == false){
 				string title = _("Error");
 				string msg = _("Failed to mount device") + ": %s".printf(App.restore_target.device);
 				gtk_messagebox(title, msg, this, true);
 				return false; 
-			}
-
-			//mount remaining devices
-			for (bool next = store.get_iter_first (out iter); next; next = store.iter_next (ref iter)) {
-				Device pi;
-				string mount_point;
-				store.get(iter, 0, out pi);
-				store.get(iter, 1, out mount_point);
-				
-				if ((mount_point != null) && (mount_point.length > 0)){
-					mount_point = mount_point.strip();
-					if (mount_point != "/"){
-						if (!mount(pi.uuid, App.mount_point_restore + mount_point)){
-							string title = _("Error");
-							string msg = _("Failed to mount device") + ": %s".printf(pi.device);
-							gtk_messagebox(title, msg, this, true);
-							return false; 
-						}
-					}					
-				}
 			}
 		}
 	

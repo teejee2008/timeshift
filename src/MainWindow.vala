@@ -696,7 +696,7 @@ class MainWindow : Gtk.Window{
 		Device info;
 		model.get (iter, 0, out info, -1);
 
-		(cell as Gtk.CellRendererText).markup = info.description();
+		(cell as Gtk.CellRendererText).markup = info.description_formatted();
 	}
 
 	private void refresh_tv_backups(){

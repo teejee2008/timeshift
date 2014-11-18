@@ -500,10 +500,14 @@ namespace TeeJee.Devices{
 		}
 		
 		public string description(){
+			return description_formatted().replace("<b>","").replace("</b>","");
+		}
+
+		public string description_formatted(){
 			string s = "";
 			
 			if (devtype == "disk"){
-				s += device;
+				s += "<b>" + device.replace("/dev/","") + "</b>";
 				s += ((vendor.length > 0)||(model.length > 0)) ? (" ~ " + vendor + " " + model) : "";
 			}
 			else{

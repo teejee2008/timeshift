@@ -674,7 +674,7 @@ public class RestoreWindow : Gtk.Dialog{
 			(cell as Gtk.CellRendererText).markup = "<b>" + dev.description() + " (MBR)</b>";
 		}
 		else{
-			(cell as Gtk.CellRendererText).text = dev.description();
+			(cell as Gtk.CellRendererText).markup = dev.description_formatted();
 		}
 	}
 

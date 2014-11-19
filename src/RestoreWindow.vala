@@ -182,10 +182,10 @@ public class RestoreWindow : Gtk.Dialog{
 		col_device_target.spacing = 1;
 		tv_partitions.append_column(col_device_target);
 		
-		CellRendererPixbuf cell_device_icon = new CellRendererPixbuf ();
-		cell_device_icon.stock_id = "gtk-harddisk";
+		CellRendererPixbuf cell_device_icon = new CellRendererPixbuf();
 		cell_device_icon.xpad = 1;
 		col_device_target.pack_start (cell_device_icon, false);
+		col_device_target.set_attributes(cell_device_icon, "pixbuf", 3);
 
 		CellRendererText cell_device_target = new CellRendererText ();
 		col_device_target.pack_start (cell_device_target, false);
@@ -798,7 +798,7 @@ public class RestoreWindow : Gtk.Dialog{
 		
 		App.update_partition_list();
 		
-		ListStore model = new ListStore(3, typeof(Device), typeof(string), typeof(string));
+		ListStore model = new ListStore(4, typeof(Device), typeof(string), typeof(string), typeof(Gdk.Pixbuf));
 		tv_partitions.set_model (model);
 
 		TreeIter iter;
@@ -824,6 +824,21 @@ public class RestoreWindow : Gtk.Dialog{
 			
 			model.append(out iter);
 			model.set (iter,0,pi,1,"",2,tt);
+			
+			//set icon ----------------
+			
+			Gdk.Pixbuf pix_selected = null;
+			Gdk.Pixbuf pix_device = get_shared_icon("disk","disk.png",16).pixbuf;
+			Gdk.Pixbuf pix_locked = get_shared_icon("locked","locked.svg",16).pixbuf;
+			
+			if (pi.type == "luks"){
+				pix_selected = pix_locked;
+			}
+			else{
+				pix_selected = pix_device;
+			}
+			
+			model.set (iter, 3, pix_selected, -1);
 		}
 		
 		tv_partitions_select_target();

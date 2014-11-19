@@ -1081,9 +1081,11 @@ namespace TeeJee.Devices{
 		public string pass = "0";
 		public string line = "";
 		
-		public static Gee.List<FsTabEntry> read_fstab_file(string fstab_file_path){
+		public static Gee.ArrayList<FsTabEntry> read_fstab_file(string fstab_file_path){
 			Gee.ArrayList<FsTabEntry> list = new Gee.ArrayList<FsTabEntry>();
-
+			
+			if (!file_exists(fstab_file_path)){ return list; }
+			
 			string text = read_file(fstab_file_path);
 			string[] lines = text.split("\n");
 			foreach(string line in lines){

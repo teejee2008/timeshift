@@ -244,8 +244,9 @@ class MainWindow : Gtk.Window{
 		cmb_backup_device.pack_start (cell_backup_dev_margin, false);
 		
 		CellRendererPixbuf cell_backup_dev_icon = new CellRendererPixbuf ();
-		cell_backup_dev_icon.stock_id = "gtk-harddisk";
+		cell_backup_dev_icon.xpad = 1;
 		cmb_backup_device.pack_start (cell_backup_dev_icon, false);
+		cmb_backup_device.set_attributes(cell_backup_dev_icon, "pixbuf", 1);
 		
 		CellRendererText cell_backup_device = new CellRendererText();
         cmb_backup_device.pack_start( cell_backup_device, false );
@@ -758,7 +759,7 @@ class MainWindow : Gtk.Window{
 	}
 
 	private void refresh_cmb_backup_device(){
-		ListStore store = new ListStore(1, typeof(Device));
+		ListStore store = new ListStore(2, typeof(Device), typeof(Gdk.Pixbuf));
 
 		TreeIter iter;
 
@@ -772,7 +773,24 @@ class MainWindow : Gtk.Window{
 
 			store.append(out iter);
 			store.set (iter, 0, pi);
-
+			
+			//set icon ----------------
+			
+			Gdk.Pixbuf pix_selected = null;
+			Gdk.Pixbuf pix_device = get_shared_icon("disk","disk.png",16).pixbuf;
+			Gdk.Pixbuf pix_locked = get_shared_icon("locked","locked.svg",16).pixbuf;
+			
+			if (pi.type == "luks"){
+				pix_selected = pix_locked;
+			}
+			else{
+				pix_selected = pix_device;
+			}
+			
+			store.set (iter, 1, pix_selected, -1);
+			
+			//selection -------------
+			
 			index++;
 			if ((App.root_device != null) && (pi.uuid == App.root_device.uuid)){
 				cmb_backup_device_index_default = index;

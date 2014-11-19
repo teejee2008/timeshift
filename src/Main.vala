@@ -2195,13 +2195,13 @@ public class Main : GLib.Object{
 			foreach(string name in name_list){
 				if (device_exists("/dev/mapper/%s".printf(name))){
 					//already unlocked
-					gtk_messagebox(_("Encrypted Device"),_("Unlocked device is mapped to '%s'.").printf(name), parent_win);
+					//gtk_messagebox(_("Encrypted Device"),_("Unlocked device is mapped to '%s'.").printf(name), parent_win);
 					return name;
 				}
 			}
 			
 			//prompt user to unlock
-			string passphrase = gtk_inputbox("Encrypted Device","Enter passphrase to unlock", parent_win, true);
+			string passphrase = gtk_inputbox(_("Encrypted Device"), _("Enter passphrase to unlock '%s'").printf(dev.name), parent_win, true);
 			string cmd = "echo '%s' | cryptsetup luksOpen '%s' '%s'".printf(passphrase, dev.device, mapped_name);
 			int retval = execute_script_sync(cmd, false);
 			log_debug("cryptsetup:" + retval.to_string());
@@ -2211,7 +2211,7 @@ public class Main : GLib.Object{
 					gtk_messagebox(_("Wrong Passphrase"),_("Wrong Passphrase") + ": " + _("Failed to unlock device"), parent_win);
 					return ""; //return
 				case 1280: //already unlocked
-					gtk_messagebox(_("Encrypted Device"),_("Unlocked device is mapped to '%s'.").printf(mapped_name), parent_win);
+					//gtk_messagebox(_("Encrypted Device"),_("Unlocked device is mapped to '%s'.").printf(mapped_name), parent_win);
 					break;
 				case 0: //success
 					gtk_messagebox(_("Unlocked Successfully"),_("Unlocked device is mapped to '%s'.").printf(mapped_name), parent_win);
@@ -3316,6 +3316,17 @@ public class Main : GLib.Object{
 			//mount remaining devices
 			foreach (MountEntry mnt in mount_list) {
 				if (mnt.mount_point != "/"){
+
+					//unlock encrypted device
+					if (mnt.device.type == "luks"){
+						mnt.device = unlock_and_find_device(mnt.device, parent_win);
+
+						//exit if not found
+						if (mnt.device == null){
+							return false;
+						}
+					}
+
 					if (!mount(mnt.device.uuid, mount_point_restore + mnt.mount_point)){
 						return false; 
 					}					
@@ -3786,6 +3797,7 @@ public class TimeShiftBackup : GLib.Object{
 	public string description = "";
 	public Gee.ArrayList<string> tags;
 	public Gee.ArrayList<string> exclude_list;
+	public Gee.ArrayList<FsTabEntry> fstab_list;
 	public bool is_valid = true;
 	
 	public TimeShiftBackup(string dir_path){
@@ -3801,9 +3813,11 @@ public class TimeShiftBackup : GLib.Object{
 			date = new DateTime.from_unix_utc(0);
 			tags = new Gee.ArrayList<string>();
 			exclude_list = new Gee.ArrayList<string>();
+			fstab_list = new Gee.ArrayList<FsTabEntry>();
 			
 			read_control_file();
 			read_exclude_list();
+			read_fstab_file();
 		}
 		catch(Error e){
 			log_error (e.message);
@@ -3892,7 +3906,7 @@ public class TimeShiftBackup : GLib.Object{
 			is_valid = false;
 		}
 	}
-	
+
 	public void read_exclude_list(){
 		string list_file = path + "/exclude.list";
 		
@@ -3910,6 +3924,11 @@ public class TimeShiftBackup : GLib.Object{
 		else{
 			is_valid = false;
 		}
+	}
+	
+	public void read_fstab_file(){
+		string fstab_path = path + "/localhost/etc/fstab";
+		fstab_list = FsTabEntry.read_fstab_file(fstab_path);	
 	}
 	
 	public void update_control_file(){

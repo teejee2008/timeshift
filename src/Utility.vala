@@ -486,11 +486,36 @@ namespace TeeJee.Devices{
 					return udev_device.get_name();
 				}
 				else{
-					return device.replace("/dev/","").replace("/dev/mapper/","");
+					return device.replace("/dev/mapper/","").replace("/dev/","");
+				}
+			}
+		}
+
+		public string full_name_with_alias{
+			owned get{
+				string fullname = "";
+				string symlink = "";
+				foreach(string sym in symlinks){
+					if (sym.has_prefix("/dev/mapper/")){
+						symlink = sym;
+					}
+				}
+				fullname = device + ((symlink.length > 0) ? " (" + symlink + ")" : ""); //→
+				if (devtype == "partition"){
+					return fullname;
+				}
+				else{
+					return name;
 				}
 			}
 		}
 		
+		public string short_name_with_alias{
+			owned get{
+				return full_name_with_alias.replace("/dev/mapper/","").replace("/dev/","");
+			}
+		}
+
 		public void print_properties(){
 			if (udev_device != null){
 				foreach(string key in udev_device.get_property_keys()){
@@ -507,19 +532,11 @@ namespace TeeJee.Devices{
 			string s = "";
 			
 			if (devtype == "disk"){
-				s += "<b>" + device.replace("/dev/","") + "</b>";
+				s += "<b>" + short_name_with_alias + "</b>";
 				s += ((vendor.length > 0)||(model.length > 0)) ? (" ~ " + vendor + " " + model) : "";
 			}
 			else{
-				
-				string symlink = "";
-				foreach(string sym in symlinks){
-					if (sym.has_prefix("/dev/mapper/")){
-						symlink = sym.replace("/dev/mapper/","");
-					}
-				}
-		
-				s += "<b>" + device.replace("/dev/","") + ((symlink.length > 0) ? " → " + symlink : "") + "</b>" ;
+				s += "<b>" + short_name_with_alias + "</b>" ;
 				s += (label.length > 0) ? " (" + label + ")": "";
 				s += (type.length > 0) ? " ~ " + type : "";
 				s += (used.length > 0) ? " ~ " + used + " / " + size + " GB used (" + used_percent + ")" : "";

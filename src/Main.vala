@@ -837,13 +837,7 @@ public class Main : GLib.Object{
 		foreach(Device pi in partition_list) {
 			if (!pi.has_linux_filesystem()) { continue; }
 			//log_msg("%4d > %-15s   %s %10s   %s".printf(++index, pi.device, pi.uuid, (pi.size_mb > 0) ? "%0.0f GB".printf(pi.size_mb / 1024.0) : "", pi.label));
-			string symlink = "";
-			foreach(string sym in pi.symlinks){
-				if (sym.has_prefix("/dev/mapper/")){
-					symlink = sym;
-				}
-			}
-			log_msg("%4d > %s%s  %s  %s  %s  %s".printf(++index, pi.device, (symlink.length > 0) ? " → " + symlink : "" , pi.uuid, (pi.size_mb > 0) ? "%0.0fGB".printf(pi.size_mb / 1024.0) : "", pi.type, pi.label));
+			log_msg("%4d > %s  %s  %s  %s  %s".printf(++index, pi.short_name_with_alias, pi.uuid, (pi.size_mb > 0) ? "%0.0fGB".printf(pi.size_mb / 1024.0) : "", pi.type, pi.label));
 		}
 	}
 	
@@ -2081,7 +2075,7 @@ public class Main : GLib.Object{
 			
 			//print target device name
 			log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
-			log_msg(_("Target Device") + ": %s".printf(restore_target.device + ((symlink.length > 0) ? " → " + symlink : "")), true);
+			log_msg(_("Target Device") + ": %s".printf(restore_target.full_name_with_alias), true);
 			log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
 		}
 		else{
@@ -2136,7 +2130,7 @@ public class Main : GLib.Object{
 						log_msg(_("'%s' will be on root device").printf(mnt.mount_point), true);
 					}
 					else{
-						log_msg(_("'%s' will be on '%s'").printf(mnt.mount_point, mnt.device.device), true);
+						log_msg(_("'%s' will be on '%s'").printf(mnt.mount_point, mnt.device.short_name_with_alias), true);
 					}
 					log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
 				}

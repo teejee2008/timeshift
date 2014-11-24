@@ -850,15 +850,8 @@ public class RestoreWindow : Gtk.Dialog{
 			if (!pi.has_linux_filesystem()) { continue; }
 			if (!radio_sys.sensitive && (App.root_device != null) && ((pi.device == App.root_device.device)||(pi.uuid == App.root_device.uuid))) { continue; }
 			
-			string symlink = "";
-			foreach(string sym in pi.symlinks){
-				if (sym.has_prefix("/dev/mapper/")){
-					symlink = sym;
-				}
-			}
-			
 			string tt = "";
-			tt += "%-7s".printf(_("Device")) + "\t: %s\n".printf(pi.device + ((symlink.length > 0) ? " → " + symlink : ""));
+			tt += "%-7s".printf(_("Device")) + "\t: %s\n".printf(pi.full_name_with_alias);
 			tt += "%-7s".printf(_("UUID")) + "\t: %s\n".printf(pi.uuid);
 			tt += "%-7s".printf(_("Type")) + "\t: %s\n".printf(pi.type);
 			tt += "%-7s".printf(_("Label")) + "\t: %s\n".printf(pi.label);
@@ -1424,19 +1417,12 @@ public class RestoreWindow : Gtk.Dialog{
 
 	private int show_mount_list(){
 		string msg = _("Following mounts will be used for restored system:") + "\n\n";
-		
-		
+
 		int max_mount = _("Mount").length;
 		int max_dev = _("Device").length;
 		
 		foreach(MountEntry mnt in App.mount_list){
-			string symlink = "";
-			foreach(string sym in mnt.device.symlinks){
-				if (sym.has_prefix("/dev/mapper/")){
-					symlink = sym.replace("/dev/mapper/","");
-				}
-			}
-			string dev_name = mnt.device.device.replace("/dev/","") + ((symlink.length > 0) ? " (" + symlink + ")" : "");//→
+			string dev_name = mnt.device.short_name_with_alias;
 			if (dev_name.length > max_dev){ max_dev = dev_name.length; }
 			if (mnt.mount_point.length > max_mount){ max_mount = mnt.mount_point.length; }
 		}
@@ -1446,14 +1432,7 @@ public class RestoreWindow : Gtk.Dialog{
 		msg += ("%%-%ds     %%-%ds\n\n".printf(max_dev, max_mount)).printf(_("Device"),_("Mount"));
 		msg += "</b>";
 		foreach(MountEntry mnt in App.mount_list){
-			string symlink = "";
-			foreach(string sym in mnt.device.symlinks){
-				if (sym.has_prefix("/dev/mapper/")){
-					symlink = sym.replace("/dev/mapper/","");
-				}
-			}
-			
-			msg += ("%%-%ds     %%-%ds\n\n".printf(max_dev, max_mount)).printf(mnt.device.device.replace("/dev/","") + ((symlink.length > 0) ? " (" + symlink + ")" : ""), mnt.mount_point);
+			msg += ("%%-%ds     %%-%ds\n\n".printf(max_dev, max_mount)).printf(mnt.device.short_name_with_alias, mnt.mount_point);
 		}
 		msg += "</tt>";
 		msg += "\n" + _("Click OK to continue") + "\n";

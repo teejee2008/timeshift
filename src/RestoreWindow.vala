@@ -154,11 +154,15 @@ public class RestoreWindow : Gtk.Dialog{
 		radio_sys.toggled.connect(() => {
 			sw_partitions.sensitive = radio_other.active;
 			
+			refresh_tv_partitions();
+			
 			if (radio_sys.active){
 				App.restore_target = App.root_device;
 			}
-			
-			refresh_tv_partitions();
+			else{
+				init_mounts();
+			}
+
 			//tv_partitions_select_target(); 
 			cmb_boot_device_select_default();
 		});
@@ -595,6 +599,46 @@ public class RestoreWindow : Gtk.Dialog{
 		});
 		
 		set_app_page_state();
+		
+		init_mounts();
+		
+	}
+	
+	private void init_mounts(){
+		TreeIter iter;
+		ListStore store;
+
+		App.init_mount_list();
+
+		if (App.mirror_system){
+			//default all mount points to root device except /boot
+			for(int i = App.mount_list.size - 1; i >= 0; i--){
+				MountEntry mnt = App.mount_list[i];
+				if (mnt.mount_point != "/boot"){
+					App.mount_list.remove_at(i);
+				}
+			}
+			
+			/* Note: 
+			 * While cloning the system, /boot is the only mount point that we will leave unchanged (to avoid encrypted systems from breaking)
+			 * All other mounts like /home will be defaulted to target device (to prevent the "cloned" system from using the original device)
+			 * */
+		}
+
+		//find the root mount point set by user
+		store = (ListStore) tv_partitions.model;
+		for (bool next = store.get_iter_first (out iter); next; next = store.iter_next (ref iter)) {
+			Device pi;
+			string mount_point;
+			store.get(iter, 0, out pi);
+			store.get(iter, 1, out mount_point);
+
+			foreach(MountEntry mnt in App.mount_list){
+				if (mnt.device.device == pi.device){
+					store.set(iter, 1, mnt.mount_point, -1);
+				}
+			}
+		}
 	}
 	
 	private void set_app_page_state(){
@@ -1145,10 +1189,8 @@ public class RestoreWindow : Gtk.Dialog{
 		//refresh treeview
 		refresh_tv_exclude();
 	}
-	
 
 	private void btn_restore_clicked(){
-
 		//check if backup device is online
 		if (!check_backup_device_online()) { return; }
 		
@@ -1226,6 +1268,14 @@ public class RestoreWindow : Gtk.Dialog{
 			App.exclude_list_restore.add("/boot/*");
 		}
 		
+		//display and confirm mount points ------------
+		
+		if (!radio_sys.active){
+			if (show_mount_list() != Gtk.ResponseType.OK){
+				return;
+			}
+		}
+
 		//last option to quit - show disclaimer ------------
 		
 		if (show_disclaimer() == Gtk.ResponseType.YES){
@@ -1278,14 +1328,13 @@ public class RestoreWindow : Gtk.Dialog{
 					no_mount_points_set_by_user = false;
 					
 					App.mount_list.add(new MountEntry(pi,mount_point));
-					
+
 					if (mount_point == "/"){
 						App.restore_target = pi;
-						break;
 					}					
 				}
 			}
-			
+
 			if (App.restore_target == null){
 				//no root mount point was set by user
 				
@@ -1373,6 +1422,52 @@ public class RestoreWindow : Gtk.Dialog{
 		return response;
 	}
 
+	private int show_mount_list(){
+		string msg = _("Following mounts will be used for restored system:") + "\n\n";
+		
+		
+		int max_mount = _("Mount").length;
+		int max_dev = _("Device").length;
+		
+		foreach(MountEntry mnt in App.mount_list){
+			string symlink = "";
+			foreach(string sym in mnt.device.symlinks){
+				if (sym.has_prefix("/dev/mapper/")){
+					symlink = sym.replace("/dev/mapper/","");
+				}
+			}
+			string dev_name = mnt.device.device.replace("/dev/","") + ((symlink.length > 0) ? " (" + symlink + ")" : "");//→
+			if (dev_name.length > max_dev){ max_dev = dev_name.length; }
+			if (mnt.mount_point.length > max_mount){ max_mount = mnt.mount_point.length; }
+		}
+
+		msg += "<tt>";
+		msg += "<b>";
+		msg += ("%%-%ds     %%-%ds\n\n".printf(max_dev, max_mount)).printf(_("Device"),_("Mount"));
+		msg += "</b>";
+		foreach(MountEntry mnt in App.mount_list){
+			string symlink = "";
+			foreach(string sym in mnt.device.symlinks){
+				if (sym.has_prefix("/dev/mapper/")){
+					symlink = sym.replace("/dev/mapper/","");
+				}
+			}
+			
+			msg += ("%%-%ds     %%-%ds\n\n".printf(max_dev, max_mount)).printf(mnt.device.device.replace("/dev/","") + ((symlink.length > 0) ? " (" + symlink + ")" : ""), mnt.mount_point);
+		}
+		msg += "</tt>";
+		msg += "\n" + _("Click OK to continue") + "\n";
+		
+		var dialog = new Gtk.MessageDialog.with_markup(null, Gtk.DialogFlags.MODAL, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK_CANCEL, msg);
+		dialog.set_title(_("Confirm Mounts"));
+		dialog.set_default_size (200, -1);
+		dialog.set_transient_for(this);
+		dialog.set_modal(true);
+		int response = dialog.run();
+		dialog.destroy();
+		return response;
+	}
+	
 	private void btn_cancel_clicked(){
 		App.unmount_target_device();
 		this.response(Gtk.ResponseType.CANCEL);

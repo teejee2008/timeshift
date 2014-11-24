@@ -877,7 +877,7 @@ public class Main : GLib.Object{
 		}
 	}
 	
-	public Device read_stdin_device(Gee.ArrayList<Device> device_list){
+	public Device? read_stdin_device(Gee.ArrayList<Device> device_list){
 		string? line = stdin.read_line();
 		line = (line != null) ? line.strip() : line;
 		
@@ -892,44 +892,14 @@ public class Main : GLib.Object{
 			log_error("Invalid input");
 		}
 		else if (line.contains("/")){
-			bool found = false;
-			foreach(Device pi in device_list) {
-				if (!pi.has_linux_filesystem()) { continue; }
-				if (pi.device == line){
-					selected_device = pi;
-					found = true;
-					break;
-				}
-				else {
-					foreach(string symlink in pi.symlinks){
-						if (symlink == line){
-							selected_device = pi;
-							found = true;
-							break;
-						}
-					}
-					if (found){ break; }
-				}
-			}
-			if (!found){
+			selected_device = get_device_from_name(device_list, line);
+			if (selected_device == null){
 				log_error("Invalid input");
 			}
 		}
 		else{
-			int64 index;
-			bool found = false;
-			if (int64.try_parse(line, out index)){
-				int i = -1;
-				foreach(Device pi in device_list) {
-					if ((pi.devtype == "partition") && !pi.has_linux_filesystem()) { continue; }
-					if (++i == index){
-						selected_device = pi;
-						found = true;
-						break;
-					}
-				}
-			}
-			if (!found){
+			selected_device = get_device_from_index(device_list, line);
+			if (selected_device == null){
 				log_error("Invalid input");
 			}
 		}
@@ -937,6 +907,78 @@ public class Main : GLib.Object{
 		return selected_device;
 	}
 
+	public Device? read_stdin_device_mounts(Gee.ArrayList<Device> device_list, MountEntry mnt){
+		string? line = stdin.read_line();
+		line = (line != null) ? line.strip() : line;
+		
+		Device selected_device = null;
+		
+		if ((line == null)||(line.length == 0)||(line.down() == "c")||(line.down() == "d")){
+			//set default
+			if (mirror_system){
+				return restore_target; //root device
+			}
+			else{
+				return mnt.device; //keep current
+			}
+		}
+		else if (line.down() == "a"){
+			log_msg("Aborted.");
+			exit_app();
+			exit(0);
+		}
+		else if ((line.down() == "n")||(line.down() == "r")){
+			return restore_target; //root device
+		}
+		else if (line.contains("/")){
+			selected_device = get_device_from_name(device_list, line);
+			if (selected_device == null){
+				log_error("Invalid input");
+			}
+		}
+		else{
+			selected_device = get_device_from_index(device_list, line);
+			if (selected_device == null){
+				log_error("Invalid input");
+			}
+		}
+		
+		return selected_device;
+	}
+	
+	public Device? get_device_from_index(Gee.ArrayList<Device> device_list, string index_string){
+		int64 index;
+		if (int64.try_parse(index_string, out index)){
+			int i = -1;
+			foreach(Device pi in device_list) {
+				if ((pi.devtype == "partition") && !pi.has_linux_filesystem()) { continue; }
+				if (++i == index){
+					return pi;
+				}
+			}
+		}
+
+		return null;
+	}
+	
+	public Device? get_device_from_name(Gee.ArrayList<Device> device_list, string device_name){
+		foreach(Device pi in device_list) {
+			if (!pi.has_linux_filesystem()) { continue; }
+			if (pi.device == device_name){
+				return pi;
+			}
+			else {
+				foreach(string symlink in pi.symlinks){
+					if (symlink == device_name){
+						return pi;
+					}
+				}
+			}
+		}
+
+		return null;
+	}
+	
 	public TimeShiftBackup read_stdin_snapshot(){
 		string? line = stdin.read_line();
 		line = (line != null) ? line.strip() : line;
@@ -994,15 +1036,15 @@ public class Main : GLib.Object{
 		string? line = stdin.read_line();
 		line = (line != null) ? line.strip() : line;
 		
-		if (line.down() == "a"){
+		if ((line == null)||(line.length == 0)){
+			log_error("Invalid input");
+			return false;
+		}
+		else if (line.down() == "a"){
 			log_msg("Aborted.");
 			exit_app();
 			exit(0);
 			return true;
-		}
-		else if ((line == null)||(line.length == 0)){
-			log_error("Invalid input");
-			return false;
 		}
 		else if (line.down() == "y"){
 			cmd_skip_grub = false;
@@ -1024,6 +1066,30 @@ public class Main : GLib.Object{
 		}
 	}
 
+	public bool read_stdin_change_device(){
+		string? line = stdin.read_line();
+		line = (line != null) ? line.strip() : line;
+		
+		if ((line == null)||(line.length == 0)){
+			return false; //default=n
+		}
+		else if (line.down() == "a"){
+			log_msg("Aborted.");
+			exit_app();
+			exit(0);
+			return true;
+		}
+		else if (line.down() == "y"){
+			return true;
+		}
+		else if (line.down() == "n"){
+			return false;
+		}
+		else{
+			return false;
+		}
+	}
+	
 	public bool read_stdin_restore_confirm(){
 		string? line = stdin.read_line();
 		line = (line != null) ? line.strip() : line;
@@ -1992,7 +2058,7 @@ public class Main : GLib.Object{
 			//prompt user for target device
 			if (restore_target == null){
 				log_msg("");
-				log_msg(TERM_COLOR_YELLOW + _("Select target device") + ":\n" + TERM_COLOR_RESET);
+				log_msg(TERM_COLOR_YELLOW + _("Select target device") + " (/):\n" + TERM_COLOR_RESET);
 				list_devices();
 				log_msg("");
 
@@ -2017,13 +2083,71 @@ public class Main : GLib.Object{
 			log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
 			log_msg(_("Target Device") + ": %s".printf(restore_target.device + ((symlink.length > 0) ? " → " + symlink : "")), true);
 			log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
+		}
+		else{
+			//print error
+			log_error(_("Target device not specified!"));
+			return false;
+		}
+		
+		//select other devices in mount_list --------------------
+		
+		if (app_mode != ""){ //command line mode
+			init_mount_list();
 
+			for(int i = mount_list.size - 1; i >= 0; i--){
+				MountEntry mnt = mount_list[i];
+				Device dev = null;
+				string default_device = "";
+				
+				if (mnt.mount_point == "/"){ continue; }
+				
+				if (mirror_system){
+					default_device = restore_target.device;
+				}
+				else{
+					default_device = mnt.device.device;
+				}
+				
+				//prompt user for device
+				if (dev == null){
+					log_msg("");
+					log_msg(TERM_COLOR_YELLOW + _("Select '%s' device (default = %s)").printf(mnt.mount_point, default_device) + ":\n" + TERM_COLOR_RESET);
+					list_devices();
+					log_msg("");
+
+					while (dev == null){
+						stdout.printf(TERM_COLOR_YELLOW + _("[a = Abort, d = Default (%s), r = Root device]").printf(default_device) + "\n\n" + TERM_COLOR_RESET);
+						stdout.printf(TERM_COLOR_YELLOW + _("Enter device name or number") + ": " + TERM_COLOR_RESET);
+						stdout.flush();
+						dev = read_stdin_device_mounts(partition_list, mnt);
+					}
+					log_msg("");
+				}
+				
+				if (dev != null){
+					mnt.device = dev;
+					if (dev.device == restore_target.device){
+						mount_list.remove_at(i);
+					}
+					
+					log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
+					if (dev.device == restore_target.device){
+						log_msg(_("'%s' will be on root device").printf(mnt.mount_point), true);
+					}
+					else{
+						log_msg(_("'%s' will be on '%s'").printf(mnt.mount_point, mnt.device.device), true);
+					}
+					log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
+				}
+			}
+		}
+		
+		//mount selected devices ---------------------------------------
+		
+		if (restore_target != null){
 			if (app_mode != ""){ //commandline mode
-				//init mount list
-				mount_list.clear();
-				mount_list.add(new MountEntry(restore_target,"/"));
-
-				//mount target device
+				//mount target device and other devices
 				bool status = mount_target_device(null);
 				if (status == false){
 					return false;
@@ -2149,6 +2273,60 @@ public class Main : GLib.Object{
 		snapshot_to_restore = null;
 		
 		return thr_success;
+	}
+	
+	public void init_mount_list(){
+		mount_list.clear();
+		
+		Gee.ArrayList<FsTabEntry> fstab_list = null;
+		if (mirror_system){
+			string fstab_path = "/etc/fstab";
+			fstab_list = FsTabEntry.read_fstab_file(fstab_path);
+		}
+		else{
+			string fstab_path = snapshot_to_restore.path + "/localhost/etc/fstab";
+			fstab_list = FsTabEntry.read_fstab_file(fstab_path);
+		}
+		
+		foreach(FsTabEntry mnt in fstab_list){
+			switch(mnt.mount_point){
+				case "/":
+				case "/boot":
+				case "/home":
+					Device mnt_dev = null;
+					if (mnt.device.down().has_prefix("uuid=")){
+						string uuid = mnt.device.down()["uuid=".length:mnt.device.length];
+						if (partition_map.has_key(uuid)){
+							mnt_dev = partition_map[uuid];
+						}
+					}
+					else{
+						foreach(Device dev in partition_list){
+							if (dev.device == mnt.device){
+								mnt_dev = dev;
+								break;
+							}
+							else{
+								foreach(string symlink in dev.symlinks){
+									if (symlink == mnt.device){
+										mnt_dev = dev;
+										break;
+									}
+								}
+								if (mnt_dev != null) { break; }
+							}
+						}
+					} 
+					if (mnt_dev != null){
+						mount_list.add(new MountEntry(mnt_dev, mnt.mount_point));
+					}
+					break;
+			}
+		}
+
+		/*foreach(MountEntry mnt in mount_list){
+			log_msg("Entry:%s -> %s".printf(mnt.device.device,mnt.mount_point));
+		}*/
 	}
 	
 	public string unlock_encrypted_device(Device dev, Gtk.Window? parent_win){

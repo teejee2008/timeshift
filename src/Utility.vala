@@ -1134,7 +1134,7 @@ namespace TeeJee.Devices{
 			
 			return list;
 		}
-		
+
 		public static string create_fstab_file(FsTabEntry[] fstab_entries, bool keep_comments_and_empty_lines = true){
 			string text = "";
 			foreach(FsTabEntry entry in fstab_entries){

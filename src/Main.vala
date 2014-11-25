@@ -340,11 +340,11 @@ public class Main : GLib.Object{
 
 		switch(app_mode){
 			case "backup":
-				is_success = take_snapshot();
+				is_success = take_snapshot(false, "", null);
 				return is_success;
 
 			case "restore":
-				is_success = restore_snapshot();
+				is_success = restore_snapshot(null);
 				return is_success;
 
 			case "delete":
@@ -356,7 +356,7 @@ public class Main : GLib.Object{
 				return is_success;
 				
 			case "ondemand":
-				is_success = take_snapshot(true);
+				is_success = take_snapshot(true,"",null);
 				return is_success;
 				
 			case "list-snapshots":
@@ -1143,7 +1143,7 @@ public class Main : GLib.Object{
 	
 	//backup
 	
-	public bool take_snapshot (bool is_ondemand = false, string snapshot_comments = ""){
+	public bool take_snapshot (bool is_ondemand, string snapshot_comments, Gtk.Window? parent_win){
 		if (check_btrfs_root_layout() == false){
 			return false;
 		}
@@ -1157,7 +1157,7 @@ public class Main : GLib.Object{
 			DateTime now = new DateTime.now_local();
 
 			//mount_backup_device
-			if (!mount_backup_device()){
+			if (!mount_backup_device(null,parent_win)){
 				return false;
 			}
 			
@@ -1924,26 +1924,67 @@ public class Main : GLib.Object{
 			json.to_file(ctl_path);
 		} catch (Error e) {
 	        log_error (e.message);
-	    }
-	    		
+	    }	
 	}
-	
+
 	//restore
 
-	public bool restore_snapshot(){
+	public bool restore_snapshot(Gtk.Window? parent_win){
 		
 		bool found = false;
 		LOG_TIMESTAMP = false;
 		
 		//set snapshot device -----------------------------------------------
 		
-		if (!mirror_system){
+		if (!mirror_system){ 
+			
+			if (app_mode != ""){
+				
+				if (cmd_backup_device.length > 0){
+					//set backup device from command line argument
+					Device cmd_dev = get_device_from_name(partition_list, cmd_backup_device);
+					if (cmd_dev != null){
+						snapshot_device = cmd_dev;
+						mount_backup_device(null, parent_win);
+						update_snapshot_list();
+					}
+					else{
+						log_error(_("Could not find device") + ": '%s'".printf(cmd_backup_device));
+						exit_app();
+						exit(1);
+						return false;
+					}
+				}
+				else{
+					if ((snapshot_device == null) || (snapshot_list.size == 0)){
+						//prompt user for backup device
+						log_msg("");
+						log_msg(TERM_COLOR_YELLOW + _("Select backup device") + ":\n" + TERM_COLOR_RESET);
+						list_devices();
+						log_msg("");
+						
+						snapshot_device = null;
+						while (snapshot_device == null){
+							stdout.printf(TERM_COLOR_YELLOW + _("Enter device name or number (a=Abort)") + ": " + TERM_COLOR_RESET);
+							stdout.flush();
+							snapshot_device = read_stdin_device(partition_list);
+						}
+						log_msg("");
+						
+						if (snapshot_device != null){
+							mount_backup_device(null, parent_win);
+							update_snapshot_list();
+						}
+					}
+				}
+			}
+
 			if (snapshot_device != null){
 				//print snapshot_device name
 				log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
 				log_msg(_("Backup Device") + ": %s".printf(snapshot_device.device), true);
 				log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
-				mount_backup_device();
+				mount_backup_device(null, parent_win);
 				update_snapshot_list();
 			}
 			else{
@@ -3140,35 +3181,7 @@ public class Main : GLib.Object{
 				break;
 			}
 		}
-		
-		//set backup device from command-line argument (if specified)
-		if ((app_mode != "") && (cmd_backup_device.length > 0)){
-			bool found = false;
-			foreach(Device pi in partition_list){
-				if ((pi.device == cmd_backup_device)||(pi.uuid == cmd_backup_device)){
-					snapshot_device = pi;
-					found = true;
-					break;
-				}
-				else {
-					foreach(string symlink in pi.symlinks){
-						if (symlink == cmd_backup_device){
-							snapshot_device = pi;
-							found = true;
-							break;
-						}
-					}
-					if (found){ break; }
-				}
-			}
-			if (!found){
-				log_error(_("Could not find device") + ": '%s'".printf(cmd_backup_device));
-				exit_app();
-				exit(1);
-				return;
-			}
-		}
-		
+
 		if ((uuid.length == 0) || (snapshot_device == null)){
 			if (root_device != null){
 				log_msg (_("Warning: Backup device not set! Defaulting to system device"));
@@ -3178,7 +3191,7 @@ public class Main : GLib.Object{
 		
 		snapshot_device = unlock_and_find_device(snapshot_device, null);
 		
-		if (mount_backup_device(snapshot_device)){
+		if (mount_backup_device(snapshot_device, null)){
 			update_partition_list();
 		}
 		else{
@@ -3350,7 +3363,7 @@ public class Main : GLib.Object{
 			return null;
 	}
 
-	public bool mount_backup_device(Device? dev = null){
+	public bool mount_backup_device(Device? dev, Gtk.Window? parent_win){
 		/* Note:
 		 * If backup device is BTRFS then it will be explicitly mounted to /mnt/timeshift/backup
 		 * Otherwise existing mount point will be used.
@@ -3393,7 +3406,14 @@ public class Main : GLib.Object{
 					/* Note: Unmount errors can be ignored.
 					 * Old device will be hidden if new device is mounted successfully
 					 * */
-					
+			
+					//unlock if required
+					backup_device = unlock_and_find_device(backup_device, parent_win);
+					if (backup_device == null){
+						log_error(_("Backup device not found"));
+						return false;
+					}
+				
 					//automount
 					mount_point_backup = automount(backup_device.uuid,"", mount_point_app);
 					if (mount_point_backup.length > 0){
@@ -3639,7 +3659,7 @@ public class Main : GLib.Object{
 	
 	public bool backup_device_online(){
 		if (snapshot_device != null){
-			mount_backup_device();
+			mount_backup_device(null,null);
 			if (Device.get_mount_points(snapshot_device.uuid).size > 0){
 				return true;
 			}

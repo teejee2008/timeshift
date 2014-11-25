@@ -867,7 +867,7 @@ class MainWindow : Gtk.Window{
 		
 		//try mounting the device ------------------
 
-		bool status = App.mount_backup_device();
+		bool status = App.mount_backup_device(null, this);
 		if (status == false){
 			string msg = _("Failed to mount device") + ": %s".printf(App.snapshot_device.device);
 			var dlg = new Gtk.MessageDialog.with_markup(this, Gtk.DialogFlags.MODAL, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK, msg);
@@ -925,7 +925,7 @@ class MainWindow : Gtk.Window{
 		
 		//take snapshot ----------------
 		
-		bool is_success = App.take_snapshot(true); 
+		bool is_success = App.take_snapshot(true,"",this); 
 
 		update_progress_stop();
 		
@@ -1136,7 +1136,7 @@ class MainWindow : Gtk.Window{
 			
 				update_progress_start();
 				
-				bool is_success = App.take_snapshot(true); 
+				bool is_success = App.take_snapshot(true,"",this); 
 				
 				update_progress_stop();
 				
@@ -1169,7 +1169,7 @@ class MainWindow : Gtk.Window{
 			log_msg("GRUB will be installed on '%s'".printf(App.grub_device),true);
 		}
 
-		bool is_success = App.restore_snapshot(); 
+		bool is_success = App.restore_snapshot(this); 
 		
 		string msg;
 		if (is_success){

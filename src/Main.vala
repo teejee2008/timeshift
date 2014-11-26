@@ -156,12 +156,13 @@ public class Main : GLib.Object{
 		/*
 		var map = Device.get_mounted_filesystems_using_mtab();
 		foreach(Device pi in map.values){
-			LOG_TIMESTAMP = false;
 			log_msg(pi.description_full());
 		}
 		exit(0);
 		*/
-
+		
+		LOG_TIMESTAMP = true;
+				
 		App = new Main(args);
 
 		bool success = App.start_application(args);
@@ -190,8 +191,7 @@ public class Main : GLib.Object{
 		if (!user_is_admin()){
 			msg = _("TimeShift needs admin access to backup and restore system files.") + "\n";
 			msg += _("Please run the application as admin (using 'sudo' or 'su')");
-			
-			LOG_TIMESTAMP = false;
+
 			log_error(msg);
 			
 			if (app_mode == ""){
@@ -340,6 +340,20 @@ public class Main : GLib.Object{
 
 		switch(app_mode){
 			case "backup":
+			case "ondemand":
+			case "restore":
+			case "delete":
+			case "delete-all":
+			case "list-snapshots":
+				//set backup device from commandline argument if available or prompt user if device is null
+				if (!mirror_system){
+					get_backup_device_from_cmd(false, null);
+				}
+				break;
+		}
+
+		switch(app_mode){
+			case "backup":
 				is_success = take_snapshot(false, "", null);
 				return is_success;
 
@@ -361,20 +375,18 @@ public class Main : GLib.Object{
 				
 			case "list-snapshots":
 				LOG_ENABLE = true;
-				LOG_TIMESTAMP = false;
 				if (snapshot_list.size > 0){
 					log_msg(_("Snapshots") + ":");
 					list_snapshots(false);
 					return true;
 				}
 				else{
-					log_msg(("No snapshots found on device '%s'").printf(snapshot_device.device));
+					log_msg(_("No snapshots found on device") + " '%s'".printf(snapshot_device.device));
 					return false;
 				}
 
 			case "list-devices":
 				LOG_ENABLE = true;
-				LOG_TIMESTAMP = false;
 				log_msg(_("Devices with Linux file systems") + ":");
 				list_devices();
 				return true;
@@ -723,28 +735,40 @@ public class Main : GLib.Object{
 		{
 			switch (args[k].down()){
 				case "--backup":
+					LOG_TIMESTAMP = false;
+					LOG_DEBUG = false;
 					app_mode = "backup";
 					break;
 					
 				case "--delete":
+					LOG_TIMESTAMP = false;
+					LOG_DEBUG = false;
 					app_mode = "delete";
 					break;
 
 				case "--delete-all":
+					LOG_TIMESTAMP = false;
+					LOG_DEBUG = false;
 					app_mode = "delete-all";
 					break;
 					
 				case "--restore":
+					LOG_TIMESTAMP = false;
+					LOG_DEBUG = false;
 					mirror_system = false;
 					app_mode = "restore";
 					break;
 					
 				case "--clone":
+					LOG_TIMESTAMP = false;
+					LOG_DEBUG = false;
 					mirror_system = true;
 					app_mode = "restore";
 					break;
 
 				case "--backup-now":
+					LOG_TIMESTAMP = false;
+					LOG_DEBUG = false;
 					app_mode = "ondemand";
 					break;
 
@@ -792,36 +816,40 @@ public class Main : GLib.Object{
 				case "--list":
 				case "--list-snapshots":
 					app_mode = "list-snapshots";
-					//LOG_ENABLE = false;
 					LOG_TIMESTAMP = false;
 					LOG_DEBUG = false;
 					break;
 
 				case "--list-devices":
 					app_mode = "list-devices";
-					//LOG_ENABLE = false;
 					LOG_TIMESTAMP = false;
 					LOG_DEBUG = false;
 					break;
 					
 				default:
 					LOG_TIMESTAMP = false;
-					log_msg(_("Invalid command line arguments") + "\n");
-					Main.help_message();
+					log_error(_("Invalid command line arguments"), true);
+					log_msg(Main.help_message());
 					exit(1);
 					break;
 			}
 		}
 		
+		/* LOG_ENABLE = false; 		disables all console output
+		 * LOG_TIMESTAMP = false;	disables the timestamp prepended to every line in terminal output
+		 * LOG_DEBUG = false;		disables additional console messages
+		 * LOG_COMMANDS = true;		enables printing of all commands on terminal
+		 * */
+		 
 		if (app_mode == ""){
 			//Initialize GTK
+			LOG_TIMESTAMP = true;
 			Gtk.init(ref args);
 		}
 		
 	}
 
 	public void list_snapshots(bool paginate){
-		LOG_TIMESTAMP = false;
 		int index = -1;
 		foreach (TimeShiftBackup bak in snapshot_list){
 			index++;
@@ -832,7 +860,6 @@ public class Main : GLib.Object{
 	}
 	
 	public void list_devices(){
-		LOG_TIMESTAMP = false;
 		int index = -1;
 		foreach(Device pi in partition_list) {
 			if (!pi.has_linux_filesystem()) { continue; }
@@ -1168,7 +1195,7 @@ public class Main : GLib.Object{
 			if (!is_ondemand){
 				//check if first snapshot was taken
 				if (status_code == 2){
-					log_error(msg);
+					log_error(_("First snapshot not taken"));
 					log_error(_("Please take the first snapshot by running 'sudo timeshift --backup-now'"));
 					return false;
 				}
@@ -1177,8 +1204,7 @@ public class Main : GLib.Object{
 			//check space
 			if ((status_code == 1) || (status_code == 2)){
 				is_scheduled = false;
-				log_error(msg);
-				log_error(_("Scheduled snapshots will be disabled till another device is selected."));
+				log_error(_("Backup device does not have enough space!") + " " + msg);
 				return false;
 			}
 
@@ -1359,8 +1385,7 @@ public class Main : GLib.Object{
 				}
 			}
 			else{
-				log_msg(_("Scheduled snapshots are disabled"));
-				log_msg(_("Nothing to do!"));
+				log_msg(_("Scheduled snapshots are disabled") + " - " + _("Nothing to do!"));
 				cron_job_update();
 			}
 
@@ -1928,57 +1953,53 @@ public class Main : GLib.Object{
 	}
 
 	//restore
+	public void get_backup_device_from_cmd(bool prompt_if_empty, Gtk.Window? parent_win){
+		if (cmd_backup_device.length > 0){
+			//set backup device from command line argument
+			Device cmd_dev = get_device_from_name(partition_list, cmd_backup_device);
+			if (cmd_dev != null){
+				snapshot_device = cmd_dev;
+				mount_backup_device(null, parent_win);
+				update_snapshot_list();
+			}
+			else{
+				log_error(_("Could not find device") + ": '%s'".printf(cmd_backup_device));
+				exit_app();
+				exit(1);
+			}
+		}
+		else{
+			if ((snapshot_device == null) || (prompt_if_empty && (snapshot_list.size == 0))){
+				//prompt user for backup device
+				log_msg("");
+				
+				log_msg(TERM_COLOR_YELLOW + _("Select backup device") + ":\n" + TERM_COLOR_RESET);
+				list_devices();
+				log_msg("");
+				
+				snapshot_device = null;
+				while (snapshot_device == null){
+					stdout.printf(TERM_COLOR_YELLOW + _("Enter device name or number (a=Abort)") + ": " + TERM_COLOR_RESET);
+					stdout.flush();
+					snapshot_device = read_stdin_device(partition_list);
+				}
+				
+				log_msg("");
 
+				if (snapshot_device != null){
+					mount_backup_device(null, parent_win);
+					update_snapshot_list();
+				}
+			}
+		}
+	}
+	
 	public bool restore_snapshot(Gtk.Window? parent_win){
-		
 		bool found = false;
-		LOG_TIMESTAMP = false;
 		
 		//set snapshot device -----------------------------------------------
 		
 		if (!mirror_system){ 
-			
-			if (app_mode != ""){
-				
-				if (cmd_backup_device.length > 0){
-					//set backup device from command line argument
-					Device cmd_dev = get_device_from_name(partition_list, cmd_backup_device);
-					if (cmd_dev != null){
-						snapshot_device = cmd_dev;
-						mount_backup_device(null, parent_win);
-						update_snapshot_list();
-					}
-					else{
-						log_error(_("Could not find device") + ": '%s'".printf(cmd_backup_device));
-						exit_app();
-						exit(1);
-						return false;
-					}
-				}
-				else{
-					if ((snapshot_device == null) || (snapshot_list.size == 0)){
-						//prompt user for backup device
-						log_msg("");
-						log_msg(TERM_COLOR_YELLOW + _("Select backup device") + ":\n" + TERM_COLOR_RESET);
-						list_devices();
-						log_msg("");
-						
-						snapshot_device = null;
-						while (snapshot_device == null){
-							stdout.printf(TERM_COLOR_YELLOW + _("Enter device name or number (a=Abort)") + ": " + TERM_COLOR_RESET);
-							stdout.flush();
-							snapshot_device = read_stdin_device(partition_list);
-						}
-						log_msg("");
-						
-						if (snapshot_device != null){
-							mount_backup_device(null, parent_win);
-							update_snapshot_list();
-						}
-					}
-				}
-			}
-
 			if (snapshot_device != null){
 				//print snapshot_device name
 				log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
@@ -2287,8 +2308,6 @@ public class Main : GLib.Object{
 			}
 		}
 
-		LOG_TIMESTAMP = true;
-		
 		try {
 			thr_running = true;
 			thr_success = false;
@@ -2897,7 +2916,7 @@ public class Main : GLib.Object{
 	public bool delete_snapshot(TimeShiftBackup? snapshot = null){
 		bool found = false;
 		snapshot_to_delete = snapshot;
-
+		
 		//set snapshot -----------------------------------------------
 
 		if (app_mode != ""){ //command-line mode
@@ -2925,12 +2944,10 @@ public class Main : GLib.Object{
 			if (snapshot_to_delete == null){
 				
 				if (snapshot_list.size == 0){
-					log_error(_("No snapshots found on device") + ": '%s'".printf(snapshot_device.device));
+					log_msg(_("No snapshots found on device") + " '%s'".printf(snapshot_device.device));
 					return false;
 				}
-				
-				LOG_TIMESTAMP = false;
-								
+		
 				log_msg("");
 				log_msg(TERM_COLOR_YELLOW + _("Select snapshot to delete") + ":\n" + TERM_COLOR_RESET);
 				list_snapshots(true);
@@ -2942,8 +2959,6 @@ public class Main : GLib.Object{
 					snapshot_to_delete = read_stdin_snapshot();
 				}
 				log_msg("");
-				
-				LOG_TIMESTAMP = true;
 			}
 		}
 		
@@ -3040,7 +3055,7 @@ public class Main : GLib.Object{
 			return delete_directory(timeshift_dir);
 		}
 		else{
-			log_msg(("No snapshots found on device '%s'").printf(snapshot_device.device));
+			log_msg(_("No snapshots found on device") + " '%s'".printf(snapshot_device.device));
 			return true; 
 		}
 	}
@@ -3174,7 +3189,7 @@ public class Main : GLib.Object{
         var config = node.get_object();
         
         string uuid = json_get_string(config,"backup_device_uuid","");
-
+		
         foreach(Device pi in partition_list){
 			if (pi.uuid == uuid){
 				snapshot_device = pi;
@@ -3182,20 +3197,36 @@ public class Main : GLib.Object{
 			}
 		}
 
-		if ((uuid.length == 0) || (snapshot_device == null)){
-			if (root_device != null){
-				log_msg (_("Warning: Backup device not set! Defaulting to system device"));
+		if (cmd_backup_device.length > 0){
+			Device cmd_dev = get_device_from_name(partition_list, cmd_backup_device);
+			if (cmd_dev != null){
+				snapshot_device = cmd_dev;
+			}
+			else{
+				log_error(_("Could not find device") + ": '%s'".printf(cmd_backup_device));
+				exit_app();
+				exit(1);
+			}
+		}
+		
+		if (snapshot_device == null){
+			if ((root_device != null) && (app_mode == "")){
+				log_msg (_("Backup device not set! Defaulting to system device") + " '%s'".printf(root_device.device));
 				snapshot_device = root_device;
 			}
 		}
 		
-		snapshot_device = unlock_and_find_device(snapshot_device, null);
+		/* Note: In commandline mode, user will be prompted for backup device instead of defaulting to system device */
+		 
+		if (snapshot_device != null){
+			snapshot_device = unlock_and_find_device(snapshot_device, null);
 		
-		if (mount_backup_device(snapshot_device, null)){
-			update_partition_list();
-		}
-		else{
-			snapshot_device = null;
+			if (mount_backup_device(snapshot_device, null)){
+				update_partition_list();
+			}
+			else{
+				snapshot_device = null;
+			}
 		}
 
 		this.is_scheduled = json_get_bool(config,"is_scheduled", is_scheduled);
@@ -3376,6 +3407,7 @@ public class Main : GLib.Object{
 		}
 		
 		if (backup_device == null){
+			log_error(_("Backup device not set!"));
 			return false;
 		}
 		else{
@@ -3429,7 +3461,6 @@ public class Main : GLib.Object{
 				return (mount_point_backup.length > 0);
 			}
 		}
-		
 	}
 	
 	public bool mount_target_device(Gtk.Window? parent_win){

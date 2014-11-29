@@ -3411,6 +3411,14 @@ public class Main : GLib.Object{
 			return false;
 		}
 		else{
+			
+			//unlock if required
+			backup_device = unlock_and_find_device(backup_device, parent_win);
+			if (backup_device == null){
+				log_error(_("Backup device not found"));
+				return false;
+			}
+					
 			if (backup_device.type == "btrfs"){
 				//unmount
 				unmount_backup_device();
@@ -3438,14 +3446,7 @@ public class Main : GLib.Object{
 					/* Note: Unmount errors can be ignored.
 					 * Old device will be hidden if new device is mounted successfully
 					 * */
-			
-					//unlock if required
-					backup_device = unlock_and_find_device(backup_device, parent_win);
-					if (backup_device == null){
-						log_error(_("Backup device not found"));
-						return false;
-					}
-				
+
 					//automount
 					mount_point_backup = automount(backup_device.uuid,"", mount_point_app);
 					if (mount_point_backup.length > 0){

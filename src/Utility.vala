@@ -480,6 +480,11 @@ namespace TeeJee.Devices{
 			}
 		}
 		
+		/* Returns: 
+		 * 'sda3' for '/dev/sda3'
+		 * 'luks' for '/dev/mapper/luks'
+		 * */
+		 
 		public string name{
 			owned get{
 				if (devtype == "partition"){
@@ -1200,7 +1205,7 @@ namespace TeeJee.Devices{
 			uuid = device_or_uuid;
 			device = "/dev/disk/by-uuid/%s".printf(uuid);
 		}
-		
+
 		//check if already mounted -------------
 		
 		var map = Device.get_mounted_filesystems_using_mtab();
@@ -1210,7 +1215,7 @@ namespace TeeJee.Devices{
 				return true;
 			}
 		}
-			
+
 		try{
 			//check and create mount point -------------------
 			
@@ -1229,6 +1234,7 @@ namespace TeeJee.Devices{
 			}
 
 			Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
+
 			if (ret_val != 0){
 				log_error ("Failed to mount device '%s' at mount point '%s'".printf(device, mount_point));
 				log_error (std_err);

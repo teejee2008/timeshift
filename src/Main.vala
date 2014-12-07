@@ -1184,7 +1184,7 @@ public class Main : GLib.Object{
 			DateTime now = new DateTime.now_local();
 
 			//mount_backup_device
-			if (!mount_backup_device(null,parent_win)){
+			if (!mount_backup_device(parent_win)){
 				return false;
 			}
 			
@@ -1959,7 +1959,7 @@ public class Main : GLib.Object{
 			Device cmd_dev = get_device_from_name(partition_list, cmd_backup_device);
 			if (cmd_dev != null){
 				snapshot_device = cmd_dev;
-				mount_backup_device(null, parent_win);
+				mount_backup_device(parent_win);
 				update_snapshot_list();
 			}
 			else{
@@ -1987,7 +1987,7 @@ public class Main : GLib.Object{
 				log_msg("");
 
 				if (snapshot_device != null){
-					mount_backup_device(null, parent_win);
+					mount_backup_device(parent_win);
 					update_snapshot_list();
 				}
 			}
@@ -2005,7 +2005,7 @@ public class Main : GLib.Object{
 				log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
 				log_msg(_("Backup Device") + ": %s".printf(snapshot_device.device), true);
 				log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
-				mount_backup_device(null, parent_win);
+				mount_backup_device(parent_win);
 				update_snapshot_list();
 			}
 			else{
@@ -3221,7 +3221,7 @@ public class Main : GLib.Object{
 		if (snapshot_device != null){
 			snapshot_device = unlock_and_find_device(snapshot_device, null);
 		
-			if (mount_backup_device(snapshot_device, null)){
+			if (mount_backup_device(null)){
 				update_partition_list();
 			}
 			else{
@@ -3315,6 +3315,21 @@ public class Main : GLib.Object{
 					Device p1 = (Device) a;
 					Device p2 = (Device) b;
 					
+					int index = 0;
+					while (index < p1.device.length){
+						if (Posix.isdigit(p1.device[index])){
+							if (p1.device[0:index-1] == p2.device[0:index-1]){
+								int num_a = int.parse(p1.device[index:p1.device.length]);
+								int num_b = int.parse(p2.device[index:p2.device.length]);
+								return (num_a == num_b) ? 0 : ((num_a < num_b) ? -1 : 1);
+							}
+							else{
+								return strcmp(p1.device,p2.device);
+							}
+						}
+						index++;
+					}
+					
 					return strcmp(p1.device,p2.device);
 				});
 			return list;
@@ -3394,39 +3409,35 @@ public class Main : GLib.Object{
 			return null;
 	}
 
-	public bool mount_backup_device(Device? dev, Gtk.Window? parent_win){
+	public bool mount_backup_device(Gtk.Window? parent_win){
 		/* Note:
 		 * If backup device is BTRFS then it will be explicitly mounted to /mnt/timeshift/backup
 		 * Otherwise existing mount point will be used.
 		 * This is required since we need to mount the root subvolume of the BTRFS filesystem
 		 * */
 		 
-		Device backup_device = dev;
-		if (backup_device == null){
-			backup_device = snapshot_device;
-		}
-		
-		if (backup_device == null){
+		if (snapshot_device == null){
 			log_error(_("Backup device not set!"));
 			return false;
 		}
 		else{
 			
 			//unlock if required
-			backup_device = unlock_and_find_device(backup_device, parent_win);
-			if (backup_device == null){
+			snapshot_device = unlock_and_find_device(snapshot_device, parent_win);
+			if (snapshot_device == null){
 				log_error(_("Backup device not found"));
 				return false;
 			}
-					
-			if (backup_device.type == "btrfs"){
+
+			if (snapshot_device.type == "btrfs"){
 				//unmount
 				unmount_backup_device();
 
 				//mount
 				mount_point_backup = mount_point_app + "/backup";
 				check_and_create_dir_with_parents(mount_point_backup);
-				if (mount(backup_device.uuid, mount_point_backup, "")){
+
+				if (mount(snapshot_device.uuid, mount_point_backup, "")){
 					if ((app_mode == "")||(LOG_DEBUG)){
 						log_msg(_("Backup path changed to '%s/timeshift'").printf((mount_point_backup == "/") ? "" : mount_point_backup));
 					}
@@ -3438,7 +3449,7 @@ public class Main : GLib.Object{
 				}
 			}
 			else{
-				string backup_device_mount_point = get_device_mount_point(backup_device.uuid);
+				string backup_device_mount_point = get_device_mount_point(snapshot_device.uuid);
 				if ((mount_point_backup.length == 0) || (backup_device_mount_point != mount_point_backup)){
 					//unmount
 					unmount_backup_device(false);
@@ -3448,7 +3459,7 @@ public class Main : GLib.Object{
 					 * */
 
 					//automount
-					mount_point_backup = automount(backup_device.uuid,"", mount_point_app);
+					mount_point_backup = automount(snapshot_device.uuid,"", mount_point_app);
 					if (mount_point_backup.length > 0){
 						if ((app_mode == "")||(LOG_DEBUG)){
 							log_msg(_("Backup path changed to '%s/timeshift'").printf((mount_point_backup == "/") ? "" : mount_point_backup));
@@ -3691,7 +3702,7 @@ public class Main : GLib.Object{
 	
 	public bool backup_device_online(){
 		if (snapshot_device != null){
-			mount_backup_device(null,null);
+			mount_backup_device(null);
 			if (Device.get_mount_points(snapshot_device.uuid).size > 0){
 				return true;
 			}

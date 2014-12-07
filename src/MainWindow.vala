@@ -867,7 +867,7 @@ class MainWindow : Gtk.Window{
 		
 		//try mounting the device ------------------
 
-		bool status = App.mount_backup_device(null, this);
+		bool status = App.mount_backup_device(this);
 		if (status == false){
 			string msg = _("Failed to mount device") + ": %s".printf(App.snapshot_device.device);
 			var dlg = new Gtk.MessageDialog.with_markup(this, Gtk.DialogFlags.MODAL, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK, msg);

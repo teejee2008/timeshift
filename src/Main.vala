@@ -376,7 +376,7 @@ public class Main : GLib.Object{
 			case "list-snapshots":
 				LOG_ENABLE = true;
 				if (snapshot_list.size > 0){
-					log_msg(_("Snapshots") + ":");
+					log_msg(_("Snapshots on device %s").printf(snapshot_device.full_name_with_alias) + ":");
 					list_snapshots(false);
 					return true;
 				}
@@ -1959,7 +1959,10 @@ public class Main : GLib.Object{
 			Device cmd_dev = get_device_from_name(partition_list, cmd_backup_device);
 			if (cmd_dev != null){
 				snapshot_device = cmd_dev;
-				mount_backup_device(parent_win);
+				if (!mount_backup_device(parent_win)){
+					exit_app();
+					exit(1);
+				}
 				update_snapshot_list();
 			}
 			else{
@@ -2406,16 +2409,16 @@ public class Main : GLib.Object{
 
 			switch (retval){
 				case 512: //invalid passphrase
-					log_msg(_("Wrong Passphrase") + ": " + _("Failed to unlock device"));
+					log_error(_("Wrong Passphrase") + ": " + _("Failed to unlock device"));
 					return ""; //return
-				case 1280: //already unlocked
-					log_msg(_("Unlocked device is mapped to '%s'").printf(mapped_name));
+				case 1280: //already unlocked and mapped to unknown name
+					log_error(_("Encrypted device '%s' is already unlocked and mapped to another device name. Select the unlocked device instead of selecting the encrypted device.").printf(dev.device));
 					break;
 				case 0: //success
 					log_msg(_("Unlocked device is mapped to '%s'").printf(mapped_name));
 					break;
 				default: //unknown error
-					log_msg(_("Failed to unlock device"));
+					log_error(_("Failed to unlock device"));
 					return ""; //return
 			}
 
@@ -2442,8 +2445,8 @@ public class Main : GLib.Object{
 				case 512: //invalid passphrase
 					gtk_messagebox(_("Wrong Passphrase"),_("Wrong Passphrase") + ": " + _("Failed to unlock device"), parent_win);
 					return ""; //return
-				case 1280: //already unlocked
-					//gtk_messagebox(_("Encrypted Device"),_("Unlocked device is mapped to '%s'.").printf(mapped_name), parent_win);
+				case 1280: //already unlocked and mapped to unknown name
+					gtk_messagebox(_("Unlocked Device"),_("Encrypted device '%s' is already unlocked and mapped to another device name. Select the unlocked device instead of selecting the encrypted device.").printf(dev.device), parent_win);
 					break;
 				case 0: //success
 					gtk_messagebox(_("Unlocked Successfully"),_("Unlocked device is mapped to '%s'.").printf(mapped_name), parent_win);
@@ -3215,17 +3218,18 @@ public class Main : GLib.Object{
 				snapshot_device = root_device;
 			}
 		}
-		
 		/* Note: In commandline mode, user will be prompted for backup device instead of defaulting to system device */
-		 
-		if (snapshot_device != null){
-			snapshot_device = unlock_and_find_device(snapshot_device, null);
 		
-			if (mount_backup_device(null)){
-				update_partition_list();
-			}
-			else{
-				snapshot_device = null;
+		if (snapshot_device != null){
+			if ((app_mode == "") || (cmd_backup_device.length == 0)){ //either GUI mode or command mode without backup device argument
+				snapshot_device = unlock_and_find_device(snapshot_device, null);
+			
+				if (mount_backup_device(null)){
+					update_partition_list();
+				}
+				else{
+					snapshot_device = null;
+				}
 			}
 		}
 

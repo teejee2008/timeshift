@@ -129,7 +129,6 @@ public class Main : GLib.Object{
 	//initialization
 
 	public static int main (string[] args) {
-
 		set_locale();
 
 		//show help and exit
@@ -376,7 +375,7 @@ public class Main : GLib.Object{
 			case "list-snapshots":
 				LOG_ENABLE = true;
 				if (snapshot_list.size > 0){
-					log_msg(_("Snapshots on device %s").printf(snapshot_device.full_name_with_alias) + ":");
+					log_msg(_("Snapshots on device %s").printf(snapshot_device.full_name_with_alias) + ":\n");
 					list_snapshots(false);
 					return true;
 				}
@@ -387,7 +386,7 @@ public class Main : GLib.Object{
 
 			case "list-devices":
 				LOG_ENABLE = true;
-				log_msg(_("Devices with Linux file systems") + ":");
+				log_msg(_("Devices with Linux file systems") + ":\n");
 				list_devices();
 				return true;
 				
@@ -850,21 +849,105 @@ public class Main : GLib.Object{
 	}
 
 	public void list_snapshots(bool paginate){
+		
 		int index = -1;
+		int count = 0;
 		foreach (TimeShiftBackup bak in snapshot_list){
 			index++;
 			if (!paginate || ((index >= snapshot_list_start_index) && (index < snapshot_list_start_index + 10))){
-				log_msg("%4d > %s%s%s".printf(index, bak.name, " ~ " + bak.taglist_short, (bak.description.length > 0) ? " ~ " + bak.description : ""));
+				count++;
 			}
 		}
+		
+		string[,] grid = new string[count+1,5];
+		bool[] right_align = { false, false, false, false, false};
+		
+		int row = 0;
+		int col = -1;
+		grid[row, ++col] = _("Num");
+		grid[row, ++col] = "";
+		grid[row, ++col] = _("Name");
+		grid[row, ++col] = _("Tags");
+		grid[row, ++col] = _("Description");
+		row++;
+		
+		index = -1;
+		foreach (TimeShiftBackup bak in snapshot_list){
+			index++;
+			if (!paginate || ((index >= snapshot_list_start_index) && (index < snapshot_list_start_index + 10))){
+				col = -1;
+				grid[row, ++col] = "%d".printf(row - 1);
+				grid[row, ++col] = ">";
+				grid[row, ++col] = "%s".printf(bak.name);
+				grid[row, ++col] = "%s".printf(bak.taglist_short);
+				grid[row, ++col] = "%s".printf(bak.description);
+				row++;
+			}
+		}
+		
+		print_grid(grid, right_align);
 	}
 	
 	public void list_devices(){
-		int index = -1;
+		int count = 0;
 		foreach(Device pi in partition_list) {
 			if (!pi.has_linux_filesystem()) { continue; }
-			//log_msg("%4d > %-15s   %s %10s   %s".printf(++index, pi.device, pi.uuid, (pi.size_mb > 0) ? "%0.0f GB".printf(pi.size_mb / 1024.0) : "", pi.label));
-			log_msg("%4d > %s  %s  %s  %s  %s".printf(++index, pi.short_name_with_alias, pi.uuid, (pi.size_mb > 0) ? "%0.0fGB".printf(pi.size_mb / 1024.0) : "", pi.type, pi.label));
+			count++;
+		}
+		
+		string[,] grid = new string[count+1,6];
+		bool[] right_align = { false, false, false, true, true, false};
+		
+		int row = 0;
+		int col = -1;
+		grid[row, ++col] = _("Num");
+		grid[row, ++col] = "";
+		grid[row, ++col] = _("Device");
+		//grid[row, ++col] = _("UUID");
+		grid[row, ++col] = _("Size");
+		grid[row, ++col] = _("Type");
+		grid[row, ++col] = _("Label");
+		row++;
+		
+		foreach(Device pi in partition_list) {
+			if (!pi.has_linux_filesystem()) { continue; }
+
+			col = -1;
+			grid[row, ++col] = "%d".printf(row - 1);
+			grid[row, ++col] = ">";
+			grid[row, ++col] = "%s".printf(pi.short_name_with_alias);
+			//grid[row, ++col] = "%s".printf(pi.uuid);
+			grid[row, ++col] = "%s".printf((pi.size_mb > 0) ? "%s GB".printf(pi.size) : "?? GB");
+			grid[row, ++col] = "%s".printf(pi.type);
+			grid[row, ++col] = "%s".printf(pi.label);
+			row++;
+		}
+		
+		print_grid(grid, right_align);
+	}
+	
+	public void print_grid(string[,] grid, bool[] right_align, bool has_header = true){
+		int[] col_width = new int[grid.length[1]];
+		
+		for(int col=0; col<grid.length[1]; col++){
+			for(int row=0; row<grid.length[0]; row++){
+				if (grid[row,col].length > col_width[col]){
+					col_width[col] = grid[row,col].length;
+				}
+			}
+		}
+
+		for(int row=0; row<grid.length[0]; row++){
+			for(int col=0; col<grid.length[1]; col++){
+				string fmt = "%" + (right_align[col] ? "+" : "-") + col_width[col].to_string() + "s  ";
+				stdout.printf(fmt.printf(grid[row,col]));
+			}
+			stdout.printf("\n");
+			
+			if (has_header && (row == 0)){
+				stdout.printf(string.nfill(78, '-'));
+				stdout.printf("\n");
+			}
 		}
 	}
 	
@@ -874,28 +957,48 @@ public class Main : GLib.Object{
 		foreach(Device di in get_block_devices()) {
 			grub_device_list.add(di);
 		}
-		
+
 		//add partitions
 		var list = partition_list;
 		foreach(Device pi in list) {
 			if (!pi.has_linux_filesystem()) { continue; }
+			if (pi.device.has_prefix("/dev/dm-")) { continue; }
 			grub_device_list.add(pi);
 		}
 		
-		//sort
-		grub_device_list.sort((a,b) => { 
-			Device p1 = (Device) a;
-			Device p2 = (Device) b;
-			
-			return strcmp(p1.device,p2.device);
-		});
+		/*Note: Lists are already sorted. No need to sort again */
 		
-		if (print_to_console){
-			int index = -1;
-			foreach(Device entry in grub_device_list) {
-				log_msg("%4d > %-15s ~ %s".printf(++index, entry.device, entry.description().split("~")[1].strip()));
+		string[,] grid = new string[grub_device_list.size+1,4];
+		bool[] right_align = { false, false, false, false };
+		
+		int row = 0;
+		int col = -1;
+		grid[row, ++col] = _("Num");
+		grid[row, ++col] = "";
+		grid[row, ++col] = _("Device");
+		grid[row, ++col] = _("Description");
+		row++;
+		
+		string desc = "";
+		foreach(Device pi in grub_device_list) {
+			col = -1;
+			grid[row, ++col] = "%d".printf(row - 1);
+			grid[row, ++col] = ">";
+			grid[row, ++col] = "%s".printf(pi.short_name_with_alias);
+
+			if (pi.devtype == "disk"){
+				desc = "%s".printf(((pi.vendor.length > 0)||(pi.model.length > 0)) ? (pi.vendor + " " + pi.model  + " [MBR]") : "");
 			}
+			else{
+				desc = "%5s, ".printf(pi.type);
+				desc += "%10s".printf((pi.size_mb > 0) ? "%s GB".printf(pi.size) : "?? GB");
+				desc += "%s".printf((pi.label.length > 0) ? ", " + pi.label : "");
+			}
+			grid[row, ++col] = "%s".printf(desc);
+			row++;
 		}
+		
+		print_grid(grid, right_align);
 	}
 	
 	public Device? read_stdin_device(Gee.ArrayList<Device> device_list){
@@ -3322,7 +3425,7 @@ public class Main : GLib.Object{
 					int index = 0;
 					while (index < p1.device.length){
 						if (Posix.isdigit(p1.device[index])){
-							if (p1.device[0:index-1] == p2.device[0:index-1]){
+							if (p1.device[0:index] == p2.device[0:index]){
 								int num_a = int.parse(p1.device[index:p1.device.length]);
 								int num_b = int.parse(p2.device[index:p2.device.length]);
 								return (num_a == num_b) ? 0 : ((num_a < num_b) ? -1 : 1);

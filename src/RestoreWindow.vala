@@ -784,6 +784,7 @@ public class RestoreWindow : Gtk.Dialog{
 		var list = App.partition_list;
 		foreach(Device pi in list) {
 			if (!pi.has_linux_filesystem()) { continue; }
+			if (pi.device.has_prefix("/dev/dm-")) { continue; }
 			device_list.add(pi);
 		}
 		

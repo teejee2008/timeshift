@@ -498,16 +498,16 @@ namespace TeeJee.Devices{
 
 		public string full_name_with_alias{
 			owned get{
-				string fullname = "";
+				string text = "";
 				string symlink = "";
 				foreach(string sym in symlinks){
 					if (sym.has_prefix("/dev/mapper/")){
 						symlink = sym;
 					}
 				}
-				fullname = device + ((symlink.length > 0) ? " (" + symlink + ")" : ""); //→
+				text = device + ((symlink.length > 0) ? " (" + symlink + ")" : ""); //→
 				if (devtype == "partition"){
-					return fullname;
+					return text;
 				}
 				else{
 					return name;
@@ -517,7 +517,25 @@ namespace TeeJee.Devices{
 		
 		public string short_name_with_alias{
 			owned get{
-				return full_name_with_alias.replace("/dev/mapper/","").replace("/dev/","");
+				string text = "";
+				string symlink = "";
+				foreach(string sym in symlinks){
+					if (sym.has_prefix("/dev/mapper/")){
+						symlink = sym.replace("/dev/mapper/","").replace("/dev/","");
+					}
+				}
+				
+				if (symlink.length > 15){
+					symlink = symlink[0:14] + "...";
+				}
+				text = device.replace("/dev/mapper/","").replace("/dev/","") + ((symlink.length > 0) ? " (" + symlink + ")" : ""); //→
+				
+				if (devtype == "partition"){
+					return text;
+				}
+				else{
+					return name;
+				}
 			}
 		}
 

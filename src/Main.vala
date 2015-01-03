@@ -98,6 +98,7 @@ public class Main : GLib.Object{
 	public bool thr_running = false;
 	public int thr_retval = -1;
 	public string thr_arg1 = "";
+	public bool thr_timeout_active = false;
 	
 	public int startup_delay_interval_mins = 10;
 	public int retain_snapshots_max_days = 200;
@@ -849,11 +850,8 @@ public class Main : GLib.Object{
 	}
 
 	public void list_snapshots(bool paginate){
-		
-		int index = -1;
 		int count = 0;
-		foreach (TimeShiftBackup bak in snapshot_list){
-			index++;
+		for(int index = 0; index < snapshot_list.size; index++){
 			if (!paginate || ((index >= snapshot_list_start_index) && (index < snapshot_list_start_index + 10))){
 				count++;
 			}
@@ -870,10 +868,9 @@ public class Main : GLib.Object{
 		grid[row, ++col] = _("Tags");
 		grid[row, ++col] = _("Description");
 		row++;
-		
-		index = -1;
-		foreach (TimeShiftBackup bak in snapshot_list){
-			index++;
+
+		for(int index = 0; index < snapshot_list.size; index++){
+			TimeShiftBackup bak = snapshot_list[index];
 			if (!paginate || ((index >= snapshot_list_start_index) && (index < snapshot_list_start_index + 10))){
 				col = -1;
 				grid[row, ++col] = "%d".printf(row - 1);
@@ -1000,15 +997,47 @@ public class Main : GLib.Object{
 		
 		print_grid(grid, right_align);
 	}
+
+	//input prompt timeout
+	
+	public void start_timeout_counter(){
+		try {
+			thr_timeout_active = true;
+			Thread.create<void> (start_timeout_counter_thread, true);
+		} 
+		catch (Error e) {
+			log_error (e.message);
+		}
+	}
+	
+	public void start_timeout_counter_thread(){
+		Thread.usleep((ulong) GLib.TimeSpan.MILLISECOND * 1000 * 20);
+		if (thr_timeout_active){
+			thr_timeout_active = false;
+			stdout.printf("\n");
+			log_error(_("No response from user"));
+			log_msg(_("Aborted."));
+			exit(0);
+		}
+	}
+	
+	public void stop_timeout_counter(){
+		thr_timeout_active = false;
+	}
+	
+	//prompt for input
 	
 	public Device? read_stdin_device(Gee.ArrayList<Device> device_list){
+		start_timeout_counter();
 		string? line = stdin.read_line();
+		stop_timeout_counter();
+		
 		line = (line != null) ? line.strip() : line;
 		
 		Device selected_device = null;
 		
 		if (line.down() == "a"){
-			log_msg("Aborted.");
+			log_msg(_("Aborted."));
 			exit_app();
 			exit(0);
 		}
@@ -1030,9 +1059,12 @@ public class Main : GLib.Object{
 		
 		return selected_device;
 	}
-
+	
 	public Device? read_stdin_device_mounts(Gee.ArrayList<Device> device_list, MountEntry mnt){
+		start_timeout_counter();
 		string? line = stdin.read_line();
+		stop_timeout_counter();
+		
 		line = (line != null) ? line.strip() : line;
 		
 		Device selected_device = null;
@@ -1088,12 +1120,12 @@ public class Main : GLib.Object{
 	public Device? get_device_from_name(Gee.ArrayList<Device> device_list, string device_name){
 		foreach(Device pi in device_list) {
 			if (!pi.has_linux_filesystem()) { continue; }
-			if (pi.device == device_name){
+			if ((pi.device == device_name)||(pi.device.replace("/dev/","") == device_name)){
 				return pi;
 			}
 			else {
 				foreach(string symlink in pi.symlinks){
-					if (symlink == device_name){
+					if ((symlink == device_name)||(symlink.replace("/dev/","").replace("/dev/mapper/","") == device_name)){
 						return pi;
 					}
 				}
@@ -1104,7 +1136,10 @@ public class Main : GLib.Object{
 	}
 	
 	public TimeShiftBackup read_stdin_snapshot(){
+		start_timeout_counter();
 		string? line = stdin.read_line();
+		stop_timeout_counter();
+		
 		line = (line != null) ? line.strip() : line;
 		
 		TimeShiftBackup selected_snapshot = null;
@@ -1157,7 +1192,10 @@ public class Main : GLib.Object{
 	}
 	
 	public bool read_stdin_grub_install(){
+		start_timeout_counter();
 		string? line = stdin.read_line();
+		stop_timeout_counter();
+		
 		line = (line != null) ? line.strip() : line;
 		
 		if ((line == null)||(line.length == 0)){
@@ -1191,7 +1229,10 @@ public class Main : GLib.Object{
 	}
 
 	public bool read_stdin_change_device(){
+		start_timeout_counter();
 		string? line = stdin.read_line();
+		stop_timeout_counter();
+		
 		line = (line != null) ? line.strip() : line;
 		
 		if ((line == null)||(line.length == 0)){
@@ -1215,7 +1256,10 @@ public class Main : GLib.Object{
 	}
 	
 	public bool read_stdin_restore_confirm(){
+		start_timeout_counter();
 		string? line = stdin.read_line();
+		stop_timeout_counter();
+		
 		line = (line != null) ? line.strip() : line;
 		
 		if ((line.down() == "a")||(line.down() == "n")){
@@ -2505,11 +2549,14 @@ public class Main : GLib.Object{
 				}
 			}
 			
+			start_timeout_counter();
+
 			//prompt user to unlock
 			string cmd = "cryptsetup luksOpen '%s' '%s'".printf(dev.device, mapped_name);
 			int retval = Posix.system(cmd);
+			stop_timeout_counter();
 			log_msg("");
-
+			
 			switch (retval){
 				case 512: //invalid passphrase
 					log_error(_("Wrong Passphrase") + ": " + _("Failed to unlock device"));
@@ -3622,7 +3669,7 @@ public class Main : GLib.Object{
 			if (restore_target.type == "btrfs"){
 
 				//check subvolume layout
-				if (check_btrfs_volume(restore_target) == false){
+				if (!check_btrfs_volume(restore_target) && snapshot_to_restore.has_subvolumes()){
 					string msg = _("The target partition has an unsupported subvolume layout.") + "\n";
 					msg += _("Only ubuntu-type layouts with @ and @home subvolumes are currently supported.");
 
@@ -4271,6 +4318,15 @@ public class TimeShiftBackup : GLib.Object{
 	public void read_fstab_file(){
 		string fstab_path = path + "/localhost/etc/fstab";
 		fstab_list = FsTabEntry.read_fstab_file(fstab_path);	
+	}
+	
+	public bool has_subvolumes(){
+		foreach(FsTabEntry en in fstab_list){
+			if (en.options.contains("subvol=@")){
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public void update_control_file(){

@@ -99,6 +99,7 @@ public class Main : GLib.Object{
 	public int thr_retval = -1;
 	public string thr_arg1 = "";
 	public bool thr_timeout_active = false;
+	public string thr_timeout_cmd = "";
 	
 	public int startup_delay_interval_mins = 10;
 	public int retain_snapshots_max_days = 200;
@@ -1000,8 +1001,9 @@ public class Main : GLib.Object{
 
 	//input prompt timeout
 	
-	public void start_timeout_counter(){
+	public void start_timeout_counter(string kill_cmd = ""){
 		try {
+			thr_timeout_cmd = kill_cmd;
 			thr_timeout_active = true;
 			Thread.create<void> (start_timeout_counter_thread, true);
 		} 
@@ -1015,6 +1017,11 @@ public class Main : GLib.Object{
 		if (thr_timeout_active){
 			thr_timeout_active = false;
 			stdout.printf("\n");
+			
+			if (thr_timeout_cmd.length > 0){
+				Posix.system("killall " + thr_timeout_cmd);
+			}
+			
 			log_error(_("No response from user"));
 			log_msg(_("Aborted."));
 			exit(0);
@@ -2549,7 +2556,7 @@ public class Main : GLib.Object{
 				}
 			}
 			
-			start_timeout_counter();
+			start_timeout_counter("cryptsetup");
 
 			//prompt user to unlock
 			string cmd = "cryptsetup luksOpen '%s' '%s'".printf(dev.device, mapped_name);

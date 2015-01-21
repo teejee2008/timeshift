@@ -37,6 +37,14 @@ using TeeJee.Misc;
 extern void exit(int exit_code);
 */
 
+public double KB = 1000;
+public double MB = 1000 * 1000;
+public double GB = 1000 * 1000 * 1000;
+
+public double KiB = 1024;
+public double MiB = 1024 * 1024;
+public double GiB = 1024 * 1024 * 1024;
+
 namespace TeeJee.Logging{
 	
 	/* Functions for logging messages to console and log files */
@@ -473,7 +481,7 @@ namespace TeeJee.Devices{
 			
 			type = d.get_property("ID_FS_TYPE");
 			type = (type == null) ? "" : type.down();
-			type = (type == "crypto_luks") ? "luks" : type;
+			type = type.contains("luks") ? "luks" : type;
 			
 			foreach (string symlink in d.get_device_file_symlinks()){
 				symlinks.add(symlink);
@@ -528,14 +536,8 @@ namespace TeeJee.Devices{
 				if (symlink.length > 15){
 					symlink = symlink[0:14] + "...";
 				}
-				text = device.replace("/dev/mapper/","").replace("/dev/","") + ((symlink.length > 0) ? " (" + symlink + ")" : ""); //→
-				
-				if (devtype == "partition"){
-					return text;
-				}
-				else{
-					return name;
-				}
+				text = device.replace("/dev/mapper/","") + ((symlink.length > 0) ? " (" + symlink + ")" : ""); //→
+				return text;
 			}
 		}
 
@@ -634,7 +636,6 @@ namespace TeeJee.Devices{
 				case "xfs":
 				case "jfs":
 				case "btrfs":
-				case "crypto_luks":
 				case "luks":
 					return true;
 				default:
@@ -2534,7 +2535,23 @@ namespace TeeJee.System{
 			return false;
 		}
 	}
+	
+	public bool reboot(){
+				
+		/* Reboot the system immediately */
 
+		try{
+			string[] argv = { "shutdown", "-r", "now" };
+			Pid procId;
+			Process.spawn_async(null, argv, null, SpawnFlags.SEARCH_PATH, null, out procId); 
+			return true;
+		} 
+		catch (Error e) { 
+			log_error (e.message); 
+			return false;
+		}
+	}
+	
 	public bool xdg_open (string file){
 		string path;
 		path = get_cmd_path ("xdg-open");
@@ -3027,6 +3044,40 @@ namespace TeeJee.Misc {
 		/* Format file size in MB */
 		
 		return "%0.1f MB".printf (size / (1024.0 * 1024));
+	}
+
+	public string format_file_size_auto (int64 size, bool binary_base = false){
+				
+		/* Format file size in human readable format */
+		
+		if (binary_base){
+			if (size > 1 * GiB){
+				return "%0.1f GiB".printf (size / GiB);
+			}
+			else if (size > 1 * MiB){
+				return "%0.0f MiB".printf (size / MiB);
+			}
+			else if (size > 1 * KiB){
+				return "%0.0f KiB".printf (size / KiB);
+			}
+			else{
+				return "%0.0f B".printf (size);
+			}
+		}
+		else{
+			if (size > 1 * GB){
+				return "%0.1f GB".printf (size / GB);
+			}
+			else if (size > 1 * MB){
+				return "%0.0f MB".printf (size / MB);
+			}
+			else if (size > 1 * KB){
+				return "%0.0f KB".printf (size / KB);
+			}
+			else{
+				return "%0.0f B".printf (size);
+			}
+		}
 	}
 	
 	public string format_duration (long millis){

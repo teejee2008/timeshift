@@ -856,7 +856,6 @@ class MainWindow : Gtk.Window{
 			}
 			else{
 				App.snapshot_device = dev;
-				//App.update_partition_list(); //needs to be updated again after changing snapshot device
 				refresh_cmb_backup_device();
 			}
 		}
@@ -890,7 +889,7 @@ class MainWindow : Gtk.Window{
 
 		timer_backup_device_init = Timeout.add(100, init_backup_device);
 	}
-	
+
 	private void btn_backup_clicked(){
 		
 		//check root device --------------

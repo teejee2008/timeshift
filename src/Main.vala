@@ -229,11 +229,11 @@ public class Main : GLib.Object{
 			log_error (e.message);
 		}
 
-		//log dist info -----------------------
+		//get Linux distribution info -----------------------
 		
-		DistInfo info = DistInfo.get_dist_info("/");
+		this.current_distro = DistInfo.get_dist_info("/");
 		if ((app_mode == "")||(LOG_DEBUG)){
-			log_msg(_("Distribution") + ": " + info.full_name(),true);
+			log_msg(_("Distribution") + ": " + current_distro.full_name(),true);
 		}
 		
 		//check dependencies ---------------------
@@ -321,10 +321,6 @@ public class Main : GLib.Object{
 		add_default_exclude_entries();
 		//add_app_exclude_entries();
 		
-		//check current linux distribution -----------------
-		
-		this.current_distro = DistInfo.get_dist_info("/");
-
 		//initialize app --------------------
 		
 		update_partition_list();
@@ -672,11 +668,12 @@ public class Main : GLib.Object{
 	public static string help_message (){
 		string msg = "\n" + AppName + " v" + AppVersion + " by Tony George (teejee2008@gmail.com)" + "\n";
 		msg += "\n";
-		msg += "Syntax:\n";//+" timeshift [--list | --backup[-now] | --restore]\n";
+		msg += "Syntax:\n";
 		msg += "\n";
 		msg += "  timeshift --list-{snapshots|devices} [OPTIONS]\n";
 		msg += "  timeshift --backup[-now] [OPTIONS]\n";
 		msg += "  timeshift --restore [OPTIONS]\n";
+		msg += "  timeshift --delete-[all] [OPTIONS]\n";
 		msg += "\n";
 		msg += _("Options") + ":\n";
 		msg += "\n";
@@ -829,7 +826,7 @@ public class Main : GLib.Object{
 					
 				default:
 					LOG_TIMESTAMP = false;
-					log_error(_("Invalid command line arguments"), true);
+					log_error(_("Invalid command line arguments") + ": %s".printf(args[k]), true);
 					log_msg(Main.help_message());
 					exit(1);
 					break;
@@ -874,7 +871,7 @@ public class Main : GLib.Object{
 			TimeShiftBackup bak = snapshot_list[index];
 			if (!paginate || ((index >= snapshot_list_start_index) && (index < snapshot_list_start_index + 10))){
 				col = -1;
-				grid[row, ++col] = "%d".printf(row - 1);
+				grid[row, ++col] = "%d".printf(index);
 				grid[row, ++col] = ">";
 				grid[row, ++col] = "%s".printf(bak.name);
 				grid[row, ++col] = "%s".printf(bak.taglist_short);
@@ -913,7 +910,7 @@ public class Main : GLib.Object{
 			col = -1;
 			grid[row, ++col] = "%d".printf(row - 1);
 			grid[row, ++col] = ">";
-			grid[row, ++col] = "%s".printf(pi.short_name_with_alias);
+			grid[row, ++col] = "%s".printf(pi.full_name_with_alias);
 			//grid[row, ++col] = "%s".printf(pi.uuid);
 			grid[row, ++col] = "%s".printf((pi.size_mb > 0) ? "%s GB".printf(pi.size) : "?? GB");
 			grid[row, ++col] = "%s".printf(pi.type);
@@ -1013,7 +1010,12 @@ public class Main : GLib.Object{
 	}
 	
 	public void start_timeout_counter_thread(){
-		Thread.usleep((ulong) GLib.TimeSpan.MILLISECOND * 1000 * 20);
+		int count = 20 * 1000;
+		while (thr_timeout_active && (count > 0)){
+			Thread.usleep((ulong) GLib.TimeSpan.MILLISECOND * 500);
+			count -= 500;
+		}
+		
 		if (thr_timeout_active){
 			thr_timeout_active = false;
 			stdout.printf("\n");
@@ -1235,33 +1237,6 @@ public class Main : GLib.Object{
 		}
 	}
 
-	public bool read_stdin_change_device(){
-		start_timeout_counter();
-		string? line = stdin.read_line();
-		stop_timeout_counter();
-		
-		line = (line != null) ? line.strip() : line;
-		
-		if ((line == null)||(line.length == 0)){
-			return false; //default=n
-		}
-		else if (line.down() == "a"){
-			log_msg("Aborted.");
-			exit_app();
-			exit(0);
-			return true;
-		}
-		else if (line.down() == "y"){
-			return true;
-		}
-		else if (line.down() == "n"){
-			return false;
-		}
-		else{
-			return false;
-		}
-	}
-	
 	public bool read_stdin_restore_confirm(){
 		start_timeout_counter();
 		string? line = stdin.read_line();
@@ -1980,7 +1955,7 @@ public class Main : GLib.Object{
 				}
 			}
 			
-			log_msg (_("Symlinks updated"));
+			log_debug (_("Symlinks updated"));
 		} 
 		catch (Error e) {
 	        log_error (e.message);
@@ -2076,7 +2051,7 @@ public class Main : GLib.Object{
 	    }
 	}
 
-	public void write_snapshot_control_file(string snapshot_path, DateTime dt_created, string tag){
+	public TimeShiftBackup write_snapshot_control_file(string snapshot_path, DateTime dt_created, string tag){
 		var ctl_path = snapshot_path + "/info.json";
 		var config = new Json.Object();
 
@@ -2103,10 +2078,13 @@ public class Main : GLib.Object{
 			json.to_file(ctl_path);
 		} catch (Error e) {
 	        log_error (e.message);
-	    }	
+	    }
+
+	    return (new TimeShiftBackup(snapshot_path));
 	}
 
 	//restore
+	
 	public void get_backup_device_from_cmd(bool prompt_if_empty, Gtk.Window? parent_win){
 		if (cmd_backup_device.length > 0){
 			//set backup device from command line argument
@@ -2569,7 +2547,7 @@ public class Main : GLib.Object{
 					log_error(_("Wrong Passphrase") + ": " + _("Failed to unlock device"));
 					return ""; //return
 				case 1280: //already unlocked and mapped to unknown name
-					log_error(_("Encrypted device '%s' is already unlocked and mapped to another device name. Select the unlocked device instead of selecting the encrypted device.").printf(dev.device));
+					log_error(_("Encrypted device '%s' is already unlocked and mapped to another device name.\nSelect the unlocked device instead of encrypted device.").printf(dev.device));
 					break;
 				case 0: //success
 					log_msg(_("Unlocked device is mapped to '%s'").printf(mapped_name));
@@ -2603,7 +2581,7 @@ public class Main : GLib.Object{
 					gtk_messagebox(_("Wrong Passphrase"),_("Wrong Passphrase") + ": " + _("Failed to unlock device"), parent_win);
 					return ""; //return
 				case 1280: //already unlocked and mapped to unknown name
-					gtk_messagebox(_("Unlocked Device"),_("Encrypted device '%s' is already unlocked and mapped to another device name. Select the unlocked device instead of selecting the encrypted device.").printf(dev.device), parent_win);
+					gtk_messagebox(_("Unlocked Device"),_("Encrypted device '%s' is already unlocked and mapped to another device name.\nSelect the unlocked device instead of encrypted device.").printf(dev.device), parent_win);
 					break;
 				case 0: //success
 					gtk_messagebox(_("Unlocked Successfully"),_("Unlocked device is mapped to '%s'.").printf(mapped_name), parent_win);
@@ -3377,10 +3355,13 @@ public class Main : GLib.Object{
 		}
 		/* Note: In commandline mode, user will be prompted for backup device instead of defaulting to system device */
 		
+		/* The backup device specified in config file will be mounted at this point if:
+		 * 1) app is running in GUI mode, OR
+		 * 2) app is running command mode without backup device argument
+		 * */
+		 
 		if (snapshot_device != null){
-			if ((app_mode == "") || (cmd_backup_device.length == 0)){ //either GUI mode or command mode without backup device argument
-				snapshot_device = unlock_and_find_device(snapshot_device, null);
-			
+			if ((app_mode == "") || (cmd_backup_device.length == 0)){
 				if (mount_backup_device(null)){
 					update_partition_list();
 				}

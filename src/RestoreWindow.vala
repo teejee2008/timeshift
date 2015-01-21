@@ -664,10 +664,10 @@ public class RestoreWindow : Gtk.Dialog{
 		}
 
 		if ((App.root_device != null) && (pi.device == App.root_device.device)){
-			(cell as Gtk.CellRendererText).text = pi.name + " (" + _("sys") + ")" + ((symlink.length > 0) ? " → " + symlink : "");
+			(cell as Gtk.CellRendererText).text = pi.device + " (" + _("sys") + ")" + ((symlink.length > 0) ? " → " + symlink : "");
 		}
 		else{
-			(cell as Gtk.CellRendererText).text = pi.name + ((symlink.length > 0) ? " → " + symlink : "");
+			(cell as Gtk.CellRendererText).text = pi.device + ((symlink.length > 0) ? " → " + symlink : "");
 		}
 		
 		Gtk.CellRendererText ctxt = (cell as Gtk.CellRendererText);
@@ -718,7 +718,7 @@ public class RestoreWindow : Gtk.Dialog{
 			(cell as Gtk.CellRendererText).markup = "<b>" + dev.description() + " (MBR)</b>";
 		}
 		else{
-			(cell as Gtk.CellRendererText).markup = dev.description_formatted();
+			(cell as Gtk.CellRendererText).markup = dev.description();
 		}
 	}
 

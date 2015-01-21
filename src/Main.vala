@@ -3443,7 +3443,6 @@ public class Main : GLib.Object{
 			return t1.date.compare(t2.date);
 		});
 
-		//log_debug(_("Updated snapshot list"));
 		return true;
 	}
 	
@@ -3718,7 +3717,7 @@ public class Main : GLib.Object{
 		//unmount the backup device only if it was mounted by application
 		if (mount_point_backup.has_prefix(mount_point_app)){
 			if (unmount_device(mount_point_backup, false)){
-				if (dir_exists(mount_point_backup)){
+				if (dir_exists(mount_point_backup) && (get_file_count(mount_point_backup) == 0)){
 					file_delete(mount_point_backup);
 					log_debug(_("Removed mount directory: '%s'").printf(mount_point_backup));
 				}
@@ -3835,8 +3834,10 @@ public class Main : GLib.Object{
 		bool is_supported = dir_exists(mnt_btrfs + "/@") && dir_exists(mnt_btrfs + "/@home");
 		
 		if (unmount(mnt_btrfs)){
-			file_delete(mnt_btrfs);
-			log_debug(_("Removed mount directory: '%s'").printf(mnt_btrfs));
+			if (dir_exists(mnt_btrfs) && (get_file_count(mnt_btrfs) == 0)){
+				file_delete(mnt_btrfs);
+				log_debug(_("Removed mount directory: '%s'").printf(mnt_btrfs));
+			}
 		}
 				
 		return is_supported;

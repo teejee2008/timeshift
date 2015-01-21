@@ -89,7 +89,6 @@ class MainWindow : Gtk.Window{
 	
 	//other
 	private Device snapshot_device_original;
-	private int cmb_backup_device_index_default = -1;
 
 	public MainWindow () {
 		this.title = AppName + " v" + AppVersion; // + " by " + AppAuthor + " (" + "teejeetech.blogspot.in" + ")";
@@ -764,8 +763,8 @@ class MainWindow : Gtk.Window{
 		TreeIter iter;
 
 		int index = -1;
-		int index_selected = -1;
-		cmb_backup_device_index_default = -1;
+		int index_snapshot_device = -1;
+		int index_root_device = -1;
 
 		foreach(Device pi in App.partition_list) {
 			
@@ -789,29 +788,28 @@ class MainWindow : Gtk.Window{
 			
 			store.set (iter, 1, pix_selected, -1);
 			
-			//selection -------------
+			//get device index ----------
 			
 			index++;
 			if ((App.root_device != null) && (pi.uuid == App.root_device.uuid)){
-				cmb_backup_device_index_default = index;
+				index_root_device = index;
 			}
 			if ((App.snapshot_device != null) && (pi.uuid == App.snapshot_device.uuid)){
-				index_selected = index;
+				index_snapshot_device = index;
 			}
-		}
-
-		if (index_selected > -1){
-			//ok
-		}
-		else if (cmb_backup_device_index_default > -1){
-			index_selected = cmb_backup_device_index_default;
-		}
-		else if (index > -1){
-			index_selected = 0;
 		}
 		
 		cmb_backup_device.set_model (store);
-		cmb_backup_device.active = index_selected;
+		
+		if (index_snapshot_device > -1){
+			cmb_backup_device.active = index_snapshot_device;
+		}
+		else if (index_root_device > -1){
+			cmb_backup_device.active = index_root_device;
+		}
+		else {
+			cmb_backup_device.active = -1;
+		}
 	}
 	
 	private void cmb_backup_device_changed(){
@@ -844,50 +842,21 @@ class MainWindow : Gtk.Window{
 
 		gtk_set_busy(true, this);
 		
-		//check for encrypted device ---------------------------
+		Device previous_device = App.snapshot_device;
+		App.snapshot_device = pi;
 		
-		if (pi.type == "luks"){
-			
-			//try to unlock
-			Device dev = App.unlock_and_find_device(pi, this);
-			if (dev == null) { 
-				refresh_cmb_backup_device();
-				return; 
-			}
-			else{
-				App.snapshot_device = dev;
-				refresh_cmb_backup_device();
-			}
-		}
-		else{ 
-			//set snapshot_device
-			App.snapshot_device = pi;
-		}
-		
-		//try mounting the device ------------------
-
-		bool status = App.mount_backup_device(this);
-		if (status == false){
-			string msg = _("Failed to mount device") + ": %s".printf(App.snapshot_device.device);
-			var dlg = new Gtk.MessageDialog.with_markup(this, Gtk.DialogFlags.MODAL, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK, msg);
-			dlg.set_title(_("Error"));
-			dlg.set_default_size (200, -1);
-			dlg.set_transient_for(this);
-			dlg.set_modal(true);
-			dlg.run();
-			dlg.destroy();
-
-			cmb_backup_device.active = cmb_backup_device_index_default;
+		//try mounting the device
+		if (App.mount_backup_device(this)){
+			App.update_partition_list();
 			gtk_set_busy(false, this);
+			timer_backup_device_init = Timeout.add(100, init_backup_device);
+		}
+		else{
+			gtk_set_busy(false, this);
+			App.snapshot_device = previous_device;
+			refresh_cmb_backup_device();
 			return;
 		}
-		
-		//update disk space after mounting
-		App.update_partition_list();
-
-		gtk_set_busy(false, this);
-
-		timer_backup_device_init = Timeout.add(100, init_backup_device);
 	}
 
 	private void btn_backup_clicked(){

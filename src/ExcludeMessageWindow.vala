@@ -148,7 +148,7 @@ public class ExcludeMessageWindow : Gtk.Dialog{
 
 		//initialize -----------------------------------------
 
-		ListStore model = new ListStore(2, typeof(string), typeof(Gdk.Pixbuf));
+		var model = new Gtk.ListStore(2, typeof(string), typeof(Gdk.Pixbuf));
 		tv_exclude.model = model;
 		
 		foreach(string path in App.exclude_list_default){
@@ -176,7 +176,7 @@ public class ExcludeMessageWindow : Gtk.Dialog{
 	    }
 
 		TreeIter iter;
-		ListStore model = (ListStore) tv_exclude.model;
+		var model = (Gtk.ListStore) tv_exclude.model;
 		model.append(out iter);
 			
 		if (path.has_prefix("+ ")){

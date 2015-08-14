@@ -473,7 +473,7 @@ public class SettingsWindow : Gtk.Dialog{
 	
 	private void cell_sched_enable_toggled (string path){
 		TreeIter iter;
-		ListStore model = (ListStore)tv_schedule.model;
+		var model = (Gtk.ListStore)tv_schedule.model;
 		bool enabled;
 		int count;
 		
@@ -500,7 +500,7 @@ public class SettingsWindow : Gtk.Dialog{
 		string units;
 		
 		TreeIter iter;
-		ListStore model = (ListStore)tv_remove.model;
+		var model = (Gtk.ListStore)tv_remove.model;
 		model.get_iter_from_string (out iter, path);
 		model.get (iter, 2, out units,-1);
 		count = int.parse(new_text);
@@ -521,7 +521,7 @@ public class SettingsWindow : Gtk.Dialog{
 		string new_pattern;
 		
 		TreeIter iter;
-		ListStore model = (ListStore) tv_exclude.model;
+		var model = (Gtk.ListStore) tv_exclude.model;
 		model.get_iter_from_string (out iter, path);
 		model.get (iter, 0, out old_pattern, -1);
 		
@@ -540,7 +540,7 @@ public class SettingsWindow : Gtk.Dialog{
 
 	private void refresh_tv_schedule(){
 
-		ListStore model = new ListStore(3, typeof(bool), typeof(string), typeof(string));
+		var model = new Gtk.ListStore(3, typeof(bool), typeof(string), typeof(string));
 
 		TreeIter iter;
 		model.append(out iter);
@@ -574,7 +574,7 @@ public class SettingsWindow : Gtk.Dialog{
 
 	private void refresh_tv_remove(){
 
-		ListStore model = new ListStore(3, typeof(string), typeof(int), typeof(string));
+		var model = new Gtk.ListStore(3, typeof(string), typeof(int), typeof(string));
 		
 		string span = "<span foreground=\"#2E2E2E\">";
 		if (switch_schedule.active){
@@ -625,7 +625,7 @@ public class SettingsWindow : Gtk.Dialog{
 	}
 	
 	private void refresh_tv_exclude(){
-		ListStore model = new ListStore(2, typeof(string), typeof(Gdk.Pixbuf));
+		var model = new Gtk.ListStore(2, typeof(string), typeof(Gdk.Pixbuf));
 		tv_exclude.model = model;
 		
 		foreach(string path in temp_exclude_list){
@@ -647,7 +647,7 @@ public class SettingsWindow : Gtk.Dialog{
 	    }
 
 		TreeIter iter;
-		ListStore model = (ListStore) tv_exclude.model;
+		var model = (Gtk.ListStore) tv_exclude.model;
 		model.append(out iter);
 			
 		if (path.has_prefix("+ ")){
@@ -677,7 +677,7 @@ public class SettingsWindow : Gtk.Dialog{
 			
 			if(!atleast_one_enabled){
 				TreeIter iter;
-				ListStore store = (ListStore) tv_schedule.model;
+				var store = (Gtk.ListStore) tv_schedule.model;
 				bool enabled; 
 				int index = -1;
 				

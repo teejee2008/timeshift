@@ -685,7 +685,7 @@ class MainWindow : Gtk.Window{
 		TimeShiftBackup bak;
 
 		TreeIter iter;
-		ListStore model = (ListStore) tv_backups.model;
+		var model = (Gtk.ListStore) tv_backups.model;
 		model.get_iter_from_string (out iter, path);
 		model.get (iter, 0, out bak, -1);
 		bak.description = new_text;
@@ -703,7 +703,7 @@ class MainWindow : Gtk.Window{
 		
 		App.update_snapshot_list();
 		
-		ListStore model = new ListStore(1, typeof(TimeShiftBackup));
+		var model = new Gtk.ListStore(1, typeof(TimeShiftBackup));
 		
 		var list = App.snapshot_list;
 		
@@ -758,7 +758,7 @@ class MainWindow : Gtk.Window{
 	}
 
 	private void refresh_cmb_backup_device(){
-		ListStore store = new ListStore(2, typeof(Device), typeof(Gdk.Pixbuf));
+		var store = new Gtk.ListStore(2, typeof(Device), typeof(Gdk.Pixbuf));
 
 		TreeIter iter;
 
@@ -940,7 +940,7 @@ class MainWindow : Gtk.Window{
 		//get list of snapshots to delete --------------------
 
 		var list_of_snapshots_to_delete = new Gee.ArrayList<TimeShiftBackup>();
-		ListStore store = (ListStore) tv_backups.model;
+		var store = (Gtk.ListStore) tv_backups.model;
 		
 		bool iterExists = store.get_iter_first (out iter);
 		while (iterExists && is_success) { 
@@ -1044,7 +1044,7 @@ class MainWindow : Gtk.Window{
 			
 			TimeShiftBackup snapshot_to_restore = null;
 			
-			ListStore store = (ListStore) tv_backups.model;
+			var store = (Gtk.ListStore) tv_backups.model;
 			sel = tv_backups.get_selection();
 			bool iterExists = store.get_iter_first (out iter);
 			while (iterExists) { 
@@ -1213,7 +1213,7 @@ class MainWindow : Gtk.Window{
 		}
 		
 		TreeIter iter;
-		ListStore store = (ListStore)tv_backups.model;
+		var store = (Gtk.ListStore)tv_backups.model;
 		
 		bool iterExists = store.get_iter_first (out iter);
 		while (iterExists) { 
@@ -1236,7 +1236,7 @@ class MainWindow : Gtk.Window{
 		}
 		
 		TreeIter iter;
-		ListStore store = (ListStore)tv_backups.model;
+		var store = (Gtk.ListStore)tv_backups.model;
 		
 		bool iterExists = store.get_iter_first (out iter);
 		while (iterExists) { 

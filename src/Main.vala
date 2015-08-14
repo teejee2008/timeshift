@@ -603,10 +603,10 @@ public class Main : GLib.Object{
 	    }
 
 		//sort the list
-		CompareFunc<AppExcludeEntry> entry_compare = (a, b) => {
+		GLib.CompareDataFunc<AppExcludeEntry> entry_compare = (a, b) => {
 			return strcmp(a.relpath,b.relpath);
 		};
-		exclude_list_apps.sort(entry_compare);
+		exclude_list_apps.sort((owned) entry_compare);
 	}
 	
 	public bool create_lock(){
@@ -4103,8 +4103,12 @@ public class Main : GLib.Object{
 				}
 				info = enumerator.next_file ();
 			}
-			
-			list.sort(strcmp);
+
+			CompareDataFunc<string> compare_func = (a, b) => {
+				return strcmp(a,b);
+			};
+		
+			list.sort((owned) compare_func);
 			
 			if (list.size > 500){
 				for(int k=0; k<100; k++){

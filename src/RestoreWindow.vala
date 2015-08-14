@@ -219,7 +219,7 @@ public class RestoreWindow : Gtk.Dialog{
 		col_mount.add_attribute (cell_mount, "text", 1);
 
 		//populate combo
-		ListStore model = new ListStore(1, typeof(string));
+		var model = new Gtk.ListStore(1, typeof(string));
 		cell_mount.model = model;
 		
 		TreeIter iter;
@@ -233,13 +233,13 @@ public class RestoreWindow : Gtk.Dialog{
 		cell_mount.changed.connect((path, iter_new) => {
 			string val;
 			cell_mount.model.get (iter_new, 0, out val);
-			model = (ListStore) tv_partitions.model;
+			model = (Gtk.ListStore) tv_partitions.model;
 			model.get_iter_from_string (out iter, path);
 			model.set (iter, 1, val);
 		});
 		
 		cell_mount.edited.connect((path, new_text) => {
-			model = (ListStore) tv_partitions.model;
+			model = (Gtk.ListStore) tv_partitions.model;
 			model.get_iter_from_string (out iter, path);
 			model.set (iter, 1, new_text);
 		});
@@ -606,7 +606,7 @@ public class RestoreWindow : Gtk.Dialog{
 	
 	private void init_mounts(){
 		TreeIter iter;
-		ListStore store;
+		Gtk.ListStore store;
 
 		App.init_mount_list();
 
@@ -626,7 +626,7 @@ public class RestoreWindow : Gtk.Dialog{
 		}
 
 		//find the root mount point set by user
-		store = (ListStore) tv_partitions.model;
+		store = (Gtk.ListStore) tv_partitions.model;
 		for (bool next = store.get_iter_first (out iter); next; next = store.iter_next (ref iter)) {
 			Device pi;
 			string mount_point;
@@ -733,7 +733,7 @@ public class RestoreWindow : Gtk.Dialog{
 		string new_pattern;
 		
 		TreeIter iter;
-		ListStore model = (ListStore) tv_exclude.model;
+		var model = (Gtk.ListStore) tv_exclude.model;
 		model.get_iter_from_string (out iter, path);
 		model.get (iter, 0, out old_pattern, -1);
 		
@@ -765,14 +765,14 @@ public class RestoreWindow : Gtk.Dialog{
 	private void cell_app_enabled_toggled (string path){
 		AppExcludeEntry entry;
 		TreeIter iter;
-		ListStore model = (ListStore) tv_app.model; //get model
+		var model = (Gtk.ListStore) tv_app.model; //get model
 		model.get_iter_from_string (out iter, path); //get selected iter
 		model.get (iter, 0, out entry, -1); //get entry
 		entry.enabled = !entry.enabled;
 	}
 
 	private void refresh_cmb_boot_device(){
-		ListStore store = new ListStore(1, typeof(Device));
+		var store = new Gtk.ListStore(1, typeof(Device));
 		
 		//add devices
 		Gee.ArrayList<Device> device_list = new Gee.ArrayList<Device>();
@@ -813,7 +813,7 @@ public class RestoreWindow : Gtk.Dialog{
 		}
 		
 		TreeIter iter;
-		ListStore store = (ListStore) cmb_boot_device.model;
+		var store = (Gtk.ListStore) cmb_boot_device.model;
 		int index = -1;
 		
 		int first_mbr_device_index = -1;
@@ -843,7 +843,7 @@ public class RestoreWindow : Gtk.Dialog{
 		
 		App.update_partition_list();
 		
-		ListStore model = new ListStore(4, typeof(Device), typeof(string), typeof(string), typeof(Gdk.Pixbuf));
+		var model = new Gtk.ListStore(4, typeof(Device), typeof(string), typeof(string), typeof(Gdk.Pixbuf));
 		tv_partitions.set_model (model);
 
 		TreeIter iter;
@@ -890,7 +890,7 @@ public class RestoreWindow : Gtk.Dialog{
 		}
 		
 		TreeIter iter;
-		ListStore store = (ListStore) tv_partitions.model;
+		var store = (Gtk.ListStore) tv_partitions.model;
 		
 		for (bool next = store.get_iter_first (out iter); next; next = store.iter_next (ref iter)) {
 			Device pi;
@@ -905,7 +905,7 @@ public class RestoreWindow : Gtk.Dialog{
 	}
 	
 	private void refresh_tv_exclude(){
-		ListStore model = new ListStore(2, typeof(string), typeof(Gdk.Pixbuf));
+		var model = new Gtk.ListStore(2, typeof(string), typeof(Gdk.Pixbuf));
 		tv_exclude.model = model;
 		
 		foreach(string path in temp_exclude_list){
@@ -914,7 +914,7 @@ public class RestoreWindow : Gtk.Dialog{
 	}
 
 	private void refresh_tv_apps(){
-		ListStore model = new ListStore(1, typeof(AppExcludeEntry));
+		var model = new Gtk.ListStore(1, typeof(AppExcludeEntry));
 		tv_app.model = model;
 		
 		foreach(AppExcludeEntry entry in App.exclude_list_apps){
@@ -938,7 +938,7 @@ public class RestoreWindow : Gtk.Dialog{
 	    }
 
 		TreeIter iter;
-		ListStore model = (ListStore) tv_exclude.model;
+		var model = (Gtk.ListStore) tv_exclude.model;
 		model.append(out iter);
 			
 		if (path.has_prefix("+ ")){
@@ -966,14 +966,14 @@ public class RestoreWindow : Gtk.Dialog{
 
 	private bool tv_partitions_button_press_event(Gdk.EventButton event){
 		TreeIter iter;
-		ListStore store;
+		Gtk.ListStore store;
 		TreeSelection sel;
 		bool iterExists;
 		
 		//get selected target device
 		Device restore_target = null;
 		sel = tv_partitions.get_selection ();
-		store = (ListStore) tv_partitions.model;
+		store = (Gtk.ListStore) tv_partitions.model;
 		iterExists = store.get_iter_first (out iter);
 		while (iterExists) { 
 			if (sel.iter_is_selected (iter)){
@@ -1292,7 +1292,7 @@ public class RestoreWindow : Gtk.Dialog{
 	
 	private bool check_and_mount_devices(){
 		TreeIter iter;
-		ListStore store;
+		Gtk.ListStore store;
 		TreeSelection sel;
 		
 		//check if target device selected ---------------
@@ -1310,7 +1310,7 @@ public class RestoreWindow : Gtk.Dialog{
 			bool no_mount_points_set_by_user = true;
 
 			//find the root mount point set by user
-			store = (ListStore) tv_partitions.model;
+			store = (Gtk.ListStore) tv_partitions.model;
 			for (bool next = store.get_iter_first (out iter); next; next = store.iter_next (ref iter)) {
 				Device pi;
 				string mount_point;

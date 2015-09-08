@@ -1,24 +1,24 @@
 /*
  * ExcludeMessageWindow.vala
- * 
+ *
  * Copyright 2013 Tony George <teejee2008@gmail.com>
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
- * 
- * 
+ *
+ *
  */
 
 using Gtk;
@@ -46,7 +46,7 @@ public class ExcludeMessageWindow : Gtk.Dialog{
 	private Label lbl_exclude;
 	private Label lbl_header_home;
 	private Label lbl_home;
-	
+
 	//actions
 	private Button btn_ok;
 
@@ -64,20 +64,20 @@ public class ExcludeMessageWindow : Gtk.Dialog{
         catch(Error e){
 	        log_error (e.message);
 	    }
-	    
+
 	    string msg;
-	    
+
 	    //vbox_main
         vbox_main = get_content_area ();
 		vbox_main.margin = 3;
 		vbox_main.spacing = 3;
-		
+
 		//lbl_header_exclude
 		lbl_header_exclude = new Gtk.Label("<b>" + _("Exclude List") + ":</b>");
 		lbl_header_exclude.xalign = (float) 0.0;
 		lbl_header_exclude.set_use_markup(true);
 		vbox_main.add(lbl_header_exclude);
-		
+
 		//lbl_exclude
 		lbl_exclude = new Gtk.Label(_("Files matching the following patterns will be excluded") + ":");
 		lbl_exclude.xalign = (float) 0.0;
@@ -85,7 +85,7 @@ public class ExcludeMessageWindow : Gtk.Dialog{
 		vbox_main.add(lbl_exclude);
 
 		//tv_exclude-----------------------------------------------
-		
+
 		//tv_exclude
 		tv_exclude = new TreeView();
 		tv_exclude.get_selection().mode = SelectionMode.MULTIPLE;
@@ -103,15 +103,15 @@ public class ExcludeMessageWindow : Gtk.Dialog{
 		col_exclude = new TreeViewColumn();
 		col_exclude.title = _("File Pattern");
 		col_exclude.expand = true;
-		
+
 		CellRendererText cell_exclude_margin = new CellRendererText ();
 		cell_exclude_margin.text = "";
 		col_exclude.pack_start (cell_exclude_margin, false);
-		
+
 		CellRendererPixbuf cell_exclude_icon = new CellRendererPixbuf ();
 		col_exclude.pack_start (cell_exclude_icon, false);
 		col_exclude.set_attributes(cell_exclude_icon, "pixbuf", 1);
-		
+
 		CellRendererText cell_exclude_text = new CellRendererText ();
 		col_exclude.pack_start (cell_exclude_text, false);
 		col_exclude.set_cell_data_func (cell_exclude_text, cell_exclude_text_render);
@@ -131,13 +131,13 @@ public class ExcludeMessageWindow : Gtk.Dialog{
 		lbl_home.set_use_markup(true);
 		lbl_home.wrap = true;
 		vbox_main.add(lbl_home);
-		
+
 		msg = _("Hidden files and folders are included by default since they contain user-specific configuration files.") + "\n";
 		msg += _("All other files and folders are excluded.") + "\n";
 		lbl_home.label =msg;
-		
+
 		//Actions ----------------------------------------------
-		
+
 		//hbox_action
         hbox_action = (Box) get_action_area ();
 
@@ -150,7 +150,7 @@ public class ExcludeMessageWindow : Gtk.Dialog{
 
 		var model = new Gtk.ListStore(2, typeof(string), typeof(Gdk.Pixbuf));
 		tv_exclude.model = model;
-		
+
 		foreach(string path in App.exclude_list_default){
 			tv_exclude_add_item(path);
 		}
@@ -161,7 +161,7 @@ public class ExcludeMessageWindow : Gtk.Dialog{
 		model.get (iter, 0, out pattern, -1);
 		(cell as Gtk.CellRendererText).text = pattern.has_prefix("+ ") ? pattern[2:pattern.length] : pattern;
 	}
-	
+
 	private void tv_exclude_add_item(string path){
 		Gdk.Pixbuf pix_exclude = null;
 		Gdk.Pixbuf pix_include = null;
@@ -178,22 +178,22 @@ public class ExcludeMessageWindow : Gtk.Dialog{
 		TreeIter iter;
 		var model = (Gtk.ListStore) tv_exclude.model;
 		model.append(out iter);
-			
+
 		if (path.has_prefix("+ ")){
 			pix_selected = pix_include;
 		}
 		else{
 			pix_selected = pix_exclude;
 		}
-			
+
 		model.set (iter, 0, path, 1, pix_selected);
-		
+
 		Adjustment adj = tv_exclude.get_hadjustment();
 		adj.value = adj.upper;
 	}
-	
+
 	private void btn_ok_clicked(){
 		this.response(Gtk.ResponseType.OK);
-		return;	
+		return;
 	}
 }

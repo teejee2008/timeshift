@@ -1,26 +1,26 @@
 /*
  * AboutWindow.vala
- * 
+ *
  * Copyright 2012 Tony George <teejee2008@gmail.com>
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
- * 
- * 
+ *
+ *
  */
- 
+
 using Gtk;
 
 using TeeJee.Logging;
@@ -39,7 +39,7 @@ public class AboutWindow : Dialog {
 	private Box hbox_action;
 	private Button btn_credits;
 	private Button btn_close;
-	
+
 	private Gtk.Image img_logo;
 	private Label lbl_program_name;
 	private Label lbl_version;
@@ -106,7 +106,7 @@ public class AboutWindow : Dialog {
 			_donations = value;
 		}
 	}
-	
+
 	private string _license = "";
 	public string license{
 		get{
@@ -116,7 +116,7 @@ public class AboutWindow : Dialog {
 			_license = value;
 		}
 	}
-	
+
 	private Gdk.Pixbuf _logo;
 	public Gdk.Pixbuf logo{
 		get{
@@ -146,7 +146,7 @@ public class AboutWindow : Dialog {
 			_translators = value;
 		}
 	}
-	
+
 	private string[] _third_party;
 	public string[] third_party{
 		get{
@@ -156,7 +156,7 @@ public class AboutWindow : Dialog {
 			_third_party = value;
 		}
 	}
-	
+
 	private string _version = "";
 	public string version{
 		get{
@@ -186,21 +186,21 @@ public class AboutWindow : Dialog {
 			_website_label = value;
 		}
 	}
-	
+
 	public AboutWindow() {
         window_position = WindowPosition.CENTER_ON_PARENT;
 		set_destroy_with_parent (true);
 		set_modal (true);
         skip_taskbar_hint = false;
-        set_default_size (450, 400);	
+        set_default_size (450, 400);
 
 	    vbox_main = get_content_area();
 		vbox_main.margin = 6;
 		vbox_main.spacing = 6;
-		
+
 		vbox_logo = new Box(Orientation.VERTICAL,0);
 		vbox_main.add(vbox_logo);
-		
+
 		vbox_credits = new Box(Orientation.VERTICAL,0);
 		vbox_credits.no_show_all = true;
 		vbox_main.add(vbox_credits);
@@ -213,7 +213,7 @@ public class AboutWindow : Dialog {
 		img_logo.margin_top = 6;
 		img_logo.margin_bottom = 6;
         vbox_logo.add(img_logo);
-		
+
 		//program_name
 		lbl_program_name = new Label("");
 		lbl_program_name.set_use_markup(true);
@@ -230,7 +230,7 @@ public class AboutWindow : Dialog {
 		lbl_comments.set_use_markup(true);
 		lbl_comments.margin_top = 10;
 		vbox_logo.add(lbl_comments);
-		
+
 		//website
 		lbtn_website = new LinkButton("");
 		lbtn_website.margin_top = 5;
@@ -238,13 +238,13 @@ public class AboutWindow : Dialog {
 
 		lbtn_website.activate_link.connect(()=>{
 			try{
-				return Gtk.show_uri(null, lbtn_website.uri, Gdk.CURRENT_TIME); 
+				return Gtk.show_uri(null, lbtn_website.uri, Gdk.CURRENT_TIME);
 			}
 			catch(Error e){
 				return false;
 			}
 		});
-		
+
 		//copyright
 		lbl_copyright = new Label("");
 		lbl_copyright.set_use_markup(true);
@@ -260,27 +260,27 @@ public class AboutWindow : Dialog {
 		var sw_credits = new ScrolledWindow(null, null);
 		sw_credits.set_shadow_type(ShadowType.ETCHED_IN);
 		sw_credits.expand = true;
-		
+
 		vbox_credits.add(sw_credits);
 		sw_credits.add(vbox_lines);
-		
+
 		//hbox_commands --------------------------------------------------
-		
+
 		hbox_action = (Box) get_action_area();
-		
+
 		//btn_credits
 		btn_credits = new Button.with_label("  " + _("Credits"));
 		btn_credits.set_image (new Image.from_stock ("gtk-about", IconSize.MENU));
-		hbox_action.add(btn_credits);	
-			
+		hbox_action.add(btn_credits);
+
         btn_credits.clicked.connect(()=>{
 			vbox_logo.visible = !(vbox_logo.visible);
 			vbox_credits.visible = !(vbox_credits.visible);
-			
+
 			if ((vbox_credits.visible)&&(!sw_credits.visible)){
 				sw_credits.show_all();
 			}
-			
+
 			if (vbox_credits.visible){
 				btn_credits.label = "  " + _("Back");
 				btn_credits.set_image (new Image.from_stock ("gtk-go-back", IconSize.MENU));
@@ -295,10 +295,10 @@ public class AboutWindow : Dialog {
 		btn_close = new Button.with_label("  " + _("Close"));
 		btn_close.set_image (new Image.from_stock ("gtk-close", IconSize.MENU));
 		hbox_action.add(btn_close);
-		
+
 		btn_close.clicked.connect(()=>{ this.destroy(); });
 	}
-	
+
 	public void initialize() {
 		title = program_name;
 		img_logo.pixbuf = logo;
@@ -309,7 +309,7 @@ public class AboutWindow : Dialog {
 		lbtn_website.label = website_label;
 		//lbl_copyright.label = "<span size='smaller'>%s</span>".printf(copyright);
 		lbl_copyright.label = "<span>%s</span>".printf(copyright);
-		
+
 		if (authors.length > 0){
 			add_line("<b>%s</b>\n".printf(_("Authors")));
 			foreach(string name in authors){
@@ -317,7 +317,7 @@ public class AboutWindow : Dialog {
 			}
 			add_line("\n");
 		}
-		
+
 		if (third_party.length > 0){
 			add_line("<b>%s</b>\n".printf(_("Third Party Tools")));
 			foreach(string name in third_party){
@@ -325,7 +325,7 @@ public class AboutWindow : Dialog {
 			}
 			add_line("\n");
 		}
-		
+
 		if (artists.length > 0){
 			add_line("<b>%s</b>\n".printf(_("Artists")));
 			foreach(string name in artists){
@@ -362,12 +362,12 @@ public class AboutWindow : Dialog {
 			btn_credits.visible = false;
 		}
 	}
-	
+
 	public void add_line(string text){
 		if (text.split(":").length >= 2){
 			var link = new LinkButton(text.split(":")[0]);
 			vbox_lines.add(link);
-			
+
 			string val = text[text.index_of(":") + 1:text.length];
 			if (val.contains("@")){
 				link.uri = "mailto:" + val;
@@ -381,7 +381,7 @@ public class AboutWindow : Dialog {
 
 			link.activate_link.connect(()=>{
 				try{
-					return Gtk.show_uri(null, link.uri, Gdk.CURRENT_TIME); 
+					return Gtk.show_uri(null, link.uri, Gdk.CURRENT_TIME);
 				}
 				catch(Error e){
 					return false;

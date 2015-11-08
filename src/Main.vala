@@ -1041,7 +1041,7 @@ public class Main : GLib.Object{
 		string? line = stdin.read_line();
 		stop_timeout_counter();
 
-		line = (line != null) ? line.strip() : line;
+		line = (line != null) ? line.strip() : "";
 
 		Device selected_device = null;
 
@@ -2113,18 +2113,26 @@ public class Main : GLib.Object{
 				log_msg("");
 
 				snapshot_device = null;
+				int attempts = 0;
 				while (snapshot_device == null){
+					attempts++;
+					if (attempts > 3) { break; }
 					stdout.printf(TERM_COLOR_YELLOW + _("Enter device name or number (a=Abort)") + ": " + TERM_COLOR_RESET);
 					stdout.flush();
 					snapshot_device = read_stdin_device(partition_list);
 				}
 
 				log_msg("");
-
-				if (snapshot_device != null){
-					mount_backup_device(parent_win);
-					update_snapshot_list();
+				
+				if (snapshot_device == null){
+					log_error(_("Failed to get input from user in 3 attempts"));
+					log_msg(_("Aborted."));
+					exit_app();
+					exit(0);
 				}
+
+				mount_backup_device(parent_win);
+				update_snapshot_list();
 			}
 		}
 	}
@@ -2188,12 +2196,22 @@ public class Main : GLib.Object{
 					list_snapshots(true);
 					log_msg("");
 
+					int attempts = 0;
 					while (snapshot_to_restore == null){
+						attempts++;
+						if (attempts > 3) { break; }
 						stdout.printf(TERM_COLOR_YELLOW + _("Enter snapshot number (a=Abort, p=Previous, n=Next)") + ": " + TERM_COLOR_RESET);
 						stdout.flush();
 						snapshot_to_restore = read_stdin_snapshot();
 					}
 					log_msg("");
+
+					if (snapshot_to_restore == null){
+						log_error(_("Failed to get input from user in 3 attempts"));
+						log_msg(_("Aborted."));
+						exit_app();
+						exit(0);
+					}
 				}
 			}
 
@@ -2253,12 +2271,22 @@ public class Main : GLib.Object{
 				list_devices();
 				log_msg("");
 
+				int attempts = 0;
 				while (restore_target == null){
+					attempts++;
+					if (attempts > 3) { break; }
 					stdout.printf(TERM_COLOR_YELLOW + _("Enter device name or number (a=Abort)") + ": " + TERM_COLOR_RESET);
 					stdout.flush();
 					restore_target = read_stdin_device(partition_list);
 				}
 				log_msg("");
+
+				if (restore_target == null){
+					log_error(_("Failed to get input from user in 3 attempts"));
+					log_msg(_("Aborted."));
+					exit_app();
+					exit(0);
+				}
 			}
 		}
 
@@ -2307,13 +2335,23 @@ public class Main : GLib.Object{
 					list_devices();
 					log_msg("");
 
+					int attempts = 0;
 					while (dev == null){
+						attempts++;
+						if (attempts > 3) { break; }
 						stdout.printf(TERM_COLOR_YELLOW + _("[a = Abort, d = Default (%s), r = Root device]").printf(default_device) + "\n\n" + TERM_COLOR_RESET);
 						stdout.printf(TERM_COLOR_YELLOW + _("Enter device name or number") + ": " + TERM_COLOR_RESET);
 						stdout.flush();
 						dev = read_stdin_device_mounts(partition_list, mnt);
 					}
 					log_msg("");
+
+					if (dev == null){
+						log_error(_("Failed to get input from user in 3 attempts"));
+						log_msg(_("Aborted."));
+						exit_app();
+						exit(0);
+					}
 				}
 
 				if (dev != null){
@@ -2396,10 +2434,20 @@ public class Main : GLib.Object{
 			if ((cmd_skip_grub == false) && (reinstall_grub2 == false)){
 				log_msg("");
 
+				int attempts = 0;
 				while ((cmd_skip_grub == false) && (reinstall_grub2 == false)){
+					attempts++;
+					if (attempts > 3) { break; }
 					stdout.printf(TERM_COLOR_YELLOW + _("Re-install GRUB2 bootloader? (y/n)") + ": " + TERM_COLOR_RESET);
 					stdout.flush();
 					read_stdin_grub_install();
+				}
+
+				if ((cmd_skip_grub == false) && (reinstall_grub2 == false)){
+					log_error(_("Failed to get input from user in 3 attempts"));
+					log_msg(_("Aborted."));
+					exit_app();
+					exit(0);
 				}
 			}
 
@@ -2409,13 +2457,23 @@ public class Main : GLib.Object{
 				list_grub_devices();
 				log_msg("");
 
+				int attempts = 0;
 				while (grub_device.length == 0){
+					attempts++;
+					if (attempts > 3) { break; }
 					stdout.printf(TERM_COLOR_YELLOW + _("Enter device name or number (a=Abort)") + ": " + TERM_COLOR_RESET);
 					stdout.flush();
 					Device dev = read_stdin_device(grub_device_list);
 					if (dev != null) { grub_device = dev.device; }
 				}
 				log_msg("");
+
+				if (grub_device.length == 0){
+					log_error(_("Failed to get input from user in 3 attempts"));
+					log_msg(_("Aborted."));
+					exit_app();
+					exit(0);
+				}
 			}
 
 			if ((reinstall_grub2) && (grub_device.length > 0)){
@@ -2436,10 +2494,20 @@ public class Main : GLib.Object{
 			msg = msg.replace("<b>",TERM_COLOR_RED).replace("</b>",TERM_COLOR_RESET);
 			log_msg(msg);
 
+			int attempts = 0;
 			while (cmd_confirm == false){
+				attempts++;
+				if (attempts > 3) { break; }
 				stdout.printf(TERM_COLOR_YELLOW + _("Continue with restore? (y/n): ") + TERM_COLOR_RESET);
 				stdout.flush();
 				read_stdin_restore_confirm();
+			}
+
+			if (cmd_confirm == false){
+				log_error(_("Failed to get input from user in 3 attempts"));
+				log_msg(_("Aborted."));
+				exit_app();
+				exit(0);
 			}
 		}
 
@@ -3091,12 +3159,22 @@ public class Main : GLib.Object{
 				list_snapshots(true);
 				log_msg("");
 
+				int attempts = 0;
 				while (snapshot_to_delete == null){
+					attempts++;
+					if (attempts > 3) { break; }
 					stdout.printf(TERM_COLOR_YELLOW + _("Enter snapshot number (a=Abort, p=Previous, n=Next)") + ": " + TERM_COLOR_RESET);
 					stdout.flush();
 					snapshot_to_delete = read_stdin_snapshot();
 				}
 				log_msg("");
+
+				if (snapshot_to_delete == null){
+					log_error(_("Failed to get input from user in 3 attempts"));
+					log_msg(_("Aborted."));
+					exit_app();
+					exit(0);
+				}
 			}
 		}
 
@@ -3699,6 +3777,8 @@ public class Main : GLib.Object{
 	}
 
 	public void unmount_backup_device(bool exit_on_error = true){
+		if (mount_point_backup == null) { return; }
+		
 		//unmount the backup device only if it was mounted by application
 		if (mount_point_backup.has_prefix(mount_point_app)){
 			if (unmount_device(mount_point_backup, false)){
@@ -3717,6 +3797,8 @@ public class Main : GLib.Object{
 	}
 
 	public void unmount_target_device(bool exit_on_error = true){
+		if (mount_point_restore == null) { return; }
+		
 		//unmount the target device only if it was mounted by application
 		if (mount_point_restore.has_prefix(mount_point_app)){   //always true
 			unmount_device(mount_point_restore,exit_on_error);
@@ -4111,7 +4193,6 @@ public class Main : GLib.Object{
 	}
 
 	public void exit_app (){
-
 		if (app_mode == ""){
 			//update app config only in GUI mode
 			save_app_config();
@@ -4123,6 +4204,7 @@ public class Main : GLib.Object{
 		unmount_target_device(false);
 
 		clean_logs();
+
 		remove_lock();
 
 		//Gtk.main_quit ();

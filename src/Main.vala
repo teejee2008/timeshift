@@ -3453,30 +3453,15 @@ public class Main : GLib.Object{
 				list.add(pi);
 			}
 			list.sort((a,b) => {
-					Device p1 = (Device) a;
-					Device p2 = (Device) b;
-
-					int index = 0;
-					while (index < p1.device.length){
-						if (Posix.isdigit(p1.device[index])){
-							if (p1.device[0:index] == p2.device[0:index]){
-								int num_a = int.parse(p1.device[index:p1.device.length]);
-								int num_b = int.parse(p2.device[index:p2.device.length]);
-								return (num_a == num_b) ? 0 : ((num_a < num_b) ? -1 : 1);
-							}
-							else{
-								return strcmp(p1.device,p2.device);
-							}
-						}
-						index++;
-					}
-
-					return strcmp(p1.device,p2.device);
-				});
+				Device p1 = (Device) a;
+				Device p2 = (Device) b;
+				return strcmp(pad_numbers_in_string(p1.device),pad_numbers_in_string(p2.device));
+			});
 			return list;
 		}
 	}
 
+	
 	public void update_partition_list(){
 		partition_map.clear();
 		partition_map = Device.get_filesystems();

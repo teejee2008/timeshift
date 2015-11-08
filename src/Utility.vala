@@ -3128,4 +3128,45 @@ namespace TeeJee.Misc {
 		.replace("&gt;",">")
 		;
 	}
+
+	
+	private string pad_numbers_in_string(string input, int max_length = 3, char pad_char = '0'){
+		string sequence = "";
+		string output = "";
+		bool seq_started = false;
+
+		unichar c;
+		string character;
+		for (int i = 0; input.get_next_char(ref i, out c);) {
+			character = c.to_string();
+
+			if (c.isdigit()){
+				sequence += character;
+				seq_started = true;
+			}
+			else{
+				if (seq_started){
+					if ((max_length - sequence.length) > 0){
+						sequence = string.nfill(max_length - sequence.length, pad_char) + sequence;
+					}
+					output += sequence;
+					sequence = "";
+					seq_started = false;
+				}
+
+				output += character;
+			}
+		}
+
+		//append remaining characters in sequence
+		if (sequence.length > 0){
+			if ((max_length - sequence.length) > 0){
+				sequence = string.nfill(max_length - sequence.length, pad_char) + sequence;
+			}
+			output += sequence;
+			sequence = "";
+		}
+					
+		return output;
+	}
 }

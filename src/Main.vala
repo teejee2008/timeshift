@@ -1074,7 +1074,7 @@ public class Main : GLib.Object{
 		string? line = stdin.read_line();
 		stop_timeout_counter();
 
-		line = (line != null) ? line.strip() : line;
+		line = (line != null) ? line.strip() : "";
 
 		Device selected_device = null;
 
@@ -1149,7 +1149,7 @@ public class Main : GLib.Object{
 		string? line = stdin.read_line();
 		stop_timeout_counter();
 
-		line = (line != null) ? line.strip() : line;
+		line = (line != null) ? line.strip() : "";
 
 		TimeShiftBackup selected_snapshot = null;
 
@@ -1242,7 +1242,7 @@ public class Main : GLib.Object{
 		string? line = stdin.read_line();
 		stop_timeout_counter();
 
-		line = (line != null) ? line.strip() : line;
+		line = (line != null) ? line.strip() : "";
 
 		if ((line.down() == "a")||(line.down() == "n")){
 			log_msg("Aborted.");

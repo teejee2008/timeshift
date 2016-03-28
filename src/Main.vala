@@ -39,7 +39,7 @@ using TeeJee.Misc;
 public Main App;
 public const string AppName = "Timeshift RSYNC";
 public const string AppShortName = "timeshift";
-public const string AppVersion = "1.7.6";
+public const string AppVersion = "1.8";
 public const string AppAuthor = "Tony George";
 public const string AppAuthorEmail = "teejee2008@gmail.com";
 
@@ -2855,23 +2855,11 @@ public class Main : GLib.Object{
 				if (restore_current_system){
 					//current system, gui, fullscreen
 					temp_script = create_temp_bash_script(sh);
-					ret_val = execute_bash_script_fullscreen_sync(temp_script);
 
-					if (ret_val == -1){
-						string msg = _("Failed to find a terminal emulator on this system!") + "\n";
-						msg += _("Please install one of the following terminal emulators and try again") + ":\n";
-						msg += "xfce4-terminal gnome-terminal xterm konsole\n\n";
-						msg += _("No changes were made to system.");
-
-						log_error(msg);
-
-						string title = _("Error");
-						gtk_messagebox(title, msg, null, true);
-
-						thr_success = false;
-						thr_running = false;
-						return;
-					}
+					//restore or clone
+					var dlg = new TerminalWindow.with_parent(null);
+					dlg.execute_script(temp_script, true);
+					
 				}
 				else{
 					//other system, gui

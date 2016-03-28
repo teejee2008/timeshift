@@ -663,14 +663,24 @@ public class RestoreWindow : Gtk.Dialog{
 			}
 		}
 
+		string txt = pi.device;
+		
 		if ((App.root_device != null) && (pi.device == App.root_device.device)){
-			(cell as Gtk.CellRendererText).text = pi.device + " (" + _("sys") + ")" + ((symlink.length > 0) ? " → " + symlink : "");
-		}
-		else{
-			(cell as Gtk.CellRendererText).text = pi.device + ((symlink.length > 0) ? " → " + symlink : "");
+			txt += " (" + _("sys") + ")";
 		}
 
+		if (symlink.length > 0){
+			txt += " → ";
+			if (symlink.length > 10){
+				txt += symlink[0:10] + "...";
+			}
+			else{
+				txt += symlink;
+			}
+		}
+		
 		Gtk.CellRendererText ctxt = (cell as Gtk.CellRendererText);
+		ctxt.text = txt;
 		set_cell_text_color(ref ctxt);
 	}
 

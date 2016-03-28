@@ -2834,6 +2834,10 @@ namespace TeeJee.System{
 			return "";
 		}
 	}
+
+	public void sleep(int milliseconds){
+		Thread.usleep ((ulong) milliseconds * 1000);
+	}
 }
 
 namespace TeeJee.Misc {

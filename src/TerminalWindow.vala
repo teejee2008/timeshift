@@ -53,7 +53,7 @@ public class TerminalWindow : Gtk.Window {
 			parent_win = parent;
 		}
 		set_modal(true);
-		window_position = WindowPosition.CENTER;
+		fullscreen();
 
 		this.delete_event.connect(()=>{
 			// do not allow window to close 
@@ -150,7 +150,7 @@ public class TerminalWindow : Gtk.Window {
 
 			term.fork_command_full(
 				Vte.PtyFlags.DEFAULT, //pty_flags
-				App.temp_dir, //working_directory
+				TEMP_DIR, //working_directory
 				argv, //argv
 				env, //env
 				GLib.SpawnFlags.SEARCH_PATH, //spawn_flags

@@ -6,1215 +6,1672 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: timeshift\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-12-01 19:55+0530\n"
-"PO-Revision-Date: 2013-11-06 17:42+0000\n"
-"Last-Translator: 박정규(Jung-Kyu Park) <bagjunggyu@gmail.com>\n"
+"Report-Msgid-Bugs-To: teejee2008@gmail.com\n"
+"POT-Creation-Date: 2016-07-05 19:22+0300\n"
+"PO-Revision-Date: 2016-07-05 19:22+0300\n"
+"Last-Translator: Maxim Taranov <png2378@gmail.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
+"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 14:36+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2016-07-05 16:12+0000\n"
+"X-Generator: Poedit 1.8.7.1\n"
 
-#: src/MainWindow.vala:1127
+#: Main.vala:2368
+#, c-format
+msgid "'%s' will be on '%s'"
+msgstr "'%s'는 '%s'에 위치될 것입니다"
+
+#: Main.vala:2365
+#, c-format
+msgid "'%s' will be on root device"
+msgstr "'%s'는 루트 장치에 위치될 것입니다"
+
+#: RestoreWindow.vala:297
+msgid "** Advanced Users **"
+msgstr "** 고급 사용자 **"
+
+#: Main.vala:3573
+#, c-format
+msgid "/ is mapped to device: %s, UUID=%s"
+msgstr "/ 는 다음 장치에 맵핑 되었습니다: %s, UUID=%s"
+
+#: Main.vala:3580
+#, c-format
+msgid "/home is mapped to device: %s, UUID=%s"
+msgstr "/home은 다음 장치에 맵핑 되었습니다: %s, UUID=%s"
+
+#: MainWindow.vala:410
+msgid ""
+"<b>Backup Levels</b>\n"
+"\n"
+"O\tOn demand (manual)\n"
+"B\tBoot\n"
+"H\tHourly\n"
+"D\tDaily\n"
+"W\tWeekly\n"
+"M\tMonthly"
+msgstr ""
+"<b>백업 단계</b>\n"
+"\n"
+"O\t즉석으로(수동)\n"
+"B\t부팅\n"
+"H\t매시간\n"
+"D\t매일\n"
+"W\t매주\n"
+"M\t매월"
+
+#: MainWindow.vala:402
+msgid "<b>Comments</b> (double-click to edit)"
+msgstr "<b>덧붙일 말</b> (두 번-눌러서 만듭니다)"
+
+#: MainWindow.vala:398
+msgid "<b>Snapshot Date:</b> Date on which snapshot was created"
+msgstr "<b>스냅샷 날짜:</b> 스냅샷이 만들어진 날짜입니다"
+
+#: MainWindow.vala:406
+msgid "<b>System:</b> Installed Linux distribution"
+msgstr "<b>시스템:</b> 설치된 리눅스 배포판입니다"
+
+#: MainWindow.vala:1290
 msgid "A System Restore Utility for Linux"
-msgstr "리눅스용 시스템 백업/복원 프로그램"
+msgstr "리눅스용 시스템 복원 프로그램입니다"
 
-#: src/Main.vala:217
+#: Main.vala:261
 msgid "A scheduled job is currently taking a system snapshot."
-msgstr "일정에 따라 시스템 스냅샷을 만들고 있습니다."
+msgstr "시스템 스냅샷을 저장하기 위한 일정 관리가 실행 중입니다."
 
-#: src/MainWindow.vala:202
+#: Main.vala:1028 Main.vala:1049 Main.vala:2129 Main.vala:2211 Main.vala:2286
+#: Main.vala:2351 Main.vala:2448 Main.vala:2473 Main.vala:2508 Main.vala:3162
+msgid "Aborted."
+msgstr "중단되었습니다."
+
+#: MainWindow.vala:214
 msgid "About"
 msgstr "설명"
 
-#: src/MainWindow.vala:203
-msgid "About TimeShift"
-msgstr "타임시프트에 관해서"
-
-#: src/Main.vala:155
+#: Main.vala:199
 msgid "Admin Access Required"
 msgstr "관리자 권한이 필요합니다"
 
-#: src/RestoreWindow.vala:351 src/SettingsWindow.vala:245
+#: RestoreWindow.vala:366 SettingsWindow.vala:243
 msgid "Advanced"
 msgstr "고급설정"
 
-#: src/Main.vala:416
-msgid "All dependencies satisfied"
-msgstr "모든 의존성이 갖추어졌습니다"
-
-#: src/ExcludeMessageWindow.vala:136
+#: ExcludeMessageWindow.vala:136
 msgid "All other files and folders are excluded."
-msgstr "다른 모든 파일과 폴더들이 제외되었습니다."
+msgstr "다른 파일과 폴더들은 제외됐습니다."
 
-#: src/SettingsWindow.vala:615
+#: SettingsWindow.vala:614
 msgid "All snapshots older than"
 msgstr "며칠 이상 된 모든 스냅샷"
 
-#: src/Main.vala:587
+#: Main.vala:631
 msgid "Another instance of timeshift is currently running"
-msgstr "다른 타임시프트가 작동하고 있습니다"
+msgstr "현재 다른 타임시프트가 작동하고 있습니다"
 
-#: src/Main.vala:221
+#: Main.vala:265
 msgid "Another instance of timeshift is currently running!"
 msgstr "다른 타임시프트가 작동하고 있습니다!"
 
-#: src/RestoreWindow.vala:999
-msgid ""
-"Any exclude patterns in the current exclude list will also be excluded."
-msgstr "지금 제외된 목록에 있는 모든 제외 패턴들도 함께 제외됩니다."
+#: Main.vala:702
+msgid "Answer YES to all confirmation prompts"
+msgstr "모든 확인 프롬프트에 예라고 답변을 합니다"
 
-#: src/Main.vala:1912
+#: RestoreWindow.vala:1158
+msgid "Any exclude patterns in the current exclude list will also be excluded."
+msgstr "현재 제외 목록에 있는 제외된 패턴 역시 제외됩니다."
+
+#: Main.vala:3468
 msgid "App config loaded"
 msgstr "프로그램 설정을 불러왔습니다"
 
-#: src/Main.vala:1848
+#: Main.vala:3378
 msgid "App config saved"
 msgstr "프로그램 설정을 저장했습니다"
 
-#: src/RestoreWindow.vala:328
+#: RestoreWindow.vala:343
 msgid "Application"
-msgstr ""
+msgstr "프로그램"
 
-#: src/Main.vala:2109
+#: MainWindow.vala:215
+msgid "Application Info"
+msgstr "프로그램 정보"
+
+#: Main.vala:3805
 msgid "Application will exit"
 msgstr "프로그램이 종료됩니다"
 
-#: src/Main.vala:294
+#: Main.vala:435
 msgid "Application will exit."
 msgstr "프로그램이 종료됩니다."
 
-#: src/SettingsWindow.vala:194
-msgid "Auto-Remove"
-msgstr "자동 제거"
+#: AboutWindow.vala:330
+#, c-format
+msgid "Artists"
+msgstr "아티스트"
 
-#: src/MainWindow.vala:125
+#: AboutWindow.vala:314
+#, c-format
+msgid "Authors"
+msgstr "저자"
+
+#: SettingsWindow.vala:187
+msgid "Auto-Remove"
+msgstr "자동-제거"
+
+#: AboutWindow.vala:285
+msgid "Back"
+msgstr "뒤로"
+
+#: Main.vala:684 MainWindow.vala:118
 msgid "Backup"
 msgstr "백업"
 
-#: src/MainWindow.vala:218
+#: Main.vala:2149 MainWindow.vala:231
 msgid "Backup Device"
 msgstr "백업 장치"
 
-#: src/MainWindow.vala:563 src/MainWindow.vala:583
+#: MainWindow.vala:619 MainWindow.vala:639
 msgid "Backup Device Changed"
 msgstr "백업 장치를 바꿨습니다"
 
-#: src/SettingsWindow.vala:176
+#: SettingsWindow.vala:169
 msgid "Backup Level"
-msgstr "백업 레벨"
+msgstr "백업 단계"
 
-#: src/MainWindow.vala:802
+#: MainWindow.vala:881
 msgid "Backup device does not have enough space"
-msgstr ""
+msgstr "백업 장치에 충분한 여유 공간이 없습니다"
 
-#: src/Main.vala:2271 src/MainWindow.vala:1269 src/MainWindow.vala:1277
+#: Main.vala:1336 Main.vala:3856 MainWindow.vala:1431 MainWindow.vala:1439
 msgid "Backup device does not have enough space!"
 msgstr "백업 장치에 충분한 여유 공간이 없습니다!"
 
-#: src/MainWindow.vala:1261
+#: MainWindow.vala:1398 RestoreWindow.vala:1295
+msgid "Backup device is not available"
+msgstr "백업 장치가 연결되지 않았습니다"
+
+#: MainWindow.vala:1423
 msgid "Backup device is not mounted!"
-msgstr "백업 장치가 연결되지 않았습니다!"
+msgstr "백업 장치가 장착되지 않았습니다!"
 
-#: src/Main.vala:2263
+#: Main.vala:3843 Main.vala:3850
 msgid "Backup device not available"
-msgstr ""
+msgstr "백업 장치를 사용할 수 없습니다"
 
-#: src/MainWindow.vala:1005
+#: Main.vala:3620
+msgid "Backup device not found"
+msgstr "백업 장치를 찾을 수 없습니다"
+
+#: Main.vala:3612
+msgid "Backup device not set!"
+msgstr "백업 장치가 설정되지 않았습니다!"
+
+#: Main.vala:3418
+msgid "Backup device not set! Defaulting to system device"
+msgstr "백업 장치가 설정되지 않았습니다! 시스템 장치로 기본 설정하는 중입니다"
+
+#: Main.vala:2156
+msgid "Backup device not specified!"
+msgstr "백업 장치가 지정되지 않았습니다!"
+
+#: Main.vala:3634 Main.vala:3657
+#, c-format
+msgid "Backup path changed to '%s/timeshift'"
+msgstr "백업 경로가 '%s/timeshift'로 바뀌었습니다"
+
+#: MainWindow.vala:1114
 msgid "Before restoring"
 msgstr "복원하기 전에"
 
-#: src/SettingsWindow.vala:569 src/SettingsWindow.vala:610
+#: SettingsWindow.vala:568 SettingsWindow.vala:609
 msgid "Boot"
 msgstr "부트"
 
-#: src/RestoreWindow.vala:1123
+#: RestoreWindow.vala:1405
 msgid "Boot device not selected"
-msgstr ""
+msgstr "부팅 장치를 선택하지 않으셨습니다"
 
-#: src/Main.vala:749
+#: Main.vala:1387
 msgid "Boot snapshot failed!"
-msgstr "부트 스냅샷 만들기를 실패했습니다"
+msgstr "부트 스냅샷 만들기에 실패했습니다"
 
-#: src/Main.vala:730
+#: Main.vala:1368
 msgid "Boot snapshots are enabled"
 msgstr "부트 스냅샷 만들기를 실행했습니다"
 
-#: src/MainWindow.vala:143
+#: MainWindow.vala:136
 msgid "Browse"
 msgstr "찾아보기"
 
-#: src/MainWindow.vala:144
+#: MainWindow.vala:137
 msgid "Browse Snapshot"
 msgstr "스냅샷 찾기"
 
-#: src/RestoreWindow.vala:998
+#: RestoreWindow.vala:1157
 msgid ""
 "By default, any item that was included/excluded at the time of taking the "
 "snapshot will be included/excluded."
-msgstr "기본적으로, 스냅샷을 생성하는 시기에 포함되거나/제외되는 모든 아이템은포함되거나/제외됩니다."
+msgstr ""
+"기본적으로, 스냅샷을 생성하는 시기에 포함되거나/제외되는 모든 아이템은 포함되"
+"거나/제외됩니다."
 
-#: src/RestoreWindow.vala:537 src/RestoreWindow.vala:538
+#: RestoreWindow.vala:552 RestoreWindow.vala:553 Utility.vala:2213
 msgid "Cancel"
 msgstr "취소"
 
-#: src/MainWindow.vala:460
+#: MainWindow.vala:512
 msgid "Checking backup device..."
-msgstr "백업 장치 확인 중..."
+msgstr "백업 장치를 확인하는 중입니다..."
 
-#: src/Main.vala:938 src/Main.vala:1608
+#: Main.vala:1561 Main.vala:2803
 msgid "Cleaning up..."
-msgstr "지우는 중..."
+msgstr "지우는 중입니다..."
 
-#: src/SettingsWindow.vala:314
+#: SettingsWindow.vala:312
 msgid "Clear the list"
-msgstr "목록 청소하기"
+msgstr "목록을 청소합니다"
 
-#: src/MainWindow.vala:560
+#: MainWindow.vala:616
 msgid "Click 'OK' to confirm"
-msgstr "’OK’를 눌러 적용합니다"
+msgstr "'확인'을 눌러 적용합니다"
 
-#: src/MainWindow.vala:360
+#: RestoreWindow.vala:1449
+msgid "Click OK to continue"
+msgstr "확인을 누르셔서 계속하십시오"
+
+#: MainWindow.vala:169
+msgid "Clone"
+msgstr "복제"
+
+#: Main.vala:690
+msgid "Clone current system"
+msgstr "현재의 시스템을 복제합니다"
+
+#: MainWindow.vala:170
+msgid "Clone the current system on another device"
+msgstr "다른 장치에 현재의 시스템을 복제합니다"
+
+#: MainWindow.vala:1161
+msgid "Cloning Failed!"
+msgstr "복제에 실패했습니다!"
+
+#: Main.vala:2851 MainWindow.vala:1133
+msgid "Cloning system..."
+msgstr "시스템을 복제하는 중입니다..."
+
+#: AboutWindow.vala:295
+msgid "Close"
+msgstr "닫기"
+
+#: Main.vala:418
+msgid "Commands listed below are not available on this system"
+msgstr "밑에 있는 명령어들은 이 시스템에 유효하지 않습니다"
+
+#: MainWindow.vala:375
 msgid "Comments"
 msgstr "덧붙일 말"
 
-#: src/RestoreWindow.vala:1256
+#: RestoreWindow.vala:1452
+msgid "Confirm Mounts"
+msgstr "장착된 장치를 확인합니다"
+
+#: RestoreWindow.vala:1417
 msgid "Continue with restore?"
 msgstr "복원을 계속하시겠습니까?"
 
-#: src/Main.vala:2108
+#: Main.vala:2501
+#, c-format
+msgid "Continue with restore? (y/n): "
+msgstr "복원과 함께 계속하시겠습니까? (y/n): "
+
+#: Main.vala:2101 Main.vala:2260 Main.vala:2427 Main.vala:3410
+msgid "Could not find device"
+msgstr "장치를 찾을 수 없습니다"
+
+#: Main.vala:2181 Main.vala:3132
+msgid "Could not find snapshot"
+msgstr "스냅샷을 찾을 수 없습니다"
+
+#: AboutWindow.vala:272 AboutWindow.vala:289
+msgid "Credits"
+msgstr "제작자"
+
+#: Main.vala:3804
 msgid "Critical Error"
 msgstr "치명적인 오류"
 
-#: src/Main.vala:2200
+#: Main.vala:4117
 msgid "Cron job added"
-msgstr "백업 일정 관리를 더했습니다"
+msgstr "백업 일정 관리를 추가했습니다"
 
-#: src/Main.vala:2225
+#: Main.vala:4130
 msgid "Cron job removed"
-msgstr "백업 일정 관리를 지웠습니다."
+msgstr "백업 일정 관리를 지웠습니다"
 
-#: src/Main.vala:2161
+#: Utility.vala:2784 Utility.vala:2813
 msgid "Crontab is empty"
-msgstr "백업 일정 관리란 이 비었습니다"
+msgstr "백업 일정 관리가 비었습니다"
 
-#: src/RestoreWindow.vala:1252 src/RestoreWindow.vala:1259
+#: Main.vala:2704 RestoreWindow.vala:1420
 msgid "DISCLAIMER"
-msgstr "포기"
+msgstr "포기성명"
 
-#: src/SettingsWindow.vala:559 src/SettingsWindow.vala:600
+#: SettingsWindow.vala:558 SettingsWindow.vala:599
 msgid "Daily"
 msgstr "매일"
 
-#: src/Main.vala:813
+#: Main.vala:1447
 msgid "Daily snapshot failed!"
-msgstr "매일 스냅샷 만들기를 실패했습니다!"
+msgstr "매일 스냅샷 만들기에 실패했습니다!"
 
-#: src/Main.vala:794
+#: Main.vala:1428
 msgid "Daily snapshots are enabled"
 msgstr "매일 스냅샷 만들기를 실행합니다"
 
-#: src/MainWindow.vala:152
+#: Main.vala:696 MainWindow.vala:145
 msgid "Delete"
 msgstr "지우기"
 
-#: src/MainWindow.vala:153
+#: MainWindow.vala:146
 msgid "Delete Snapshot"
-msgstr "스냅샷 지우기"
+msgstr "스냅샷을 지웁니다"
 
-#: src/Main.vala:1796
-msgid "Deleted"
-msgstr "지워짐"
+#: Main.vala:698
+msgid "Delete all snapshots"
+msgstr "모든 스냅샷을 지웁니다"
 
-#: src/Main.vala:951
-msgid "Deleted incomplete snapshot"
-msgstr "미완성된 스냅샷 지우기"
+#: Main.vala:697
+msgid "Delete snapshot"
+msgstr "스냅샷을 지웁니다"
 
-#: src/MainWindow.vala:894
+#: MainWindow.vala:977 MainWindow.vala:992
 msgid "Deleting snapshot"
-msgstr "스냅샷 지우는 중"
+msgstr "스냅샷을 지우는 중입니다"
 
-#: src/SettingsWindow.vala:184
+#: Main.vala:867 Main.vala:974 SettingsWindow.vala:177
 msgid "Description"
 msgstr "설명"
 
-#: src/RestoreWindow.vala:183 src/RestoreWindow.vala:732
+#: Main.vala:900 Main.vala:973 RestoreWindow.vala:185 RestoreWindow.vala:865
+#: RestoreWindow.vala:1433 RestoreWindow.vala:1443
+#, c-format
 msgid "Device"
 msgstr "장치"
 
-#: src/RestoreWindow.vala:266
+#: MainWindow.vala:1398 RestoreWindow.vala:1295
+msgid "Device Offline"
+msgstr "오프라인 장치"
+
+#: RestoreWindow.vala:269
 msgid "Device for Bootloader Installation"
 msgstr "부트로더를 설치할 장치"
 
-#: src/RestoreWindow.vala:135
+#: RestoreWindow.vala:132
+msgid "Device for Cloning System"
+msgstr "시스템을 복제하기 위한 장치"
+
+#: RestoreWindow.vala:132
 msgid "Device for Restoring Snapshot"
 msgstr "스냅샷 복원에 쓰일 장치"
 
-#: src/MainWindow.vala:494 src/MainWindow.vala:516
-msgid "Disable Scheduled Snapshots"
-msgstr "스냅샷 일정 관리 해제"
+#: Main.vala:387
+msgid "Devices with Linux file systems"
+msgstr "리눅스 파일 시스템이 있는 장치"
 
-#: src/MainWindow.vala:1314
+#: DonationWindow.vala:54
+msgid ""
+"Did you find this software useful?\n"
+"\n"
+"You can buy me a coffee or make a donation via PayPal to show your support. "
+"Or just drop me an email and say Hi. This application is completely free and "
+"will continue to remain that way. Your contributions will help in keeping "
+"this project alive and improving it further.\n"
+"\n"
+"Feel free to send me an email if you find any issues in this application or "
+"if you need any changes. Suggestions and feedback are always welcome.\n"
+"\n"
+"Thanks,\n"
+"Tony George\n"
+"(teejeetech@gmail.com)"
+msgstr ""
+"이 프로그램 쓸만하시던가요?\n"
+"\n"
+"제게 커피를 한 잔 사시거나 페이팔로 기부를 하시는 것으로 후원하는 마음을 보여"
+"주실 수 있습니다. 또는 안녕하세요라는 이 메일 한 통 보내셔도 좋구요. 이 프로"
+"그램은 완전히 무료이며 앞으로도 무료일겁니다. 여러분의 공헌으로 이 프로젝트"
+"는 살아가고 발전해 나가게 될 겁니다.\n"
+"\n"
+"이 프로그램에 문제를 제기하시거나 바꿀게 있다면 부담 갖지 마시고 이메일 보내"
+"세요. 제안이나 피드백은 언제나 환영입니다.\n"
+"\n"
+"감사합니다,\n"
+"Tony George\n"
+"(teejeetech@gmail.com)"
+
+#: Main.vala:3226 Main.vala:3319
+msgid "Directory not found"
+msgstr "디렉터리를 찾을 수 없습니다"
+
+#: MainWindow.vala:550 MainWindow.vala:572
+msgid "Disable Scheduled Snapshots"
+msgstr "스냅샷 일정 관리를 해제합니다"
+
+#: MainWindow.vala:1479
 msgid "Disabled"
 msgstr "해제됨"
 
-#: src/Main.vala:193
+#: Main.vala:236
 msgid "Distribution"
-msgstr ""
+msgstr "배포판"
 
-#: src/MainWindow.vala:513
+#: MainWindow.vala:569
 msgid "Do you want to select another device now?"
-msgstr "지금, 다른 장치를 선택하시겠습니까?"
+msgstr "지금 다른 장치를 선택하시겠습니까?"
 
-#: src/MainWindow.vala:580
+#: MainWindow.vala:636
 msgid "Do you want to select another device?"
 msgstr "다른 장치를 선택하시겠습니까?"
 
-#: src/MainWindow.vala:983
+#: MainWindow.vala:1092
 msgid ""
 "Do you want to take a snapshot of the current system before restoring the "
 "selected snapshot?"
-msgstr "복원하기전에 선택된 스냅샷으로현재 시스템 스냅샷을 만드시겠습니까?"
+msgstr "복원하기 전에 선택된 스냅샷으로 현재 시스템 스냅샷을 만드시겠습니까?"
 
-#: src/MainWindow.vala:535
+#: MainWindow.vala:591
 msgid "Do you want to take the first snapshot now?"
-msgstr "지금, 첫 번째 스냅샷을 만드시겠습니까?"
+msgstr "지금 첫 번째 스냅샷을 만드시겠습니까?"
 
-#: src/SettingsWindow.vala:858
+#: AboutWindow.vala:346
+#, c-format
+msgid "Documenters"
+msgstr "문서 작성자"
+
+#: SettingsWindow.vala:857
 msgid ""
 "Documents, music and other folders in your home directory are excluded by "
 "default."
-msgstr "기본으로문서, 음악, 그리고 다른 폴더들은 제외됩니다."
+msgstr "기본으로 문서, 음악, 그리고 다른 폴더들은 제외됩니다."
 
-#: src/SettingsWindow.vala:166
+#: DonationWindow.vala:36 MainWindow.vala:205 MainWindow.vala:206
+msgid "Donate"
+msgstr "기부하기"
+
+#: DonationWindow.vala:74
+msgid "Donate with Google Wallet"
+msgstr "구글 지갑으로 기부하기"
+
+#: DonationWindow.vala:67
+msgid "Donate with PayPal"
+msgstr "페이팔로 기부하기"
+
+#: AboutWindow.vala:354
+#, c-format
+msgid "Donations"
+msgstr "기부"
+
+#: SettingsWindow.vala:159
 msgid "Enable"
 msgstr "실행"
 
-#: src/MainWindow.vala:1310
+#: MainWindow.vala:1475
 msgid "Enabled"
 msgstr "실행됨"
 
-#: src/Main.vala:225 src/Main.vala:1661 src/MainWindow.vala:777
-#: src/MainWindow.vala:1034 src/RestoreWindow.vala:1209
-#: src/RestoreWindow.vala:1227 src/Utility.vala:101
+#: Main.vala:2642
+msgid "Encrypted Device"
+msgstr "암호화된 장치"
+
+#: Main.vala:2618 Main.vala:2652
+#, c-format
+msgid ""
+"Encrypted device '%s' is already unlocked and mapped to another device "
+"name.\n"
+"Select the unlocked device instead of encrypted device."
+msgstr ""
+"암호화된 장치 '%s'는 이미 잠금 해제되었으며 다른 장치 이름으로 매핑되었습니"
+"다.\n"
+"암호화된 장치를 선택하는 대신에 잠금 해제된 장치를 선택하십시오."
+
+#: Main.vala:2343
+#, c-format
+msgid "Enter device name or number"
+msgstr "장치 이름 혹은 번호를 입력하십시오"
+
+#: Main.vala:2120 Main.vala:2278 Main.vala:2464
+#, c-format
+msgid "Enter device name or number (a=Abort)"
+msgstr "장치 이름 혹은 번호를 입력하십시오(a=중단)"
+
+#: Main.vala:2642
+#, c-format
+msgid "Enter passphrase to unlock '%s'"
+msgstr "암호문을 입력하셔서 '%s'를 잠금 해제하십시오"
+
+#: Main.vala:2203 Main.vala:3154
+#, c-format
+msgid "Enter snapshot number (a=Abort, p=Previous, n=Next)"
+msgstr "스냅샷 번호를 입력하십시오(a=중단, p=이전, n=다음)"
+
+#: Main.vala:269 Main.vala:2658 MainWindow.vala:1170 RestoreWindow.vala:1395
+#: Utility.vala:125
 msgid "Error"
 msgstr "오류"
 
-#: src/MainWindow.vala:899
+#: MainWindow.vala:982
 msgid "Error: Unable to delete snapshot"
-msgstr "오류:백업 이미지를 지우지 못함"
+msgstr "오류: 백업 이미지를 지우지 못했습니다"
 
-#: src/MainWindow.vala:824
+#: MainWindow.vala:904
 msgid "Error: Unable to save snapshot"
-msgstr "오류:백업 이미지를 저장하지 못함"
+msgstr "오류: 백업 이미지를 저장하지 못했습니다"
 
-#: src/MainWindow.vala:463
+#: MainWindow.vala:515
 msgid "Estimating system size..."
-msgstr "시스템 크기를 어림잡는 중..."
+msgstr "시스템 크기를 어림잡는 중입니다..."
 
-#: src/RestoreWindow.vala:297 src/RestoreWindow.vala:373
-#: src/RestoreWindow.vala:374 src/SettingsWindow.vala:269
-#: src/SettingsWindow.vala:270
+#: Main.vala:709
+msgid "Examples"
+msgstr "예제"
+
+#: RestoreWindow.vala:312 RestoreWindow.vala:388 RestoreWindow.vala:389
+#: SettingsWindow.vala:267 SettingsWindow.vala:268
 msgid "Exclude"
 msgstr "제외하기"
 
-#: src/RestoreWindow.vala:438 src/SettingsWindow.vala:332
+#: RestoreWindow.vala:453 SettingsWindow.vala:330
 msgid "Exclude Directory"
 msgstr "디렉터리 제외하기"
 
-#: src/RestoreWindow.vala:446 src/SettingsWindow.vala:340
+#: RestoreWindow.vala:461 SettingsWindow.vala:338
 msgid "Exclude Directory Contents"
 msgstr "디렉터리 내용 제외하기"
 
-#: src/RestoreWindow.vala:430 src/SettingsWindow.vala:324
+#: RestoreWindow.vala:445 SettingsWindow.vala:322
 msgid "Exclude File(s)"
-msgstr "파일 제외하기"
+msgstr "파일(들) 제외하기"
 
-#: src/ExcludeMessageWindow.vala:76
+#: ExcludeMessageWindow.vala:76
 msgid "Exclude List"
 msgstr "목록 제외하기"
 
-#: src/ExcludeMessageWindow.vala:54
+#: ExcludeMessageWindow.vala:54
 msgid "Excluded Directories"
 msgstr "제외된 디렉터리들"
 
-#: src/Main.vala:2196
+#: Main.vala:4121
 msgid "Failed to add cron job"
-msgstr "백업 일정 관리 추가를 실패했습니다"
+msgstr "백업 일정 관리 추가에 실패했습니다"
 
-#: src/Main.vala:1107
+#: Main.vala:1717
 msgid "Failed to create new snapshot"
-msgstr "새 스냅샷 만들기를 실패했습니다"
+msgstr "새 스냅샷 만들기에 실패했습니다"
 
-#: src/Main.vala:1299
+#: Main.vala:1952
 msgid "Failed to create symlinks"
-msgstr "symlink 만들기를 실패했습니다"
+msgstr "심볼릭 링크 만들기에 실패했습니다"
 
-#: src/Main.vala:947
-msgid "Failed to delete incomplete snapshot"
-msgstr "미완성된 스냅샷 지우기를 실패했습니다"
-
-#: src/Main.vala:1329
+#: Main.vala:1982
 msgid "Failed to delete symlinks"
-msgstr "symlink 지우기를 실패했습니다"
+msgstr "심볼릭 링크 지우기에 실패했습니다"
 
-#: src/Main.vala:2360
+#: Main.vala:3978 Main.vala:3984
 msgid "Failed to estimate system size"
-msgstr "시스템 크기 어림잡기를 실패했습니다"
+msgstr "시스템 크기 어림잡기에 실패했습니다"
 
-#: src/Main.vala:1654
-msgid "Failed to find a terminal emulator on this system!"
-msgstr "이 시스템의 터미널을 찾는데 실패했습니다"
+#: Main.vala:2128 Main.vala:2210 Main.vala:2285 Main.vala:2350 Main.vala:2447
+#: Main.vala:2472 Main.vala:2507 Main.vala:3161
+msgid "Failed to get input from user in 3 attempts"
+msgstr "사용자의 계정으로 3번 입력 시도를 실패했습니다"
 
-#: src/Main.vala:1972
+#: Utility.vala:680
+msgid "Failed to get partition list"
+msgstr "파티션 목록을 가져오는 데 실패했습니다"
+
+#: Main.vala:3545
 msgid "Failed to get partition list."
-msgstr "파티션 목록을 가져오는데 실패했습니다."
+msgstr "파티션 목록을 가져오는 데 실패했습니다."
 
-#: src/Main.vala:1053
+#: Main.vala:1666
 msgid "Failed to hard-link last snapshot"
-msgstr "마지막 스냅샷 하드 링크를 실패했습니다"
+msgstr "마지막 스냅샷 하드-링크에 실패했습니다"
 
-#: src/Utility.vala:1012
-msgid "Failed to kill process"
-msgstr "작업 중지를 실패했습니다"
-
-#: src/Main.vala:2069 src/Main.vala:2077
+#: Main.vala:3727 Main.vala:3733
 msgid "Failed to mount BTRFS subvolume"
-msgstr ""
+msgstr "BTRFS 하위 볼륨을 장착하는 걸 실패했습니다"
 
-#: src/MainWindow.vala:775 src/RestoreWindow.vala:1210
-#: src/RestoreWindow.vala:1228
+#: RestoreWindow.vala:1396
 msgid "Failed to mount device"
-msgstr ""
+msgstr "장치를 장착하는 걸 실패했습니다"
 
-#: src/Main.vala:2221
+#: Main.vala:3213 Main.vala:3306
+msgid "Failed to remove"
+msgstr "제거하는 걸 실패했습니다"
+
+#: Main.vala:4134
 msgid "Failed to remove cron job"
-msgstr "백업 일정 관리 지우기를 실패했습니다"
+msgstr "백업 일정 관리 지우기에 실패했습니다"
 
-#: src/Main.vala:1128
+#: Main.vala:1739
 msgid "Failed to save snapshot"
-msgstr "스냅샷 저장을 실패했습니다"
+msgstr "스냅샷 저장에 실패했습니다"
 
-#: src/Main.vala:359 src/Main.vala:366
-msgid "Failed to take snapshot."
-msgstr "스냅샷 만들기를 실패했습니다"
+#: Utility.vala:2711
+msgid "Failed to set ownership"
+msgstr "소유권을 설정하는 걸 실패했습니다"
 
-#: src/Utility.vala:995 src/Utility.vala:1021
+#: Main.vala:2615 Main.vala:2624 Main.vala:2649 Main.vala:2658
+msgid "Failed to unlock device"
+msgstr "장치를 잠금 해제하는 걸 실패했습니다"
+
+#: Utility.vala:1378
 msgid "Failed to unmount"
-msgstr ""
+msgstr "장치를 해제하는 걸 실패했습니다"
 
-#: src/Main.vala:2109
+#: Main.vala:3805
 msgid "Failed to unmount device!"
-msgstr "연결된 장치 해제를 실패했습니다!"
+msgstr "연결된 장치 해제에 실패했습니다!"
 
-#: src/Main.vala:1080
+#: Main.vala:1693
 msgid "Failed to update modification date"
-msgstr "설정된 날짜의 업데이트를 실패했습니다"
+msgstr "설정 날짜 업데이트에 실패했습니다"
 
-#: src/ExcludeMessageWindow.vala:104 src/RestoreWindow.vala:493
-#: src/SettingsWindow.vala:387
+#: ExcludeMessageWindow.vala:104 RestoreWindow.vala:508 SettingsWindow.vala:385
 msgid "File Pattern"
 msgstr "파일 패턴"
 
-#: src/ExcludeMessageWindow.vala:82
+#: ExcludeMessageWindow.vala:82
 msgid "Files matching the following patterns will be excluded"
-msgstr "다음 패턴에 부합되는 파일들은 제외됩니다."
+msgstr "다음 패턴에 부합되는 파일들은 제외됩니다"
 
-#: src/RestoreWindow.vala:1243
+#: Main.vala:2695
 msgid "Files will be overwritten on the target device!"
-msgstr "대상 장치에 있는 파일들은 덮어씝니다."
+msgstr "대상 장치에 있는 파일들은 덮어 쓰일 것입니다!"
 
-#: src/MainWindow.vala:538
+#: MainWindow.vala:1153
+msgid "Finished"
+msgstr "완료되었습니다"
+
+#: MainWindow.vala:594
 msgid "First Snapshot"
 msgstr "첫 번째 스냅샷 만들기"
 
-#: src/Main.vala:2277 src/MainWindow.vala:1278
+#: Main.vala:3865 MainWindow.vala:1440
 msgid "First snapshot needs"
 msgstr "첫 번째 스냅샷 만들기가 필요합니다"
 
-#: src/Main.vala:409
-msgid "Following dependencies are missing:"
-msgstr "다음의 의존성들이 빠졌습니다."
+#: Main.vala:1327
+msgid "First snapshot not taken"
+msgstr "첫 번째 스냅샷을 보유하지 않았습니다"
 
-#: src/RestoreWindow.vala:306
+#: RestoreWindow.vala:1430
+msgid "Following mounts will be used for restored system:"
+msgstr "다음과 같은 장착된 장비는 복원된 시스템에서 사용될 것입니다:"
+
+#: RestoreWindow.vala:321
 msgid ""
 "For all other applications, settings will be restored from selected snapshot."
-msgstr ""
+msgstr "모든 다른 프로그램, 설정은 선택한 스냅샷으로부터 복구됩니다."
 
-#: src/Main.vala:1245
+#: Main.vala:1898
 msgid "Free space is less than"
 msgstr "여유 공간이 이하입니다"
 
-#: src/Main.vala:1044
+#: Main.vala:2481
+msgid "GRUB Device"
+msgstr "GRUB 장치"
+
+#: Main.vala:2486
+msgid "GRUB will NOT be reinstalled"
+msgstr "GRUB은 재설치되지 않을 것입니다"
+
+#: Main.vala:700
+msgid "Global"
+msgstr "전역"
+
+#: Main.vala:1657
 msgid "Hard-linking files from previous snapshot..."
 msgstr "이전의 스냅샷 파일로 하드링크하기..."
 
-#: src/ExcludeMessageWindow.vala:135
+#: ExcludeMessageWindow.vala:135
 msgid ""
 "Hidden files and folders are included by default since they contain user-"
 "specific configuration files."
-msgstr "사용자가 지정한 설정 파일들을 포함한숨김 파일들과 폴더들은 포함됩니다"
+msgstr ""
+"사용자가-지정한 설정 파일들을 함유한 숨겨진 파일들과 폴더들은 포함됩니다."
 
-#: src/ExcludeMessageWindow.vala:122
+#: Main.vala:705
+msgid "Hide rsync output"
+msgstr "알싱크 출력 숨기기"
+
+#: ExcludeMessageWindow.vala:122
 msgid "Home Directory"
 msgstr "홈 디렉터리"
 
-#: src/SettingsWindow.vala:564 src/SettingsWindow.vala:605
+#: SettingsWindow.vala:563 SettingsWindow.vala:604
 msgid "Hourly"
 msgstr "매시간"
 
-#: src/Main.vala:781
+#: Main.vala:1417
 msgid "Hourly snapshot failed!"
-msgstr "매시간 스냅샷 만들기를 실패했습니다!"
+msgstr "매시간 스냅샷 만들기에 실패했습니다!"
 
-#: src/Main.vala:762
+#: Main.vala:1398
 msgid "Hourly snapshots are enabled"
 msgstr "매시간 스냅샷 만들기를 실행합니다"
 
-#: src/RestoreWindow.vala:1244
+#: Main.vala:2696
 msgid ""
-"If the restore fails for any reason and you are unable to boot the system, \n"
-"please boot from the Ubuntu Live CD and try again."
+"If restore fails and you are unable to boot the system, \n"
+"then boot from the Ubuntu Live CD, install Timeshift, and try again."
 msgstr ""
-"어떤 이유에 의해서 시스템 복원에 실패하셔서 시스템이 부팅되지 않는다면, \n"
-"Ubuntu Live CD로 부팅하셔서 다시 시도해보세요."
+"복원에 실패해서 시스템을 부팅하실 수 없게되면, \n"
+"우분투 라이브 CD로 부팅하셔서, 타임시프트를 설치하시고, 다시 시도해보세요."
 
-#: src/RestoreWindow.vala:1254
+#: Main.vala:2706
 msgid ""
-"If these terms are not acceptable to you, please do not proceed beyond this "
-"point!"
-msgstr "포인트!이 요건들을 수락하실 수 없으시다면, 이후의 과정을 실행하지 말아주세요"
+"If these terms are not acceptable to you, please do not proceed\n"
+"beyond this point!"
+msgstr ""
+"이 요건들을 수락하실 수 없으시다면, 이후의 과정을\n"
+"실행하지 말아 주십시오!"
 
-#: src/SettingsWindow.vala:860
+#: SettingsWindow.vala:859
 msgid ""
 "If you include any specific folders then these folders will get overwritten "
 "with previous contents when you restore a snapshot."
-msgstr "스냅샷을 복원할 때 어떤 개인화된 폴더를 포함하신다면이전의 내용들과 함께 이 폴더들은 덮어씝니다."
+msgstr ""
+"스냅샷을 복원할 때 어떤 개인화된 폴더를 포함하신다면 이전의 내용과 함께 이 폴"
+"더들은 덮어 씝니다."
 
-#: src/RestoreWindow.vala:382 src/RestoreWindow.vala:383
-#: src/SettingsWindow.vala:278 src/SettingsWindow.vala:279
+#: RestoreWindow.vala:397 RestoreWindow.vala:398 SettingsWindow.vala:276
+#: SettingsWindow.vala:277
 msgid "Include"
 msgstr "포함하기"
 
-#: src/RestoreWindow.vala:466 src/SettingsWindow.vala:360
+#: RestoreWindow.vala:481 SettingsWindow.vala:358
 msgid "Include Directory"
 msgstr "디렉터리 포함하기"
 
-#: src/RestoreWindow.vala:458 src/SettingsWindow.vala:352
+#: RestoreWindow.vala:473 SettingsWindow.vala:350
 msgid "Include File(s)"
 msgstr "파일 포함하기"
 
-#: src/SettingsWindow.vala:560
+#: Main.vala:829
+msgid "Invalid command line arguments"
+msgstr "사용 불가능한 명령어 인수입니다"
+
+#: SettingsWindow.vala:559
 msgid "Keep one snapshot per day"
-msgstr "하루에 하나씩 스냅샷을 보관합니다"
+msgstr "하루에 한 개씩 스냅샷을 보관합니다"
 
-#: src/SettingsWindow.vala:565
+#: SettingsWindow.vala:564
 msgid "Keep one snapshot per hour"
-msgstr "매시간마다 한 개씩 스냅샷을 보관합니다"
+msgstr "매시간 한 개씩 스냅샷을 보관합니다"
 
-#: src/SettingsWindow.vala:550
+#: SettingsWindow.vala:549
 msgid "Keep one snapshot per month"
-msgstr "한달에 한 개씩 스냅샷을 보관합니다"
+msgstr "한 달에 한 개씩 스냅샷을 보관합니다"
 
-#: src/SettingsWindow.vala:570
+#: SettingsWindow.vala:569
 msgid "Keep one snapshot per reboot"
-msgstr "재부팅할 때마다 하나씩 스냅샷을 보관합니다"
+msgstr "재부팅 할 때마다 한 개씩 스냅샷을 보관합니다"
 
-#: src/SettingsWindow.vala:555
+#: SettingsWindow.vala:554
 msgid "Keep one snapshot per week"
-msgstr "일주일에 하나씩 스냅샷을 보관합니다"
+msgstr "매주 한 개씩 스냅샷을 보관합니다"
 
-#: src/Utility.vala:1005
-msgid "Killing all processes using the mount-point..."
-msgstr "마운트 포인트를 이용해서 모든 프로세스를 멈추세요..."
-
-#: src/RestoreWindow.vala:735
+#: Main.vala:904 RestoreWindow.vala:868
+#, c-format
 msgid "Label"
 msgstr "이름표"
 
-#: src/Main.vala:742
+#: Main.vala:1380
 #, c-format
 msgid "Last boot snapshot is %d hours old"
-msgstr "마지막 부트 스냅샷을 만든지 %d 시간 됬습니다"
+msgstr "마지막 부트 스냅샷을 만든 지 %d 시간 됐습니다"
 
-#: src/Main.vala:737
+#: Main.vala:1375
 msgid "Last boot snapshot is older than system start time"
-msgstr "마지막 부트 스냅샷을 만든 시간이 시스템 시작 시간보다 오래되었습니다"
+msgstr "마지막 부트 스냅샷을 만든 시간이 시스템 시작 시각보다 오래되었습니다"
 
-#: src/Main.vala:733
+#: Main.vala:1371
 msgid "Last boot snapshot not found"
 msgstr "마지막 부트 스냅샷을 찾을 수 없습니다"
 
-#: src/Main.vala:806
+#: Main.vala:1440
 #, c-format
 msgid "Last daily snapshot is %d hours old"
-msgstr "마지막 매일 스냅샷을 만든지 %d 시간 되었습니다"
+msgstr "마지막 매일 스냅샷을 만든 지 %d 시간 되었습니다"
 
-#: src/Main.vala:801
+#: Main.vala:1435
 msgid "Last daily snapshot is more than 1 day old"
-msgstr "마지막 매일 스냅샷을 만든지 하루가 넘었습니다"
+msgstr "마지막 매일 스냅샷을 만든 지 하루가 넘었습니다"
 
-#: src/Main.vala:797
+#: Main.vala:1431
 msgid "Last daily snapshot not found"
 msgstr "마지막 매일 스냅샷을 찾을 수 없습니다"
 
-#: src/Main.vala:774
+#: Main.vala:1410
 #, c-format
 msgid "Last hourly snapshot is %d minutes old"
-msgstr "마지막 매시간 스냅샷을 만든지 %d 분 되었습니다"
+msgstr "마지막 매시간 스냅샷을 만든 지 %d 분 되었습니다"
 
-#: src/Main.vala:769
+#: Main.vala:1405
 msgid "Last hourly snapshot is more than 1 hour old"
-msgstr "마지막 매시간 스냅샷을 만든지 1시간이 지났습니다"
+msgstr "마지막 매시간 스냅샷을 만든 지 한 시간이 지났습니다"
 
-#: src/Main.vala:765
+#: Main.vala:1401
 msgid "Last hourly snapshot not found"
 msgstr "마지막 매시간 스냅샷을 찾을 수 없습니다"
 
-#: src/Main.vala:870
+#: Main.vala:1500
 #, c-format
 msgid "Last monthly snapshot is %d days old"
-msgstr "마지막 매월 스냅샷을 만든지 %d 일 지났습니다"
+msgstr "마지막 매월 스냅샷을 만든 지 %d 일 지났습니다"
 
-#: src/Main.vala:865
+#: Main.vala:1495
 msgid "Last monthly snapshot is more than 1 month old"
-msgstr "마지막 매월 스냅샷을 만든지 한 달이 넘었습니다"
+msgstr "마지막 매월 스냅샷을 만든 지 한 달이 넘었습니다"
 
-#: src/Main.vala:861
+#: Main.vala:1491
 msgid "Last monthly snapshot not found"
 msgstr "마지막 매월 스냅샷을 찾을 수 없습니다"
 
-#: src/MainWindow.vala:1336 src/MainWindow.vala:1340 src/MainWindow.vala:1344
+#: MainWindow.vala:1501 MainWindow.vala:1505
 msgid "Last snapshot is"
 msgstr "마지막 스냅샷은"
 
-#: src/Main.vala:838
+#: MainWindow.vala:1509
+msgid "Last snapshot is less than 1 hour old"
+msgstr "마지막 스냅샷을 만든 지 한 시간 이상 지났습니다"
+
+#: Main.vala:1470
 #, c-format
 msgid "Last weekly snapshot is %d days old"
-msgstr "마지막 매주 스냅샷을 만든지 %d 일 지났습니다"
+msgstr "마지막 매주 스냅샷을 만든 지 %d 일 지났습니다"
 
-#: src/Main.vala:833
+#: Main.vala:1465
 msgid "Last weekly snapshot is more than 1 week old"
-msgstr "마지막 매주 스냅샷을 만든지 1주일이 넘었습니다"
+msgstr "마지막 매주 스냅샷을 만든 지 일주일이 넘었습니다"
 
-#: src/Main.vala:829
+#: Main.vala:1461
 msgid "Last weekly snapshot not found"
 msgstr "마지막 매주 스냅샷을 찾을 수 없습니다"
 
-#: src/SettingsWindow.vala:223
+#: SettingsWindow.vala:221
 msgid "Limit"
 msgstr "제한"
 
-#: src/Main.vala:554
-msgid "List all snapshots"
-msgstr "모든 스냅샷 목록 보기"
+#: Main.vala:680
+msgid "List"
+msgstr "목록 보기"
 
-#: src/MainWindow.vala:186
+#: Main.vala:682
+msgid "List devices"
+msgstr "장치 목록을 봅니다"
+
+#: Main.vala:681
+msgid "List snapshots"
+msgstr "스냅샷 목록을 봅니다"
+
+#: MainWindow.vala:189
 msgid "Log"
 msgstr "로그"
 
-#: src/MainWindow.vala:802
+#: MainWindow.vala:881
 msgid "Low Disk Space"
 msgstr "여유 공간 부족"
 
-#: src/Main.vala:1164 src/Main.vala:1201
+#: MainWindow.vala:531
+msgid "Main window closed by user"
+msgstr "주창이 사용자에 의해 닫혔습니다"
+
+#: Main.vala:1817 Main.vala:1854
 msgid "Maximum backups exceeded for backup level"
-msgstr "최대 백업이 백업 레벨을 초과했습니다"
+msgstr "최대 백업이 백업 단계를 초과했습니다"
 
-#: src/Main.vala:200
+#: Main.vala:244
 msgid "Missing Dependencies"
-msgstr "의존성들이 빠졌습니다"
+msgstr "없는 의존성"
 
-#: src/Main.vala:412
-msgid "Missing dependencies"
-msgstr "의존성들이  빠졌습니다"
+#: Utility.vala:2324
+msgid "Missing Icon"
+msgstr "없는 아이콘"
 
-#: src/SettingsWindow.vala:549 src/SettingsWindow.vala:590
+#: SettingsWindow.vala:548 SettingsWindow.vala:589
 msgid "Monthly"
 msgstr "매월"
 
-#: src/Main.vala:858
+#: Main.vala:1488
 msgid "Monthly snapshot are enabled"
 msgstr "매월 스냅샷 만들기를 실행합니다"
 
-#: src/Main.vala:877
+#: Main.vala:1507
 msgid "Monthly snapshot failed!"
 msgstr "매월 스냅샷 만들기에 실패했습니다"
 
-#: src/RestoreWindow.vala:207
+#: RestoreWindow.vala:209 RestoreWindow.vala:1432 RestoreWindow.vala:1443
 msgid "Mount"
-msgstr ""
+msgstr "장착"
 
-#: src/MainWindow.vala:938
+#: MainWindow.vala:1039
 msgid "Multiple Snapshots Selected"
 msgstr "다중 스냅샷 만들기를 선택했습니다"
 
-#: src/MainWindow.vala:847 src/MainWindow.vala:934
+#: Main.vala:865
+msgid "Name"
+msgstr "이름"
+
+#: MainWindow.vala:930 MainWindow.vala:1035
 msgid "No Snapshots Selected"
 msgstr "스냅샷을 선택하지 않으셨습니다"
 
-#: src/Main.vala:1657
-msgid "No changes were made to system."
-msgstr "시스템은 그대로 입니다"
+#: Main.vala:1027
+msgid "No response from user"
+msgstr "사용자로부터 응답이 없습니다"
 
-#: src/MainWindow.vala:1327
+#: Main.vala:381 Main.vala:2190 Main.vala:3141 Main.vala:3262
+msgid "No snapshots found on device"
+msgstr "이 장치에서 스냅샷을 찾을 수 없습니다"
+
+#: MainWindow.vala:1493
 msgid "No snapshots on device"
 msgstr "장치에 스냅샷들이 없습니다"
 
-#: src/Main.vala:295
+#: Main.vala:436
 msgid "Not Supported"
 msgstr "지원되지 않는 것입니다"
 
-#: src/Main.vala:559
+#: Main.vala:720
 msgid "Notes"
 msgstr "기록"
 
-#: src/Main.vala:890
+#: Main.vala:1517
 msgid "Nothing to do!"
-msgstr "할 일 없음!"
+msgstr "할 일이 없습니다!"
 
-#: src/Main.vala:2417
+#: Main.vala:863 Main.vala:898 Main.vala:971
+msgid "Num"
+msgstr "번호"
+
+#: DonationWindow.vala:95 Utility.vala:2212
+msgid "OK"
+msgstr "확인"
+
+#: Main.vala:4175
 msgid "Older log files removed"
 msgstr "오래된 로그파일들이 지워졌습니다"
 
-#: src/Main.vala:709
-msgid "On-demand snapshot failed!"
-msgstr "사용자 지정 스냅샷 만들기 실패!"
-
-#: src/Main.vala:293 src/Main.vala:2052 src/RestoreWindow.vala:1200
+#: Main.vala:434 Main.vala:3712 RestoreWindow.vala:1385
 msgid ""
 "Only ubuntu-type layouts with @ and @home subvolumes are currently supported."
-msgstr "현재는 @ 와 @홈 하위볼륨으로된 우분투 형식의 레이아웃만 지원합니다"
+msgstr "현재는 @ 와 @홈 하위볼륨으로된 우분투 형식의 배치만 지원합니다."
 
-#: src/Main.vala:550
+#: Main.vala:678
 msgid "Options"
-msgstr "옵션"
+msgstr "선택 사항"
 
-#: src/Main.vala:222
+#: Main.vala:266
 msgid "Please check if you have multiple windows open."
-msgstr "창을 여러 개 열어 놓으셨는지 확인해 주세요"
+msgstr "창을 여러 개 열어 놓으셨는지 확인해 주십시오."
 
-#: src/SettingsWindow.vala:859
+#: SettingsWindow.vala:858
 msgid ""
 "Please do NOT include these folders in your snapshot unless you have a very "
 "good reason for doing so."
-msgstr "꼭 해야하는 경우가 아니면이 폴더들은 포함하지 말아주세요."
+msgstr "꼭 해야 하는 경우가 아니면 이 폴더들은 포함하지 말아 주십시오."
 
-#: src/Main.vala:1570
+#: Main.vala:2759
 msgid "Please do not interrupt the restore process!"
-msgstr "복원 과정을 방해하지 말아주세요!"
+msgstr "복원 과정을 방해하지 말아 주십시오!"
 
-#: src/Main.vala:1655
-msgid "Please install one of the following terminal emulators and try again"
-msgstr "다음의 터미널 중 하나라도 설치하신 후에 다시 해주세요"
+#: Main.vala:419
+msgid "Please install required packages and try running TimeShift again"
+msgstr "필요한 패키지들을 설치하신 후에 타임시프트를 다시 실행해주세요"
 
-#: src/Main.vala:410
-msgid ""
-"Please install the packages for the commands \n"
-"listed above and try running TimeShift again."
-msgstr ""
-"실행을 위해 목록에 있는 \n"
-" 패키지를 설치하신 후에타임시프트를 다시 실행해주세요."
+#: Main.vala:194
+msgid "Please run the application as admin (using 'sudo' or 'su')"
+msgstr "관리자로서 프로그램을 사용하여주십시오('sudo' 혹은 'su'를 사용)"
 
-#: src/Main.vala:152
-msgid "Please run the application as admin (using 'sudo')"
-msgstr "(‘sudo’를 이용해서) 관리자 권한으로 프로그램을 실행해주세요"
-
-#: src/RestoreWindow.vala:1247
+#: Main.vala:2699
 msgid "Please save your work and close all applications."
-msgstr "작업을 저장하시고 모든 프로그램들을 닫아주세요."
+msgstr "작업을 저장하시고 모든 프로그램을 닫아주십시오."
 
-#: src/MainWindow.vala:752
+#: MainWindow.vala:822
 msgid "Please select a device for saving snapshots."
-msgstr "스냅샷을 저장할 장치를 선택해주세요."
+msgstr "스냅샷을 저장할 장치를 선택해주십시오."
 
-#: src/MainWindow.vala:938
+#: MainWindow.vala:1039
 msgid "Please select a single snapshot"
-msgstr "한 개의 스냅샷만 선택해주세요"
+msgstr "한 개의 스냅샷만 선택해주십시오"
 
-#: src/MainWindow.vala:1089
+#: MainWindow.vala:1234
 msgid "Please select a snapshot to view the log!"
-msgstr "로그를 보기 위한 스냅샷을 하나 선택해주세요!"
+msgstr "로그를 보기 위한 스냅샷을 하나 선택해주십시오!"
 
-#: src/Main.vala:2260 src/MainWindow.vala:1258
+#: Main.vala:3840 MainWindow.vala:1420
 msgid "Please select the backup device"
-msgstr ""
+msgstr "백업 장치를 선택해주십시오"
 
-#: src/RestoreWindow.vala:1124
+#: RestoreWindow.vala:1406
 msgid "Please select the boot device"
-msgstr "부팅 장치를 선택해 주세요"
+msgstr "부팅 장치를 선택해주십시오"
 
-#: src/RestoreWindow.vala:1189
+#: RestoreWindow.vala:1373
 msgid "Please select the root device (/)"
-msgstr ""
+msgstr "루트 장치를 선택해주십시오(/)"
 
-#: src/MainWindow.vala:934
+#: MainWindow.vala:1035
 msgid "Please select the snapshot to restore"
-msgstr "복원할 스냅샷을 선택해주세요"
+msgstr "복원할 스냅샷을 선택해주십시오"
 
-#: src/MainWindow.vala:847
+#: MainWindow.vala:930
 msgid "Please select the snapshots to delete"
-msgstr "지울 스냅샷을 선택해주세요"
+msgstr "지우실 스냅샷을 선택해주십시오"
 
-#: src/RestoreWindow.vala:1181
+#: RestoreWindow.vala:1365
 msgid "Please select the target device from the list"
-msgstr "목록에서 대상 장치를 선택해주세요"
+msgstr "목록에서 대상 장치를 선택해주십시오"
 
-#: src/Main.vala:684
-msgid ""
-"Please take the first snapshot by running 'sudo timeshift --backup-now'"
-msgstr "'sudo timeshift --backup-now'하셔서 첫 번째 스냅샷을 만들어 주세요"
+#: Main.vala:1328
+msgid "Please take the first snapshot by running 'sudo timeshift --backup-now'"
+msgstr "'sudo timeshift --backup-now'하셔서 첫 번째 스냅샷을 만들어 주십시오"
 
-#: src/Main.vala:218
+#: Main.vala:262
 msgid "Please wait for a few minutes and try again."
-msgstr "잠시 기다리셨다가 다시 시도해주세요"
+msgstr "잠시 기다리셨다가 다시 시도해주십시오."
 
-#: src/Main.vala:1598
+#: Main.vala:2441
+#, c-format
+msgid "Re-install GRUB2 bootloader? (y/n)"
+msgstr "GRUB2 부트로더를 재설치하시겠습니까? (y/n)"
+
+#: Main.vala:2792
 msgid "Re-installing GRUB2 bootloader..."
-msgstr "GRUB2 부트로더를 다시 설치 중..."
+msgstr "GRUB2 부트로더를 재설치하는 중입니다..."
 
-#: src/Main.vala:1619
+#: Main.vala:2813
 msgid "Rebooting system..."
-msgstr "재부팅 중..."
+msgstr "다시 시작하는 중입니다..."
 
-#: src/MainWindow.vala:175 src/MainWindow.vala:243
+#: MainWindow.vala:177 MainWindow.vala:257
 msgid "Refresh"
 msgstr "새로 고침"
 
-#: src/MainWindow.vala:245
+#: MainWindow.vala:259
 msgid "Refresh Devices"
 msgstr "장치 새로 고침"
 
-#: src/MainWindow.vala:176
+#: MainWindow.vala:178
 msgid "Refresh Snapshot List"
 msgstr "스냅샷 목록 새로 고침"
 
-#: src/RestoreWindow.vala:391 src/SettingsWindow.vala:287
+#: RestoreWindow.vala:406 SettingsWindow.vala:285
 msgid "Remove"
 msgstr "제거하기"
 
-#: src/RestoreWindow.vala:392 src/SettingsWindow.vala:288
+#: RestoreWindow.vala:407 SettingsWindow.vala:286
 msgid "Remove selected items"
 msgstr "선택한 항목을 제거합니다"
 
-#: src/Main.vala:1220
+#: Main.vala:3219 Main.vala:3312
+msgid "Removed"
+msgstr "제거됨"
+
+#: Main.vala:3775 Main.vala:3894
+#, c-format
+msgid "Removed mount directory: '%s'"
+msgstr "장착 디렉터리를 제거하십시오: '%s'"
+
+#: Main.vala:1873
 msgid "Removing backups older than"
 msgstr "이 기간보다 오래된 백업들을 제거합니다"
 
-#: src/Main.vala:1246
+#: Main.vala:1899
 msgid "Removing older backups to free disk space"
 msgstr "여유 공간을 만들기 위해 오래된 백업들을 제거합니다"
 
-#: src/MainWindow.vala:855
+#: MainWindow.vala:938
 msgid "Removing selected snapshots..."
-msgstr "선택한 스냅샷 제거 중..."
+msgstr "선택한 스냅샷을 제거 중입니다..."
 
-#: src/Main.vala:1264
+#: Main.vala:3201
+msgid "Removing snapshot"
+msgstr "스냅샷을 제거하는 중입니다"
+
+#: Main.vala:1917
 msgid "Removing un-tagged snapshots..."
-msgstr "태그 되지 않은 스냅샷 제거 중..."
+msgstr "태그 되지 않은 스냅샷을 제거 중입니다..."
 
-#: src/RestoreWindow.vala:417 src/SettingsWindow.vala:313
+#: RestoreWindow.vala:432 SettingsWindow.vala:311
 msgid "Reset"
 msgstr "되돌리기"
 
-#: src/RestoreWindow.vala:418
+#: RestoreWindow.vala:433
 msgid "Reset this list to default state"
 msgstr "이 목록을 기본 설정으로 되돌립니다"
 
-#: src/MainWindow.vala:134 src/RestoreWindow.vala:97
-#: src/RestoreWindow.vala:527 src/RestoreWindow.vala:528
+#: Main.vala:688 MainWindow.vala:127 RestoreWindow.vala:100
+#: RestoreWindow.vala:542 RestoreWindow.vala:543
 msgid "Restore"
 msgstr "복원"
 
-#: src/MainWindow.vala:1023
-msgid "Restore Complete"
-msgstr "복원 성공"
-
-#: src/MainWindow.vala:1031
+#: MainWindow.vala:1164
 msgid "Restore Failed!"
-msgstr "복원 실패"
+msgstr "복원에 실패했습니다!"
 
-#: src/MainWindow.vala:135
+#: MainWindow.vala:128
 msgid "Restore Snapshot"
 msgstr "스냅샷 복원"
 
-#: src/Main.vala:1683
+#: Main.vala:2895
 msgid "Restore completed without errors"
-msgstr "오류 없이 스냅샷 복원 성공"
+msgstr "오류 없이 스냅샷 복원에 성공했습니다"
 
-#: src/Main.vala:1678
+#: Main.vala:2890
 msgid "Restore failed with exit code"
-msgstr "종료 코드와 함께 복원 실패"
+msgstr "종료 코드와 함께 복원에 실패했습니다"
 
-#: src/MainWindow.vala:1030
-msgid "Restore was not successful!"
-msgstr "복원이 성공적이지 않습니다!"
+#: Main.vala:689
+msgid "Restore snapshot"
+msgstr "스냅샷을 복원합니다"
 
-#: src/MainWindow.vala:1013
-msgid "Restoring snapshot"
-msgstr "스냅샷 복원 중"
+#: Main.vala:2848 MainWindow.vala:1129
+msgid "Restoring snapshot..."
+msgstr "스넵샷을 복원하는 중입니다..."
 
-#: src/SettingsWindow.vala:215
+#: SettingsWindow.vala:213
 msgid "Rule"
 msgstr "규칙"
 
-#: src/MainWindow.vala:1304
+#: MainWindow.vala:1469
 msgid "Running from Live CD/USB"
-msgstr "라이브 CD/USB에서 작동 중"
+msgstr "라이브 CD/USB에서 작동 중입니다"
 
-#: src/Main.vala:1117
+#: Main.vala:1727
 msgid "Saving new snapshot..."
-msgstr "새 스냅샷 저장 중..."
+msgstr "새 스냅샷을 저장하는 중입니다..."
 
-#: src/SettingsWindow.vala:118
+#: SettingsWindow.vala:111
 msgid "Schedule"
-msgstr "일정관리"
+msgstr "일정 관리"
 
-#: src/SettingsWindow.vala:132
+#: SettingsWindow.vala:125
 msgid "Scheduled Snapshots"
 msgstr "일정 관리된 스냅샷"
 
-#: src/MainWindow.vala:533
-msgid ""
-"Scheduled jobs will be enabled only after the first snapshot is taken."
-msgstr "일정관리된 스냅샷은 첫 번째 스냅샷이 만들어진 후에 실행됩니다"
+#: MainWindow.vala:589
+msgid "Scheduled jobs will be enabled only after the first snapshot is taken."
+msgstr "일정 관리된 스냅샷은 첫 번째 스냅샷이 만들어진 후에 실행됩니다."
 
-#: src/MainWindow.vala:1310 src/MainWindow.vala:1314
+#: MainWindow.vala:1475 MainWindow.vala:1479
 msgid "Scheduled snapshots"
 msgstr "일정 관리된 스냅샷"
 
-#: src/Main.vala:889
+#: Main.vala:1517
 msgid "Scheduled snapshots are disabled"
-msgstr "일정 관리된 스냅샷이 해제됬습니다"
+msgstr "일정 관리된 스냅샷이 해제됐습니다"
 
-#: src/MainWindow.vala:512
+#: MainWindow.vala:568
 msgid "Scheduled snapshots will be disabled till another device is selected."
-msgstr "일정 관리된 스냅샷은 다른 장치가 선택될 때까지 해제됩니다"
+msgstr "일정 관리된 스냅샷은 다른 장치가 선택될 때까지 해제됩니다."
 
-#: src/MainWindow.vala:491 src/MainWindow.vala:579
+#: MainWindow.vala:547 MainWindow.vala:635
 msgid "Scheduled snapshots will be disabled."
 msgstr "일정 관리된 스냅샷이 해제됩니다."
 
-#: src/MainWindow.vala:559
+#: MainWindow.vala:615
 msgid "Scheduled snapshots will be saved to "
 msgstr "일정 관리된 스냅샷이 이곳에 저장됩니다 "
 
-#: src/RestoreWindow.vala:1188
-msgid "Select Root Device"
-msgstr ""
+#: Main.vala:2334
+#, c-format
+msgid "Select '%s' device (default = %s)"
+msgstr "'%s' 장치를 선택하십시오(기본 = %s)"
 
-#: src/MainWindow.vala:1089
+#: Main.vala:2456
+msgid "Select GRUB device"
+msgstr "GRUB 장치를 선택하십시오"
+
+#: RestoreWindow.vala:1372
+msgid "Select Root Device"
+msgstr "루트 장치를 선택하십시오"
+
+#: MainWindow.vala:1234
 msgid "Select Snapshot"
 msgstr "스냅샷 선택"
 
-#: src/RestoreWindow.vala:1180
+#: RestoreWindow.vala:1364
 msgid "Select Target Device"
 msgstr "대상 장치 선택"
 
-#: src/RestoreWindow.vala:962 src/SettingsWindow.vala:822
+#: Main.vala:2111
+msgid "Select backup device"
+msgstr "백업 장치를 선택하십시오"
+
+#: RestoreWindow.vala:1121 SettingsWindow.vala:821
 msgid "Select directory"
 msgstr "디렉터리 선택"
 
-#: src/RestoreWindow.vala:945 src/SettingsWindow.vala:805
+#: RestoreWindow.vala:1104 SettingsWindow.vala:804
 msgid "Select file(s)"
 msgstr "파일 선택"
 
-#: src/RestoreWindow.vala:305
-msgid "Select the applications for which current settings should be kept."
-msgstr ""
+#: Main.vala:3146
+msgid "Select snapshot to delete"
+msgstr "지우실 스냅샷을 선택하십시오"
 
-#: src/MainWindow.vala:511
+#: Main.vala:2195
+msgid "Select snapshot to restore"
+msgstr "복원할 스냅샷을 선택하십시오"
+
+#: Main.vala:2270
+msgid "Select target device"
+msgstr "대상 장치를 선택하십시오"
+
+#: RestoreWindow.vala:320
+msgid "Select the applications for which current settings should be kept."
+msgstr "현재 설정을 유지해야 하는 프로그램을 선택하십시오."
+
+#: MainWindow.vala:567
 msgid "Selected device does not have enough space."
 msgstr "선택된 장치에 여유공간이 별로 없습니다."
 
-#: src/Main.vala:183
+#: DonationWindow.vala:81
+msgid "Send Email"
+msgstr "이메일을 보냅니다"
+
+#: Main.vala:225
 msgid "Session log file"
 msgstr "세션 로그 파일"
 
-#: src/MainWindow.vala:161 src/MainWindow.vala:162 src/SettingsWindow.vala:93
+#: MainWindow.vala:154 MainWindow.vala:155 SettingsWindow.vala:93
 msgid "Settings"
 msgstr "설정"
 
-#: src/Main.vala:556
+#: Main.vala:703
 msgid "Show additional debug messages"
-msgstr "추가된 디버그 메시지를 보여주세요"
+msgstr "추가된 디버그 메시지를 봅니다"
 
-#: src/Main.vala:557
+#: Main.vala:706
 msgid "Show all options"
-msgstr "모든 옵션을 보여주세요"
+msgstr "모든 선택 사항을 봅니다"
 
-#: src/Main.vala:555
-msgid "Show commands"
-msgstr "명령을 보여주세요"
+#: Main.vala:704
+msgid "Show rsync output (default)"
+msgstr "알싱크 출력을 봅니다(기본)"
 
-#: src/RestoreWindow.vala:246 src/RestoreWindow.vala:736
+#: Main.vala:902 RestoreWindow.vala:249 RestoreWindow.vala:869
+#, c-format
 msgid "Size"
 msgstr "크기"
 
-#: src/Main.vala:990 src/Main.vala:1140 src/Main.vala:1167 src/Main.vala:1205
-#: src/Main.vala:1224 src/MainWindow.vala:284
+#: Main.vala:694
+msgid "Skip GRUB2 reinstall"
+msgstr "GRUB2 재설치를 넘깁니다"
+
+#: RestoreWindow.vala:300
+msgid "Skip bootloader installation (not recommended)"
+msgstr "부트로더 설치를 넘깁니다(추천하지 않습니다)"
+
+#: RestoreWindow.vala:297
+msgid ""
+"Skips bootloader (re)installation on target device.\n"
+"Files in /boot directory on target partition will remain untouched.\n"
+"\n"
+"If you are restoring a system that was bootable previously then it should "
+"boot successfully.\n"
+"Otherwise the system may fail to boot."
+msgstr ""
+"대상 장치에 부트로더 (재)설치를 넘깁니다.\n"
+"대상 파티션의 /boot에있는 파일들을 건드리지 않을 것입니다.\n"
+"\n"
+"만약 당신이 이전에 부팅이 가능했던 시스템을 복원하는 중이라면 성공적으로 부팅"
+"될 것입니다.\n"
+"그렇지 않으면 시스템은 부팅하는 걸 실패할 수 있습니다."
+
+#: Main.vala:1604 Main.vala:1751 Main.vala:1820 Main.vala:1858 Main.vala:1877
+#: Main.vala:2221 MainWindow.vala:299
 msgid "Snapshot"
 msgstr "스냅샷"
 
-#: src/Main.vala:1745
-msgid "Snapshot deleted"
-msgstr "스냅샷이 지워짐"
-
-#: src/MainWindow.vala:1019
-msgid "Snapshot restored successfully"
-msgstr "스냅샷이 성공적으로 복원되었습니다"
-
-#: src/Main.vala:1136 src/MainWindow.vala:821
+#: Main.vala:1747 MainWindow.vala:901
 msgid "Snapshot saved successfully"
 msgstr "스냅샷이 성공적으로 저장되었습니다"
 
-#: src/Main.vala:1517
+#: Main.vala:3171
+msgid "Snapshot to delete not specified!"
+msgstr "지우실 스냅샷이 지정되지 않았습니다!"
+
+#: Main.vala:2226
 msgid "Snapshot to restore not specified!"
 msgstr "복원할 스냅샷이 지정되지 않았습니다!"
 
-#: src/Main.vala:375
-msgid "Snapshots"
-msgstr "스냅샷"
+#: MainWindow.vala:1148
+msgid "Snapshot was restored successfully on target device"
+msgstr "대상 장치에 있는 스냅샷이 성공적으로 복원되었습니다"
 
-#: src/MainWindow.vala:913
+#: MainWindow.vala:997
 msgid "Snapshots deleted successfully"
 msgstr "스냅샷이 성공적으로 지워졌습니다"
 
-#: src/MainWindow.vala:225
+#: SettingsWindow.vala:195
+msgid "Snapshots matching following rules will be removed automatically"
+msgstr "정해진 규칙과 일치되는 스냅샷은 성공적으로 제거될 것입니다"
+
+#: Main.vala:376
+#, c-format
+msgid "Snapshots on device %s"
+msgstr "장치 %s에 있는 스냅샷"
+
+#: MainWindow.vala:238
 msgid "Snapshots will be saved in path <b>/timeshift</b> on selected device"
 msgstr "스냅샷은 선택된 장치의 <b>/timeshift</b>에 저장됩니다"
 
-#: src/RestoreWindow.vala:513 src/SettingsWindow.vala:407
+#: RestoreWindow.vala:528 SettingsWindow.vala:405
 msgid "Some locations are excluded by default"
 msgstr "몇몇 위치는 기본으로 제외됩니다"
 
-#: src/Main.vala:1604
+#: Main.vala:701
+msgid "Specify backup device"
+msgstr "백업 장치를 지정하십시오"
+
+#: Main.vala:693
+msgid "Specify device for installing GRUB2 bootloader"
+msgstr "GRUB2 부트로더를 설치할 장치를 지정하십시오"
+
+#: Main.vala:691
+msgid "Specify snapshot to restore"
+msgstr "복원할 스냅샷을 지정하십시오"
+
+#: Main.vala:692
+msgid "Specify target device"
+msgstr "대상 장치를 지정하십시오"
+
+#: Utility.vala:1993
+msgid "Stopped"
+msgstr "정지되었습니다"
+
+#: Main.vala:1958
+msgid "Symlinks updated"
+msgstr "심볼릭 링크가 업데이트됐습니다"
+
+#: Main.vala:2799
 msgid "Synching file systems..."
-msgstr "파일 시스템 동기화 중..."
+msgstr "파일 시스템을 동기화하는 중입니다..."
 
-#: src/Main.vala:1086
+#: Main.vala:1699
 msgid "Synching files..."
-msgstr "파일 동기화 중..."
+msgstr "파일을 동기화하는 중입니다..."
 
-#: src/MainWindow.vala:313 src/RestoreWindow.vala:255
-#: src/RestoreWindow.vala:738
+#: MainWindow.vala:328 RestoreWindow.vala:258 RestoreWindow.vala:871
+#, c-format
 msgid "System"
 msgstr "시스템"
 
-#: src/MainWindow.vala:1311
+#: MainWindow.vala:1476
 msgid "System snapshots will be taken at regular intervals"
 msgstr "시스템 스냅샷은 일정한 간격으로 만들어질 겁니다"
 
-#: src/Main.vala:1572
+#: MainWindow.vala:1145
+msgid "System was cloned successfully on target device"
+msgstr "대상 장치에 시스템이 성공적으로 복제되었습니다"
+
+#: Main.vala:2760
 msgid "System will reboot after files are restored"
-msgstr "파일이 복원된 후에 시스템이 재부팅 될 겁니다"
+msgstr "파일이 복원된 후에 시스템이 재부팅될 겁니다"
 
-#: src/RestoreWindow.vala:1248
+#: Main.vala:2700
 msgid "System will reboot to complete the restore process."
-msgstr "복원 과정을 마무리하기 위해 시스템이 재부팅 될 겁니다"
+msgstr "복원 과정을 마무리하기 위해 시스템이 재부팅될 겁니다."
 
-#: src/MainWindow.vala:337
+#: Main.vala:866 MainWindow.vala:352
 msgid "Tags"
 msgstr "태그"
 
-#: src/MainWindow.vala:986
+#: MainWindow.vala:1095
 msgid "Take Snapshot"
 msgstr "스냅샷 만들기"
 
-#: src/MainWindow.vala:126
+#: MainWindow.vala:119
 msgid "Take a manual (ondemand) snapshot"
-msgstr "수동(사용자 설정) 스냅샷 만들기"
+msgstr "수동(사용자 설정) 스냅샷을 만듭니다"
 
-#: src/Main.vala:553
+#: Main.vala:686
 msgid "Take on-demand backup"
-msgstr "사용자 설정 백업 만들기"
+msgstr "사용자 설정 백업을 만듭니다"
 
-#: src/Main.vala:552
+#: Main.vala:685
 msgid "Take scheduled backup"
-msgstr "일정 관리된 스냅샷 만들기"
+msgstr "일정 관리된 스냅샷을 만듭니다"
 
-#: src/MainWindow.vala:810 src/MainWindow.vala:994
+#: MainWindow.vala:890 MainWindow.vala:1103
 msgid "Taking snapshot..."
-msgstr "스냅샷 만드는 중..."
+msgstr "스냅샷을 만드는 중입니다..."
 
-#: src/RestoreWindow.vala:122
+#: RestoreWindow.vala:119
 msgid "Target"
 msgstr "대상"
 
-#: src/MainWindow.vala:578
+#: Main.vala:2303
+msgid "Target Device"
+msgstr "대상 장치"
+
+#: Main.vala:2743
+msgid "Target device is not mounted"
+msgstr "대상 장치가 장착되지 않았습니다"
+
+#: Main.vala:2308 Main.vala:2391 Main.vala:3693
+msgid "Target device not specified!"
+msgstr "대상 장치가 지정되지 않았습니다!"
+
+#: Main.vala:4220
+msgid "Terminating rsync process"
+msgstr "알싱크 과정을 정지시키는 중입니다"
+
+#: MainWindow.vala:634
 msgid "The backup device is not set or unavailable."
 msgstr "백업 장치를 설정하지 않았거나 사용할 수 없습니다."
 
-#: src/Main.vala:292
+#: Main.vala:433
 msgid "The system partition has an unsupported subvolume layout."
-msgstr "시스템 파티션에 지원하지 않는 서브 볼륨 레이아웃이 있습니다."
+msgstr "시스템 파티션에 지원하지 않는 하위 볼륨 배치가 있습니다."
 
-#: src/Main.vala:2051 src/RestoreWindow.vala:1199
+#: Main.vala:3711 RestoreWindow.vala:1384
 msgid "The target partition has an unsupported subvolume layout."
-msgstr "대상 파티션에 지원하지 않는 서브 볼륨 레이아웃이 있습니다."
+msgstr "대상 파티션에 지원하지 않는 하위 볼륨 배치가 있습니다."
 
-#: src/RestoreWindow.vala:1253
+#: AboutWindow.vala:322
+#, c-format
+msgid "Third Party Tools"
+msgstr "제삼자 도구"
+
+#: Main.vala:2705
 msgid ""
-"This software comes without absolutely NO warranty and the author takes no "
-"responsibility for any damage arising from the use of this program."
-msgstr "이 소프트웨어는 보증기간이 없으며 개발자는 이 프로그램을 사용하며 발생하는 어떤 문제도 책임지지 않습니다."
+"This software comes without absolutely NO warranty and the author takes\n"
+"no responsibility for any damage arising from the use of this program."
+msgstr ""
+"이 소프트웨어는 보증기간이 없으며 개발자는 이 프로그램을\n"
+"사용하며 발생하는 어떤 문제도 책임지지 않습니다."
 
-#: src/MainWindow.vala:194
+#: MainWindow.vala:197
 msgid "TimeShift Logs"
 msgstr "타임시프트 로그"
 
-#: src/MainWindow.vala:1305
+#: MainWindow.vala:1470
 msgid "TimeShift is running in a live system"
 msgstr "타임시프트가 라이브 시스템에서 운영되고 있습니다"
 
-#: src/Main.vala:151
+#: Main.vala:193
 msgid "TimeShift needs admin access to backup and restore system files."
-msgstr "타임시프트는 시스템 백업과 복원 파일의 접근에 관리자 권한이 필요합니다"
+msgstr ""
+"타임시프트는 시스템 백업과 복원 파일의 접근에 관리자 권한이 필요합니다."
 
-#: src/RestoreWindow.vala:1000
+#: RestoreWindow.vala:1159
 msgid ""
 "To see which files are included in the snapshot use the 'Browse' button on "
 "the main window."
-msgstr "스냅샷에 어떤 파일들이 포함되었는지 보시려면 첫 창에서'Browse' 버튼을 이용하세요"
+msgstr ""
+"스냅샷에 어떤 파일들이 포함되었는지 보시려면 첫 창에서 '찾아보기' 버튼을 이용"
+"하십시오."
 
-#: src/RestoreWindow.vala:198 src/RestoreWindow.vala:734
+#: AboutWindow.vala:338
+#, c-format
+msgid "Translators"
+msgstr "번역가"
+
+#: Main.vala:903 RestoreWindow.vala:200 RestoreWindow.vala:867
+#, c-format
 msgid "Type"
 msgstr "형식"
 
-#: src/RestoreWindow.vala:733
+#: RestoreWindow.vala:866
+#, c-format
 msgid "UUID"
-msgstr ""
+msgstr "범용 단일 식별자(UUID)"
 
-#: src/Main.vala:1739 src/Main.vala:1792
-msgid "Unable to delete"
-msgstr "지울 수 없습니다"
-
-#: src/Main.vala:975
+#: Main.vala:1589
 msgid "Unknown snapshot type"
 msgstr "알려지지 않은 스냅샷 형식입니다"
 
-#: src/Utility.vala:983
+#: Main.vala:2652
+msgid "Unlocked Device"
+msgstr "잠금 해제된 장치"
+
+#: Main.vala:2655
+msgid "Unlocked Successfully"
+msgstr "잠금 해제를 성공적으로 했습니다"
+
+#: Main.vala:2599 Main.vala:2621
+#, c-format
+msgid "Unlocked device is mapped to '%s'"
+msgstr "잠금 해제된 장치는 '%s'로 맵핑되었습니다"
+
+#: Main.vala:2655
+#, c-format
+msgid "Unlocked device is mapped to '%s'."
+msgstr "잠금 해제된 장치는 '%s'로 맵핑되었습니다."
+
+#: Utility.vala:1367
 msgid "Unmounting from"
-msgstr ""
+msgstr "장치로부터 해제"
 
-#: src/Main.vala:2055 src/RestoreWindow.vala:1198
+#: Main.vala:3715 RestoreWindow.vala:1383
 msgid "Unsupported Subvolume Layout"
-msgstr ""
+msgstr "지원하지 않는 하위 볼륨 배치"
 
-#: src/RestoreWindow.vala:737
+#: Main.vala:2983
+msgid "Updated /etc/fstab on target device"
+msgstr "선택한 장치의 /etc/fstab이 업데이트되었습니다"
+
+#: RestoreWindow.vala:870
+#, c-format
 msgid "Used"
 msgstr "사용된"
 
-#: src/Main.vala:1451
+#: Main.vala:3076
 msgid "Using the default exclude-list"
-msgstr "기본 제외 목록을 이용함"
+msgstr "기본 제외 목록을 이용합니다"
 
-#: src/Main.vala:1454
+#: Main.vala:3079
 msgid "Using user-specified exclude-list"
-msgstr "사용자 지정 제외 목록을 이용함"
+msgstr "사용자 지정 제외 목록을 이용합니다"
 
-#: src/MainWindow.vala:195
+#: MainWindow.vala:198
 msgid "View TimeShift Logs"
 msgstr "타임시프트 로그 보기"
 
-#: src/MainWindow.vala:187
+#: MainWindow.vala:190
 msgid "View rsync log for selected snapshot"
-msgstr "선택된 스냅샷의 rsync 로그 보기"
+msgstr "선택된 스냅샷의 알싱크 로그 보기"
 
-#: src/RestoreWindow.vala:1242
+#: DonationWindow.vala:88
+msgid "Visit Website"
+msgstr "웹사이트를 방문합니다"
+
+#: Main.vala:2694
 msgid "WARNING"
 msgstr "주의"
 
-#: src/MainWindow.vala:751
+#: MainWindow.vala:821
 msgid "WARNING:"
 msgstr "주의:"
 
-#: src/RestoreWindow.vala:401 src/RestoreWindow.vala:402
-#: src/SettingsWindow.vala:297 src/SettingsWindow.vala:298
-#: src/Utility.vala:101
+#: RestoreWindow.vala:416 RestoreWindow.vala:417 SettingsWindow.vala:295
+#: SettingsWindow.vala:296 Utility.vala:125
 msgid "Warning"
 msgstr "주의"
 
-#: src/Main.vala:1874
-msgid "Warning: Backup device not set! Defaulting to system device"
-msgstr "주의: 백업장치가 시스템 장치에 기본으로 설정되지 않음!"
-
-#: src/Main.vala:591
+#: Main.vala:636
 msgid "Warning: Deleted invalid lock"
-msgstr "주의:  인식 불가 잠금이 지워졌음"
+msgstr "주의: 인식 불가 잠금이 지워졌습니다"
 
-#: src/SettingsWindow.vala:554 src/SettingsWindow.vala:595
+#: SettingsWindow.vala:553 SettingsWindow.vala:594
 msgid "Weekly"
 msgstr "매주"
 
-#: src/Main.vala:845
+#: Main.vala:1477
 msgid "Weekly snapshot failed!"
-msgstr "매주 스냅샷 만들기를 실패했습니다!"
+msgstr "매주 스냅샷 만들기에 실패했습니다!"
 
-#: src/Main.vala:826
+#: Main.vala:1458
 msgid "Weekly snapshots are enabled"
 msgstr "매주 스냅샷 만들기를 실행합니다"
 
-#: src/SettingsWindow.vala:620
+#: SettingsWindow.vala:619
 msgid "When free space less than"
-msgstr "여유 공간이 이 이하 이면"
+msgstr "여유 공간이 이 이하이면"
 
-#: src/MainWindow.vala:1336
+#: Main.vala:2615 Main.vala:2649
+msgid "Wrong Passphrase"
+msgstr "틀린 암호문입니다"
+
+#: Main.vala:2342
+#, c-format
+msgid "[a = Abort, d = Default (%s), r = Root device]"
+msgstr "[a = 중단, d = 기본(%s), r = 루트 장치]"
+
+#: MainWindow.vala:1501
 msgid "days old"
 msgstr "일 됨"
 
-#: src/Main.vala:1220
+#: Main.vala:1873
 msgid "days..."
 msgstr "일..."
 
-#: src/Main.vala:2253
+#: Main.vala:3829
 msgid "free"
 msgstr "여유"
 
-#: src/MainWindow.vala:1340
+#: MainWindow.vala:1505
 msgid "hours old"
-msgstr "시간 됨"
+msgstr "한 시간 이상 지남"
 
-#: src/MainWindow.vala:1344
-msgid "mins old"
-msgstr "분 됨"
-
-#: src/Main.vala:1106
+#: Main.vala:1716
 msgid "rsync returned an error"
-msgstr "rsync가 오류를 실행했습니다"
+msgstr "알싱크가 오류를 실행했습니다"
 
-#: src/MainWindow.vala:557
+#: MainWindow.vala:613
 msgid "snapshot device changed"
-msgstr "스냅샷 장치 변경됨"
+msgstr "스냅샷 장치가 변경되었습니다"
 
-#: src/SettingsWindow.vala:590 src/SettingsWindow.vala:595
-#: src/SettingsWindow.vala:600 src/SettingsWindow.vala:605
-#: src/SettingsWindow.vala:610
+#: SettingsWindow.vala:589 SettingsWindow.vala:594 SettingsWindow.vala:599
+#: SettingsWindow.vala:604 SettingsWindow.vala:609
 msgid "snapshots older than"
 msgstr "이상 된 스냅샷"
 
-#: src/Main.vala:1305
-msgid "symlinks updated"
-msgstr "symlinks 업데이트 됨"
-
-#: src/RestoreWindow.vala:593
+#: RestoreWindow.vala:669
 msgid "sys"
 msgstr "sys"
 
-#: src/Main.vala:990 src/Main.vala:1140
+#: Main.vala:1604 Main.vala:1751
 msgid "tagged"
 msgstr "태그 된"
 
-#: src/Main.vala:1167 src/Main.vala:1205 src/Main.vala:1224
+#: Main.vala:1820 Main.vala:1858 Main.vala:1877
 msgid "un-tagged"
 msgstr "태그 되지 않은"
-
-#: src/Main.vala:1975
-msgid "updated partition list"
-msgstr "파티션 목록 업데이트 됨"
-
-#: src/Main.vala:1954
-msgid "updated snapshot list"
-msgstr "스냅샷 목록 업데이트 됨"

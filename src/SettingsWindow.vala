@@ -134,7 +134,6 @@ public class SettingsWindow : Gtk.Dialog{
 
 		//switch_schedule
         switch_schedule = new Gtk.Switch();
-        switch_schedule.set_size_request(100,20);
         switch_schedule.active = App.is_scheduled;
         hbox_auto_snapshots.pack_end(switch_schedule,false,false,0);
 

@@ -1272,9 +1272,20 @@ class MainWindow : Gtk.Window{
 		};
 
 		dialog.translators = {
-			"Debaru, Nikos, alienus (French):launchpad.net/~lp-l10n-fr",
+			"BennyBeat (Catalan):https://launchpad.net/~bennybeat",
+			"Pavel Borecki (Czech):https://launchpad.net/~pavel-borecki",
+			"Jerre van Erp, cropr (Dutch):https://launchpad.net/~lp-l10n-nl",
+			"Anne, Debaru, Nikos, alienus (French):launchpad.net/~lp-l10n-fr",
 			"tomberry88 (Italian):launchpad.net/~tomberry",
-			"박정규(Jung-Kyu Park) (Korean):bagjunggyu@gmail.com"
+			"B.W.Knight, Jung-Kyu Park (Korean):https://launchpad.net/~lp-l10n-ko",
+			"Michał Olber, eloaders (Polish):https://translations.launchpad.net/+groups/launchpad-translators",
+			"Eugene Marshal, admin_x, Владимир Шаталин (Russian):https://launchpad.net/~lp-l10n-ru",
+			"Adolfo Jayme (Spanish):https://launchpad.net/~lp-l10n-es",
+			"Ultimate (Turkish):https://launchpad.net/~lolcat"
+		};
+
+		dialog.contributors = {
+			"Maxim Taranov:png2378@gmail.com"
 		};
 
 		dialog.third_party = {
@@ -1288,7 +1299,7 @@ class MainWindow : Gtk.Window{
 
 		dialog.program_name = AppName;
 		dialog.comments = _("A System Restore Utility for Linux");
-		dialog.copyright = "Copyright © 2014 Tony George (%s)".printf(AppAuthorEmail);
+		dialog.copyright = "Copyright © 2016 Tony George (%s)".printf(AppAuthorEmail);
 		dialog.version = AppVersion;
 		dialog.logo = get_app_icon(128);
 

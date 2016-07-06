@@ -1,7 +1,7 @@
 /*
  * AboutWindow.vala
  *
- * Copyright 2012 Tony George <teejee2008@gmail.com>
+ * Copyright 2016 Tony George <teejee2008@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -67,6 +67,16 @@ public class AboutWindow : Dialog {
 		}
 	}
 
+	private string[] _contributors;
+	public string[] contributors{
+		get{
+			return _contributors;
+		}
+		set{
+			_contributors = value;
+		}
+	}
+	
 	private string _comments = "";
 	public string comments{
 		get{
@@ -301,7 +311,7 @@ public class AboutWindow : Dialog {
 
 	public void initialize() {
 		title = program_name;
-		img_logo.pixbuf = logo;
+		img_logo.pixbuf = logo.scale_simple(128,128,Gdk.InterpType.HYPER);
 		lbl_program_name.label = "<span size='larger'>%s</span>".printf(program_name);
 		lbl_version.label = "v%s".printf(version);
 		lbl_comments.label = "%s".printf(comments);
@@ -318,6 +328,14 @@ public class AboutWindow : Dialog {
 			add_line("\n");
 		}
 
+		if (contributors.length > 0){
+			add_line("<b>%s</b>\n".printf(_("Contributions")));
+			foreach(string name in contributors){
+				add_line("%s\n".printf(name));
+			}
+			add_line("\n");
+		}
+		
 		if (third_party.length > 0){
 			add_line("<b>%s</b>\n".printf(_("Third Party Tools")));
 			foreach(string name in third_party){

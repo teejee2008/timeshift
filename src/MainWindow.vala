@@ -180,7 +180,7 @@ class MainWindow : Gtk.Window{
         var button = new Gtk.ToolButton.from_stock ("gtk-menu");
 		button.label = _("Menu");
 		button.set_tooltip_text (_("Open Menu"));
-		button.icon_widget = get_shared_icon("open-menu","open-menu.svg",24);
+		button.icon_widget = get_shared_icon("","open-menu.svg",24);
         toolbar.add(button);
 
         // click event

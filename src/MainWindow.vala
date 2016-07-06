@@ -418,7 +418,7 @@ class MainWindow : Gtk.Window{
 
 		//hbox_statusbar
 		hbox_statusbar = new Box (Orientation.HORIZONTAL, 6);
-        hbox_statusbar.margin_bottom = 1;
+        hbox_statusbar.margin_bottom = 6;
         hbox_statusbar.margin_left = 6;
         hbox_statusbar.margin_right = 12;
         vbox_main.add (hbox_statusbar);

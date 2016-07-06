@@ -2309,8 +2309,9 @@ namespace TeeJee.GtkHelper{
 
 		try {
 			Gtk.IconTheme icon_theme = Gtk.IconTheme.get_default();
-			pix_icon = icon_theme.load_icon (icon_name, icon_size, 0);
-		} catch (Error e) {
+			pix_icon = icon_theme.load_icon (icon_name, icon_size, Gtk.IconLookupFlags.FORCE_SIZE);
+		}
+		catch (Error e) {
 			//log_error (e.message);
 		}
 

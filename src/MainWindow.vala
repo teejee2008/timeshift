@@ -36,49 +36,44 @@ using TeeJee.Misc;
 
 class MainWindow : Gtk.Window{
 
-	private Box vbox_main;
+	private Gtk.Box vbox_main;
 
 	//snapshots
-	private Toolbar toolbar;
-	private ToolButton btn_backup;
-	private ToolButton btn_restore;
-	private ToolButton btn_delete_snapshot;
-	private ToolButton btn_browse_snapshot;
-	private ToolButton btn_settings;
-	private ToolButton btn_clone;
-	private ToolButton btn_refresh_snapshots;
-	private ToolButton btn_view_snapshot_log;
-	private ToolButton btn_view_app_logs;
-	private ToolButton btn_about;
-    private ToolButton btn_donate;
-
+	private Gtk.Toolbar toolbar;
+	private Gtk.ToolButton btn_backup;
+	private Gtk.ToolButton btn_restore;
+	private Gtk.ToolButton btn_delete_snapshot;
+	private Gtk.ToolButton btn_browse_snapshot;
+	private Gtk.ToolButton btn_settings;
+	private Gtk.Menu menu_extra;
+	
 	//backup device
-	private Box hbox_device;
-	private Label lbl_backup_device;
-	private ComboBox cmb_backup_device;
-	private Button btn_refresh_backup_device_list;
-	private Label lbl_backup_device_warning;
+	private Gtk.Box hbox_device;
+	private Gtk.Label lbl_backup_device;
+	private Gtk.ComboBox cmb_backup_device;
+	private Gtk.Button btn_refresh_backup_device_list;
+	private Gtk.Label lbl_backup_device_warning;
 
 	//snapshots
-	private ScrolledWindow sw_backups;
-	private TreeView tv_backups;
-    private TreeViewColumn col_date;
-    private TreeViewColumn col_tags;
-    private TreeViewColumn col_system;
-    private TreeViewColumn col_desc;
+	private Gtk.ScrolledWindow sw_backups;
+	private Gtk.TreeView tv_backups;
+    private Gtk.TreeViewColumn col_date;
+    private Gtk.TreeViewColumn col_tags;
+    private Gtk.TreeViewColumn col_system;
+    private Gtk.TreeViewColumn col_desc;
 	private int tv_backups_sort_column_index = 0;
 	private bool tv_backups_sort_column_desc = true;
 
 	//statusbar
-	private Box hbox_statusbar;
+	private Gtk.Box hbox_statusbar;
 	private Gtk.Image img_status_spinner;
 	private Gtk.Image img_status_dot;
-	private Label lbl_status;
-	private Label lbl_status_scheduled;
+	private Gtk.Label lbl_status;
+	private Gtk.Label lbl_status_scheduled;
 	private Gtk.Image img_status_scheduled;
-	private Label lbl_status_latest;
+	private Gtk.Label lbl_status_latest;
 	private Gtk.Image img_status_latest;
-	private Label lbl_status_device;
+	private Gtk.Label lbl_status_device;
 	private Gtk.Image img_status_device;
 	private Gtk.Image img_status_progress;
 
@@ -91,21 +86,39 @@ class MainWindow : Gtk.Window{
 	private Device snapshot_device_original;
 
 	public MainWindow () {
-		this.title = AppName + " v" + AppVersion; // + " by " + AppAuthor + " (" + "teejeetech.blogspot.in" + ")";
+		this.title = AppName + " v" + AppVersion;
         this.window_position = WindowPosition.CENTER;
         this.modal = true;
         this.set_default_size (700, 500);
 		this.delete_event.connect(on_delete_event);
 		this.icon = get_app_icon(16);
 
-	    //vboxMain
+	    //vbox_main
         vbox_main = new Box (Orientation.VERTICAL, 0);
         vbox_main.margin = 0;
         add (vbox_main);
 
-        //toolbar ---------------------------------------------------
+        init_ui_toolbar();
 
-        //toolbar
+		init_ui_backup_device();
+
+        init_ui_snapshot_list();
+
+		init_ui_statusbar();
+
+        snapshot_device_original = App.snapshot_device;
+
+        if (App.live_system()){
+			btn_backup.sensitive = false;
+			btn_settings.sensitive = false;
+		}
+
+		refresh_cmb_backup_device();
+		timer_backup_device_init = Timeout.add(100, init_backup_device);
+    }
+
+	private void init_ui_toolbar(){
+		//toolbar
 		toolbar = new Gtk.Toolbar ();
 		toolbar.toolbar_style = ToolbarStyle.BOTH_HORIZ;
 		toolbar.get_style_context().add_class(Gtk.STYLE_CLASS_PRIMARY_TOOLBAR);
@@ -163,63 +176,20 @@ class MainWindow : Gtk.Window{
 		separator.set_expand (true);
 		toolbar.add (separator);
 
-		//btn_clone
-		btn_clone = new Gtk.ToolButton.from_stock ("gtk-copy");
-		btn_clone.is_important = false;
-		btn_clone.label = _("Clone");
-		btn_clone.set_tooltip_text (_("Clone the current system on another device"));
-        toolbar.add(btn_clone);
+		//btn_hamburger
+        var button = new Gtk.ToolButton.from_stock ("gtk-menu");
+		button.label = _("Menu");
+		button.set_tooltip_text (_("Open Menu"));
+		button.icon_widget = get_shared_icon("open-menu","open-menu.svg",24);
+        toolbar.add(button);
 
-        btn_clone.clicked.connect (btn_clone_clicked);
-
-        //btn_refresh_snapshots
-        btn_refresh_snapshots = new Gtk.ToolButton.from_stock ("gtk-refresh");
-		btn_refresh_snapshots.label = _("Refresh");
-		btn_refresh_snapshots.set_tooltip_text (_("Refresh Snapshot List"));
-        toolbar.add(btn_refresh_snapshots);
-
-        btn_refresh_snapshots.clicked.connect (() => {
-			if (!check_backup_device_online()) { return; }
-			App.update_snapshot_list();
-			refresh_tv_backups();
+        // click event
+		button.clicked.connect(()=>{
+			menu_extra_popup(null);
 		});
+	}
 
-		//btn_view_snapshot_log
-        btn_view_snapshot_log = new Gtk.ToolButton.from_stock ("gtk-file");
-		btn_view_snapshot_log.label = _("Log");
-		btn_view_snapshot_log.set_tooltip_text (_("View rsync log for selected snapshot"));
-        toolbar.add(btn_view_snapshot_log);
-
-        btn_view_snapshot_log.clicked.connect (btn_view_snapshot_log_clicked);
-
-		//btn_view_app_logs
-        btn_view_app_logs = new Gtk.ToolButton.from_stock ("gtk-file");
-		btn_view_app_logs.label = _("TimeShift Logs");
-		btn_view_app_logs.set_tooltip_text (_("View TimeShift Logs"));
-        toolbar.add(btn_view_app_logs);
-
-        btn_view_app_logs.clicked.connect (btn_view_app_logs_clicked);
-
-		//btn_donate
-        btn_donate = new Gtk.ToolButton.from_stock ("gtk-missing-image");
-		btn_donate.label = _("Donate");
-		btn_donate.set_tooltip_text (_("Donate"));
-		btn_donate.icon_widget = get_shared_icon("donate","donate.svg",24);
-        toolbar.add(btn_donate);
-
-		btn_donate.clicked.connect(btn_donate_clicked);
-
-		//btn_about
-        btn_about = new Gtk.ToolButton.from_stock ("gtk-about");
-		btn_about.label = _("About");
-		btn_about.set_tooltip_text (_("Application Info"));
-		btn_about.icon_widget = get_shared_icon("","help-info.svg",24);
-        toolbar.add(btn_about);
-
-        btn_about.clicked.connect (btn_about_clicked);
-
-		//backup device ------------------------------------------------
-
+	private void init_ui_backup_device(){
 		//hbox_device
 		hbox_device = new Box (Orientation.HORIZONTAL, 6);
         hbox_device.margin_top = 6;
@@ -273,9 +243,9 @@ class MainWindow : Gtk.Window{
 		lbl_backup_device_warning.margin_top = 6;
 		lbl_backup_device_warning.margin_bottom = 6;
 		vbox_main.add(lbl_backup_device_warning);
-
-		//snapshot list ----------------------------------------------
-
+	}
+	
+	private void init_ui_snapshot_list(){
         //tv_backups
 		tv_backups = new TreeView();
 		tv_backups.get_selection().mode = SelectionMode.MULTIPLE;
@@ -415,7 +385,9 @@ class MainWindow : Gtk.Window{
 
 			return false;
 		});
+	}
 
+	private void init_ui_statusbar(){
 		//hbox_statusbar
 		hbox_statusbar = new Box (Orientation.HORIZONTAL, 6);
         hbox_statusbar.margin_bottom = 6;
@@ -483,20 +455,110 @@ class MainWindow : Gtk.Window{
 		img_status_progress.file = App.share_folder + "/timeshift/images/progress.gif";
 		img_status_progress.no_show_all = true;
         hbox_statusbar.add(img_status_progress);
+	}
+	
+    private bool menu_extra_popup(Gdk.EventButton? event){
 
-        snapshot_device_original = App.snapshot_device;
+		menu_extra = new Gtk.Menu();
+		menu_extra.reserve_toggle_size = false;
 
-        if (App.live_system()){
-			btn_backup.sensitive = false;
-			btn_clone.sensitive = false;
-			btn_settings.sensitive = false;
-			btn_view_app_logs.sensitive = false;
+		Gtk.MenuItem menu_item = null;
+				
+		if (!App.live_system()){
+			// clone
+			menu_item = create_menu_item(_("Clone"), "gtk-copy", "", 16,
+				_("Clone the current system on another device"));
+				
+			menu_extra.append(menu_item);
+			menu_item.activate.connect(btn_clone_clicked);
 		}
 
-		refresh_cmb_backup_device();
-		timer_backup_device_init = Timeout.add(100, init_backup_device);
-    }
+		// refresh
+		menu_item = create_menu_item(_("Refresh Snapshot List"),"gtk-refresh","",16);
+		menu_extra.append(menu_item);
+		menu_item.activate.connect(() => {
+			if (!check_backup_device_online()) { return; }
+			App.update_snapshot_list();
+			refresh_tv_backups();
+		});
+		
+		// snapshot logs
+		menu_item = create_menu_item(_("View rsync log for selected snapshot"), "gtk-file", "", 16);
+		menu_extra.append(menu_item);
+		menu_item.activate.connect(btn_view_snapshot_log_clicked);
 
+		if (!App.live_system()){
+			// app logs
+			menu_item = create_menu_item(_("View TimeShift Logs"), "gtk-file", "", 16);
+			menu_extra.append(menu_item);
+			menu_item.activate.connect(btn_view_app_logs_clicked);
+		}
+
+		// separator
+		menu_item = create_menu_item_separator();
+		menu_extra.append(menu_item);
+		
+		// donate
+		menu_item = create_menu_item(_("Donate"), "donate", "donate.svg", 16);
+		menu_extra.append(menu_item);
+		menu_item.activate.connect(btn_donate_clicked);
+
+		// about
+		menu_item = create_menu_item(_("About"), "help-info", "help-info.svg", 16);
+		menu_extra.append(menu_item);
+		menu_item.activate.connect(btn_about_clicked);
+		
+		menu_extra.show_all();
+		
+		if (event != null) {
+			menu_extra.popup (null, null, null, event.button, event.time);
+		}
+		else {
+			menu_extra.popup (null, null, null, 0, Gtk.get_current_event_time());
+		}
+
+		return true;
+	}
+
+	private Gtk.MenuItem create_menu_item(
+		string label_text,
+		string icon_name_stock,
+		string icon_name_custom,
+		int icon_size,
+		string tooltip_text = ""){
+			
+		var menu_item = new Gtk.MenuItem();
+	
+		var box = new Gtk.Box (Orientation.HORIZONTAL, 3);
+		menu_item.add(box);
+
+		var icon = get_shared_icon(icon_name_stock, icon_name_custom, icon_size);
+		icon.set_tooltip_text(tooltip_text);
+		box.add(icon);
+				
+		var label = new Gtk.Label(label_text);
+		label.xalign = (float) 0.0;
+		label.margin_right = 6;
+		label.set_tooltip_text((tooltip_text.length > 0) ? tooltip_text : label_text);
+		box.add(label);
+
+		return menu_item;
+	}
+	
+	private Gtk.MenuItem create_menu_item_separator(){
+			
+		var menu_item = new Gtk.MenuItem();
+		menu_item.sensitive = false;
+		
+		var box = new Gtk.Box (Orientation.HORIZONTAL, 3);
+		menu_item.add(box);
+
+		box.add(new Gtk.Separator(Gtk.Orientation.HORIZONTAL));
+				
+		return menu_item;
+	}
+
+	
 	private bool init_backup_device(){
 
 		/* updates statusbar messages and snapshot list after backup device is changed */

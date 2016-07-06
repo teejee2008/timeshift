@@ -3946,28 +3946,35 @@ public class Main : GLib.Object{
 
 		try{
 
-			var f = File.new_for_path("/tmp/exclude.list");
+			log_msg("Using temp dir '%s'".printf(TEMP_DIR));
+
+			string file_exclude_list = path_combine(TEMP_DIR, "exclude.list");
+			var f = File.new_for_path(file_exclude_list);
 			if (f.query_exists()){
 				f.delete();
 			}
 
-			f = File.new_for_path("/tmp/rsync.log");
+			string file_log = path_combine(TEMP_DIR, "rsync.log");
+			f = File.new_for_path(file_log);
 			if (f.query_exists()){
 				f.delete();
 			}
 
-			f = File.new_for_path("/tmp/empty");
+			string dir_empty = path_combine(TEMP_DIR, "empty");
+			f = File.new_for_path(dir_empty);
 			if (!f.query_exists()){
-				create_dir("/tmp/empty");
+				create_dir(dir_empty);
 			}
 
-			save_exclude_list("/tmp");
+			save_exclude_list(TEMP_DIR);
+			
+			cmd  = "LC_ALL=C ; rsync -ai --delete --numeric-ids --relative --stats --dry-run --delete-excluded --exclude-from='%s' /. '%s' &> '%s'".printf(file_exclude_list, dir_empty, file_log);
 
-			cmd  = "LC_ALL=C ; rsync -ai --delete --numeric-ids --relative --stats --dry-run --delete-excluded --exclude-from=/tmp/exclude.list /. /tmp/empty/ &> /tmp/rsync.log";
-
+			log_debug(cmd);
 			ret_val = execute_command_script_sync(cmd, out std_out, out std_err);
-			if (ret_val == 0){
-				cmd = "cat /tmp/rsync.log | awk '/Total file size/ {print $4}'";
+
+			if (file_exists(file_log)){
+				cmd = "cat '%s' | awk '/Total file size/ {print $4}'".printf(file_log);
 				ret_val = execute_command_script_sync(cmd, out std_out, out std_err);
 				if (ret_val == 0){
 					required_space = long.parse(std_out.replace(",","").strip());
@@ -3983,6 +3990,7 @@ public class Main : GLib.Object{
 			else{
 				log_error (_("Failed to estimate system size"));
 				log_error (std_err);
+				log_error (std_out);
 				thr_success = false;
 			}
 		}

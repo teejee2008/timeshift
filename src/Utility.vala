@@ -214,6 +214,10 @@ namespace TeeJee.FileSystem{
 		return (FileUtils.test(filePath, GLib.FileTest.EXISTS));
 	}
 
+	public string path_combine(string path1, string path2){
+		return GLib.Path.build_path("/", path1, path2);
+	}
+	
 	public void file_copy (string src_file, string dest_file){
 		try{
 			var file_src = File.new_for_path (src_file);

@@ -2156,11 +2156,13 @@ namespace TeeJee.GtkHelper{
 		gtk_do_events ();
 	}
 
-	public void gtk_messagebox(string title, string message, Gtk.Window? parent_win, bool is_error = false){
+	public void gtk_messagebox(
+		string title, string message,
+		Gtk.Window? parent_win, bool is_error = false){
 
 		/* Shows a simple message box */
 
-		Gtk.MessageType type = Gtk.MessageType.INFO;
+		var type = Gtk.MessageType.INFO;
 		if (is_error){
 			type = Gtk.MessageType.ERROR;
 		}
@@ -2168,15 +2170,8 @@ namespace TeeJee.GtkHelper{
 			type = Gtk.MessageType.INFO;
 		}
 
-		var dlg = new Gtk.MessageDialog.with_markup(null, Gtk.DialogFlags.MODAL, type, Gtk.ButtonsType.OK, message);
-		dlg.title = title;
-		dlg.set_default_size (300, -1);
-		if (parent_win != null){
-			dlg.set_transient_for(parent_win);
-			dlg.set_modal(true);
-		}
+		var dlg = new CustomMessageDialog(title,message,type,parent_win);
 		dlg.run();
-		dlg.destroy();
 	}
 
 	public string gtk_inputbox(string title, string message, Gtk.Window? parent_win, bool mask_password = false){

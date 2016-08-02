@@ -128,8 +128,8 @@ class MainWindow : Gtk.Window{
 		//btn_backup
 		btn_backup = new Gtk.ToolButton.from_stock ("gtk-save");
 		btn_backup.is_important = true;
-		btn_backup.label = _("Backup");
-		btn_backup.set_tooltip_text (_("Take a manual (ondemand) snapshot"));
+		btn_backup.label = _("Create");
+		btn_backup.set_tooltip_text (_("Create snapshot of current system"));
         toolbar.add(btn_backup);
 
         btn_backup.clicked.connect (btn_backup_clicked);
@@ -138,7 +138,7 @@ class MainWindow : Gtk.Window{
 		btn_restore = new Gtk.ToolButton.from_stock ("gtk-apply");
 		btn_restore.is_important = true;
 		btn_restore.label = _("Restore");
-		btn_restore.set_tooltip_text (_("Restore Snapshot"));
+		btn_restore.set_tooltip_text (_("Restore selected snapshot"));
         toolbar.add(btn_restore);
 
 		btn_restore.clicked.connect (btn_restore_clicked);
@@ -147,7 +147,7 @@ class MainWindow : Gtk.Window{
 		btn_browse_snapshot = new Gtk.ToolButton.from_stock ("gtk-directory");
 		btn_browse_snapshot.is_important = true;
 		btn_browse_snapshot.label = _("Browse");
-		btn_browse_snapshot.set_tooltip_text (_("Browse Snapshot"));
+		btn_browse_snapshot.set_tooltip_text (_("Browse selected snapshot"));
         toolbar.add(btn_browse_snapshot);
 
         btn_browse_snapshot.clicked.connect (btn_browse_snapshot_clicked);
@@ -156,7 +156,7 @@ class MainWindow : Gtk.Window{
 		btn_delete_snapshot = new Gtk.ToolButton.from_stock ("gtk-delete");
 		btn_delete_snapshot.is_important = true;
 		btn_delete_snapshot.label = _("Delete");
-		btn_delete_snapshot.set_tooltip_text (_("Delete Snapshot"));
+		btn_delete_snapshot.set_tooltip_text (_("Delete selected snapshot"));
         toolbar.add(btn_delete_snapshot);
 
         btn_delete_snapshot.clicked.connect (btn_delete_snapshot_clicked);

@@ -94,7 +94,7 @@ class WizardWindow : Gtk.Window{
 	}
 
 	private Gtk.Label add_label(Gtk.Box box, string text, bool is_header = false){
-		var msg = is_header ? "%s".printf(text) : "<b>%s</b>".printf(text);
+		var msg = is_header ? "<b>%s</b>".printf(text) : "%s".printf(text);
 		var label = new Gtk.Label(msg);
 		label.set_use_markup(true);
 		label.xalign = (float) 0.0;

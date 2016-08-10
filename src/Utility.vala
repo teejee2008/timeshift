@@ -2181,7 +2181,10 @@ namespace TeeJee.GtkHelper{
 		}
 
 		var dlg = new CustomMessageDialog(title, message, type, parent_win, buttons_type);
-		return dlg.run();
+		var response = dlg.run();
+		dlg.destroy();
+		
+		return response;
 	}
 
 	public string gtk_inputbox(string title, string message, Gtk.Window? parent_win, bool mask_password = false){

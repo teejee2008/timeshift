@@ -175,7 +175,7 @@ class MainWindow : Gtk.Window{
 		btn_wizard.is_important = true;
 		btn_wizard.label = _("Settings");
 		btn_wizard.set_tooltip_text (_("Settings"));
-        //toolbar.add(btn_wizard);
+        toolbar.add(btn_wizard);
 
         btn_wizard.clicked.connect (btn_wizard_clicked);
 
@@ -954,8 +954,13 @@ class MainWindow : Gtk.Window{
 				return;
 			case 1:
 			case 2:
-				gtk_messagebox(_("Low Disk Space"),_("Backup device does not have enough space"),null, true);
+				gtk_messagebox(
+					_("Low Disk Space"),
+					_("Backup device does not have enough space"),
+					this, true);
+				
 				update_statusbar();
+				
 				return;
 		}
 
@@ -1003,7 +1008,11 @@ class MainWindow : Gtk.Window{
 
 		sel = tv_backups.get_selection ();
 		if (sel.count_selected_rows() == 0){
-			gtk_messagebox(_("No Snapshots Selected"),_("Please select the snapshots to delete"),null,false);
+			gtk_messagebox(
+				_("No Snapshots Selected"),
+				_("Please select the snapshots to delete"),
+				this, false);
+				
 			return;
 		}
 
@@ -1108,11 +1117,17 @@ class MainWindow : Gtk.Window{
 
 			sel = tv_backups.get_selection ();
 			if (sel.count_selected_rows() == 0){
-				gtk_messagebox(_("No Snapshots Selected"), _("Please select the snapshot to restore"),null,false);
+				gtk_messagebox(
+					_("No Snapshots Selected"),
+					_("Please select the snapshot to restore"),
+					this, false);
 				return;
 			}
 			else if (sel.count_selected_rows() > 1){
-				gtk_messagebox(_("Multiple Snapshots Selected"), _("Please select a single snapshot"),null,false);
+				gtk_messagebox(
+					_("Multiple Snapshots Selected"),
+					_("Please select a single snapshot"),
+					this, false);
 				return;
 			}
 
@@ -1313,7 +1328,10 @@ class MainWindow : Gtk.Window{
 	private void btn_view_snapshot_log_clicked(){
 		TreeSelection sel = tv_backups.get_selection ();
 		if (sel.count_selected_rows() == 0){
-			gtk_messagebox(_("Select Snapshot"),_("Please select a snapshot to view the log!"),null,false);
+			gtk_messagebox(
+				_("Select Snapshot"),
+				_("Please select a snapshot to view the log!"),
+				this, false);
 			return;
 		}
 
@@ -1488,7 +1506,10 @@ class MainWindow : Gtk.Window{
 
 	private bool check_backup_device_online(){
 		if (!App.backup_device_online()){
-			gtk_messagebox(_("Device Offline"),_("Backup device is not available"), null, true);
+			gtk_messagebox(
+				_("Device Offline"),
+				_("Backup device is not available"),
+				this, true);
 			update_statusbar();
 			return false;
 		}

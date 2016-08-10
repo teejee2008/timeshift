@@ -167,101 +167,7 @@ public class RestoreWindow : Gtk.Dialog{
 			cmb_boot_device_select_default();
 		});
 
-		//tv_partitions
-		tv_partitions = new TreeView();
-		tv_partitions.get_selection().mode = SelectionMode.SINGLE;
-		tv_partitions.set_rules_hint (true);
-		tv_partitions.button_release_event.connect(tv_partitions_button_press_event);
-
-		//sw_partitions
-		sw_partitions = new ScrolledWindow(null, null);
-		sw_partitions.set_shadow_type (ShadowType.ETCHED_IN);
-		sw_partitions.add (tv_partitions);
-		sw_partitions.expand = true;
-		vbox_target.add(sw_partitions);
-
-		//col_device
-		col_device_target = new TreeViewColumn();
-		col_device_target.title = _("Device");
-		col_device_target.spacing = 1;
-		tv_partitions.append_column(col_device_target);
-
-		CellRendererPixbuf cell_device_icon = new CellRendererPixbuf();
-		cell_device_icon.xpad = 1;
-		col_device_target.pack_start (cell_device_icon, false);
-		col_device_target.set_attributes(cell_device_icon, "pixbuf", 3);
-
-		CellRendererText cell_device_target = new CellRendererText ();
-		col_device_target.pack_start (cell_device_target, false);
-		col_device_target.set_cell_data_func (cell_device_target, cell_device_target_render);
-
-		//col_fs
-		col_fs = new TreeViewColumn();
-		col_fs.title = _("Type");
-		CellRendererText cell_fs = new CellRendererText ();
-		cell_fs.xalign = (float) 0.5;
-		col_fs.pack_start (cell_fs, false);
-		col_fs.set_cell_data_func (cell_fs, cell_fs_render);
-		tv_partitions.append_column(col_fs);
-
-		//col_mount
-		col_mount = new TreeViewColumn();
-		col_mount.title = _("Mount");
-		cell_mount = new CellRendererCombo();
-		cell_mount.xalign = (float) 0.0;
-		cell_mount.editable = true;
-		cell_mount.width = 70;
-		col_mount.pack_start (cell_mount, false);
-		col_mount.set_cell_data_func (cell_mount, cell_mount_render);
-		tv_partitions.append_column(col_mount);
-
-		cell_mount.set_property ("text-column", 0);
-		col_mount.add_attribute (cell_mount, "text", 1);
-
-		//populate combo
-		var model = new Gtk.ListStore(1, typeof(string));
-		cell_mount.model = model;
-
-		TreeIter iter;
-		model.append(out iter);
-		model.set (iter, 0, "/");
-		model.append(out iter);
-		model.set (iter, 0, "/home");
-		model.append(out iter);
-		model.set (iter, 0, "/boot");
-
-		cell_mount.changed.connect((path, iter_new) => {
-			string val;
-			cell_mount.model.get (iter_new, 0, out val);
-			model = (Gtk.ListStore) tv_partitions.model;
-			model.get_iter_from_string (out iter, path);
-			model.set (iter, 1, val);
-		});
-
-		cell_mount.edited.connect((path, new_text) => {
-			model = (Gtk.ListStore) tv_partitions.model;
-			model.get_iter_from_string (out iter, path);
-			model.set (iter, 1, new_text);
-		});
-
-		//col_size
-		col_size = new TreeViewColumn();
-		col_size.title = _("Size");
-		CellRendererText cell_size = new CellRendererText ();
-		cell_size.xalign = (float) 1.0;
-		col_size.pack_start (cell_size, false);
-		col_size.set_cell_data_func (cell_size, cell_size_render);
-		tv_partitions.append_column(col_size);
-
-		//col_dist
-		col_dist = new TreeViewColumn();
-		col_dist.title = _("System");
-		CellRendererText cell_dist = new CellRendererText ();
-		col_dist.pack_start (cell_dist, false);
-		col_dist.set_cell_data_func (cell_dist, cell_dist_render);
-		tv_partitions.append_column(col_dist);
-
-		tv_partitions.set_tooltip_column(2);
+		init_device_list(vbox_target);
 
 		//bootloader options -------------------------------------------
 
@@ -604,6 +510,104 @@ public class RestoreWindow : Gtk.Dialog{
 
 	}
 
+	private void init_device_list(Gtk.Box box){
+		//tv_partitions
+		tv_partitions = new TreeView();
+		tv_partitions.get_selection().mode = SelectionMode.SINGLE;
+		tv_partitions.set_rules_hint (true);
+		tv_partitions.button_release_event.connect(tv_partitions_button_press_event);
+
+		//sw_partitions
+		sw_partitions = new ScrolledWindow(null, null);
+		sw_partitions.set_shadow_type (ShadowType.ETCHED_IN);
+		sw_partitions.add (tv_partitions);
+		sw_partitions.expand = true;
+		box.add(sw_partitions);
+
+		//col_device
+		col_device_target = new TreeViewColumn();
+		col_device_target.title = _("Device");
+		col_device_target.spacing = 1;
+		tv_partitions.append_column(col_device_target);
+
+		CellRendererPixbuf cell_device_icon = new CellRendererPixbuf();
+		cell_device_icon.xpad = 1;
+		col_device_target.pack_start (cell_device_icon, false);
+		col_device_target.set_attributes(cell_device_icon, "pixbuf", 3);
+
+		CellRendererText cell_device_target = new CellRendererText ();
+		col_device_target.pack_start (cell_device_target, false);
+		col_device_target.set_cell_data_func (cell_device_target, cell_device_target_render);
+
+		//col_fs
+		col_fs = new TreeViewColumn();
+		col_fs.title = _("Type");
+		CellRendererText cell_fs = new CellRendererText ();
+		cell_fs.xalign = (float) 0.5;
+		col_fs.pack_start (cell_fs, false);
+		col_fs.set_cell_data_func (cell_fs, cell_fs_render);
+		tv_partitions.append_column(col_fs);
+
+		//col_mount
+		col_mount = new TreeViewColumn();
+		col_mount.title = _("Mount");
+		cell_mount = new CellRendererCombo();
+		cell_mount.xalign = (float) 0.0;
+		cell_mount.editable = true;
+		cell_mount.width = 70;
+		col_mount.pack_start (cell_mount, false);
+		col_mount.set_cell_data_func (cell_mount, cell_mount_render);
+		tv_partitions.append_column(col_mount);
+
+		cell_mount.set_property ("text-column", 0);
+		col_mount.add_attribute (cell_mount, "text", 1);
+
+		//populate combo
+		var model = new Gtk.ListStore(1, typeof(string));
+		cell_mount.model = model;
+
+		TreeIter iter;
+		model.append(out iter);
+		model.set (iter, 0, "/");
+		model.append(out iter);
+		model.set (iter, 0, "/home");
+		model.append(out iter);
+		model.set (iter, 0, "/boot");
+
+		cell_mount.changed.connect((path, iter_new) => {
+			string val;
+			cell_mount.model.get (iter_new, 0, out val);
+			model = (Gtk.ListStore) tv_partitions.model;
+			model.get_iter_from_string (out iter, path);
+			model.set (iter, 1, val);
+		});
+
+		cell_mount.edited.connect((path, new_text) => {
+			model = (Gtk.ListStore) tv_partitions.model;
+			model.get_iter_from_string (out iter, path);
+			model.set (iter, 1, new_text);
+		});
+
+		//col_size
+		col_size = new TreeViewColumn();
+		col_size.title = _("Size");
+		CellRendererText cell_size = new CellRendererText ();
+		cell_size.xalign = (float) 1.0;
+		col_size.pack_start (cell_size, false);
+		col_size.set_cell_data_func (cell_size, cell_size_render);
+		tv_partitions.append_column(col_size);
+
+		//col_dist
+		col_dist = new TreeViewColumn();
+		col_dist.title = _("System");
+		CellRendererText cell_dist = new CellRendererText ();
+		col_dist.pack_start (cell_dist, false);
+		col_dist.set_cell_data_func (cell_dist, cell_dist_render);
+		tv_partitions.append_column(col_dist);
+
+		tv_partitions.set_tooltip_column(2);
+	}
+	
 	private void init_mounts(){
 		TreeIter iter;
 		Gtk.ListStore store;
@@ -1292,7 +1296,7 @@ public class RestoreWindow : Gtk.Dialog{
 
 	private bool check_backup_device_online(){
 		if (!App.backup_device_online()){
-			gtk_messagebox(_("Device Offline"),_("Backup device is not available"), null, true);
+			gtk_messagebox(_("Device Offline"),_("Backup device is not available"), this, true);
 			return false;
 		}
 		else{

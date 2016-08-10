@@ -109,22 +109,22 @@ public class CustomMessageDialog : Gtk.Dialog {
 			break;
 		}
 
-		//img
+		// image ----------------
+		
 		var img = new Image.from_icon_name(icon_name, Gtk.IconSize.DIALOG);
 		img.margin_right = 12;
 		hbox_contents.add(img);
 		
-		//lbl_msg
-		lbl_msg = new Gtk.Label("");
+		// label -------------------
+
+		var text = "<span weight=\"bold\" size=\"x-large\">%s</span>\n\n%s".printf(msg_title, msg_body);
+		lbl_msg = new Gtk.Label(text);
 		lbl_msg.xalign = (float) 0.0;
 		lbl_msg.max_width_chars = 70;
 		lbl_msg.wrap = true;
 		lbl_msg.wrap_mode = Pango.WrapMode.CHAR;
 		lbl_msg.use_markup = true;
-		//hbox_contents.add(lbl_msg);
 
-		lbl_msg.label = "<b>%s</b>\n\n%s".printf(msg_title, msg_body);
-		
 		//sw_msg
 		sw_msg = new ScrolledWindow(null, null);
 		//sw_msg.set_shadow_type (ShadowType.ETCHED_IN);
@@ -135,18 +135,17 @@ public class CustomMessageDialog : Gtk.Dialog {
 		//sw_msg.set_size_request();
 		hbox_contents.add(sw_msg);
 
-		//actions
-		//btn_ok = (Gtk.Button) add_button ("_Ok", Gtk.ResponseType.OK);
-		//btn_ok.clicked.connect(()=>{
-		//	this.destroy();
-		//});
+		// actions -------------------------
+		
+		var action_area = get_action_area () as Gtk.Box;
+		action_area.margin_top = 12;
 
 		switch(buttons_type){
 		case Gtk.ButtonsType.OK:
 			btn_ok = (Gtk.Button) add_button ("_Ok", Gtk.ResponseType.OK);
-			btn_cancel = (Gtk.Button) add_button ("_Cancel", Gtk.ResponseType.CANCEL);
 			break;
 		case Gtk.ButtonsType.OK_CANCEL:
+			btn_ok = (Gtk.Button) add_button ("_Ok", Gtk.ResponseType.OK);
 			btn_cancel = (Gtk.Button) add_button ("_Cancel", Gtk.ResponseType.CANCEL);
 			break;
 		case Gtk.ButtonsType.YES_NO:

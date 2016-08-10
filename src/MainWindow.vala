@@ -170,6 +170,15 @@ class MainWindow : Gtk.Window{
 
         btn_settings.clicked.connect (btn_settings_clicked);
 
+        //btn_wizard
+		var btn_wizard = new Gtk.ToolButton.from_stock ("gtk-preferences");
+		btn_wizard.is_important = true;
+		btn_wizard.label = _("Settings");
+		btn_wizard.set_tooltip_text (_("Settings"));
+        //toolbar.add(btn_wizard);
+
+        btn_wizard.clicked.connect (btn_wizard_clicked);
+
         //separator
 		var separator = new Gtk.SeparatorToolItem();
 		separator.set_draw (false);
@@ -605,17 +614,18 @@ class MainWindow : Gtk.Window{
 
 		switch(status_code){
 			case 1:
-				string msg = message + "\n";
-				msg += _("Scheduled snapshots will be disabled.");
 
-				var dialog = new Gtk.MessageDialog.with_markup(this, Gtk.DialogFlags.MODAL, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK_CANCEL, msg);
-				dialog.set_title(_("Disable Scheduled Snapshots"));
-				dialog.set_default_size (300, -1);
-				dialog.set_transient_for(this);
-				dialog.set_modal(true);
-				int response = dialog.run();
-				dialog.destroy();
+				var title = _("Backup device does not have enough space!");
+				
+				string msg = _("Scheduled snapshots will be disabled.");
+				
+				var type = Gtk.MessageType.WARNING;
+				var buttons_type = Gtk.ButtonsType.OK_CANCEL;
 
+				var dlg = new CustomMessageDialog(title, msg, type, this, buttons_type);
+				var response = dlg.run();
+				dlg.destroy();
+				
 				if (response == Gtk.ResponseType.OK){
 					App.is_scheduled = false;
 					return false; //close window
@@ -626,18 +636,19 @@ class MainWindow : Gtk.Window{
 				}
 
 			case 2:
-				string msg = _("Selected device does not have enough space.") + "\n";
-				msg += _("Scheduled snapshots will be disabled till another device is selected.") + "\n";
+
+				var title = _("Backup device does not have enough space!") ;
+			
+				var msg = _("Scheduled snapshots will be disabled till another device is selected.") + "\n";
 				msg += _("Do you want to select another device now?") + "\n";
 
-				var dialog = new Gtk.MessageDialog.with_markup(this, Gtk.DialogFlags.MODAL, Gtk.MessageType.WARNING, Gtk.ButtonsType.YES_NO, msg);
-				dialog.set_title(_("Disable Scheduled Snapshots"));
-				dialog.set_default_size (300, -1);
-				dialog.set_transient_for(this);
-				dialog.set_modal(true);
-				int response = dialog.run();
-				dialog.destroy();
-
+				var type = Gtk.MessageType.WARNING;
+				var buttons_type = Gtk.ButtonsType.YES_NO;
+				
+				var dlg = new CustomMessageDialog(title, msg, type, this, buttons_type);
+				var response = dlg.run();
+				dlg.destroy();
+				
 				if (response == Gtk.ResponseType.YES){
 					this.delete_event.connect(on_delete_event); //reconnect this handler
 					return true; //keep window open
@@ -648,18 +659,20 @@ class MainWindow : Gtk.Window{
 				}
 
 			case 3:
+
+				var title = _("First snapshot required");
+			
 				string msg = _("Scheduled jobs will be enabled only after the first snapshot is taken.") + "\n";
 				msg += message + (" space and 10 minutes to complete.") + "\n";
 				msg += _("Do you want to take the first snapshot now?") + "\n";
 
-				var dialog = new Gtk.MessageDialog.with_markup(this, Gtk.DialogFlags.MODAL, Gtk.MessageType.WARNING, Gtk.ButtonsType.YES_NO, msg);
-				dialog.set_title(_("First Snapshot"));
-				dialog.set_default_size (300, -1);
-				dialog.set_transient_for(this);
-				dialog.set_modal(true);
-				int response = dialog.run();
-				dialog.destroy();
-
+				var type = Gtk.MessageType.WARNING;
+				var buttons_type = Gtk.ButtonsType.YES_NO;
+				
+				var dlg = new CustomMessageDialog(title, msg, type, this, buttons_type);
+				var response = dlg.run();
+				dlg.destroy();
+				
 				if (response == Gtk.ResponseType.YES){
 					btn_backup_clicked();
 					this.delete_event.connect(on_delete_event); //reconnect this handler
@@ -674,16 +687,17 @@ class MainWindow : Gtk.Window{
 				if (App.snapshot_device.uuid != snapshot_device_original.uuid){
 					log_debug(_("snapshot device changed"));
 
-					string msg = _("Scheduled snapshots will be saved to ") + "<b>%s</b>\n".printf(App.snapshot_device.device);
+					var title = _("Backup device has changed");
+					
+					var msg = _("Scheduled snapshots will be saved to ") + "<b>%s</b>\n".printf(App.snapshot_device.device);
 					msg += _("Click 'OK' to confirm") + "\n";
 
-					var dialog = new Gtk.MessageDialog.with_markup(this, Gtk.DialogFlags.MODAL, Gtk.MessageType.INFO, Gtk.ButtonsType.OK_CANCEL, msg);
-					dialog.set_title(_("Backup Device Changed"));
-					dialog.set_default_size (300, -1);
-					dialog.set_transient_for(this);
-					dialog.set_modal(true);
-					int response = dialog.run();
-					dialog.destroy();
+					var type = Gtk.MessageType.INFO;
+					var buttons_type = Gtk.ButtonsType.OK_CANCEL;
+					
+					var dlg = new CustomMessageDialog(title, msg, type, this, buttons_type);
+					var response = dlg.run();
+					dlg.destroy();
 
 					if (response == Gtk.ResponseType.CANCEL){
 						this.delete_event.connect(on_delete_event); //reconnect this handler
@@ -693,18 +707,18 @@ class MainWindow : Gtk.Window{
 				break;
 
 			case -1:
-				string msg = _("The backup device is not set or unavailable.") + "\n";
-				msg += _("Scheduled snapshots will be disabled.") + "\n";
+				var title = _("Backup device is not set or unavailable.");
+				
+				var msg = _("Scheduled snapshots will be disabled.") + "\n";
 				msg += _("Do you want to select another device?");
 
-				var dialog = new Gtk.MessageDialog.with_markup(this, Gtk.DialogFlags.MODAL, Gtk.MessageType.INFO, Gtk.ButtonsType.OK_CANCEL, msg);
-				dialog.set_title(_("Backup Device Changed"));
-				dialog.set_default_size (300, -1);
-				dialog.set_transient_for(this);
-				dialog.set_modal(true);
-				int response = dialog.run();
-				dialog.destroy();
-
+				var type = Gtk.MessageType.INFO;
+				var buttons_type = Gtk.ButtonsType.OK_CANCEL;
+				
+				var dlg = new CustomMessageDialog(title, msg, type, this, buttons_type);
+				var response = dlg.run();
+				dlg.destroy();
+					
 				if (response == Gtk.ResponseType.YES){
 					this.delete_event.connect(on_delete_event); //reconnect this handler
 					return true; //keep window open
@@ -1255,6 +1269,12 @@ class MainWindow : Gtk.Window{
 		update_statusbar();
 	}
 
+	private void btn_wizard_clicked(){
+		var win = new WizardWindow();
+		win.set_transient_for(this);
+		win.show_all();
+	}
+
 	private void btn_browse_snapshot_clicked(){
 
 		//check if device is online
@@ -1508,7 +1528,7 @@ class MainWindow : Gtk.Window{
 				break;
 
 			case 2:
-				long required = App.calculate_size_of_first_snapshot();
+				var required = App.calculate_size_of_first_snapshot();
 				txt = _("Backup device does not have enough space!") + " ";
 				txt += _("First snapshot needs") + " %.1f GB".printf(required/1024.0);
 				txt = "<span foreground=\"#8A0808\">" + txt + "</span>";

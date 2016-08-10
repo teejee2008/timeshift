@@ -1528,6 +1528,16 @@ namespace TeeJee.JSON{
 		}
 	}
 
+	public int64 json_get_int64(Json.Object jobj, string member, int64 def_value){
+		if (jobj.has_member(member)){
+			return int64.parse(jobj.get_string_member(member));
+		}
+		else{
+			log_error ("Member not found in JSON object: " + member, false, true);
+			return def_value;
+		}
+	}
+
 }
 
 namespace TeeJee.ProcessManagement{
@@ -2156,9 +2166,9 @@ namespace TeeJee.GtkHelper{
 		gtk_do_events ();
 	}
 
-	public void gtk_messagebox(
+	public int gtk_messagebox(
 		string title, string message,
-		Gtk.Window? parent_win, bool is_error = false){
+		Gtk.Window? parent_win, bool is_error = false, Gtk.ButtonsType buttons_type = Gtk.ButtonsType.OK){
 
 		/* Shows a simple message box */
 
@@ -2170,8 +2180,8 @@ namespace TeeJee.GtkHelper{
 			type = Gtk.MessageType.INFO;
 		}
 
-		var dlg = new CustomMessageDialog(title,message,type,parent_win);
-		dlg.run();
+		var dlg = new CustomMessageDialog(title, message, type, parent_win, buttons_type);
+		return dlg.run();
 	}
 
 	public string gtk_inputbox(string title, string message, Gtk.Window? parent_win, bool mask_password = false){

@@ -41,9 +41,7 @@ public class SettingsWindow : Gtk.Dialog{
 	//schedule
 	private Label lbl_schedule;
 	private Box vbox_schedule;
-	private Box hbox_auto_snapshots;
-	private Label lbl_header_schedule;
-	private Switch switch_schedule;
+	private CheckButton chk_schedule;
 	private TreeView tv_schedule;
 	private ScrolledWindow sw_schedule;
 	private TreeViewColumn col_sched_enable;
@@ -94,7 +92,7 @@ public class SettingsWindow : Gtk.Dialog{
         this.window_position = WindowPosition.CENTER_ON_PARENT;
         this.set_destroy_with_parent (true);
 		this.set_modal (true);
-        this.set_default_size (450, 500);
+        this.set_default_size (450, 450);
 		this.icon = get_app_icon(16);
 
 	    //vboxMain
@@ -102,7 +100,7 @@ public class SettingsWindow : Gtk.Dialog{
 
         //notebook
 		notebook = new Notebook ();
-		notebook.margin = 6;
+		notebook.margin = 12;
 		vbox_main.pack_start (notebook, true, true, 0);
 
         //schedule tab ---------------------------------------------
@@ -117,27 +115,12 @@ public class SettingsWindow : Gtk.Dialog{
 
 		//automatic snapshots ------------------------------
 
-        //hbox_auto_snapshots
-        hbox_auto_snapshots = new Box (Gtk.Orientation.HORIZONTAL, 6);
-        vbox_schedule.add (hbox_auto_snapshots);
+		//chk_schedule
+        chk_schedule = new Gtk.CheckButton.with_label(_("Create scheduled/automatic snapshots"));
+        chk_schedule.active = App.is_scheduled;
+        vbox_schedule.pack_start(chk_schedule,false,false,0);
 
-        //lbl_header_schedule
-		lbl_header_schedule = new Gtk.Label("<b>" + _("Scheduled Snapshots") + "</b>");
-		lbl_header_schedule.set_use_markup(true);
-		lbl_header_schedule.hexpand = true;
-		lbl_header_schedule.xalign = (float) 0.0;
-		lbl_header_schedule.valign = Align.CENTER;
-		hbox_auto_snapshots.add(lbl_header_schedule);
-
-		Box hbox_schedule = new Box(Orientation.HORIZONTAL,0);
-        hbox_auto_snapshots.add(hbox_schedule);
-
-		//switch_schedule
-        switch_schedule = new Gtk.Switch();
-        switch_schedule.active = App.is_scheduled;
-        hbox_auto_snapshots.pack_end(switch_schedule,false,false,0);
-
-        switch_schedule.notify["active"].connect(switch_schedule_changed);
+        chk_schedule.notify["active"].connect(chk_schedule_changed);
 
 		//tv_schedule -----------------------------------------------
 
@@ -234,7 +217,7 @@ public class SettingsWindow : Gtk.Dialog{
 		col_remove_units.set_cell_data_func (cell_remove_units, cell_remove_units_render);
 		tv_remove.append_column(col_remove_units);
 
-		tv_schedule.sensitive = switch_schedule.active;
+		tv_schedule.sensitive = chk_schedule.active;
 
         //Exclude tab ---------------------------------------------
 
@@ -422,6 +405,10 @@ public class SettingsWindow : Gtk.Dialog{
 
 		// Actions ----------------------------------------------
 
+		var vbox_action = get_action_area();
+		vbox_action.margin = 12;
+		vbox_action.margin_top = 0;
+		
         //btn_save
         btn_save = (Button) add_button ("gtk-save", Gtk.ResponseType.ACCEPT);
         btn_save.clicked.connect (btn_save_clicked);
@@ -491,7 +478,7 @@ public class SettingsWindow : Gtk.Dialog{
 			}
 		}
 
-		switch_schedule.active = atleast_one_enabled;
+		chk_schedule.active = atleast_one_enabled;
 	}
 
 	private void cell_remove_limit_edited (string path, string new_text) {
@@ -545,27 +532,27 @@ public class SettingsWindow : Gtk.Dialog{
 		model.append(out iter);
 		model.set (iter, 0, App.schedule_monthly);
 		model.set (iter, 1, _("Monthly"));
-		model.set (iter, 2, _("Keep one snapshot per month"));
+		model.set (iter, 2, _("Create one snapshot every month"));
 
 		model.append(out iter);
 		model.set (iter, 0, App.schedule_weekly);
 		model.set (iter, 1, _("Weekly"));
-		model.set (iter, 2, _("Keep one snapshot per week"));
+		model.set (iter, 2, _("Create one snapshot every week"));
 
 		model.append(out iter);
 		model.set (iter, 0, App.schedule_daily);
 		model.set (iter, 1, _("Daily"));
-		model.set (iter, 2, _("Keep one snapshot per day"));
+		model.set (iter, 2, _("Create one snapshot every day"));
 
 		model.append(out iter);
 		model.set (iter, 0, App.schedule_hourly);
 		model.set (iter, 1, _("Hourly"));
-		model.set (iter, 2, _("Keep one snapshot per hour"));
+		model.set (iter, 2, _("Create one snapshot every hour"));
 
 		model.append(out iter);
 		model.set (iter, 0, App.schedule_boot);
 		model.set (iter, 1, _("Boot"));
-		model.set (iter, 2, _("Keep one snapshot per reboot"));
+		model.set (iter, 2, _("Create one snapshot every boot"));
 
 		tv_schedule.set_model (model);
 		tv_schedule.columns_autosize ();
@@ -576,7 +563,7 @@ public class SettingsWindow : Gtk.Dialog{
 		var model = new Gtk.ListStore(3, typeof(string), typeof(int), typeof(string));
 
 		string span = "<span foreground=\"#2E2E2E\">";
-		if (switch_schedule.active){
+		if (chk_schedule.active){
 			span = "<span foreground=\"blue\">";
 		}
 		else{
@@ -663,10 +650,10 @@ public class SettingsWindow : Gtk.Dialog{
 	}
 
 
-	private void switch_schedule_changed(){
-		tv_schedule.sensitive = switch_schedule.active;
+	private void chk_schedule_changed(){
+		tv_schedule.sensitive = chk_schedule.active;
 
-		if (switch_schedule.active){
+		if (chk_schedule.active){
 
 			bool atleast_one_enabled = App.schedule_boot
 			|| App.schedule_hourly
@@ -921,7 +908,7 @@ public class SettingsWindow : Gtk.Dialog{
 		}
 
 		if (!App.live_system()){
-			App.is_scheduled = switch_schedule.active;
+			App.is_scheduled = chk_schedule.active;
 		}
 	}
 

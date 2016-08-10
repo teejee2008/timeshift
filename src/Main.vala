@@ -104,7 +104,7 @@ public class Main : GLib.Object{
 	public int startup_delay_interval_mins = 10;
 	public int retain_snapshots_max_days = 200;
 	public int minimum_free_disk_space_mb = 2048;
-	public long first_snapshot_size = 0;
+	public int64 first_snapshot_size = 0;
 
 	public string log_dir = "";
 	public string log_file = "";
@@ -3355,6 +3355,8 @@ public class Main : GLib.Object{
 		config.set_string_member("max_days", retain_snapshots_max_days.to_string());
 		config.set_string_member("min_space", minimum_free_disk_space_mb.to_string());
 
+		config.set_string_member("first_snapshot_size", first_snapshot_size.to_string());
+		
 		Json.Array arr = new Json.Array();
 		foreach(string path in exclude_list_user){
 			arr.add_string_element(path);
@@ -3454,6 +3456,8 @@ public class Main : GLib.Object{
 		this.retain_snapshots_max_days = json_get_int(config,"max_days",retain_snapshots_max_days);
 		this.minimum_free_disk_space_mb = json_get_int(config,"min_space",minimum_free_disk_space_mb);
 
+		this.first_snapshot_size = json_get_int64(config,"first_snapshot_size",first_snapshot_size);
+		
 		this.exclude_list_user.clear();
 		if (config.has_member ("exclude")){
 			foreach (Json.Node jnode in config.get_array_member ("exclude").get_elements()) {
@@ -3861,7 +3865,7 @@ public class Main : GLib.Object{
 						}
 					}
 					else {
-						long required_space = calculate_size_of_first_snapshot();
+						var required_space = calculate_size_of_first_snapshot();
 						message = _("First snapshot needs") + " %.1f GB".printf(required_space/1024.0);
 						if (snapshot_device.free_mb < required_space){
 							status_code = 2;
@@ -3908,7 +3912,7 @@ public class Main : GLib.Object{
 		return false;
 	}
 
-	public long calculate_size_of_first_snapshot(){
+	public int64 calculate_size_of_first_snapshot(){
 
 		if (this.first_snapshot_size > 0){
 			return this.first_snapshot_size;

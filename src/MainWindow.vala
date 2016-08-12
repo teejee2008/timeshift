@@ -64,6 +64,11 @@ class MainWindow : Gtk.Window{
 	private int tv_backups_sort_column_index = 0;
 	private bool tv_backups_sort_column_desc = true;
 
+	private Gtk.Box hbox_shield;
+	private Gtk.Image img_shield;
+	private Gtk.Label lbl_shield;
+	private Gtk.Label lbl_shield_subnote;
+	
 	//statusbar
 	private Gtk.Box hbox_statusbar;
 	private Gtk.Image img_status_spinner;
@@ -76,6 +81,7 @@ class MainWindow : Gtk.Window{
 	private Gtk.Label lbl_status_device;
 	private Gtk.Image img_status_device;
 	private Gtk.Image img_status_progress;
+	
 
 	//timers
 	private uint timer_status_message;
@@ -100,7 +106,7 @@ class MainWindow : Gtk.Window{
 
         init_ui_toolbar();
 
-		init_ui_backup_device();
+		//init_ui_backup_device();
 
         init_ui_snapshot_list();
 
@@ -113,7 +119,7 @@ class MainWindow : Gtk.Window{
 			btn_settings.sensitive = false;
 		}
 
-		refresh_cmb_backup_device();
+		//refresh_cmb_backup_device();
 		timer_backup_device_init = Timeout.add(100, init_backup_device);
     }
 
@@ -171,10 +177,11 @@ class MainWindow : Gtk.Window{
         btn_settings.clicked.connect (btn_settings_clicked);
 
         //btn_wizard
-		var btn_wizard = new Gtk.ToolButton.from_stock ("gtk-preferences");
+		var btn_wizard = new Gtk.ToolButton.from_stock ("tools-wizard");
 		btn_wizard.is_important = true;
 		btn_wizard.label = _("Settings");
 		btn_wizard.set_tooltip_text (_("Settings"));
+		btn_wizard.icon_widget = get_shared_icon("tools-wizard","tools-wizard.svg",24);
         toolbar.add(btn_wizard);
 
         btn_wizard.clicked.connect (btn_wizard_clicked);
@@ -198,7 +205,7 @@ class MainWindow : Gtk.Window{
 		});
 	}
 
-	private void init_ui_backup_device(){
+	/*private void init_ui_backup_device(){
 		//hbox_device
 		hbox_device = new Box (Orientation.HORIZONTAL, 6);
         hbox_device.margin_top = 6;
@@ -230,7 +237,7 @@ class MainWindow : Gtk.Window{
         cmb_backup_device.pack_start( cell_backup_device, false );
         cmb_backup_device.set_cell_data_func (cell_backup_device, cell_backup_device_render);
 
-		cmb_backup_device.changed.connect(cmb_backup_device_changed);
+		//cmb_backup_device.changed.connect(cmb_backup_device_changed);
 
 		//btn_refresh_backup_device_list
 		btn_refresh_backup_device_list = new Gtk.Button.with_label (" " + _("Refresh") + " ");
@@ -238,7 +245,7 @@ class MainWindow : Gtk.Window{
 		btn_refresh_backup_device_list.set_tooltip_text(_("Refresh Devices"));
 		btn_refresh_backup_device_list.clicked.connect(()=>{
 			App.update_partition_list();
-			refresh_cmb_backup_device();
+			//refresh_cmb_backup_device();
 			refresh_tv_backups();
 		});
 		hbox_device.add(btn_refresh_backup_device_list);
@@ -252,7 +259,7 @@ class MainWindow : Gtk.Window{
 		lbl_backup_device_warning.margin_top = 6;
 		lbl_backup_device_warning.margin_bottom = 6;
 		vbox_main.add(lbl_backup_device_warning);
-	}
+	}*/
 	
 	private void init_ui_snapshot_list(){
         //tv_backups
@@ -397,12 +404,39 @@ class MainWindow : Gtk.Window{
 	}
 
 	private void init_ui_statusbar(){
-		//hbox_statusbar
-		hbox_statusbar = new Box (Orientation.HORIZONTAL, 6);
-        hbox_statusbar.margin_bottom = 6;
-        hbox_statusbar.margin_left = 6;
-        hbox_statusbar.margin_right = 12;
-        vbox_main.add (hbox_statusbar);
+
+		// hbox_shield
+		var box = new Box (Orientation.HORIZONTAL, 6);
+        box.margin_bottom = 6;
+        box.margin_left = 6;
+        box.margin_right = 12;
+        vbox_main.add (box);
+		hbox_shield = box;
+		
+        // img_shield
+		img_shield = new Gtk.Image();
+		img_shield.pixbuf = get_shared_icon("security-high", "security-high.svg", 48).pixbuf;
+        hbox_shield.add(img_shield);
+
+		var vbox = new Box (Orientation.VERTICAL, 6);
+        hbox_shield.add (vbox);
+        
+		//lbl_shield
+		lbl_shield = add_label(vbox, "");
+        lbl_shield.margin_bottom = 0;
+        lbl_shield.yalign = (float) 0.5;
+        lbl_shield.hexpand = true;
+
+        //lbl_shield_subnote
+		lbl_shield_subnote = add_label(vbox, "");
+
+		// progress
+		
+		box = new Box (Orientation.HORIZONTAL, 6);
+        box.margin_bottom = 6;
+        box.margin_left = 6;
+        box.margin_right = 12;
+        vbox_main.add (box);
 
 		//img_status_spinner
 		img_status_spinner = new Gtk.Image();
@@ -421,44 +455,46 @@ class MainWindow : Gtk.Window{
 		lbl_status.no_show_all = true;
 		hbox_statusbar.add(lbl_status);
 
+		/*
         //img_status_device
 		img_status_device = new Gtk.Image();
 		img_status_device.no_show_all = true;
-        hbox_statusbar.add(img_status_device);
+        //hbox_statusbar.add(img_status_device);
 
         //lbl_status_device
 		lbl_status_device = new Gtk.Label("");
 		lbl_status_device.set_use_markup(true);
 		lbl_status_device.no_show_all = true;
-		hbox_statusbar.add(lbl_status_device);
+		//hbox_statusbar.add(lbl_status_device);
 
         //img_status_scheduled
 		img_status_scheduled = new Gtk.Image();
 		img_status_scheduled.no_show_all = true;
-        hbox_statusbar.add(img_status_scheduled);
+        //hbox_statusbar.add(img_status_scheduled);
 
 		//lbl_status_scheduled
 		lbl_status_scheduled = new Gtk.Label("");
 		lbl_status_scheduled.set_use_markup(true);
 		lbl_status_scheduled.no_show_all = true;
-		hbox_statusbar.add(lbl_status_scheduled);
+		//hbox_statusbar.add(lbl_status_scheduled);
 
         //img_status_latest
 		img_status_latest = new Gtk.Image();
 		img_status_latest.no_show_all = true;
-        hbox_statusbar.add(img_status_latest);
+        //hbox_statusbar.add(img_status_latest);
 
         //lbl_status_latest
 		lbl_status_latest = new Gtk.Label("");
 		lbl_status_latest.set_use_markup(true);
 		lbl_status_latest.no_show_all = true;
-		hbox_statusbar.add(lbl_status_latest);
+		//hbox_statusbar.add(lbl_status_latest);
 
 		//lbl_status_separator
 		Label lbl_status_separator = new Gtk.Label("");
 		hbox_statusbar.hexpand = true;
 		hbox_statusbar.pack_start(lbl_status_separator,true,true,0);
-
+		*/
+		
 		//img_status_progress
 		img_status_progress = new Gtk.Image();
 		img_status_progress.file = App.share_folder + "/timeshift/images/progress.gif";
@@ -833,7 +869,7 @@ class MainWindow : Gtk.Window{
 		tv_backups.columns_autosize ();
 	}
 
-	private void refresh_cmb_backup_device(){
+	/*private void refresh_cmb_backup_device(){
 		var store = new Gtk.ListStore(2, typeof(Device), typeof(Gdk.Pixbuf));
 
 		TreeIter iter;
@@ -886,9 +922,9 @@ class MainWindow : Gtk.Window{
 		else {
 			cmb_backup_device.active = -1;
 		}
-	}
+	}*/
 
-	private void cmb_backup_device_changed(){
+	/*private void cmb_backup_device_changed(){
 		ComboBox combo = cmb_backup_device;
 		if (combo.model == null) { return; }
 
@@ -910,9 +946,9 @@ class MainWindow : Gtk.Window{
 		model.get(iter, 0, out pi);
 
 		change_backup_device(pi);
-	}
+	}*/
 
-	private void change_backup_device(Device pi){
+	/*private void change_backup_device(Device pi){
 		//return if device has not changed
 		if ((App.snapshot_device != null) && (pi.uuid == App.snapshot_device.uuid)){ return; }
 
@@ -933,7 +969,7 @@ class MainWindow : Gtk.Window{
 			refresh_cmb_backup_device();
 			return;
 		}
-	}
+	}*/
 
 	private void btn_backup_clicked(){
 
@@ -988,7 +1024,7 @@ class MainWindow : Gtk.Window{
 		//update UI -------------------
 
 		App.update_partition_list();
-		refresh_cmb_backup_device();
+		//refresh_cmb_backup_device();
 		refresh_tv_backups();
 		update_statusbar();
 
@@ -1085,7 +1121,7 @@ class MainWindow : Gtk.Window{
 		//update UI -------------------
 
 		App.update_partition_list();
-		refresh_cmb_backup_device();
+		//refresh_cmb_backup_device();
 		refresh_tv_backups();
 		update_statusbar();
 
@@ -1518,7 +1554,7 @@ class MainWindow : Gtk.Window{
 		}
 	}
 
-	private void update_statusbar(){
+	private void update_statusbar(){		
 		string img_dot_red = App.share_folder + "/timeshift/images/item-red.png";
 		string img_dot_green = App.share_folder + "/timeshift/images/item-green.png";
 
@@ -1597,10 +1633,12 @@ class MainWindow : Gtk.Window{
 
 		//status - last snapshot -----------
 
+		DateTime last_snapshot_date = null;
+		
 		if (status_code >= 0){
 			DateTime now = new DateTime.now_local();
 			TimeShiftBackup last_snapshot = App.get_latest_snapshot();
-			DateTime last_snapshot_date = (last_snapshot == null) ? null : last_snapshot.date;
+			last_snapshot_date = (last_snapshot == null) ? null : last_snapshot.date;
 
 			if (last_snapshot == null){
 				img_status_latest.file = img_dot_red;
@@ -1628,6 +1666,72 @@ class MainWindow : Gtk.Window{
 			img_status_latest.visible = false;
 			lbl_status_latest.visible = false;
 		}
+
+		if (App.live_system()){
+			hbox_shield.visible = false;
+		}
+		else{
+			hbox_shield.visible = true;
+			hbox_shield.show_all();
+			if (App.is_scheduled){
+				img_shield.pixbuf = get_shared_icon("", "security-high.svg", 48).pixbuf;
+				set_shield_label(_("System is protected"));
+				set_shield_subnote(_("Last snapshot was taken at: ") + last_snapshot_date.to_string());
+			}
+			else{
+				img_shield.pixbuf = get_shared_icon("", "security-low.svg", 48).pixbuf;
+				set_shield_label(_("System is not protected"));
+				set_shield_subnote(_("Scheduled snapshots are disabled!"));
+			}
+		}
 	}
 
+	// TODO: Move this to GtkHelper
+	private Gtk.Label add_label(
+		Gtk.Box box, string text, bool is_bold = false, bool is_italic = false, bool is_large = false){
+			
+		string msg = "<span%s%s%s>%s</span>".printf(
+			(is_bold ? " weight=\"bold\"" : ""),
+			(is_italic ? " style=\"italic\"" : ""),
+			(is_large ? " size=\"x-large\"" : ""),
+			text);
+			
+		var label = new Gtk.Label(msg);
+		label.set_use_markup(true);
+		label.xalign = (float) 0.0;
+		box.add(label);
+		return label;
+	}
+
+	private Gtk.Label add_label_header(
+		Gtk.Box box, string text, bool large_heading = false){
+		
+		var label = add_label(box, text, true, false, large_heading);
+		label.margin_bottom = 12;
+		return label;
+	}
+
+	private void set_shield_label(
+		string text, bool is_bold = true, bool is_italic = false, bool is_large = true){
+			
+		string msg = "<span%s%s%s>%s</span>".printf(
+			(is_bold ? " weight=\"bold\"" : ""),
+			(is_italic ? " style=\"italic\"" : ""),
+			(is_large ? " size=\"x-large\"" : ""),
+			text);
+			
+		lbl_shield.label = msg;
+	}
+
+	private void set_shield_subnote(
+		string text, bool is_bold = false, bool is_italic = true, bool is_large = false){
+			
+		string msg = "<span%s%s%s>%s</span>".printf(
+			(is_bold ? " weight=\"bold\"" : ""),
+			(is_italic ? " style=\"italic\"" : ""),
+			(is_large ? " size=\"x-large\"" : ""),
+			text);
+			
+		lbl_shield_subnote.label = msg;
+	}
 }

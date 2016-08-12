@@ -71,7 +71,9 @@ public class Main : GLib.Object{
 	public Device root_device;
 	public Device home_device;
 	public Device snapshot_device;
-
+	public bool use_snapshot_path = false;
+	public string snapshot_path = "";
+	
 	public string mount_point_backup = "";
 	public string mount_point_restore = "";
 	public string mount_point_app = "/mnt/timeshift";

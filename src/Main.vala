@@ -29,10 +29,9 @@ using Json;
 using TeeJee.Logging;
 using TeeJee.FileSystem;
 using TeeJee.Devices;
-using TeeJee.JSON;
-using TeeJee.ProcessManagement;
+using TeeJee.JsonHelper;
+using TeeJee.ProcessHelper;
 using TeeJee.GtkHelper;
-using TeeJee.Multimedia;
 using TeeJee.System;
 using TeeJee.Misc;
 
@@ -55,7 +54,7 @@ public class Main : GLib.Object{
 	public string app_conf_path = "";
 
 	public Gee.ArrayList<TimeShiftBackup?> snapshot_list;
-	public Gee.HashMap<string,Device> partition_map;
+	public Gee.ArrayList<Device> partitions;
 
 	public Gee.ArrayList<string> exclude_list_user;
 	public Gee.ArrayList<string> exclude_list_default;
@@ -78,7 +77,7 @@ public class Main : GLib.Object{
 	public string mount_point_restore = "";
 	public string mount_point_app = "/mnt/timeshift";
 
-	public DistInfo current_distro;
+	public LinuxDistro current_distro;
 	public bool mirror_system = false;
 
 	public bool _is_scheduled = false;
@@ -105,7 +104,7 @@ public class Main : GLib.Object{
 
 	public int startup_delay_interval_mins = 10;
 	public int retain_snapshots_max_days = 200;
-	public int minimum_free_disk_space_mb = 2048;
+	public int64 minimum_free_disk_space = 2 * GB;
 	public int64 first_snapshot_size = 0;
 
 	public string log_dir = "";
@@ -130,6 +129,12 @@ public class Main : GLib.Object{
 	public string progress_text = "";
 	public int snapshot_list_start_index = 0;
 
+	public const string TERM_COLOR_YELLOW = "\033[" + "1;33" + "m";
+	public const string TERM_COLOR_GREEN = "\033[" + "1;32" + "m";
+	public const string TERM_COLOR_RED = "\033[" + "1;31" + "m";
+	public const string TERM_COLOR_RESET = "\033[" + "0" + "m";
+
+	
 	//initialization
 
 	public static int main (string[] args) {
@@ -147,7 +152,7 @@ public class Main : GLib.Object{
 
 		//init TMP
 		LOG_ENABLE = false;
-		init_tmp();
+		init_tmp(AppShortName);
 		LOG_ENABLE = true;
 
 		/*
@@ -233,7 +238,7 @@ public class Main : GLib.Object{
 
 		//get Linux distribution info -----------------------
 
-		this.current_distro = DistInfo.get_dist_info("/");
+		this.current_distro = LinuxDistro.get_dist_info("/");
 		if ((app_mode == "")||(LOG_DEBUG)){
 			log_msg(_("Distribution") + ": " + current_distro.full_name(),true);
 		}
@@ -255,7 +260,7 @@ public class Main : GLib.Object{
 		lock_file = lock_dir + "/lock";
 		if (!create_lock()){
 			if (app_mode == ""){
-				string txt = read_file(lock_file);
+				string txt = file_read(lock_file);
 				//string pid = txt.split(";")[0].strip();
 				string mode = txt.split(";")[1].strip();
 
@@ -317,7 +322,7 @@ public class Main : GLib.Object{
 		exclude_list_home = new Gee.ArrayList<string>();
 		exclude_list_restore = new Gee.ArrayList<string>();
 		exclude_list_apps = new Gee.ArrayList<AppExcludeEntry>();
-		partition_map = new Gee.HashMap<string,Device>();
+		partitions = new Gee.ArrayList<Device>();
 		mount_list = new Gee.ArrayList<MountEntry>();
 
 		add_default_exclude_entries();
@@ -325,7 +330,7 @@ public class Main : GLib.Object{
 
 		//initialize app --------------------
 
-		update_partition_list();
+		update_partitions();
 		detect_system_devices();
 
 		//finish initialization --------------
@@ -429,7 +434,7 @@ public class Main : GLib.Object{
 
 	public bool check_btrfs_root_layout(){
 		//check if root device is a BTRFS volume
-		if ((root_device != null) && (root_device.type == "btrfs")){
+		if ((root_device != null) && (root_device.fstype == "btrfs")){
 			//check subvolume layout
 			if (check_btrfs_volume(root_device) == false){
 				string msg = _("The system partition has an unsupported subvolume layout.") + " ";
@@ -527,7 +532,7 @@ public class Main : GLib.Object{
 		string std_out;
 		string std_err;
 		int ret_val;
-		ret_val = execute_command_script_sync(cmd, out std_out, out std_err);
+		ret_val = exec_script_sync(cmd, out std_out, out std_err);
 
 		if ((std_out == null) || (std_out.length == 0)){
 			user_name = "root";
@@ -624,7 +629,7 @@ public class Main : GLib.Object{
 			file = File.new_for_path (lock_file);
 			if (file.query_exists()) {
 
-				string txt = read_file(lock_file);
+				string txt = file_read(lock_file);
 				string process_id = txt.split(";")[0].strip();
 				//string mode = txt.split(";")[1].strip();
 				long pid = long.parse(process_id);
@@ -638,12 +643,12 @@ public class Main : GLib.Object{
 						log_msg(_("Warning: Deleted invalid lock"));
 					}
 					file.delete();
-					write_file(lock_file, current_pid);
+					file_write(lock_file, current_pid);
 					return true;
 				}
 			}
 			else{
-				write_file(lock_file, current_pid + ";" + app_mode);
+				file_write(lock_file, current_pid + ";" + app_mode);
 				return true;
 			}
 		}
@@ -887,7 +892,7 @@ public class Main : GLib.Object{
 
 	public void list_devices(){
 		int count = 0;
-		foreach(Device pi in partition_list) {
+		foreach(Device pi in partitions) {
 			if (!pi.has_linux_filesystem()) { continue; }
 			count++;
 		}
@@ -906,7 +911,7 @@ public class Main : GLib.Object{
 		grid[row, ++col] = _("Label");
 		row++;
 
-		foreach(Device pi in partition_list) {
+		foreach(Device pi in partitions) {
 			if (!pi.has_linux_filesystem()) { continue; }
 
 			col = -1;
@@ -914,8 +919,8 @@ public class Main : GLib.Object{
 			grid[row, ++col] = ">";
 			grid[row, ++col] = "%s".printf(pi.full_name_with_alias);
 			//grid[row, ++col] = "%s".printf(pi.uuid);
-			grid[row, ++col] = "%s".printf((pi.size_mb > 0) ? "%s GB".printf(pi.size) : "?? GB");
-			grid[row, ++col] = "%s".printf(pi.type);
+			grid[row, ++col] = "%s".printf((pi.size_bytes > 0) ? "%s GB".printf(pi.size) : "?? GB");
+			grid[row, ++col] = "%s".printf(pi.fstype);
 			grid[row, ++col] = "%s".printf(pi.label);
 			row++;
 		}
@@ -956,8 +961,7 @@ public class Main : GLib.Object{
 		}
 
 		//add partitions
-		var list = partition_list;
-		foreach(Device pi in list) {
+		foreach(Device pi in partitions) {
 			if (!pi.has_linux_filesystem()) { continue; }
 			if (pi.device.has_prefix("/dev/dm-")) { continue; }
 			grub_device_list.add(pi);
@@ -987,8 +991,8 @@ public class Main : GLib.Object{
 				desc = "%s".printf(((pi.vendor.length > 0)||(pi.model.length > 0)) ? (pi.vendor + " " + pi.model  + " [MBR]") : "");
 			}
 			else{
-				desc = "%5s, ".printf(pi.type);
-				desc += "%10s".printf((pi.size_mb > 0) ? "%s GB".printf(pi.size) : "?? GB");
+				desc = "%5s, ".printf(pi.fstype);
+				desc += "%10s".printf((pi.size_bytes > 0) ? "%s GB".printf(pi.size) : "?? GB");
 				desc += "%s".printf((pi.label.length > 0) ? ", " + pi.label : "");
 			}
 			grid[row, ++col] = "%s".printf(desc);
@@ -1633,7 +1637,7 @@ public class Main : GLib.Object{
 
 					f = File.new_for_path(ctl_path);
 					if(f.query_exists()){
-						string snapshot_path = read_file(ctl_path);
+						string snapshot_path = file_read(ctl_path);
 
 						foreach(TimeShiftBackup bak in snapshot_list){
 							if (bak.path == snapshot_path){
@@ -1748,7 +1752,7 @@ public class Main : GLib.Object{
 				long seconds = (long)(elapsed * 1.0 / TimeSpan.SECOND);
 				msg = _("Snapshot saved successfully") + " (%lds)".printf(seconds);
 				log_msg(msg);
-				notify_send("TimeShift",msg,10000,"low");
+				OSDNotify.notify_send("TimeShift",msg,10000,"low");
 
 				log_msg(_("Snapshot") + " '%s' ".printf(new_name) + _("tagged") + " '%s'".printf(tag));
 
@@ -1788,9 +1792,9 @@ public class Main : GLib.Object{
 		int ret_val = -1;
 
 		try{
-			if (cmd_verbose){ log_empty_line(); }
+			if (cmd_verbose){ log_msg(""); }
 			Process.spawn_command_line_sync(thr_arg1, null, null, out ret_val);
-			if (cmd_verbose){ log_empty_line(); }
+			if (cmd_verbose){ log_msg(""); }
 		}
 		catch(Error e){
 			log_error (e.message);
@@ -1887,17 +1891,17 @@ public class Main : GLib.Object{
 
 		//delete older backups - minimum space -------
 
-		update_partition_list();
+		update_partitions();
 
 		show_msg = true;
 		count = 0;
-		while ((snapshot_device.size_mb - snapshot_device.used_mb) < minimum_free_disk_space_mb){
+		while ((snapshot_device.size_bytes - snapshot_device.used_bytes) < minimum_free_disk_space){
 			list = get_snapshot_list();
 			if (list.size > 0){
 				if (!list[0].has_tag("ondemand")){
 
 					if (show_msg){
-						log_msg(_("Free space is less than") + " %d GB".printf(minimum_free_disk_space_mb));
+						log_msg(_("Free space is less than") + " %lld GB".printf(minimum_free_disk_space / GB));
 						log_msg(_("Removing older backups to free disk space"));
 						show_msg = false;
 					}
@@ -1905,7 +1909,7 @@ public class Main : GLib.Object{
 					delete_snapshot(list[0]);
 				}
 			}
-			update_partition_list(); //TODO: update snapshot_device only
+			update_partitions(); //TODO: update snapshot_device only
 		}
 	}
 
@@ -2046,7 +2050,7 @@ public class Main : GLib.Object{
 				file_text += path + "\n";
 			}
 
-			write_file(list_file,file_text);
+			file_write(list_file,file_text);
 		}
 		catch (Error e) {
 	        log_error (e.message);
@@ -2090,7 +2094,7 @@ public class Main : GLib.Object{
 	public void get_backup_device_from_cmd(bool prompt_if_empty, Gtk.Window? parent_win){
 		if (cmd_backup_device.length > 0){
 			//set backup device from command line argument
-			Device cmd_dev = get_device_from_name(partition_list, cmd_backup_device);
+			Device cmd_dev = get_device_from_name(partitions, cmd_backup_device);
 			if (cmd_dev != null){
 				snapshot_device = cmd_dev;
 				if (!mount_backup_device(parent_win)){
@@ -2121,7 +2125,7 @@ public class Main : GLib.Object{
 					if (attempts > 3) { break; }
 					stdout.printf(TERM_COLOR_YELLOW + _("Enter device name or number (a=Abort)") + ": " + TERM_COLOR_RESET);
 					stdout.flush();
-					snapshot_device = read_stdin_device(partition_list);
+					snapshot_device = read_stdin_device(partitions);
 				}
 
 				log_msg("");
@@ -2238,7 +2242,7 @@ public class Main : GLib.Object{
 
 				//check command line arguments
 				found = false;
-				foreach(Device pi in partition_list) {
+				foreach(Device pi in partitions) {
 					if (!pi.has_linux_filesystem()) { continue; }
 					if ((pi.device == cmd_target_device)||((pi.uuid == cmd_target_device))){
 						restore_target = pi;
@@ -2279,7 +2283,7 @@ public class Main : GLib.Object{
 					if (attempts > 3) { break; }
 					stdout.printf(TERM_COLOR_YELLOW + _("Enter device name or number (a=Abort)") + ": " + TERM_COLOR_RESET);
 					stdout.flush();
-					restore_target = read_stdin_device(partition_list);
+					restore_target = read_stdin_device(partitions);
 				}
 				log_msg("");
 
@@ -2344,7 +2348,7 @@ public class Main : GLib.Object{
 						stdout.printf(TERM_COLOR_YELLOW + _("[a = Abort, d = Default (%s), r = Root device]").printf(default_device) + "\n\n" + TERM_COLOR_RESET);
 						stdout.printf(TERM_COLOR_YELLOW + _("Enter device name or number") + ": " + TERM_COLOR_RESET);
 						stdout.flush();
-						dev = read_stdin_device_mounts(partition_list, mnt);
+						dev = read_stdin_device_mounts(partitions, mnt);
 					}
 					log_msg("");
 
@@ -2555,12 +2559,10 @@ public class Main : GLib.Object{
 					Device mnt_dev = null;
 					if (mnt.device.down().has_prefix("uuid=")){
 						string uuid = mnt.device.down()["uuid=".length:mnt.device.length];
-						if (partition_map.has_key(uuid)){
-							mnt_dev = partition_map[uuid];
-						}
+						mnt_dev = Device.find_device_in_list(partitions, "", uuid);
 					}
 					else{
-						foreach(Device dev in partition_list){
+						foreach(Device dev in partitions){
 							if (dev.device == mnt.device){
 								mnt_dev = dev;
 								break;
@@ -2596,7 +2598,7 @@ public class Main : GLib.Object{
 
 			//check if unlocked
 			foreach(string name in name_list){
-				if (device_exists("/dev/mapper/%s".printf(name))){
+				if (file_exists("/dev/mapper/%s".printf(name))){
 					//already unlocked
 					log_msg(_("Unlocked device is mapped to '%s'").printf(name));
 					log_msg("");
@@ -2627,13 +2629,13 @@ public class Main : GLib.Object{
 					return ""; //return
 			}
 
-			update_partition_list();
+			update_partitions();
 			return mapped_name;
 		}
 		else{
 			//check if unlocked
 			foreach(string name in name_list){
-				if (device_exists("/dev/mapper/%s".printf(name))){
+				if (file_exists("/dev/mapper/%s".printf(name))){
 					//already unlocked
 					//gtk_messagebox(_("Encrypted Device"),_("Unlocked device is mapped to '%s'.").printf(name), parent_win);
 					return name;
@@ -2643,7 +2645,8 @@ public class Main : GLib.Object{
 			//prompt user to unlock
 			string passphrase = gtk_inputbox(_("Encrypted Device"), _("Enter passphrase to unlock '%s'").printf(dev.name), parent_win, true);
 			string cmd = "echo '%s' | cryptsetup luksOpen '%s' '%s'".printf(passphrase, dev.device, mapped_name);
-			int retval = execute_script_sync(cmd, false);
+			string std_out, std_err;
+			int retval = exec_script_sync(cmd, out std_out, out std_err);
 			log_debug("cryptsetup:" + retval.to_string());
 
 			switch(retval){
@@ -2661,13 +2664,13 @@ public class Main : GLib.Object{
 					return ""; //return
 			}
 
-			update_partition_list();
+			update_partitions();
 			return mapped_name;
 		}
 	}
 
 	public Device? unlock_and_find_device(Device enc_dev, Gtk.Window? parent_win){
-		if (enc_dev.type == "luks"){
+		if (enc_dev.fstype == "luks"){
 			string mapped_name = unlock_encrypted_device(enc_dev, parent_win);
 			string mapped_device = "/dev/mapper/%s".printf(mapped_name);
 			if (mapped_name.length == 0) { return null; }
@@ -2675,7 +2678,7 @@ public class Main : GLib.Object{
 
 			//find unlocked device
 			if (mapped_name.length > 0){
-				foreach(Device dev in partition_list){
+				foreach(Device dev in partitions){
 					foreach(string sym in dev.symlinks){
 						if (sym == mapped_device){
 							return dev;
@@ -2724,7 +2727,7 @@ public class Main : GLib.Object{
 			else{
 				source_path = "/tmp/timeshift";
 				if (!dir_exists(source_path)){
-					create_dir(source_path);
+					dir_create(source_path);
 				}
 			}
 
@@ -2841,7 +2844,7 @@ public class Main : GLib.Object{
 					f.delete(); //delete existing file
 				}
 
-				write_file(control_file_path, snapshot_to_restore.path); //save snapshot name
+				file_write(control_file_path, snapshot_to_restore.path); //save snapshot name
 			}
 
 			//run the script --------------------
@@ -2856,7 +2859,7 @@ public class Main : GLib.Object{
 			if (app_mode == ""){ //gui
 				if (restore_current_system){
 					//current system, gui, fullscreen
-					temp_script = create_temp_bash_script(sh);
+					temp_script = save_bash_script_temp(sh);
 
 					//restore or clone
 					var dlg = new TerminalWindow.with_parent(null);
@@ -2866,23 +2869,23 @@ public class Main : GLib.Object{
 				else{
 					//other system, gui
 					string std_out, std_err;
-					ret_val = execute_script_sync_get_output(sh, out std_out, out std_err);
-					log_msg_to_file(std_out);
-					log_msg_to_file(std_err);
+					ret_val = exec_script_sync(sh, out std_out, out std_err);
+					log_to_file(std_out);
+					log_to_file(std_err);
 				}
 			}
 			else{ //console
 				if (cmd_verbose){
 					//current/other system, console, verbose
-					ret_val = execute_script_sync(sh, false);
-					log_empty_line();
+					ret_val = exec_script_sync(sh);
+					log_msg("");
 				}
 				else{
 					//current/other system, console, quiet
 					string std_out, std_err;
-					ret_val = execute_script_sync_get_output(sh, out std_out, out std_err);
-					log_msg_to_file(std_out);
-					log_msg_to_file(std_err);
+					ret_val = exec_script_sync(sh, out std_out, out std_err);
+					log_to_file(std_out);
+					log_to_file(std_err);
 				}
 			}
 
@@ -2912,10 +2915,10 @@ public class Main : GLib.Object{
 							found = true;
 							//update fstab entry
 							fstab_entry.device = "UUID=%s".printf(mount_entry.device.uuid);
-							fstab_entry.type = mount_entry.device.type;
+							fstab_entry.type = mount_entry.device.fstype;
 
 							//fix mount options for / and /home
-							if (restore_target.type != "btrfs"){
+							if (restore_target.fstype != "btrfs"){
 								if ((fstab_entry.mount_point == "/") && fstab_entry.options.contains("subvol=@")){
 									fstab_entry.options = fstab_entry.options.replace("subvol=@","").strip();
 									if (fstab_entry.options.has_suffix(",")){
@@ -2937,7 +2940,7 @@ public class Main : GLib.Object{
 						FsTabEntry fstab_entry = new FsTabEntry();
 						fstab_entry.device = "UUID=%s".printf(mount_entry.device.uuid);
 						fstab_entry.mount_point = mount_entry.mount_point;
-						fstab_entry.type = mount_entry.device.type;
+						fstab_entry.type = mount_entry.device.fstype;
 						fstab_list.add(fstab_entry);
 					}
 				}
@@ -2980,7 +2983,7 @@ public class Main : GLib.Object{
 				if (file_exists(fstab_path)){
 					file_delete(fstab_path);
 				}
-				write_file(fstab_path, text);
+				file_write(fstab_path, text);
 
 				log_msg(_("Updated /etc/fstab on target device") + ": %s".printf(fstab_path));
 
@@ -2994,7 +2997,7 @@ public class Main : GLib.Object{
 
 					if (!dir_exists(mount_path)){
 						log_msg("Created mount point on target device: %s".printf(fstab_entry.mount_point));
-						create_dir(mount_path);
+						dir_create(mount_path);
 					}
 				}
 			}
@@ -3056,7 +3059,7 @@ public class Main : GLib.Object{
 				//add user entries from snapshot exclude list
 				string list_file = file_path + "/exclude.list";
 				if (file_exists(list_file)){
-					foreach(string path in read_file(list_file).split("\n")){
+					foreach(string path in file_read(list_file).split("\n")){
 						if (!exclude_list_restore.contains(path) && !exclude_list_home.contains(path)){
 							exclude_list_restore.add(path);
 						}
@@ -3100,7 +3103,7 @@ public class Main : GLib.Object{
 				file_text += path + "\n";
 			}
 
-			write_file(list_file_restore,file_text);
+			file_write(list_file_restore,file_text);
 		}
 		catch (Error e) {
 	        log_error (e.message);
@@ -3355,7 +3358,7 @@ public class Main : GLib.Object{
 		config.set_string_member("count_boot", count_boot.to_string());
 
 		config.set_string_member("max_days", retain_snapshots_max_days.to_string());
-		config.set_string_member("min_space", minimum_free_disk_space_mb.to_string());
+		config.set_string_member("min_space", (minimum_free_disk_space / (1.0 * GB)).to_string());
 
 		config.set_string_member("first_snapshot_size", first_snapshot_size.to_string());
 		
@@ -3398,7 +3401,7 @@ public class Main : GLib.Object{
 
         string uuid = json_get_string(config,"backup_device_uuid","");
 
-        foreach(Device pi in partition_list){
+        foreach(Device pi in partitions){
 			if (pi.uuid == uuid){
 				snapshot_device = pi;
 				break;
@@ -3406,7 +3409,7 @@ public class Main : GLib.Object{
 		}
 
 		if (cmd_backup_device.length > 0){
-			Device cmd_dev = get_device_from_name(partition_list, cmd_backup_device);
+			Device cmd_dev = get_device_from_name(partitions, cmd_backup_device);
 			if (cmd_dev != null){
 				snapshot_device = cmd_dev;
 			}
@@ -3433,7 +3436,7 @@ public class Main : GLib.Object{
 		if (snapshot_device != null){
 			if ((app_mode == "") || (cmd_backup_device.length == 0)){
 				if (mount_backup_device(null)){
-					update_partition_list();
+					update_partitions();
 				}
 				else{
 					snapshot_device = null;
@@ -3456,8 +3459,9 @@ public class Main : GLib.Object{
 		this.count_boot = json_get_int(config,"count_boot",count_boot);
 
 		this.retain_snapshots_max_days = json_get_int(config,"max_days",retain_snapshots_max_days);
-		this.minimum_free_disk_space_mb = json_get_int(config,"min_space",minimum_free_disk_space_mb);
-
+		this.minimum_free_disk_space = json_get_int64(config,"min_space",minimum_free_disk_space);
+		this.minimum_free_disk_space = this.minimum_free_disk_space * GB;
+		
 		this.first_snapshot_size = json_get_int64(config,"first_snapshot_size",first_snapshot_size);
 		
 		this.exclude_list_user.clear();
@@ -3518,36 +3522,20 @@ public class Main : GLib.Object{
 		return true;
 	}
 
-	public Gee.ArrayList<Device> partition_list {
-		owned get{
-			var list = new Gee.ArrayList<Device>();
-			foreach(Device pi in partition_map.values) {
-				list.add(pi);
-			}
-			list.sort((a,b) => {
-				Device p1 = (Device) a;
-				Device p2 = (Device) b;
-				return strcmp(pad_numbers_in_string(p1.device),pad_numbers_in_string(p2.device));
-			});
-			return list;
-		}
-	}
+	public void update_partitions(){
+		partitions.clear();
+		partitions = Device.get_filesystems();
 
-	
-	public void update_partition_list(){
-		partition_map.clear();
-		partition_map = Device.get_filesystems();
-
-		foreach(Device pi in partition_map.values){
+		foreach(Device pi in partitions){
 			//root_device and home_device will be detected by detect_system_devices()
 			if ((snapshot_device != null) && (pi.uuid == snapshot_device.uuid)){
 				snapshot_device = pi;
 			}
 			if (pi.is_mounted){
-				pi.dist_info = DistInfo.get_dist_info(pi.mount_points[0]).full_name();
+				pi.dist_info = LinuxDistro.get_dist_info(pi.mount_points[0]).full_name();
 			}
 		}
-		if (partition_map.size == 0){
+		if (partitions.size == 0){
 			log_error("ts: " + _("Failed to get partition list."));
 		}
 
@@ -3572,7 +3560,7 @@ public class Main : GLib.Object{
 	}
 
 	public void detect_system_devices(){
-		foreach(Device pi in partition_list){
+		foreach(Device pi in partitions){
 			if (pi.mount_points.contains("/")){
 				root_device = pi;
 				if ((app_mode == "")||(LOG_DEBUG)){
@@ -3627,15 +3615,15 @@ public class Main : GLib.Object{
 				return false;
 			}
 
-			if (snapshot_device.type == "btrfs"){
+			if (snapshot_device.fstype == "btrfs"){
 				//unmount
 				unmount_backup_device();
 
 				//mount
 				mount_point_backup = mount_point_app + "/backup";
-				check_and_create_dir_with_parents(mount_point_backup);
+				dir_create(mount_point_backup);
 
-				if (mount(snapshot_device.uuid, mount_point_backup, "")){
+				if (Device.mount(snapshot_device.uuid, mount_point_backup, "")){
 					if ((app_mode == "")||(LOG_DEBUG)){
 						log_msg(_("Backup path changed to '%s/timeshift'").printf((mount_point_backup == "/") ? "" : mount_point_backup));
 					}
@@ -3647,7 +3635,8 @@ public class Main : GLib.Object{
 				}
 			}
 			else{
-				string backup_device_mount_point = get_device_mount_point(snapshot_device.uuid);
+				var mps = Device.get_device_mount_points(snapshot_device.uuid);
+				string backup_device_mount_point = mps[0];
 				if ((mount_point_backup.length == 0) || (backup_device_mount_point != mount_point_backup)){
 					//unmount
 					unmount_backup_device(false);
@@ -3657,14 +3646,14 @@ public class Main : GLib.Object{
 					 * */
 
 					//automount
-					mount_point_backup = automount(snapshot_device.uuid,"", mount_point_app);
+					mount_point_backup = Device.automount(snapshot_device.uuid,"", mount_point_app);
 					if (mount_point_backup.length > 0){
 						if ((app_mode == "")||(LOG_DEBUG)){
 							log_msg(_("Backup path changed to '%s/timeshift'").printf((mount_point_backup == "/") ? "" : mount_point_backup));
 						}
 					}
 					else{
-						update_partition_list();
+						update_partitions();
 					}
 				}
 
@@ -3688,10 +3677,10 @@ public class Main : GLib.Object{
 
 			//check and create restore mount point for restore
 			mount_point_restore = mount_point_app + "/restore";
-			check_and_create_dir_with_parents(mount_point_restore);
+			dir_create(mount_point_restore);
 
 			//unlock encrypted device
-			if (restore_target.type == "luks"){
+			if (restore_target.fstype == "luks"){
 				restore_target = unlock_and_find_device(restore_target, parent_win);
 
 				//exit if not found
@@ -3710,7 +3699,7 @@ public class Main : GLib.Object{
 			}
 
 			//mount root device
-			if (restore_target.type == "btrfs"){
+			if (restore_target.fstype == "btrfs"){
 
 				//check subvolume layout
 				if (!check_btrfs_volume(restore_target) && snapshot_to_restore.has_subvolumes()){
@@ -3729,19 +3718,19 @@ public class Main : GLib.Object{
 				}
 
 				//mount @
-				if (!mount(restore_target.uuid, mount_point_restore, "subvol=@")){
+				if (!Device.mount(restore_target.uuid, mount_point_restore, "subvol=@")){
 					log_error(_("Failed to mount BTRFS subvolume") + ": @");
 					return false;
 				}
 
 				//mount @home
-				if (!mount(restore_target.uuid, mount_point_restore + "/home", "subvol=@home")){
+				if (!Device.mount(restore_target.uuid, mount_point_restore + "/home", "subvol=@home")){
 					log_error(_("Failed to mount BTRFS subvolume") + ": @home");
 					return false;
 				}
 			}
 			else{
-				if (!mount(restore_target.uuid, mount_point_restore, "")){
+				if (!Device.mount(restore_target.uuid, mount_point_restore, "")){
 					return false;
 				}
 			}
@@ -3751,7 +3740,7 @@ public class Main : GLib.Object{
 				if (mnt.mount_point != "/"){
 
 					//unlock encrypted device
-					if (mnt.device.type == "luks"){
+					if (mnt.device.fstype == "luks"){
 						mnt.device = unlock_and_find_device(mnt.device, parent_win);
 
 						//exit if not found
@@ -3760,7 +3749,7 @@ public class Main : GLib.Object{
 						}
 					}
 
-					if (!mount(mnt.device.uuid, mount_point_restore + mnt.mount_point)){
+					if (!Device.mount(mnt.device.uuid, mount_point_restore + mnt.mount_point)){
 						return false;
 					}
 				}
@@ -3776,7 +3765,7 @@ public class Main : GLib.Object{
 		//unmount the backup device only if it was mounted by application
 		if (mount_point_backup.has_prefix(mount_point_app)){
 			if (unmount_device(mount_point_backup, false)){
-				if (dir_exists(mount_point_backup) && (get_file_count(mount_point_backup) == 0)){
+				if (dir_exists(mount_point_backup) && (dir_count(mount_point_backup) == 0)){
 					file_delete(mount_point_backup);
 					log_debug(_("Removed mount directory: '%s'").printf(mount_point_backup));
 				}
@@ -3803,7 +3792,7 @@ public class Main : GLib.Object{
 	}
 
 	public bool unmount_device(string mount_point, bool exit_on_error = true){
-		bool is_unmounted = unmount(mount_point);
+		bool is_unmounted = Device.unmount(mount_point);
 		if (!is_unmounted){
 			if (exit_on_error){
 				if (app_mode == ""){
@@ -3828,10 +3817,15 @@ public class Main : GLib.Object{
 		 3 - first snapshot not taken, disk space sufficient
 		*/
 
+		log_debug("Checking backup device:");
+		log_debug("Minimum free space: %s".printf(format_file_size(minimum_free_disk_space)));
+
 		int status_code = 0;
 
 		//free space message
 		if ((snapshot_device != null) && (snapshot_device.free.length > 0)){
+			log_debug("Available space: %s".printf(
+				format_file_size(snapshot_device.available_bytes)));
 			message = "%s ".printf(snapshot_device.free) + _("free");
 			message = message.strip();
 		}
@@ -3852,13 +3846,13 @@ public class Main : GLib.Object{
 				status_code = -1;
 			}
 			else{
-				if (snapshot_device.size_mb == 0){
+				if (snapshot_device.size_bytes == 0){
 					message = _("Backup device not available");
 					status_code = -1;
 				}
 				else{
 					if (snapshot_list.size > 0){
-						if (snapshot_device.free_mb < minimum_free_disk_space_mb){
+						if (snapshot_device.free_bytes < minimum_free_disk_space){
 							message = _("Backup device does not have enough space!");
 							status_code = 1;
 						}
@@ -3868,8 +3862,8 @@ public class Main : GLib.Object{
 					}
 					else {
 						var required_space = calculate_size_of_first_snapshot();
-						message = _("First snapshot needs") + " %.1f GB".printf(required_space/1024.0);
-						if (snapshot_device.free_mb < required_space){
+						message = _("First snapshot needs") + " %.1f GB".printf((required_space * 1.0) / GB);
+						if (snapshot_device.free_bytes < required_space){
 							status_code = 2;
 						}
 						else{
@@ -3887,15 +3881,15 @@ public class Main : GLib.Object{
 
 	public bool check_btrfs_volume(Device dev){
 		string mnt_btrfs = mount_point_app + "/btrfs";
-		check_and_create_dir_with_parents(mnt_btrfs);
+		dir_create(mnt_btrfs);
 
-		unmount(mnt_btrfs);
-		mount(dev.uuid, mnt_btrfs);
+		Device.unmount(mnt_btrfs);
+		Device.mount(dev.uuid, mnt_btrfs);
 
 		bool is_supported = dir_exists(mnt_btrfs + "/@") && dir_exists(mnt_btrfs + "/@home");
 
-		if (unmount(mnt_btrfs)){
-			if (dir_exists(mnt_btrfs) && (get_file_count(mnt_btrfs) == 0)){
+		if (Device.unmount(mnt_btrfs)){
+			if (dir_exists(mnt_btrfs) && (dir_count(mnt_btrfs) == 0)){
 				file_delete(mnt_btrfs);
 				log_debug(_("Removed mount directory: '%s'").printf(mnt_btrfs));
 			}
@@ -3907,7 +3901,7 @@ public class Main : GLib.Object{
 	public bool backup_device_online(){
 		if (snapshot_device != null){
 			mount_backup_device(null);
-			if (Device.get_mount_points(snapshot_device.uuid).size > 0){
+			if (Device.get_device_mount_points(snapshot_device.uuid).size > 0){
 				return true;
 			}
 		}
@@ -3948,7 +3942,7 @@ public class Main : GLib.Object{
 		string std_out;
 		string std_err;
 		int ret_val;
-		long required_space = 0;
+		int64 required_space = 0;
 
 		try{
 
@@ -3969,7 +3963,7 @@ public class Main : GLib.Object{
 			string dir_empty = path_combine(TEMP_DIR, "empty");
 			f = File.new_for_path(dir_empty);
 			if (!f.query_exists()){
-				create_dir(dir_empty);
+				dir_create(dir_empty);
 			}
 
 			save_exclude_list(TEMP_DIR);
@@ -3977,11 +3971,11 @@ public class Main : GLib.Object{
 			cmd  = "LC_ALL=C ; rsync -ai --delete --numeric-ids --relative --stats --dry-run --delete-excluded --exclude-from='%s' /. '%s' &> '%s'".printf(file_exclude_list, dir_empty, file_log);
 
 			log_debug(cmd);
-			ret_val = execute_command_script_sync(cmd, out std_out, out std_err);
+			ret_val = exec_script_sync(cmd, out std_out, out std_err);
 
 			if (file_exists(file_log)){
 				cmd = "cat '%s' | awk '/Total file size/ {print $4}'".printf(file_log);
-				ret_val = execute_command_script_sync(cmd, out std_out, out std_err);
+				ret_val = exec_script_sync(cmd, out std_out, out std_err);
 				if (ret_val == 0){
 					required_space = long.parse(std_out.replace(",","").strip());
 					required_space = required_space / (1024 * 1024);
@@ -4006,12 +4000,12 @@ public class Main : GLib.Object{
 		}
 
 		if ((required_space == 0) && (root_device != null)){
-			required_space = root_device.used_mb;
+			required_space = root_device.used_bytes;
 		}
 
 		this.first_snapshot_size = required_space;
 
-		log_debug("First snapshot size: %ld MB".printf(required_space));
+		log_debug("First snapshot size: %lld MB".printf(required_space / (1.0 * MB)));
 
 		thr_running = false;
 	}
@@ -4150,6 +4144,125 @@ public class Main : GLib.Object{
 		}
 	}
 
+	public bool crontab_remove(string line){
+		string cmd = "";
+		string std_out;
+		string std_err;
+		int ret_val;
+
+		cmd = "crontab -l | sed '/%s/d' | crontab -".printf(line);
+		ret_val = exec_script_sync(cmd, out std_out, out std_err);
+
+		if (ret_val != 0){
+			log_error(std_err);
+			return false;
+		}
+		else{
+			return true;
+		}
+	}
+
+	public bool crontab_add(string entry){
+		string cmd = "";
+		string std_out;
+		string std_err;
+		int ret_val;
+
+		try{
+			string crontab = crontab_read_all();
+			crontab += crontab.has_suffix("\n") ? "" : "\n";
+			crontab += entry + "\n";
+
+			//remove empty lines
+			crontab = crontab.replace("\n\n","\n"); //remove empty lines in middle
+			crontab = crontab.has_prefix("\n") ? crontab[1:crontab.length] : crontab; //remove empty lines in beginning
+
+			string temp_file = get_temp_file_path();
+			file_write(temp_file, crontab);
+
+			cmd = "crontab \"%s\"".printf(temp_file);
+			Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
+
+			if (ret_val != 0){
+				log_error(std_err);
+				return false;
+			}
+			else{
+				return true;
+			}
+		}
+		catch(Error e){
+			log_error (e.message);
+			return false;
+		}
+	}
+
+	public string crontab_read_all(){
+		string cmd = "";
+		string std_out;
+		string std_err;
+		int ret_val;
+
+		try {
+			cmd = "crontab -l";
+			Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
+			if (ret_val != 0){
+				log_debug(_("Crontab is empty"));
+				return "";
+			}
+			else{
+				return std_out;
+			}
+		}
+		catch (Error e){
+			log_error (e.message);
+			return "";
+		}
+	}
+
+	public string crontab_read_entry(string search_string, bool use_regex_matching = false){
+		string cmd = "";
+		string std_out;
+		string std_err;
+		int ret_val;
+
+		try{
+			Regex rex = null;
+			MatchInfo match;
+			if (use_regex_matching){
+				rex = new Regex(search_string);
+			}
+
+			cmd = "crontab -l";
+			Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
+			if (ret_val != 0){
+				log_debug(_("Crontab is empty"));
+			}
+			else{
+				foreach(string line in std_out.split("\n")){
+					if (use_regex_matching && (rex != null)){
+						if (rex.match (line, 0, out match)){
+							return line.strip();
+						}
+					}
+					else {
+						if (line.contains(search_string)){
+							return line.strip();
+						}
+					}
+				}
+			}
+
+			return "";
+		}
+		catch(Error e){
+			log_error (e.message);
+			return "";
+		}
+	}
+
+	// TODO: Use the new CronTab class
+
 	//cleanup
 
 	public void clean_logs(){
@@ -4214,8 +4327,9 @@ public class Main : GLib.Object{
 
 	public bool is_rsync_running(){
 		string cmd = "rsync -ai --delete --numeric-ids --relative --delete-excluded";
-		string txt = execute_command_sync_get_output ("ps w -C rsync");
-		foreach(string line in txt.split("\n")){
+		string std_out, std_err;
+		exec_sync("ps w -C rsync", out std_out, out std_err);
+		foreach(string line in std_out.split("\n")){
 			if (line.index_of(cmd) != -1){
 				return true;
 			}
@@ -4225,9 +4339,11 @@ public class Main : GLib.Object{
 
 	public void kill_rsync(){
 		string cmd = "rsync -ai --delete --numeric-ids --relative --delete-excluded";
-		string txt = execute_command_sync_get_output ("ps w -C rsync");
+
+		string std_out, std_err;
+		exec_sync ("ps w -C rsync", out std_out, out std_err);
 		string pid = "";
-		foreach(string line in txt.split("\n")){
+		foreach(string line in std_out.split("\n")){
 			if (line.index_of(cmd) != -1){
 				pid = line.strip().split(" ")[0];
 				Posix.kill ((Pid) int.parse(pid), 15);
@@ -4365,7 +4481,7 @@ public class TimeShiftBackup : GLib.Object{
 
 		var f = File.new_for_path(list_file);
 		if (f.query_exists()) {
-			foreach(string path in read_file(list_file).split("\n")){
+			foreach(string path in file_read(list_file).split("\n")){
 				path = path.strip();
 				if (!exclude_list.contains(path) && path.length > 0){
 					exclude_list.add(path);

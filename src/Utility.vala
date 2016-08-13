@@ -26,8 +26,8 @@ using Json;
 using TeeJee.Logging;
 using TeeJee.FileSystem;
 using TeeJee.Devices;
-using TeeJee.JSON;
-using TeeJee.ProcessManagement;
+using TeeJee.JsonHelper;
+using TeeJee.ProcessHelper;
 using TeeJee.GtkHelper;
 using TeeJee.Multimedia;
 using TeeJee.System;
@@ -187,7 +187,7 @@ namespace TeeJee.FileSystem{
 
 	using TeeJee.Logging;
 	using TeeJee.FileSystem;
-	using TeeJee.ProcessManagement;
+	using TeeJee.ProcessHelper;
 	using TeeJee.Misc;
 
 	public void file_delete(string filePath){
@@ -304,7 +304,7 @@ namespace TeeJee.FileSystem{
 		}
 	}
 
-	public string? read_file (string file_path){
+	public string? file_read (string file_path){
 
 		/* Reads text from file */
 
@@ -322,7 +322,7 @@ namespace TeeJee.FileSystem{
 	    return null;
 	}
 
-	public bool write_file (string file_path, string contents){
+	public bool file_write (string file_path, string contents){
 
 		/* Write text to file */
 
@@ -341,7 +341,7 @@ namespace TeeJee.FileSystem{
 	    }
 	}
 
-	public long get_file_count(string path){
+	public long dir_count(string path){
 
 		/* Return total count of files and directories */
 
@@ -429,7 +429,7 @@ namespace TeeJee.Devices{
 
 	using TeeJee.Logging;
 	using TeeJee.FileSystem;
-	using TeeJee.ProcessManagement;
+	using TeeJee.ProcessHelper;
 
 	public class Device : GLib.Object{
 
@@ -900,7 +900,7 @@ namespace TeeJee.Devices{
 
 			//read -----------
 
-			mtab_lines = read_file(mtab_path);
+			mtab_lines = file_read(mtab_path);
 
 			/*
 			sample mtab
@@ -1115,96 +1115,8 @@ namespace TeeJee.Devices{
 
 	}
 
-	public class FsTabEntry : GLib.Object{
-		public bool is_comment = false;
-		public bool is_empty_line = false;
-		public string device = "";
-		public string mount_point = "";
-		public string type = "";
-		public string options = "defaults";
-		public string dump = "0";
-		public string pass = "0";
-		public string line = "";
-
-		public static Gee.ArrayList<FsTabEntry> read_fstab_file(string fstab_file_path){
-			Gee.ArrayList<FsTabEntry> list = new Gee.ArrayList<FsTabEntry>();
-
-			if (!file_exists(fstab_file_path)){ return list; }
-
-			string text = read_file(fstab_file_path);
-			string[] lines = text.split("\n");
-			foreach(string line in lines){
-				FsTabEntry entry = new FsTabEntry();
-				list.add(entry);
-
-				entry.is_comment = line.strip().has_prefix("#");
-				entry.is_empty_line = (line.strip().length == 0);
-
-				if (entry.is_comment){
-					entry.line = line;
-				}
-				else if (entry.is_empty_line){
-					entry.line = "";
-				}
-				else{
-					entry.line = line;
-
-					string[] parts = line.replace("\t"," ").split(" ");
-					int part_num = -1;
-					foreach(string part in parts){
-						if (part.strip().length == 0) { continue; }
-						switch (++part_num){
-							case 0:
-								entry.device = part.strip();
-								break;
-							case 1:
-								entry.mount_point = part.strip();
-								break;
-							case 2:
-								entry.type = part.strip();
-								break;
-							case 3:
-								entry.options = part.strip();
-								break;
-							case 4:
-								entry.dump = part.strip();
-								break;
-							case 5:
-								entry.pass = part.strip();
-								break;
-						}
-					}
-				}
-			}
-
-			return list;
-		}
-
-		public static string create_fstab_file(FsTabEntry[] fstab_entries, bool keep_comments_and_empty_lines = true){
-			string text = "";
-			foreach(FsTabEntry entry in fstab_entries){
-				if (entry.is_comment || entry.is_empty_line){
-					if (keep_comments_and_empty_lines){
-						text += "%s\n".printf(entry.line);
-					}
-				}
-				else {
-					text += "%s\t%s\t%s\t%s\t%s\t%s\n".printf(entry.device, entry.mount_point, entry.type, entry.options, entry.dump, entry.pass);
-				}
-			}
-			return text;
-		}
-	}
-
-	public class MountEntry : GLib.Object{
-		public Device device = null;
-		public string mount_point = "";
-
-		public MountEntry(Device device, string mount_point){
-			this.device = device;
-			this.mount_point = mount_point;
-		}
-	}
+	
+	
 
 	public bool mount(string device_or_uuid, string mount_point, string mount_options = ""){
 
@@ -1462,17 +1374,17 @@ namespace TeeJee.Devices{
 
 				f = File.new_for_path(path + "/device/vendor");
 				if (f.query_exists()){
-					vendor = read_file(path + "/device/vendor");
+					vendor = file_read(path + "/device/vendor");
 				}
 
 				f = File.new_for_path(path + "/device/model");
 				if (f.query_exists()){
-					model = read_file(path + "/device/model");
+					model = file_read(path + "/device/model");
 				}
 
 				f = File.new_for_path(path + "/removable");
 				if (f.query_exists()){
-					removable = read_file(path + "/removable");
+					removable = file_read(path + "/removable");
 				}
 
 				if ((vendor.length > 0) || (model.length > 0)){
@@ -1492,7 +1404,7 @@ namespace TeeJee.Devices{
 
 }
 
-namespace TeeJee.JSON{
+namespace TeeJee.JsonHelper{
 
 	using TeeJee.Logging;
 
@@ -1540,7 +1452,7 @@ namespace TeeJee.JSON{
 
 }
 
-namespace TeeJee.ProcessManagement{
+namespace TeeJee.ProcessHelper{
 	using TeeJee.Logging;
 	using TeeJee.FileSystem;
 	using TeeJee.Misc;
@@ -1553,13 +1465,13 @@ namespace TeeJee.ProcessManagement{
 		string std_out, std_err;
 
 		TEMP_DIR = Environment.get_tmp_dir() + "/" + AppShortName;
-		create_dir(TEMP_DIR);
+		dir_create(TEMP_DIR);
 
 		execute_command_script_sync("echo 'ok'",out std_out,out std_err);
 		if ((std_out == null)||(std_out.strip() != "ok")){
 			TEMP_DIR = Environment.get_home_dir() + "/.temp/" + AppShortName;
 			execute_command_sync("rm -rf '%s'".printf(TEMP_DIR));
-			create_dir(TEMP_DIR);
+			dir_create(TEMP_DIR);
 		}
 	}
 
@@ -1635,7 +1547,7 @@ namespace TeeJee.ProcessManagement{
 
 		string script_path = get_temp_file_path() + ".sh";
 
-		if (write_file (script_path, sh)){  // create file
+		if (file_write (script_path, sh)){  // create file
 			chmod (script_path, "u+x");      // set execute permission
 			return script_path;
 		}
@@ -2448,7 +2360,7 @@ namespace TeeJee.Multimedia{
 
 namespace TeeJee.System{
 
-	using TeeJee.ProcessManagement;
+	using TeeJee.ProcessHelper;
 	using TeeJee.Logging;
 
 	public double get_system_uptime_seconds(){
@@ -2731,123 +2643,7 @@ namespace TeeJee.System{
 		}
 	}
 
-	public bool crontab_remove(string line){
-		string cmd = "";
-		string std_out;
-		string std_err;
-		int ret_val;
-
-		cmd = "crontab -l | sed '/%s/d' | crontab -".printf(line);
-		ret_val = execute_command_script_sync(cmd, out std_out, out std_err);
-
-		if (ret_val != 0){
-			log_error(std_err);
-			return false;
-		}
-		else{
-			return true;
-		}
-	}
-
-	public bool crontab_add(string entry){
-		string cmd = "";
-		string std_out;
-		string std_err;
-		int ret_val;
-
-		try{
-			string crontab = crontab_read_all();
-			crontab += crontab.has_suffix("\n") ? "" : "\n";
-			crontab += entry + "\n";
-
-			//remove empty lines
-			crontab = crontab.replace("\n\n","\n"); //remove empty lines in middle
-			crontab = crontab.has_prefix("\n") ? crontab[1:crontab.length] : crontab; //remove empty lines in beginning
-
-			string temp_file = get_temp_file_path();
-			write_file(temp_file, crontab);
-
-			cmd = "crontab \"%s\"".printf(temp_file);
-			Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-
-			if (ret_val != 0){
-				log_error(std_err);
-				return false;
-			}
-			else{
-				return true;
-			}
-		}
-		catch(Error e){
-			log_error (e.message);
-			return false;
-		}
-	}
-
-	public string crontab_read_all(){
-		string cmd = "";
-		string std_out;
-		string std_err;
-		int ret_val;
-
-		try {
-			cmd = "crontab -l";
-			Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-			if (ret_val != 0){
-				log_debug(_("Crontab is empty"));
-				return "";
-			}
-			else{
-				return std_out;
-			}
-		}
-		catch (Error e){
-			log_error (e.message);
-			return "";
-		}
-	}
-
-	public string crontab_read_entry(string search_string, bool use_regex_matching = false){
-		string cmd = "";
-		string std_out;
-		string std_err;
-		int ret_val;
-
-		try{
-			Regex rex = null;
-			MatchInfo match;
-			if (use_regex_matching){
-				rex = new Regex(search_string);
-			}
-
-			cmd = "crontab -l";
-			Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-			if (ret_val != 0){
-				log_debug(_("Crontab is empty"));
-			}
-			else{
-				foreach(string line in std_out.split("\n")){
-					if (use_regex_matching && (rex != null)){
-						if (rex.match (line, 0, out match)){
-							return line.strip();
-						}
-					}
-					else {
-						if (line.contains(search_string)){
-							return line.strip();
-						}
-					}
-				}
-			}
-
-			return "";
-		}
-		catch(Error e){
-			log_error (e.message);
-			return "";
-		}
-	}
-
+	
 	public void sleep(int milliseconds){
 		Thread.usleep ((ulong) milliseconds * 1000);
 	}
@@ -2860,7 +2656,7 @@ namespace TeeJee.Misc {
 	using Gtk;
 	using TeeJee.Logging;
 	using TeeJee.FileSystem;
-	using TeeJee.ProcessManagement;
+	using TeeJee.ProcessHelper;
 
 	public class DistInfo : GLib.Object{
 
@@ -2909,7 +2705,7 @@ namespace TeeJee.Misc {
 					DISTRIB_DESCRIPTION="Ubuntu 13.04"
 				*/
 
-				foreach(string line in read_file(dist_file).split("\n")){
+				foreach(string line in file_read(dist_file).split("\n")){
 
 					if (line.split("=").length != 2){ continue; }
 
@@ -2958,7 +2754,7 @@ namespace TeeJee.Misc {
 						BUG_REPORT_URL="http://bugs.launchpad.net/ubuntu/"
 					*/
 
-					foreach(string line in read_file(dist_file).split("\n")){
+					foreach(string line in file_read(dist_file).split("\n")){
 
 						if (line.split("=").length != 2){ continue; }
 
@@ -3147,43 +2943,4 @@ namespace TeeJee.Misc {
 	}
 
 	
-	private string pad_numbers_in_string(string input, int max_length = 3, char pad_char = '0'){
-		string sequence = "";
-		string output = "";
-		bool seq_started = false;
-
-		unichar c;
-		string character;
-		for (int i = 0; input.get_next_char(ref i, out c);) {
-			character = c.to_string();
-
-			if (c.isdigit()){
-				sequence += character;
-				seq_started = true;
-			}
-			else{
-				if (seq_started){
-					if ((max_length - sequence.length) > 0){
-						sequence = string.nfill(max_length - sequence.length, pad_char) + sequence;
-					}
-					output += sequence;
-					sequence = "";
-					seq_started = false;
-				}
-
-				output += character;
-			}
-		}
-
-		//append remaining characters in sequence
-		if (sequence.length > 0){
-			if ((max_length - sequence.length) > 0){
-				sequence = string.nfill(max_length - sequence.length, pad_char) + sequence;
-			}
-			output += sequence;
-			sequence = "";
-		}
-					
-		return output;
 	}
-}

@@ -38,7 +38,6 @@ class WizardWindow : Gtk.Window{
 	private Gtk.Box vbox_main;
 	private Notebook notebook;
 	private Gtk.TreeView tv_devices;
-	private string selected_path = "";
 	private Gtk.RadioButton radio_device;
 	private Gtk.RadioButton radio_path;
 	private Gtk.Entry entry_backup_path;
@@ -47,6 +46,12 @@ class WizardWindow : Gtk.Window{
 	private Gtk.InfoBar infobar_path;
 	private Gtk.Label lbl_infobar_path;
 
+	private Gtk.Spinner spinner;
+	private Gtk.Label lbl_msg;
+	private Gtk.Label lbl_status;
+	private ProgressBar progressbar;
+	private Gtk.Button btn_cancel_snapshot;
+	
 	private uint tmr_init;
 	
 	public WizardWindow () {
@@ -58,18 +63,19 @@ class WizardWindow : Gtk.Window{
 		this.icon = get_app_icon(16);
 
 	    // vbox_main
-        var box = new Box (Orientation.VERTICAL, 0);
-        box.margin = 0;
+        var box = new Box (Orientation.VERTICAL, 6);
+        box.margin = 0; // keep 0 as we will hide tabs in Wizard view
         add(box);
 		vbox_main = box;
         
 		notebook = add_notebook(box, false, false);
 		notebook.margin = 6;
 		
-		box = add_tab(notebook, _("Backup Device"));
-		create_tab_backup_device(box);
+		create_tab_backup_device();
 
-		create_actions(box);
+		create_tab_first_snapshot();
+
+		create_actions();
 
 		show_all();
 
@@ -105,8 +111,10 @@ class WizardWindow : Gtk.Window{
 
 		return false;
 	}
-    
-	private void create_tab_backup_device(Gtk.Box box){
+
+	private void create_tab_backup_device(){
+
+		var box = add_tab(notebook, _("Backup Device"));
 		
 		add_label_header(box, _("Select Snapshot Location"), true);
 
@@ -128,9 +136,11 @@ class WizardWindow : Gtk.Window{
 				if (App.snapshot_device != null){
 					select_backup_device(App.snapshot_device);
 				}
-				
-				check_backup_device(App.snapshot_device);
+
+				App.use_snapshot_path = false;
 			}
+			
+			check_backup_location();
 		});
 		
 		create_device_list(box);
@@ -156,8 +166,8 @@ class WizardWindow : Gtk.Window{
 			infobar_path.visible = radio_path.active;
 			if (radio_path.active){
 				entry_backup_path.text = App.snapshot_path;
-				check_backup_path(App.snapshot_path);
 			}
+			check_backup_location();
 		});
 
 		create_infobar_path(box);
@@ -166,14 +176,46 @@ class WizardWindow : Gtk.Window{
 		entry_backup_path.set_tooltip_text(msg);
 	}
 
-	private void create_actions(Gtk.Box box){
+	private void create_tab_first_snapshot(){
+
+		var box = add_tab(notebook, _("Progress"));
+		
+		add_label_header(box, _("Creating Snapshot..."), true);
+
+		var hbox_status = new Box (Orientation.HORIZONTAL, 6);
+		box.add (hbox_status);
+		
+		spinner = new Gtk.Spinner();
+		spinner.active = true;
+		hbox_status.add(spinner);
+		
+		//lbl_msg
+		lbl_msg = add_label(box, "");
+		lbl_msg.halign = Align.START;
+		lbl_msg.ellipsize = Pango.EllipsizeMode.END;
+		lbl_msg.max_width_chars = 40;
+
+		//progressbar
+		progressbar = new Gtk.ProgressBar();
+		//progressbar.pulse_step = 0.1;
+		box.pack_start (progressbar, false, true, 0);
+
+		//lbl_status
+		lbl_status = add_label(box, "");
+		lbl_status.halign = Align.START;
+		lbl_status.ellipsize = Pango.EllipsizeMode.END;
+		lbl_status.max_width_chars = 40;
+	}
+
+	private void create_actions(){
 		var hbox = new Gtk.ButtonBox (Gtk.Orientation.HORIZONTAL);
 		hbox.set_layout (Gtk.ButtonBoxStyle.EXPAND);
 		hbox.margin = 0;
 		hbox.margin_top = 24;
 		hbox.margin_left = 24;
 		hbox.margin_right = 24;
-        box.add(hbox);
+		hbox.margin_bottom = 12;
+        vbox_main.add(hbox);
 
 		Gtk.SizeGroup size_group = null;
 		
@@ -183,7 +225,7 @@ class WizardWindow : Gtk.Window{
 		var button = add_button(hbox, _("Previous"), "", ref size_group, img);
 
         button.clicked.connect(()=>{
-			notebook.prev_page();
+			go_prev();
 		});
 
 		// next
@@ -192,7 +234,7 @@ class WizardWindow : Gtk.Window{
 		button = add_button(hbox, _("Next"), "", ref size_group, img);
 
         button.clicked.connect(()=>{
-			notebook.next_page();
+			go_next();
 		});
 
 		// cancel
@@ -258,11 +300,25 @@ class WizardWindow : Gtk.Window{
 		// size
 		
 		col = add_column_text(tv_devices, _("Size"), out cell_text);
-
+		cell_text.xalign = (float) 1.0;
+		
 		col.set_cell_data_func(cell_text, (cell_layout, cell, model, iter)=>{
 			Device dev;
 			model.get (iter, 0, out dev, -1);
-			(cell as Gtk.CellRendererText).text = (dev.size_bytes > 0) ? "%s".printf(dev.size) : "";
+			(cell as Gtk.CellRendererText).text =
+				(dev.size_bytes > 0) ? format_file_size(dev.size_bytes) : "";
+		});
+
+		// free
+		
+		col = add_column_text(tv_devices, _("Free"), out cell_text);
+		cell_text.xalign = (float) 1.0;
+		
+		col.set_cell_data_func(cell_text, (cell_layout, cell, model, iter)=>{
+			Device dev;
+			model.get (iter, 0, out dev, -1);
+			(cell as Gtk.CellRendererText).text =
+				(dev.free_bytes > 0) ? format_file_size(dev.free_bytes) : "";
 		});
 		
 		// label
@@ -334,12 +390,12 @@ class WizardWindow : Gtk.Window{
 		if (App.mount_backup_device(this)){
 			App.update_partitions();
 		}
-		else{
-			App.snapshot_device = previous_device;
-			select_backup_device(previous_device);
-		}
 
-		check_backup_device(App.snapshot_device);
+		//if (App.snapshot_device != null){
+		//	log_msg("Snapshot device: %s".printf(App.snapshot_device.description()));
+		//}
+
+		check_backup_location();
 
 		gtk_set_busy(false, this);
 	}
@@ -370,64 +426,71 @@ class WizardWindow : Gtk.Window{
 		}
 	}
 
-	private void check_backup_device(Device pi){
-		string message;
-		int status_code = App.check_backup_device(out message);
+	private bool check_backup_location(){
+		bool ok = true;
+		string message, details;
+		int status_code = App.check_backup_location(out message, out details);
 		
-		/*
-		-1 - device un-available
-		 0 - first snapshot taken, disk space sufficient
-		 1 - first snapshot taken, disk space not sufficient
-		 2 - first snapshot not taken, disk space not sufficient
-		 3 - first snapshot not taken, disk space sufficient
-		*/
-		
-		switch(status_code){
-			case 1:
-			case 2:
-				var msg = _("Backup device does not have enough space!");
-				lbl_infobar_device.label = "<span weight=\"bold\">%s</span>".printf(msg);
+		switch (status_code){
+			case SnapshotLocationStatus.NOT_AVAILABLE:
+			case SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE:
+			case SnapshotLocationStatus.NO_SNAPSHOTS_NO_SPACE:
+				lbl_infobar_device.label = "<span weight=\"bold\">%s</span>".printf(message);
 				infobar_device.message_type = Gtk.MessageType.ERROR;
 				infobar_device.no_show_all = false;
 				infobar_device.show_all();
+				ok = false;
+				break;
+
+			case SnapshotLocationStatus.READ_ONLY_FS:
+			case SnapshotLocationStatus.HARDLINKS_NOT_SUPPORTED:
+				lbl_infobar_path.label = "<span weight=\"bold\">%s</span>".printf(message);
+				infobar_path.message_type = Gtk.MessageType.ERROR;
+				infobar_path.no_show_all = false;
+				infobar_path.show_all();
+				ok = false;
 				break;
 
 			case 3:
 			case 0:
 				infobar_device.hide();
-				break;
-
-			case -1:
-				var msg = _("Device is not available!");
-				lbl_infobar_device.label = "<span weight=\"bold\">%s</span>".printf(msg);
-				infobar_device.message_type = Gtk.MessageType.ERROR;
-				infobar_device.no_show_all = false;
-				infobar_device.show_all();
+				infobar_path.hide();
 				break;
 		}
+
+		return ok;
 	}
 
-	private void check_backup_path(string path){
-		var msg = _("File system at selected path must support hard-links");
+	/*private bool check_backup_path(string path){
+		bool ok = true;
+		bool is_readonly;
+		bool hardlink_supported = filesystem_supports_hardlinks(path, out is_readonly);
 		
-		lbl_infobar_path.label = "<span weight=\"bold\">%s</span>".printf(msg);
-		infobar_path.message_type = Gtk.MessageType.INFO;
-		infobar_path.no_show_all = false;
-		infobar_path.show_all();
+		if (is_readonly){
+			var msg = _("File system at selected path is read-only!") + "\n";
+			msg += _("Please select another path.");
+			lbl_infobar_path.label = "<span weight=\"bold\">%s</span>".printf(msg);
+			infobar_path.message_type = Gtk.MessageType.ERROR;
+			infobar_path.no_show_all = false;
+			infobar_path.show_all();
+			ok = false;
+		}
+		else if (!hardlink_supported){
+			var msg = _("File system at selected path does not support hard-links!") + "\n";
+			msg += _("Please select another path.");
+			lbl_infobar_path.label = "<span weight=\"bold\">%s</span>".printf(msg);
+			infobar_path.message_type = Gtk.MessageType.ERROR;
+			infobar_path.no_show_all = false;
+			infobar_path.show_all();
+			ok = false;
+		}
+		else{
+			infobar_path.hide();
+		}
 
-		infobar_path.hide();
-	}
+		return ok;
+	}*/
 
-	//public bool check_hardlink_support(string path){
-		//string test_file = path_combine(path, get_ran );
-		//file_write(, "");
-		//re
-	//}
-
-	//public bool check_write_support(){
-
-	//}
-	
 	private void tv_devices_refresh(){
 		App.update_partitions();
 
@@ -468,12 +531,34 @@ class WizardWindow : Gtk.Window{
 		}
 	}
 
+	private void take_first_snapshot(){
+		App.take_snapshot(true,"",this);
+	}
+
+	private void go_prev(){
+		notebook.prev_page();
+	}
+	
+	private void go_next(){
+		if (notebook.page == 0){
+			if (check_backup_location()){
+				notebook.next_page();
+			}
+			else{
+				gtk_messagebox(
+					"Snapshot location not selected",
+					"Please select a valid device or path",
+					this, true);
+			}
+		}
+	}
+	
 	// utility ------------------
 	
 	private Gtk.Notebook add_notebook(Gtk.Box box, bool show_tabs = true, bool show_border = true){
         // notebook
 		var book = new Gtk.Notebook();
-		book.margin = 12;
+		book.margin = 6;
 		book.show_tabs = show_tabs;
 		book.show_border = show_border;
 		
@@ -656,7 +741,13 @@ class WizardWindow : Gtk.Window{
 
 			if (chooser.run() == Gtk.ResponseType.ACCEPT) {
 				entry.text = chooser.get_filename();
-				check_backup_path(entry.text);
+
+				App.use_snapshot_path = true;
+				App.snapshot_path = entry.text;
+				
+				if (!check_backup_location()){
+					App.use_snapshot_path = false;
+				}
 			}
 
 			chooser.destroy();

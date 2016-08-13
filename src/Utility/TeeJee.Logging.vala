@@ -31,7 +31,7 @@ namespace TeeJee.Logging{
 	public DataOutputStream dos_log;
 	public string err_log;
 	public bool LOG_ENABLE = true;
-	public bool LOG_TIMESTAMP = true;
+	public bool LOG_TIMESTAMP = false;
 	public bool LOG_COLORS = true;
 	public bool LOG_DEBUG = false;
 	public bool LOG_COMMANDS = false;

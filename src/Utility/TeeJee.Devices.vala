@@ -832,7 +832,7 @@ namespace TeeJee.Devices{
 			}
 
 			if (dev_device != resolved){
-				log_msg("resolved '%s' to '%s'".printf(dev_device, resolved));
+				//log_msg("resolved '%s' to '%s'".printf(dev_device, resolved));
 			}
 
 			return resolved;

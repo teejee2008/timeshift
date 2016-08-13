@@ -134,12 +134,15 @@ public class Main : GLib.Object{
 	public const string TERM_COLOR_RED = "\033[" + "1;31" + "m";
 	public const string TERM_COLOR_RESET = "\033[" + "0" + "m";
 
+	public RsyncTask task;
 	
 	//initialization
 
 	public static int main (string[] args) {
 		set_locale();
 
+		LOG_TIMESTAMP = false;
+		
 		//show help and exit
 		if (args.length > 1) {
 			switch (args[1].down()) {
@@ -168,8 +171,6 @@ public class Main : GLib.Object{
 		}
 		exit(0);
 		*/
-
-		LOG_TIMESTAMP = true;
 
 		App = new Main(args);
 
@@ -337,6 +338,15 @@ public class Main : GLib.Object{
 
 		load_app_config();
 		update_snapshot_list();
+
+		task = create_new_rsync_task();
+	}
+
+	public RsyncTask create_new_rsync_task(){
+		var working_dir = path_combine(TEMP_DIR, random_string());
+		dir_create(working_dir);
+		var task_log = path_combine(working_dir, "rsynctask.log");
+		return new RsyncTask(working_dir, task_log);
 	}
 
 	public bool start_application(string[] args){
@@ -1306,50 +1316,52 @@ public class Main : GLib.Object{
 	//backup
 
 	public bool take_snapshot (bool is_ondemand, string snapshot_comments, Gtk.Window? parent_win){
-		if (check_btrfs_root_layout() == false){
-			return false;
-		}
-
 		bool status;
 		bool update_symlinks = false;
 
 		try
 		{
-			//create a timestamp
+			if (App.check_btrfs_root_layout() == false){
+				return false;
+			}
+		
+			// create a timestamp
 			DateTime now = new DateTime.now_local();
 
-			//mount_backup_device
+			// mount_backup_device
 			if (!mount_backup_device(parent_win)){
 				return false;
 			}
 
 			//check backup device
-			string msg;
-			int status_code = check_backup_device(out msg);
+			string message, details;
+			int status_code = check_backup_location(out message, out details);
 
 			if (!is_ondemand){
-				//check if first snapshot was taken
+				// check if first snapshot was taken
 				if (status_code == 2){
-					log_error(_("First snapshot not taken"));
-					log_error(_("Please take the first snapshot by running 'sudo timeshift --backup-now'"));
+					log_error(message);
+					log_error(
+						_("Please take the first snapshot by running 'sudo timeshift --backup-now'"));
 					return false;
 				}
 			}
 
-			//check space
-			if ((status_code == 1) || (status_code == 2)){
+			// check space
+			if ((status_code != 0) || (status_code != 3)){
 				is_scheduled = false;
-				log_error(_("Backup device does not have enough space!") + " " + msg);
+				log_error(message);
+				log_error(details);
 				return false;
 			}
 
-			//create snapshot root if missing
+			// create snapshot root if missing
 			var f = File.new_for_path(snapshot_dir);
 			if (!f.query_exists()){
 				f.make_directory_with_parents();
 			}
 
-			//ondemand
+			// ondemand
 			if (is_ondemand){
 				bool ok = backup_and_rotate ("ondemand",now);
 				if(!ok){
@@ -1619,7 +1631,7 @@ public class Main : GLib.Object{
 				DateTime dt_begin = new DateTime.now_local();
 				//log_msg("Taking system snapshot...");
 
-				string list_file = sync_path + "/exclude.list";
+				string exclude_from_file = sync_path + "/exclude.list";
 
 				f = File.new_for_path(sync_path);
 				if (!f.query_exists()){
@@ -1705,20 +1717,27 @@ public class Main : GLib.Object{
 				progress_text = _("Synching files...");
 				log_msg(progress_text);
 
-				var log_path = sync_path + "/rsync-log";
-				f = File.new_for_path(log_path);
+				var log_file = sync_path + "/rsync-log";
+				f = File.new_for_path(log_file);
 				if (f.query_exists()){
 					f.delete();
 				}
 
-				cmd = "rsync -ai %s --delete --numeric-ids --stats --relative --delete-excluded".printf(cmd_verbose ? "--verbose" : "--quiet");
-				cmd += " --log-file=\"%s\"".printf(log_path);
-				cmd += " --exclude-from=\"%s\"".printf(list_file);
-				cmd += " /. \"%s\"".printf(sync_path + "/localhost/");
+				task = create_new_rsync_task();
 
-				ret_val = run_rsync(cmd);
+				task.source_path = "/.";
+				task.dest_path = sync_path + "/localhost/";
+				task.exclude_from_file = exclude_from_file;
+				task.rsync_log_file = log_file;
 
-				if (ret_val != 0){
+				task.execute();
+
+				while (task.status == AppStatus.RUNNING){
+					gtk_do_events ();
+					sleep(200);
+				}
+				
+				if (task.read_status() != 0){
 					log_error(_("rsync returned an error") + ": %d".printf(ret_val));
 					log_error(_("Failed to create new snapshot"));
 					return false;
@@ -3807,24 +3826,29 @@ public class Main : GLib.Object{
 		return is_unmounted;
 	}
 
-	public int check_backup_device(out string message){
+	public SnapshotLocationStatus check_backup_location(out string message, out string details){
 
+		var status_code = SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE;
+		message = "";
+		details = "";
+		
 		/*
-		-1 - device un-available
+		-1 - device un-available, path does not exist
 		 0 - first snapshot taken, disk space sufficient
 		 1 - first snapshot taken, disk space not sufficient
 		 2 - first snapshot not taken, disk space not sufficient
 		 3 - first snapshot not taken, disk space sufficient
+		 4 - path is readonly
+		 5 - hardlinks not supported
 		*/
 
-		log_debug("Checking backup device:");
-		log_debug("Minimum free space: %s".printf(format_file_size(minimum_free_disk_space)));
+		log_msg("Checking backup location:");
+		log_msg("Free space limit: %s".printf(format_file_size(minimum_free_disk_space)));
 
-		int status_code = 0;
-
-		//free space message
+		// free space message
+		
 		if ((snapshot_device != null) && (snapshot_device.free.length > 0)){
-			log_debug("Available space: %s".printf(
+			log_msg("Available space: %s".printf(
 				format_file_size(snapshot_device.available_bytes)));
 			message = "%s ".printf(snapshot_device.free) + _("free");
 			message = message.strip();
@@ -3833,28 +3857,66 @@ public class Main : GLib.Object{
 			message = "";
 		}
 
-		if (!live_system()){
-			if (!backup_device_online()){
-
-				if (snapshot_device == null){
-					message = _("Please select the backup device");
+		if (use_snapshot_path){
+			if (!dir_exists(snapshot_path)){
+				
+				message = _("Backup path not available");
+				
+				if (snapshot_path.length == 0){
+					details = _("Select the path for saving snapshots");
 				}
 				else{
-					message = _("Backup device not available");
+					details = _("Backup path not found") + ": '%s'".printf(snapshot_path);
 				}
 
-				status_code = -1;
+				status_code = SnapshotLocationStatus.NOT_AVAILABLE;
+			}
+			else{
+				bool is_readonly;
+				bool hardlink_supported = filesystem_supports_hardlinks(
+					snapshot_path, out is_readonly);
+
+				if (is_readonly){
+					message = _("File system at selected path is read-only!");
+					details = _("Select another path for saving snapshots");
+					status_code = SnapshotLocationStatus.READ_ONLY_FS;
+				}
+				else if (!hardlink_supported){
+					message = _("File system at selected path does not support hard-links!");
+					details = _("Select another path for saving snapshots");
+					status_code = SnapshotLocationStatus.HARDLINKS_NOT_SUPPORTED;
+				}
+				else{
+					//ok
+				}
+			}
+		}
+		else{
+			if (!backup_device_online()){
+
+				message = _("Backup device not available");
+				
+				if (snapshot_device == null){
+					details = _("Select the device for saving snapshots");
+				}
+				else{
+					details = _("Device not connected");
+				}
+
+				status_code = SnapshotLocationStatus.NOT_AVAILABLE;
 			}
 			else{
 				if (snapshot_device.size_bytes == 0){
 					message = _("Backup device not available");
-					status_code = -1;
+					details = _("Failed to read file system size");
+					status_code = SnapshotLocationStatus.NOT_AVAILABLE;
 				}
 				else{
 					if (snapshot_list.size > 0){
 						if (snapshot_device.free_bytes < minimum_free_disk_space){
 							message = _("Backup device does not have enough space!");
-							status_code = 1;
+							details = _("Select another device or free up some space");
+							status_code = SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE;
 						}
 						else{
 							//ok
@@ -3862,19 +3924,24 @@ public class Main : GLib.Object{
 					}
 					else {
 						var required_space = calculate_size_of_first_snapshot();
-						message = _("First snapshot needs") + " %.1f GB".printf((required_space * 1.0) / GB);
+
 						if (snapshot_device.free_bytes < required_space){
-							status_code = 2;
+							message = _("Backup device does not have enough space!");
+							details = _("Select another device or free up some space");
+							status_code = SnapshotLocationStatus.NO_SNAPSHOTS_NO_SPACE;
 						}
 						else{
-							status_code = 3;
+							message = _("First snapshot not created");
+							details = _("Disk space required:") +
+								" %.1f GB".printf((required_space * 1.0) / GB);
+							status_code = SnapshotLocationStatus.NO_SNAPSHOTS_HAS_SPACE;
 						}
 					}
 				}
 			}
 		}
 
-		log_debug("Checked backup device (status=%d)".printf(status_code));
+		log_msg("Checked backup device (%s)".printf(status_code.to_string()));
 
 		return status_code;
 	}
@@ -4560,4 +4627,25 @@ public class AppExcludeEntry : GLib.Object{
 		return str.strip();
 	}
 
+}
+
+public enum SnapshotLocationStatus{
+	/*
+	-1 - device un-available, path does not exist
+	 0 - first snapshot taken, disk space sufficient
+	 1 - first snapshot taken, disk space not sufficient
+	 2 - first snapshot not taken, disk space not sufficient
+	 3 - first snapshot not taken, disk space sufficient
+	 4 - path is readonly
+     5 - hardlinks not supported
+	*/
+		
+	NOT_AVAILABLE = -1,
+	HAS_SNAPSHOTS_HAS_SPACE = 0,
+	HAS_SNAPSHOTS_NO_SPACE = 1,
+	NO_SNAPSHOTS_NO_SPACE = 2,
+	NO_SNAPSHOTS_HAS_SPACE = 3,
+	READ_ONLY_FS = 4,
+	HARDLINKS_NOT_SUPPORTED = 5
+	
 }

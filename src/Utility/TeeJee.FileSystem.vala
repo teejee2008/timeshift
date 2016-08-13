@@ -53,6 +53,15 @@ namespace TeeJee.FileSystem{
 	public string path_combine(string path1, string path2){
 		return GLib.Path.build_path("/", path1, path2);
 	}
+
+	public string remove_trailing_slash(string path){
+		if (path.has_suffix("/")){
+			return path[0:path.length - 1];
+		}
+		else{
+			return path;
+		}
+	}
 	
 	// file helpers -----------------------------
 
@@ -321,6 +330,28 @@ namespace TeeJee.FileSystem{
 		}
 	}
 
+	public bool filesystem_supports_hardlinks(string path, out bool is_readonly){
+		var test_file = path_combine(path, random_string() + "~");
+		if (file_write(test_file,"")){
+			is_readonly = false;
+
+			var test_file2 = path_combine(path, random_string() + "~");
+			
+			int status = exec_sync("ln '%s' '%s'".printf(
+				escape_single_quote(test_file),
+				escape_single_quote(test_file2)));
+
+			file_delete(test_file2); // delete if exists
+			file_delete(test_file);
+			
+			return (status == 0);
+		}
+		else{
+			is_readonly = true;
+		}
+
+		return false;
+	}
 
 	public Gee.ArrayList<string> dir_list_names(string path){
 		var list = new Gee.ArrayList<string>();

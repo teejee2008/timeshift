@@ -178,8 +178,8 @@ class MainWindow : Gtk.Window{
         //btn_wizard
 		var btn_wizard = new Gtk.ToolButton.from_stock ("tools-wizard");
 		btn_wizard.is_important = true;
-		btn_wizard.label = _("Settings");
-		btn_wizard.set_tooltip_text (_("Settings"));
+		btn_wizard.label = _("Wizard");
+		btn_wizard.set_tooltip_text (_("Settings wizard"));
 		btn_wizard.icon_widget = get_shared_icon("tools-wizard","tools-wizard.svg",24);
         toolbar.add(btn_wizard);
 
@@ -644,13 +644,13 @@ class MainWindow : Gtk.Window{
 
 		//else - check backup device -------------------------------
 
-		string message;
-		int status_code = App.check_backup_device(out message);
+		string message,details;
+		int status_code = App.check_backup_location(out message, out details);
 
 		switch(status_code){
-			case 1:
+			case SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE:
 
-				var title = _("Backup device does not have enough space!");
+				var title = message;
 				
 				string msg = _("Scheduled snapshots will be disabled.");
 				
@@ -670,9 +670,9 @@ class MainWindow : Gtk.Window{
 					return true; //keep window open
 				}
 
-			case 2:
+			case SnapshotLocationStatus.NO_SNAPSHOTS_NO_SPACE:
 
-				var title = _("Backup device does not have enough space!") ;
+				var title = message;
 			
 				var msg = _("Scheduled snapshots will be disabled till another device is selected.") + "\n";
 				msg += _("Do you want to select another device now?") + "\n";
@@ -693,9 +693,9 @@ class MainWindow : Gtk.Window{
 					return false; //close window
 				}
 
-			case 3:
+			case SnapshotLocationStatus.NO_SNAPSHOTS_HAS_SPACE:
 
-				var title = _("First snapshot required");
+				var title = message;
 			
 				string msg = _("Scheduled jobs will be enabled only after the first snapshot is taken.") + "\n";
 				msg += message + (" space and 10 minutes to complete.") + "\n";
@@ -718,7 +718,7 @@ class MainWindow : Gtk.Window{
 					return false; //close window
 				}
 
-			case 0:
+			case SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE:
 				if (App.snapshot_device.uuid != snapshot_device_original.uuid){
 					log_debug(_("snapshot device changed"));
 
@@ -741,8 +741,8 @@ class MainWindow : Gtk.Window{
 				}
 				break;
 
-			case -1:
-				var title = _("Backup device is not set or unavailable.");
+			case SnapshotLocationStatus.NOT_AVAILABLE:
+				var title = message;
 				
 				var msg = _("Scheduled snapshots will be disabled.") + "\n";
 				msg += _("Do you want to select another device?");
@@ -980,25 +980,19 @@ class MainWindow : Gtk.Window{
 
 		//check snapshot device -----------
 
-		string msg;
-		int status_code = App.check_backup_device(out msg);
+		string message, details;
+		int status_code = App.check_backup_location(out message, out details);
 
 		switch(status_code){
-			case -1:
-				check_backup_device_online();
-				return;
-			case 1:
-			case 2:
-				gtk_messagebox(
-					_("Low Disk Space"),
-					_("Backup device does not have enough space"),
-					this, true);
-				
-				update_statusbar();
-				
-				return;
+		case SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE:
+		case SnapshotLocationStatus.NO_SNAPSHOTS_HAS_SPACE:
+			//ok
+			break;
+		default:
+			gtk_messagebox(message, details, this, true);
+			return;
 		}
-
+		
 		//update UI ------------------
 
 		update_ui(false);
@@ -1554,13 +1548,12 @@ class MainWindow : Gtk.Window{
 	}
 
 	private void update_statusbar(){		
-		string img_dot_red = App.share_folder + "/timeshift/images/item-red.png";
+		/*string img_dot_red = App.share_folder + "/timeshift/images/item-red.png";
 		string img_dot_green = App.share_folder + "/timeshift/images/item-green.png";
 
 		//check free space on backup device ---------------------------
 
-		string message = "";
-		int status_code = App.check_backup_device(out message);
+		
 		string txt;
 
 		switch(status_code){
@@ -1628,18 +1621,23 @@ class MainWindow : Gtk.Window{
 				lbl_status_scheduled.label = _("Scheduled snapshots") + " " + _("Disabled");
 				lbl_status_scheduled.set_tooltip_text("");
 			}
-		}
+		}*/
 
+		string message, details;
+		int status_code = App.check_backup_location(out message, out details);
+		
 		//status - last snapshot -----------
 
 		DateTime last_snapshot_date = null;
 		
-		if (status_code >= 0){
+		switch (status_code){
+		case SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE:
+		case SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE:
 			DateTime now = new DateTime.now_local();
 			TimeShiftBackup last_snapshot = App.get_latest_snapshot();
 			last_snapshot_date = (last_snapshot == null) ? null : last_snapshot.date;
-
-			if (last_snapshot == null){
+			break;
+			/*if (last_snapshot == null){
 				img_status_latest.file = img_dot_red;
 				lbl_status_latest.label = _("No snapshots on device");
 			}
@@ -1659,12 +1657,13 @@ class MainWindow : Gtk.Window{
 					img_status_latest.file = img_dot_green;
 					lbl_status_latest.label = _("Last snapshot is less than 1 hour old");
 				}
-			}
+			}*/
 		}
-		else{
-			img_status_latest.visible = false;
-			lbl_status_latest.visible = false;
-		}
+		//else{
+			//img_status_latest.visible = false;
+			//lbl_status_latest.visible = false;
+		//}
+
 
 		if (App.live_system()){
 			hbox_shield.visible = false;

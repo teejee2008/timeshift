@@ -635,28 +635,47 @@ namespace TeeJee.FileSystem{
 	// misc --------------------
 
 	public string format_file_size (
-		uint64 size, bool binary_units = false, bool size_kb = false){
+		uint64 size, bool binary_units = false, string unit = "", bool show_units = true){
 			
 		int64 unit_k = binary_units ? 1024 : 1000;
 		int64 unit_m = binary_units ? 1024 * unit_k : 1000 * unit_k;
 		int64 unit_g = binary_units ? 1024 * unit_m : 1000 * unit_m;
+		int64 unit_t = binary_units ? 1024 * unit_g : 1000 * unit_g;
 
-		if (size_kb){
-			return "%'0.0f %sB".printf(size/(1.0 * unit_k), (binary_units)?"Ki":"K");
-		}
+		string txt = "";
 		
-		if (size > unit_g){
-			return "%'0.1f %sB".printf(size/(1.0 * unit_g), (binary_units)?"Gi":"G");
+		if ((size > unit_t) && ((unit.length == 0) || (unit == "t"))){
+			txt += "%'0.1f".printf(size / (1.0 * unit_t));
+			if (show_units){
+				txt += " %sB".printf(binary_units ? "Ti" : "T");
+			}
 		}
-		else if (size > unit_m){
-			return "%'0.1f %sB".printf(size/(1.0 * unit_m), (binary_units)?"Mi":"M");
+		else if ((size > unit_g) && ((unit.length == 0) || (unit == "g"))){
+			txt += "%'0.1f".printf(size / (1.0 * unit_g));
+			if (show_units){
+				txt += " %sB".printf(binary_units ? "Gi" : "G");
+			}
 		}
-		else if (size > unit_k){
-			return "%'0.0f %sB".printf(size/(1.0 * unit_k), (binary_units)?"Ki":"K");
+		else if ((size > unit_m) && ((unit.length == 0) || (unit == "m"))){
+			txt += "%'0.1f".printf(size / (1.0 * unit_m));
+			if (show_units){
+				txt += " %sB".printf(binary_units ? "Mi" : "M");
+			}
+		}
+		else if ((size > unit_k) && ((unit.length == 0) || (unit == "k"))){
+			txt += "%'0.1f".printf(size / (1.0 * unit_k));
+			if (show_units){
+				txt += " %sB".printf(binary_units ? "Ki" : "K");
+			}
 		}
 		else{
-			return "%'0lld B".printf(size);
+			txt += "%'0lld".printf(size);
+			if (show_units){
+				txt += " B";
+			}
 		}
+
+		return txt;
 	}
 
 	public string escape_single_quote(string file_path){

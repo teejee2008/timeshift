@@ -84,19 +84,23 @@ namespace TeeJee.ProcessHelper{
 		 * */
 
 		string sh_file = save_bash_script_temp(script, null, true, supress_errors);
-		string sh_file_main = "";
+		string sh_file_admin = "";
+		
 		if (run_as_admin){
-			string script_main = "pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY";
-			script_main += " '%s'".printf(escape_single_quote(sh_file));
-			string dir = file_parent(sh_file);
-			sh_file_main = GLib.Path.build_filename(dir,"script-admin.sh");
-			file_write(script_main, sh_file_main);
+			
+			var script_admin = "#!/bin/bash\n";
+			script_admin += "pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY";
+			script_admin += " '%s'".printf(escape_single_quote(sh_file));
+			
+			sh_file_admin = GLib.Path.build_filename(file_parent(sh_file),"script-admin.sh");
+
+			save_bash_script_temp(script_admin, sh_file_admin, true, supress_errors);
 		}
 		
 		try {
 			string[] argv = new string[1];
 			if (run_as_admin){
-				argv[0] = sh_file_main;
+				argv[0] = sh_file_admin;
 			}
 			else{
 				argv[0] = sh_file;
@@ -120,7 +124,7 @@ namespace TeeJee.ProcessHelper{
 			if (cleanup_tmp){
 				file_delete(sh_file);
 				if (run_as_admin){
-					file_delete(sh_file_main);
+					file_delete(sh_file_admin);
 				}
 			}
 			

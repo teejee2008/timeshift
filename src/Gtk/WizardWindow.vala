@@ -79,6 +79,8 @@ class WizardWindow : Gtk.Window{
 
 		show_all();
 
+		log_msg("here2");
+
 		tmr_init = Timeout.add(100, init_delayed);
     }
 
@@ -88,7 +90,7 @@ class WizardWindow : Gtk.Window{
 			Source.remove(tmr_init);
 			tmr_init = 0;
 		}
-		
+
 		tv_devices_refresh();
 
 		if (App.snapshot_path.length > 0){
@@ -109,6 +111,8 @@ class WizardWindow : Gtk.Window{
 		radio_device.toggled();
 		radio_path.toggled();
 
+		
+		
 		return false;
 	}
 
@@ -252,41 +256,71 @@ class WizardWindow : Gtk.Window{
 	private void create_device_list(Gtk.Box box){
 		tv_devices = add_treeview(box);
 
-		Gtk.CellRendererPixbuf cell_pix;
-		var col = add_column_icon(tv_devices, "", out cell_pix);
+		// device name
+		
+		//Gtk.CellRendererPixbuf cell_pix;
+		Gtk.CellRendererToggle cell_radio;
+		Gtk.CellRendererText cell_text;
+		var col = add_column_radio_and_text(tv_devices, _("Disk"), out cell_radio, out cell_text);
 
-		col.set_cell_data_func(cell_pix, (cell_layout, cell, model, iter)=>{
+		/*col.set_cell_data_func(cell_pix, (cell_layout, cell, model, iter)=>{
 			Gdk.Pixbuf pix = null;
 			model.get (iter, 2, out pix, -1);
 
-			//Gtk.Image img = null;
-			/*if ((dev.type == "crypt") && (dev.pkname.length > 0)){
-				img = get_shared_icon("unlocked","unlocked.png",16);
-			}
-			else if (dev.fstype.contains("luks")){
-				img = get_shared_icon("locked","locked.png",16);
-			}
-			else if (dev.fstype.contains("iso9660")){
-				img = get_shared_icon("media-cdrom","media-cdrom.png",16);
-			}
-			else{*/
-				//img = get_shared_icon("gtk-harddisk","gtk-harddisk.svg",16);
-			//}
-			
+			Device dev;
+			model.get (iter, 0, out dev, -1);
+
 			(cell as Gtk.CellRendererPixbuf).pixbuf =  pix;
+			(cell as Gtk.CellRendererPixbuf).sensitive = (dev.type != "disk");
+			
+		});*/
+
+		col.set_cell_data_func(cell_radio, (cell_layout, cell, model, iter)=>{
+			Device dev;
+			bool selected;
+			model.get (iter, 0, out dev, 3, out selected, -1);
+
+			(cell as Gtk.CellRendererToggle).active = selected;
+
+			(cell as Gtk.CellRendererToggle).visible =
+				(dev.type != "disk") && ((dev.fstype != "luks") || (dev.children.size == 0));
 		});
 
-		// device name
-		
-		Gtk.CellRendererText cell_text;
-		col = add_column_text(tv_devices, _("Partition"), out cell_text);
+		//cell_radio.toggled.connect((path)=>{});
 
 		col.set_cell_data_func(cell_text, (cell_layout, cell, model, iter)=>{
 			Device dev;
 			model.get (iter, 0, out dev, -1);
-			(cell as Gtk.CellRendererText).text = dev.device;
+
+			/*if (dev.type == "disk"){
+				var txt = "%s %s".printf(dev.model, dev.vendor).strip();
+				if (txt.length == 0){
+					txt = "%s Disk".printf(format_file_size(dev.size_bytes));
+				}
+				else{
+					txt += " (%s Disk)".printf(format_file_size(dev.size_bytes));
+				}
+				(cell as Gtk.CellRendererText).text = txt.strip();
+			}
+			else {
+				(cell as Gtk.CellRendererText).text = dev.description_full_free();
+			}*/
+
+			if (dev.type == "disk"){
+				var txt = "%s %s".printf(dev.model, dev.vendor).strip();
+				if (txt.length == 0){
+					txt = "%s Disk".printf(format_file_size(dev.size_bytes));
+				}
+				(cell as Gtk.CellRendererText).text = txt.strip();
+			}
+			else {
+				(cell as Gtk.CellRendererText).text = dev.kname;
+			}
+
+			//(cell as Gtk.CellRendererText).sensitive = (dev.type != "disk");
 		});
 
+		
 		// type
 		
 		col = add_column_text(tv_devices, _("Type"), out cell_text);
@@ -295,18 +329,8 @@ class WizardWindow : Gtk.Window{
 			Device dev;
 			model.get (iter, 0, out dev, -1);
 			(cell as Gtk.CellRendererText).text = dev.fstype;
-		});
-		
-		// size
-		
-		col = add_column_text(tv_devices, _("Size"), out cell_text);
-		cell_text.xalign = (float) 1.0;
-		
-		col.set_cell_data_func(cell_text, (cell_layout, cell, model, iter)=>{
-			Device dev;
-			model.get (iter, 0, out dev, -1);
-			(cell as Gtk.CellRendererText).text =
-				(dev.size_bytes > 0) ? format_file_size(dev.size_bytes) : "";
+
+			//(cell as Gtk.CellRendererText).sensitive = (dev.type != "disk");
 		});
 
 		// free
@@ -317,11 +341,38 @@ class WizardWindow : Gtk.Window{
 		col.set_cell_data_func(cell_text, (cell_layout, cell, model, iter)=>{
 			Device dev;
 			model.get (iter, 0, out dev, -1);
-			(cell as Gtk.CellRendererText).text =
-				(dev.free_bytes > 0) ? format_file_size(dev.free_bytes) : "";
+
+			if (dev.type == "disk"){
+				(cell as Gtk.CellRendererText).text = "";
+			}
+			else{
+				(cell as Gtk.CellRendererText).text =
+					(dev.free_bytes > 0) ? format_file_size(dev.free_bytes) : "";
+			}
+
+			(cell as Gtk.CellRendererText).sensitive = (dev.type != "disk");
 		});
 		
-		// label
+		// size
+		
+		col = add_column_text(tv_devices, _("Size"), out cell_text);
+		cell_text.xalign = (float) 1.0;
+		
+		col.set_cell_data_func(cell_text, (cell_layout, cell, model, iter)=>{
+			Device dev;
+			model.get (iter, 0, out dev, -1);
+
+			(cell as Gtk.CellRendererText).text =
+					(dev.size_bytes > 0) ? format_file_size(dev.size_bytes) : "";
+		});
+
+		
+		// buffer
+
+		col = add_column_text(tv_devices, "", out cell_text);
+		col.expand = true;
+		
+		/*// label
 		
 		col = add_column_text(tv_devices, _("Label"), out cell_text);
 
@@ -329,29 +380,79 @@ class WizardWindow : Gtk.Window{
 			Device dev;
 			model.get (iter, 0, out dev, -1);
 			(cell as Gtk.CellRendererText).text = dev.label;
-		});
 
+			(cell as Gtk.CellRendererText).sensitive = (dev.type != "disk");
+		});*/
+
+		
+		
 		// events
 
 		tv_devices.cursor_changed.connect(() => {
-			
-			// get selected iter
-			
-			Gtk.TreeIter iter;
-			var store = (Gtk.ListStore) tv_devices.model;
-			var selection = tv_devices.get_selection ();
-			
-			bool iterExists = store.get_iter_first (out iter);
-			while (iterExists) {
-				if (selection.iter_is_selected (iter)){
-					Device dev;
-					store.get (iter, 0, out dev);
-					change_backup_device(dev);
+			var store = (Gtk.TreeStore) tv_devices.model;
+			var selection = tv_devices.get_selection();
+
+			selection.selected_foreach((model, path, iter) => {
+				Device dev;
+				store.get (iter, 0, out dev);
+
+				if ((App.snapshot_device == null) || (App.snapshot_device.uuid != dev.uuid)){
+					try_change_device(dev);
+				}
+				else{
+					return;
+				}
+			});
+
+			store.foreach((model, path, iter) => {
+				Device dev;
+				store.get (iter, 0, out dev);
+				
+				if ((App.snapshot_device != null) && (App.snapshot_device.uuid == dev.uuid)){
+					store.set (iter, 3, true);
+					//tv_devices.get_selection().select_iter(iter);
+				}
+				else{
+					store.set (iter, 3, false);
+				}
+
+				return false; // continue
+			});
+		});
+	}
+
+	private void try_change_device(Device dev){
+
+		if (dev.type == "disk"){
+			bool found_child = false;
+			foreach (var child in dev.children){
+				if (child.has_linux_filesystem()){
+					change_backup_device(child);
+					found_child = true;
 					break;
 				}
-				iterExists = store.iter_next (ref iter);
 			}
-		});
+			if (!found_child){
+				lbl_infobar_device.label = "<span weight=\"bold\">%s</span>".printf(
+				_("Selected disk does not have Linux partitions"));
+				infobar_device.message_type = Gtk.MessageType.ERROR;
+				infobar_device.no_show_all = false;
+				infobar_device.show_all();
+			}
+		}
+		else if (!dev.has_children()){
+			change_backup_device(dev);
+		}
+		else if (dev.has_children()){
+			change_backup_device(dev.children[0]);
+		}
+		else {
+			lbl_infobar_device.label = "<span weight=\"bold\">%s</span>".printf(
+				_("Select a partition on this disk"));
+			infobar_device.message_type = Gtk.MessageType.ERROR;
+			infobar_device.no_show_all = false;
+			infobar_device.show_all();
+		}
 	}
 
 	private void create_infobar_device(Gtk.Box box){
@@ -381,14 +482,27 @@ class WizardWindow : Gtk.Window{
 		if ((App.snapshot_device != null) && (pi.uuid == App.snapshot_device.uuid)){ return; }
 
 		gtk_set_busy(true, this);
-
-		Device previous_device = App.snapshot_device;
+		
+		//Device previous_device = App.snapshot_device;
 		App.snapshot_device = pi;
 
-		// try mounting the device
+		log_debug("selected: %s".printf(pi.device));
 		
+		// try mounting the device
 		if (App.mount_backup_device(this)){
 			App.update_partitions();
+
+			var newpi = Device.find_device_in_list(App.partitions,pi.device,pi.uuid);
+
+			log_debug("newpi: %s".printf(pi.device));
+			log_debug("pi.fstype: %s".printf(pi.fstype));
+			log_debug("pi.child_device: %s".printf(
+				(pi.children.size == 0) ? "null" : pi.children[0].device));
+			
+			if ((pi.fstype == "luks") && !pi.has_children() && newpi.has_children()){
+				App.snapshot_device = newpi.children[0];
+				tv_devices_refresh();
+			}
 		}
 
 		//if (App.snapshot_device != null){
@@ -409,7 +523,7 @@ class WizardWindow : Gtk.Window{
 		}
 		
 		Gtk.TreeIter iter;
-		var store = (Gtk.ListStore) tv_devices.model;
+		var store = (Gtk.TreeStore) tv_devices.model;
 
 		bool iterExists = store.get_iter_first (out iter);
 		while (iterExists) {
@@ -494,40 +608,78 @@ class WizardWindow : Gtk.Window{
 	private void tv_devices_refresh(){
 		App.update_partitions();
 
-		var model = new Gtk.ListStore(3, typeof(Device), typeof(string), typeof(Gdk.Pixbuf));
+		var model = new Gtk.TreeStore(4,
+			typeof(Device),
+			typeof(string),
+			typeof(Gdk.Pixbuf),
+			typeof(bool));
+		
 		tv_devices.set_model (model);
 
-		TreeIter iter;
-		foreach(Device pi in App.partitions) {
-			if (!pi.has_linux_filesystem()) { continue; }
+		Gdk.Pixbuf pix_device = get_shared_icon("disk","disk.png",16).pixbuf;
 
-			string tt = "";
-			tt += "%-7s".printf(_("Device")) + "\t: %s\n".printf(pi.full_name_with_alias);
-			tt += "%-7s".printf(_("UUID")) + "\t: %s\n".printf(pi.uuid);
-			tt += "%-7s".printf(_("Type")) + "\t: %s\n".printf(pi.type);
-			tt += "%-7s".printf(_("Label")) + "\t: %s\n".printf(pi.label);
-			tt += "%-7s".printf(_("Size")) + "\t: %s\n".printf((pi.size_bytes > 0) ? "%s GB".printf(pi.size) : "");
-			tt += "%-7s".printf(_("Used")) + "\t: %s\n".printf((pi.used_bytes > 0) ? "%s GB".printf(pi.used) : "");
-			tt += "%-7s".printf(_("System")) + "\t: %s".printf(pi.dist_info);
+		TreeIter iter0, iter_selected, iter_dummy;
 
-			model.append(out iter);
-			model.set(iter, 0, pi, -1);
-			model.set(iter, 1, tt, -1);
+		model.append(out iter_dummy, null);
+		iter_selected = iter_dummy;
+		model.clear();
 
-			//set icon ----------------
+		foreach(var disk in App.partitions) {
+			if (disk.type != "disk") { continue; }
 
-			Gdk.Pixbuf pix_selected = null;
-			Gdk.Pixbuf pix_device = get_shared_icon("disk","disk.png",16).pixbuf;
-			Gdk.Pixbuf pix_locked = get_shared_icon("locked","locked.svg",16).pixbuf;
+			model.append(out iter0, null);
+			model.set(iter0, 0, disk, -1);
+			model.set(iter0, 1, disk.tooltip_text(), -1);
+			model.set(iter0, 2, pix_device, -1);
+			model.set(iter0, 3, false, -1);
 
-			if (pi.type == "luks"){
-				pix_selected = pix_locked;
+			tv_append_child_volumes(ref model, ref iter0, disk, ref iter_selected);
+		}
+
+		//TODO: pre-select the current App.snapshot_device
+
+		//if (iter_selected != iter_dummy){
+			//tv_devices.get_selection().select_iter(iter_selected);
+		//}
+
+		tv_devices.expand_all();
+	}
+
+	private void tv_append_child_volumes(
+		ref Gtk.TreeStore model, ref Gtk.TreeIter iter0,
+		Device parent, ref Gtk.TreeIter iter_selected){
+			
+		Gdk.Pixbuf pix_device = get_shared_icon("disk","disk.png",16).pixbuf;
+		Gdk.Pixbuf pix_locked = get_shared_icon("locked","locked.png",16).pixbuf;
+		Gdk.Pixbuf pix_unlocked = get_shared_icon("unlocked","unlocked.png",16).pixbuf;
+		
+		foreach(var part in App.partitions) {
+
+			if (!part.has_linux_filesystem()){ continue; }
+			
+			if (part.pkname == parent.kname) {
+				TreeIter iter1;
+				model.append(out iter1, iter0);
+				model.set(iter1, 0, part, -1);
+				model.set(iter1, 1, part.tooltip_text(), -1);
+				model.set(iter1, 2, (part.fstype == "luks") ? pix_locked : pix_device, -1);
+				
+				
+				if (parent.fstype == "luks"){
+					// change parent's icon to unlocked
+					model.set(iter0, 2, pix_unlocked, -1);
+				}
+
+				if ((App.snapshot_device != null) && (part.uuid == App.snapshot_device.uuid)){
+					//iter_selected = iter1;
+					model.set(iter1, 3, true, -1);
+				}
+				else{
+					model.set(iter1, 3, false, -1);
+				}
+
+				tv_append_child_volumes(ref model, ref iter1, part, ref iter_selected);
 			}
-			else{
-				pix_selected = pix_device;
-			}
-
-			model.set (iter, 2, pix_selected, -1);
 		}
 	}
 
@@ -586,6 +738,8 @@ class WizardWindow : Gtk.Window{
 		var treeview = new TreeView();
 		treeview.get_selection().mode = selection_mode;
 		treeview.set_rules_hint (true);
+		treeview.show_expanders = true;
+		treeview.enable_tree_lines = true;
 
 		// ScrolledWindow
 		var scrollwin = new ScrolledWindow(null, null);
@@ -626,7 +780,49 @@ class WizardWindow : Gtk.Window{
 
 		return col;
 	}
-	
+
+	private Gtk.TreeViewColumn add_column_icon_and_text(
+		Gtk.TreeView treeview, string title,
+		out Gtk.CellRendererPixbuf cell_pix, out Gtk.CellRendererText cell_text){
+			
+		// TreeViewColumn
+		var col = new Gtk.TreeViewColumn();
+		col.title = title;
+
+		cell_pix = new Gtk.CellRendererPixbuf();
+		cell_pix.xpad = 2;
+		col.pack_start (cell_pix, false);
+		
+		cell_text = new Gtk.CellRendererText();
+		cell_text.xalign = (float) 0.0;
+		col.pack_start (cell_text, false);
+		treeview.append_column(col);
+
+		return col;
+	}
+
+	private Gtk.TreeViewColumn add_column_radio_and_text(
+		Gtk.TreeView treeview, string title,
+		out Gtk.CellRendererToggle cell_radio, out Gtk.CellRendererText cell_text){
+			
+		// TreeViewColumn
+		var col = new Gtk.TreeViewColumn();
+		col.title = title;
+
+		cell_radio = new Gtk.CellRendererToggle();
+		cell_radio.xpad = 2;
+		cell_radio.radio = true;
+		cell_radio.activatable = true;
+		col.pack_start (cell_radio, false);
+		
+		cell_text = new Gtk.CellRendererText();
+		cell_text.xalign = (float) 0.0;
+		col.pack_start (cell_text, false);
+		treeview.append_column(col);
+
+		return col;
+	}
+
 	private Gtk.Label add_label(
 		Gtk.Box box, string text, bool is_bold = false, bool is_italic = false, bool is_large = false){
 			

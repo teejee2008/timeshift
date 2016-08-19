@@ -64,6 +64,8 @@ public class Main : GLib.Object{
 	public Gee.ArrayList<AppExcludeEntry> exclude_list_apps;
 	public Gee.ArrayList<MountEntry> mount_list;
 
+	//public SnapshotStore snapshot_store; 
+
 	//temp
 	private Gee.ArrayList<Device> grub_device_list;
 
@@ -72,7 +74,7 @@ public class Main : GLib.Object{
 	public Device snapshot_device;
 	public bool use_snapshot_path = false;
 	public string snapshot_path = "";
-	
+
 	public string mount_point_backup = "";
 	public string mount_point_restore = "";
 	public string mount_point_app = "/mnt/timeshift";
@@ -317,6 +319,9 @@ public class Main : GLib.Object{
 		//initialize lists -------------------------
 
 		snapshot_list = new Gee.ArrayList<TimeShiftBackup>();
+
+		//snapshot_store = new SnapshotStore();
+		
 		exclude_list_user = new Gee.ArrayList<string>();
 		exclude_list_default = new Gee.ArrayList<string>();
 		exclude_list_default_extra = new Gee.ArrayList<string>();
@@ -1286,16 +1291,13 @@ public class Main : GLib.Object{
 
 	//properties
 
-	public string snapshot_dir {
+	public string snapshot_location {
 		owned get{
-			if (mount_point_backup == "/"){
-				return "/timeshift/snapshots";
-			}
-			else if (mount_point_backup.length > 0){
-				return "%s/timeshift/snapshots".printf(mount_point_backup);
+			if (use_snapshot_path && dir_exists(snapshot_path)){
+				return snapshot_path;
 			}
 			else{
-				return "";
+				return mount_point_backup;
 			}
 		}
 	}
@@ -1355,6 +1357,8 @@ public class Main : GLib.Object{
 				return false;
 			}
 
+			string snapshot_dir = path_combine(snapshot_location, "timeshift/snapshots");
+			
 			// create snapshot root if missing
 			var f = File.new_for_path(snapshot_dir);
 			if (!f.query_exists()){
@@ -1562,8 +1566,9 @@ public class Main : GLib.Object{
 		string time_stamp = dt_created.format("%Y-%m-%d_%H-%M-%S");
 		DateTime now = new DateTime.now_local();
 		bool backup_taken = false;
-
+		
 		string sync_name = ".sync";
+		string snapshot_dir = path_combine(snapshot_location, "timeshift/snapshots");
 		string sync_path = snapshot_dir + "/" + sync_name;
 
 		try{
@@ -2598,7 +2603,7 @@ public class Main : GLib.Object{
 						}
 					}
 					if (mnt_dev != null){
-						mount_list.add(new MountEntry(mnt_dev, mnt.mount_point));
+						mount_list.add(new MountEntry(mnt_dev, mnt.mount_point, ""));
 					}
 					break;
 			}
@@ -2609,108 +2614,57 @@ public class Main : GLib.Object{
 		}*/
 	}
 
-	public string unlock_encrypted_device(Device dev, Gtk.Window? parent_win){
-		string mapped_name = "%s_unlocked".printf(dev.name);
-		string[] name_list = { "%s_unlocked".printf(dev.name), "%s_crypt".printf(dev.name), "luks-%s".printf(dev.uuid)};
+	public Device unlock_encrypted_device(Device luks_device, Gtk.Window? parent_win){
+		Device luks_unlocked = null;
 
-		if ((parent_win == null)&&(app_mode != "")){
+		string mapped_name = "%s_unlocked".printf(luks_device.name);
 
-			//check if unlocked
-			foreach(string name in name_list){
-				if (file_exists("/dev/mapper/%s".printf(name))){
-					//already unlocked
-					log_msg(_("Unlocked device is mapped to '%s'").printf(name));
-					log_msg("");
-					return name;
-				}
+		// check if already unlocked
+		foreach(var part in partitions){
+			if (part.pkname == luks_device.kname){
+				log_msg(_("Unlocked device is mapped to '%s'").printf(part.device));
+				log_msg("");
+				return part;
 			}
+		}
+			
+		if ((parent_win == null) && (app_mode != "")){
 
 			start_timeout_counter("cryptsetup");
 
-			//prompt user to unlock
-			string cmd = "cryptsetup luksOpen '%s' '%s'".printf(dev.device, mapped_name);
+			// prompt user to unlock
+			string cmd = "cryptsetup luksOpen '%s' '%s'".printf(luks_device.device, mapped_name);
 			int retval = Posix.system(cmd);
 			stop_timeout_counter();
 			log_msg("");
 
-			switch (retval){
-				case 512: //invalid passphrase
-					log_error(_("Wrong Passphrase") + ": " + _("Failed to unlock device"));
-					return ""; //return
-				case 1280: //already unlocked and mapped to unknown name
-					log_error(_("Encrypted device '%s' is already unlocked and mapped to another device name.\nSelect the unlocked device instead of encrypted device.").printf(dev.device));
-					break;
-				case 0: //success
-					log_msg(_("Unlocked device is mapped to '%s'").printf(mapped_name));
-					break;
-				default: //unknown error
-					log_error(_("Failed to unlock device"));
-					return ""; //return
-			}
-
 			update_partitions();
-			return mapped_name;
-		}
-		else{
-			//check if unlocked
-			foreach(string name in name_list){
-				if (file_exists("/dev/mapper/%s".printf(name))){
-					//already unlocked
-					//gtk_messagebox(_("Encrypted Device"),_("Unlocked device is mapped to '%s'.").printf(name), parent_win);
-					return name;
+
+			// check if unlocked
+			foreach(var part in partitions){
+				if (part.pkname == luks_device.kname){
+					log_msg(_("Unlocked device is mapped to '%s'").printf(part.name));
+					log_msg("");
+					return part;
 				}
 			}
-
-			//prompt user to unlock
-			string passphrase = gtk_inputbox(_("Encrypted Device"), _("Enter passphrase to unlock '%s'").printf(dev.name), parent_win, true);
-			string cmd = "echo '%s' | cryptsetup luksOpen '%s' '%s'".printf(passphrase, dev.device, mapped_name);
-			string std_out, std_err;
-			int retval = exec_script_sync(cmd, out std_out, out std_err);
-			log_debug("cryptsetup:" + retval.to_string());
-
-			switch(retval){
-				case 512: //invalid passphrase
-					gtk_messagebox(_("Wrong Passphrase"),_("Wrong Passphrase") + ": " + _("Failed to unlock device"), parent_win);
-					return ""; //return
-				case 1280: //already unlocked and mapped to unknown name
-					gtk_messagebox(_("Unlocked Device"),_("Encrypted device '%s' is already unlocked and mapped to another device name.\nSelect the unlocked device instead of encrypted device.").printf(dev.device), parent_win);
-					break;
-				case 0: //success
-					gtk_messagebox(_("Unlocked Successfully"),_("Unlocked device is mapped to '%s'.").printf(mapped_name), parent_win);
-					break;
-				default: //unknown error
-					gtk_messagebox(_("Error"),_("Failed to unlock device"), parent_win, true);
-					return ""; //return
-			}
-
-			update_partitions();
-			return mapped_name;
-		}
-	}
-
-	public Device? unlock_and_find_device(Device enc_dev, Gtk.Window? parent_win){
-		if (enc_dev.fstype == "luks"){
-			string mapped_name = unlock_encrypted_device(enc_dev, parent_win);
-			string mapped_device = "/dev/mapper/%s".printf(mapped_name);
-			if (mapped_name.length == 0) { return null; }
-			enc_dev = null;
-
-			//find unlocked device
-			if (mapped_name.length > 0){
-				foreach(Device dev in partitions){
-					foreach(string sym in dev.symlinks){
-						if (sym == mapped_device){
-							return dev;
-						}
-					}
-				}
-			}
-
-			return null;
 		}
 		else{
-			return enc_dev;
+			// prompt user for password
+			string passphrase = gtk_inputbox(
+				_("Encrypted Device"),
+				_("Enter passphrase to unlock '%s'").printf(luks_device.name),
+				parent_win, true);
+
+			string message, details;
+			luks_unlocked = Device.luks_unlock(luks_device, mapped_name, passphrase,
+				out message, out details);
+
+			bool is_error = (luks_unlocked == null);
+			gtk_messagebox(message,details,null,is_error);
 		}
+
+		return luks_unlocked;
 	}
 
 	public string disclaimer_pre_restore(){
@@ -2846,6 +2800,7 @@ public class Main : GLib.Object{
 				//invalidate the .sync snapshot  -------
 
 				string sync_name = ".sync";
+				string snapshot_dir = path_combine(snapshot_location, "timeshift/snapshots");
 				string sync_path = snapshot_dir + "/" + sync_name;
 				string control_file_path = sync_path + "/info.json";
 
@@ -3551,7 +3506,7 @@ public class Main : GLib.Object{
 				snapshot_device = pi;
 			}
 			if (pi.is_mounted){
-				pi.dist_info = LinuxDistro.get_dist_info(pi.mount_points[0]).full_name();
+				pi.dist_info = LinuxDistro.get_dist_info(pi.mount_points[0].mount_point).full_name();
 			}
 		}
 		if (partitions.size == 0){
@@ -3580,17 +3535,19 @@ public class Main : GLib.Object{
 
 	public void detect_system_devices(){
 		foreach(Device pi in partitions){
-			if (pi.mount_points.contains("/")){
-				root_device = pi;
-				if ((app_mode == "")||(LOG_DEBUG)){
-					log_msg(_("/ is mapped to device: %s, UUID=%s").printf(pi.device,pi.uuid));
+			foreach(var mp in pi.mount_points){
+				if (mp.mount_point.contains("/")){
+					root_device = pi;
+					if ((app_mode == "")||(LOG_DEBUG)){
+						log_msg(_("/ is mapped to device: %s, UUID=%s").printf(pi.device,pi.uuid));
+					}
 				}
-			}
 
-			if (pi.mount_points.contains("/home")){
-				home_device = pi;
-				if ((app_mode == "")||(LOG_DEBUG)){
-					log_msg(_("/home is mapped to device: %s, UUID=%s").printf(pi.device,pi.uuid));
+				if (mp.mount_point.contains("/home")){
+					home_device = pi;
+					if ((app_mode == "")||(LOG_DEBUG)){
+						log_msg(_("/home is mapped to device: %s, UUID=%s").printf(pi.device,pi.uuid));
+					}
 				}
 			}
 		}
@@ -3621,64 +3578,60 @@ public class Main : GLib.Object{
 		 * This is required since we need to mount the root subvolume of the BTRFS filesystem
 		 * */
 
+		log_msg("");
+
 		if (snapshot_device == null){
-			log_error(_("Backup device not set!"));
+			log_error(_("Snapshot device not set!"));
 			return false;
 		}
 		else{
 
-			//unlock if required
-			snapshot_device = unlock_and_find_device(snapshot_device, parent_win);
-			if (snapshot_device == null){
-				log_error(_("Backup device not found"));
-				return false;
+			log_msg(_("Snapshot device") + ": %s".printf(snapshot_device.device));
+			
+			// unlock encrypted device
+			if (snapshot_device.is_encrypted()){
+
+				snapshot_device = unlock_encrypted_device(snapshot_device, parent_win);
+				
+				if (snapshot_device == null){
+					log_msg(_("Failed to unlock"));
+					return false;
+				}
 			}
 
 			if (snapshot_device.fstype == "btrfs"){
-				//unmount
-				unmount_backup_device();
 
-				//mount
+				unmount_backup_device(); // unmount /mnt/timeshift/backup
+
+				// mount
 				mount_point_backup = mount_point_app + "/backup";
-				dir_create(mount_point_backup);
-
-				if (Device.mount(snapshot_device.uuid, mount_point_backup, "")){
-					if ((app_mode == "")||(LOG_DEBUG)){
-						log_msg(_("Backup path changed to '%s/timeshift'").printf((mount_point_backup == "/") ? "" : mount_point_backup));
-					}
-					return true;
-				}
-				else{
+				bool ok = Device.mount(snapshot_device.uuid, mount_point_backup, "");
+				if (!ok){
 					mount_point_backup = "";
-					return false;
 				}
 			}
 			else{
 				var mps = Device.get_device_mount_points(snapshot_device.uuid);
-				string backup_device_mount_point = mps[0];
-				if ((mount_point_backup.length == 0) || (backup_device_mount_point != mount_point_backup)){
-					//unmount
-					unmount_backup_device(false);
 
-					/* Note: Unmount errors can be ignored.
-					 * Old device will be hidden if new device is mounted successfully
-					 * */
+				if (mps.size > 0){
+					mount_point_backup = mps[0].mount_point;
+				}
+				else{
+					Device.automount_udisks(snapshot_device.device);
 
-					//automount
-					mount_point_backup = Device.automount(snapshot_device.uuid,"", mount_point_app);
-					if (mount_point_backup.length > 0){
-						if ((app_mode == "")||(LOG_DEBUG)){
-							log_msg(_("Backup path changed to '%s/timeshift'").printf((mount_point_backup == "/") ? "" : mount_point_backup));
-						}
+					mps = Device.get_device_mount_points(snapshot_device.uuid);
+					if (mps.size > 0){
+						mount_point_backup = mps[0].mount_point;
 					}
 					else{
-						update_partitions();
+						mount_point_backup = "";
 					}
 				}
-
-				return (mount_point_backup.length > 0);
 			}
 		}
+
+		log_msg(_("Snapshot device mounted at") + " '%s'".printf(mount_point_backup));
+		return (mount_point_backup.length > 0);
 	}
 
 	public bool mount_target_device(Gtk.Window? parent_win){
@@ -3699,8 +3652,8 @@ public class Main : GLib.Object{
 			dir_create(mount_point_restore);
 
 			//unlock encrypted device
-			if (restore_target.fstype == "luks"){
-				restore_target = unlock_and_find_device(restore_target, parent_win);
+			if (restore_target.is_encrypted()){
+				restore_target = unlock_encrypted_device(restore_target, parent_win);
 
 				//exit if not found
 				if (restore_target == null){
@@ -3759,8 +3712,8 @@ public class Main : GLib.Object{
 				if (mnt.mount_point != "/"){
 
 					//unlock encrypted device
-					if (mnt.device.fstype == "luks"){
-						mnt.device = unlock_and_find_device(mnt.device, parent_win);
+					if (mnt.device.is_encrypted()){
+						mnt.device = unlock_encrypted_device(mnt.device, parent_win);
 
 						//exit if not found
 						if (mnt.device == null){
@@ -3842,7 +3795,7 @@ public class Main : GLib.Object{
 		 5 - hardlinks not supported
 		*/
 
-		log_msg("Checking backup location:");
+		log_msg("");
 		log_msg("Free space limit: %s".printf(format_file_size(minimum_free_disk_space)));
 
 		// free space message
@@ -3887,7 +3840,41 @@ public class Main : GLib.Object{
 					status_code = SnapshotLocationStatus.HARDLINKS_NOT_SUPPORTED;
 				}
 				else{
-					//ok
+					// ok, check snapshots and space
+
+					var list = Device.get_disk_space_using_df(snapshot_path);
+					var free_space = (list.size > 0) ? list[0].free_bytes : 0;
+					
+					if (snapshot_list.size > 0){
+						if (free_space < minimum_free_disk_space){
+							message = _("Backup device does not have enough space!");
+							details = _("Select another device or free up some space");
+							status_code = SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE;
+						}
+						else{
+							//ok
+							message = _("%d snapshots, %s free").printf(
+								snapshot_list.size,
+								format_file_size(free_space));
+								
+							status_code = SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE;
+						}
+					}
+					else {
+						var required_space = calculate_size_of_first_snapshot();
+
+						if (free_space < required_space){
+							message = _("Backup device does not have enough space!");
+							details = _("Select another device or free up some space");
+							status_code = SnapshotLocationStatus.NO_SNAPSHOTS_NO_SPACE;
+						}
+						else{
+							message = _("First snapshot not created");
+							details = _("Disk space required:") +
+								" %.1f GB".printf((required_space * 1.0) / GB);
+							status_code = SnapshotLocationStatus.NO_SNAPSHOTS_HAS_SPACE;
+						}
+					}
 				}
 			}
 		}
@@ -3920,6 +3907,11 @@ public class Main : GLib.Object{
 						}
 						else{
 							//ok
+							message = _("%d snapshots, %s free").printf(
+								snapshot_list.size,
+								format_file_size(snapshot_device.free_bytes));
+								
+							status_code = SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE;
 						}
 					}
 					else {
@@ -3927,13 +3919,14 @@ public class Main : GLib.Object{
 
 						if (snapshot_device.free_bytes < required_space){
 							message = _("Backup device does not have enough space!");
-							details = _("Select another device or free up some space");
+							details = _("Select another device or free up some space")
+								+ " (%s required)".printf(format_file_size(required_space));
 							status_code = SnapshotLocationStatus.NO_SNAPSHOTS_NO_SPACE;
 						}
 						else{
 							message = _("First snapshot not created");
 							details = _("Disk space required:") +
-								" %.1f GB".printf((required_space * 1.0) / GB);
+								" %s".printf(format_file_size(required_space));
 							status_code = SnapshotLocationStatus.NO_SNAPSHOTS_HAS_SPACE;
 						}
 					}
@@ -3941,7 +3934,12 @@ public class Main : GLib.Object{
 			}
 		}
 
-		log_msg("Checked backup device (%s)".printf(status_code.to_string()));
+		log_msg(_("Snapshot location") + ": '%s'".printf(snapshot_location));
+
+		log_msg(message);
+		log_msg(details);
+		log_msg("Status: %s".printf(
+			status_code.to_string().replace("SNAPSHOT_LOCATION_STATUS_","")));
 
 		return status_code;
 	}
@@ -3967,7 +3965,7 @@ public class Main : GLib.Object{
 
 	public bool backup_device_online(){
 		if (snapshot_device != null){
-			mount_backup_device(null);
+			//mount_backup_device(null);
 			if (Device.get_device_mount_points(snapshot_device.uuid).size > 0){
 				return true;
 			}
@@ -4649,3 +4647,97 @@ public enum SnapshotLocationStatus{
 	HARDLINKS_NOT_SUPPORTED = 5
 	
 }
+/*
+public class SnapshotStore : GLib.Object{
+	public Device device = null;
+	public string snapshot_path_user = "";
+	public string snapshot_path_mount = "";
+	public bool use_snapshot_path_user = false;
+
+	public Gee.ArrayList<TimeShiftBackup?> snapshot_list;
+
+	private Gtk.Window? parent = null;
+
+	public SnapshotStore.from_path(string path, Gtk.Window parent_win){
+		this.snapshot_path_user = path;
+		this.use_snapshot_path_user = true;
+		this.parent = parent_win;
+		
+		snapshot_list = new Gee.ArrayList<TimeShiftBackup>();
+
+		log_msg(_("Snapshot path") + ": %s".printf(path));
+		
+		var list = Device.get_disk_space_using_df(path);
+		if (list.size > 0){
+			device = list[0];
+		}
+	}
+
+	public SnapshotStore.from_device(Device dev, Gtk.Window parent_win){
+		this.device = dev;
+		this.use_snapshot_path_user = false;
+		this.parent = parent_win;
+		
+		snapshot_list = new Gee.ArrayList<TimeShiftBackup>();
+
+		log_msg(_("Snapshot device") + ": %s".printf(device.device));
+
+		unlock_and_mount_device();
+	}
+
+	public bool unlock_and_mount_device(){
+		
+		// unlock encrypted device
+		if (device.is_encrypted()){
+
+			device = unlock_encrypted_device(device, parent);
+			
+			if (device == null){
+				log_msg(_("Failed to unlock"));
+				return false;
+			}
+		}
+
+		if (device.fstype == "btrfs"){
+
+			unmount_backup_device(); // unmount /mnt/timeshift/backup
+
+			// mount
+			mount_point_backup = mount_point_app + "/backup";
+			bool ok = Device.mount(device.uuid, mount_point_backup, "");
+			if (!ok){
+				mount_point_backup = "";
+			}
+		}
+		else{
+			var mps = Device.get_device_mount_points(device.uuid);
+
+			if (mps.size > 0){
+				mount_point_backup = mps[0];
+			}
+			else{
+				Device.automount_udisks(device.device);
+
+				mps = Device.get_device_mount_points(device.uuid);
+				if (mps.size > 0){
+					mount_point_backup = mps[0];
+				}
+				else{
+					mount_point_backup = "";
+				}
+			}
+		}
+	}
+	
+	public string snapshot_location {
+		owned get{
+			if (use_snapshot_path_user && dir_exists(snapshot_path_user)){
+				return snapshot_path_user;
+			}
+			else{
+				return snapshot_path_mount;
+			}
+		}
+	}
+}
+*/

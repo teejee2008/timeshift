@@ -722,7 +722,7 @@ class MainWindow : Gtk.Window{
 				if (App.snapshot_device.uuid != snapshot_device_original.uuid){
 					log_debug(_("snapshot device changed"));
 
-					var title = _("Backup device has changed");
+					var title = _("Snapshot device has changed");
 					
 					var msg = _("Scheduled snapshots will be saved to ") + "<b>%s</b>\n".printf(App.snapshot_device.device);
 					msg += _("Click 'OK' to confirm") + "\n";
@@ -1328,9 +1328,10 @@ class MainWindow : Gtk.Window{
 
 		TreeSelection sel = tv_backups.get_selection ();
 		if (sel.count_selected_rows() == 0){
-			var f = File.new_for_path(App.snapshot_dir);
+			string snapshot_dir = path_combine(App.snapshot_location, "timeshift/snapshots");
+			var f = File.new_for_path(snapshot_dir);
 			if (f.query_exists()){
-				exo_open_folder(App.snapshot_dir);
+				exo_open_folder(snapshot_dir);
 			}
 			else{
 				exo_open_folder(App.mount_point_backup);
@@ -1537,7 +1538,7 @@ class MainWindow : Gtk.Window{
 		if (!App.backup_device_online()){
 			gtk_messagebox(
 				_("Device Offline"),
-				_("Backup device is not available"),
+				_("Snapshot device is not available"),
 				this, true);
 			update_statusbar();
 			return false;

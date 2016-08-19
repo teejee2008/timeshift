@@ -1333,7 +1333,7 @@ public class RestoreWindow : Gtk.Dialog{
 					mount_point = mount_point.strip();
 					no_mount_points_set_by_user = false;
 
-					App.mount_list.add(new MountEntry(pi,mount_point));
+					App.mount_list.add(new MountEntry(pi,mount_point,""));
 
 					if (mount_point == "/"){
 						App.restore_target = pi;
@@ -1356,7 +1356,7 @@ public class RestoreWindow : Gtk.Dialog{
 								Device pi;
 								store.get(iter, 0, out pi);
 								App.restore_target = pi;
-								App.mount_list.add(new MountEntry(pi,"/"));
+								App.mount_list.add(new MountEntry(pi,"/",""));
 								break;
 							}
 						}

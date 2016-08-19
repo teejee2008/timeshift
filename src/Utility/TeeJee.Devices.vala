@@ -59,7 +59,11 @@ namespace TeeJee.Devices{
 		
 		public string vendor = "";
 		public string model = "";
+		public string serial = "";
+		public string revision = "";
+
 		public bool removable = false;
+		public bool read_only = false;
 		
 		public int64 size_bytes = 0;
 		public int64 used_bytes = 0;
@@ -67,17 +71,21 @@ namespace TeeJee.Devices{
 		
 		public string used_percent = "";
 		public string dist_info = "";
-		public Gee.ArrayList<string> mount_points;
+		public Gee.ArrayList<MountEntry> mount_points;
 		public Gee.ArrayList<string> symlinks;
-		public string mount_options = "";
+
+		public Device parent = null;
+		public Gee.ArrayList<Device> children = null;
 
 		private static Gee.ArrayList<Device> device_list;
 
 		public static Bash bash_admin_shell = null;
 		
 		public Device(){
-			mount_points = new Gee.ArrayList<string>();
+			mount_points = new Gee.ArrayList<MountEntry>();
+			//mount_options = new Gee.ArrayList<string>();
 			symlinks = new Gee.ArrayList<string>();
+			children = new Gee.ArrayList<Device>();
 		}
 
 		/* Returns:
@@ -143,6 +151,34 @@ namespace TeeJee.Devices{
 			return s;
 		}
 
+		public string description_full_free(){
+			string s = "";
+
+			if (devtype == "disk"){
+				s += "%s %s".printf(model, vendor).strip();
+				if (s.length == 0){
+					s = "%s Disk".printf(format_file_size(size_bytes));
+				}
+				else{
+					s += " (%s Disk)".printf(format_file_size(size_bytes));
+				}
+			}
+			else{
+				s += kname;
+				if (label.length > 0){
+					s += " (%s)".printf(label);
+				}
+				if (fstype.length > 0){
+					s += " ~ %s".printf(fstype);
+				}
+				if (free_bytes > 0){
+					s += " ~ %s".printf(description_free());
+				}
+			}
+
+			return s;
+		}
+
 		public string description_full(){
 			string s = "";
 			s += device;
@@ -150,13 +186,7 @@ namespace TeeJee.Devices{
 			s += (uuid.length > 0) ? " ~ " + uuid : "";
 			s += (fstype.length > 0) ? " ~ " + fstype : "";
 			s += (used.length > 0) ? " ~ " + used + " / " + size + " GB used (" + used_percent + ")" : "";
-
-			string mps = "";
-			foreach(string mp in mount_points){
-				mps += mp + " ";
-			}
-			s += (mps.length > 0) ? " ~ " + mps.strip() : "";
-
+			
 			return s;
 		}
 
@@ -169,6 +199,50 @@ namespace TeeJee.Devices{
 			}
 		}
 
+		public string description_free(){
+			if (used.length > 0){
+				return format_file_size(free_bytes, false, "g", false)
+					+ " / " + format_file_size(size_bytes, false, "g", true) + " free";
+			}
+			else{
+				return "";
+			}
+		}
+
+		public string tooltip_text(){
+			string tt = "";
+
+			if (devtype == "disk"){
+				tt += "%-7s\t: %s\n".printf(_("Device"), full_name_with_alias);
+				tt += "%-7s\t: %s\n".printf(_("Vendor"), vendor);
+				tt += "%-7s\t: %s\n".printf(_("Model"), model);
+				tt += "%-7s\t: %s\n".printf(_("Serial"), serial);
+				tt += "%-7s\t: %s\n".printf(_("Revision"), revision);
+
+				tt += "%-7s\t: %s\n".printf(
+					_("Size"),
+					(size_bytes > 0) ? format_file_size(size_bytes) : "N/A");
+			}
+			else{
+				tt += "%-7s\t: %s\n".printf(_("Device"),full_name_with_alias);
+				tt += "%-7s\t: %s\n".printf(_("UUID"),uuid);
+				tt += "%-7s\t: %s\n".printf(_("Type"),type);
+				tt += "%-7s\t: %s\n".printf(_("Label"),label);
+				
+				tt += "%-7s\t: %s\n".printf(
+					_("Size"),
+					(size_bytes > 0) ? format_file_size(size_bytes) : "N/A");
+					
+				tt += "%-7s\t: %s\n".printf(
+					_("Used"),
+					(used_bytes > 0) ? format_file_size(used_bytes) : "N/A");
+
+				tt += "%-7s\t: %s\n".printf(_("System"),dist_info);
+			}
+
+			return tt;
+		}
+		
 		public int64 free_bytes{
 			get{
 				return (size_bytes - used_bytes);
@@ -218,10 +292,33 @@ namespace TeeJee.Devices{
 				case "jfs":
 				case "btrfs":
 				case "luks":
+				case "crypt":
+				case "crypto_luks":
 					return true;
 				default:
 					return false;
 			}
+		}
+
+		public bool is_encrypted(){
+			return (fstype.contains("luks") || fstype.contains("crypt"));
+		}
+
+		public bool has_children(){
+			return (children.size > 0);
+		}
+
+		public Device? first_linux_child(){
+			foreach(var child in children){
+				if (child.has_linux_filesystem()){
+					return child;
+				}
+			}
+			return null;
+		}
+
+		public bool has_parent(){
+			return (parent != null);
 		}
 
 		// methods ---------------------------
@@ -242,7 +339,7 @@ namespace TeeJee.Devices{
 			this.used_bytes = dev2.used_bytes;
 			
 			this.mount_points = dev2.mount_points;
-			this.mount_options = dev2.mount_options;
+			//this.mount_options = dev2.mount_options;
 			
 			this.vendor = dev2.vendor;
 			this.model = dev2.model;
@@ -281,12 +378,28 @@ namespace TeeJee.Devices{
 					var dev = find_device_in_list(list, dev_mtab.device, dev_mtab.uuid);
 					if (dev != null){
 						dev.mount_points = dev_mtab.mount_points;
-						dev.mount_options = dev_mtab.mount_options;
 					}
 				}
 			}
 
+			foreach (var part in list){
+				find_child_devices(list, part);
+			}
+
+			//print_device_list(list);
+
+			//print_device_mounts(list);
+			
 			return list;
+		}
+
+		private static void find_child_devices(Gee.ArrayList<Device> list, Device parent){
+			foreach (var part in list){
+				if (part.pkname == parent.kname){
+					parent.children.add(part);
+					part.parent = parent;
+				}
+			}
 		}
 
 		public static Gee.ArrayList<Device> get_block_devices_using_lsblk(
@@ -304,7 +417,7 @@ namespace TeeJee.Devices{
 			Regex rex;
 			MatchInfo match;
 
-			cmd = "lsblk --bytes --pairs --output \"NAME,KNAME,PKNAME,LABEL,UUID,TYPE,FSTYPE,SIZE,MOUNTPOINT,HOTPLUG\" %s".printf(
+			cmd = "lsblk --bytes --pairs --output NAME,KNAME,PKNAME,LABEL,UUID,TYPE,FSTYPE,SIZE,MOUNTPOINT,HOTPLUG,RO,VENDOR,MODEL,SERIAL,REV %s".printf(
 				(device_file.length > 0) ? device_file : "");
 				
 			ret_val = exec_sync(cmd, out std_out, out std_err);
@@ -340,7 +453,7 @@ namespace TeeJee.Devices{
 				if (line.strip().length == 0) { continue; }
 
 				try{
-					rex = new Regex("""NAME="(.*)" KNAME="(.*)" PKNAME="(.*)" LABEL="(.*)" UUID="(.*)" TYPE="(.*)" FSTYPE="(.*)" SIZE="(.*)" MOUNTPOINT="(.*)" HOTPLUG="([0-9]+)"""");
+					rex = new Regex("""NAME="(.*)" KNAME="(.*)" PKNAME="(.*)" LABEL="(.*)" UUID="(.*)" TYPE="(.*)" FSTYPE="(.*)" SIZE="(.*)" MOUNTPOINT="(.*)" HOTPLUG="([0-9]+)" RO="([0-9]+)" VENDOR="(.*)" MODEL="(.*)" SERIAL="(.*)" REV="(.*)"""");
 					if (rex.match (line, 0, out match)){
 
 						Device pi = new Device();
@@ -353,12 +466,20 @@ namespace TeeJee.Devices{
 						pi.fstype = match.fetch(7).strip().down();
 						pi.size_bytes = int64.parse(match.fetch(8).strip());
 
+						pi.fstype = (pi.fstype == "crypto_luks") ? "luks" : pi.fstype;
+						
 						var mp = match.fetch(9).strip();
 						if (mp.length > 0){
-							pi.mount_points.add(mp);
+							pi.mount_points.add(new MountEntry(pi,mp,""));
 						}
 						
 						pi.removable = (match.fetch(10).strip() == "1");
+						pi.read_only = (match.fetch(11).strip() == "1");
+
+						pi.vendor = match.fetch(12).strip();
+						pi.model = match.fetch(13).strip();
+						pi.serial = match.fetch(14).strip();
+						pi.revision = match.fetch(15).strip();
 						
 						pi.order = ++index;
 						pi.device = "/dev/%s".printf(pi.kname);
@@ -367,9 +488,9 @@ namespace TeeJee.Devices{
 							pi.name = "%s (unlocked)".printf(pi.pkname);
 						}
 
-						if ((pi.uuid.length > 0) && (pi.pkname.length > 0)){
+						//if ((pi.uuid.length > 0) && (pi.pkname.length > 0)){
 							list.add(pi);
-						}
+						//}
 					}
 				}
 				catch(Error e){
@@ -598,7 +719,7 @@ namespace TeeJee.Devices{
 
 			File f;
 
-			//find mtab file -----------
+			// find mtab file -----------
 
 			mtab_path = "/proc/mounts";
 			f = File.new_for_path(mtab_path);
@@ -659,7 +780,9 @@ namespace TeeJee.Devices{
 				string line = lines[i].strip();
 				if (line.length == 0) { continue; }
 
-				Device pi = new Device();
+				var pi = new Device();
+
+				var mp = new MountEntry(pi,"","");
 
 				//parse & populate fields ------------------
 
@@ -671,19 +794,17 @@ namespace TeeJee.Devices{
 							pi.device = val.strip();
 							break;
 						case 2: //mountpoint
-							string mount_point = val.strip();
-							if (!mount_list.contains(mount_point)){
-								mount_list.add(mount_point);
-								if (!pi.mount_points.contains(mount_point)){
-									pi.mount_points.add(mount_point);
-								}
+							mp.mount_point = val.strip();
+							if (!mount_list.contains(mp.mount_point)){
+								mount_list.add(mp.mount_point);
+								pi.mount_points.add(mp);
 							}
 							break;
 						case 3: //filesystemtype
 							pi.fstype = val.strip();
 							break;
 						case 4: //options
-							pi.mount_options = val.strip();
+							mp.mount_options = val.strip();
 							break;
 						default:
 							//ignore
@@ -708,8 +829,8 @@ namespace TeeJee.Devices{
 					}
 					else{
 						// add mount points to existing device
-						foreach(string mp in pi.mount_points){
-							dev.mount_points.add(mp);
+						foreach(var item in pi.mount_points){
+							dev.mount_points.add(item);
 						}
 					}
 				}
@@ -764,7 +885,7 @@ namespace TeeJee.Devices{
 			return "";
 		}
 
-		public static Gee.ArrayList<string> get_device_mount_points(string device_or_uuid){
+		public static Gee.ArrayList<MountEntry> get_device_mount_points(string device_or_uuid){
 			string device = "";
 			string uuid = "";
 
@@ -786,7 +907,7 @@ namespace TeeJee.Devices{
 				return dev.mount_points;
 			}
 			else{
-				return (new Gee.ArrayList<string>());
+				return (new Gee.ArrayList<MountEntry>());
 			}
 		}
 
@@ -803,9 +924,10 @@ namespace TeeJee.Devices{
 		public static bool mount_point_in_use(string mount_point){
 			bool mounted = false;
 			var list = Device.get_mounted_filesystems_using_mtab();
-			foreach (Device dev in list){
-				foreach(string mp in dev.mount_points){
-					if (mp.has_prefix(mount_point)){ // check for any mount point at or under the given mount_point
+			foreach (var dev in list){
+				foreach(var mp in dev.mount_points){
+					if (mp.mount_point.has_prefix(mount_point)){
+						// check for any mount point at or under the given mount_point
 						return true;
 					}
 				}
@@ -889,20 +1011,67 @@ namespace TeeJee.Devices{
 			return (status == 0);
 		}
 
-		public static bool luks_unlock(string device_or_uuid, string mapped_name, string luks_pass){
+		public static Device? luks_unlock(
+			Device luks_device, string mapped_name, string luks_pass,
+			out string message, out string details){
+				
+			Device unlocked_device = null;
+
+			// check if not encrypted
+			if (!luks_device.fstype.contains("luks") && !luks_device.fstype.contains("crypt")){
+				message = _("This device is not encrypted");
+				details = _("Failed to unlock device");
+				return null;
+			}
+
+			// check if already unlocked
+			var list = get_filesystems();
+			foreach(var part in list){
+				if (part.pkname == luks_device.kname){
+					unlocked_device = part;
+					message = _("Device is unlocked");
+					details = _("Unlocked device is mapped to '%s'").printf(part.mapped_name);
+					return part; 
+				}
+			}
+		
+
 			var cmd = "echo -n -e '%s' | cryptsetup luksOpen --key-file - %s %s\n".printf(
-				luks_pass, device_or_uuid, mapped_name);
+				luks_pass, luks_device.device, mapped_name);
 			
 			log_debug(cmd);
 
-			if (bash_admin_shell != null){
-				int status = bash_admin_shell.execute(cmd);
-				return (status == 0);
+			string std_out, std_err;
+			int status = exec_script_sync(cmd, out std_out, out std_err, false, true);
+
+			switch (status){
+				case 512: // invalid passphrase
+					message = _("Wrong password");
+					details = _("Failed to unlock device");
+					log_error(message);
+					log_error(details);
+					break;
+			}
+
+			// find unlocked device
+			list = get_filesystems();
+			foreach(var part in list){
+				if (part.pkname == luks_device.kname){
+					unlocked_device = part;
+					break; 
+				}
+			}
+
+			if (unlocked_device == null){
+				message = _("Failed to unlock device") + " '%s'".printf(luks_device.device);
+				details = std_err;
 			}
 			else{
-				int status = exec_script_sync(cmd,null,null,false,true);
-				return (status == 0);
+				message = _("Unlocked successfully");
+				details = _("Unlocked device is mapped to '%s'").printf(unlocked_device.mapped_name);
 			}
+			
+			return unlocked_device;
 		}
 
 		public static bool luks_lock(string kname){
@@ -944,13 +1113,21 @@ namespace TeeJee.Devices{
 				uuid = device_or_uuid;
 				device = "/dev/disk/by-uuid/%s".printf(uuid);
 			}
+
+			if (dir_exists(mount_point)){
+				dir_create(mount_point);
+			}
 			
 			// check if already mounted ------------------
 			
 			var mps = Device.get_device_mount_points(device_or_uuid);
-			if (mps.contains(mount_point)){
-				return true;
+			foreach(var mp in mps){
+				if (mp.mount_point.contains(mount_point)){
+					log_msg("Device '%s' is mounted at '%s'".printf(device_or_uuid, mount_point));
+					return true;
+				}
 			}
+			
 
 			try{
 				// check and create mount point -------------
@@ -972,13 +1149,13 @@ namespace TeeJee.Devices{
 				Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
 
 				if (ret_val != 0){
-					log_error ("Failed to mount device '%s' at mount point '%s'".printf(
-						device, mount_point));
+					log_error ("Failed to mount device '%s' at mount point '%s'".printf(device, mount_point));
 					log_error (std_err);
 					return false;
 				}
 				else{
-					log_debug ("Mounted device '%s' at mount point '%s'".printf(device, mount_point));
+					log_msg ("Mounted device '%s' at mount point '%s'".printf(device, mount_point));
+					return true;
 				}
 			}
 			catch(Error e){
@@ -988,13 +1165,14 @@ namespace TeeJee.Devices{
 
 			// check if mounted successfully ------------------
 
-			mps = Device.get_device_mount_points(device_or_uuid);
+			/*mps = Device.get_device_mount_points(device_or_uuid);
 			if (mps.contains(mount_point)){
+				log_msg("Device '%s' is mounted at '%s'".printf(device_or_uuid, mount_point));
 				return true;
 			}
 			else{
 				return false;
-			}
+			}*/
 		}
 
 		public static string automount(
@@ -1023,7 +1201,7 @@ namespace TeeJee.Devices{
 			var list = Device.get_block_devices_using_lsblk();
 			var dev = find_device_in_list(list, device, uuid);
 			if (dev != null){
-				return dev.mount_points[0];
+				return dev.mount_points[0].mount_point;
 			}
 
 			// check and create mount point -------------------
@@ -1137,87 +1315,122 @@ namespace TeeJee.Devices{
 
 		public static void print_device_list(Gee.ArrayList<Device> list){
 
-			log_msg("");
+			stdout.printf("\n");
 			
-			log_msg("%-20s %-25s %-10s %-10s %s".printf(
+			stdout.printf("%-20s %-25s %-10s %-10s %s\n".printf(
 				"device",
-				"name",
+				"label",
 				"pkname",
 				"kname",
 				"uuid"));
 
-			log_msg(string.nfill(100, '-'));
+			stdout.printf(string.nfill(100, '-'));
+			stdout.printf("\n");
 			
 			foreach(var dev in list){
-				log_msg("%-20s %-25s %-10s %-10s %s".printf(
+				stdout.printf("%-20s %-25s %-10s %-10s %s\n".printf(
 					dev.device + ((dev.mapped_name.length > 0) ? " -> " + dev.mapped_name : ""),
-					dev.name,
+					dev.label,
 					dev.pkname,
 					dev.kname,
 					dev.uuid
 					));
 			}
 
-			log_msg("");
+			stdout.printf("\n");
 			
-			log_msg("%-20s %-10s %-15s %-10s %10s %10s".printf(
+			stdout.printf("%-20s %-10s %-10s %s %s %s %s\n".printf(
+				"device",
+				"pkname",
+				"kname",
+				"vendor",
+				"model",
+				"serial",
+				"rev"));
+
+			stdout.printf(string.nfill(100, '-'));
+			stdout.printf("\n");
+			
+			foreach(var dev in list){
+				stdout.printf("%-20s %-10s %-10s %s %s %s %s\n".printf(
+					dev.device + ((dev.mapped_name.length > 0) ? " -> " + dev.mapped_name : ""),
+					//dev.name,
+					dev.pkname,
+					dev.kname,
+					dev.vendor,
+					dev.model,
+					dev.serial,
+					dev.revision
+					));
+			}
+
+			stdout.printf("\n");
+			
+			stdout.printf("%-20s %-10s %-15s %-10s %10s %10s %10s\n".printf(
 				"device",
 				"type",
 				"fstype",
-				"removable",
+				"REM",
+				"RO",
 				"size",
 				"used"));
 
-			log_msg(string.nfill(100, '-'));
-				
+			stdout.printf(string.nfill(100, '-'));
+			stdout.printf("\n");
+			
 			foreach(var dev in list){
-				log_msg("%-20s %-10s %-15s %-10s %10s %10s".printf(
+				stdout.printf("%-20s %-10s %-15s %-10s %10s %10s %10s\n".printf(
 					dev.device,
 					dev.type,
 					dev.fstype,
 					dev.removable ? "1" : "0",
+					dev.read_only ? "1" : "0",
 					format_file_size(dev.size_bytes, true),
 					format_file_size(dev.used_bytes, true)
 					));
 			}
+
+			stdout.printf("\n");
 		}
 
 		public static void print_device_mounts(Gee.ArrayList<Device> list){
 
-			log_msg("");
+			stdout.printf("\n");
 			
-			log_msg("%-15s %-12s %s".printf(
+			stdout.printf("%-15s %s\n".printf(
 				"device",
-				"fstype",
-				"mount_points (mount_options)"
+				//"fstype",
+				"> mount_points (mount_options)"
 			));
 
-			log_msg(string.nfill(100, '-'));
+			stdout.printf(string.nfill(100, '-'));
+			stdout.printf("\n");
 			
 			foreach(var dev in list){
 
 				string mps = "";
 				foreach(var mp in dev.mount_points){
-					mps += "%s ".printf(mp);
+					mps += "\n    %s -> ".printf(mp.mount_point);
+					if (mp.mount_options.length > 0){
+						mps += " %s".printf(mp.mount_options);
+					}
 				}
 
-				if (dev.mount_options.length > 0){
-					mps += " (" + dev.mount_options + ")";
-				}
-				
-				log_msg("%-15s %-12s %s".printf(
+				stdout.printf("%-15s %s\n\n".printf(
 					dev.device,
-					dev.fstype,
+					//dev.fstype,
 					mps
 				));
 				
 			}
+
+			stdout.printf("\n");
 		}
 
 		public static void print_device_disk_space(Gee.ArrayList<Device> list){
-			log_msg("");
+			stdout.printf("\n");
 			
-			log_msg("%-15s %-12s %15s %15s %15s %10s".printf(
+			stdout.printf("%-15s %-12s %15s %15s %15s %10s\n".printf(
 				"device",
 				"fstype",
 				"size",
@@ -1226,10 +1439,11 @@ namespace TeeJee.Devices{
 				"used_percent"
 			));
 
-			log_msg(string.nfill(100, '-'));
+			stdout.printf(string.nfill(100, '-'));
+			stdout.printf("\n");
 			
 			foreach(var dev in list){
-				log_msg("%-15s %-12s %15s %15s %15s %10s".printf(
+				stdout.printf("%-15s %-12s %15s %15s %15s %10s\n".printf(
 					dev.device,
 					dev.fstype,
 					format_file_size(dev.size_bytes, true),
@@ -1238,6 +1452,20 @@ namespace TeeJee.Devices{
 					dev.used_percent
 				));
 			}
+
+			stdout.printf("\n");
+		}
+	}
+
+	public class MountEntry : GLib.Object{
+		public Device device = null;
+		public string mount_point = "";
+		public string mount_options = "";
+		
+		public MountEntry(Device device, string mount_point, string mount_options){
+			this.device = device;
+			this.mount_point = mount_point;
+			this.mount_options = mount_options;
 		}
 	}
 
@@ -1298,3 +1526,8 @@ namespace TeeJee.Devices{
 	}
 
 }
+
+
+
+
+

@@ -108,6 +108,7 @@ public class Main : GLib.Object{
 	public int retain_snapshots_max_days = 200;
 	public int64 minimum_free_disk_space = 2 * GB;
 	public int64 first_snapshot_size = 0;
+	public int64 first_snapshot_count = 0;
 
 	public string log_dir = "";
 	public string log_file = "";
@@ -348,10 +349,7 @@ public class Main : GLib.Object{
 	}
 
 	public RsyncTask create_new_rsync_task(){
-		var working_dir = path_combine(TEMP_DIR, random_string());
-		dir_create(working_dir);
-		var task_log = path_combine(working_dir, "rsynctask.log");
-		return new RsyncTask(working_dir, task_log);
+		return new RsyncTask();
 	}
 
 	public bool start_application(string[] args){
@@ -1321,8 +1319,12 @@ public class Main : GLib.Object{
 		bool status;
 		bool update_symlinks = false;
 
+		
 		try
 		{
+
+			log_debug("checking btrfs volumes on root device...");
+			
 			if (App.check_btrfs_root_layout() == false){
 				return false;
 			}
@@ -1330,16 +1332,23 @@ public class Main : GLib.Object{
 			// create a timestamp
 			DateTime now = new DateTime.now_local();
 
+			log_debug("checking if snapshot device is mounted...");
+			
 			// mount_backup_device
 			if (!mount_backup_device(parent_win)){
 				return false;
 			}
 
+			log_debug("checking snapshot device...");
+			
 			//check backup device
 			string message, details;
 			int status_code = check_backup_location(out message, out details);
-
+			
 			if (!is_ondemand){
+
+				log_debug("is_ondemand: false");
+				
 				// check if first snapshot was taken
 				if (status_code == 2){
 					log_error(message);
@@ -1350,11 +1359,17 @@ public class Main : GLib.Object{
 			}
 
 			// check space
-			if ((status_code != 0) || (status_code != 3)){
+			if ((status_code != SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE)
+				&& (status_code != SnapshotLocationStatus.NO_SNAPSHOTS_HAS_SPACE)){
+					
 				is_scheduled = false;
 				log_error(message);
 				log_error(details);
+				log_debug("space_check: Failed!");
 				return false;
+			}
+			else{
+				log_debug("space_check: OK");
 			}
 
 			string snapshot_dir = path_combine(snapshot_location, "timeshift/snapshots");
@@ -1362,6 +1377,7 @@ public class Main : GLib.Object{
 			// create snapshot root if missing
 			var f = File.new_for_path(snapshot_dir);
 			if (!f.query_exists()){
+				log_debug("mkdir: %s".printf(snapshot_dir));
 				f.make_directory_with_parents();
 			}
 
@@ -1555,6 +1571,10 @@ public class Main : GLib.Object{
 		return true;
 	}
 
+	private string temp_tag;
+	private DateTime temp_dt_created;
+	private DateTime temp_dt_begin;
+	
 	public bool backup_and_rotate(string tag, DateTime dt_created){
 		string cmd = "";
 		string std_out;
@@ -1563,6 +1583,11 @@ public class Main : GLib.Object{
 		string msg;
 		File f;
 
+		log_debug("backup_and_rotate()");
+		
+		temp_tag = tag;
+		temp_dt_created = dt_created;
+		
 		string time_stamp = dt_created.format("%Y-%m-%d_%H-%M-%S");
 		DateTime now = new DateTime.now_local();
 		bool backup_taken = false;
@@ -1631,9 +1656,11 @@ public class Main : GLib.Object{
 
 			if (!backup_taken){
 
+				log_debug("Creating new backup...");
+				
 				//take new backup ---------------------------------
 
-				DateTime dt_begin = new DateTime.now_local();
+				temp_dt_begin = new DateTime.now_local();
 				//log_msg("Taking system snapshot...");
 
 				string exclude_from_file = sync_path + "/exclude.list";
@@ -1730,57 +1757,16 @@ public class Main : GLib.Object{
 
 				task = create_new_rsync_task();
 
-				task.source_path = "/.";
+				task.source_path = "";
 				task.dest_path = sync_path + "/localhost/";
 				task.exclude_from_file = exclude_from_file;
 				task.rsync_log_file = log_file;
 
+				task.task_complete.connect(backup_and_rotate_finish);
+				
 				task.execute();
 
-				while (task.status == AppStatus.RUNNING){
-					gtk_do_events ();
-					sleep(200);
-				}
 				
-				if (task.read_status() != 0){
-					log_error(_("rsync returned an error") + ": %d".printf(ret_val));
-					log_error(_("Failed to create new snapshot"));
-					return false;
-				}
-
-				//write control file ----------
-
-				write_snapshot_control_file(sync_path, dt_created, tag);
-
-				//rotate .sync to required level ----------
-
-				progress_text = _("Saving new snapshot...");
-				log_msg(progress_text);
-
-				string new_name = time_stamp;
-				string new_path = snapshot_dir + "/" + new_name;
-
-				cmd = "cp -alp \"%s\" \"%s\"".printf(sync_path, new_path);
-
-				if (LOG_COMMANDS) { log_debug(cmd); }
-
-				Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-				if (ret_val != 0){
-					log_error(_("Failed to save snapshot") + ":'%s'".printf(new_name));
-					log_error (std_err);
-					return false;
-				}
-
-				DateTime dt_end = new DateTime.now_local();
-				TimeSpan elapsed = dt_end.difference(dt_begin);
-				long seconds = (long)(elapsed * 1.0 / TimeSpan.SECOND);
-				msg = _("Snapshot saved successfully") + " (%lds)".printf(seconds);
-				log_msg(msg);
-				OSDNotify.notify_send("TimeShift",msg,10000,"low");
-
-				log_msg(_("Snapshot") + " '%s' ".printf(new_name) + _("tagged") + " '%s'".printf(tag));
-
-				update_snapshot_list();
 			}
 		}
 		catch(Error e){
@@ -1791,6 +1777,71 @@ public class Main : GLib.Object{
 		return true;
 	}
 
+	public void backup_and_rotate_finish(){
+
+		string cmd = "";
+		string std_out;
+		string std_err;
+		int ret_val = -1;
+		string msg;
+		//File f;
+		
+		string sync_name = ".sync";
+		string snapshot_dir = path_combine(snapshot_location, "timeshift/snapshots");
+		string sync_path = snapshot_dir + "/" + sync_name;
+
+		string time_stamp = temp_dt_created.format("%Y-%m-%d_%H-%M-%S");
+		//DateTime now = new DateTime.now_local();
+		
+		if (task.read_status() != 0){
+			log_error(_("rsync returned an error") + ": %d".printf(ret_val));
+			log_error(_("Failed to create new snapshot"));
+			return;
+		}
+
+		//write control file ----------
+
+		write_snapshot_control_file(sync_path, temp_dt_created, temp_tag);
+
+		//rotate .sync to required level ----------
+
+		progress_text = _("Saving new snapshot...");
+		log_msg(progress_text);
+
+		string new_name = time_stamp;
+		string new_path = snapshot_dir + "/" + new_name;
+
+		cmd = "cp -alp \"%s\" \"%s\"".printf(sync_path, new_path);
+
+		if (LOG_COMMANDS) { log_debug(cmd); }
+
+		try{
+			
+			Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
+			if (ret_val != 0){
+				log_error(_("Failed to save snapshot") + ":'%s'".printf(new_name));
+				log_error (std_err);
+				return;
+			}
+		}
+		catch(Error e){
+			log_error (e.message);
+			return;
+		}
+
+		DateTime dt_end = new DateTime.now_local();
+		TimeSpan elapsed = dt_end.difference(temp_dt_begin);
+		long seconds = (long)(elapsed * 1.0 / TimeSpan.SECOND);
+		msg = _("Snapshot saved successfully") + " (%lds)".printf(seconds);
+		log_msg(msg);
+		OSDNotify.notify_send("TimeShift",msg,10000,"low");
+
+		log_msg(_("Snapshot") + " '%s' ".printf(new_name)
+			+ _("tagged") + " '%s'".printf(temp_tag));
+
+		update_snapshot_list();
+	}
+	
 	public int run_rsync(string cmd){
 		thr_arg1 = cmd;
 
@@ -3335,7 +3386,8 @@ public class Main : GLib.Object{
 		config.set_string_member("min_space", (minimum_free_disk_space / (1.0 * GB)).to_string());
 
 		config.set_string_member("first_snapshot_size", first_snapshot_size.to_string());
-		
+		config.set_string_member("first_snapshot_count", first_snapshot_count.to_string());
+
 		Json.Array arr = new Json.Array();
 		foreach(string path in exclude_list_user){
 			arr.add_string_element(path);
@@ -3437,6 +3489,7 @@ public class Main : GLib.Object{
 		this.minimum_free_disk_space = this.minimum_free_disk_space * GB;
 		
 		this.first_snapshot_size = json_get_int64(config,"first_snapshot_size",first_snapshot_size);
+		this.first_snapshot_count = json_get_int64(config,"first_snapshot_count",first_snapshot_count);
 		
 		this.exclude_list_user.clear();
 		if (config.has_member ("exclude")){
@@ -3536,14 +3589,14 @@ public class Main : GLib.Object{
 	public void detect_system_devices(){
 		foreach(Device pi in partitions){
 			foreach(var mp in pi.mount_points){
-				if (mp.mount_point.contains("/")){
+				if (mp.mount_point == "/"){
 					root_device = pi;
 					if ((app_mode == "")||(LOG_DEBUG)){
 						log_msg(_("/ is mapped to device: %s, UUID=%s").printf(pi.device,pi.uuid));
 					}
 				}
 
-				if (mp.mount_point.contains("/home")){
+				if (mp.mount_point == "/home"){
 					home_device = pi;
 					if ((app_mode == "")||(LOG_DEBUG)){
 						log_msg(_("/home is mapped to device: %s, UUID=%s").printf(pi.device,pi.uuid));
@@ -3918,7 +3971,8 @@ public class Main : GLib.Object{
 						var required_space = calculate_size_of_first_snapshot();
 
 						if (snapshot_device.free_bytes < required_space){
-							message = _("Backup device does not have enough space!");
+							message = _("Backup device does not have enough space!")
+								+ " (&lt; %s)".printf(format_file_size(required_space));
 							details = _("Select another device or free up some space")
 								+ " (%s required)".printf(format_file_size(required_space));
 							status_code = SnapshotLocationStatus.NO_SNAPSHOTS_NO_SPACE;
@@ -4008,6 +4062,7 @@ public class Main : GLib.Object{
 		string std_err;
 		int ret_val;
 		int64 required_space = 0;
+		int64 file_count = 0;
 
 		try{
 
@@ -4043,7 +4098,13 @@ public class Main : GLib.Object{
 				ret_val = exec_script_sync(cmd, out std_out, out std_err);
 				if (ret_val == 0){
 					required_space = long.parse(std_out.replace(",","").strip());
-					required_space = required_space / (1024 * 1024);
+
+					cmd = "wc -l '%s'".printf(escape_single_quote(file_log));
+					ret_val = exec_script_sync(cmd, out std_out, out std_err);
+					if (ret_val == 0){
+						file_count = long.parse(std_out.split(" ")[0].strip());
+					}
+					
 					thr_success = true;
 				}
 				else{
@@ -4069,8 +4130,10 @@ public class Main : GLib.Object{
 		}
 
 		this.first_snapshot_size = required_space;
+		this.first_snapshot_count = file_count;
 
-		log_debug("First snapshot size: %lld MB".printf(required_space / (1.0 * MB)));
+		log_debug("First snapshot size: %s".printf(format_file_size(required_space)));
+		log_debug("File count: %lld".printf(first_snapshot_count));
 
 		thr_running = false;
 	}

@@ -13,20 +13,42 @@ public class RsyncTask : AsyncTask{
 	public string source_path = "";
 	public string dest_path = "";
 	public bool verbose = true;
+	private Gee.HashMap<string, Regex> regex_list;
+
+	public Gee.ArrayList<string> status_lines;
+	public int64 status_line_count = 0;
 	
-	public RsyncTask(string _working_dir, string _log_file){
-		working_dir = _working_dir;
-		log_file = _log_file;
+	public RsyncTask(){
+		init_regular_expressions();
+	}
+
+	private void init_regular_expressions(){
+		if (regex_list != null){
+			return; // already initialized
+		}
+		
+		regex_list = new Gee.HashMap<string,Regex>();
+		
+		try {
+			//Example: status=-1
+			regex_list["status"] = new Regex(
+				"""(.)(.)(c|\+|\.)(s|\+|\.)(t|\+|\.)(p|\+|\.)(o|\+|\.)(g|\+|\.)(u|\+|\.)(a|\+|\.)(x|\+|\.) (.*)""");
+		}
+		catch (Error e) {
+			log_error (e.message);
+		}
 	}
 	
 	public void prepare() {
 		string script_text = build_script();
 		save_bash_script_temp(script_text, script_file);
+		log_debug("RsyncTask:prepare(): saved: %s".printf(script_file));
+
+		status_lines = new Gee.ArrayList<string>();
+		status_line_count = 0;
 	}
 
 	private string build_script() {
-		var script = new StringBuilder();
-
 		var cmd = "rsync -ai";
 
 		if (verbose){
@@ -60,13 +82,14 @@ public class RsyncTask : AsyncTask{
 		
 		//cmd += " /. \"%s\"".printf(sync_path + "/localhost/");
 
-		return script.str;
+		return cmd;
 	}
 	 
 	// execution ----------------------------
 
 	public void execute() {
-
+		log_debug("RsyncTask:execute()");
+		
 		prepare();
 
 		/*log_debug(string.nfill(70,'='));
@@ -102,6 +125,14 @@ public class RsyncTask : AsyncTask{
 	public bool update_progress_parse_console_output (string line) {
 		if ((line == null) || (line.length == 0)) {
 			return true;
+		}
+
+		status_line_count++;
+		
+		MatchInfo match;
+		if (regex_list["status"].match(line, 0, out match)) {
+			status_line = match.fetch(12);
+			status_lines.add(status_line);
 		}
 
 		return true;

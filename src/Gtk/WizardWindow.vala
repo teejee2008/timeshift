@@ -50,7 +50,11 @@ class WizardWindow : Gtk.Window{
 	private Gtk.Label lbl_msg;
 	private Gtk.Label lbl_status;
 	private ProgressBar progressbar;
-	private Gtk.Button btn_cancel_snapshot;
+
+	private Gtk.Button btn_prev;
+	private Gtk.Button btn_next;
+	private Gtk.Button btn_cancel;
+	private Gtk.Button btn_abort;
 	
 	private uint tmr_init;
 	
@@ -70,7 +74,9 @@ class WizardWindow : Gtk.Window{
         
 		notebook = add_notebook(box, false, false);
 		notebook.margin = 6;
-		
+
+		create_tab_estimate_system_size();
+
 		create_tab_backup_device();
 
 		create_tab_first_snapshot();
@@ -78,8 +84,6 @@ class WizardWindow : Gtk.Window{
 		create_actions();
 
 		show_all();
-
-		log_msg("here2");
 
 		tmr_init = Timeout.add(100, init_delayed);
     }
@@ -111,9 +115,42 @@ class WizardWindow : Gtk.Window{
 		radio_device.toggled();
 		radio_path.toggled();
 
-		
+		notebook.page = 0;
+		initialize_current_tab();
 		
 		return false;
+	}
+
+	private void create_tab_estimate_system_size(){
+
+		var box = add_tab(notebook, _("Progress"));
+		
+		add_label_header(box, _("Estimating System Size..."), true);
+
+		var hbox_status = new Box (Orientation.HORIZONTAL, 6);
+		box.add (hbox_status);
+		
+		var spinner = new Gtk.Spinner();
+		spinner.active = true;
+		hbox_status.add(spinner);
+		
+		//lbl_msg
+		var lbl_msg = add_label(hbox_status, "Please wait...");
+		lbl_msg.halign = Align.START;
+		lbl_msg.ellipsize = Pango.EllipsizeMode.END;
+		lbl_msg.max_width_chars = 50;
+
+		//progressbar
+		var progressbar = new Gtk.ProgressBar();
+		progressbar.set_size_request(-1,25);
+		//progressbar.pulse_step = 0.1;
+		box.add (progressbar);
+
+		//lbl_status
+		//lbl_status = add_framed_label(box, "");
+		//lbl_status.halign = Align.START;
+		//lbl_status.ellipsize = Pango.EllipsizeMode.MIDDLE;
+		//lbl_status.max_width_chars = 50;
 	}
 
 	private void create_tab_backup_device(){
@@ -194,21 +231,24 @@ class WizardWindow : Gtk.Window{
 		hbox_status.add(spinner);
 		
 		//lbl_msg
-		lbl_msg = add_label(box, "");
+		lbl_msg = add_label(hbox_status, "Copying files...");
 		lbl_msg.halign = Align.START;
 		lbl_msg.ellipsize = Pango.EllipsizeMode.END;
-		lbl_msg.max_width_chars = 40;
+		lbl_msg.max_width_chars = 50;
 
 		//progressbar
 		progressbar = new Gtk.ProgressBar();
+		progressbar.set_size_request(-1,25);
+		//progressbar.show_text = true;
 		//progressbar.pulse_step = 0.1;
-		box.pack_start (progressbar, false, true, 0);
+		box.add (progressbar);
 
 		//lbl_status
-		lbl_status = add_label(box, "");
+		lbl_status = add_framed_label(box, "");
 		lbl_status.halign = Align.START;
-		lbl_status.ellipsize = Pango.EllipsizeMode.END;
-		lbl_status.max_width_chars = 40;
+		lbl_status.ellipsize = Pango.EllipsizeMode.MIDDLE;
+		lbl_status.max_width_chars = 50;
+		lbl_status.margin_top = 6;
 	}
 
 	private void create_actions(){
@@ -226,31 +266,39 @@ class WizardWindow : Gtk.Window{
 		// previous
 		
 		Gtk.Image img = new Image.from_stock("gtk-go-back", Gtk.IconSize.BUTTON);
-		var button = add_button(hbox, _("Previous"), "", ref size_group, img);
-
-        button.clicked.connect(()=>{
+		btn_prev = add_button(hbox, _("Previous"), "", ref size_group, img);
+		
+        btn_prev.clicked.connect(()=>{
 			go_prev();
 		});
 
 		// next
 		
 		img = new Image.from_stock("gtk-go-forward", Gtk.IconSize.BUTTON);
-		button = add_button(hbox, _("Next"), "", ref size_group, img);
+		btn_next = add_button(hbox, _("Next"), "", ref size_group, img);
 
-        button.clicked.connect(()=>{
+        btn_next.clicked.connect(()=>{
 			go_next();
 		});
 
 		// cancel
 		
 		img = new Image.from_stock("gtk-close", Gtk.IconSize.BUTTON);
-		button = add_button(hbox, _("Close"), "", ref size_group, img);
+		btn_cancel = add_button(hbox, _("Close"), "", ref size_group, img);
 
-        button.clicked.connect(()=>{
+        btn_cancel.clicked.connect(()=>{
 			this.destroy();
 		});
 
+		// cancel
 		
+		img = new Image.from_stock("gtk-cancel", Gtk.IconSize.BUTTON);
+		btn_abort = add_button(hbox, _("Cancel"), "", ref size_group, img);
+
+        btn_abort.clicked.connect(()=>{
+			App.task.stop(AppStatus.CANCELLED);
+			this.destroy(); // TODO: Show error page
+		});
 	}
 	
 	private void create_device_list(Gtk.Box box){
@@ -683,8 +731,49 @@ class WizardWindow : Gtk.Window{
 		}
 	}
 
+	private void estimate_system_size(){
+		if (App.first_snapshot_size == 0){
+			App.calculate_size_of_first_snapshot();
+			go_next();
+		}
+	}
+
 	private void take_first_snapshot(){
 		App.take_snapshot(true,"",this);
+
+		var list = new Gee.ArrayList<string>();
+		int index = 0;
+		
+		while (App.task.status == AppStatus.RUNNING){
+
+			int max_index = App.task.status_lines.size - 1;
+			while (index <= max_index){
+				var line = App.task.status_lines[index++];
+				list.add(line);
+			}
+				
+			while (list.size > 18){
+				list.remove_at(0);
+			}
+			
+			var txt = "";
+			foreach(var line in list){
+				txt += "%s\n".printf(line);
+			}
+			lbl_status.label = txt;
+
+			if ((App.first_snapshot_count > 0)
+				&& (App.task.status_line_count < App.first_snapshot_count)){
+
+				double fraction = (App.task.status_line_count * 1.0)
+					/ App.first_snapshot_count;
+				
+				progressbar.set_fraction(fraction);
+			}
+
+			sleep(100);
+			gtk_do_events();
+		}
 	}
 
 	private void go_prev(){
@@ -692,17 +781,62 @@ class WizardWindow : Gtk.Window{
 	}
 	
 	private void go_next(){
-		if (notebook.page == 0){
-			if (check_backup_location()){
-				notebook.next_page();
+		if (validate_current_tab()){
+			notebook.next_page();
+			initialize_current_tab();
+		}
+	}
+
+	private void initialize_current_tab(){
+		switch (notebook.page){
+		case 0:
+			if (App.first_snapshot_size == 0){
+				btn_prev.hide();
+				btn_next.hide();
+				btn_cancel.hide();
+				btn_abort.show();
+			
+				estimate_system_size();
 			}
 			else{
+				go_next();
+			}
+			break;
+			
+		case 1:
+			btn_prev.show();
+			btn_next.show();
+			btn_cancel.show();
+			btn_abort.hide();
+			break;
+			
+		case 2:
+			btn_prev.hide();
+			btn_next.hide();
+			btn_cancel.hide();
+			btn_abort.show();
+			take_first_snapshot();
+			break;
+		}
+	}
+
+	private bool validate_current_tab(){
+		switch (notebook.page){
+		case 1:
+			if (!check_backup_location()){
+				
 				gtk_messagebox(
-					"Snapshot location not selected",
+					"Snapshot location not valid",
 					"Please select a valid device or path",
 					this, true);
+					
+				return false;
 			}
+			
+			break;
 		}
+
+		return true;
 	}
 	
 	// utility ------------------
@@ -823,6 +957,22 @@ class WizardWindow : Gtk.Window{
 		return col;
 	}
 
+	private Gtk.Label add_framed_label(Gtk.Box box, string text){
+
+		// ScrolledWindow
+		var scroll = new Gtk.ScrolledWindow(null, null);
+		scroll.set_shadow_type (ShadowType.ETCHED_IN);
+		scroll.expand = true;
+		box.add(scroll);
+		
+		var label = new Gtk.Label(text);
+		label.xalign = (float) 0.0;
+		label.yalign = (float) 0.0;
+		label.margin = 6;
+		scroll.add(label);
+		return label;
+	}
+	
 	private Gtk.Label add_label(
 		Gtk.Box box, string text, bool is_bold = false, bool is_italic = false, bool is_large = false){
 			

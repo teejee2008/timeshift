@@ -41,11 +41,6 @@ public class Bash : AsyncTask {
 	private static Gee.HashMap<string, Regex> regex_list;
 	
 	public Bash() {
-		var temp_dir = TEMP_DIR + "/" + timestamp_for_path();
-		log_file = temp_dir + "/log.txt";
-		script_file = temp_dir + "/bash.sh";
-		working_dir = temp_dir;
-		
 		init_regular_expressions();
 	}
 

@@ -47,13 +47,15 @@ public abstract class AsyncTask : GLib.Object{
 	public signal void stdout_line_read(string line);
 	public signal void stderr_line_read(string line);
 	public signal void task_complete();
-	
-	public void AsyncTask(string _script_file, string _working_dir, string _log_file){
-		this.script_file = _script_file;
-		this.working_dir = _working_dir;
-		this.log_file = _log_file;
-	}
 
+	public AsyncTask(){
+		working_dir = TEMP_DIR + "/" + timestamp_for_path();
+		script_file = path_combine(working_dir, "script.sh");
+		log_file = path_combine(working_dir, "task.log");
+		
+		dir_create(working_dir);
+	}
+	
 	public bool begin(){
 		bool has_started = true;
 		is_terminated = false;
@@ -307,7 +309,7 @@ public abstract class AsyncTask : GLib.Object{
 		status = AppStatus.RUNNING;
 	}
 
-	public void stop(AppStatus status_to_update) {
+	public void stop(AppStatus status_to_update = AppStatus.CANCELLED) {
 		// we need to un-freeze the processes before we kill them
 		if (status == AppStatus.PAUSED) {
 			resume();

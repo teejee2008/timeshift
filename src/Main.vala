@@ -1311,7 +1311,8 @@ public class Main : GLib.Object{
 	}
 
 	public bool live_system(){
-		return (root_device == null);
+		return true;
+		//return (root_device == null);
 	}
 
 	//backup

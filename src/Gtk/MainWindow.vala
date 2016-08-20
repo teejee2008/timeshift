@@ -410,7 +410,7 @@ class MainWindow : Gtk.Window{
 
 		// hbox_shield
 		var box = new Box (Orientation.HORIZONTAL, 6);
-        box.margin_bottom = 6;
+        box.margin_bottom = 12;
         box.margin_left = 6;
         box.margin_right = 12;
         vbox_main.add (box);
@@ -1299,125 +1299,43 @@ class MainWindow : Gtk.Window{
 	}
 
 	private void update_statusbar(){		
-		/*string img_dot_red = App.share_folder + "/timeshift/images/item-red.png";
-		string img_dot_green = App.share_folder + "/timeshift/images/item-green.png";
-
-		//check free space on backup device ---------------------------
-
-		
-		string txt;
-
-		switch(status_code){
-			case -1:
-				if (App.snapshot_device == null){
-					txt = _("Please select the backup device");
-				}
-				else{
-					txt = _("Backup device is not mounted!");;
-				}
-				txt = "<span foreground=\"#8A0808\">" + txt + "</span>";
-				lbl_backup_device_warning.label = txt;
-				lbl_backup_device_warning.visible = true;
-				break;
-
-			case 1:
-				txt = _("Backup device does not have enough space!");
-				txt = "<span foreground=\"#8A0808\">" + txt + "</span>";
-				lbl_backup_device_warning.label = txt;
-				lbl_backup_device_warning.visible = true;
-				break;
-
-			case 2:
-				var required = App.calculate_size_of_first_snapshot();
-				txt = _("Backup device does not have enough space!") + " ";
-				txt += _("First snapshot needs") + " %.1f GB".printf(required/1024.0);
-				txt = "<span foreground=\"#8A0808\">" + txt + "</span>";
-				lbl_backup_device_warning.label = txt;
-				lbl_backup_device_warning.visible = true;
-				break;
-
-			default:
-				lbl_backup_device_warning.label = "";
-				lbl_backup_device_warning.visible = false;
-				break;
-		}
-
-		if ((status_code == 0)||(status_code == 3)){
-			img_status_device.file = img_dot_green;
-		}
-		else{
-			img_status_device.file = img_dot_red;
-		}
-		lbl_status_device.label = message;
-
-		img_status_device.visible = (message.strip().length > 0);
-		lbl_status_device.visible = (message.strip().length > 0);
-
-		// statusbar icons ---------------------------------------------------------
-
-		//status - scheduled snapshots -----------
-
-		if (App.live_system()){
-			img_status_scheduled.file = img_dot_green;
-			lbl_status_scheduled.label = _("Running from Live CD/USB");
-			lbl_status_scheduled.set_tooltip_text(_("TimeShift is running in a live system"));
-		}
-		else{
-			if (App.is_scheduled){
-				img_status_scheduled.file = img_dot_green;
-				lbl_status_scheduled.label = _("Scheduled snapshots") + " " + _("Enabled");
-				lbl_status_scheduled.set_tooltip_text(_("System snapshots will be taken at regular intervals"));
-			}else{
-				img_status_scheduled.file = img_dot_red;
-				lbl_status_scheduled.label = _("Scheduled snapshots") + " " + _("Disabled");
-				lbl_status_scheduled.set_tooltip_text("");
-			}
-		}*/
-
 		string message, details;
 		int status_code = App.check_backup_location(out message, out details);
 		
-		//status - last snapshot -----------
-
 		DateTime last_snapshot_date = null;
 		
 		switch (status_code){
 		case SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE:
 		case SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE:
-			DateTime now = new DateTime.now_local();
 			TimeShiftBackup last_snapshot = App.get_latest_snapshot();
 			last_snapshot_date = (last_snapshot == null) ? null : last_snapshot.date;
 			break;
-			/*if (last_snapshot == null){
-				img_status_latest.file = img_dot_red;
-				lbl_status_latest.label = _("No snapshots on device");
-			}
-			else{
-				float days = ((float) now.difference(last_snapshot_date) / TimeSpan.DAY);
-				float hours = ((float) now.difference(last_snapshot_date) / TimeSpan.HOUR);
-
-				if (days > 1){
-					img_status_latest.file = img_dot_red;
-					lbl_status_latest.label = _("Last snapshot is") +  " %.0f ".printf(days) + _("days old") + "!";
-				}
-				else if (hours > 1){
-					img_status_latest.file = img_dot_green;
-					lbl_status_latest.label = _("Last snapshot is") +  " %.0f ".printf(hours) + _("hours old");
-				}
-				else{
-					img_status_latest.file = img_dot_green;
-					lbl_status_latest.label = _("Last snapshot is less than 1 hour old");
-				}
-			}*/
 		}
-		//else{
-			//img_status_latest.visible = false;
-			//lbl_status_latest.visible = false;
-		//}
-
 
 		if (App.live_system()){
-			statusbar.visible = false;
+			statusbar.visible = true;
+			statusbar.show_all();
+
+			img_shield.pixbuf = get_shared_icon("media-optical", "media-optical.png", 48).pixbuf;
+			set_shield_label(_("Live USB Mode (Restore Only)"));
+			set_shield_subnote("");
+
+			switch (status_code){
+			case SnapshotLocationStatus.NOT_SELECTED:
+			case SnapshotLocationStatus.NOT_AVAILABLE:
+				set_shield_subnote(details);
+				break;
+			
+			case SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE:
+			case SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE:
+				set_shield_subnote(_("Snapshots available for restore"));
+				break;
+
+			case SnapshotLocationStatus.NO_SNAPSHOTS_NO_SPACE:
+			case SnapshotLocationStatus.NO_SNAPSHOTS_HAS_SPACE:
+				set_shield_subnote(_("No snapshots found"));
+				break;
+			}
 		}
 		else{
 			statusbar.visible = true;

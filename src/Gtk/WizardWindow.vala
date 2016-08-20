@@ -125,7 +125,13 @@ class WizardWindow : Gtk.Window{
 		radio_device.toggled();
 		radio_path.toggled();
 
-		notebook.page = Tabs.ESTIMATE;
+		if (App.live_system()){
+			notebook.page = Tabs.SNAPSHOT_LOCATION;
+		}
+		else{
+			notebook.page = Tabs.ESTIMATE;
+		}
+
 		initialize_current_tab();
 		
 		return false;
@@ -171,7 +177,7 @@ class WizardWindow : Gtk.Window{
 
 		// section device
 		
-		radio_device = add_radio(box, "<b>%s</b>".printf(_("Save to disk partition:")), null);
+		radio_device = add_radio(box, "<b>%s</b>".printf(_("Disk Partition:")), null);
 
 		var msg = _("Only Linux partitions are supported.");
 		msg += "\n" + _("Snapshots will be saved in folder /timeshift");
@@ -195,7 +201,7 @@ class WizardWindow : Gtk.Window{
 
 		// section path
 		
-		radio_path = add_radio(box, "<b>%s</b>".printf(_("Save to specified path:")), radio_device);
+		radio_path = add_radio(box, "<b>%s</b>".printf(_("Custom Path:")), radio_device);
 		radio_path.margin_top = 12;
 
 		msg = _("File system at selected path must support hard-links");
@@ -634,7 +640,8 @@ class WizardWindow : Gtk.Window{
 		string message, details;
 		int status_code = App.check_backup_location(out message, out details);
 
-		switch (status_code){
+		if (App.live_system()){
+			switch (status_code){
 			case SnapshotLocationStatus.NOT_SELECTED:
 				lbl_infobar_location.label = "<span weight=\"bold\">%s</span>".printf(details);
 				infobar_location.message_type = Gtk.MessageType.ERROR;
@@ -644,8 +651,6 @@ class WizardWindow : Gtk.Window{
 				break;
 				
 			case SnapshotLocationStatus.NOT_AVAILABLE:
-			case SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE:
-			case SnapshotLocationStatus.NO_SNAPSHOTS_NO_SPACE:
 				lbl_infobar_location.label = "<span weight=\"bold\">%s</span>".printf(message);
 				infobar_location.message_type = Gtk.MessageType.ERROR;
 				infobar_location.no_show_all = false;
@@ -662,11 +667,59 @@ class WizardWindow : Gtk.Window{
 				ok = false;
 				break;
 
-			case 3:
-			case 0:
+			case SnapshotLocationStatus.NO_SNAPSHOTS_HAS_SPACE:
+			case SnapshotLocationStatus.NO_SNAPSHOTS_NO_SPACE:
+				lbl_infobar_location.label = "<span weight=\"bold\">%s</span>".printf(
+					_("There are no snapshots on this device"));
+				infobar_location.message_type = Gtk.MessageType.ERROR;
+				infobar_location.no_show_all = false;
+				infobar_location.show_all();
+				//ok = false;
+				break;
+
+			case SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE:
+			case SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE:
 				infobar_location.hide();
 				break;
+			}
 		}
+		else{
+			switch (status_code){
+				case SnapshotLocationStatus.NOT_SELECTED:
+					lbl_infobar_location.label = "<span weight=\"bold\">%s</span>".printf(details);
+					infobar_location.message_type = Gtk.MessageType.ERROR;
+					infobar_location.no_show_all = false;
+					infobar_location.show_all();
+					ok = false;
+					break;
+					
+				case SnapshotLocationStatus.NOT_AVAILABLE:
+				case SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE:
+				case SnapshotLocationStatus.NO_SNAPSHOTS_NO_SPACE:
+					lbl_infobar_location.label = "<span weight=\"bold\">%s</span>".printf(message);
+					infobar_location.message_type = Gtk.MessageType.ERROR;
+					infobar_location.no_show_all = false;
+					infobar_location.show_all();
+					ok = false;
+					break;
+
+				case SnapshotLocationStatus.READ_ONLY_FS:
+				case SnapshotLocationStatus.HARDLINKS_NOT_SUPPORTED:
+					lbl_infobar_location.label = "<span weight=\"bold\">%s</span>".printf(message);
+					infobar_location.message_type = Gtk.MessageType.ERROR;
+					infobar_location.no_show_all = false;
+					infobar_location.show_all();
+					ok = false;
+					break;
+
+				case 3:
+				case 0:
+					infobar_location.hide();
+					break;
+			}
+
+		}
+		
 
 		return ok;
 	}
@@ -909,7 +962,7 @@ class WizardWindow : Gtk.Window{
 
 			box_actions.set_layout (Gtk.ButtonBoxStyle.CENTER);
 			
-			if ((App.snapshot_list.size == 0)||(mode == "create")){
+			if (!App.live_system() && ((App.snapshot_list.size == 0) || (mode == "create"))){
 				take_snapshot();
 			}
 			else{
@@ -929,8 +982,10 @@ class WizardWindow : Gtk.Window{
 			btn_prev.sensitive = false;
 			btn_next.sensitive = false;
 
-			destroy();
-			
+			if (App.live_system() || (mode == "create")){
+				destroy();
+			}
+
 			break;
 		}
 	}

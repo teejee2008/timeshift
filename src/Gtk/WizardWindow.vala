@@ -44,6 +44,11 @@ class WizardWindow : Gtk.Window{
 	private Gtk.InfoBar infobar_location;
 	private Gtk.Label lbl_infobar_location;
 
+	private Gtk.Box tab_estimate;
+	private Gtk.Box tab_snapshot_location;
+	private Gtk.Box tab_take_snapshot;
+	private Gtk.Box tab_finish;
+
 	private Gtk.Spinner spinner;
 	private Gtk.Label lbl_msg;
 	private Gtk.Label lbl_status;
@@ -54,6 +59,8 @@ class WizardWindow : Gtk.Window{
 	private Gtk.Button btn_next;
 	private Gtk.Button btn_cancel;
 	private Gtk.Button btn_abort;
+
+	private bool show_finish_page = false;
 
 	private bool thread_is_running = false;
 	
@@ -86,14 +93,22 @@ class WizardWindow : Gtk.Window{
         
 		notebook = add_notebook(box, false, false);
 		notebook.margin = 6;
+
+		if (mode == "settings"){
+			notebook.show_tabs = true;
+		}
 		
-		create_tab_estimate_system_size();
+		if (mode != "settings"){
+			tab_estimate = create_tab_estimate_system_size();
+		}
 
-		create_tab_backup_device();
+		tab_snapshot_location = create_tab_backup_device();
 
-		create_tab_first_snapshot();
+		if (mode != "settings"){
+			tab_take_snapshot = create_tab_first_snapshot();
+		}
 
-		create_tab_final();
+		tab_finish = create_tab_final();
 		
 		create_actions();
 
@@ -126,10 +141,10 @@ class WizardWindow : Gtk.Window{
 		radio_path.toggled();
 
 		if (App.live_system()){
-			notebook.page = Tabs.SNAPSHOT_LOCATION;
+			notebook.page = page_num_snapshot_location;
 		}
 		else{
-			notebook.page = Tabs.ESTIMATE;
+			notebook.page = page_num_estimate;
 		}
 
 		initialize_current_tab();
@@ -137,13 +152,13 @@ class WizardWindow : Gtk.Window{
 		return false;
 	}
 
-	private void create_tab_estimate_system_size(){
+	private Gtk.Box create_tab_estimate_system_size(){
 
-		var box = add_tab(notebook, _("Progress"));
+		var box = add_tab(notebook, _("Estimate"));
 		
 		add_label_header(box, _("Estimating System Size..."), true);
 
-		var hbox_status = new Box (Orientation.HORIZONTAL, 6);
+		var hbox_status = new Gtk.Box (Orientation.HORIZONTAL, 6);
 		box.add (hbox_status);
 		
 		var spinner = new Gtk.Spinner();
@@ -167,11 +182,13 @@ class WizardWindow : Gtk.Window{
 		//lbl_status.halign = Align.START;
 		//lbl_status.ellipsize = Pango.EllipsizeMode.MIDDLE;
 		//lbl_status.max_width_chars = 50;
+
+		return box;
 	}
 
-	private void create_tab_backup_device(){
+	private Gtk.Box create_tab_backup_device(){
 
-		var box = add_tab(notebook, _("Backup Device"));
+		var box = add_tab(notebook, _("Snapshot Device"));
 		
 		add_label_header(box, _("Select Snapshot Location"), true);
 
@@ -224,11 +241,13 @@ class WizardWindow : Gtk.Window{
 
 		radio_path.set_tooltip_text(msg);
 		entry_backup_path.set_tooltip_text(msg);
+
+		return box;
 	}
 
-	private void create_tab_first_snapshot(){
+	private Gtk.Box create_tab_first_snapshot(){
 
-		var box = add_tab(notebook, _("Progress"));
+		var box = add_tab(notebook, _("Create Snapshot"));
 		
 		add_label_header(box, _("Creating Snapshot..."), true);
 
@@ -256,10 +275,12 @@ class WizardWindow : Gtk.Window{
 		lbl_status = add_label_scrolled(box, "", true);
 		lbl_status.max_width_chars = 45;
 		lbl_status.margin_top = 12;
+
+		return box;
 	}
 
-	private void create_tab_final(){
-		var box = add_tab(notebook, _("Done"));
+	private Gtk.Box create_tab_final(){
+		var box = add_tab(notebook, _("Notes"));
 		
 		add_label_header(box, _("Setup Complete"), true);
 
@@ -297,6 +318,8 @@ class WizardWindow : Gtk.Window{
 		box.add(scroll);*/
 
 		//scroll.add(label);
+
+		return box;
 	}
 	
 	private void create_actions(){
@@ -609,32 +632,6 @@ class WizardWindow : Gtk.Window{
 		gtk_set_busy(false, this);
 	}
 
-	/*private void select_backup_device(Device pi){
-
-		tv_devices.get_selection().unselect_all();
-
-		if (App.snapshot_device == null){
-			return;
-		}
-		
-		Gtk.TreeIter iter;
-		var store = (Gtk.TreeStore) tv_devices.model;
-
-		bool iterExists = store.get_iter_first (out iter);
-		while (iterExists) {
-			Device dev;
-			store.get (iter, 0, out dev);
-
-			if (dev.uuid == App.snapshot_device.uuid){
-				tv_devices.get_selection().select_iter(iter);
-				break;
-			}
-			else{
-				iterExists = store.iter_next (ref iter);
-			}
-		}
-	}*/
-
 	private bool check_backup_location(){
 		bool ok = true;
 		string message, details;
@@ -724,36 +721,6 @@ class WizardWindow : Gtk.Window{
 		return ok;
 	}
 
-	/*private bool check_backup_path(string path){
-		bool ok = true;
-		bool is_readonly;
-		bool hardlink_supported = filesystem_supports_hardlinks(path, out is_readonly);
-		
-		if (is_readonly){
-			var msg = _("File system at selected path is read-only!") + "\n";
-			msg += _("Please select another path.");
-			lbl_infobar_path.label = "<span weight=\"bold\">%s</span>".printf(msg);
-			infobar_path.message_type = Gtk.MessageType.ERROR;
-			infobar_path.no_show_all = false;
-			infobar_path.show_all();
-			ok = false;
-		}
-		else if (!hardlink_supported){
-			var msg = _("File system at selected path does not support hard-links!") + "\n";
-			msg += _("Please select another path.");
-			lbl_infobar_path.label = "<span weight=\"bold\">%s</span>".printf(msg);
-			infobar_path.message_type = Gtk.MessageType.ERROR;
-			infobar_path.no_show_all = false;
-			infobar_path.show_all();
-			ok = false;
-		}
-		else{
-			infobar_path.hide();
-		}
-
-		return ok;
-	}*/
-
 	private void tv_devices_refresh(){
 		App.update_partitions();
 
@@ -842,7 +809,7 @@ class WizardWindow : Gtk.Window{
 	
 	
 	private void take_snapshot(){
-		
+	
 		try {
 			thread_is_running = true;
 			Thread.create<void> (take_snapshot_thread, true);
@@ -920,8 +887,7 @@ class WizardWindow : Gtk.Window{
 
 		log_debug("page: %d".printf(notebook.page));
 		
-		switch (notebook.page){
-		case Tabs.ESTIMATE:
+		if (notebook.page == page_num_estimate){
 			if (App.first_snapshot_size == 0){
 				btn_prev.hide();
 				btn_next.hide();
@@ -935,9 +901,9 @@ class WizardWindow : Gtk.Window{
 			else{
 				go_next();
 			}
-			break;
+		}
+		else if (notebook.page == page_num_snapshot_location){
 			
-		case Tabs.SNAPSHOT_LOCATION:
 			btn_prev.show();
 			btn_next.show();
 			btn_cancel.show();
@@ -951,16 +917,19 @@ class WizardWindow : Gtk.Window{
 			if (mode == "create"){
 				go_next();
 			}
+		}
+		else if (notebook.page == page_num_take_snapshot){
 			
-			break;
-			
-		case Tabs.FIRST_SNAPSHOT:
 			btn_prev.hide();
 			btn_next.hide();
 			btn_cancel.hide();
 			btn_abort.show();
 
 			box_actions.set_layout (Gtk.ButtonBoxStyle.CENTER);
+
+			if (App.snapshot_list.size == 0){
+				show_finish_page = true;
+			}
 			
 			if (!App.live_system() && ((App.snapshot_list.size == 0) || (mode == "create"))){
 				take_snapshot();
@@ -969,9 +938,9 @@ class WizardWindow : Gtk.Window{
 				go_next();
 			}
 			
-			break;
+		}
+		else if (notebook.page == page_num_finish){
 
-		case Tabs.FINISH:
 			btn_prev.show();
 			btn_next.show();
 			btn_cancel.show();
@@ -982,17 +951,15 @@ class WizardWindow : Gtk.Window{
 			btn_prev.sensitive = false;
 			btn_next.sensitive = false;
 
-			if (App.live_system() || (mode == "create")){
+			if (App.live_system() || (mode == "create") || (show_finish_page == false)){
 				destroy();
 			}
-
-			break;
 		}
 	}
 
 	private bool validate_current_tab(){
-		switch (notebook.page){
-		case 1:
+		
+		if (notebook.page == page_num_snapshot_location){
 			if (!check_backup_location()){
 				
 				gtk_messagebox(
@@ -1002,13 +969,37 @@ class WizardWindow : Gtk.Window{
 					
 				return false;
 			}
-			
-			break;
 		}
 
 		return true;
 	}
-	
+
+	// properties ---------------------------------
+
+	private int page_num_estimate{
+		get {
+			return notebook.page_num(tab_estimate);
+		}
+	}
+
+	private int page_num_snapshot_location{
+		get {
+			return notebook.page_num(tab_snapshot_location);
+		}
+	}
+
+	private int page_num_take_snapshot{
+		get {
+			return notebook.page_num(tab_take_snapshot);
+		}
+	}
+
+	private int page_num_finish{
+		get {
+			return notebook.page_num(tab_finish);
+		}
+	}
+
 	// utility ------------------
 	
 	private Gtk.Notebook add_notebook(Gtk.Box box, bool show_tabs = true, bool show_border = true){
@@ -1298,10 +1289,9 @@ class WizardWindow : Gtk.Window{
 	}
 }
 
-private enum Tabs{
+/*private enum Tabs{
 	ESTIMATE,
 	SNAPSHOT_LOCATION,
 	FIRST_SNAPSHOT,
 	FINISH
-
-}
+}*/

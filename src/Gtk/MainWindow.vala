@@ -432,6 +432,32 @@ class MainWindow : Gtk.Window{
 
         //lbl_shield_subnote
 		lbl_shield_subnote = add_label(vbox, "");
+
+		// snap_count
+		vbox = new Box (Orientation.VERTICAL, 6);
+        statusbar.add (vbox);
+
+		var lbl_snap_count = new Label(_("Per Hour"));
+		lbl_snap_count.set_no_show_all(true);
+		vbox.add(lbl_snap_count);
+
+		lbl_snap_count_val = new Label("<b>" + _("0.0%") + "</b>");
+		lbl_snap_count_val.set_use_markup(true);
+		lbl_snap_count_val.set_no_show_all(true);
+		vbox.add(lbl_snap_count_val);
+
+		// free space
+		vbox = new Box (Orientation.VERTICAL, 6);
+        statusbar.add(vbox);
+
+		var lbl_snap_count = new Label(_("Per Hour"));
+		lbl_snap_count.set_no_show_all(true);
+		vbox.add(lbl_snap_count);
+
+		lbl_snap_count_val = new Label("<b>" + _("0.0%") + "</b>");
+		lbl_snap_count_val.set_use_markup(true);
+		lbl_snap_count_val.set_no_show_all(true);
+		vbox.add(lbl_snap_count_val);
 	}
 	
     private bool menu_extra_popup(Gdk.EventButton? event){

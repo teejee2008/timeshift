@@ -52,7 +52,8 @@ public class Main : GLib.Object{
 	public string share_folder = "";
 	public string rsnapshot_conf_path = "";
 	public string app_conf_path = "";
-
+	public bool first_run = false;
+	
 	public Gee.ArrayList<TimeShiftBackup?> snapshot_list;
 	public Gee.ArrayList<Device> partitions;
 
@@ -1319,10 +1320,8 @@ public class Main : GLib.Object{
 		bool status;
 		bool update_symlinks = false;
 
-		
 		try
 		{
-
 			log_debug("checking btrfs volumes on root device...");
 			
 			if (App.check_btrfs_root_layout() == false){
@@ -1606,7 +1605,7 @@ public class Main : GLib.Object{
 				f = File.new_for_path(sync_path + "/info.json");
 				if(!f.query_exists()){
 
-					progress_text = _("Cleaning up...");
+					progress_text = _("Removing partially completed snapshot...");
 					log_msg(progress_text);
 
 					if (!delete_directory(sync_path)){
@@ -1762,11 +1761,62 @@ public class Main : GLib.Object{
 				task.exclude_from_file = exclude_from_file;
 				task.rsync_log_file = log_file;
 
-				task.task_complete.connect(backup_and_rotate_finish);
+				//task.task_complete.connect(backup_and_rotate_finish);
 				
 				task.execute();
 
-				
+				while (task.status == AppStatus.RUNNING){
+					sleep(1000);
+					gtk_do_events();
+				}
+
+				if (task.total_size == 0){
+					log_error(_("rsync returned an error") + ": %d".printf(ret_val));
+					log_error(_("Failed to create new snapshot"));
+					return false;
+				}
+
+				// write control file ----------
+
+				write_snapshot_control_file(sync_path, temp_dt_created, temp_tag);
+
+				// rotate .sync to required level ----------
+
+				progress_text = _("Saving snapshot...");
+				log_msg(progress_text);
+
+				string new_name = time_stamp;
+				string new_path = snapshot_dir + "/" + new_name;
+
+				cmd = "cp -alp \"%s\" \"%s\"".printf(sync_path, new_path);
+
+				if (LOG_COMMANDS) { log_debug(cmd); }
+
+				try{
+					
+					Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
+					if (ret_val != 0){
+						log_error(_("Failed to save snapshot") + ":'%s'".printf(new_name));
+						log_error (std_err);
+						return false;
+					}
+				}
+				catch(Error e){
+					log_error (e.message);
+					return false;
+				}
+
+				DateTime dt_end = new DateTime.now_local();
+				TimeSpan elapsed = dt_end.difference(temp_dt_begin);
+				long seconds = (long)(elapsed * 1.0 / TimeSpan.SECOND);
+				msg = _("Snapshot saved successfully") + " (%lds)".printf(seconds);
+				log_msg(msg);
+				OSDNotify.notify_send("TimeShift",msg,10000,"low");
+
+				log_msg(_("Snapshot") + " '%s' ".printf(new_name)
+					+ _("tagged") + " '%s'".printf(temp_tag));
+
+				update_snapshot_list();
 			}
 		}
 		catch(Error e){
@@ -1777,71 +1827,6 @@ public class Main : GLib.Object{
 		return true;
 	}
 
-	public void backup_and_rotate_finish(){
-
-		string cmd = "";
-		string std_out;
-		string std_err;
-		int ret_val = -1;
-		string msg;
-		//File f;
-		
-		string sync_name = ".sync";
-		string snapshot_dir = path_combine(snapshot_location, "timeshift/snapshots");
-		string sync_path = snapshot_dir + "/" + sync_name;
-
-		string time_stamp = temp_dt_created.format("%Y-%m-%d_%H-%M-%S");
-		//DateTime now = new DateTime.now_local();
-		
-		if (task.total_size == 0){
-			log_error(_("rsync returned an error") + ": %d".printf(ret_val));
-			log_error(_("Failed to create new snapshot"));
-			return;
-		}
-
-		//write control file ----------
-
-		write_snapshot_control_file(sync_path, temp_dt_created, temp_tag);
-
-		//rotate .sync to required level ----------
-
-		progress_text = _("Saving new snapshot...");
-		log_msg(progress_text);
-
-		string new_name = time_stamp;
-		string new_path = snapshot_dir + "/" + new_name;
-
-		cmd = "cp -alp \"%s\" \"%s\"".printf(sync_path, new_path);
-
-		if (LOG_COMMANDS) { log_debug(cmd); }
-
-		try{
-			
-			Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-			if (ret_val != 0){
-				log_error(_("Failed to save snapshot") + ":'%s'".printf(new_name));
-				log_error (std_err);
-				return;
-			}
-		}
-		catch(Error e){
-			log_error (e.message);
-			return;
-		}
-
-		DateTime dt_end = new DateTime.now_local();
-		TimeSpan elapsed = dt_end.difference(temp_dt_begin);
-		long seconds = (long)(elapsed * 1.0 / TimeSpan.SECOND);
-		msg = _("Snapshot saved successfully") + " (%lds)".printf(seconds);
-		log_msg(msg);
-		OSDNotify.notify_send("TimeShift",msg,10000,"low");
-
-		log_msg(_("Snapshot") + " '%s' ".printf(new_name)
-			+ _("tagged") + " '%s'".printf(temp_tag));
-
-		update_snapshot_list();
-	}
-	
 	public int run_rsync(string cmd){
 		thr_arg1 = cmd;
 
@@ -2010,37 +1995,33 @@ public class Main : GLib.Object{
 		string std_err;
 		int ret_val;
 
-		try{
-			cleanup_symlink_dir("boot");
-			cleanup_symlink_dir("hourly");
-			cleanup_symlink_dir("daily");
-			cleanup_symlink_dir("weekly");
-			cleanup_symlink_dir("monthly");
-			cleanup_symlink_dir("ondemand");
+		cleanup_symlink_dir("boot");
+		cleanup_symlink_dir("hourly");
+		cleanup_symlink_dir("daily");
+		cleanup_symlink_dir("weekly");
+		cleanup_symlink_dir("monthly");
+		cleanup_symlink_dir("ondemand");
 
-			string path;
+		string path;
 
-			foreach(TimeShiftBackup bak in snapshot_list){
-				foreach(string tag in bak.tags){
-					path = mount_point_backup + "/timeshift/snapshots-%s".printf(tag);
-					cmd = "ln --symbolic \"../snapshots/%s\" -t \"%s\"".printf(bak.name, path);
+		foreach(TimeShiftBackup bak in snapshot_list){
+			foreach(string tag in bak.tags){
+				
+				path = mount_point_backup + "/timeshift/snapshots-%s".printf(tag);
+				cmd = "ln --symbolic \"../snapshots/%s\" -t \"%s\"".printf(bak.name, path);
 
-					if (LOG_COMMANDS) { log_debug(cmd); }
+				if (LOG_COMMANDS) { log_debug(cmd); }
 
-					Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-					if (ret_val != 0){
-						log_error (std_err);
-						log_error(_("Failed to create symlinks") + ": snapshots-%s".printf(tag));
-						return;
-					}
+				ret_val = exec_sync(cmd, out std_out, out std_err);
+				if (ret_val != 0){
+					log_error (std_err);
+					log_error(_("Failed to create symlinks") + ": snapshots-%s".printf(tag));
+					return;
 				}
 			}
-
-			log_debug (_("Symlinks updated"));
 		}
-		catch (Error e) {
-	        log_error (e.message);
-	    }
+
+		log_debug (_("Symlinks updated"));
 	}
 
 	public void cleanup_symlink_dir(string tag){
@@ -3414,7 +3395,10 @@ public class Main : GLib.Object{
 
 	public void load_app_config(){
 		var f = File.new_for_path(this.app_conf_path);
-		if (!f.query_exists()) { return; }
+		if (!f.query_exists()) {
+			first_run = true;
+			return;
+		}
 
 		var parser = new Json.Parser();
         try{
@@ -3854,10 +3838,13 @@ public class Main : GLib.Object{
 		log_msg("Free space limit: %s".printf(format_file_size(minimum_free_disk_space)));
 
 		int64 free_space = 0;
-		bool ok = false;
+		bool check_free_space = false;
 
 		if (use_snapshot_path){
-			if (snapshot_path.length > 0){
+
+			log_msg(_("Path selected"));
+			
+			if (snapshot_path.strip().length == 0){
 				message = _("Snapshot location not selected!");
 				details = _("Select the location for saving snapshots");
 				status_code = SnapshotLocationStatus.NOT_SELECTED;
@@ -3888,12 +3875,17 @@ public class Main : GLib.Object{
 						
 						var list = Device.get_disk_space_using_df(snapshot_path);
 						free_space = (list.size > 0) ? list[0].free_bytes : 0;
-						ok = true;
+						log_debug("free space: %s".printf(format_file_size(free_space)));
+						check_free_space = true;
 					}
 				}
 			}
 		}
 		else{
+
+			log_msg(_("Device selected") +
+				((snapshot_device == null) ? ": null" : ": %s".printf(snapshot_device.kname)));
+			
 			if (snapshot_device == null){
 				message = _("Snapshot location not selected!");
 				details = _("Select the location for saving snapshots");
@@ -3908,56 +3900,60 @@ public class Main : GLib.Object{
 				// ok, check snapshots and space
 				
 				free_space = snapshot_device.free_bytes;
-				ok = true;
+				log_debug("free space: %s".printf(format_file_size(free_space)));
+				check_free_space = true;
 			}
 		}
 
-		if (snapshot_list.size > 0){
-
-			// has snapshots, check minimum space
+		if (check_free_space){
 			
-			if (free_space < minimum_free_disk_space){
+			if (snapshot_list.size > 0){
+				// has snapshots, check minimum space
 				
-				message = _("Disk space not enough!")
-					+ " (less than %s)".printf(format_file_size(minimum_free_disk_space));
+				if (free_space < minimum_free_disk_space){
 					
-				details = _("Select another device or free up some space");
-				status_code = SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE;
+					message = _("Disk space not enough!")
+						+ " (less than %s)".printf(format_file_size(minimum_free_disk_space));
+						
+					details = _("Select another device or free up some space");
+					status_code = SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE;
+				}
+				else{
+					//ok
+					message = "";
+					
+					details = _("%d snapshots, %s free").printf(
+						snapshot_list.size,
+						format_file_size(free_space));
+						
+					status_code = SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE;
+				}
 			}
-			else{
-				//ok
-				message = "";
+			else {
+
+				// no snapshots, check estimated space
 				
-				details = _("%d snapshots, %s free").printf(
-					snapshot_list.size,
-					format_file_size(free_space));
+				var required_space = calculate_size_of_first_snapshot();
+
+				if (free_space < required_space){
+					message = _("Not enough disk space");
+					message += " (%s needed)".printf(format_file_size(required_space));
 					
-				status_code = SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE;
+					details = _("Select another device or free up some space");
+					
+					status_code = SnapshotLocationStatus.NO_SNAPSHOTS_NO_SPACE;
+				}
+				else{
+					message = _("No snapshots on this device");
+					
+					details = _("First snapshot requires:");
+					details += " %s".printf(format_file_size(required_space));
+					
+					status_code = SnapshotLocationStatus.NO_SNAPSHOTS_HAS_SPACE;
+				}
 			}
 		}
-		else {
-
-			// no snapshots, check estimated space
-			
-			var required_space = calculate_size_of_first_snapshot();
-
-			if (free_space < required_space){
-				message = _("Disk space not enough!");
-				message += " (%s needed)".printf(format_file_size(required_space));
-				
-				details = _("Select another device or free up some space");
-				
-				status_code = SnapshotLocationStatus.NO_SNAPSHOTS_NO_SPACE;
-			}
-			else{
-				message = _("No snapshots on this device");
-				
-				details = _("First snapshot requires:");
-				details += " %s".printf(format_file_size(required_space));
-				
-				status_code = SnapshotLocationStatus.NO_SNAPSHOTS_HAS_SPACE;
-			}
-		}
+		
 
 		log_msg(_("Snapshot location") + ": '%s'".printf(snapshot_location));
 

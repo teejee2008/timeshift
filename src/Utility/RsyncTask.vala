@@ -25,6 +25,7 @@ public class RsyncTask : AsyncTask{
 	
 	public RsyncTask(){
 		init_regular_expressions();
+		status_lines = new Gee.ArrayList<string>();
 	}
 
 	private void init_regular_expressions(){
@@ -142,7 +143,11 @@ public class RsyncTask : AsyncTask{
 		MatchInfo match;
 		if (regex_list["status"].match(line, 0, out match)) {
 			status_line = match.fetch(12);
+
 			status_lines.add(status_line);
+			if (status_lines.size > 15){
+				status_lines.remove_at(0);
+			}
 		}
 		else if (regex_list["total-size"].match(line, 0, out match)) {
 			total_size = int64.parse(match.fetch(1).replace(",",""));

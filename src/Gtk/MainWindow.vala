@@ -47,11 +47,11 @@ class MainWindow : Gtk.Window{
 	private Gtk.Menu menu_extra;
 	
 	//backup device
-	private Gtk.Box hbox_device;
-	private Gtk.Label lbl_backup_device;
-	private Gtk.ComboBox cmb_backup_device;
-	private Gtk.Button btn_refresh_backup_device_list;
-	private Gtk.Label lbl_backup_device_warning;
+	//private Gtk.Box hbox_device;
+	//private Gtk.Label lbl_backup_device;
+	//private Gtk.ComboBox cmb_backup_device;
+	//private Gtk.Button btn_refresh_backup_device_list;
+	//private Gtk.Label lbl_backup_device_warning;
 
 	//snapshots
 	private Gtk.ScrolledWindow sw_backups;
@@ -63,29 +63,18 @@ class MainWindow : Gtk.Window{
 	private int tv_backups_sort_column_index = 0;
 	private bool tv_backups_sort_column_desc = true;
 
-	private Gtk.Box hbox_shield;
+	//statusbar
+	private Gtk.Box statusbar;
 	private Gtk.Image img_shield;
 	private Gtk.Label lbl_shield;
 	private Gtk.Label lbl_shield_subnote;
-	
-	//statusbar
-	private Gtk.Box hbox_statusbar;
-	private Gtk.Image img_status_spinner;
-	private Gtk.Image img_status_dot;
 	private Gtk.Label lbl_status;
-	private Gtk.Label lbl_status_scheduled;
-	private Gtk.Image img_status_scheduled;
-	private Gtk.Label lbl_status_latest;
-	private Gtk.Image img_status_latest;
-	private Gtk.Label lbl_status_device;
-	private Gtk.Image img_status_device;
-	private Gtk.Image img_status_progress;
-	
 
 	//timers
 	private uint timer_status_message;
 	private uint timer_progress;
 	private uint timer_backup_device_init;
+	private uint tmr_init;
 
 	//other
 	private Device snapshot_device_original;
@@ -119,8 +108,23 @@ class MainWindow : Gtk.Window{
 		}
 
 		//refresh_cmb_backup_device();
-		timer_backup_device_init = Timeout.add(100, init_ui_for_backup_device);
+		tmr_init = Timeout.add(100, init_delayed);
     }
+
+    private bool init_delayed(){
+		if (tmr_init > 0){
+			Source.remove(tmr_init);
+			tmr_init = 0;
+		}
+
+		init_ui_for_backup_device();
+
+		if (App.first_run){
+			btn_wizard_clicked();
+		}
+
+		return false;
+	}
 
 	private void init_ui_toolbar(){
 		//toolbar
@@ -410,15 +414,15 @@ class MainWindow : Gtk.Window{
         box.margin_left = 6;
         box.margin_right = 12;
         vbox_main.add (box);
-		hbox_shield = box;
+		statusbar = box;
 		
         // img_shield
 		img_shield = new Gtk.Image();
 		img_shield.pixbuf = get_shared_icon("security-high", "security-high.svg", 48).pixbuf;
-        hbox_shield.add(img_shield);
+        statusbar.add(img_shield);
 
 		var vbox = new Box (Orientation.VERTICAL, 6);
-        hbox_shield.add (vbox);
+        statusbar.add (vbox);
         
 		//lbl_shield
 		lbl_shield = add_label(vbox, "");
@@ -428,77 +432,6 @@ class MainWindow : Gtk.Window{
 
         //lbl_shield_subnote
 		lbl_shield_subnote = add_label(vbox, "");
-
-		// progress
-		
-		box = new Box (Orientation.HORIZONTAL, 6);
-        box.margin_bottom = 6;
-        box.margin_left = 6;
-        box.margin_right = 12;
-        vbox_main.add (box);
-
-		//img_status_spinner
-		img_status_spinner = new Gtk.Image();
-		img_status_spinner.file = App.share_folder + "/timeshift/images/spinner.gif";
-		img_status_spinner.no_show_all = true;
-        hbox_statusbar.add(img_status_spinner);
-
-        //img_status_dot
-		img_status_dot = new Gtk.Image();
-		img_status_dot.file = App.share_folder + "/timeshift/images/item-green.gif";
-		img_status_dot.no_show_all = true;
-        hbox_statusbar.add(img_status_dot);
-
-        //lbl_status
-		lbl_status = new Gtk.Label("");
-		lbl_status.no_show_all = true;
-		hbox_statusbar.add(lbl_status);
-
-		/*
-        //img_status_device
-		img_status_device = new Gtk.Image();
-		img_status_device.no_show_all = true;
-        //hbox_statusbar.add(img_status_device);
-
-        //lbl_status_device
-		lbl_status_device = new Gtk.Label("");
-		lbl_status_device.set_use_markup(true);
-		lbl_status_device.no_show_all = true;
-		//hbox_statusbar.add(lbl_status_device);
-
-        //img_status_scheduled
-		img_status_scheduled = new Gtk.Image();
-		img_status_scheduled.no_show_all = true;
-        //hbox_statusbar.add(img_status_scheduled);
-
-		//lbl_status_scheduled
-		lbl_status_scheduled = new Gtk.Label("");
-		lbl_status_scheduled.set_use_markup(true);
-		lbl_status_scheduled.no_show_all = true;
-		//hbox_statusbar.add(lbl_status_scheduled);
-
-        //img_status_latest
-		img_status_latest = new Gtk.Image();
-		img_status_latest.no_show_all = true;
-        //hbox_statusbar.add(img_status_latest);
-
-        //lbl_status_latest
-		lbl_status_latest = new Gtk.Label("");
-		lbl_status_latest.set_use_markup(true);
-		lbl_status_latest.no_show_all = true;
-		//hbox_statusbar.add(lbl_status_latest);
-
-		//lbl_status_separator
-		Label lbl_status_separator = new Gtk.Label("");
-		hbox_statusbar.hexpand = true;
-		hbox_statusbar.pack_start(lbl_status_separator,true,true,0);
-		*/
-		
-		//img_status_progress
-		img_status_progress = new Gtk.Image();
-		img_status_progress.file = App.share_folder + "/timeshift/images/progress.gif";
-		img_status_progress.no_show_all = true;
-        hbox_statusbar.add(img_status_progress);
 	}
 	
     private bool menu_extra_popup(Gdk.EventButton? event){
@@ -615,10 +548,10 @@ class MainWindow : Gtk.Window{
 		update_ui(false);
 
 		if (App.live_system()){
-			statusbar_message(_("Checking backup device..."));
+			//statusbar_message(_("Checking backup device..."));
 		}
 		else{
-			statusbar_message(_("Estimating system size..."));
+			//statusbar_message(_("Estimating system size..."));
 		}
 
 		//refresh_cmb_backup_device();
@@ -867,108 +800,6 @@ class MainWindow : Gtk.Window{
 		tv_backups.columns_autosize ();
 	}
 
-	/*private void refresh_cmb_backup_device(){
-		var store = new Gtk.ListStore(2, typeof(Device), typeof(Gdk.Pixbuf));
-
-		TreeIter iter;
-
-		int index = -1;
-		int index_snapshot_device = -1;
-		int index_root_device = -1;
-
-		foreach(Device pi in App.partition_list) {
-
-			if (!pi.has_linux_filesystem()) { continue; }
-
-			store.append(out iter);
-			store.set (iter, 0, pi);
-
-			//set icon ----------------
-
-			Gdk.Pixbuf pix_selected = null;
-			Gdk.Pixbuf pix_device = get_shared_icon("disk","disk.png",16).pixbuf;
-			Gdk.Pixbuf pix_locked = get_shared_icon("locked","locked.svg",16).pixbuf;
-
-			if (pi.type == "luks"){
-				pix_selected = pix_locked;
-			}
-			else{
-				pix_selected = pix_device;
-			}
-
-			store.set (iter, 1, pix_selected, -1);
-
-			//get device index ----------
-
-			index++;
-			if ((App.root_device != null) && (pi.uuid == App.root_device.uuid)){
-				index_root_device = index;
-			}
-			if ((App.snapshot_device != null) && (pi.uuid == App.snapshot_device.uuid)){
-				index_snapshot_device = index;
-			}
-		}
-
-		cmb_backup_device.set_model (store);
-
-		if (index_snapshot_device > -1){
-			cmb_backup_device.active = index_snapshot_device;
-		}
-		else if (index_root_device > -1){
-			cmb_backup_device.active = index_root_device;
-		}
-		else {
-			cmb_backup_device.active = -1;
-		}
-	}*/
-
-	/*private void cmb_backup_device_changed(){
-		ComboBox combo = cmb_backup_device;
-		if (combo.model == null) { return; }
-
-		string txt;
-		if (combo.active < 0) {
-			txt = "<b>" + _("WARNING:") + "</b>\n";
-			txt += "Ø " + _("Please select a device for saving snapshots.") + "\n";
-			txt = "<span foreground=\"#8A0808\">" + txt + "</span>";
-			lbl_backup_device_warning.label = txt;
-			App.snapshot_device = null;
-			return;
-		}
-
-		//get new device reference
-		TreeIter iter;
-		Device pi;
-		combo.get_active_iter (out iter);
-		TreeModel model = (TreeModel) combo.model;
-		model.get(iter, 0, out pi);
-
-		change_backup_device(pi);
-	}*/
-
-	/*private void change_backup_device(Device pi){
-		//return if device has not changed
-		if ((App.snapshot_device != null) && (pi.uuid == App.snapshot_device.uuid)){ return; }
-
-		gtk_set_busy(true, this);
-
-		Device previous_device = App.snapshot_device;
-		App.snapshot_device = pi;
-
-		//try mounting the device
-		if (App.mount_backup_device(this)){
-			App.update_partition_list();
-			gtk_set_busy(false, this);
-			timer_backup_device_init = Timeout.add(100, init_backup_device);
-		}
-		else{
-			gtk_set_busy(false, this);
-			App.snapshot_device = previous_device;
-			refresh_cmb_backup_device();
-			return;
-		}
-	}*/
-
 	private void btn_backup_clicked(){
 
 		//check root device --------------
@@ -991,36 +822,16 @@ class MainWindow : Gtk.Window{
 			gtk_messagebox(message, details, this, true);
 			return;
 		}
+
+		// run wizard window
 		
-		//update UI ------------------
-
-		update_ui(false);
-
-		statusbar_message(_("Taking snapshot..."));
-
-		update_progress_start();
-
-		//take snapshot ----------------
-
-		bool is_success = App.take_snapshot(true,"",this);
-
-		update_progress_stop();
-
-		if (is_success){
-			statusbar_message_with_timeout(_("Snapshot saved successfully"), true);
-		}
-		else{
-			statusbar_message_with_timeout(_("Error: Unable to save snapshot"), false);
-		}
-
-		//update UI -------------------
-
-		App.update_partitions();
-		//refresh_cmb_backup_device();
-		refresh_tv_backups();
-		update_statusbar();
-
-		update_ui(true);
+		var win = new WizardWindow("create");
+		win.set_transient_for(this);
+		win.show_all();
+		win.destroy.connect(()=>{
+			App.update_partitions();
+			timer_backup_device_init = Timeout.add(100, init_ui_for_backup_device);
+		});
 	}
 
 	private void btn_delete_snapshot_clicked(){
@@ -1048,7 +859,7 @@ class MainWindow : Gtk.Window{
 
 		update_ui(false);
 
-		statusbar_message(_("Removing selected snapshots..."));
+		//statusbar_message(_("Removing selected snapshots..."));
 
 		//get list of snapshots to delete --------------------
 
@@ -1087,12 +898,12 @@ class MainWindow : Gtk.Window{
 			//select the iter being deleted
 			tv_backups.get_selection().select_iter(iter_delete);
 
-			statusbar_message(_("Deleting snapshot") + ": '%s'...".printf(bak.name));
+			//statusbar_message(_("Deleting snapshot") + ": '%s'...".printf(bak.name));
 
 			is_success = App.delete_snapshot(bak);
 
 			if (!is_success){
-				statusbar_message_with_timeout(_("Error: Unable to delete snapshot") + ": '%s'".printf(bak.name), false);
+				//statusbar_message_with_timeout(_("Error: Unable to delete snapshot") + ": '%s'".printf(bak.name), false);
 				break;
 			}
 
@@ -1102,12 +913,12 @@ class MainWindow : Gtk.Window{
 
 		App.update_snapshot_list();
 		if (App.snapshot_list.size == 0){
-			statusbar_message(_("Deleting snapshot") + ": '.sync'...");
+			//statusbar_message(_("Deleting snapshot") + ": '.sync'...");
 			App.delete_all_snapshots();
 		}
 
 		if (is_success){
-			statusbar_message_with_timeout(_("Snapshots deleted successfully"), true);
+			//statusbar_message_with_timeout(_("Snapshots deleted successfully"), true);
 		}
 
 		//update UI -------------------
@@ -1219,7 +1030,7 @@ class MainWindow : Gtk.Window{
 			dlg.destroy();
 
 			if (response == Gtk.ResponseType.YES){
-				statusbar_message(_("Taking snapshot..."));
+				//statusbar_message(_("Taking snapshot..."));
 
 				update_progress_start();
 
@@ -1245,11 +1056,11 @@ class MainWindow : Gtk.Window{
 
 		if (App.snapshot_to_restore != null){
 			log_msg("Restoring snapshot '%s' to device '%s'".printf(App.snapshot_to_restore.name,App.restore_target.device),true);
-			statusbar_message(_("Restoring snapshot..."));
+			//statusbar_message(_("Restoring snapshot..."));
 		}
 		else{
 			log_msg("Cloning current system to device '%s'".printf(App.restore_target.device),true);
-			statusbar_message(_("Cloning system..."));
+			//statusbar_message(_("Cloning system..."));
 		}
 
 		if (App.reinstall_grub2){
@@ -1266,7 +1077,7 @@ class MainWindow : Gtk.Window{
 			else{
 				msg = _("Snapshot was restored successfully on target device");
 			}
-			statusbar_message_with_timeout(msg, true);
+			//statusbar_message_with_timeout(msg, true);
 
 			var dlg = new Gtk.MessageDialog.with_markup(this,Gtk.DialogFlags.MODAL, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, msg);
 			dlg.set_title(_("Finished"));
@@ -1283,7 +1094,7 @@ class MainWindow : Gtk.Window{
 				msg = _("Restore Failed!");
 			}
 
-			statusbar_message_with_timeout(msg, true);
+			//statusbar_message_with_timeout(msg, true);
 
 			var dlg = new Gtk.MessageDialog.with_markup(this,Gtk.DialogFlags.MODAL, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK, msg);
 			dlg.set_title(_("Error"));
@@ -1444,72 +1255,9 @@ class MainWindow : Gtk.Window{
 	}
 
 
-	private void show_statusbar_icons(bool visible){
-		img_status_dot.visible = false;
-		img_status_spinner.visible = !visible;
-		img_status_progress.visible = !visible;
-		lbl_status.visible = !visible;
-		lbl_status.label = "";
-
-		img_status_device.visible = visible;
-		lbl_status_device.visible = visible;
-
-		//if (App.is_live_system()){
-			//visible = false;
-		//}
-
-		img_status_scheduled.visible = visible;
-		lbl_status_scheduled.visible = visible;
-		img_status_latest.visible = visible;
-		lbl_status_latest.visible = visible;
-	}
-
-	private void statusbar_message (string message){
-		if (timer_status_message > 0){
-			Source.remove (timer_status_message);
-			timer_status_message = 0;
-		}
-
-		lbl_status.label = message;
-	}
-
-	private void statusbar_message_with_timeout (string message, bool success){
-		if (timer_status_message > 0){
-			Source.remove (timer_status_message);
-			timer_status_message = 0;
-		}
-
-		lbl_status.label = message;
-
-		img_status_spinner.visible = false;
-		img_status_progress.visible = false;
-		img_status_dot.visible = true;
-
-		if (success){
-			img_status_dot.file =  App.share_folder + "/timeshift/images/item-green.png";
-		}
-		else{
-			img_status_dot.file =  App.share_folder + "/timeshift/images/item-red.png";
-		}
-
-		timer_status_message = Timeout.add_seconds (5, statusbar_clear);
-	}
-
-    private bool statusbar_clear (){
-		if (timer_status_message > 0){
-			Source.remove (timer_status_message);
-			timer_status_message = 0;
-		}
-		lbl_status.label = "";
-		show_statusbar_icons(true);
-		return true;
-	}
-
 	private void update_ui(bool enable){
 		toolbar.sensitive = enable;
-		hbox_device.sensitive = enable;
 		sw_backups.sensitive = enable;
-		show_statusbar_icons(enable);
 		gtk_set_busy(!enable, this);
 	}
 
@@ -1669,11 +1417,11 @@ class MainWindow : Gtk.Window{
 
 
 		if (App.live_system()){
-			hbox_shield.visible = false;
+			statusbar.visible = false;
 		}
 		else{
-			hbox_shield.visible = true;
-			hbox_shield.show_all();
+			statusbar.visible = true;
+			statusbar.show_all();
 
 			switch (status_code){
 			case SnapshotLocationStatus.READ_ONLY_FS:

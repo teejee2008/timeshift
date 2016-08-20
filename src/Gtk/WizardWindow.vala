@@ -41,27 +41,35 @@ class WizardWindow : Gtk.Window{
 	private Gtk.RadioButton radio_device;
 	private Gtk.RadioButton radio_path;
 	private Gtk.Entry entry_backup_path;
-	private Gtk.InfoBar infobar_device;
-	private Gtk.Label lbl_infobar_device;
-	private Gtk.InfoBar infobar_path;
-	private Gtk.Label lbl_infobar_path;
+	private Gtk.InfoBar infobar_location;
+	private Gtk.Label lbl_infobar_location;
 
 	private Gtk.Spinner spinner;
 	private Gtk.Label lbl_msg;
 	private Gtk.Label lbl_status;
 	private ProgressBar progressbar;
 
+	private Gtk.ButtonBox box_actions;
 	private Gtk.Button btn_prev;
 	private Gtk.Button btn_next;
 	private Gtk.Button btn_cancel;
 	private Gtk.Button btn_abort;
+
+	private bool thread_is_running = false;
 	
 	private uint tmr_init;
 
 	private string mode;
 	
 	public WizardWindow (string _mode) {
-		this.title = "Setup Wizard";
+
+		if (_mode.length == 0){
+			this.title = "Setup Wizard";
+		}
+		else{
+			this.title = "";
+		}
+
         this.window_position = WindowPosition.CENTER;
         this.modal = true;
         this.set_default_size (500, 500);
@@ -105,10 +113,6 @@ class WizardWindow : Gtk.Window{
 
 		if (App.snapshot_path.length > 0){
 			entry_backup_path.text = App.snapshot_path;
-		}
-
-		if (App.snapshot_device != null){
-			select_backup_device(App.snapshot_device);
 		}
 
 		if (App.use_snapshot_path){
@@ -176,23 +180,15 @@ class WizardWindow : Gtk.Window{
 
 		radio_device.toggled.connect(() =>{
 			tv_devices.sensitive = radio_device.active;
-			//lbl_device_subnote.sensitive = radio_device.active;
-			infobar_device.visible = radio_device.active;
 
 			if (radio_device.active){
-				if (App.snapshot_device != null){
-					select_backup_device(App.snapshot_device);
-				}
-
 				App.use_snapshot_path = false;
+				log_debug("radio_device.toggled: active");
+				check_backup_location();
 			}
-			
-			check_backup_location();
 		});
 		
 		create_device_list(box);
-
-		create_infobar_device(box);
 
 		radio_device.set_tooltip_text(msg);
 		tv_devices.set_tooltip_text(msg);
@@ -206,18 +202,19 @@ class WizardWindow : Gtk.Window{
 		//var lbl_path_subnote = add_label_subnote(box,msg);
 
 		entry_backup_path = add_directory_chooser(box, App.snapshot_path);
-
+		entry_backup_path.margin_bottom = 12;
+		
 		radio_path.toggled.connect(()=>{
 			entry_backup_path.sensitive = radio_path.active;
-			//lbl_path_subnote.sensitive = radio_path.active;
-			infobar_path.visible = radio_path.active;
+
 			if (radio_path.active){
-				entry_backup_path.text = App.snapshot_path;
+				App.use_snapshot_path = true;
+				log_debug("radio_path.toggled: active");
+				check_backup_location();
 			}
-			check_backup_location();
 		});
 
-		create_infobar_path(box);
+		create_infobar_location(box);
 
 		radio_path.set_tooltip_text(msg);
 		entry_backup_path.set_tooltip_text(msg);
@@ -250,8 +247,8 @@ class WizardWindow : Gtk.Window{
 		box.add (progressbar);
 
 		//lbl_status
-		lbl_status = add_label_scrolled(box, "");
-		lbl_status.max_width_chars = 50;
+		lbl_status = add_label_scrolled(box, "", true);
+		lbl_status.max_width_chars = 45;
 		lbl_status.margin_top = 12;
 	}
 
@@ -261,9 +258,7 @@ class WizardWindow : Gtk.Window{
 		add_label_header(box, _("Setup Complete"), true);
 
 		var msg = "";
-
-		//msg += _("1. .") + "\n";
-
+		
 		msg += _("◈ Scheduled snapshots are enabled. Snapshots will be created automatically to protect your system.") + "\n\n";
 
 		msg += _("◈ You can rollback your system to a previous date by restoring a snapshot.") + "\n\n";
@@ -302,12 +297,13 @@ class WizardWindow : Gtk.Window{
 		var hbox = new Gtk.ButtonBox (Gtk.Orientation.HORIZONTAL);
 		hbox.set_layout (Gtk.ButtonBoxStyle.EXPAND);
 		hbox.margin = 0;
-		hbox.margin_top = 24;
+		//hbox.margin_top = 24;
 		hbox.margin_left = 24;
 		hbox.margin_right = 24;
 		hbox.margin_bottom = 12;
         vbox_main.add(hbox);
-
+		box_actions = hbox;
+		
 		Gtk.SizeGroup size_group = null;
 		
 		// previous
@@ -352,7 +348,8 @@ class WizardWindow : Gtk.Window{
 	
 	private void create_device_list(Gtk.Box box){
 		tv_devices = add_treeview(box);
-
+		tv_devices.vexpand = true;
+		
 		// device name
 		
 		//Gtk.CellRendererPixbuf cell_pix;
@@ -518,6 +515,23 @@ class WizardWindow : Gtk.Window{
 		});
 	}
 
+	private void create_infobar_location(Gtk.Box box){
+
+		// dummy
+		//var label = add_label(box, "");
+		//label.vexpand = true;
+		
+		var infobar = new Gtk.InfoBar();
+		infobar.no_show_all = true;
+		box.add(infobar);
+		infobar_location = infobar;
+		
+		var content = (Gtk.Box) infobar.get_content_area ();
+		var label = add_label(content, "");
+		lbl_infobar_location = label;
+	}
+
+
 	private void try_change_device(Device dev){
 
 		if (dev.type == "disk"){
@@ -530,11 +544,11 @@ class WizardWindow : Gtk.Window{
 				}
 			}
 			if (!found_child){
-				lbl_infobar_device.label = "<span weight=\"bold\">%s</span>".printf(
+				lbl_infobar_location.label = "<span weight=\"bold\">%s</span>".printf(
 				_("Selected disk does not have Linux partitions"));
-				infobar_device.message_type = Gtk.MessageType.ERROR;
-				infobar_device.no_show_all = false;
-				infobar_device.show_all();
+				infobar_location.message_type = Gtk.MessageType.ERROR;
+				infobar_location.no_show_all = false;
+				infobar_location.show_all();
 			}
 		}
 		else if (!dev.has_children()){
@@ -544,36 +558,14 @@ class WizardWindow : Gtk.Window{
 			change_backup_device(dev.children[0]);
 		}
 		else {
-			lbl_infobar_device.label = "<span weight=\"bold\">%s</span>".printf(
+			lbl_infobar_location.label = "<span weight=\"bold\">%s</span>".printf(
 				_("Select a partition on this disk"));
-			infobar_device.message_type = Gtk.MessageType.ERROR;
-			infobar_device.no_show_all = false;
-			infobar_device.show_all();
+			infobar_location.message_type = Gtk.MessageType.ERROR;
+			infobar_location.no_show_all = false;
+			infobar_location.show_all();
 		}
 	}
 
-	private void create_infobar_device(Gtk.Box box){
-		var infobar = new Gtk.InfoBar();
-		infobar.no_show_all = true;
-		box.add(infobar);
-		infobar_device = infobar;
-		
-		var content = (Gtk.Box) infobar.get_content_area ();
-		var label = add_label(content, "");
-		lbl_infobar_device = label;
-	}
-
-	private void create_infobar_path(Gtk.Box box){
-		var infobar = new Gtk.InfoBar();
-		infobar.no_show_all = true;
-		box.add(infobar);
-		infobar_path = infobar;
-		
-		var content = (Gtk.Box) infobar.get_content_area ();
-		var label = add_label(content, "");
-		lbl_infobar_path = label;
-	}
-	
 	private void change_backup_device(Device pi){
 		// return if device has not changed
 		if ((App.snapshot_device != null) && (pi.uuid == App.snapshot_device.uuid)){ return; }
@@ -611,7 +603,7 @@ class WizardWindow : Gtk.Window{
 		gtk_set_busy(false, this);
 	}
 
-	private void select_backup_device(Device pi){
+	/*private void select_backup_device(Device pi){
 
 		tv_devices.get_selection().unselect_all();
 
@@ -635,37 +627,44 @@ class WizardWindow : Gtk.Window{
 				iterExists = store.iter_next (ref iter);
 			}
 		}
-	}
+	}*/
 
 	private bool check_backup_location(){
 		bool ok = true;
 		string message, details;
 		int status_code = App.check_backup_location(out message, out details);
-		
+
 		switch (status_code){
+			case SnapshotLocationStatus.NOT_SELECTED:
+				lbl_infobar_location.label = "<span weight=\"bold\">%s</span>".printf(details);
+				infobar_location.message_type = Gtk.MessageType.ERROR;
+				infobar_location.no_show_all = false;
+				infobar_location.show_all();
+				ok = false;
+				break;
+				
 			case SnapshotLocationStatus.NOT_AVAILABLE:
 			case SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE:
 			case SnapshotLocationStatus.NO_SNAPSHOTS_NO_SPACE:
-				lbl_infobar_device.label = "<span weight=\"bold\">%s</span>".printf(message);
-				infobar_device.message_type = Gtk.MessageType.ERROR;
-				infobar_device.no_show_all = false;
-				infobar_device.show_all();
+				lbl_infobar_location.label = "<span weight=\"bold\">%s</span>".printf(message);
+				infobar_location.message_type = Gtk.MessageType.ERROR;
+				infobar_location.no_show_all = false;
+				infobar_location.show_all();
 				ok = false;
 				break;
 
 			case SnapshotLocationStatus.READ_ONLY_FS:
 			case SnapshotLocationStatus.HARDLINKS_NOT_SUPPORTED:
-				lbl_infobar_path.label = "<span weight=\"bold\">%s</span>".printf(message);
-				infobar_path.message_type = Gtk.MessageType.ERROR;
-				infobar_path.no_show_all = false;
-				infobar_path.show_all();
+				lbl_infobar_location.label = "<span weight=\"bold\">%s</span>".printf(message);
+				infobar_location.message_type = Gtk.MessageType.ERROR;
+				infobar_location.no_show_all = false;
+				infobar_location.show_all();
 				ok = false;
 				break;
 
 			case 3:
 			case 0:
-				infobar_device.hide();
-				infobar_path.hide();
+				infobar_location.hide();
 				break;
 		}
 
@@ -787,26 +786,36 @@ class WizardWindow : Gtk.Window{
 		}
 	}
 
+	
+	
 	private void take_snapshot(){
-		App.take_snapshot(true,"",this);
-
+		
+		try {
+			thread_is_running = true;
+			Thread.create<void> (take_snapshot_thread, true);
+		}
+		catch (Error e) {
+			log_error (e.message);
+		}
+		
 		var list = new Gee.ArrayList<string>();
 		int index = 0;
-		
-		while (App.task.status == AppStatus.RUNNING){
+		int64 last_count = 0;
 
-			int max_index = App.task.status_lines.size - 1;
-			while (index <= max_index){
-				var line = App.task.status_lines[index++];
-				list.add(line);
-			}
+		while (thread_is_running){
+
+			//int max_index = App.task.status_lines.size - 1;
+			//while (index <= max_index){
+			//	var line = App.task.status_lines[index++];
+			//	list.add(line);
+			//}
 				
-			while (list.size > 18){
-				list.remove_at(0);
-			}
+			//while (list.size > 18){
+			//	list.remove_at(0);
+			//}
 			
 			var txt = "";
-			foreach(var line in list){
+			foreach(var line in App.task.status_lines){
 				txt += "%s\n".printf(line);
 			}
 			lbl_status.label = txt;
@@ -816,9 +825,16 @@ class WizardWindow : Gtk.Window{
 
 				double fraction = (App.task.status_line_count * 1.0)
 					/ App.first_snapshot_count;
-				
-				progressbar.set_fraction(fraction);
 
+				if (App.task.status_line_count == last_count){
+					progressbar.fraction = progressbar.fraction + 0.0005;
+				}
+				else{
+					progressbar.set_fraction(fraction);
+				}
+
+				last_count = App.task.status_line_count;
+				
 				lbl_msg.label = App.progress_text;
 			}
 
@@ -829,6 +845,11 @@ class WizardWindow : Gtk.Window{
 		//TODO: check errors.
 
 		go_next();
+	}
+	
+	private void take_snapshot_thread(){
+		App.take_snapshot(true,"",this);
+		thread_is_running = false;
 	}
 
 	private void go_prev(){
@@ -853,6 +874,8 @@ class WizardWindow : Gtk.Window{
 				btn_next.hide();
 				btn_cancel.hide();
 				btn_abort.show();
+
+				box_actions.set_layout (Gtk.ButtonBoxStyle.CENTER);
 			
 				estimate_system_size();
 			}
@@ -866,6 +889,8 @@ class WizardWindow : Gtk.Window{
 			btn_next.show();
 			btn_cancel.show();
 			btn_abort.hide();
+
+			box_actions.set_layout (Gtk.ButtonBoxStyle.EXPAND);
 
 			btn_prev.sensitive = false;
 			btn_next.sensitive = true;
@@ -882,6 +907,8 @@ class WizardWindow : Gtk.Window{
 			btn_cancel.hide();
 			btn_abort.show();
 
+			box_actions.set_layout (Gtk.ButtonBoxStyle.CENTER);
+			
 			if ((App.snapshot_list.size == 0)||(mode == "create")){
 				take_snapshot();
 			}
@@ -897,8 +924,13 @@ class WizardWindow : Gtk.Window{
 			btn_cancel.show();
 			btn_abort.hide();
 
+			box_actions.set_layout (Gtk.ButtonBoxStyle.EXPAND);
+
 			btn_prev.sensitive = false;
 			btn_next.sensitive = false;
+
+			destroy();
+			
 			break;
 		}
 	}
@@ -1110,7 +1142,8 @@ class WizardWindow : Gtk.Window{
 		return label;
 	}
 
-	private Gtk.RadioButton add_radio(Gtk.Box box, string text, Gtk.RadioButton? another_radio_in_group){
+	private Gtk.RadioButton add_radio(
+		Gtk.Box box, string text, Gtk.RadioButton? another_radio_in_group){
 
 		Gtk.RadioButton radio = null;
 
@@ -1166,7 +1199,7 @@ class WizardWindow : Gtk.Window{
 		// Entry
 		var entry = new Gtk.Entry();
 		entry.hexpand = true;
-		entry.margin_left = 6;
+		//entry.margin_left = 6;
 		entry.secondary_icon_stock = "gtk-open";
 		entry.placeholder_text = _("Enter path or browse for directory");
 		box.add (entry);
@@ -1195,10 +1228,12 @@ class WizardWindow : Gtk.Window{
 
 				App.use_snapshot_path = true;
 				App.snapshot_path = entry.text;
-				
-				if (!check_backup_location()){
-					App.use_snapshot_path = false;
-				}
+				check_backup_location();
+				//log_msg("here");
+				//if (!check_backup_location()){
+				//	App.use_snapshot_path = false;
+				//	log_msg("set false");
+				//}
 			}
 
 			chooser.destroy();

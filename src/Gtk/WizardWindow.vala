@@ -378,25 +378,28 @@ class WizardWindow : Gtk.Window{
 	private void create_device_list(Gtk.Box box){
 		tv_devices = add_treeview(box);
 		tv_devices.vexpand = true;
+		tv_devices.rules_hint = true;
 		
 		// device name
 		
-		//Gtk.CellRendererPixbuf cell_pix;
+		Gtk.CellRendererPixbuf cell_pix;
 		Gtk.CellRendererToggle cell_radio;
 		Gtk.CellRendererText cell_text;
-		var col = add_column_radio_and_text(tv_devices, _("Disk"), out cell_radio, out cell_text);
-
-		/*col.set_cell_data_func(cell_pix, (cell_layout, cell, model, iter)=>{
+		//var col = add_column_radio_and_text(tv_devices, _("Disk"), out cell_radio, out cell_text);
+		var col = add_column_icon_radio_text(tv_devices, _("Disk"),
+			out cell_pix, out cell_radio, out cell_text);
+		
+		col.set_cell_data_func(cell_pix, (cell_layout, cell, model, iter)=>{
 			Gdk.Pixbuf pix = null;
 			model.get (iter, 2, out pix, -1);
 
 			Device dev;
 			model.get (iter, 0, out dev, -1);
 
-			(cell as Gtk.CellRendererPixbuf).pixbuf =  pix;
-			(cell as Gtk.CellRendererPixbuf).sensitive = (dev.type != "disk");
+			(cell as Gtk.CellRendererPixbuf).pixbuf = pix;
+			(cell as Gtk.CellRendererPixbuf).visible = (dev.type == "disk");
 			
-		});*/
+		});
 
 		col.set_cell_data_func(cell_radio, (cell_layout, cell, model, iter)=>{
 			Device dev;
@@ -759,6 +762,7 @@ class WizardWindow : Gtk.Window{
 		//}
 
 		tv_devices.expand_all();
+		tv_devices.columns_autosize();
 	}
 
 	private void tv_append_child_volumes(
@@ -1103,6 +1107,34 @@ class WizardWindow : Gtk.Window{
 		// TreeViewColumn
 		var col = new Gtk.TreeViewColumn();
 		col.title = title;
+
+		cell_radio = new Gtk.CellRendererToggle();
+		cell_radio.xpad = 2;
+		cell_radio.radio = true;
+		cell_radio.activatable = true;
+		col.pack_start (cell_radio, false);
+		
+		cell_text = new Gtk.CellRendererText();
+		cell_text.xalign = (float) 0.0;
+		col.pack_start (cell_text, false);
+		treeview.append_column(col);
+
+		return col;
+	}
+
+	private Gtk.TreeViewColumn add_column_icon_radio_text(
+		Gtk.TreeView treeview, string title,
+		out Gtk.CellRendererPixbuf cell_pix,
+		out Gtk.CellRendererToggle cell_radio,
+		out Gtk.CellRendererText cell_text){
+			
+		// TreeViewColumn
+		var col = new Gtk.TreeViewColumn();
+		col.title = title;
+
+		cell_pix = new Gtk.CellRendererPixbuf();
+		cell_pix.xpad = 2;
+		col.pack_start (cell_pix, false);
 
 		cell_radio = new Gtk.CellRendererToggle();
 		cell_radio.xpad = 2;

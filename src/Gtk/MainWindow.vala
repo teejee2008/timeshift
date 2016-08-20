@@ -295,8 +295,10 @@ class MainWindow : Gtk.Window{
 		col_date.spacing = 1;
 
 		CellRendererPixbuf cell_backup_icon = new CellRendererPixbuf ();
-		cell_backup_icon.stock_id = "gtk-floppy";
-		cell_backup_icon.xpad = 1;
+		cell_backup_icon.pixbuf = get_shared_icon_pixbuf("clock","clock.png",16);
+		//cell_backup_icon.xpad = 1;
+		cell_backup_icon.xpad = 4;
+		cell_backup_icon.ypad = 6;
 		col_date.pack_start (cell_backup_icon, false);
 
 		CellRendererText cell_date = new CellRendererText ();
@@ -368,6 +370,7 @@ class MainWindow : Gtk.Window{
 		col_desc.title = _("Comments");
 		col_desc.resizable = true;
 		col_desc.clickable = true;
+		col_desc.expand = true;
 		CellRendererText cell_desc = new CellRendererText ();
 		cell_desc.ellipsize = Pango.EllipsizeMode.END;
 		col_desc.pack_start (cell_desc, false);
@@ -377,6 +380,12 @@ class MainWindow : Gtk.Window{
 
 		cell_desc.edited.connect (cell_desc_edited);
 
+		var col_buffer = new TreeViewColumn();
+		var cell_text = new CellRendererText();
+		cell_text.width = 20;
+		col_buffer.pack_start (cell_text, false);
+		tv_backups.append_column(col_buffer);
+		
 		//tooltips
 		tv_backups.query_tooltip.connect ((x, y, keyboard_tooltip, tooltip) => {
 			TreeModel model;

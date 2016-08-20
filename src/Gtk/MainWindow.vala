@@ -69,6 +69,10 @@ class MainWindow : Gtk.Window{
 	private Gtk.Label lbl_shield;
 	private Gtk.Label lbl_shield_subnote;
 	private Gtk.Label lbl_status;
+	private Gtk.Label lbl_snap_count;
+	private Gtk.Label lbl_free_space;
+	private Gtk.Box vbox_snap_count;
+	private Gtk.Box vbox_free_space;
 
 	//timers
 	private uint timer_status_message;
@@ -435,29 +439,29 @@ class MainWindow : Gtk.Window{
 
 		// snap_count
 		vbox = new Box (Orientation.VERTICAL, 6);
+		vbox.set_no_show_all(true);
         statusbar.add (vbox);
+        vbox_snap_count = vbox;
 
-		var lbl_snap_count = new Label(_("Per Hour"));
-		lbl_snap_count.set_no_show_all(true);
+		lbl_snap_count = new Label("<b>" + _("0.0%") + "</b>");
+		lbl_snap_count.set_use_markup(true);
 		vbox.add(lbl_snap_count);
 
-		lbl_snap_count_val = new Label("<b>" + _("0.0%") + "</b>");
-		lbl_snap_count_val.set_use_markup(true);
-		lbl_snap_count_val.set_no_show_all(true);
-		vbox.add(lbl_snap_count_val);
+		var label = new Label(_("Snapshots"));
+		vbox.add(label);
 
 		// free space
 		vbox = new Box (Orientation.VERTICAL, 6);
+		vbox.set_no_show_all(true);
         statusbar.add(vbox);
+        vbox_free_space = vbox;
 
-		var lbl_snap_count = new Label(_("Per Hour"));
-		lbl_snap_count.set_no_show_all(true);
-		vbox.add(lbl_snap_count);
+		lbl_free_space = new Label("<b>" + _("0.0%") + "</b>");
+		lbl_free_space.set_use_markup(true);
+		vbox.add(lbl_free_space);
 
-		lbl_snap_count_val = new Label("<b>" + _("0.0%") + "</b>");
-		lbl_snap_count_val.set_use_markup(true);
-		lbl_snap_count_val.set_no_show_all(true);
-		vbox.add(lbl_snap_count_val);
+		label = new Label(_("Free"));
+		vbox.add(label);
 	}
 	
     private bool menu_extra_popup(Gdk.EventButton? event){
@@ -1375,7 +1379,7 @@ class MainWindow : Gtk.Window{
 			case SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE:
 			case SnapshotLocationStatus.NO_SNAPSHOTS_NO_SPACE:
 				img_shield.pixbuf = get_shared_icon("", "security-low.svg", 48).pixbuf;
-				set_shield_label(message);
+				set_shield_label(message.replace("<","&lt;"));
 				set_shield_subnote(details);
 				break;
 
@@ -1421,9 +1425,36 @@ class MainWindow : Gtk.Window{
 				
 				break;
 			}
+
+			vbox_snap_count.hide();
+			vbox_free_space.hide();
+			
+			switch (status_code){
+			case SnapshotLocationStatus.NO_SNAPSHOTS_NO_SPACE:
+			case SnapshotLocationStatus.NO_SNAPSHOTS_HAS_SPACE:
+			case SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE:
+			case SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE:
+				vbox_snap_count.no_show_all = false;
+				vbox_snap_count.show_all();
+				
+				lbl_snap_count.label = format_text_large(
+					"%d".printf(App.snapshot_list.size));
+
+				vbox_free_space.no_show_all = false;
+				vbox_free_space.show_all();
+				
+				lbl_free_space.label =
+					format_text_large("%s".printf(
+						format_file_size(App.snapshot_location_free_space)));
+				break;
+			}
 		}
 	}
 
+	private string format_text_large(string text){
+		return "<span size='xx-large'><b>" + text + "</b></span>";
+	}
+	
 	// TODO: Move this to GtkHelper
 	private Gtk.Label add_label(
 		Gtk.Box box, string text, bool is_bold = false, bool is_italic = false, bool is_large = false){

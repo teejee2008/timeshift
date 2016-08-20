@@ -110,7 +110,8 @@ public class Main : GLib.Object{
 	public int64 minimum_free_disk_space = 2 * GB;
 	public int64 first_snapshot_size = 0;
 	public int64 first_snapshot_count = 0;
-
+	public int64 snapshot_location_free_space = 0;
+	
 	public string log_dir = "";
 	public string log_file = "";
 	public string lock_dir = "";
@@ -3913,8 +3914,8 @@ public class Main : GLib.Object{
 				
 				if (free_space < minimum_free_disk_space){
 					
-					message = _("Disk space not enough!")
-						+ " (less than %s)".printf(format_file_size(minimum_free_disk_space));
+					message = _("Not enough disk space");
+					message += " (< %s)".printf(format_file_size(minimum_free_disk_space));
 						
 					details = _("Select another device or free up some space");
 					status_code = SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE;
@@ -3938,7 +3939,7 @@ public class Main : GLib.Object{
 
 				if (free_space < required_space){
 					message = _("Not enough disk space");
-					message += " (%s needed)".printf(format_file_size(required_space));
+					message += " (< %s)".printf(format_file_size(required_space));
 					
 					details = _("Select another device or free up some space");
 					
@@ -3964,6 +3965,8 @@ public class Main : GLib.Object{
 		log_msg("Status: %s".printf(
 			status_code.to_string().replace("SNAPSHOT_LOCATION_STATUS_","")));
 
+		snapshot_location_free_space = free_space;
+		
 		return status_code;
 	}
 

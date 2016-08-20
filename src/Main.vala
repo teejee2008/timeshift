@@ -1793,7 +1793,7 @@ public class Main : GLib.Object{
 		string time_stamp = temp_dt_created.format("%Y-%m-%d_%H-%M-%S");
 		//DateTime now = new DateTime.now_local();
 		
-		if (task.read_status() != 0){
+		if (task.total_size == 0){
 			log_error(_("rsync returned an error") + ": %d".printf(ret_val));
 			log_error(_("Failed to create new snapshot"));
 			return;
@@ -3837,6 +3837,8 @@ public class Main : GLib.Object{
 		var status_code = SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE;
 		message = "";
 		details = "";
+
+		update_snapshot_list();
 		
 		/*
 		-1 - device un-available, path does not exist
@@ -3851,140 +3853,109 @@ public class Main : GLib.Object{
 		log_msg("");
 		log_msg("Free space limit: %s".printf(format_file_size(minimum_free_disk_space)));
 
-		// free space message
-		
-		if ((snapshot_device != null) && (snapshot_device.free.length > 0)){
-			log_msg("Available space: %s".printf(
-				format_file_size(snapshot_device.available_bytes)));
-			message = "%s ".printf(snapshot_device.free) + _("free");
-			message = message.strip();
-		}
-		else{
-			message = "";
-		}
+		int64 free_space = 0;
+		bool ok = false;
 
 		if (use_snapshot_path){
-			if (!dir_exists(snapshot_path)){
-				
-				message = _("Backup path not available");
-				
-				if (snapshot_path.length == 0){
-					details = _("Select the path for saving snapshots");
-				}
-				else{
-					details = _("Backup path not found") + ": '%s'".printf(snapshot_path);
-				}
-
-				status_code = SnapshotLocationStatus.NOT_AVAILABLE;
+			if (snapshot_path.length > 0){
+				message = _("Snapshot location not selected!");
+				details = _("Select the location for saving snapshots");
+				status_code = SnapshotLocationStatus.NOT_SELECTED;
 			}
 			else{
-				bool is_readonly;
-				bool hardlink_supported = filesystem_supports_hardlinks(
-					snapshot_path, out is_readonly);
-
-				if (is_readonly){
-					message = _("File system at selected path is read-only!");
-					details = _("Select another path for saving snapshots");
-					status_code = SnapshotLocationStatus.READ_ONLY_FS;
-				}
-				else if (!hardlink_supported){
-					message = _("File system at selected path does not support hard-links!");
-					details = _("Select another path for saving snapshots");
-					status_code = SnapshotLocationStatus.HARDLINKS_NOT_SUPPORTED;
-				}
-				else{
-					// ok, check snapshots and space
-
-					var list = Device.get_disk_space_using_df(snapshot_path);
-					var free_space = (list.size > 0) ? list[0].free_bytes : 0;
-					
-					if (snapshot_list.size > 0){
-						if (free_space < minimum_free_disk_space){
-							message = _("Backup device does not have enough space!");
-							details = _("Select another device or free up some space");
-							status_code = SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE;
-						}
-						else{
-							//ok
-							message = _("%d snapshots, %s free").printf(
-								snapshot_list.size,
-								format_file_size(free_space));
-								
-							status_code = SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE;
-						}
-					}
-					else {
-						var required_space = calculate_size_of_first_snapshot();
-
-						if (free_space < required_space){
-							message = _("Backup device does not have enough space!");
-							details = _("Select another device or free up some space");
-							status_code = SnapshotLocationStatus.NO_SNAPSHOTS_NO_SPACE;
-						}
-						else{
-							message = _("First snapshot not created");
-							details = _("Disk space required:") +
-								" %.1f GB".printf((required_space * 1.0) / GB);
-							status_code = SnapshotLocationStatus.NO_SNAPSHOTS_HAS_SPACE;
-						}
-					}
-				}
-			}
-		}
-		else{
-			if (!backup_device_online()){
-
-				message = _("Backup device not available");
-				
-				if (snapshot_device == null){
-					details = _("Select the device for saving snapshots");
-				}
-				else{
-					details = _("Device not connected");
-				}
-
-				status_code = SnapshotLocationStatus.NOT_AVAILABLE;
-			}
-			else{
-				if (snapshot_device.size_bytes == 0){
-					message = _("Backup device not available");
-					details = _("Failed to read file system size");
+				if (!dir_exists(snapshot_path)){
+					message = _("Snapshot location not available!");
+					details = _("Path not found") + ": '%s'".printf(snapshot_path);
 					status_code = SnapshotLocationStatus.NOT_AVAILABLE;
 				}
 				else{
-					if (snapshot_list.size > 0){
-						if (snapshot_device.free_bytes < minimum_free_disk_space){
-							message = _("Backup device does not have enough space!");
-							details = _("Select another device or free up some space");
-							status_code = SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE;
-						}
-						else{
-							//ok
-							message = _("%d snapshots, %s free").printf(
-								snapshot_list.size,
-								format_file_size(snapshot_device.free_bytes));
-								
-							status_code = SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE;
-						}
-					}
-					else {
-						var required_space = calculate_size_of_first_snapshot();
+					bool is_readonly;
+					bool hardlink_supported = filesystem_supports_hardlinks(
+						snapshot_path, out is_readonly);
 
-						if (snapshot_device.free_bytes < required_space){
-							message = _("Backup device does not have enough space!")
-								+ " (&lt; %s)".printf(format_file_size(required_space));
-							details = _("Select another device or free up some space")
-								+ " (%s required)".printf(format_file_size(required_space));
-							status_code = SnapshotLocationStatus.NO_SNAPSHOTS_NO_SPACE;
-						}
-						else{
-							message = _("First snapshot not created");
-							details = _("Disk space required:") +
-								" %s".printf(format_file_size(required_space));
-							status_code = SnapshotLocationStatus.NO_SNAPSHOTS_HAS_SPACE;
-						}
+					if (is_readonly){
+						message = _("File system is read-only!");
+						details = _("Select another location for saving snapshots");
+						status_code = SnapshotLocationStatus.READ_ONLY_FS;
+					}
+					else if (!hardlink_supported){
+						message = _("File system does not support hard-links!");
+						details = _("Select another location for saving snapshots");
+						status_code = SnapshotLocationStatus.HARDLINKS_NOT_SUPPORTED;
+					}
+					else{
+						// ok, check snapshots and space
+						
+						var list = Device.get_disk_space_using_df(snapshot_path);
+						free_space = (list.size > 0) ? list[0].free_bytes : 0;
+						ok = true;
 					}
 				}
+			}
+		}
+		else{
+			if (snapshot_device == null){
+				message = _("Snapshot location not selected!");
+				details = _("Select the location for saving snapshots");
+				status_code = SnapshotLocationStatus.NOT_SELECTED;
+			}
+			else if (!backup_device_online() || (snapshot_device.size_bytes == 0)){
+				message = _("Snapshot location not available!");
+				details = _("Device is offline") + ": '%s'".printf(snapshot_device.kname);
+				status_code = SnapshotLocationStatus.NOT_AVAILABLE;
+			}
+			else{
+				// ok, check snapshots and space
+				
+				free_space = snapshot_device.free_bytes;
+				ok = true;
+			}
+		}
+
+		if (snapshot_list.size > 0){
+
+			// has snapshots, check minimum space
+			
+			if (free_space < minimum_free_disk_space){
+				
+				message = _("Disk space not enough!")
+					+ " (less than %s)".printf(format_file_size(minimum_free_disk_space));
+					
+				details = _("Select another device or free up some space");
+				status_code = SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE;
+			}
+			else{
+				//ok
+				message = "";
+				
+				details = _("%d snapshots, %s free").printf(
+					snapshot_list.size,
+					format_file_size(free_space));
+					
+				status_code = SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE;
+			}
+		}
+		else {
+
+			// no snapshots, check estimated space
+			
+			var required_space = calculate_size_of_first_snapshot();
+
+			if (free_space < required_space){
+				message = _("Disk space not enough!");
+				message += " (%s needed)".printf(format_file_size(required_space));
+				
+				details = _("Select another device or free up some space");
+				
+				status_code = SnapshotLocationStatus.NO_SNAPSHOTS_NO_SPACE;
+			}
+			else{
+				message = _("No snapshots on this device");
+				
+				details = _("First snapshot requires:");
+				details += " %s".printf(format_file_size(required_space));
+				
+				status_code = SnapshotLocationStatus.NO_SNAPSHOTS_HAS_SPACE;
 			}
 		}
 
@@ -3992,6 +3963,7 @@ public class Main : GLib.Object{
 
 		log_msg(message);
 		log_msg(details);
+		
 		log_msg("Status: %s".printf(
 			status_code.to_string().replace("SNAPSHOT_LOCATION_STATUS_","")));
 
@@ -4700,7 +4672,7 @@ public enum SnapshotLocationStatus{
 	 4 - path is readonly
      5 - hardlinks not supported
 	*/
-		
+	NOT_SELECTED = -2,
 	NOT_AVAILABLE = -1,
 	HAS_SNAPSHOTS_HAS_SPACE = 0,
 	HAS_SNAPSHOTS_NO_SPACE = 1,

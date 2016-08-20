@@ -119,7 +119,7 @@ class MainWindow : Gtk.Window{
 		}
 
 		//refresh_cmb_backup_device();
-		timer_backup_device_init = Timeout.add(100, init_backup_device);
+		timer_backup_device_init = Timeout.add(100, init_ui_for_backup_device);
     }
 
 	private void init_ui_toolbar(){
@@ -603,7 +603,7 @@ class MainWindow : Gtk.Window{
 	}
 
 	
-	private bool init_backup_device(){
+	private bool init_ui_for_backup_device(){
 
 		/* updates statusbar messages and snapshot list after backup device is changed */
 
@@ -698,7 +698,6 @@ class MainWindow : Gtk.Window{
 				var title = message;
 			
 				string msg = _("Scheduled jobs will be enabled only after the first snapshot is taken.") + "\n";
-				msg += message + (" space and 10 minutes to complete.") + "\n";
 				msg += _("Do you want to take the first snapshot now?") + "\n";
 
 				var type = Gtk.MessageType.WARNING;
@@ -1314,9 +1313,12 @@ class MainWindow : Gtk.Window{
 	}
 
 	private void btn_wizard_clicked(){
-		var win = new WizardWindow();
+		var win = new WizardWindow("");
 		win.set_transient_for(this);
 		win.show_all();
+		win.destroy.connect(()=>{
+			timer_backup_device_init = Timeout.add(100, init_ui_for_backup_device);
+		});
 	}
 
 	private void btn_browse_snapshot_clicked(){
@@ -1672,15 +1674,60 @@ class MainWindow : Gtk.Window{
 		else{
 			hbox_shield.visible = true;
 			hbox_shield.show_all();
-			if (App.is_scheduled){
-				img_shield.pixbuf = get_shared_icon("", "security-high.svg", 48).pixbuf;
-				set_shield_label(_("System is protected"));
-				set_shield_subnote(_("Last snapshot was taken at: ") + last_snapshot_date.to_string());
-			}
-			else{
+
+			switch (status_code){
+			case SnapshotLocationStatus.READ_ONLY_FS:
+			case SnapshotLocationStatus.HARDLINKS_NOT_SUPPORTED:
+			case SnapshotLocationStatus.NOT_SELECTED:
+			case SnapshotLocationStatus.NOT_AVAILABLE:
+			case SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE:
+			case SnapshotLocationStatus.NO_SNAPSHOTS_NO_SPACE:
 				img_shield.pixbuf = get_shared_icon("", "security-low.svg", 48).pixbuf;
-				set_shield_label(_("System is not protected"));
-				set_shield_subnote(_("Scheduled snapshots are disabled!"));
+				set_shield_label(message);
+				set_shield_subnote(details);
+				break;
+
+			case SnapshotLocationStatus.NO_SNAPSHOTS_HAS_SPACE:
+			case SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE:
+				// has space
+				if (App.is_scheduled){
+					// is scheduled
+					if (App.snapshot_list.size > 0){
+						// has snaps
+						img_shield.pixbuf = get_shared_icon("", "security-high.svg", 48).pixbuf;
+						set_shield_label(_("System is protected"));
+						set_shield_subnote(
+							_("Last snapshot taken at: ") + format_date(last_snapshot_date));
+
+					}
+					else{
+						// no snaps
+						img_shield.pixbuf = get_shared_icon("", "security-low.svg", 48).pixbuf;
+						set_shield_label(_("No snapshots available"));
+						set_shield_subnote(_("Create a snapshot to start using Timeshift"));
+						//set_shield_subnote(_("Snapshots will be created at scheduled intervals"));
+						//TODO: enable scheduled snaps without first snap
+					}
+
+					//TODO: show more info, count and free space
+				}
+				else {
+					// not scheduled
+					if (App.snapshot_list.size > 0){
+						// has snaps
+						img_shield.pixbuf = get_shared_icon("", "security-medium.svg", 48).pixbuf;
+						set_shield_label(_("Scheduled snapshots are disabled"));
+						set_shield_subnote(_("Enable scheduled snapshots to protect your system"));
+					}
+					else{
+						// no snaps
+						img_shield.pixbuf = get_shared_icon("", "security-low.svg", 48).pixbuf;
+						set_shield_label(_("No snapshots available"));
+						set_shield_subnote(_("Create snapshots manually or enable scheduled snapshots to protect your system"));
+					}
+				}
+				
+				break;
 			}
 		}
 	}

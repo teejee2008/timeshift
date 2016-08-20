@@ -7,16 +7,21 @@ using TeeJee.Misc;
 
 public class RsyncTask : AsyncTask{
 
+	// settings
 	public bool delete_extra = true;
 	public string rsync_log_file = "";
 	public string exclude_from_file = "";
 	public string source_path = "";
 	public string dest_path = "";
 	public bool verbose = true;
+
+	// regex
 	private Gee.HashMap<string, Regex> regex_list;
 
+	// status
 	public Gee.ArrayList<string> status_lines;
 	public int64 status_line_count = 0;
+	public int64 total_size = 0;
 	
 	public RsyncTask(){
 		init_regular_expressions();
@@ -33,6 +38,10 @@ public class RsyncTask : AsyncTask{
 			//Example: status=-1
 			regex_list["status"] = new Regex(
 				"""(.)(.)(c|\+|\.)(s|\+|\.)(t|\+|\.)(p|\+|\.)(o|\+|\.)(g|\+|\.)(u|\+|\.)(a|\+|\.)(x|\+|\.) (.*)""");
+
+			regex_list["total-size"] = new Regex(
+				"""total size is ([0-9,]+)[ \t]+speedup is [0-9.]+""");
+
 		}
 		catch (Error e) {
 			log_error (e.message);
@@ -46,6 +55,7 @@ public class RsyncTask : AsyncTask{
 
 		status_lines = new Gee.ArrayList<string>();
 		status_line_count = 0;
+		total_size = 0;
 	}
 
 	private string build_script() {
@@ -133,6 +143,9 @@ public class RsyncTask : AsyncTask{
 		if (regex_list["status"].match(line, 0, out match)) {
 			status_line = match.fetch(12);
 			status_lines.add(status_line);
+		}
+		else if (regex_list["total-size"].match(line, 0, out match)) {
+			total_size = int64.parse(match.fetch(1).replace(",",""));
 		}
 
 		return true;

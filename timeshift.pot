@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timeshift 1.6\n"
 "Report-Msgid-Bugs-To: teejee2008@gmail.com\n"
-"POT-Creation-Date: 2016-08-19 23:42+0530\n"
+"POT-Creation-Date: 2016-08-20 13:34+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: Main.vala:3909 Main.vala:3963
+#: Main.vala:3931
 #, c-format
 msgid "%d snapshots, %s free"
 msgstr ""
@@ -91,28 +91,12 @@ msgstr ""
 msgid "Backup Device"
 msgstr ""
 
-#: Main.vala:3903 Main.vala:3920 Main.vala:3957 Main.vala:3974
-msgid "Backup device does not have enough space!"
-msgstr ""
-
-#: Main.vala:3937 Main.vala:3950
-msgid "Backup device not available"
-msgstr ""
-
 #: Main.vala:3451
 msgid "Backup device not set! Defaulting to system device"
 msgstr ""
 
 #: Main.vala:2237
 msgid "Backup device not specified!"
-msgstr ""
-
-#: Main.vala:3869
-msgid "Backup path not available"
-msgstr ""
-
-#: Main.vala:3875
-msgid "Backup path not found"
 msgstr ""
 
 #: Main.vala:1425
@@ -160,15 +144,15 @@ msgstr ""
 msgid "Critical Error"
 msgstr ""
 
-#: Main.vala:4253
+#: Main.vala:4225
 msgid "Cron job added"
 msgstr ""
 
-#: Main.vala:4266
+#: Main.vala:4238
 msgid "Cron job removed"
 msgstr ""
 
-#: Main.vala:4338 Main.vala:4367
+#: Main.vala:4310 Main.vala:4339
 msgid "Crontab is empty"
 msgstr ""
 
@@ -204,8 +188,8 @@ msgstr ""
 msgid "Device"
 msgstr ""
 
-#: Main.vala:3943
-msgid "Device not connected"
+#: Main.vala:3904
+msgid "Device is offline"
 msgstr ""
 
 #: Main.vala:407
@@ -216,8 +200,8 @@ msgstr ""
 msgid "Directory not found"
 msgstr ""
 
-#: Main.vala:3926 Main.vala:3982
-msgid "Disk space required:"
+#: Main.vala:3921 Main.vala:3945
+msgid "Disk space not enough!"
 msgstr ""
 
 #: Main.vala:247
@@ -256,7 +240,7 @@ msgstr ""
 msgid "Examples"
 msgstr ""
 
-#: Main.vala:4257
+#: Main.vala:4229
 msgid "Failed to add cron job"
 msgstr ""
 
@@ -272,7 +256,7 @@ msgstr ""
 msgid "Failed to delete symlinks"
 msgstr ""
 
-#: Main.vala:4111 Main.vala:4117
+#: Main.vala:4083 Main.vala:4089
 msgid "Failed to estimate system size"
 msgstr ""
 
@@ -297,15 +281,11 @@ msgstr ""
 msgid "Failed to mount BTRFS subvolume"
 msgstr ""
 
-#: Main.vala:3951
-msgid "Failed to read file system size"
-msgstr ""
-
 #: Main.vala:3243 Main.vala:3336
 msgid "Failed to remove"
 msgstr ""
 
-#: Main.vala:4270
+#: Main.vala:4242
 msgid "Failed to remove cron job"
 msgstr ""
 
@@ -333,20 +313,20 @@ msgstr ""
 msgid "Failed to update modification date"
 msgstr ""
 
-#: Main.vala:3891
-msgid "File system at selected path does not support hard-links!"
+#: Main.vala:3882
+msgid "File system does not support hard-links!"
 msgstr ""
 
-#: Main.vala:3886
-msgid "File system at selected path is read-only!"
+#: Main.vala:3877
+msgid "File system is read-only!"
 msgstr ""
 
 #: Main.vala:2724
 msgid "Files will be overwritten on the target device!"
 msgstr ""
 
-#: Main.vala:3925 Main.vala:3981
-msgid "First snapshot not created"
+#: Main.vala:3955
+msgid "First snapshot requires:"
 msgstr ""
 
 #: Main.vala:1979
@@ -510,6 +490,10 @@ msgstr ""
 msgid "No snapshots found on device"
 msgstr ""
 
+#: Main.vala:3953
+msgid "No snapshots on this device"
+msgstr ""
+
 #: Main.vala:456
 msgid "Not Supported"
 msgstr ""
@@ -530,7 +514,7 @@ msgstr ""
 msgid "OK"
 msgstr ""
 
-#: Main.vala:4430
+#: Main.vala:4402
 msgid "Older log files removed"
 msgstr ""
 
@@ -541,6 +525,10 @@ msgstr ""
 
 #: Main.vala:698
 msgid "Options"
+msgstr ""
+
+#: Main.vala:3868
+msgid "Path not found"
 msgstr ""
 
 #: Main.vala:277
@@ -588,7 +576,7 @@ msgstr ""
 msgid "Removed"
 msgstr ""
 
-#: Main.vala:3795 Main.vala:4013
+#: Main.vala:3795 Main.vala:3985
 #, c-format
 msgid "Removed mount directory: '%s'"
 msgstr ""
@@ -646,12 +634,12 @@ msgstr ""
 msgid "Select GRUB device"
 msgstr ""
 
-#: Main.vala:3904 Main.vala:3921 Main.vala:3958 Main.vala:3976
+#: Main.vala:3924 Main.vala:3948
 msgid "Select another device or free up some space"
 msgstr ""
 
-#: Main.vala:3887 Main.vala:3892
-msgid "Select another path for saving snapshots"
+#: Main.vala:3878 Main.vala:3883
+msgid "Select another location for saving snapshots"
 msgstr ""
 
 #: Main.vala:2192
@@ -670,12 +658,8 @@ msgstr ""
 msgid "Select target device"
 msgstr ""
 
-#: Main.vala:3940
-msgid "Select the device for saving snapshots"
-msgstr ""
-
-#: Main.vala:3872
-msgid "Select the path for saving snapshots"
+#: Main.vala:3862 Main.vala:3899
+msgid "Select the location for saving snapshots"
 msgstr ""
 
 #: Main.vala:236
@@ -719,8 +703,16 @@ msgstr ""
 msgid "Snapshot device not set!"
 msgstr ""
 
-#: Main.vala:3991
+#: Main.vala:3962
 msgid "Snapshot location"
+msgstr ""
+
+#: Main.vala:3867 Main.vala:3903
+msgid "Snapshot location not available!"
+msgstr ""
+
+#: Main.vala:3861 Main.vala:3898
+msgid "Snapshot location not selected!"
 msgstr ""
 
 #: Main.vala:1835
@@ -804,7 +796,7 @@ msgstr ""
 msgid "Target device not specified!"
 msgstr ""
 
-#: Main.vala:4478
+#: Main.vala:4450
 msgid "Terminating rsync process"
 msgstr ""
 
@@ -886,10 +878,6 @@ msgstr ""
 
 #: Main.vala:1954
 msgid "days..."
-msgstr ""
-
-#: Main.vala:3859
-msgid "free"
 msgstr ""
 
 #: Main.vala:1797

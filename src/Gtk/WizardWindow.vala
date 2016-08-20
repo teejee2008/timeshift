@@ -57,9 +57,11 @@ class WizardWindow : Gtk.Window{
 	private Gtk.Button btn_abort;
 	
 	private uint tmr_init;
+
+	private string mode;
 	
-	public WizardWindow () {
-		this.title = AppName + " v" + AppVersion;
+	public WizardWindow (string _mode) {
+		this.title = "Setup Wizard";
         this.window_position = WindowPosition.CENTER;
         this.modal = true;
         this.set_default_size (500, 500);
@@ -71,16 +73,20 @@ class WizardWindow : Gtk.Window{
         box.margin = 0; // keep 0 as we will hide tabs in Wizard view
         add(box);
 		vbox_main = box;
+
+		mode = _mode;
         
 		notebook = add_notebook(box, false, false);
 		notebook.margin = 6;
-
+		
 		create_tab_estimate_system_size();
 
 		create_tab_backup_device();
 
 		create_tab_first_snapshot();
 
+		create_tab_final();
+		
 		create_actions();
 
 		show_all();
@@ -115,7 +121,7 @@ class WizardWindow : Gtk.Window{
 		radio_device.toggled();
 		radio_path.toggled();
 
-		notebook.page = 0;
+		notebook.page = Tabs.ESTIMATE;
 		initialize_current_tab();
 		
 		return false;
@@ -231,26 +237,67 @@ class WizardWindow : Gtk.Window{
 		hbox_status.add(spinner);
 		
 		//lbl_msg
-		lbl_msg = add_label(hbox_status, "Copying files...");
+		lbl_msg = add_label(hbox_status, _("Preparing..."));
 		lbl_msg.halign = Align.START;
 		lbl_msg.ellipsize = Pango.EllipsizeMode.END;
 		lbl_msg.max_width_chars = 50;
 
 		//progressbar
 		progressbar = new Gtk.ProgressBar();
-		progressbar.set_size_request(-1,25);
+		//progressbar.set_size_request(-1,25);
 		//progressbar.show_text = true;
 		//progressbar.pulse_step = 0.1;
 		box.add (progressbar);
 
 		//lbl_status
-		lbl_status = add_framed_label(box, "");
-		lbl_status.halign = Align.START;
-		lbl_status.ellipsize = Pango.EllipsizeMode.MIDDLE;
+		lbl_status = add_label_scrolled(box, "");
 		lbl_status.max_width_chars = 50;
-		lbl_status.margin_top = 6;
+		lbl_status.margin_top = 12;
 	}
 
+	private void create_tab_final(){
+		var box = add_tab(notebook, _("Done"));
+		
+		add_label_header(box, _("Setup Complete"), true);
+
+		var msg = "";
+
+		//msg += _("1. .") + "\n";
+
+		msg += _("◈ Scheduled snapshots are enabled. Snapshots will be created automatically to protect your system.") + "\n\n";
+
+		msg += _("◈ You can rollback your system to a previous date by restoring a snapshot.") + "\n\n";
+
+		msg += _("◈ Restoring a snapshot only replaces system files and settings. Documents and other files in your home directory will not be affected. You can change this in Settings by adding a filter to include these files.") + "\n\n";
+
+		msg += _("◈ If the system is unable to boot, you can rescue your system by installing and running Timeshift on the Ubuntu Live CD / USB.") + "\n\n";
+
+		msg += _("◈ To guard against hard disk failures, select an external disk for the snapshot location instead of the primary hard disk.") + "\n\n";
+
+		msg += _("◈ Avoid storing snapshots on your system partition. Using another partition will allow you to format and re-install the OS on your system partition without losing the snapshots stored on it. You can even install another Linux distribution and later roll-back the previous distribution by restoring the snapshot.") + "\n\n";
+
+		msg += _("◈ Snapshots only store files which have changed. You can reduce the size by adding filters to exclude files which are not required.") + "\n\n";
+
+		msg += _("◈ Common files are hard-linked between snapshots. Copying the files manually to another location will duplicate files and break hard-links. Snapshots must be moved carefully by running 'rsync' from a terminal and the file system at destination path must support hard-links.") + "\n\n";
+		
+		add_label_scrolled(box, msg, false, true, 0);
+		/*label.set_use_markup(true);
+		label.xalign = (float) 0.0;
+		//box.add(label);
+		label.max_width_chars = 50;
+		
+		
+		var scroll = new ScrolledWindow(null, null);
+		//sw_msg.set_shadow_type (ShadowType.ETCHED_IN);
+		scroll.expand = true;
+		scroll.hscrollbar_policy = PolicyType.NEVER;
+		scroll.vscrollbar_policy = PolicyType.ALWAYS;
+		//sw_msg.set_size_request();
+		box.add(scroll);*/
+
+		//scroll.add(label);
+	}
+	
 	private void create_actions(){
 		var hbox = new Gtk.ButtonBox (Gtk.Orientation.HORIZONTAL);
 		hbox.set_layout (Gtk.ButtonBoxStyle.EXPAND);
@@ -281,7 +328,7 @@ class WizardWindow : Gtk.Window{
 			go_next();
 		});
 
-		// cancel
+		// close
 		
 		img = new Image.from_stock("gtk-close", Gtk.IconSize.BUTTON);
 		btn_cancel = add_button(hbox, _("Close"), "", ref size_group, img);
@@ -290,11 +337,13 @@ class WizardWindow : Gtk.Window{
 			this.destroy();
 		});
 
-		// cancel
+		// abort
 		
 		img = new Image.from_stock("gtk-cancel", Gtk.IconSize.BUTTON);
 		btn_abort = add_button(hbox, _("Cancel"), "", ref size_group, img);
 
+		//btn_abort.margin_left = btn_abort.margin_right = 100;
+		
         btn_abort.clicked.connect(()=>{
 			App.task.stop(AppStatus.CANCELLED);
 			this.destroy(); // TODO: Show error page
@@ -738,7 +787,7 @@ class WizardWindow : Gtk.Window{
 		}
 	}
 
-	private void take_first_snapshot(){
+	private void take_snapshot(){
 		App.take_snapshot(true,"",this);
 
 		var list = new Gee.ArrayList<string>();
@@ -769,11 +818,17 @@ class WizardWindow : Gtk.Window{
 					/ App.first_snapshot_count;
 				
 				progressbar.set_fraction(fraction);
+
+				lbl_msg.label = App.progress_text;
 			}
 
 			sleep(100);
 			gtk_do_events();
 		}
+
+		//TODO: check errors.
+
+		go_next();
 	}
 
 	private void go_prev(){
@@ -788,8 +843,11 @@ class WizardWindow : Gtk.Window{
 	}
 
 	private void initialize_current_tab(){
+
+		log_debug("page: %d".printf(notebook.page));
+		
 		switch (notebook.page){
-		case 0:
+		case Tabs.ESTIMATE:
 			if (App.first_snapshot_size == 0){
 				btn_prev.hide();
 				btn_next.hide();
@@ -803,19 +861,44 @@ class WizardWindow : Gtk.Window{
 			}
 			break;
 			
-		case 1:
+		case Tabs.SNAPSHOT_LOCATION:
 			btn_prev.show();
 			btn_next.show();
 			btn_cancel.show();
 			btn_abort.hide();
+
+			btn_prev.sensitive = false;
+			btn_next.sensitive = true;
+
+			if (mode == "create"){
+				go_next();
+			}
+			
 			break;
 			
-		case 2:
+		case Tabs.FIRST_SNAPSHOT:
 			btn_prev.hide();
 			btn_next.hide();
 			btn_cancel.hide();
 			btn_abort.show();
-			take_first_snapshot();
+
+			if ((App.snapshot_list.size == 0)||(mode == "create")){
+				take_snapshot();
+			}
+			else{
+				go_next();
+			}
+			
+			break;
+
+		case Tabs.FINISH:
+			btn_prev.show();
+			btn_next.show();
+			btn_cancel.show();
+			btn_abort.hide();
+
+			btn_prev.sensitive = false;
+			btn_next.sensitive = false;
 			break;
 		}
 	}
@@ -957,11 +1040,14 @@ class WizardWindow : Gtk.Window{
 		return col;
 	}
 
-	private Gtk.Label add_framed_label(Gtk.Box box, string text){
+	private Gtk.Label add_label_scrolled(
+		Gtk.Box box, string text,
+		bool show_border = false, bool wrap = false, int ellipsize_chars = 40){
 
 		// ScrolledWindow
 		var scroll = new Gtk.ScrolledWindow(null, null);
-		scroll.set_shadow_type (ShadowType.ETCHED_IN);
+		scroll.hscrollbar_policy = PolicyType.NEVER;
+		scroll.vscrollbar_policy = PolicyType.ALWAYS;
 		scroll.expand = true;
 		box.add(scroll);
 		
@@ -970,6 +1056,25 @@ class WizardWindow : Gtk.Window{
 		label.yalign = (float) 0.0;
 		label.margin = 6;
 		scroll.add(label);
+
+		if (wrap){
+			label.wrap = true;
+			label.wrap_mode = Pango.WrapMode.WORD;
+		}
+
+		if (ellipsize_chars > 0){
+			label.wrap = false;
+			label.ellipsize = Pango.EllipsizeMode.MIDDLE;
+			label.max_width_chars = ellipsize_chars;
+		}
+
+		if (show_border){
+			scroll.set_shadow_type (ShadowType.ETCHED_IN);
+		}
+		else{
+			label.margin_left = 0;
+		}
+		
 		return label;
 	}
 	
@@ -1101,4 +1206,12 @@ class WizardWindow : Gtk.Window{
 
 		return entry;
 	}
+}
+
+private enum Tabs{
+	ESTIMATE,
+	SNAPSHOT_LOCATION,
+	FIRST_SNAPSHOT,
+	FINISH
+
 }

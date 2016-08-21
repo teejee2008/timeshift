@@ -3404,6 +3404,7 @@ public class Main : GLib.Object{
 		var f = File.new_for_path(this.app_conf_path);
 		if (!f.query_exists()) {
 			first_run = true;
+			snapshot_device = root_device;
 			return;
 		}
 
@@ -3437,12 +3438,13 @@ public class Main : GLib.Object{
 			}
 		}
 
-		if (snapshot_device == null){
-			if ((root_device != null) && (app_mode == "")){
-				log_msg (_("Backup device not set! Defaulting to system device") + " '%s'".printf(root_device.device));
-				snapshot_device = root_device;
-			}
-		}
+		//if (snapshot_device == null){
+			//if ((root_device != null) && (app_mode == "")){
+			//	log_msg (_("Backup device not set! Defaulting to system device") + " '%s'".printf(root_device.device));
+			//	snapshot_device = root_device;
+			//}
+		//}
+		
 		/* Note: In commandline mode, user will be prompted for backup device instead of defaulting to system device */
 
 		/* The backup device specified in config file will be mounted at this point if:

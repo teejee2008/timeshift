@@ -696,7 +696,8 @@ class WizardWindow : Gtk.Window{
 				case SnapshotLocationStatus.NOT_AVAILABLE:
 				case SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE:
 				case SnapshotLocationStatus.NO_SNAPSHOTS_NO_SPACE:
-					lbl_infobar_location.label = "<span weight=\"bold\">%s</span>".printf(message);
+					lbl_infobar_location.label = "<span weight=\"bold\">%s</span>".printf(
+						message.replace("<","&lt;"));
 					infobar_location.message_type = Gtk.MessageType.ERROR;
 					infobar_location.no_show_all = false;
 					infobar_location.show_all();

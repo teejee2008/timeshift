@@ -75,7 +75,6 @@ class MainWindow : Gtk.Window{
 	private Gtk.Box vbox_free_space;
 
 	//timers
-	private uint timer_status_message;
 	private uint timer_progress;
 	private uint timer_backup_device_init;
 	private uint tmr_init;
@@ -98,8 +97,6 @@ class MainWindow : Gtk.Window{
 
         init_ui_toolbar();
 
-		//init_ui_backup_device();
-
         init_ui_snapshot_list();
 
 		init_ui_statusbar();
@@ -111,7 +108,6 @@ class MainWindow : Gtk.Window{
 			btn_settings.sensitive = false;
 		}
 
-		//refresh_cmb_backup_device();
 		tmr_init = Timeout.add(100, init_delayed);
     }
 
@@ -212,62 +208,6 @@ class MainWindow : Gtk.Window{
 		});
 	}
 
-	/*private void init_ui_backup_device(){
-		//hbox_device
-		hbox_device = new Box (Orientation.HORIZONTAL, 6);
-        hbox_device.margin_top = 6;
-        hbox_device.margin_left = 6;
-        hbox_device.margin_right = 6;
-        vbox_main.add (hbox_device);
-
-        //lbl_backup_device
-		lbl_backup_device = new Gtk.Label(_("Backup Device"));
-		lbl_backup_device.xalign = (float) 0.0;
-		hbox_device.add(lbl_backup_device);
-
-		//cmb_backup_device
-		cmb_backup_device = new ComboBox ();
-		cmb_backup_device.hexpand = true;
-		cmb_backup_device.set_tooltip_markup(_("Snapshots will be saved in path <b>/timeshift</b> on selected device"));
-		hbox_device.add(cmb_backup_device);
-
-		CellRendererText cell_backup_dev_margin = new CellRendererText ();
-		cell_backup_dev_margin.text = "";
-		cmb_backup_device.pack_start (cell_backup_dev_margin, false);
-
-		CellRendererPixbuf cell_backup_dev_icon = new CellRendererPixbuf ();
-		cell_backup_dev_icon.xpad = 1;
-		cmb_backup_device.pack_start (cell_backup_dev_icon, false);
-		cmb_backup_device.set_attributes(cell_backup_dev_icon, "pixbuf", 1);
-
-		CellRendererText cell_backup_device = new CellRendererText();
-        cmb_backup_device.pack_start( cell_backup_device, false );
-        cmb_backup_device.set_cell_data_func (cell_backup_device, cell_backup_device_render);
-
-		//cmb_backup_device.changed.connect(cmb_backup_device_changed);
-
-		//btn_refresh_backup_device_list
-		btn_refresh_backup_device_list = new Gtk.Button.with_label (" " + _("Refresh") + " ");
-		btn_refresh_backup_device_list.set_size_request(50,-1);
-		btn_refresh_backup_device_list.set_tooltip_text(_("Refresh Devices"));
-		btn_refresh_backup_device_list.clicked.connect(()=>{
-			App.update_partition_list();
-			//refresh_cmb_backup_device();
-			refresh_tv_backups();
-		});
-		hbox_device.add(btn_refresh_backup_device_list);
-
-		//lbl_backup_device_warning
-		lbl_backup_device_warning = new Gtk.Label("");
-		lbl_backup_device_warning.set_use_markup(true);
-		lbl_backup_device_warning.xalign = (float) 0.0;
-		lbl_backup_device_warning.no_show_all = true;
-		lbl_backup_device_warning.margin_left = 6;
-		lbl_backup_device_warning.margin_top = 6;
-		lbl_backup_device_warning.margin_bottom = 6;
-		vbox_main.add(lbl_backup_device_warning);
-	}*/
-	
 	private void init_ui_snapshot_list(){
         //tv_backups
 		tv_backups = new TreeView();
@@ -666,50 +606,8 @@ class MainWindow : Gtk.Window{
 				}
 
 			case SnapshotLocationStatus.NO_SNAPSHOTS_HAS_SPACE:
-
-				var title = message;
-			
-				string msg = _("Scheduled jobs will be enabled only after the first snapshot is taken.") + "\n";
-				msg += _("Do you want to take the first snapshot now?") + "\n";
-
-				var type = Gtk.MessageType.WARNING;
-				var buttons_type = Gtk.ButtonsType.YES_NO;
-				
-				var dlg = new CustomMessageDialog(title, msg, type, this, buttons_type);
-				var response = dlg.run();
-				dlg.destroy();
-				
-				if (response == Gtk.ResponseType.YES){
-					btn_backup_clicked();
-					this.delete_event.connect(on_delete_event); //reconnect this handler
-					return true; //keep window open
-				}
-				else{
-					App.is_scheduled = false;
-					return false; //close window
-				}
-
 			case SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE:
-				if (App.snapshot_device.uuid != snapshot_device_original.uuid){
-					log_debug(_("snapshot device changed"));
-
-					var title = _("Snapshot device has changed");
-					
-					var msg = _("Scheduled snapshots will be saved to ") + "<b>%s</b>\n".printf(App.snapshot_device.device);
-					msg += _("Click 'OK' to confirm") + "\n";
-
-					var type = Gtk.MessageType.INFO;
-					var buttons_type = Gtk.ButtonsType.OK_CANCEL;
-					
-					var dlg = new CustomMessageDialog(title, msg, type, this, buttons_type);
-					var response = dlg.run();
-					dlg.destroy();
-
-					if (response == Gtk.ResponseType.CANCEL){
-						this.delete_event.connect(on_delete_event); //reconnect this handler
-						return true; //keep window open
-					}
-				}
+				// TODO: Allow scheduled snapshots when first snapshot not taken
 				break;
 
 			case SnapshotLocationStatus.NOT_AVAILABLE:

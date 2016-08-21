@@ -114,8 +114,7 @@ public class Main : GLib.Object{
 	
 	public string log_dir = "";
 	public string log_file = "";
-	public string lock_dir = "";
-	public string lock_file = "";
+	public AppLock app_lock;
 
 	public Snapshot snapshot_to_delete;
 	public Snapshot snapshot_to_restore;
@@ -262,15 +261,11 @@ public class Main : GLib.Object{
 
 		//check and create lock ------------------
 
-		lock_dir = "/var/run/lock/timeshift";
-		lock_file = lock_dir + "/lock";
-		if (!create_lock()){
+		app_lock = new AppLock();
+		
+		if (!app_lock.create("timeshift", app_mode)){
 			if (app_mode == ""){
-				string txt = file_read(lock_file);
-				//string pid = txt.split(";")[0].strip();
-				string mode = txt.split(";")[1].strip();
-
-				if (mode == "backup"){
+				if (app_lock.lock_message == "backup"){
 					msg = _("A scheduled job is currently taking a system snapshot.") + "\n";
 					msg += _("Please wait for a few minutes and try again.");
 				}
@@ -629,60 +624,6 @@ public class Main : GLib.Object{
 			return strcmp(a.relpath,b.relpath);
 		};
 		exclude_list_apps.sort((owned) entry_compare);
-	}
-
-	public bool create_lock(){
-		try{
-
-			string current_pid = ((long)Posix.getpid()).to_string();
-
-			var file = File.new_for_path (lock_dir);
-			if (!file.query_exists()) {
-				file.make_directory_with_parents();
-			}
-
-			file = File.new_for_path (lock_file);
-			if (file.query_exists()) {
-
-				string txt = file_read(lock_file);
-				string process_id = txt.split(";")[0].strip();
-				//string mode = txt.split(";")[1].strip();
-				long pid = long.parse(process_id);
-
-				if (process_is_running(pid)){
-					log_msg(_("Another instance of timeshift is currently running") + " (PID=%ld)".printf(pid));
-					return false;
-				}
-				else{
-					if ((app_mode == "")||(LOG_DEBUG)){
-						log_msg(_("Warning: Deleted invalid lock"));
-					}
-					file.delete();
-					file_write(lock_file, current_pid);
-					return true;
-				}
-			}
-			else{
-				file_write(lock_file, current_pid + ";" + app_mode);
-				return true;
-			}
-		}
-		catch (Error e) {
-			log_error (e.message);
-			return false;
-		}
-	}
-
-	public void remove_lock(){
-		try{
-			var file = File.new_for_path (lock_file);
-			if (file.query_exists()) {
-				file.delete();
-			}
-		}
-		catch (Error e) {
-			log_error (e.message);
-		}
 	}
 
 	//console functions
@@ -4430,7 +4371,7 @@ public class Main : GLib.Object{
 
 		clean_logs();
 
-		remove_lock();
+		app_lock.remove();
 
 		//Gtk.main_quit ();
 	}
@@ -4701,12 +4642,12 @@ public class SnapshotStore : GLib.Object{
 
 	public Gee.ArrayList<Snapshot?> snapshots;
 
-	private Gtk.Window? parent = null;
+	private Gtk.Window? parent_window = null;
 
 	public SnapshotStore.from_path(string path, Gtk.Window? parent_win){
 		this.snapshot_path_user = path;
 		this.use_snapshot_path_user = true;
-		this.parent = parent_win;
+		this.parent_window = parent_win;
 		
 		snapshots = new Gee.ArrayList<Snapshot>();
 
@@ -4723,7 +4664,7 @@ public class SnapshotStore : GLib.Object{
 	public SnapshotStore.from_device(Device dev, Gtk.Window? parent_win){
 		this.device = dev;
 		this.use_snapshot_path_user = false;
-		this.parent = parent_win;
+		this.parent_window = parent_win;
 		
 		snapshots = new Gee.ArrayList<Snapshot>();
 
@@ -4738,7 +4679,7 @@ public class SnapshotStore : GLib.Object{
 		// unlock encrypted device
 		if (device.is_encrypted()){
 
-			device = unlock_encrypted_device(device, parent);
+			device = unlock_encrypted_device(device);
 			
 			if (device == null){
 				return false;
@@ -4780,7 +4721,7 @@ public class SnapshotStore : GLib.Object{
 		return false;
 	}
 
-	public Device unlock_encrypted_device(Device luks_device, Gtk.Window? parent_win){
+	public Device unlock_encrypted_device(Device luks_device){
 		Device luks_unlocked = null;
 
 		string mapped_name = "%s_unlocked".printf(luks_device.name);
@@ -4796,14 +4737,14 @@ public class SnapshotStore : GLib.Object{
 			}
 		}
 			
-		if (parent_win == null){
+		if (parent_window == null){
 
 			var counter = new TimeoutCounter();
 			counter.kill_process_on_timeout("cryptsetup", 20, true);
 
 			// prompt user to unlock
 			string cmd = "cryptsetup luksOpen '%s' '%s'".printf(luks_device.device, mapped_name);
-			int retval = Posix.system(cmd);
+			Posix.system(cmd);
 			counter.stop();
 			log_msg("");
 
@@ -4823,7 +4764,7 @@ public class SnapshotStore : GLib.Object{
 			string passphrase = gtk_inputbox(
 				_("Encrypted Device"),
 				_("Enter passphrase to unlock '%s'").printf(luks_device.name),
-				parent_win, true);
+				parent_window, true);
 
 			string message, details;
 			luks_unlocked = Device.luks_unlock(luks_device, mapped_name, passphrase,
@@ -4831,7 +4772,7 @@ public class SnapshotStore : GLib.Object{
 
 			bool is_error = (luks_unlocked == null);
 			
-			gtk_messagebox(message,details,null,is_error);
+			gtk_messagebox(message, details, null, is_error);
 		}
 
 		return luks_unlocked;
@@ -4847,5 +4788,48 @@ public class SnapshotStore : GLib.Object{
 			}
 		}
 	}
+
+	public bool load_snapshots(){
+
+		snapshots.clear();
+
+		string path = snapshot_location + "/timeshift/snapshots";
+
+		if (!dir_exists(path)){
+			log_error("Path not found: %s".printf(path));
+			return false;
+		}
+
+		try{
+			var dir = File.new_for_path (path);
+			var enumerator = dir.enumerate_children ("*", 0);
+
+			var info = enumerator.next_file ();
+			while (info != null) {
+				if (info.get_file_type() == FileType.DIRECTORY) {
+					if (info.get_name() != ".sync") {
+						Snapshot bak = new Snapshot(path + "/" + info.get_name());
+						if (bak.is_valid){
+							snapshots.add(bak);
+						}
+					}
+				}
+				info = enumerator.next_file ();
+			}
+		}
+		catch(Error e){
+			log_error (e.message);
+			return false;
+		}
+
+		snapshots.sort((a,b) => {
+			Snapshot t1 = (Snapshot) a;
+			Snapshot t2 = (Snapshot) b;
+			return t1.date.compare(t2.date);
+		});
+
+		return true;
+	}
+
 }
 

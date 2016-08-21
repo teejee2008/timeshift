@@ -346,6 +346,23 @@ namespace TeeJee.Devices{
 			this.removable = dev2.removable;
 		}
 
+		public void query_disk_space(){
+
+			/* Updates disk space info and returns the given Device object */
+
+			var list_df = get_disk_space_using_df(device);
+			
+			var dev_df = find_device_in_list(list_df, device, uuid);
+			
+			if (dev_df != null){
+				// update dev fields
+				size_bytes = dev_df.size_bytes;
+				used_bytes = dev_df.used_bytes;
+				available_bytes = dev_df.available_bytes;
+				used_percent = dev_df.used_percent;
+			}
+		}
+
 		// static --------------------------------
 		
 		public static Gee.ArrayList<Device> get_filesystems(
@@ -839,24 +856,6 @@ namespace TeeJee.Devices{
 			return list;
 		}
 
-		public static Device update_device_disk_space(Device dev){
-
-			/* Updates disk space info and returns the given Device object */
-
-			var list_df = get_disk_space_using_df(dev.device);
-			
-			var dev_df = find_device_in_list(list_df, dev.device, dev.uuid);
-			
-			if (dev_df != null){
-				// update dev fields
-				dev.size_bytes = dev_df.size_bytes;
-				dev.used_bytes = dev_df.used_bytes;
-				dev.available_bytes = dev_df.available_bytes;
-				dev.used_percent = dev_df.used_percent;
-			}
-
-			return dev;
-		}
 
 		// helpers ----------------------------------
 

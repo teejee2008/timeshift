@@ -1508,23 +1508,6 @@ public class Main : GLib.Object{
 
 		try{
 
-			//delete the existing .sync snapshot if invalid --------
-
-			f = File.new_for_path(sync_path);
-			if(f.query_exists()){
-
-				f = File.new_for_path(sync_path + "/info.json");
-				if(!f.query_exists()){
-
-					progress_text = _("Removing partially completed snapshot...");
-					log_msg(progress_text);
-
-					if (!delete_directory(sync_path)){
-						return false;
-					}
-				}
-			}
-
 			DateTime dt_sys_boot = now.add_seconds((-1) * get_system_uptime_seconds());
 
 			//check if we can rotate an existing backup -------------
@@ -1568,52 +1551,58 @@ public class Main : GLib.Object{
 
 				log_debug("Creating new backup...");
 				
-				//take new backup ---------------------------------
+				// take new backup ---------------------------------
 
 				temp_dt_begin = new DateTime.now_local();
-				//log_msg("Taking system snapshot...");
 
 				string exclude_from_file = sync_path + "/exclude.list";
 
-				f = File.new_for_path(sync_path);
-				if (!f.query_exists()){
+				/*
+				Check if a control file was written after restore.
+				If control file exists, we will delete the existing
+				.sync snapshot and hard-link the restored snapshot to .sync.
+				This will save disk space as the new snapshot will share
+				almost all files with the restored snapshot.
+				*/
+				
+				Snapshot bak_restore = null;
+				string ctl_path = snapshot_dir + "/.sync-restore";
 
-					//create .sync directory --------
+				f = File.new_for_path(ctl_path);
+				if(f.query_exists()){
+					string snapshot_path = file_read(ctl_path);
 
-					f = File.new_for_path(sync_path + "/localhost");
-					f.make_directory_with_parents();
-
-					Snapshot bak_restore = null;
-
-					//check if a control file was written after restore -------
-
-					string ctl_path = snapshot_dir + "/.sync-restore";
-
-					f = File.new_for_path(ctl_path);
-					if(f.query_exists()){
-						string snapshot_path = file_read(ctl_path);
-
-						foreach(Snapshot bak in snapshot_list){
-							if (bak.path == snapshot_path){
-								bak_restore = bak;
-								break;
-							}
-						}
-
-						f.delete();
-					}
-
-					if (bak_restore == null){
-						//select latest snapshot for hard-linking
-						for(int k = snapshot_list.size -1; k >= 0; k--){
-							Snapshot bak = snapshot_list[k];
-							bak_restore = bak; //TODO: check dist type
+					// find the snapshot that was restored
+					foreach(Snapshot bak in snapshot_list){
+						if (bak.path == snapshot_path){
+							bak_restore = bak;
 							break;
 						}
 					}
 
-					//hard-link selected snapshot
+					// delete the restore-control-file
+					f.delete();
+
 					if (bak_restore != null){
+						// delete the existing .sync snapshot
+
+						f = File.new_for_path(sync_path);
+						if(f.query_exists()){
+
+							f = File.new_for_path(sync_path + "/info.json");
+							if(!f.query_exists()){
+
+								progress_text = _("Removing partially completed snapshot...");
+								log_msg(progress_text);
+
+								if (!delete_directory(sync_path)){
+									return false;
+								}
+							}
+						}
+
+						// hard-link restored snapshot to .sync
+						
 						progress_text = _("Hard-linking files from previous snapshot...");
 						log_msg(progress_text);
 
@@ -1630,18 +1619,19 @@ public class Main : GLib.Object{
 					}
 				}
 
-				//delete existing control file --------------
+				// create sync directory if missing
 
-				f = File.new_for_path(sync_path + "/info.json");
-				if (f.query_exists()){
-					f.delete();
-				}
+				dir_create(sync_path + "/localhost");
+				
+				// delete existing control file
+				
+				file_delete(sync_path + "/info.json");
 
-				//save exclude list ------------
+				// save exclude list
 
 				save_exclude_list(sync_path);
 
-				//update modification date of .sync directory ---------
+				// update modification date of .sync directory
 
 				cmd = "touch \"%s\"".printf(sync_path);
 				Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
@@ -1654,7 +1644,7 @@ public class Main : GLib.Object{
 					return false;
 				}
 
-				//rsync file system with .sync ------------------
+				// rsync file system with .sync
 
 				progress_text = _("Synching files...");
 				log_msg(progress_text);
@@ -1677,8 +1667,6 @@ public class Main : GLib.Object{
 					task.io_nice = true;
 				}
 
-				//task.task_complete.connect(backup_and_rotate_finish);
-				
 				task.execute();
 
 				while (task.status == AppStatus.RUNNING){
@@ -1742,49 +1730,7 @@ public class Main : GLib.Object{
 
 		return true;
 	}
-
-	public int run_rsync(string cmd){
-		thr_arg1 = cmd;
-
-		try {
-			thr_running = true;
-			Thread.create<void> (run_rsync_thread, true);
-
-			while (thr_running){
-				gtk_do_events ();
-				Thread.usleep((ulong) GLib.TimeSpan.MILLISECOND * 100);
-			}
-		} catch (Error e) {
-			log_error (e.message);
-			thr_retval = -1;
-		}
-
-		return thr_retval;
-	}
-
-	public void run_rsync_thread(){
-		if (LOG_COMMANDS) { log_debug(thr_arg1); }
-
-		int ret_val = -1;
-
-		try{
-			if (cmd_verbose){ log_msg(""); }
-			Process.spawn_command_line_sync(thr_arg1, null, null, out ret_val);
-			if (cmd_verbose){ log_msg(""); }
-		}
-		catch(Error e){
-			log_error (e.message);
-			thr_success = false;
-			thr_running = false;
-			thr_retval = -1;
-			return;
-		}
-
-		thr_retval = ret_val;
-		thr_success = (ret_val == 0);
-		thr_running = false;
-	}
-
+	
 	public void auto_delete_backups(){
 		DateTime now = new DateTime.now_local();
 		int count = 0;
@@ -4418,6 +4364,11 @@ public class Snapshot : GLib.Object{
 	public Gee.ArrayList<FsTabEntry> fstab_list;
 	public bool is_valid = true;
 
+	// private
+	private bool thr_success = false;
+	private bool thr_running = false;
+	//private int thr_retval = -1;
+
 	public Snapshot(string dir_path){
 
 		try{
@@ -4442,6 +4393,8 @@ public class Snapshot : GLib.Object{
 		}
 	}
 
+	// manage tags
+	
 	public string taglist{
 		owned get{
 			string str = "";
@@ -4488,6 +4441,8 @@ public class Snapshot : GLib.Object{
 		return tags.contains(tag.strip());
 	}
 
+	// control files
+	
 	public void read_control_file(){
 		string ctl_file = path + "/info.json";
 
@@ -4549,16 +4504,9 @@ public class Snapshot : GLib.Object{
 		fstab_list = FsTabEntry.read_fstab_file(fstab_path);
 	}
 
-	public bool has_subvolumes(){
-		foreach(FsTabEntry en in fstab_list){
-			if (en.options.contains("subvol=@")){
-				return true;
-			}
-		}
-		return false;
-	}
-
 	public void update_control_file(){
+		/* Updates tag and comments */
+		
 		try{
 			string ctl_file = path + "/info.json";
 			var f = File.new_for_path(ctl_file);
@@ -4589,6 +4537,123 @@ public class Snapshot : GLib.Object{
 			log_error (e.message);
 		}
 	}
+
+	public void remove_control_file(){
+		string ctl_file = path + "/info.json";
+		file_delete(ctl_file);
+	}
+	
+	public static Snapshot write_control_file(
+		string snapshot_path, DateTime dt_created,
+		string tag, string root_uuid, string distro_full_name){
+			
+		var ctl_path = snapshot_path + "/info.json";
+		var config = new Json.Object();
+
+		config.set_string_member("created", dt_created.to_utc().to_unix().to_string());
+		config.set_string_member("sys-uuid", root_uuid);
+		config.set_string_member("sys-distro", distro_full_name);
+		config.set_string_member("app-version", AppVersion);
+		config.set_string_member("tags", tag);
+		config.set_string_member("comments", "");
+
+		var json = new Json.Generator();
+		json.pretty = true;
+		json.indent = 2;
+		var node = new Json.Node(NodeType.OBJECT);
+		node.set_object(config);
+		json.set_root(node);
+
+		try{
+			var f = File.new_for_path(ctl_path);
+			if (f.query_exists()){
+				f.delete();
+			}
+
+			json.to_file(ctl_path);
+		} catch (Error e) {
+	        log_error (e.message);
+	    }
+
+	    return (new Snapshot(snapshot_path));
+	}
+
+	// check
+	
+	public bool has_subvolumes(){
+		foreach(FsTabEntry en in fstab_list){
+			if (en.options.contains("subvol=@")){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	// actions
+
+	public bool remove(){
+		try {
+			thr_running = true;
+			thr_success = false;
+			Thread.create<void> (remove_snapshot_thread, true);
+		} catch (ThreadError e) {
+			thr_running = false;
+			thr_success = false;
+			log_error (e.message);
+		}
+
+		while (thr_running){
+			gtk_do_events ();
+			Thread.usleep((ulong) GLib.TimeSpan.MILLISECOND * 500);
+		}
+
+		return thr_success;
+	}
+
+	private void remove_snapshot_thread(){
+		string cmd = "";
+		string std_out;
+		string std_err;
+		int ret_val;
+
+		log_msg(_("Removing snapshot") + " '%s'...".printf(name));
+
+		try{
+			var f = File.new_for_path(path);
+			if(f.query_exists()){
+				cmd = "rm -rf \"%s\"".printf(path);
+
+				if (LOG_COMMANDS) { log_debug(cmd); }
+
+				Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
+
+				if (ret_val != 0){
+					log_error(_("Failed to remove") + ": '%s'".printf(path));
+					thr_success = false;
+					thr_running = false;
+					return;
+				}
+				else{
+					log_msg(_("Removed") + ": '%s'".printf(path));
+					thr_success = true;
+					thr_running = false;
+					return;
+				}
+			}
+			else{
+				log_error(_("Directory not found") + ": '%s'".printf(path));
+				thr_success = true;
+				thr_running = false;
+			}
+		}
+		catch(Error e){
+			log_error (e.message);
+			thr_success = false;
+			thr_running = false;
+			return;
+		}
+	}
+
 }
 
 public class AppExcludeEntry : GLib.Object{
@@ -4633,7 +4698,6 @@ public enum SnapshotLocationStatus{
 	HARDLINKS_NOT_SUPPORTED = 5
 }
 
-
 public class SnapshotStore : GLib.Object{
 	public Device device = null;
 	public string snapshot_path_user = "";
@@ -4642,7 +4706,16 @@ public class SnapshotStore : GLib.Object{
 
 	public Gee.ArrayList<Snapshot?> snapshots;
 
+	public string status_message = "";
+	public string status_details = "";
+	public SnapshotLocationStatus status_code;
+
+	// private
 	private Gtk.Window? parent_window = null;
+	private bool thr_success = false;
+	private bool thr_running = false;
+	//private int thr_retval = -1;
+	private string thr_args1 = "";
 
 	public SnapshotStore.from_path(string path, Gtk.Window? parent_win){
 		this.snapshot_path_user = path;
@@ -4673,6 +4746,19 @@ public class SnapshotStore : GLib.Object{
 		
 		unlock_and_mount_device();
 	}
+
+	public string snapshot_location {
+		owned get{
+			if (use_snapshot_path_user && dir_exists(snapshot_path_user)){
+				return snapshot_path_user;
+			}
+			else{
+				return snapshot_path_mount;
+			}
+		}
+	}
+
+	// load
 
 	public bool unlock_and_mount_device(){
 		
@@ -4778,17 +4864,6 @@ public class SnapshotStore : GLib.Object{
 		return luks_unlocked;
 	}
 	
-	public string snapshot_location {
-		owned get{
-			if (use_snapshot_path_user && dir_exists(snapshot_path_user)){
-				return snapshot_path_user;
-			}
-			else{
-				return snapshot_path_mount;
-			}
-		}
-	}
-
 	public bool load_snapshots(){
 
 		snapshots.clear();
@@ -4829,6 +4904,450 @@ public class SnapshotStore : GLib.Object{
 		});
 
 		return true;
+	}
+
+	// get tagged snapshots
+	
+	public Gee.ArrayList<Snapshot?> get_snapshots_by_tag(string tag = ""){
+		var list = new Gee.ArrayList<Snapshot?>();
+
+		foreach(Snapshot bak in snapshots){
+			if (tag == "" || bak.has_tag(tag)){
+				list.add(bak);
+			}
+		}
+		list.sort((a,b) => {
+			Snapshot t1 = (Snapshot) a;
+			Snapshot t2 = (Snapshot) b;
+			return (t1.date.compare(t2.date));
+		});
+
+		return list;
+	}
+
+	public Snapshot? get_latest_snapshot(string tag = ""){
+		var list = get_snapshots_by_tag(tag);
+
+		if (list.size > 0)
+			return list[list.size - 1];
+		else
+			return null;
+	}
+
+	public Snapshot? get_oldest_snapshot(string tag = ""){
+		var list = get_snapshots_by_tag(tag);
+
+		if (list.size > 0)
+			return list[0];
+		else
+			return null;
+	}
+
+	// status check
+
+	public bool is_available(){
+		if (use_snapshot_path_user){
+			if (snapshot_path_user.strip().length == 0){
+				status_message = _("Snapshot location not selected");
+				status_details = _("Select the location for saving snapshots");
+				status_code = SnapshotLocationStatus.NOT_SELECTED;
+				return false;
+			}
+			else{
+				if (!dir_exists(snapshot_path_user)){
+					status_message = _("Snapshot location not available!");
+					status_details = _("Path not found") + ": '%s'".printf(snapshot_path_user);
+					status_code = SnapshotLocationStatus.NOT_AVAILABLE;
+					return false;
+				}
+				else{
+					bool is_readonly;
+					bool hardlink_supported =
+						filesystem_supports_hardlinks(snapshot_path_user, out is_readonly);
+
+					if (is_readonly){
+						status_message = _("File system is read-only!");
+						status_details = _("Select another location for saving snapshots");
+						status_code = SnapshotLocationStatus.READ_ONLY_FS;
+						return false;
+					}
+					else if (!hardlink_supported){
+						status_message = _("File system does not support hard-links!");
+						status_details = _("Select another location for saving snapshots");
+						status_code = SnapshotLocationStatus.HARDLINKS_NOT_SUPPORTED;
+						return false;
+					}
+					else{
+						// ok
+						//device = Device.get_disk_space_using_df(snapshot_path_user);
+						return true;
+					}
+				}
+			}
+		}
+		else{
+			if (device == null){
+				status_message = _("Snapshot location not selected");
+				status_details = _("Select the location for saving snapshots");
+				status_code = SnapshotLocationStatus.NOT_SELECTED;
+				return false;
+			}
+			else if (device.device.length == 0){
+				status_message = _("Snapshot location not available!");
+				status_details = _("Device not found") + ": UUID='%s'".printf(device.uuid);
+				status_code = SnapshotLocationStatus.NOT_AVAILABLE;
+				return false;
+			}
+			else{
+				// ok
+				return true;
+			}
+		}
+	}
+	
+	public bool has_snapshots(){
+		return (snapshots.size > 0);
+	}
+
+	public bool has_space(){
+		if (snapshots.size > 0){
+			// has snapshots, check minimum space
+
+			var min_free = App.minimum_free_disk_space;
+			
+			if (device.free_bytes < min_free){
+				status_message = _("Not enough disk space");
+				status_message += " (< %s)".printf(format_file_size(min_free));
+					
+				status_details = _("Select another device or free up some space");
+				
+				status_code = SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE;
+				return false;
+			}
+			else{
+				//ok
+				status_message = "";
+				
+				status_details = _("%d snapshots, %s free").printf(
+					snapshots.size, format_file_size(device.free_bytes));
+					
+				status_code = SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE;
+				return true;
+			}
+		}
+		else {
+
+			// no snapshots, check estimated space
+			
+			var required_space = App.first_snapshot_size;
+
+			if (device.free_bytes < required_space){
+				status_message = _("Not enough disk space");
+				status_message += " (< %s)".printf(format_file_size(required_space));
+				
+				status_details = _("Select another device or free up some space");
+				
+				status_code = SnapshotLocationStatus.NO_SNAPSHOTS_NO_SPACE;
+				return false;
+			}
+			else{
+				status_message = _("No snapshots on this device");
+				
+				status_details = _("First snapshot requires:");
+				status_details += " %s".printf(format_file_size(required_space));
+				
+				status_code = SnapshotLocationStatus.NO_SNAPSHOTS_HAS_SPACE;
+				return true;
+			}
+		}
+	}
+
+	// actions
+
+	public void auto_remove(){
+		DateTime now = new DateTime.now_local();
+		int count = 0;
+		bool show_msg = false;
+		DateTime dt_limit;
+
+		// delete older backups - boot ---------------
+
+		var list = get_snapshots_by_tag("boot");
+
+		if (list.size > App.count_boot){
+			log_msg(_("Maximum backups exceeded for backup level") + " '%s'".printf("boot"));
+			while (list.size > App.count_boot){
+				list[0].remove_tag("boot");
+				log_msg(_("Snapshot") + " '%s' ".printf(list[0].name) + _("un-tagged") + " '%s'".printf("boot"));
+				list = get_snapshots_by_tag("boot");
+			}
+		}
+
+		// delete older backups - hourly, daily, weekly, monthly ---------
+
+		string[] levels = { "hourly","daily","weekly","monthly" };
+
+		foreach(string level in levels){
+			list = get_snapshots_by_tag(level);
+
+			if (list.size == 0) { continue; }
+
+			switch (level){
+				case "hourly":
+					dt_limit = now.add_hours(-1 * App.count_hourly);
+					break;
+				case "daily":
+					dt_limit = now.add_days(-1 * App.count_daily);
+					break;
+				case "weekly":
+					dt_limit = now.add_weeks(-1 * App.count_weekly);
+					break;
+				case "monthly":
+					dt_limit = now.add_months(-1 * App.count_monthly);
+					break;
+				default:
+					dt_limit = now.add_years(-1 * 10);
+					break;
+			}
+
+			if (list[0].date.compare(dt_limit) < 0){
+
+				log_msg(_("Maximum backups exceeded for backup level") + " '%s'".printf(level));
+
+				while (list[0].date.compare(dt_limit) < 0){
+					list[0].remove_tag(level);
+					log_msg(_("Snapshot") + " '%s' ".printf(list[0].name) + _("un-tagged") + " '%s'".printf(level));
+					list = get_snapshots_by_tag(level);
+				}
+			}
+		}
+
+		// delete older backups - max days -------
+
+		show_msg = true;
+		count = 0;
+		foreach(var bak in snapshots){
+			if (bak.date.compare(now.add_days(-1 * App.retain_snapshots_max_days)) < 0){
+				if (!bak.has_tag("ondemand")){
+
+					if (show_msg){
+						log_msg(_("Removing backups older than") + " %d ".printf(
+							App.retain_snapshots_max_days) + _("days..."));
+						show_msg = false;
+					}
+
+					log_msg(_("Snapshot") + " '%s' ".printf(bak.name) + _("un-tagged"));
+					bak.tags.clear();
+					count++;
+				}
+			}
+		}
+
+		remove_untagged();
+
+		// delete older backups - minimum space -------
+
+		device.query_disk_space();
+
+		show_msg = true;
+		count = 0;
+		while ((device.size_bytes - device.used_bytes) < App.minimum_free_disk_space){
+			
+			load_snapshots();
+			
+			if (snapshots.size > 0){
+				if (!snapshots[0].has_tag("ondemand")){
+
+					if (show_msg){
+						log_msg(_("Free space is less than") + " %lld GB".printf(
+							App.minimum_free_disk_space / GB));
+						log_msg(_("Removing older backups to free disk space"));
+						show_msg = false;
+					}
+
+					snapshots[0].remove();
+				}
+			}
+			
+			device.query_disk_space();
+		}
+	}
+
+	public void remove_untagged(){
+		bool show_msg = true;
+
+		foreach(Snapshot bak in snapshots){
+			if (bak.tags.size == 0){
+
+				if (show_msg){
+					log_msg(_("Removing un-tagged snapshots..."));
+					show_msg = false;
+				}
+
+				bak.remove();
+			}
+		}
+	}
+
+	public bool remove_all(){
+		string timeshift_dir = snapshot_location + "/timeshift";
+		string sync_dir = snapshot_location + "/timeshift/snapshots/.sync";
+
+		if (dir_exists(timeshift_dir)){
+			//delete snapshots
+			foreach(var bak in snapshots){
+				if (!bak.remove()){
+					return false;
+				}
+			}
+
+			//delete .sync
+			if (dir_exists(sync_dir)){
+				if (!delete_directory(sync_dir)){
+					return false;
+				}
+			}
+
+			//delete /timeshift
+			return delete_directory(timeshift_dir);
+		}
+		else{
+			log_msg(_("No snapshots found") + " '%s'".printf(snapshot_location));
+			return true;
+		}
+	}
+
+	// private
+	
+	private bool delete_directory(string dir_path){
+		thr_args1 = dir_path;
+
+		try {
+			thr_running = true;
+			thr_success = false;
+			Thread.create<void> (delete_directory_thread, true);
+		} catch (ThreadError e) {
+			thr_running = false;
+			thr_success = false;
+			log_error (e.message);
+		}
+
+		while (thr_running){
+			gtk_do_events ();
+			Thread.usleep((ulong) GLib.TimeSpan.MILLISECOND * 100);
+		}
+
+		thr_args1 = null;
+
+		return thr_success;
+	}
+
+	private void delete_directory_thread(){
+		string cmd = "";
+		string std_out;
+		string std_err;
+		int ret_val;
+
+		try{
+			var f = File.new_for_path(thr_args1);
+			if(f.query_exists()){
+				cmd = "rm -rf \"%s\"".printf(thr_args1);
+
+				if (LOG_COMMANDS) { log_debug(cmd); }
+
+				Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
+
+				if (ret_val != 0){
+					log_error(_("Failed to remove") + ": '%s'".printf(thr_args1));
+					thr_success = false;
+					thr_running = false;
+					return;
+				}
+				else{
+					log_msg(_("Removed") + ": '%s'".printf(thr_args1));
+					thr_success = true;
+					thr_running = false;
+					return;
+				}
+			}
+			else{
+				log_error(_("Directory not found") + ": '%s'".printf(thr_args1));
+				thr_success = true;
+				thr_running = false;
+			}
+		}
+		catch(Error e){
+			log_error (e.message);
+			thr_success = false;
+			thr_running = false;
+			return;
+		}
+	}
+
+	// symlinks
+	
+	public void create_symlinks(){
+		string cmd = "";
+		string std_out;
+		string std_err;
+		int ret_val;
+
+		cleanup_symlink_dir("boot");
+		cleanup_symlink_dir("hourly");
+		cleanup_symlink_dir("daily");
+		cleanup_symlink_dir("weekly");
+		cleanup_symlink_dir("monthly");
+		cleanup_symlink_dir("ondemand");
+
+		string path;
+
+		foreach(var bak in snapshots){
+			foreach(string tag in bak.tags){
+				
+				path = snapshot_location + "/timeshift/snapshots-%s".printf(tag);
+				cmd = "ln --symbolic \"../snapshots/%s\" -t \"%s\"".printf(bak.name, path);
+
+				if (LOG_COMMANDS) { log_debug(cmd); }
+
+				ret_val = exec_sync(cmd, out std_out, out std_err);
+				if (ret_val != 0){
+					log_error (std_err);
+					log_error(_("Failed to create symlinks") + ": snapshots-%s".printf(tag));
+					return;
+				}
+			}
+		}
+
+		log_debug (_("Symlinks updated"));
+	}
+
+	public void cleanup_symlink_dir(string tag){
+		string cmd = "";
+		string std_out;
+		string std_err;
+		int ret_val;
+
+		try{
+			string path = snapshot_location + "/timeshift/snapshots-%s".printf(tag);
+			var f = File.new_for_path(path);
+			if (f.query_exists()){
+				cmd = "rm -rf \"%s\"".printf(path + "/");
+
+				if (LOG_COMMANDS) { log_debug(cmd); }
+
+				Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
+				if (ret_val != 0){
+					log_error (std_err);
+					log_error(_("Failed to delete symlinks") + ": 'snapshots-%s'".printf(tag));
+					return;
+				}
+			}
+
+			f.make_directory_with_parents();
+		}
+		catch (Error e) {
+	        log_error (e.message);
+	    }
 	}
 
 }

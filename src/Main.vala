@@ -65,7 +65,7 @@ public class Main : GLib.Object{
 	public Gee.ArrayList<AppExcludeEntry> exclude_list_apps;
 	public Gee.ArrayList<MountEntry> mount_list;
 
-	//public SnapshotStore snapshot_store; 
+	public SnapshotStore repo; 
 
 	//temp
 	private Gee.ArrayList<Device> grub_device_list;
@@ -316,6 +316,8 @@ public class Main : GLib.Object{
 
 		//initialize lists -------------------------
 
+		//repo = new SnapshotStore();
+		
 		snapshot_list = new Gee.ArrayList<Snapshot>();
 
 		//snapshot_store = new SnapshotStore();
@@ -4945,6 +4947,37 @@ public class SnapshotStore : GLib.Object{
 
 	// status check
 
+	public void check_status(){
+
+		status_code = SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE;
+		status_message = "";
+		status_details = "";
+
+		log_msg("");
+		log_msg("Config: Free space limit is %s".printf(
+			format_file_size(App.minimum_free_disk_space)));
+
+		if (is_available()){
+			has_snapshots();
+			has_space();
+		}
+
+		if (use_snapshot_path_user){
+			log_msg("Custom path is selected for snapshot location");
+		}
+		
+		log_msg(_("Snapshot device") + ": '%s'".printf(
+			(device == null) ? " UNKNOWN" : device.device));
+			
+		log_msg(_("Snapshot location") + ": '%s'".printf(snapshot_location));
+
+		log_msg(status_message);
+		log_msg(status_details);
+		
+		log_msg("Status: %s".printf(
+			status_code.to_string().replace("SNAPSHOT_LOCATION_STATUS_","")));
+	}
+
 	public bool is_available(){
 		if (use_snapshot_path_user){
 			if (snapshot_path_user.strip().length == 0){
@@ -4979,7 +5012,6 @@ public class SnapshotStore : GLib.Object{
 					}
 					else{
 						// ok
-						//device = Device.get_disk_space_using_df(snapshot_path_user);
 						return true;
 					}
 				}
@@ -5006,10 +5038,16 @@ public class SnapshotStore : GLib.Object{
 	}
 	
 	public bool has_snapshots(){
+		load_snapshots();
 		return (snapshots.size > 0);
 	}
 
 	public bool has_space(){
+
+		if (device != null){
+			device.query_disk_space();
+		}
+		
 		if (snapshots.size > 0){
 			// has snapshots, check minimum space
 

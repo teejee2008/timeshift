@@ -1584,7 +1584,7 @@ public class Main : GLib.Object{
 		string msg;
 		File f;
 
-		log_debug("backup_and_rotate()");
+		//log_debug("backup_and_rotate()");
 		
 		temp_tag = tag;
 		temp_dt_created = dt_created;
@@ -1762,6 +1762,11 @@ public class Main : GLib.Object{
 				task.dest_path = sync_path + "/localhost/";
 				task.exclude_from_file = exclude_from_file;
 				task.rsync_log_file = log_file;
+
+				if (app_mode.length > 0){
+					// console mode
+					task.io_nice = true;
+				}
 
 				//task.task_complete.connect(backup_and_rotate_finish);
 				
@@ -4190,7 +4195,7 @@ public class Main : GLib.Object{
 	}
 
 	private string get_crontab_entry_scheduled(){
-		if (is_scheduled && (snapshot_list.size > 0)){
+		if (is_scheduled){
 			if (schedule_hourly){
 				return "@hourly timeshift --backup";
 			}
@@ -4209,8 +4214,10 @@ public class Main : GLib.Object{
 	}
 
 	private string get_crontab_entry_boot(){
-		if (is_scheduled && (snapshot_list.size > 0)){
-			if (schedule_boot || schedule_hourly || schedule_daily || schedule_weekly || schedule_monthly){
+		if (is_scheduled){
+			if (schedule_boot || schedule_hourly
+				|| schedule_daily || schedule_weekly || schedule_monthly){
+					
 				return "@reboot sleep %dm && timeshift --backup".printf(startup_delay_interval_mins);
 			}
 		}

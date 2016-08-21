@@ -370,7 +370,7 @@ class MainWindow : Gtk.Window{
 		col_desc.title = _("Comments");
 		col_desc.resizable = true;
 		col_desc.clickable = true;
-		col_desc.expand = true;
+		//col_desc.expand = true;
 		CellRendererText cell_desc = new CellRendererText ();
 		cell_desc.ellipsize = Pango.EllipsizeMode.END;
 		col_desc.pack_start (cell_desc, false);
@@ -1387,7 +1387,8 @@ class MainWindow : Gtk.Window{
 			case SnapshotLocationStatus.NOT_AVAILABLE:
 			case SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE:
 			case SnapshotLocationStatus.NO_SNAPSHOTS_NO_SPACE:
-				img_shield.pixbuf = get_shared_icon("", "security-low.svg", 48).pixbuf;
+				img_shield.pixbuf =
+					get_shared_icon("security-low", "security-low.svg", 48).pixbuf;
 				set_shield_label(message.replace("<","&lt;"));
 				set_shield_subnote(details);
 				break;
@@ -1399,7 +1400,8 @@ class MainWindow : Gtk.Window{
 					// is scheduled
 					if (App.snapshot_list.size > 0){
 						// has snaps
-						img_shield.pixbuf = get_shared_icon("", "security-high.svg", 48).pixbuf;
+						img_shield.pixbuf =
+							get_shared_icon("security-high", "security-high.svg", 48).pixbuf;
 						set_shield_label(_("System is protected"));
 						set_shield_subnote(
 							_("Last snapshot taken at: ") + format_date(last_snapshot_date));
@@ -1407,7 +1409,8 @@ class MainWindow : Gtk.Window{
 					}
 					else{
 						// no snaps
-						img_shield.pixbuf = get_shared_icon("", "security-low.svg", 48).pixbuf;
+						img_shield.pixbuf =
+							get_shared_icon("security-low", "security-low.svg", 48).pixbuf;
 						set_shield_label(_("No snapshots available"));
 						set_shield_subnote(_("Create a snapshot to start using Timeshift"));
 						//set_shield_subnote(_("Snapshots will be created at scheduled intervals"));
@@ -1420,13 +1423,15 @@ class MainWindow : Gtk.Window{
 					// not scheduled
 					if (App.snapshot_list.size > 0){
 						// has snaps
-						img_shield.pixbuf = get_shared_icon("", "security-medium.svg", 48).pixbuf;
+						img_shield.pixbuf =
+							get_shared_icon("security-medium", "security-medium.svg", 48).pixbuf;
 						set_shield_label(_("Scheduled snapshots are disabled"));
 						set_shield_subnote(_("Enable scheduled snapshots to protect your system"));
 					}
 					else{
 						// no snaps
-						img_shield.pixbuf = get_shared_icon("", "security-low.svg", 48).pixbuf;
+						img_shield.pixbuf =
+							get_shared_icon("security-low", "security-low.svg", 48).pixbuf;
 						set_shield_label(_("No snapshots available"));
 						set_shield_subnote(_("Create snapshots manually or enable scheduled snapshots to protect your system"));
 					}
@@ -1447,7 +1452,7 @@ class MainWindow : Gtk.Window{
 				vbox_snap_count.show_all();
 				
 				lbl_snap_count.label = format_text_large(
-					"%d".printf(App.snapshot_list.size));
+					"%0d".printf(App.snapshot_list.size));
 
 				vbox_free_space.no_show_all = false;
 				vbox_free_space.show_all();

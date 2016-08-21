@@ -1223,9 +1223,10 @@ class MainWindow : Gtk.Window{
 
 	private bool check_backup_device_online(){
 		if (!App.backup_device_online()){
+			// TODO: use message and details
 			gtk_messagebox(
-				_("Device Offline"),
-				_("Snapshot device is not available"),
+				_("Snapshot location is not available"),
+				"",
 				this, true);
 			update_statusbar();
 			return false;

@@ -3418,11 +3418,25 @@ public class Main : GLib.Object{
         var config = node.get_object();
 
         string uuid = json_get_string(config,"backup_device_uuid","");
+        snapshot_path = json_get_string(config, "snapshot_path", snapshot_path);
+		use_snapshot_path = json_get_bool(config, "use_snapshot_path", use_snapshot_path);
 
-        foreach(Device pi in partitions){
-			if (pi.uuid == uuid){
-				snapshot_device = pi;
-				break;
+		// find snapshot device
+		
+		snapshot_device = null;
+		if (uuid.length > 0){
+			foreach(Device pi in partitions){
+				if (pi.uuid == uuid){
+					snapshot_device = pi;
+					break;
+				}
+			}
+			if (snapshot_device == null){
+				// device is offline?
+				log_error(_("Device is offline"));
+				snapshot_device = new Device();
+				snapshot_device.uuid = uuid;
+				// TODO: handle this
 			}
 		}
 
@@ -3432,6 +3446,7 @@ public class Main : GLib.Object{
 				snapshot_device = cmd_dev;
 			}
 			else{
+				//log_error(_("Device is offline"));
 				log_error(_("Could not find device") + ": '%s'".printf(cmd_backup_device));
 				exit_app();
 				exit(1);
@@ -3445,7 +3460,7 @@ public class Main : GLib.Object{
 			//}
 		//}
 		
-		/* Note: In commandline mode, user will be prompted for backup device instead of defaulting to system device */
+		/* Note: In command-line mode, user will be prompted for backup device */
 
 		/* The backup device specified in config file will be mounted at this point if:
 		 * 1) app is running in GUI mode, OR
@@ -3854,7 +3869,7 @@ public class Main : GLib.Object{
 			log_msg(_("Path selected"));
 			
 			if (snapshot_path.strip().length == 0){
-				message = _("Snapshot location not selected!");
+				message = _("Snapshot location not selected");
 				details = _("Select the location for saving snapshots");
 				status_code = SnapshotLocationStatus.NOT_SELECTED;
 			}
@@ -3896,13 +3911,13 @@ public class Main : GLib.Object{
 				((snapshot_device == null) ? ": null" : ": %s".printf(snapshot_device.kname)));
 			
 			if (snapshot_device == null){
-				message = _("Snapshot location not selected!");
+				message = _("Snapshot location not selected");
 				details = _("Select the location for saving snapshots");
 				status_code = SnapshotLocationStatus.NOT_SELECTED;
 			}
-			else if (!backup_device_online() || (snapshot_device.size_bytes == 0)){
+			else if (snapshot_device.device.length == 0){
 				message = _("Snapshot location not available!");
-				details = _("Device is offline") + ": '%s'".printf(snapshot_device.kname);
+				details = _("Device is offline") + ": UUID='%s'".printf(snapshot_device.uuid);
 				status_code = SnapshotLocationStatus.NOT_AVAILABLE;
 			}
 			else{
@@ -3997,13 +4012,27 @@ public class Main : GLib.Object{
 	}
 
 	public bool backup_device_online(){
-		if (snapshot_device != null){
+		/*if (snapshot_device != null){
 			//mount_backup_device(null);
 			if (Device.get_device_mount_points(snapshot_device.uuid).size > 0){
 				return true;
 			}
+		}*/
+
+		string message, details;
+		var status = App.check_backup_location(out message, out details);
+
+		switch(status){
+		case SnapshotLocationStatus.NO_SNAPSHOTS_HAS_SPACE:
+		case SnapshotLocationStatus.NO_SNAPSHOTS_NO_SPACE:
+		case SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE:
+		case SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE:
+			return true;
+		default:
+			//gtk_messagebox(message,details, this, true);
+			return false;
 		}
-		return false;
+		//return false;
 	}
 
 	public int64 calculate_size_of_first_snapshot(){

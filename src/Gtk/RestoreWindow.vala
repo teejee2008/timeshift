@@ -1292,13 +1292,20 @@ public class RestoreWindow : Gtk.Dialog{
 		}
 	}
 
+	// TODO: get rid of this method
 	private bool check_backup_device_online(){
-		if (!App.backup_device_online()){
-			gtk_messagebox(_("Device Offline"),_("Backup device is not available"), this, true);
-			return false;
-		}
-		else{
+		string message, details;
+		var status = App.check_backup_location(out message, out details);
+		
+		switch(status){
+		case SnapshotLocationStatus.NO_SNAPSHOTS_HAS_SPACE:
+		case SnapshotLocationStatus.NO_SNAPSHOTS_NO_SPACE:
+		case SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE:
+		case SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE:
 			return true;
+		default:
+			gtk_messagebox(message,details, this, true);
+			return false;
 		}
 	}
 

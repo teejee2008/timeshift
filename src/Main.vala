@@ -54,7 +54,7 @@ public class Main : GLib.Object{
 	public string app_conf_path = "";
 	public bool first_run = false;
 	
-	public Gee.ArrayList<TimeShiftBackup?> snapshot_list;
+	public Gee.ArrayList<Snapshot?> snapshot_list;
 	public Gee.ArrayList<Device> partitions;
 
 	public Gee.ArrayList<string> exclude_list_user;
@@ -117,8 +117,8 @@ public class Main : GLib.Object{
 	public string lock_dir = "";
 	public string lock_file = "";
 
-	public TimeShiftBackup snapshot_to_delete;
-	public TimeShiftBackup snapshot_to_restore;
+	public Snapshot snapshot_to_delete;
+	public Snapshot snapshot_to_restore;
 	public Device restore_target;
 	public bool reinstall_grub2 = false;
 	public string grub_device = "";
@@ -321,7 +321,7 @@ public class Main : GLib.Object{
 
 		//initialize lists -------------------------
 
-		snapshot_list = new Gee.ArrayList<TimeShiftBackup>();
+		snapshot_list = new Gee.ArrayList<Snapshot>();
 
 		//snapshot_store = new SnapshotStore();
 		
@@ -890,7 +890,7 @@ public class Main : GLib.Object{
 		row++;
 
 		for(int index = 0; index < snapshot_list.size; index++){
-			TimeShiftBackup bak = snapshot_list[index];
+			Snapshot bak = snapshot_list[index];
 			if (!paginate || ((index >= snapshot_list_start_index) && (index < snapshot_list_start_index + 10))){
 				col = -1;
 				grid[row, ++col] = "%d".printf(index);
@@ -1017,50 +1017,13 @@ public class Main : GLib.Object{
 		print_grid(grid, right_align);
 	}
 
-	//input prompt timeout
-
-	public void start_timeout_counter(string kill_cmd = ""){
-		try {
-			thr_timeout_cmd = kill_cmd;
-			thr_timeout_active = true;
-			Thread.create<void> (start_timeout_counter_thread, true);
-		}
-		catch (Error e) {
-			log_error (e.message);
-		}
-	}
-
-	public void start_timeout_counter_thread(){
-		int count = 20 * 1000;
-		while (thr_timeout_active && (count > 0)){
-			Thread.usleep((ulong) GLib.TimeSpan.MILLISECOND * 500);
-			count -= 500;
-		}
-
-		if (thr_timeout_active){
-			thr_timeout_active = false;
-			stdout.printf("\n");
-
-			if (thr_timeout_cmd.length > 0){
-				Posix.system("killall " + thr_timeout_cmd);
-			}
-
-			log_error(_("No response from user"));
-			log_msg(_("Aborted."));
-			exit(0);
-		}
-	}
-
-	public void stop_timeout_counter(){
-		thr_timeout_active = false;
-	}
-
 	//prompt for input
 
 	public Device? read_stdin_device(Gee.ArrayList<Device> device_list){
-		start_timeout_counter();
+		var counter = new TimeoutCounter();
+		counter.exit_on_timeout();
 		string? line = stdin.read_line();
-		stop_timeout_counter();
+		counter.stop();
 
 		line = (line != null) ? line.strip() : "";
 
@@ -1091,9 +1054,10 @@ public class Main : GLib.Object{
 	}
 
 	public Device? read_stdin_device_mounts(Gee.ArrayList<Device> device_list, MountEntry mnt){
-		start_timeout_counter();
+		var counter = new TimeoutCounter();
+		counter.exit_on_timeout();
 		string? line = stdin.read_line();
-		stop_timeout_counter();
+		counter.stop();
 
 		line = (line != null) ? line.strip() : "";
 
@@ -1165,14 +1129,15 @@ public class Main : GLib.Object{
 		return null;
 	}
 
-	public TimeShiftBackup read_stdin_snapshot(){
-		start_timeout_counter();
+	public Snapshot read_stdin_snapshot(){
+		var counter = new TimeoutCounter();
+		counter.exit_on_timeout();
 		string? line = stdin.read_line();
-		stop_timeout_counter();
+		counter.stop();
 
 		line = (line != null) ? line.strip() : "";
 
-		TimeShiftBackup selected_snapshot = null;
+		Snapshot selected_snapshot = null;
 
 		if (line.down() == "a"){
 			log_msg("Aborted.");
@@ -1222,9 +1187,10 @@ public class Main : GLib.Object{
 	}
 
 	public bool read_stdin_grub_install(){
-		start_timeout_counter();
+		var counter = new TimeoutCounter();
+		counter.exit_on_timeout();
 		string? line = stdin.read_line();
-		stop_timeout_counter();
+		counter.stop();
 
 		line = (line != null) ? line.strip() : line;
 
@@ -1259,9 +1225,11 @@ public class Main : GLib.Object{
 	}
 
 	public bool read_stdin_restore_confirm(){
-		start_timeout_counter();
+		var counter = new TimeoutCounter();
+		counter.exit_on_timeout();
+		
 		string? line = stdin.read_line();
-		stop_timeout_counter();
+		counter.stop();
 
 		line = (line != null) ? line.strip() : "";
 
@@ -1290,7 +1258,7 @@ public class Main : GLib.Object{
 	}
 
 	//properties
-
+	
 	public string snapshot_location {
 		owned get{
 			if (use_snapshot_path && dir_exists(snapshot_path)){
@@ -1301,7 +1269,7 @@ public class Main : GLib.Object{
 			}
 		}
 	}
-
+	
 	public bool is_scheduled{
 		get{
 			return _is_scheduled;
@@ -1393,11 +1361,11 @@ public class Main : GLib.Object{
 				}
 			}
 			else if (is_scheduled){
-				TimeShiftBackup last_snapshot_boot = get_latest_snapshot("boot");
-				TimeShiftBackup last_snapshot_hourly = get_latest_snapshot("hourly");
-				TimeShiftBackup last_snapshot_daily = get_latest_snapshot("daily");
-				TimeShiftBackup last_snapshot_weekly = get_latest_snapshot("weekly");
-				TimeShiftBackup last_snapshot_monthly = get_latest_snapshot("monthly");
+				Snapshot last_snapshot_boot = get_latest_snapshot("boot");
+				Snapshot last_snapshot_hourly = get_latest_snapshot("hourly");
+				Snapshot last_snapshot_daily = get_latest_snapshot("daily");
+				Snapshot last_snapshot_weekly = get_latest_snapshot("weekly");
+				Snapshot last_snapshot_monthly = get_latest_snapshot("monthly");
 
 				DateTime dt_sys_boot = now.add_seconds((-1) * get_system_uptime_seconds());
 				bool take_new = false;
@@ -1620,7 +1588,7 @@ public class Main : GLib.Object{
 
 			//check if we can rotate an existing backup -------------
 
-			TimeShiftBackup last_snapshot = get_latest_snapshot();
+			Snapshot last_snapshot = get_latest_snapshot();
 			DateTime dt_filter = null;
 
 			if ((tag != "ondemand") && (last_snapshot != null)){
@@ -1639,8 +1607,8 @@ public class Main : GLib.Object{
 						return false;
 				}
 
-				TimeShiftBackup backup_to_rotate = null;
-				foreach(TimeShiftBackup bak in snapshot_list){
+				Snapshot backup_to_rotate = null;
+				foreach(Snapshot bak in snapshot_list){
 					if (bak.date.compare(dt_filter) > 0){
 						backup_to_rotate = bak;
 						break;
@@ -1674,7 +1642,7 @@ public class Main : GLib.Object{
 					f = File.new_for_path(sync_path + "/localhost");
 					f.make_directory_with_parents();
 
-					TimeShiftBackup bak_restore = null;
+					Snapshot bak_restore = null;
 
 					//check if a control file was written after restore -------
 
@@ -1684,7 +1652,7 @@ public class Main : GLib.Object{
 					if(f.query_exists()){
 						string snapshot_path = file_read(ctl_path);
 
-						foreach(TimeShiftBackup bak in snapshot_list){
+						foreach(Snapshot bak in snapshot_list){
 							if (bak.path == snapshot_path){
 								bak_restore = bak;
 								break;
@@ -1697,7 +1665,7 @@ public class Main : GLib.Object{
 					if (bak_restore == null){
 						//select latest snapshot for hard-linking
 						for(int k = snapshot_list.size -1; k >= 0; k--){
-							TimeShiftBackup bak = snapshot_list[k];
+							Snapshot bak = snapshot_list[k];
 							bak_restore = bak; //TODO: check dist type
 							break;
 						}
@@ -1938,7 +1906,7 @@ public class Main : GLib.Object{
 
 		show_msg = true;
 		count = 0;
-		foreach(TimeShiftBackup bak in snapshot_list){
+		foreach(Snapshot bak in snapshot_list){
 			if (bak.date.compare(now.add_days(-1 * retain_snapshots_max_days)) < 0){
 				if (!bak.has_tag("ondemand")){
 
@@ -1983,7 +1951,7 @@ public class Main : GLib.Object{
 	public void delete_untagged_snapshots(){
 		bool show_msg = true;
 
-		foreach(TimeShiftBackup bak in snapshot_list){
+		foreach(Snapshot bak in snapshot_list){
 			if (bak.tags.size == 0){
 
 				if (show_msg){
@@ -2011,7 +1979,7 @@ public class Main : GLib.Object{
 
 		string path;
 
-		foreach(TimeShiftBackup bak in snapshot_list){
+		foreach(Snapshot bak in snapshot_list){
 			foreach(string tag in bak.tags){
 				
 				path = mount_point_backup + "/timeshift/snapshots-%s".printf(tag);
@@ -2120,7 +2088,7 @@ public class Main : GLib.Object{
 	    }
 	}
 
-	public TimeShiftBackup write_snapshot_control_file(string snapshot_path, DateTime dt_created, string tag){
+	public Snapshot write_snapshot_control_file(string snapshot_path, DateTime dt_created, string tag){
 		var ctl_path = snapshot_path + "/info.json";
 		var config = new Json.Object();
 
@@ -2149,7 +2117,7 @@ public class Main : GLib.Object{
 	        log_error (e.message);
 	    }
 
-	    return (new TimeShiftBackup(snapshot_path));
+	    return (new Snapshot(snapshot_path));
 	}
 
 	//restore
@@ -2237,7 +2205,7 @@ public class Main : GLib.Object{
 
 					//check command line arguments
 					found = false;
-					foreach(TimeShiftBackup bak in snapshot_list) {
+					foreach(Snapshot bak in snapshot_list) {
 						if (bak.name == cmd_snapshot){
 							snapshot_to_restore = bak;
 							found = true;
@@ -2653,6 +2621,8 @@ public class Main : GLib.Object{
 		}*/
 	}
 
+
+	// todo: remove
 	public Device unlock_encrypted_device(Device luks_device, Gtk.Window? parent_win){
 		Device luks_unlocked = null;
 
@@ -2669,12 +2639,13 @@ public class Main : GLib.Object{
 			
 		if ((parent_win == null) && (app_mode != "")){
 
-			start_timeout_counter("cryptsetup");
+			var counter = new TimeoutCounter();
+			counter.kill_process_on_timeout("cryptsetup", 20, true);
 
 			// prompt user to unlock
 			string cmd = "cryptsetup luksOpen '%s' '%s'".printf(luks_device.device, mapped_name);
-			int retval = Posix.system(cmd);
-			stop_timeout_counter();
+			Posix.system(cmd);
+			counter.stop();
 			log_msg("");
 
 			update_partitions();
@@ -2700,6 +2671,7 @@ public class Main : GLib.Object{
 				out message, out details);
 
 			bool is_error = (luks_unlocked == null);
+			
 			gtk_messagebox(message,details,null,is_error);
 		}
 
@@ -3125,7 +3097,7 @@ public class Main : GLib.Object{
 
 	//delete
 
-	public bool delete_snapshot(TimeShiftBackup? snapshot = null){
+	public bool delete_snapshot(Snapshot? snapshot = null){
 		bool found = false;
 		snapshot_to_delete = snapshot;
 
@@ -3137,7 +3109,7 @@ public class Main : GLib.Object{
 
 				//check command line arguments
 				found = false;
-				foreach(TimeShiftBackup bak in snapshot_list) {
+				foreach(Snapshot bak in snapshot_list) {
 					if (bak.name == cmd_snapshot){
 						snapshot_to_delete = bak;
 						found = true;
@@ -3260,7 +3232,7 @@ public class Main : GLib.Object{
 
 		if (dir_exists(timeshift_dir)){
 			//delete snapshots
-			foreach(TimeShiftBackup bak in snapshot_list){
+			foreach(Snapshot bak in snapshot_list){
 				if (!delete_snapshot(bak)){
 					return false;
 				}
@@ -3534,7 +3506,7 @@ public class Main : GLib.Object{
 			while (info != null) {
 				if (info.get_file_type() == FileType.DIRECTORY) {
 					if (info.get_name() != ".sync") {
-						TimeShiftBackup bak = new TimeShiftBackup(path + "/" + info.get_name());
+						Snapshot bak = new Snapshot(path + "/" + info.get_name());
 						if (bak.is_valid){
 							snapshot_list.add(bak);
 						}
@@ -3549,8 +3521,8 @@ public class Main : GLib.Object{
 		}
 
 		snapshot_list.sort((a,b) => {
-			TimeShiftBackup t1 = (TimeShiftBackup) a;
-			TimeShiftBackup t2 = (TimeShiftBackup) b;
+			Snapshot t1 = (Snapshot) a;
+			Snapshot t2 = (Snapshot) b;
 			return t1.date.compare(t2.date);
 		});
 
@@ -3577,17 +3549,17 @@ public class Main : GLib.Object{
 		//log_debug(_("Partition list updated"));
 	}
 
-	public Gee.ArrayList<TimeShiftBackup?> get_snapshot_list(string tag = ""){
-		var list = new Gee.ArrayList<TimeShiftBackup?>();
+	public Gee.ArrayList<Snapshot?> get_snapshot_list(string tag = ""){
+		var list = new Gee.ArrayList<Snapshot?>();
 
-		foreach(TimeShiftBackup bak in snapshot_list){
+		foreach(Snapshot bak in snapshot_list){
 			if (tag == "" || bak.has_tag(tag)){
 				list.add(bak);
 			}
 		}
 		list.sort((a,b) => {
-			TimeShiftBackup t1 = (TimeShiftBackup) a;
-			TimeShiftBackup t2 = (TimeShiftBackup) b;
+			Snapshot t1 = (Snapshot) a;
+			Snapshot t2 = (Snapshot) b;
 			return (t1.date.compare(t2.date));
 		});
 
@@ -3614,7 +3586,7 @@ public class Main : GLib.Object{
 		}
 	}
 
-	public TimeShiftBackup? get_latest_snapshot(string tag = ""){
+	public Snapshot? get_latest_snapshot(string tag = ""){
 		var list = get_snapshot_list(tag);
 
 		if (list.size > 0)
@@ -3623,7 +3595,7 @@ public class Main : GLib.Object{
 			return null;
 	}
 
-	public TimeShiftBackup? get_oldest_snapshot(string tag = ""){
+	public Snapshot? get_oldest_snapshot(string tag = ""){
 		var list = get_snapshot_list(tag);
 
 		if (list.size > 0)
@@ -3811,7 +3783,7 @@ public class Main : GLib.Object{
 			//don't unmount
 		}
 	}
-
+	
 	public void unmount_target_device(bool exit_on_error = true){
 		if (mount_point_restore == null) { return; }
 		
@@ -4492,7 +4464,7 @@ public class Main : GLib.Object{
 
 }
 
-public class TimeShiftBackup : GLib.Object{
+public class Snapshot : GLib.Object{
 	public string path = "";
 	public string name = "";
 	public DateTime date;
@@ -4505,7 +4477,7 @@ public class TimeShiftBackup : GLib.Object{
 	public Gee.ArrayList<FsTabEntry> fstab_list;
 	public bool is_valid = true;
 
-	public TimeShiftBackup(string dir_path){
+	public Snapshot(string dir_path){
 
 		try{
 			var f = File.new_for_path(dir_path);
@@ -4718,43 +4690,46 @@ public enum SnapshotLocationStatus{
 	NO_SNAPSHOTS_HAS_SPACE = 3,
 	READ_ONLY_FS = 4,
 	HARDLINKS_NOT_SUPPORTED = 5
-	
 }
-/*
+
+
 public class SnapshotStore : GLib.Object{
 	public Device device = null;
 	public string snapshot_path_user = "";
 	public string snapshot_path_mount = "";
 	public bool use_snapshot_path_user = false;
 
-	public Gee.ArrayList<TimeShiftBackup?> snapshot_list;
+	public Gee.ArrayList<Snapshot?> snapshots;
 
 	private Gtk.Window? parent = null;
 
-	public SnapshotStore.from_path(string path, Gtk.Window parent_win){
+	public SnapshotStore.from_path(string path, Gtk.Window? parent_win){
 		this.snapshot_path_user = path;
 		this.use_snapshot_path_user = true;
 		this.parent = parent_win;
 		
-		snapshot_list = new Gee.ArrayList<TimeShiftBackup>();
+		snapshots = new Gee.ArrayList<Snapshot>();
 
 		log_msg(_("Snapshot path") + ": %s".printf(path));
 		
 		var list = Device.get_disk_space_using_df(path);
 		if (list.size > 0){
 			device = list[0];
+			log_msg(_("Device") + ": %s".printf(device.device));
+			log_msg(_("Free space") + ": %s".printf(format_file_size(device.free_bytes)));
 		}
 	}
 
-	public SnapshotStore.from_device(Device dev, Gtk.Window parent_win){
+	public SnapshotStore.from_device(Device dev, Gtk.Window? parent_win){
 		this.device = dev;
 		this.use_snapshot_path_user = false;
 		this.parent = parent_win;
 		
-		snapshot_list = new Gee.ArrayList<TimeShiftBackup>();
+		snapshots = new Gee.ArrayList<Snapshot>();
 
 		log_msg(_("Snapshot device") + ": %s".printf(device.device));
-
+		log_msg(_("Free space") + ": %s".printf(format_file_size(device.free_bytes)));
+		
 		unlock_and_mount_device();
 	}
 
@@ -4766,40 +4741,100 @@ public class SnapshotStore : GLib.Object{
 			device = unlock_encrypted_device(device, parent);
 			
 			if (device == null){
-				log_msg(_("Failed to unlock"));
 				return false;
 			}
 		}
 
 		if (device.fstype == "btrfs"){
 
-			unmount_backup_device(); // unmount /mnt/timeshift/backup
-
+			snapshot_path_mount = "/mnt/timeshift/backup";
+			
+			Device.unmount(snapshot_path_mount);
+			
 			// mount
-			mount_point_backup = mount_point_app + "/backup";
-			bool ok = Device.mount(device.uuid, mount_point_backup, "");
+			
+			bool ok = Device.mount(device.uuid, snapshot_path_mount, "");
 			if (!ok){
-				mount_point_backup = "";
+				snapshot_path_mount = "";
 			}
 		}
 		else{
 			var mps = Device.get_device_mount_points(device.uuid);
 
 			if (mps.size > 0){
-				mount_point_backup = mps[0];
+				snapshot_path_mount = mps[0].mount_point;
 			}
 			else{
 				Device.automount_udisks(device.device);
 
 				mps = Device.get_device_mount_points(device.uuid);
 				if (mps.size > 0){
-					mount_point_backup = mps[0];
+					snapshot_path_mount = mps[0].mount_point;
 				}
 				else{
-					mount_point_backup = "";
+					snapshot_path_mount = "";
 				}
 			}
 		}
+		
+		return false;
+	}
+
+	public Device unlock_encrypted_device(Device luks_device, Gtk.Window? parent_win){
+		Device luks_unlocked = null;
+
+		string mapped_name = "%s_unlocked".printf(luks_device.name);
+
+		var partitions = Device.get_block_devices_using_lsblk();
+		
+		// check if already unlocked
+		foreach(var part in partitions){
+			if (part.pkname == luks_device.kname){
+				log_msg(_("Unlocked device is mapped to '%s'").printf(part.device));
+				log_msg("");
+				return part;
+			}
+		}
+			
+		if (parent_win == null){
+
+			var counter = new TimeoutCounter();
+			counter.kill_process_on_timeout("cryptsetup", 20, true);
+
+			// prompt user to unlock
+			string cmd = "cryptsetup luksOpen '%s' '%s'".printf(luks_device.device, mapped_name);
+			int retval = Posix.system(cmd);
+			counter.stop();
+			log_msg("");
+
+			partitions = Device.get_block_devices_using_lsblk();
+
+			// check if unlocked
+			foreach(var part in partitions){
+				if (part.pkname == luks_device.kname){
+					log_msg(_("Unlocked device is mapped to '%s'").printf(part.name));
+					log_msg("");
+					return part;
+				}
+			}
+		}
+		else{
+			// prompt user for password
+			string passphrase = gtk_inputbox(
+				_("Encrypted Device"),
+				_("Enter passphrase to unlock '%s'").printf(luks_device.name),
+				parent_win, true);
+
+			string message, details;
+			luks_unlocked = Device.luks_unlock(luks_device, mapped_name, passphrase,
+				out message, out details);
+
+			bool is_error = (luks_unlocked == null);
+			
+			gtk_messagebox(message,details,null,is_error);
+		}
+
+		return luks_unlocked;
 	}
 	
 	public string snapshot_location {
@@ -4813,4 +4848,4 @@ public class SnapshotStore : GLib.Object{
 		}
 	}
 }
-*/
+

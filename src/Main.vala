@@ -106,7 +106,7 @@ public class Main : GLib.Object{
 
 	public int startup_delay_interval_mins = 10;
 	public int retain_snapshots_max_days = 200;
-	public int64 minimum_free_disk_space = 2 * GB;
+	public int64 minimum_free_disk_space = 1 * GB;
 	public int64 first_snapshot_size = 0;
 	public int64 first_snapshot_count = 0;
 	public int64 snapshot_location_free_space = 0;
@@ -1243,13 +1243,13 @@ public class Main : GLib.Object{
 				&& (status_code != SnapshotLocationStatus.NO_SNAPSHOTS_HAS_SPACE)){
 					
 				is_scheduled = false;
-				log_error(message);
-				log_error(details);
-				log_debug("space_check: Failed!");
+				//log_error(message);
+				//log_error(details);
+				//log_debug("space_check: Failed!");
 				return false;
 			}
 			else{
-				log_debug("space_check: OK");
+				//log_debug("space_check: OK");
 			}
 
 			string snapshot_dir = path_combine(repo.snapshot_location, "timeshift/snapshots");
@@ -2873,7 +2873,7 @@ public class Main : GLib.Object{
 		config.set_string_member("count_boot", count_boot.to_string());
 
 		config.set_string_member("max_days", retain_snapshots_max_days.to_string());
-		config.set_string_member("min_space", (minimum_free_disk_space / (1.0 * GB)).to_string());
+		//config.set_string_member("min_space", (minimum_free_disk_space / (1.0 * GB)).to_string());
 
 		config.set_string_member("first_snapshot_size", first_snapshot_size.to_string());
 		config.set_string_member("first_snapshot_count", first_snapshot_count.to_string());
@@ -2991,8 +2991,8 @@ public class Main : GLib.Object{
 		this.count_boot = json_get_int(config,"count_boot",count_boot);
 
 		this.retain_snapshots_max_days = json_get_int(config,"max_days",retain_snapshots_max_days);
-		this.minimum_free_disk_space = json_get_int64(config,"min_space",minimum_free_disk_space);
-		this.minimum_free_disk_space = this.minimum_free_disk_space * GB;
+		//this.minimum_free_disk_space = json_get_int64(config,"min_space",minimum_free_disk_space);
+		//this.minimum_free_disk_space = this.minimum_free_disk_space * GB;
 		
 		this.first_snapshot_size = json_get_int64(config,"first_snapshot_size",first_snapshot_size);
 		this.first_snapshot_count = json_get_int64(config,"first_snapshot_count",first_snapshot_count);

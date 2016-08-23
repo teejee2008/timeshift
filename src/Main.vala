@@ -54,7 +54,6 @@ public class Main : GLib.Object{
 	public string app_conf_path = "";
 	public bool first_run = false;
 	
-	public Gee.ArrayList<Snapshot?> snapshot_list;
 	public Gee.ArrayList<Device> partitions;
 
 	public Gee.ArrayList<string> exclude_list_user;
@@ -72,11 +71,11 @@ public class Main : GLib.Object{
 
 	public Device root_device;
 	public Device home_device;
-	public Device snapshot_device;
-	public bool use_snapshot_path = false;
-	public string snapshot_path = "";
+	//public Device snapshot_device;
+	//public bool use_snapshot_path = false;
+	//public string snapshot_path = "";
 
-	public string mount_point_backup = "";
+	//public string mount_point_backup = "";
 	public string mount_point_restore = "";
 	public string mount_point_app = "/mnt/timeshift";
 
@@ -316,11 +315,7 @@ public class Main : GLib.Object{
 
 		//initialize lists -------------------------
 
-		//repo = new SnapshotStore();
-		
-		snapshot_list = new Gee.ArrayList<Snapshot>();
-
-		//snapshot_store = new SnapshotStore();
+		repo = new SnapshotStore();
 		
 		exclude_list_user = new Gee.ArrayList<string>();
 		exclude_list_default = new Gee.ArrayList<string>();
@@ -342,7 +337,7 @@ public class Main : GLib.Object{
 		//finish initialization --------------
 
 		load_app_config();
-		update_snapshot_list();
+		//update_snapshot_list();
 
 		task = create_new_rsync_task();
 	}
@@ -391,13 +386,14 @@ public class Main : GLib.Object{
 
 			case "list-snapshots":
 				LOG_ENABLE = true;
-				if (snapshot_list.size > 0){
-					log_msg(_("Snapshots on device %s").printf(snapshot_device.full_name_with_alias) + ":\n");
+				if (App.repo.has_snapshots()){
+					log_msg(_("Snapshots on device %s").printf(
+						repo.device.full_name_with_alias) + ":\n");
 					list_snapshots(false);
 					return true;
 				}
 				else{
-					log_msg(_("No snapshots found on device") + " '%s'".printf(snapshot_device.device));
+					log_msg(_("No snapshots found on device") + " '%s'".printf(repo.device.device));
 					return false;
 				}
 
@@ -814,7 +810,7 @@ public class Main : GLib.Object{
 
 	public void list_snapshots(bool paginate){
 		int count = 0;
-		for(int index = 0; index < snapshot_list.size; index++){
+		for(int index = 0; index < repo.snapshots.size; index++){
 			if (!paginate || ((index >= snapshot_list_start_index) && (index < snapshot_list_start_index + 10))){
 				count++;
 			}
@@ -832,8 +828,8 @@ public class Main : GLib.Object{
 		grid[row, ++col] = _("Description");
 		row++;
 
-		for(int index = 0; index < snapshot_list.size; index++){
-			Snapshot bak = snapshot_list[index];
+		for(int index = 0; index < repo.snapshots.size; index++){
+			Snapshot bak = repo.snapshots[index];
 			if (!paginate || ((index >= snapshot_list_start_index) && (index < snapshot_list_start_index + 10))){
 				col = -1;
 				grid[row, ++col] = "%d".printf(index);
@@ -981,7 +977,7 @@ public class Main : GLib.Object{
 			log_error("Invalid input");
 		}
 		else if (line.contains("/")){
-			selected_device = get_device_from_name(device_list, line);
+			selected_device = Device.get_device_by_name(line);
 			if (selected_device == null){
 				log_error("Invalid input");
 			}
@@ -1024,7 +1020,7 @@ public class Main : GLib.Object{
 			return restore_target; //root device
 		}
 		else if (line.contains("/")){
-			selected_device = get_device_from_name(device_list, line);
+			selected_device = Device.get_device_by_name(line);
 			if (selected_device == null){
 				log_error("Invalid input");
 			}
@@ -1047,24 +1043,6 @@ public class Main : GLib.Object{
 				if ((pi.devtype == "partition") && !pi.has_linux_filesystem()) { continue; }
 				if (++i == index){
 					return pi;
-				}
-			}
-		}
-
-		return null;
-	}
-
-	public Device? get_device_from_name(Gee.ArrayList<Device> device_list, string device_name){
-		foreach(Device pi in device_list) {
-			if (!pi.has_linux_filesystem()) { continue; }
-			if ((pi.device == device_name)||(pi.device.replace("/dev/","") == device_name)){
-				return pi;
-			}
-			else {
-				foreach(string symlink in pi.symlinks){
-					if ((symlink == device_name)||(symlink.replace("/dev/","").replace("/dev/mapper/","") == device_name)){
-						return pi;
-					}
 				}
 			}
 		}
@@ -1097,7 +1075,7 @@ public class Main : GLib.Object{
 			log_msg("");
 		}
 		else if (line.down() == "n"){
-			if ((snapshot_list_start_index + 10) < snapshot_list.size){
+			if ((snapshot_list_start_index + 10) < repo.snapshots.size){
 				snapshot_list_start_index += 10;
 			}
 			log_msg("");
@@ -1114,8 +1092,8 @@ public class Main : GLib.Object{
 		else{
 			int64 index;
 			if (int64.try_parse(line, out index)){
-				if (index < snapshot_list.size){
-					selected_snapshot = snapshot_list[(int) index];
+				if (index < repo.snapshots.size){
+					selected_snapshot = repo.snapshots[(int) index];
 				}
 				else{
 					log_error("Invalid input");
@@ -1202,17 +1180,6 @@ public class Main : GLib.Object{
 
 	//properties
 	
-	public string snapshot_location {
-		owned get{
-			if (use_snapshot_path && dir_exists(snapshot_path)){
-				return snapshot_path;
-			}
-			else{
-				return mount_point_backup;
-			}
-		}
-	}
-	
 	public bool is_scheduled{
 		get{
 			return _is_scheduled;
@@ -1247,9 +1214,10 @@ public class Main : GLib.Object{
 			log_debug("checking if snapshot device is mounted...");
 			
 			// mount_backup_device
-			if (!mount_backup_device(parent_win)){
-				return false;
-			}
+			//if (!mount_backup_device(parent_win)){
+				//return false;
+			//}
+			// TODO: check if needs to be mounted
 
 			log_debug("checking snapshot device...");
 			
@@ -1284,7 +1252,7 @@ public class Main : GLib.Object{
 				log_debug("space_check: OK");
 			}
 
-			string snapshot_dir = path_combine(snapshot_location, "timeshift/snapshots");
+			string snapshot_dir = path_combine(repo.snapshot_location, "timeshift/snapshots");
 			
 			// create snapshot root if missing
 			var f = File.new_for_path(snapshot_dir);
@@ -1304,11 +1272,11 @@ public class Main : GLib.Object{
 				}
 			}
 			else if (is_scheduled){
-				Snapshot last_snapshot_boot = get_latest_snapshot("boot");
-				Snapshot last_snapshot_hourly = get_latest_snapshot("hourly");
-				Snapshot last_snapshot_daily = get_latest_snapshot("daily");
-				Snapshot last_snapshot_weekly = get_latest_snapshot("weekly");
-				Snapshot last_snapshot_monthly = get_latest_snapshot("monthly");
+				Snapshot last_snapshot_boot = repo.get_latest_snapshot("boot");
+				Snapshot last_snapshot_hourly = repo.get_latest_snapshot("hourly");
+				Snapshot last_snapshot_daily = repo.get_latest_snapshot("daily");
+				Snapshot last_snapshot_weekly = repo.get_latest_snapshot("weekly");
+				Snapshot last_snapshot_monthly = repo.get_latest_snapshot("monthly");
 
 				DateTime dt_sys_boot = now.add_seconds((-1) * get_system_uptime_seconds());
 				bool take_new = false;
@@ -1468,11 +1436,11 @@ public class Main : GLib.Object{
 				cron_job_update();
 			}
 
-			auto_delete_backups();
+			repo.auto_remove();
 
 			if (update_symlinks){
-				update_snapshot_list();
-				create_symlinks();
+				repo.load_snapshots();
+				repo.create_symlinks();
 			}
 		}
 		catch(Error e){
@@ -1505,7 +1473,7 @@ public class Main : GLib.Object{
 		bool backup_taken = false;
 		
 		string sync_name = ".sync";
-		string snapshot_dir = path_combine(snapshot_location, "timeshift/snapshots");
+		string snapshot_dir = path_combine(repo.snapshot_location, "timeshift/snapshots");
 		string sync_path = snapshot_dir + "/" + sync_name;
 
 		try{
@@ -1514,7 +1482,7 @@ public class Main : GLib.Object{
 
 			//check if we can rotate an existing backup -------------
 
-			Snapshot last_snapshot = get_latest_snapshot();
+			Snapshot last_snapshot = repo.get_latest_snapshot();
 			DateTime dt_filter = null;
 
 			if ((tag != "ondemand") && (last_snapshot != null)){
@@ -1534,7 +1502,7 @@ public class Main : GLib.Object{
 				}
 
 				Snapshot backup_to_rotate = null;
-				foreach(Snapshot bak in snapshot_list){
+				foreach(var bak in repo.snapshots){
 					if (bak.date.compare(dt_filter) > 0){
 						backup_to_rotate = bak;
 						break;
@@ -1575,7 +1543,7 @@ public class Main : GLib.Object{
 					string snapshot_path = file_read(ctl_path);
 
 					// find the snapshot that was restored
-					foreach(Snapshot bak in snapshot_list){
+					foreach(var bak in repo.snapshots){
 						if (bak.path == snapshot_path){
 							bak_restore = bak;
 							break;
@@ -1597,7 +1565,7 @@ public class Main : GLib.Object{
 								progress_text = _("Removing partially completed snapshot...");
 								log_msg(progress_text);
 
-								if (!delete_directory(sync_path)){
+								if (repo.remove_sync_dir()){
 									return false;
 								}
 							}
@@ -1722,7 +1690,7 @@ public class Main : GLib.Object{
 				log_msg(_("Snapshot") + " '%s' ".printf(new_name)
 					+ _("tagged") + " '%s'".printf(temp_tag));
 
-				update_snapshot_list();
+				repo.load_snapshots();
 			}
 		}
 		catch(Error e){
@@ -1733,190 +1701,6 @@ public class Main : GLib.Object{
 		return true;
 	}
 	
-	public void auto_delete_backups(){
-		DateTime now = new DateTime.now_local();
-		int count = 0;
-		bool show_msg = false;
-		DateTime dt_limit;
-
-		//delete older backups - boot ---------------
-
-		var list = get_snapshot_list("boot");
-
-		if (list.size > count_boot){
-			log_msg(_("Maximum backups exceeded for backup level") + " '%s'".printf("boot"));
-			while (list.size > count_boot){
-				list[0].remove_tag("boot");
-				log_msg(_("Snapshot") + " '%s' ".printf(list[0].name) + _("un-tagged") + " '%s'".printf("boot"));
-				list = get_snapshot_list("boot");
-			}
-		}
-
-		//delete older backups - hourly, daily, weekly, monthly ---------
-
-		string[] levels = { "hourly","daily","weekly","monthly" };
-
-		foreach(string level in levels){
-			list = get_snapshot_list(level);
-
-			if (list.size == 0) { continue; }
-
-			switch (level){
-				case "hourly":
-					dt_limit = now.add_hours(-1 * count_hourly);
-					break;
-				case "daily":
-					dt_limit = now.add_days(-1 * count_daily);
-					break;
-				case "weekly":
-					dt_limit = now.add_weeks(-1 * count_weekly);
-					break;
-				case "monthly":
-					dt_limit = now.add_months(-1 * count_monthly);
-					break;
-				default:
-					dt_limit = now.add_years(-1 * 10);
-					break;
-			}
-
-			if (list[0].date.compare(dt_limit) < 0){
-
-				log_msg(_("Maximum backups exceeded for backup level") + " '%s'".printf(level));
-
-				while (list[0].date.compare(dt_limit) < 0){
-					list[0].remove_tag(level);
-					log_msg(_("Snapshot") + " '%s' ".printf(list[0].name) + _("un-tagged") + " '%s'".printf(level));
-					list = get_snapshot_list(level);
-				}
-			}
-		}
-
-		//delete older backups - max days -------
-
-		show_msg = true;
-		count = 0;
-		foreach(Snapshot bak in snapshot_list){
-			if (bak.date.compare(now.add_days(-1 * retain_snapshots_max_days)) < 0){
-				if (!bak.has_tag("ondemand")){
-
-					if (show_msg){
-						log_msg(_("Removing backups older than") + " %d ".printf(retain_snapshots_max_days) + _("days..."));
-						show_msg = false;
-					}
-
-					log_msg(_("Snapshot") + " '%s' ".printf(bak.name) + _("un-tagged"));
-					bak.tags.clear();
-					count++;
-				}
-			}
-		}
-
-		delete_untagged_snapshots();
-
-		//delete older backups - minimum space -------
-
-		update_partitions();
-
-		show_msg = true;
-		count = 0;
-		while ((snapshot_device.size_bytes - snapshot_device.used_bytes) < minimum_free_disk_space){
-			list = get_snapshot_list();
-			if (list.size > 0){
-				if (!list[0].has_tag("ondemand")){
-
-					if (show_msg){
-						log_msg(_("Free space is less than") + " %lld GB".printf(minimum_free_disk_space / GB));
-						log_msg(_("Removing older backups to free disk space"));
-						show_msg = false;
-					}
-
-					delete_snapshot(list[0]);
-				}
-			}
-			update_partitions(); //TODO: update snapshot_device only
-		}
-	}
-
-	public void delete_untagged_snapshots(){
-		bool show_msg = true;
-
-		foreach(Snapshot bak in snapshot_list){
-			if (bak.tags.size == 0){
-
-				if (show_msg){
-					log_msg(_("Removing un-tagged snapshots..."));
-					show_msg = false;
-				}
-
-				delete_snapshot(bak);
-			}
-		}
-	}
-
-	public void create_symlinks(){
-		string cmd = "";
-		string std_out;
-		string std_err;
-		int ret_val;
-
-		cleanup_symlink_dir("boot");
-		cleanup_symlink_dir("hourly");
-		cleanup_symlink_dir("daily");
-		cleanup_symlink_dir("weekly");
-		cleanup_symlink_dir("monthly");
-		cleanup_symlink_dir("ondemand");
-
-		string path;
-
-		foreach(Snapshot bak in snapshot_list){
-			foreach(string tag in bak.tags){
-				
-				path = mount_point_backup + "/timeshift/snapshots-%s".printf(tag);
-				cmd = "ln --symbolic \"../snapshots/%s\" -t \"%s\"".printf(bak.name, path);
-
-				if (LOG_COMMANDS) { log_debug(cmd); }
-
-				ret_val = exec_sync(cmd, out std_out, out std_err);
-				if (ret_val != 0){
-					log_error (std_err);
-					log_error(_("Failed to create symlinks") + ": snapshots-%s".printf(tag));
-					return;
-				}
-			}
-		}
-
-		log_debug (_("Symlinks updated"));
-	}
-
-	public void cleanup_symlink_dir(string tag){
-		string cmd = "";
-		string std_out;
-		string std_err;
-		int ret_val;
-
-		try{
-			string path = mount_point_backup + "/timeshift/snapshots-%s".printf(tag);
-			var f = File.new_for_path(path);
-			if (f.query_exists()){
-				cmd = "rm -rf \"%s\"".printf(path + "/");
-
-				if (LOG_COMMANDS) { log_debug(cmd); }
-
-				Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-				if (ret_val != 0){
-					log_error (std_err);
-					log_error(_("Failed to delete symlinks") + ": 'snapshots-%s'".printf(tag));
-					return;
-				}
-			}
-
-			f.make_directory_with_parents();
-		}
-		catch (Error e) {
-	        log_error (e.message);
-	    }
-	}
-
 	public void save_exclude_list(string snapshot_path){
 
 		try{
@@ -2014,14 +1798,13 @@ public class Main : GLib.Object{
 	public void get_backup_device_from_cmd(bool prompt_if_empty, Gtk.Window? parent_win){
 		if (cmd_backup_device.length > 0){
 			//set backup device from command line argument
-			Device cmd_dev = get_device_from_name(partitions, cmd_backup_device);
+			var cmd_dev = Device.get_device_by_name(cmd_backup_device);
 			if (cmd_dev != null){
-				snapshot_device = cmd_dev;
-				if (!mount_backup_device(parent_win)){
+				repo = new SnapshotStore.from_device(cmd_dev, null);
+				if (!repo.is_available()){
 					exit_app();
 					exit(1);
 				}
-				update_snapshot_list();
 			}
 			else{
 				log_error(_("Could not find device") + ": '%s'".printf(cmd_backup_device));
@@ -2030,7 +1813,7 @@ public class Main : GLib.Object{
 			}
 		}
 		else{
-			if ((snapshot_device == null) || (prompt_if_empty && (snapshot_list.size == 0))){
+			if ((repo.device == null) || (prompt_if_empty && (repo.snapshots.size == 0))){
 				//prompt user for backup device
 				log_msg("");
 
@@ -2038,27 +1821,31 @@ public class Main : GLib.Object{
 				list_devices();
 				log_msg("");
 
-				snapshot_device = null;
+				Device dev = null;
 				int attempts = 0;
-				while (snapshot_device == null){
+				while (dev == null){
 					attempts++;
 					if (attempts > 3) { break; }
-					stdout.printf(TERM_COLOR_YELLOW + _("Enter device name or number (a=Abort)") + ": " + TERM_COLOR_RESET);
+					stdout.printf(TERM_COLOR_YELLOW +
+						_("Enter device name or number (a=Abort)") + ": " + TERM_COLOR_RESET);
 					stdout.flush();
-					snapshot_device = read_stdin_device(partitions);
+					dev = read_stdin_device(partitions);
 				}
 
 				log_msg("");
 				
-				if (snapshot_device == null){
+				if (dev == null){
 					log_error(_("Failed to get input from user in 3 attempts"));
 					log_msg(_("Aborted."));
 					exit_app();
 					exit(0);
 				}
 
-				mount_backup_device(parent_win);
-				update_snapshot_list();
+				repo = new SnapshotStore.from_device(dev, null);
+				if (!repo.is_available()){
+					exit_app();
+					exit(1);
+				}
 			}
 		}
 	}
@@ -2069,13 +1856,14 @@ public class Main : GLib.Object{
 		//set snapshot device -----------------------------------------------
 
 		if (!mirror_system){
-			if (snapshot_device != null){
+			if (repo.device != null){
 				//print snapshot_device name
 				log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
-				log_msg(_("Backup Device") + ": %s".printf(snapshot_device.device), true);
+				log_msg(_("Backup Device") + ": %s".printf(repo.device.device), true);
 				log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
-				mount_backup_device(parent_win);
-				update_snapshot_list();
+				//mount_backup_device(parent_win);
+				//repo.load_snapshots();
+				//TODO: check if repo needs to be re-initialized
 			}
 			else{
 				//print error
@@ -2094,7 +1882,7 @@ public class Main : GLib.Object{
 
 					//check command line arguments
 					found = false;
-					foreach(Snapshot bak in snapshot_list) {
+					foreach(var bak in repo.snapshots) {
 						if (bak.name == cmd_snapshot){
 							snapshot_to_restore = bak;
 							found = true;
@@ -2112,8 +1900,8 @@ public class Main : GLib.Object{
 				//prompt user for snapshot
 				if (snapshot_to_restore == null){
 
-					if (snapshot_list.size == 0){
-						log_error(_("No snapshots found on device") + ": '%s'".printf(snapshot_device.device));
+					if (!repo.has_snapshots()){
+						log_error(_("No snapshots found on device") + ": '%s'".printf(repo.device.device));
 						return false;
 					}
 
@@ -2510,6 +2298,80 @@ public class Main : GLib.Object{
 		}*/
 	}
 
+	// delete from terminal
+
+	public bool delete_snapshot(Snapshot? snapshot = null){
+
+		bool found = false;
+		
+		// set snapshot -----------------------------------------------
+
+		if (app_mode != ""){ //command-line mode
+
+			if (cmd_snapshot.length > 0){
+
+				//check command line arguments
+				found = false;
+				foreach(var bak in repo.snapshots) {
+					if (bak.name == cmd_snapshot){
+						snapshot_to_delete = bak;
+						found = true;
+						break;
+					}
+				}
+
+				//check if found
+				if (!found){
+					log_error(_("Could not find snapshot") + ": '%s'".printf(cmd_snapshot));
+					return false;
+				}
+			}
+
+			//prompt user for snapshot
+			if (snapshot_to_delete == null){
+
+				if (repo.snapshots.size == 0){
+					log_msg(_("No snapshots found on device") +
+						" '%s'".printf(repo.device.device));
+					return false;
+				}
+
+				log_msg("");
+				log_msg(TERM_COLOR_YELLOW + _("Select snapshot to delete") + ":\n" + TERM_COLOR_RESET);
+				list_snapshots(true);
+				log_msg("");
+
+				int attempts = 0;
+				while (snapshot_to_delete == null){
+					attempts++;
+					if (attempts > 3) { break; }
+					stdout.printf(TERM_COLOR_YELLOW + _("Enter snapshot number (a=Abort, p=Previous, n=Next)") + ": " + TERM_COLOR_RESET);
+					stdout.flush();
+					snapshot_to_delete = read_stdin_snapshot();
+				}
+				log_msg("");
+
+				if (snapshot_to_delete == null){
+					log_error(_("Failed to get input from user in 3 attempts"));
+					log_msg(_("Aborted."));
+					exit_app();
+					exit(0);
+				}
+			}
+		}
+
+		if (snapshot_to_delete == null){
+			//print error
+			log_error(_("Snapshot to delete not specified!"));
+			return false;
+		}
+
+		return snapshot_to_delete.remove();
+	}
+
+	public bool delete_all_snapshots(){
+		return repo.remove_all();
+	}
 
 	// todo: remove
 	public Device unlock_encrypted_device(Device luks_device, Gtk.Window? parent_win){
@@ -2700,7 +2562,7 @@ public class Main : GLib.Object{
 				//invalidate the .sync snapshot  -------
 
 				string sync_name = ".sync";
-				string snapshot_dir = path_combine(snapshot_location, "timeshift/snapshots");
+				string snapshot_dir = path_combine(repo.snapshot_location, "timeshift/snapshots");
 				string sync_path = snapshot_dir + "/" + sync_name;
 				string control_file_path = sync_path + "/info.json";
 
@@ -2984,238 +2846,17 @@ public class Main : GLib.Object{
 	    }
 	}
 
-	//delete
-
-	public bool delete_snapshot(Snapshot? snapshot = null){
-		bool found = false;
-		snapshot_to_delete = snapshot;
-
-		//set snapshot -----------------------------------------------
-
-		if (app_mode != ""){ //command-line mode
-
-			if (cmd_snapshot.length > 0){
-
-				//check command line arguments
-				found = false;
-				foreach(Snapshot bak in snapshot_list) {
-					if (bak.name == cmd_snapshot){
-						snapshot_to_delete = bak;
-						found = true;
-						break;
-					}
-				}
-
-				//check if found
-				if (!found){
-					log_error(_("Could not find snapshot") + ": '%s'".printf(cmd_snapshot));
-					return false;
-				}
-			}
-
-			//prompt user for snapshot
-			if (snapshot_to_delete == null){
-
-				if (snapshot_list.size == 0){
-					log_msg(_("No snapshots found on device") + " '%s'".printf(snapshot_device.device));
-					return false;
-				}
-
-				log_msg("");
-				log_msg(TERM_COLOR_YELLOW + _("Select snapshot to delete") + ":\n" + TERM_COLOR_RESET);
-				list_snapshots(true);
-				log_msg("");
-
-				int attempts = 0;
-				while (snapshot_to_delete == null){
-					attempts++;
-					if (attempts > 3) { break; }
-					stdout.printf(TERM_COLOR_YELLOW + _("Enter snapshot number (a=Abort, p=Previous, n=Next)") + ": " + TERM_COLOR_RESET);
-					stdout.flush();
-					snapshot_to_delete = read_stdin_snapshot();
-				}
-				log_msg("");
-
-				if (snapshot_to_delete == null){
-					log_error(_("Failed to get input from user in 3 attempts"));
-					log_msg(_("Aborted."));
-					exit_app();
-					exit(0);
-				}
-			}
-		}
-
-		if (snapshot_to_delete == null){
-			//print error
-			log_error(_("Snapshot to delete not specified!"));
-			return false;
-		}
-
-		try {
-			thr_running = true;
-			thr_success = false;
-			Thread.create<void> (delete_snapshot_thread, true);
-		} catch (ThreadError e) {
-			thr_running = false;
-			thr_success = false;
-			log_error (e.message);
-		}
-
-		while (thr_running){
-			gtk_do_events ();
-			Thread.usleep((ulong) GLib.TimeSpan.MILLISECOND * 100);
-		}
-
-		snapshot_to_delete = null;
-
-		return thr_success;
-	}
-
-	public void delete_snapshot_thread(){
-		string cmd = "";
-		string std_out;
-		string std_err;
-		int ret_val;
-
-		log_msg(_("Removing snapshot") + " '%s'...".printf(snapshot_to_delete.name));
-
-		try{
-			var f = File.new_for_path(snapshot_to_delete.path);
-			if(f.query_exists()){
-				cmd = "rm -rf \"%s\"".printf(snapshot_to_delete.path);
-
-				if (LOG_COMMANDS) { log_debug(cmd); }
-
-				Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-
-				if (ret_val != 0){
-					log_error(_("Failed to remove") + ": '%s'".printf(snapshot_to_delete.path));
-					thr_success = false;
-					thr_running = false;
-					return;
-				}
-				else{
-					log_msg(_("Removed") + ": '%s'".printf(snapshot_to_delete.path));
-					thr_success = true;
-					thr_running = false;
-					return;
-				}
-			}
-			else{
-				log_error(_("Directory not found") + ": '%s'".printf(snapshot_to_delete.path));
-				thr_success = true;
-				thr_running = false;
-			}
-		}
-		catch(Error e){
-			log_error (e.message);
-			thr_success = false;
-			thr_running = false;
-			return;
-		}
-	}
-
-	public bool delete_all_snapshots(){
-		string timeshift_dir = mount_point_backup + "/timeshift";
-		string sync_dir = mount_point_backup + "/timeshift/snapshots/.sync";
-
-		if (dir_exists(timeshift_dir)){
-			//delete snapshots
-			foreach(Snapshot bak in snapshot_list){
-				if (!delete_snapshot(bak)){
-					return false;
-				}
-			}
-
-			//delete .sync
-			if (dir_exists(sync_dir)){
-				if (!delete_directory(sync_dir)){
-					return false;
-				}
-			}
-
-			//delete /timeshift
-			return delete_directory(timeshift_dir);
-		}
-		else{
-			log_msg(_("No snapshots found on device") + " '%s'".printf(snapshot_device.device));
-			return true;
-		}
-	}
-
-	public bool delete_directory(string dir_path){
-		thr_arg1 = dir_path;
-
-		try {
-			thr_running = true;
-			thr_success = false;
-			Thread.create<void> (delete_directory_thread, true);
-		} catch (ThreadError e) {
-			thr_running = false;
-			thr_success = false;
-			log_error (e.message);
-		}
-
-		while (thr_running){
-			gtk_do_events ();
-			Thread.usleep((ulong) GLib.TimeSpan.MILLISECOND * 100);
-		}
-
-		thr_arg1 = null;
-
-		return thr_success;
-	}
-
-	public void delete_directory_thread(){
-		string cmd = "";
-		string std_out;
-		string std_err;
-		int ret_val;
-
-		try{
-			var f = File.new_for_path(thr_arg1);
-			if(f.query_exists()){
-				cmd = "rm -rf \"%s\"".printf(thr_arg1);
-
-				if (LOG_COMMANDS) { log_debug(cmd); }
-
-				Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-
-				if (ret_val != 0){
-					log_error(_("Failed to remove") + ": '%s'".printf(thr_arg1));
-					thr_success = false;
-					thr_running = false;
-					return;
-				}
-				else{
-					log_msg(_("Removed") + ": '%s'".printf(thr_arg1));
-					thr_success = true;
-					thr_running = false;
-					return;
-				}
-			}
-			else{
-				log_error(_("Directory not found") + ": '%s'".printf(thr_arg1));
-				thr_success = true;
-				thr_running = false;
-			}
-		}
-		catch(Error e){
-			log_error (e.message);
-			thr_success = false;
-			thr_running = false;
-			return;
-		}
-	}
-
-
 	//app config
 
 	public void save_app_config(){
 		var config = new Json.Object();
 		//config.set_string_member("enabled", is_scheduled.to_string());
 
-		config.set_string_member("backup_device_uuid", (snapshot_device == null) ? "" : snapshot_device.uuid);
+		config.set_string_member("backup_device_uuid",
+			(repo.device == null) ? "" : repo.device.uuid);
+			
+		config.set_string_member("use_snapshot_path_custom", repo.use_snapshot_path_custom.to_string());
+		config.set_string_member("snapshot_path_custom", repo.snapshot_path_user.to_string());
 
 		config.set_string_member("is_scheduled", is_scheduled.to_string());
 
@@ -3265,7 +2906,7 @@ public class Main : GLib.Object{
 		var f = File.new_for_path(this.app_conf_path);
 		if (!f.query_exists()) {
 			first_run = true;
-			snapshot_device = root_device;
+			repo = new SnapshotStore.from_device(root_device, null);
 			return;
 		}
 
@@ -3278,49 +2919,44 @@ public class Main : GLib.Object{
         var node = parser.get_root();
         var config = node.get_object();
 
-        string uuid = json_get_string(config,"backup_device_uuid","");
-        snapshot_path = json_get_string(config, "snapshot_path", snapshot_path);
-		use_snapshot_path = json_get_bool(config, "use_snapshot_path", use_snapshot_path);
+		// initialize repo using config file values
 
-		// find snapshot device
+		string uuid = json_get_string(config,"backup_device_uuid","");
+        var snapshot_path = json_get_string(config, "snapshot_path", "");
+		var use_snapshot_path = json_get_bool(config, "use_snapshot_path", false);
 		
-		snapshot_device = null;
-		if (uuid.length > 0){
-			foreach(Device pi in partitions){
-				if (pi.uuid == uuid){
-					snapshot_device = pi;
-					break;
-				}
+		if (use_snapshot_path){
+			repo = new SnapshotStore.from_path(snapshot_path, null);
+			repo.check_status();
+		}
+		else{
+			var dev = Device.get_device_by_uuid(uuid);
+			if (dev == null){
+				dev = new Device();
+				dev.uuid = uuid;
 			}
-			if (snapshot_device == null){
-				// device is offline?
-				log_error(_("Device is offline"));
-				snapshot_device = new Device();
-				snapshot_device.uuid = uuid;
-				// TODO: handle this
-			}
+			repo = new SnapshotStore.from_device(dev, null);
+			//repo.check_status();
+			// TODO: move this code to main window
 		}
 
+		//TODO; repo.check_status() should not use App
+
+		// initialize repo using command line parameter
+		 
 		if (cmd_backup_device.length > 0){
-			Device cmd_dev = get_device_from_name(partitions, cmd_backup_device);
+			var cmd_dev = Device.get_device_by_name(cmd_backup_device);
 			if (cmd_dev != null){
-				snapshot_device = cmd_dev;
+				repo = new SnapshotStore.from_device(cmd_dev, null);
+				// TODO: move this code to main window
 			}
 			else{
-				//log_error(_("Device is offline"));
 				log_error(_("Could not find device") + ": '%s'".printf(cmd_backup_device));
 				exit_app();
 				exit(1);
 			}
 		}
 
-		//if (snapshot_device == null){
-			//if ((root_device != null) && (app_mode == "")){
-			//	log_msg (_("Backup device not set! Defaulting to system device") + " '%s'".printf(root_device.device));
-			//	snapshot_device = root_device;
-			//}
-		//}
-		
 		/* Note: In command-line mode, user will be prompted for backup device */
 
 		/* The backup device specified in config file will be mounted at this point if:
@@ -3328,16 +2964,17 @@ public class Main : GLib.Object{
 		 * 2) app is running command mode without backup device argument
 		 * */
 
-		if (snapshot_device != null){
-			if ((app_mode == "") || (cmd_backup_device.length == 0)){
-				if (mount_backup_device(null)){
-					update_partitions();
-				}
-				else{
-					snapshot_device = null;
-				}
-			}
-		}
+		//if (snapshot_device != null){
+			//if ((app_mode == "") || (cmd_backup_device.length == 0)){
+				//if (mount_backup_device(null)){
+				//	update_partitions();
+				//}
+				//else{
+				//	snapshot_device = null;
+				//}
+			//}
+			// TODO: mount separately
+		//}
 
 		this.is_scheduled = json_get_bool(config,"is_scheduled", is_scheduled);
 
@@ -3377,55 +3014,14 @@ public class Main : GLib.Object{
 
 	//core functions
 
-	public bool update_snapshot_list(){
-
-		snapshot_list.clear();
-
-		string path = mount_point_backup + "/timeshift/snapshots";
-
-		if (!dir_exists(path)){
-			return false;
-		}
-
-		try{
-			var dir = File.new_for_path (path);
-			var enumerator = dir.enumerate_children ("*", 0);
-
-			var info = enumerator.next_file ();
-			while (info != null) {
-				if (info.get_file_type() == FileType.DIRECTORY) {
-					if (info.get_name() != ".sync") {
-						Snapshot bak = new Snapshot(path + "/" + info.get_name());
-						if (bak.is_valid){
-							snapshot_list.add(bak);
-						}
-					}
-				}
-				info = enumerator.next_file ();
-			}
-		}
-		catch(Error e){
-			log_error (e.message);
-			return false;
-		}
-
-		snapshot_list.sort((a,b) => {
-			Snapshot t1 = (Snapshot) a;
-			Snapshot t2 = (Snapshot) b;
-			return t1.date.compare(t2.date);
-		});
-
-		return true;
-	}
-
 	public void update_partitions(){
 		partitions.clear();
 		partitions = Device.get_filesystems();
 
 		foreach(Device pi in partitions){
 			//root_device and home_device will be detected by detect_system_devices()
-			if ((snapshot_device != null) && (pi.uuid == snapshot_device.uuid)){
-				snapshot_device = pi;
+			if ((repo.device != null) && (pi.uuid == repo.device.uuid)){
+				repo.device = pi;
 			}
 			if (pi.is_mounted){
 				pi.dist_info = LinuxDistro.get_dist_info(pi.mount_points[0].mount_point).full_name();
@@ -3436,23 +3032,6 @@ public class Main : GLib.Object{
 		}
 
 		//log_debug(_("Partition list updated"));
-	}
-
-	public Gee.ArrayList<Snapshot?> get_snapshot_list(string tag = ""){
-		var list = new Gee.ArrayList<Snapshot?>();
-
-		foreach(Snapshot bak in snapshot_list){
-			if (tag == "" || bak.has_tag(tag)){
-				list.add(bak);
-			}
-		}
-		list.sort((a,b) => {
-			Snapshot t1 = (Snapshot) a;
-			Snapshot t2 = (Snapshot) b;
-			return (t1.date.compare(t2.date));
-		});
-
-		return list;
 	}
 
 	public void detect_system_devices(){
@@ -3473,87 +3052,6 @@ public class Main : GLib.Object{
 				}
 			}
 		}
-	}
-
-	public Snapshot? get_latest_snapshot(string tag = ""){
-		var list = get_snapshot_list(tag);
-
-		if (list.size > 0)
-			return list[list.size - 1];
-		else
-			return null;
-	}
-
-	public Snapshot? get_oldest_snapshot(string tag = ""){
-		var list = get_snapshot_list(tag);
-
-		if (list.size > 0)
-			return list[0];
-		else
-			return null;
-	}
-
-	public bool mount_backup_device(Gtk.Window? parent_win){
-		/* Note:
-		 * If backup device is BTRFS then it will be explicitly mounted to /mnt/timeshift/backup
-		 * Otherwise existing mount point will be used.
-		 * This is required since we need to mount the root subvolume of the BTRFS filesystem
-		 * */
-
-		log_msg("");
-
-		if (snapshot_device == null){
-			log_error(_("Snapshot device not set!"));
-			return false;
-		}
-		else{
-
-			log_msg(_("Snapshot device") + ": %s".printf(snapshot_device.device));
-			
-			// unlock encrypted device
-			if (snapshot_device.is_encrypted()){
-
-				snapshot_device = unlock_encrypted_device(snapshot_device, parent_win);
-				
-				if (snapshot_device == null){
-					log_msg(_("Failed to unlock"));
-					return false;
-				}
-			}
-
-			if (snapshot_device.fstype == "btrfs"){
-
-				unmount_backup_device(); // unmount /mnt/timeshift/backup
-
-				// mount
-				mount_point_backup = mount_point_app + "/backup";
-				bool ok = Device.mount(snapshot_device.uuid, mount_point_backup, "");
-				if (!ok){
-					mount_point_backup = "";
-				}
-			}
-			else{
-				var mps = Device.get_device_mount_points(snapshot_device.uuid);
-
-				if (mps.size > 0){
-					mount_point_backup = mps[0].mount_point;
-				}
-				else{
-					Device.automount_udisks(snapshot_device.device);
-
-					mps = Device.get_device_mount_points(snapshot_device.uuid);
-					if (mps.size > 0){
-						mount_point_backup = mps[0].mount_point;
-					}
-					else{
-						mount_point_backup = "";
-					}
-				}
-			}
-		}
-
-		log_msg(_("Snapshot device mounted at") + " '%s'".printf(mount_point_backup));
-		return (mount_point_backup.length > 0);
 	}
 
 	public bool mount_target_device(Gtk.Window? parent_win){
@@ -3653,26 +3151,6 @@ public class Main : GLib.Object{
 		return true;
 	}
 
-	public void unmount_backup_device(bool exit_on_error = true){
-		if (mount_point_backup == null) { return; }
-		
-		//unmount the backup device only if it was mounted by application
-		if (mount_point_backup.has_prefix(mount_point_app)){
-			if (unmount_device(mount_point_backup, false)){
-				if (dir_exists(mount_point_backup) && (dir_count(mount_point_backup) == 0)){
-					file_delete(mount_point_backup);
-					log_debug(_("Removed mount directory: '%s'").printf(mount_point_backup));
-				}
-			}
-			else{
-				//ignore
-			}
-		}
-		else{
-			//don't unmount
-		}
-	}
-	
 	public void unmount_target_device(bool exit_on_error = true){
 		if (mount_point_restore == null) { return; }
 		
@@ -3702,155 +3180,10 @@ public class Main : GLib.Object{
 	}
 
 	public SnapshotLocationStatus check_backup_location(out string message, out string details){
-
-		var status_code = SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE;
-		message = "";
-		details = "";
-
-		update_snapshot_list();
-		
-		/*
-		-1 - device un-available, path does not exist
-		 0 - first snapshot taken, disk space sufficient
-		 1 - first snapshot taken, disk space not sufficient
-		 2 - first snapshot not taken, disk space not sufficient
-		 3 - first snapshot not taken, disk space sufficient
-		 4 - path is readonly
-		 5 - hardlinks not supported
-		*/
-
-		log_msg("");
-		log_msg("Free space limit: %s".printf(format_file_size(minimum_free_disk_space)));
-
-		int64 free_space = 0;
-		bool check_free_space = false;
-
-		if (use_snapshot_path){
-
-			log_msg(_("Path selected"));
-			
-			if (snapshot_path.strip().length == 0){
-				message = _("Snapshot location not selected");
-				details = _("Select the location for saving snapshots");
-				status_code = SnapshotLocationStatus.NOT_SELECTED;
-			}
-			else{
-				if (!dir_exists(snapshot_path)){
-					message = _("Snapshot location not available!");
-					details = _("Path not found") + ": '%s'".printf(snapshot_path);
-					status_code = SnapshotLocationStatus.NOT_AVAILABLE;
-				}
-				else{
-					bool is_readonly;
-					bool hardlink_supported = filesystem_supports_hardlinks(
-						snapshot_path, out is_readonly);
-
-					if (is_readonly){
-						message = _("File system is read-only!");
-						details = _("Select another location for saving snapshots");
-						status_code = SnapshotLocationStatus.READ_ONLY_FS;
-					}
-					else if (!hardlink_supported){
-						message = _("File system does not support hard-links!");
-						details = _("Select another location for saving snapshots");
-						status_code = SnapshotLocationStatus.HARDLINKS_NOT_SUPPORTED;
-					}
-					else{
-						// ok, check snapshots and space
-						
-						var list = Device.get_disk_space_using_df(snapshot_path);
-						free_space = (list.size > 0) ? list[0].free_bytes : 0;
-						log_debug("free space: %s".printf(format_file_size(free_space)));
-						check_free_space = true;
-					}
-				}
-			}
-		}
-		else{
-
-			log_msg(_("Device selected") +
-				((snapshot_device == null) ? ": null" : ": %s".printf(snapshot_device.kname)));
-			
-			if (snapshot_device == null){
-				message = _("Snapshot location not selected");
-				details = _("Select the location for saving snapshots");
-				status_code = SnapshotLocationStatus.NOT_SELECTED;
-			}
-			else if (snapshot_device.device.length == 0){
-				message = _("Snapshot location not available!");
-				details = _("Device is offline") + ": UUID='%s'".printf(snapshot_device.uuid);
-				status_code = SnapshotLocationStatus.NOT_AVAILABLE;
-			}
-			else{
-				// ok, check snapshots and space
-				
-				free_space = snapshot_device.free_bytes;
-				log_debug("free space: %s".printf(format_file_size(free_space)));
-				check_free_space = true;
-			}
-		}
-
-		if (check_free_space){
-			
-			if (snapshot_list.size > 0){
-				// has snapshots, check minimum space
-				
-				if (free_space < minimum_free_disk_space){
-					
-					message = _("Not enough disk space");
-					message += " (< %s)".printf(format_file_size(minimum_free_disk_space));
-						
-					details = _("Select another device or free up some space");
-					status_code = SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE;
-				}
-				else{
-					//ok
-					message = "";
-					
-					details = _("%d snapshots, %s free").printf(
-						snapshot_list.size,
-						format_file_size(free_space));
-						
-					status_code = SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE;
-				}
-			}
-			else {
-
-				// no snapshots, check estimated space
-				
-				var required_space = calculate_size_of_first_snapshot();
-
-				if (free_space < required_space){
-					message = _("Not enough disk space");
-					message += " (< %s)".printf(format_file_size(required_space));
-					
-					details = _("Select another device or free up some space");
-					
-					status_code = SnapshotLocationStatus.NO_SNAPSHOTS_NO_SPACE;
-				}
-				else{
-					message = _("No snapshots on this device");
-					
-					details = _("First snapshot requires:");
-					details += " %s".printf(format_file_size(required_space));
-					
-					status_code = SnapshotLocationStatus.NO_SNAPSHOTS_HAS_SPACE;
-				}
-			}
-		}
-		
-
-		log_msg(_("Snapshot location") + ": '%s'".printf(snapshot_location));
-
-		log_msg(message);
-		log_msg(details);
-		
-		log_msg("Status: %s".printf(
-			status_code.to_string().replace("SNAPSHOT_LOCATION_STATUS_","")));
-
-		snapshot_location_free_space = free_space;
-		
-		return status_code;
+		repo.check_status();
+		message = repo.status_message;
+		details = repo.status_details;
+		return repo.status_code;
 	}
 
 	public bool check_btrfs_volume(Device dev){
@@ -4314,7 +3647,6 @@ public class Main : GLib.Object{
 
 		cron_job_update();
 
-		unmount_backup_device(false);
 		unmount_target_device(false);
 
 		clean_logs();
@@ -4704,7 +4036,7 @@ public class SnapshotStore : GLib.Object{
 	public Device device = null;
 	public string snapshot_path_user = "";
 	public string snapshot_path_mount = "";
-	public bool use_snapshot_path_user = false;
+	public bool use_snapshot_path_custom = false;
 
 	public Gee.ArrayList<Snapshot?> snapshots;
 
@@ -4721,16 +4053,17 @@ public class SnapshotStore : GLib.Object{
 
 	public SnapshotStore.from_path(string path, Gtk.Window? parent_win){
 		this.snapshot_path_user = path;
-		this.use_snapshot_path_user = true;
+		this.use_snapshot_path_custom = true;
 		this.parent_window = parent_win;
 		
 		snapshots = new Gee.ArrayList<Snapshot>();
 
-		log_msg(_("Snapshot path") + ": %s".printf(path));
+		log_msg(_("Selected snapshot path") + ": %s".printf(path));
 		
 		var list = Device.get_disk_space_using_df(path);
 		if (list.size > 0){
 			device = list[0];
+			
 			log_msg(_("Device") + ": %s".printf(device.device));
 			log_msg(_("Free space") + ": %s".printf(format_file_size(device.free_bytes)));
 		}
@@ -4738,20 +4071,23 @@ public class SnapshotStore : GLib.Object{
 
 	public SnapshotStore.from_device(Device dev, Gtk.Window? parent_win){
 		this.device = dev;
-		this.use_snapshot_path_user = false;
+		this.use_snapshot_path_custom = false;
 		this.parent_window = parent_win;
 		
 		snapshots = new Gee.ArrayList<Snapshot>();
 
-		log_msg(_("Snapshot device") + ": %s".printf(device.device));
-		log_msg(_("Free space") + ": %s".printf(format_file_size(device.free_bytes)));
-		
-		unlock_and_mount_device();
+		if ((dev != null) && (dev.uuid.length > 0)){
+			log_msg("");
+			unlock_and_mount_device();
+
+			log_msg(_("Selected snapshot device") + ": %s".printf(device.device));
+			log_msg(_("Free space") + ": %s".printf(format_file_size(device.free_bytes)));;
+		}
 	}
 
 	public string snapshot_location {
 		owned get{
-			if (use_snapshot_path_user && dir_exists(snapshot_path_user)){
+			if (use_snapshot_path_custom && dir_exists(snapshot_path_user)){
 				return snapshot_path_user;
 			}
 			else{
@@ -4962,7 +4298,7 @@ public class SnapshotStore : GLib.Object{
 			has_space();
 		}
 
-		if (use_snapshot_path_user){
+		if (use_snapshot_path_custom){
 			log_msg("Custom path is selected for snapshot location");
 		}
 		
@@ -4979,7 +4315,7 @@ public class SnapshotStore : GLib.Object{
 	}
 
 	public bool is_available(){
-		if (use_snapshot_path_user){
+		if (use_snapshot_path_custom){
 			if (snapshot_path_user.strip().length == 0){
 				status_message = _("Snapshot location not selected");
 				status_details = _("Select the location for saving snapshots");
@@ -5064,7 +4400,7 @@ public class SnapshotStore : GLib.Object{
 			}
 			else{
 				//ok
-				status_message = "";
+				status_message = "ok";
 				
 				status_details = _("%d snapshots, %s free").printf(
 					snapshots.size, format_file_size(device.free_bytes));
@@ -5255,6 +4591,18 @@ public class SnapshotStore : GLib.Object{
 		}
 	}
 
+	public bool remove_sync_dir(){
+		string sync_dir = snapshot_location + "/timeshift/snapshots/.sync";
+		//delete .sync
+		if (dir_exists(sync_dir)){
+			if (!delete_directory(sync_dir)){
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
 	// private
 	
 	private bool delete_directory(string dir_path){

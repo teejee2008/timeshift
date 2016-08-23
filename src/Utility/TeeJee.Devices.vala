@@ -872,6 +872,30 @@ namespace TeeJee.Devices{
 			return null;
 		}
 
+		public static Device? get_device_by_uuid(string uuid){
+			var list = Device.get_block_devices_using_lsblk();
+			
+			foreach(var dev in list){
+				if (dev.uuid == uuid){
+					return dev;
+				}
+			}
+			
+			return null;
+		}
+
+		public static Device? get_device_by_name(string file_name){
+			var list = Device.get_block_devices_using_lsblk();
+			
+			foreach(var dev in list){
+				if (dev.device == file_name){
+					return dev;
+				}
+			}
+			
+			return null;
+		}
+		
 		public static string get_device_uuid(string device){
 			if (device_list == null){
 				device_list = get_block_devices_using_lsblk();

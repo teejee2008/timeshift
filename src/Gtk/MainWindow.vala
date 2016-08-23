@@ -80,7 +80,7 @@ class MainWindow : Gtk.Window{
 	private uint tmr_init;
 
 	//other
-	private Device snapshot_device_original;
+	//private Device snapshot_device_original;
 
 	public MainWindow () {
 		this.title = AppName + " v" + AppVersion;
@@ -100,8 +100,6 @@ class MainWindow : Gtk.Window{
         init_ui_snapshot_list();
 
 		init_ui_statusbar();
-
-        snapshot_device_original = App.snapshot_device;
 
         if (App.live_system()){
 			btn_backup.sensitive = false;
@@ -178,6 +176,15 @@ class MainWindow : Gtk.Window{
         toolbar.add(btn_settings);
 
         btn_settings.clicked.connect (btn_settings_clicked);
+
+        //btn_settings
+		btn_settings = new Gtk.ToolButton.from_stock ("gtk-preferences");
+		btn_settings.is_important = true;
+		btn_settings.label = _("Settings");
+		btn_settings.set_tooltip_text (_("Settings"));
+        toolbar.add(btn_settings);
+
+        btn_settings.clicked.connect (btn_settings2_clicked);
 
         //btn_wizard
 		var btn_wizard = new Gtk.ToolButton.from_stock ("tools-wizard");
@@ -434,7 +441,7 @@ class MainWindow : Gtk.Window{
 		menu_extra.append(menu_item);
 		menu_item.activate.connect(() => {
 			if (!check_backup_device_online()) { return; }
-			App.update_snapshot_list();
+			App.repo.load_snapshots();
 			refresh_tv_backups();
 		});
 		
@@ -559,6 +566,9 @@ class MainWindow : Gtk.Window{
 		string message,details;
 		int status_code = App.check_backup_location(out message, out details);
 
+		message = escape_html(message);
+		details = escape_html(details);
+		
 		switch(status_code){
 			case SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE:
 
@@ -681,11 +691,11 @@ class MainWindow : Gtk.Window{
 
 	private void refresh_tv_backups(){
 
-		App.update_snapshot_list();
+		App.repo.load_snapshots();
 
 		var model = new Gtk.ListStore(1, typeof(Snapshot));
 
-		var list = App.snapshot_list;
+		var list = App.repo.snapshots;
 
 		if (tv_backups_sort_column_index == 0){
 
@@ -837,7 +847,7 @@ class MainWindow : Gtk.Window{
 
 			//statusbar_message(_("Deleting snapshot") + ": '%s'...".printf(bak.name));
 
-			is_success = App.delete_snapshot(bak);
+			is_success = bak.remove();
 
 			if (!is_success){
 				//statusbar_message_with_timeout(_("Error: Unable to delete snapshot") + ": '%s'".printf(bak.name), false);
@@ -848,10 +858,10 @@ class MainWindow : Gtk.Window{
 			store.remove(iter_delete);
 		}
 
-		App.update_snapshot_list();
-		if (App.snapshot_list.size == 0){
+		App.repo.load_snapshots();
+		if (!App.repo.has_snapshots()){
 			//statusbar_message(_("Deleting snapshot") + ": '.sync'...");
-			App.delete_all_snapshots();
+			App.repo.remove_all();
 		}
 
 		if (is_success){
@@ -976,8 +986,8 @@ class MainWindow : Gtk.Window{
 				update_progress_stop();
 
 				if (is_success){
-					App.update_snapshot_list();
-					var latest = App.get_latest_snapshot("ondemand");
+					App.repo.load_snapshots();
+					var latest = App.repo.get_latest_snapshot("ondemand");
 					latest.description = _("Before restoring") + " '%s'".printf(App.snapshot_to_restore.name);
 					latest.update_control_file();
 				}
@@ -1060,6 +1070,15 @@ class MainWindow : Gtk.Window{
 		update_statusbar();
 	}
 
+	private void btn_settings2_clicked(){
+		var win = new WizardWindow("settings");
+		win.set_transient_for(this);
+		win.show_all();
+		win.destroy.connect(()=>{
+			timer_backup_device_init = Timeout.add(100, init_ui_for_backup_device);
+		});
+	}
+
 	private void btn_wizard_clicked(){
 		var win = new WizardWindow("");
 		win.set_transient_for(this);
@@ -1078,13 +1097,13 @@ class MainWindow : Gtk.Window{
 
 		TreeSelection sel = tv_backups.get_selection ();
 		if (sel.count_selected_rows() == 0){
-			string snapshot_dir = path_combine(App.snapshot_location, "timeshift/snapshots");
+			string snapshot_dir = path_combine(App.repo.snapshot_location, "timeshift/snapshots");
 			var f = File.new_for_path(snapshot_dir);
 			if (f.query_exists()){
 				exo_open_folder(snapshot_dir);
 			}
 			else{
-				exo_open_folder(App.mount_point_backup);
+				exo_open_folder(App.repo.snapshot_location);
 			}
 			return;
 		}
@@ -1241,11 +1260,13 @@ class MainWindow : Gtk.Window{
 		int status_code = App.check_backup_location(out message, out details);
 		
 		DateTime last_snapshot_date = null;
+
+		// TODO; change this
 		
 		switch (status_code){
 		case SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE:
 		case SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE:
-			Snapshot last_snapshot = App.get_latest_snapshot();
+			Snapshot last_snapshot = App.repo.get_latest_snapshot();
 			last_snapshot_date = (last_snapshot == null) ? null : last_snapshot.date;
 			break;
 		}
@@ -1297,7 +1318,7 @@ class MainWindow : Gtk.Window{
 				// has space
 				if (App.is_scheduled){
 					// is scheduled
-					if (App.snapshot_list.size > 0){
+					if (App.repo.has_snapshots()){
 						// has snaps
 						img_shield.pixbuf =
 							get_shared_icon("security-high", "security-high.svg", 48).pixbuf;
@@ -1320,7 +1341,7 @@ class MainWindow : Gtk.Window{
 				}
 				else {
 					// not scheduled
-					if (App.snapshot_list.size > 0){
+					if (App.repo.has_snapshots()){
 						// has snaps
 						img_shield.pixbuf =
 							get_shared_icon("security-medium", "security-medium.svg", 48).pixbuf;
@@ -1351,14 +1372,14 @@ class MainWindow : Gtk.Window{
 				vbox_snap_count.show_all();
 				
 				lbl_snap_count.label = format_text_large(
-					"%0d".printf(App.snapshot_list.size));
+					"%0d".printf(App.repo.snapshots.size));
 
 				vbox_free_space.no_show_all = false;
 				vbox_free_space.show_all();
 				
 				lbl_free_space.label =
 					format_text_large("%s".printf(
-						format_file_size(App.snapshot_location_free_space)));
+						format_file_size(App.repo.device.free_bytes)));
 				break;
 			}
 		}

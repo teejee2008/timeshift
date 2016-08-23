@@ -49,6 +49,8 @@ class WizardWindow : Gtk.Window{
 	private Gtk.Box tab_take_snapshot;
 	private Gtk.Box tab_finish;
 
+	private Gtk.Box tab_schedule;
+	
 	private Gtk.Spinner spinner;
 	private Gtk.Label lbl_msg;
 	private Gtk.Label lbl_status;
@@ -108,6 +110,8 @@ class WizardWindow : Gtk.Window{
 			tab_take_snapshot = create_tab_first_snapshot();
 		}
 
+		tab_schedule = create_tab_schedule();
+
 		tab_finish = create_tab_final();
 		
 		create_actions();
@@ -126,11 +130,11 @@ class WizardWindow : Gtk.Window{
 
 		tv_devices_refresh();
 
-		if (App.snapshot_path.length > 0){
-			entry_backup_path.text = App.snapshot_path;
+		if (App.repo.snapshot_path_user.length > 0){
+			entry_backup_path.text = App.repo.snapshot_path_user;
 		}
 
-		if (App.use_snapshot_path){
+		if (App.repo.use_snapshot_path_custom){
 			radio_path.active = true;
 		}
 		else{
@@ -139,7 +143,7 @@ class WizardWindow : Gtk.Window{
 
 		radio_device.toggled();
 		radio_path.toggled();
-
+		
 		if (App.live_system()){
 			notebook.page = page_num_snapshot_location;
 		}
@@ -151,7 +155,7 @@ class WizardWindow : Gtk.Window{
 		
 		return false;
 	}
-
+	
 	private Gtk.Box create_tab_estimate_system_size(){
 
 		var box = add_tab(notebook, _("Estimate"));
@@ -205,7 +209,7 @@ class WizardWindow : Gtk.Window{
 			tv_devices.sensitive = radio_device.active;
 
 			if (radio_device.active){
-				App.use_snapshot_path = false;
+				App.repo.use_snapshot_path_custom = false;
 				log_debug("radio_device.toggled: active");
 				check_backup_location();
 			}
@@ -224,14 +228,14 @@ class WizardWindow : Gtk.Window{
 		msg = _("File system at selected path must support hard-links");
 		//var lbl_path_subnote = add_label_subnote(box,msg);
 
-		entry_backup_path = add_directory_chooser(box, App.snapshot_path);
+		entry_backup_path = add_directory_chooser(box, App.repo.snapshot_path_user);
 		entry_backup_path.margin_bottom = 12;
 		
 		radio_path.toggled.connect(()=>{
 			entry_backup_path.sensitive = radio_path.active;
 
 			if (radio_path.active){
-				App.use_snapshot_path = true;
+				App.repo.use_snapshot_path_custom = true;
 				log_debug("radio_path.toggled: active");
 				check_backup_location();
 			}
@@ -318,6 +322,24 @@ class WizardWindow : Gtk.Window{
 		box.add(scroll);*/
 
 		//scroll.add(label);
+
+		return box;
+	}
+
+	private Gtk.Box create_tab_schedule(){
+		var box = add_tab(notebook, _("Schedule"));
+		
+		add_label_header(box, _("Select Snapshot Intervals"), true);
+
+		add_checkbox(box, _("Every <b>Month</b>"));
+
+		add_checkbox(box, _("Every <b>Week</b>"));
+
+		add_checkbox(box, _("Every <b>Day</b>"));
+
+		add_checkbox(box, _("Every <b>Hour</b>"));
+
+		add_checkbox(box, _("Every <b>Boot</b>"));
 
 		return box;
 	}
@@ -522,7 +544,7 @@ class WizardWindow : Gtk.Window{
 				Device dev;
 				store.get (iter, 0, out dev);
 
-				if ((App.snapshot_device == null) || (App.snapshot_device.uuid != dev.uuid)){
+				if ((App.repo.device == null) || (App.repo.device.uuid != dev.uuid)){
 					try_change_device(dev);
 				}
 				else{
@@ -534,7 +556,7 @@ class WizardWindow : Gtk.Window{
 				Device dev;
 				store.get (iter, 0, out dev);
 				
-				if ((App.snapshot_device != null) && (App.snapshot_device.uuid == dev.uuid)){
+				if ((App.repo.device != null) && (App.repo.device.uuid == dev.uuid)){
 					store.set (iter, 3, true);
 					//tv_devices.get_selection().select_iter(iter);
 				}
@@ -600,30 +622,29 @@ class WizardWindow : Gtk.Window{
 
 	private void change_backup_device(Device pi){
 		// return if device has not changed
-		if ((App.snapshot_device != null) && (pi.uuid == App.snapshot_device.uuid)){ return; }
+		if ((App.repo.device != null) && (pi.uuid == App.repo.device.uuid)){ return; }
 
 		gtk_set_busy(true, this);
 		
 		//Device previous_device = App.snapshot_device;
-		App.snapshot_device = pi;
-
-		log_debug("selected: %s".printf(pi.device));
+		App.repo = new SnapshotStore.from_device(pi, this);
+		App.repo.check_status();
 		
-		// try mounting the device
-		if (App.mount_backup_device(this)){
-			App.update_partitions();
+		//log_debug("selected: %s".printf(pi.device));
 
-			var newpi = Device.find_device_in_list(App.partitions,pi.device,pi.uuid);
+		App.update_partitions();
 
-			log_debug("newpi: %s".printf(pi.device));
-			log_debug("pi.fstype: %s".printf(pi.fstype));
-			log_debug("pi.child_device: %s".printf(
-				(pi.children.size == 0) ? "null" : pi.children[0].device));
-			
-			if ((pi.fstype == "luks") && !pi.has_children() && newpi.has_children()){
-				App.snapshot_device = newpi.children[0];
-				tv_devices_refresh();
-			}
+		var newpi = Device.find_device_in_list(App.partitions,pi.device,pi.uuid);
+
+		//log_debug("newpi: %s".printf(pi.device));
+		//log_debug("pi.fstype: %s".printf(pi.fstype));
+		//log_debug("pi.child_device: %s".printf(
+		//	(pi.children.size == 0) ? "null" : pi.children[0].device));
+		
+		if ((pi.fstype == "luks") && !pi.has_children() && newpi.has_children()){
+			App.repo = new SnapshotStore.from_device(newpi.children[0], this);
+			App.repo.check_status();
+			tv_devices_refresh();
 		}
 
 		//if (App.snapshot_device != null){
@@ -639,7 +660,11 @@ class WizardWindow : Gtk.Window{
 		bool ok = true;
 		string message, details;
 		int status_code = App.check_backup_location(out message, out details);
-
+		// TODO: call check on repo directly
+		
+		message = escape_html(message);
+		details = escape_html(details);
+		
 		if (App.live_system()){
 			switch (status_code){
 			case SnapshotLocationStatus.NOT_SELECTED:
@@ -791,7 +816,7 @@ class WizardWindow : Gtk.Window{
 					model.set(iter0, 2, pix_unlocked, -1);
 				}
 
-				if ((App.snapshot_device != null) && (part.uuid == App.snapshot_device.uuid)){
+				if ((App.repo.device != null) && (part.uuid == App.repo.device.uuid)){
 					//iter_selected = iter1;
 					model.set(iter1, 3, true, -1);
 				}
@@ -891,75 +916,73 @@ class WizardWindow : Gtk.Window{
 	private void initialize_current_tab(){
 
 		log_debug("page: %d".printf(notebook.page));
-		
-		if (notebook.page == page_num_estimate){
-			if (App.first_snapshot_size == 0){
-				btn_prev.hide();
-				btn_next.hide();
-				btn_cancel.hide();
-				btn_abort.show();
 
-				box_actions.set_layout (Gtk.ButtonBoxStyle.CENTER);
-			
-				estimate_system_size();
-			}
-			else{
-				go_next();
-			}
-		}
-		else if (notebook.page == page_num_snapshot_location){
-			
-			btn_prev.show();
-			btn_next.show();
-			btn_cancel.show();
-			btn_abort.hide();
-
-			box_actions.set_layout (Gtk.ButtonBoxStyle.EXPAND);
-
-			btn_prev.sensitive = false;
-			btn_next.sensitive = true;
-
-			if (mode == "create"){
-				go_next();
-			}
-		}
-		else if (notebook.page == page_num_take_snapshot){
-			
+		if ((notebook.page == page_num_estimate)
+		|| (notebook.page == page_num_take_snapshot)){
 			btn_prev.hide();
 			btn_next.hide();
 			btn_cancel.hide();
 			btn_abort.show();
 
 			box_actions.set_layout (Gtk.ButtonBoxStyle.CENTER);
-
-			if (App.snapshot_list.size == 0){
-				show_finish_page = true;
-			}
-			
-			if (!App.live_system() && ((App.snapshot_list.size == 0) || (mode == "create"))){
-				take_snapshot();
-			}
-			else{
-				go_next();
-			}
-			
 		}
-		else if (notebook.page == page_num_finish){
-
+		else{
 			btn_prev.show();
 			btn_next.show();
 			btn_cancel.show();
 			btn_abort.hide();
 
+			btn_prev.sensitive = true;
+			btn_next.sensitive = true;
+
 			box_actions.set_layout (Gtk.ButtonBoxStyle.EXPAND);
-
-			btn_prev.sensitive = false;
-			btn_next.sensitive = false;
-
-			if (App.live_system() || (mode == "create") || (show_finish_page == false)){
-				destroy();
+		}
+		
+		if (notebook.page == page_num_estimate){
+			if (App.first_snapshot_size == 0){
+				estimate_system_size();
+			}
+			else{
+				log_debug("page: estimate: skip");
+				go_next(); // skip
 			}
 		}
+		else if (notebook.page == page_num_snapshot_location){
+			btn_prev.sensitive = false;
+			if (mode == "create"){
+				log_debug("page: snapshot_location: skip");
+				go_next(); // skip if valid
+			}
+		}
+		else if (notebook.page == page_num_take_snapshot){
+			
+			if (!App.live_system() && !App.repo.has_snapshots()){
+				show_finish_page = true;
+			}
+			
+			if (!App.repo.has_snapshots() || (mode == "create")){
+				take_snapshot();
+			}
+			else{
+				log_debug("page: take_snapshot: skip");
+				go_next(); // skip
+			}
+		}
+		else if (notebook.page == page_num_finish){
+			if (mode == "settings"){
+				log_debug("page: finish: skip");
+				go_next(); // skip
+			}
+			else{
+				btn_prev.sensitive = false;
+
+				if ((mode == "create") || (show_finish_page == false)){
+					destroy(); // close window
+				}
+			}
+		}
+
+		btn_next.sensitive = (notebook.num);
 	}
 
 	private bool validate_current_tab(){
@@ -1248,6 +1271,16 @@ class WizardWindow : Gtk.Window{
 		return radio;
 	}
 
+	private Gtk.CheckButton add_checkbox(
+		Gtk.Box box, string text){
+
+		var chk = new Gtk.CheckButton.with_label(text);
+		chk.label = text;
+		box.add(chk);
+
+		return chk;
+	}
+
 	private Gtk.Button add_button(
 		Gtk.Box box, string text, string tooltip,
 		ref Gtk.SizeGroup? size_group,
@@ -1305,8 +1338,8 @@ class WizardWindow : Gtk.Window{
 			if (chooser.run() == Gtk.ResponseType.ACCEPT) {
 				entry.text = chooser.get_filename();
 
-				App.use_snapshot_path = true;
-				App.snapshot_path = entry.text;
+				App.repo.use_snapshot_path_custom = true;
+				App.repo.snapshot_path_user = entry.text;
 				check_backup_location();
 				//log_msg("here");
 				//if (!check_backup_location()){

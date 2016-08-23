@@ -2872,7 +2872,7 @@ public class Main : GLib.Object{
 		config.set_string_member("count_hourly", count_hourly.to_string());
 		config.set_string_member("count_boot", count_boot.to_string());
 
-		config.set_string_member("max_days", retain_snapshots_max_days.to_string());
+		//config.set_string_member("max_days", retain_snapshots_max_days.to_string());
 		//config.set_string_member("min_space", (minimum_free_disk_space / (1.0 * GB)).to_string());
 
 		config.set_string_member("first_snapshot_size", first_snapshot_size.to_string());
@@ -2990,7 +2990,7 @@ public class Main : GLib.Object{
 		this.count_hourly = json_get_int(config,"count_hourly",count_hourly);
 		this.count_boot = json_get_int(config,"count_boot",count_boot);
 
-		this.retain_snapshots_max_days = json_get_int(config,"max_days",retain_snapshots_max_days);
+		//this.retain_snapshots_max_days = json_get_int(config,"max_days",retain_snapshots_max_days);
 		//this.minimum_free_disk_space = json_get_int64(config,"min_space",minimum_free_disk_space);
 		//this.minimum_free_disk_space = this.minimum_free_disk_space * GB;
 		

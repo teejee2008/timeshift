@@ -44,11 +44,14 @@ class WizardWindow : Gtk.Window{
 	private Gtk.InfoBar infobar_location;
 	private Gtk.Label lbl_infobar_location;
 
+	private Gtk.Image img_shield;
+	private Gtk.Label lbl_shield;
+	private Gtk.Label lbl_shield_subnote;
+
 	private Gtk.Box tab_estimate;
 	private Gtk.Box tab_snapshot_location;
 	private Gtk.Box tab_take_snapshot;
 	private Gtk.Box tab_finish;
-
 	private Gtk.Box tab_schedule;
 	
 	private Gtk.Spinner spinner;
@@ -93,18 +96,14 @@ class WizardWindow : Gtk.Window{
 
 		mode = _mode;
         
-		notebook = add_notebook(box, false, false);
+		notebook = add_notebook(box, (mode == "settings"), (mode == "settings"));
 		notebook.margin = 6;
 
-		if (mode == "settings"){
-			notebook.show_tabs = true;
-		}
-		
 		if (mode != "settings"){
 			tab_estimate = create_tab_estimate_system_size();
 		}
 
-		tab_snapshot_location = create_tab_backup_device();
+		tab_snapshot_location = create_tab_snapshot_device();
 
 		if (mode != "settings"){
 			tab_take_snapshot = create_tab_first_snapshot();
@@ -143,12 +142,21 @@ class WizardWindow : Gtk.Window{
 
 		radio_device.toggled();
 		radio_path.toggled();
+
+		chk_schedule_changed();
+		
+		// set initial tab
 		
 		if (App.live_system()){
 			notebook.page = page_num_snapshot_location;
 		}
 		else{
-			notebook.page = page_num_estimate;
+			if (mode == "settings"){
+				notebook.page = page_num_snapshot_location;
+			}
+			else{
+				notebook.page = page_num_estimate;
+			}
 		}
 
 		initialize_current_tab();
@@ -158,7 +166,8 @@ class WizardWindow : Gtk.Window{
 	
 	private Gtk.Box create_tab_estimate_system_size(){
 
-		var box = add_tab(notebook, _("Estimate"));
+		var margin = (mode == "settings") ? 12 : 6;
+		var box = add_tab(notebook, _("Estimate"), margin);
 		
 		add_label_header(box, _("Estimating System Size..."), true);
 
@@ -190,9 +199,9 @@ class WizardWindow : Gtk.Window{
 		return box;
 	}
 
-	private Gtk.Box create_tab_backup_device(){
-
-		var box = add_tab(notebook, _("Snapshot Device"));
+	private Gtk.Box create_tab_snapshot_device(){
+		var margin = (mode == "settings") ? 12 : 6;
+		var box = add_tab(notebook, _("Snapshot Device"), margin);
 		
 		add_label_header(box, _("Select Snapshot Location"), true);
 
@@ -250,8 +259,8 @@ class WizardWindow : Gtk.Window{
 	}
 
 	private Gtk.Box create_tab_first_snapshot(){
-
-		var box = add_tab(notebook, _("Create Snapshot"));
+		var margin = (mode == "settings") ? 12 : 6;
+		var box = add_tab(notebook, _("Create Snapshot"), margin);
 		
 		add_label_header(box, _("Creating Snapshot..."), true);
 
@@ -284,13 +293,18 @@ class WizardWindow : Gtk.Window{
 	}
 
 	private Gtk.Box create_tab_final(){
-		var box = add_tab(notebook, _("Notes"));
-		
-		add_label_header(box, _("Setup Complete"), true);
+		var margin = (mode == "settings") ? 12 : 6;
+		var box = add_tab(notebook, _("Notes"), margin);
+
+		if (mode != "settings"){
+			add_label_header(box, _("Setup Complete"), true);
+		}
 
 		var msg = "";
-		
-		msg += _("◈ Scheduled snapshots are enabled. Snapshots will be created automatically to protect your system.") + "\n\n";
+
+		if (mode != "settings"){
+			msg += _("◈ Scheduled snapshots are enabled. Snapshots will be created automatically to protect your system.") + "\n\n";
+		}
 
 		msg += _("◈ You can rollback your system to a previous date by restoring a snapshot.") + "\n\n";
 
@@ -327,20 +341,132 @@ class WizardWindow : Gtk.Window{
 	}
 
 	private Gtk.Box create_tab_schedule(){
-		var box = add_tab(notebook, _("Schedule"));
-		
+		var margin = (mode == "settings") ? 12 : 6;
+		var box = add_tab(notebook, _("Schedule"), margin);
+		box.spacing = 6;
+
 		add_label_header(box, _("Select Snapshot Intervals"), true);
 
-		add_checkbox(box, _("Every <b>Month</b>"));
+		Gtk.CheckButton chk_m, chk_w, chk_d, chk_h, chk_b;
+		Gtk.SpinButton spin_m, spin_w, spin_d, spin_h, spin_b;
 
-		add_checkbox(box, _("Every <b>Week</b>"));
+		// monthly
+		
+		add_schedule_option(box, _("Monthly"), _("Create one per month"), out chk_m, out spin_m);
 
-		add_checkbox(box, _("Every <b>Day</b>"));
+		chk_m.active = App.schedule_monthly;
+		chk_m.toggled.connect(()=>{
+			App.schedule_monthly = chk_m.active;
+			spin_m.sensitive = chk_m.active;
+			chk_schedule_changed();
+		});
 
-		add_checkbox(box, _("Every <b>Hour</b>"));
+		spin_m.set_value(App.count_monthly);
+		spin_m.sensitive = chk_m.active;
+		spin_m.value_changed.connect(()=>{
+			App.count_monthly = (int) spin_m.get_value();
+		});
+		
+		// weekly
+		
+		add_schedule_option(box, _("Weekly"), _("Create one per week"), out chk_w, out spin_w);
 
-		add_checkbox(box, _("Every <b>Boot</b>"));
+		chk_w.active = App.schedule_weekly;
+		chk_w.toggled.connect(()=>{
+			App.schedule_weekly = chk_w.active;
+			spin_w.sensitive = chk_w.active;
+			chk_schedule_changed();
+		});
 
+		spin_w.set_value(App.count_weekly);
+		spin_w.sensitive = chk_w.active;
+		spin_w.value_changed.connect(()=>{
+			App.count_weekly = (int) spin_w.get_value();
+		});
+
+		// daily
+		
+		add_schedule_option(box, _("Daily"), _("Create one per day"), out chk_d, out spin_d);
+
+		chk_d.active = App.schedule_daily;
+		chk_d.toggled.connect(()=>{
+			App.schedule_daily = chk_d.active;
+			spin_d.sensitive = chk_d.active;
+			chk_schedule_changed();
+		});
+
+		spin_d.set_value(App.count_daily);
+		spin_d.sensitive = chk_d.active;
+		spin_d.value_changed.connect(()=>{
+			App.count_daily = (int) spin_d.get_value();
+		});
+
+		// hourly
+		
+		add_schedule_option(box, _("Hourly"), _("Create one per hour"), out chk_h, out spin_h);
+
+		chk_h.active = App.schedule_hourly;
+		chk_h.toggled.connect(()=>{
+			App.schedule_hourly = chk_h.active;
+			spin_h.sensitive = chk_h.active;
+			chk_schedule_changed();
+		});
+
+		spin_h.set_value(App.count_hourly);
+		spin_h.sensitive = chk_h.active;
+		spin_h.value_changed.connect(()=>{
+			App.count_hourly = (int) spin_h.get_value();
+		});
+
+		// boot
+		
+		add_schedule_option(box, _("Boot"), _("Create one per boot"), out chk_b, out spin_b);
+
+		chk_b.active = App.schedule_boot;
+		chk_b.toggled.connect(()=>{
+			App.schedule_boot = chk_b.active;
+			spin_b.sensitive = chk_b.active;
+			chk_schedule_changed();
+		});
+
+		spin_b.set_value(App.count_boot);
+		spin_b.sensitive = chk_b.active;
+		spin_b.value_changed.connect(()=>{
+			App.count_boot = (int) spin_b.get_value();
+		});
+		
+		// buffer
+		var label = new Gtk.Label("");
+		label.vexpand = true;
+		box.add(label);
+
+		// shield
+		var hbox = new Gtk.Box (Orientation.HORIZONTAL, 6);
+        hbox.margin_bottom = 6;
+        hbox.margin_left = 6;
+        hbox.margin_right = 6;
+        box.add (hbox);
+
+        // img_shield
+		img_shield = new Gtk.Image();
+		img_shield.pixbuf = get_shared_icon("security-high", "security-high.svg", 48).pixbuf;
+        hbox.add(img_shield);
+
+		var vbox = new Box (Orientation.VERTICAL, 6);
+        hbox.add (vbox);
+        
+		// lbl_shield
+		lbl_shield = add_label(vbox, "");
+        lbl_shield.margin_bottom = 0;
+        lbl_shield.yalign = (float) 0.5;
+        lbl_shield.hexpand = true;
+
+        // lbl_shield_subnote
+		lbl_shield_subnote = add_label(vbox, "");
+
+		lbl_shield_subnote.wrap = true;
+		lbl_shield_subnote.wrap_mode = Pango.WrapMode.WORD;
+		
 		return box;
 	}
 	
@@ -829,6 +955,23 @@ class WizardWindow : Gtk.Window{
 		}
 	}
 
+	private void chk_schedule_changed(){
+		if (App.schedule_monthly || App.schedule_weekly || App.schedule_daily
+		|| App.schedule_hourly || App.schedule_boot){
+
+			img_shield.pixbuf = get_shared_icon("", "security-high.svg", 64).pixbuf;
+			set_shield_label(_("Scheduled snapshots are enabled"));
+			set_shield_subnote(_("Snapshots will be created at selected intervals if the snapshot disk has enough space (> 1 GB)"));
+		}
+		else{
+			img_shield.pixbuf = get_shared_icon("", "security-low.svg", 64).pixbuf;
+			set_shield_label(_("Scheduled snapshots are disabled"));
+			set_shield_subnote(_("Select the intervals for creating snapshots automatically"));
+		}
+	}
+	
+	// actions
+	
 	private void estimate_system_size(){
 		if (App.first_snapshot_size == 0){
 			App.calculate_size_of_first_snapshot();
@@ -836,8 +979,6 @@ class WizardWindow : Gtk.Window{
 		}
 	}
 
-	
-	
 	private void take_snapshot(){
 	
 		try {
@@ -908,8 +1049,13 @@ class WizardWindow : Gtk.Window{
 	
 	private void go_next(){
 		if (validate_current_tab()){
-			notebook.next_page();
-			initialize_current_tab();
+			if (notebook.page == notebook.get_n_pages() - 1){
+				btn_next.sensitive = false;
+			}
+			else{
+				notebook.next_page();
+				initialize_current_tab();
+			}
 		}
 	}
 
@@ -927,8 +1073,15 @@ class WizardWindow : Gtk.Window{
 			box_actions.set_layout (Gtk.ButtonBoxStyle.CENTER);
 		}
 		else{
-			btn_prev.show();
-			btn_next.show();
+			if (mode == "settings"){
+				btn_prev.hide();
+				btn_next.hide();
+			}
+			else{
+				btn_prev.show();
+				btn_next.show();
+			}
+			
 			btn_cancel.show();
 			btn_abort.hide();
 
@@ -975,14 +1128,12 @@ class WizardWindow : Gtk.Window{
 			}
 			else{
 				btn_prev.sensitive = false;
-
+				btn_next.sensitive = false;
 				if ((mode == "create") || (show_finish_page == false)){
 					destroy(); // close window
 				}
 			}
 		}
-
-		btn_next.sensitive = (notebook.num);
 	}
 
 	private bool validate_current_tab(){
@@ -1278,7 +1429,39 @@ class WizardWindow : Gtk.Window{
 		chk.label = text;
 		box.add(chk);
 
+		foreach(var child in chk.get_children()){
+			if (child is Gtk.Label){
+				var label = (Gtk.Label) child;
+				label.use_markup = true;
+				break;
+			}
+		}
+		
+		/*
+		chk.toggled.connect(()=>{
+			chk.active;
+		});
+		*/
+
 		return chk;
+	}
+
+	private Gtk.SpinButton add_spin(
+		Gtk.Box box, double min, double max, double val,
+		int digits = 0, double step = 1, double step_page = 1){
+
+		var adj = new Gtk.Adjustment(val, min, max, step, step_page, 0);
+		var spin  = new Gtk.SpinButton(adj, step, digits);
+		spin.xalign = (float) 0.5;
+		box.add(spin);
+
+		/*
+		spin.value_changed.connect(()=>{
+			label.sensitive = spin.sensitive;
+		});
+		*/
+
+		return spin;
 	}
 
 	private Gtk.Button add_button(
@@ -1352,6 +1535,57 @@ class WizardWindow : Gtk.Window{
 		});
 
 		return entry;
+	}
+
+	private void set_shield_label(
+		string text, bool is_bold = true, bool is_italic = false, bool is_large = true){
+			
+		string msg = "<span%s%s%s>%s</span>".printf(
+			(is_bold ? " weight=\"bold\"" : ""),
+			(is_italic ? " style=\"italic\"" : ""),
+			(is_large ? " size=\"x-large\"" : ""),
+			escape_html(text));
+			
+		lbl_shield.label = msg;
+	}
+
+	private void set_shield_subnote(
+		string text, bool is_bold = false, bool is_italic = true, bool is_large = false){
+			
+		string msg = "<span%s%s%s>%s</span>".printf(
+			(is_bold ? " weight=\"bold\"" : ""),
+			(is_italic ? " style=\"italic\"" : ""),
+			(is_large ? " size=\"x-large\"" : ""),
+			escape_html(text));
+			
+		lbl_shield_subnote.label = msg;
+	}
+
+	private void add_schedule_option(
+		Gtk.Box box, string period, string period_desc,
+		out Gtk.CheckButton chk, out Gtk.SpinButton spin){
+
+		var hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
+		box.add(hbox);
+		
+        var txt = "<b>%s</b> - %s".printf(period, period_desc);
+		chk = add_checkbox(hbox, txt);
+
+		var label = add_label(hbox, "");
+		label.hexpand = true;
+
+		var tt = _("Number of snapshots to keep.\nOlder snapshots will be removed once this limit is exceeded.");
+		label = add_label(hbox, _("Keep"));
+		label.set_tooltip_text(tt);
+		
+		var spin2 = add_spin(hbox, 1, 999, 10);
+		spin2.set_tooltip_text(tt);
+		
+		spin2.notify["sensitive"].connect(()=>{
+			label.sensitive = spin2.sensitive;
+		});
+
+		spin = spin2;
 	}
 }
 

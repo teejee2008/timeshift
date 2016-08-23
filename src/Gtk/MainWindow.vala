@@ -370,7 +370,7 @@ class MainWindow : Gtk.Window{
 
 		// hbox_shield
 		var box = new Box (Orientation.HORIZONTAL, 6);
-        box.margin_bottom = 12;
+        box.margin_bottom = 6;
         box.margin_left = 6;
         box.margin_right = 12;
         vbox_main.add (box);
@@ -1261,6 +1261,11 @@ class MainWindow : Gtk.Window{
 		
 		DateTime last_snapshot_date = null;
 
+		//message = escape_html(message);
+		//details = escape_html(details);
+
+		int SHIELD_SIZE = 64;
+		
 		// TODO; change this
 		
 		switch (status_code){
@@ -1275,7 +1280,8 @@ class MainWindow : Gtk.Window{
 			statusbar.visible = true;
 			statusbar.show_all();
 
-			img_shield.pixbuf = get_shared_icon("media-optical", "media-optical.png", 48).pixbuf;
+			img_shield.pixbuf =
+				get_shared_icon("media-optical", "media-optical.png", SHIELD_SIZE).pixbuf;
 			set_shield_label(_("Live USB Mode (Restore Only)"));
 			set_shield_subnote("");
 
@@ -1308,8 +1314,8 @@ class MainWindow : Gtk.Window{
 			case SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE:
 			case SnapshotLocationStatus.NO_SNAPSHOTS_NO_SPACE:
 				img_shield.pixbuf =
-					get_shared_icon("security-low", "security-low.svg", 48).pixbuf;
-				set_shield_label(message.replace("<","&lt;"));
+					get_shared_icon("", "security-low.svg", SHIELD_SIZE).pixbuf;
+				set_shield_label(message);
 				set_shield_subnote(details);
 				break;
 
@@ -1321,7 +1327,7 @@ class MainWindow : Gtk.Window{
 					if (App.repo.has_snapshots()){
 						// has snaps
 						img_shield.pixbuf =
-							get_shared_icon("security-high", "security-high.svg", 48).pixbuf;
+							get_shared_icon("", "security-high.svg", SHIELD_SIZE).pixbuf;
 						set_shield_label(_("System is protected"));
 						set_shield_subnote(
 							_("Last snapshot taken at: ") + format_date(last_snapshot_date));
@@ -1330,7 +1336,7 @@ class MainWindow : Gtk.Window{
 					else{
 						// no snaps
 						img_shield.pixbuf =
-							get_shared_icon("security-low", "security-low.svg", 48).pixbuf;
+							get_shared_icon("", "security-low.svg", SHIELD_SIZE).pixbuf;
 						set_shield_label(_("No snapshots available"));
 						set_shield_subnote(_("Create a snapshot to start using Timeshift"));
 						//set_shield_subnote(_("Snapshots will be created at scheduled intervals"));
@@ -1344,14 +1350,14 @@ class MainWindow : Gtk.Window{
 					if (App.repo.has_snapshots()){
 						// has snaps
 						img_shield.pixbuf =
-							get_shared_icon("security-medium", "security-medium.svg", 48).pixbuf;
+							get_shared_icon("", "security-medium.svg", SHIELD_SIZE).pixbuf;
 						set_shield_label(_("Scheduled snapshots are disabled"));
 						set_shield_subnote(_("Enable scheduled snapshots to protect your system"));
 					}
 					else{
 						// no snaps
 						img_shield.pixbuf =
-							get_shared_icon("security-low", "security-low.svg", 48).pixbuf;
+							get_shared_icon("", "security-low.svg", SHIELD_SIZE).pixbuf;
 						set_shield_label(_("No snapshots available"));
 						set_shield_subnote(_("Create snapshots manually or enable scheduled snapshots to protect your system"));
 					}
@@ -1421,7 +1427,7 @@ class MainWindow : Gtk.Window{
 			(is_bold ? " weight=\"bold\"" : ""),
 			(is_italic ? " style=\"italic\"" : ""),
 			(is_large ? " size=\"x-large\"" : ""),
-			text);
+			escape_html(text));
 			
 		lbl_shield.label = msg;
 	}
@@ -1433,7 +1439,7 @@ class MainWindow : Gtk.Window{
 			(is_bold ? " weight=\"bold\"" : ""),
 			(is_italic ? " style=\"italic\"" : ""),
 			(is_large ? " size=\"x-large\"" : ""),
-			text);
+			escape_html(text));
 			
 		lbl_shield_subnote.label = msg;
 	}

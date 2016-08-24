@@ -753,7 +753,7 @@ class WizardWindow : Gtk.Window{
 		gtk_set_busy(true, this);
 		
 		//Device previous_device = App.snapshot_device;
-		App.repo = new SnapshotStore.from_device(pi, this);
+		App.repo = new SnapshotRepo.from_device(pi, this);
 		App.repo.check_status();
 		
 		//log_debug("selected: %s".printf(pi.device));
@@ -768,7 +768,7 @@ class WizardWindow : Gtk.Window{
 		//	(pi.children.size == 0) ? "null" : pi.children[0].device));
 		
 		if ((pi.fstype == "luks") && !pi.has_children() && newpi.has_children()){
-			App.repo = new SnapshotStore.from_device(newpi.children[0], this);
+			App.repo = new SnapshotRepo.from_device(newpi.children[0], this);
 			App.repo.check_status();
 			tv_devices_refresh();
 		}

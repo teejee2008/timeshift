@@ -106,12 +106,13 @@ public class Main : GLib.Object{
 
 	public int startup_delay_interval_mins = 10;
 	public int retain_snapshots_max_days = 200;
-	public int64 first_snapshot_size = 0;
-	public int64 first_snapshot_count = 0;
+	
 	public int64 snapshot_location_free_space = 0;
 
 	public static const int SHIELD_ICON_SIZE = 64;
 	public static const int64 MIN_FREE_SPACE = 1 * GB;
+	public static int64 first_snapshot_size = 0;
+	public static int64 first_snapshot_count = 0;
 	
 	public string log_dir = "";
 	public string log_file = "";
@@ -2927,12 +2928,7 @@ public class Main : GLib.Object{
 			repo = new SnapshotRepo.from_path(snapshot_path_user, null);
 		}
 		else{
-			var dev = Device.get_device_by_uuid(uuid);
-			if (dev == null){
-				dev = new Device();
-				dev.uuid = uuid;
-			}
-			repo = new SnapshotRepo.from_device(dev, null);
+			repo = new SnapshotRepo.from_uuid(uuid, null);
 		}
 
 		// initialize repo using command line parameter

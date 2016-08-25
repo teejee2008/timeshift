@@ -318,26 +318,47 @@ namespace TeeJee.FileSystem{
 	}
 
 	public bool filesystem_supports_hardlinks(string path, out bool is_readonly){
+		bool supports_hardlinks = false;
+		is_readonly = false;
+		
 		var test_file = path_combine(path, random_string() + "~");
+		
 		if (file_write(test_file,"")){
-			is_readonly = false;
-
-			var test_file2 = path_combine(path, random_string() + "~");
 			
-			int status = exec_sync("ln '%s' '%s'".printf(
-				escape_single_quote(test_file),
-				escape_single_quote(test_file2)));
+			var test_file2 = path_combine(path, random_string() + "~");
 
+			var cmd = "ln '%s' '%s'".printf(
+				escape_single_quote(test_file),
+				escape_single_quote(test_file2));
+				
+			log_debug(cmd);
+
+			int status = exec_sync(cmd);
+
+			cmd = "stat --printf '%%h' '%s'".printf(
+				escape_single_quote(test_file));
+
+			log_debug(cmd);
+			
+			string std_out, std_err;
+			status = exec_sync(cmd, out std_out, out std_err);
+			log_debug("stdout: %s".printf(std_out));
+			
+			int64 count = 0;
+			if (int64.try_parse(std_out, out count)){
+				if (count > 1){
+					supports_hardlinks = true;
+				}
+			}
+			
 			file_delete(test_file2); // delete if exists
 			file_delete(test_file);
-			
-			return (status == 0);
 		}
 		else{
 			is_readonly = true;
 		}
 
-		return false;
+		return supports_hardlinks;
 	}
 
 	public Gee.ArrayList<string> dir_list_names(string path){

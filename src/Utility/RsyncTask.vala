@@ -66,6 +66,9 @@ public class RsyncTask : AsyncTask{
 		if (io_nice){
 			cmd += "ionice -c2 -n7 ";
 		}
+		else{
+			cmd += "ionice -c2 -n5 ";
+		}
 		
 		cmd += "rsync -ai";
 

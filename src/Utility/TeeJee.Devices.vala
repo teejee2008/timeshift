@@ -436,6 +436,10 @@ namespace TeeJee.Devices{
 
 			cmd = "lsblk --bytes --pairs --output NAME,KNAME,PKNAME,LABEL,UUID,TYPE,FSTYPE,SIZE,MOUNTPOINT,HOTPLUG,RO,VENDOR,MODEL,SERIAL,REV %s".printf(
 				(device_file.length > 0) ? device_file : "");
+
+			if (LOG_DEBUG){
+				log_debug(cmd);
+			}
 				
 			ret_val = exec_sync(cmd, out std_out, out std_err);
 			if (ret_val != 0){
@@ -542,6 +546,11 @@ namespace TeeJee.Devices{
 			MatchInfo match;
 
 			cmd = "/sbin/blkid" + ((device_file.length > 0) ? " " + device_file: "");
+
+			if (LOG_DEBUG){
+				log_debug(cmd);
+			}
+			
 			ret_val = exec_script_sync(cmd, out std_out, out std_err);
 			if (ret_val != 0){
 				var msg = "blkid: " + _("Failed to get partition list");
@@ -637,6 +646,10 @@ namespace TeeJee.Devices{
 
 			if (device_or_mount_point.length > 0){
 				cmd += " '%s'".printf(escape_single_quote(device_or_mount_point));
+			}
+
+			if (LOG_DEBUG){
+				log_debug(cmd);
 			}
 
 			ret_val = exec_script_sync(cmd, out std_out, out std_err);

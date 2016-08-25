@@ -176,6 +176,12 @@ class WizardWindow : Gtk.Window{
 			radio_device.active = true;
 		}
 
+		tv_devices_refresh();
+		radio_device.toggled();
+		radio_path.toggled();
+		check_backup_location();
+		chk_schedule_changed();
+
 		go_first();
 
 		return false;
@@ -1519,7 +1525,7 @@ class WizardWindow : Gtk.Window{
 	// navigation
 
 	private void page_changed(Widget page, uint page_num){
-		initialize_tab((int)page_num);
+		
 	}
 	
 	private void go_first(){
@@ -1531,11 +1537,10 @@ class WizardWindow : Gtk.Window{
 			notebook.page = page_num_snapshot_location;
 		}
 		else{
-			if (App.first_snapshot_size == 0){
+			if (Main.first_snapshot_size == 0){
 				if (notebook.page != page_num_estimate){
 					notebook.page = page_num_estimate;
 				}
-				
 			}
 			else{
 				// skip tab_estimate
@@ -1547,6 +1552,8 @@ class WizardWindow : Gtk.Window{
 				}
 			}
 		}
+
+		initialize_tab(notebook.page);
 	}
 	
 	private void go_prev(){
@@ -1570,6 +1577,8 @@ class WizardWindow : Gtk.Window{
 		else if (notebook.page == page_num_finish){
 			notebook.page = page_num_schedule;
 		}
+
+		initialize_tab(notebook.page);
 	}
 	
 	private void go_next(){
@@ -1603,6 +1612,8 @@ class WizardWindow : Gtk.Window{
 		else if (notebook.page == page_num_finish){
 			// do nothing, btn_next is disabled for this page
 		}
+
+		initialize_tab(notebook.page);
 	}
 
 	private void initialize_tab(int page_num){
@@ -1616,15 +1627,13 @@ class WizardWindow : Gtk.Window{
 
 		// show/hide actions -----------------------------------
 
-		btn_close.show();
-		box_actions.set_layout (Gtk.ButtonBoxStyle.CENTER);
-
 		if (mode == "wizard"){
 			if ((page_num == page_num_estimate)
 				|| (page_num == page_num_take_snapshot)){
 
 				btn_prev.hide();
 				btn_next.hide();
+				btn_close.hide();
 				
 				btn_cancel.show();
 				box_actions.set_layout (Gtk.ButtonBoxStyle.CENTER);
@@ -1632,6 +1641,7 @@ class WizardWindow : Gtk.Window{
 			else{
 				btn_prev.show();
 				btn_next.show();
+				btn_close.show();
 				
 				btn_cancel.hide();
 				box_actions.set_layout (Gtk.ButtonBoxStyle.EXPAND);
@@ -1641,6 +1651,8 @@ class WizardWindow : Gtk.Window{
 			btn_prev.hide();
 			btn_next.hide();
 			btn_cancel.hide();
+			btn_close.show();
+			box_actions.set_layout (Gtk.ButtonBoxStyle.CENTER);
 		}
 		
 		// enable/disable actions ---------------------------------
@@ -1668,15 +1680,12 @@ class WizardWindow : Gtk.Window{
 		}
 		
 		// start actions -------------------
-		
+	
 		if (page_num == page_num_estimate){
 			estimate_system_size();
 			go_next();
 		}
 		else if (page_num == page_num_snapshot_location){
-			tv_devices_refresh();
-			radio_device.toggled();
-			radio_path.toggled();
 			check_backup_location();
 		}
 		else if (page_num == page_num_take_snapshot){
@@ -1684,7 +1693,7 @@ class WizardWindow : Gtk.Window{
 			go_next();
 		}
 		else if (page_num == page_num_schedule){
-			chk_schedule_changed();
+			// do nothing
 		}
 		else if (page_num == page_num_filters){
 			// do nothing

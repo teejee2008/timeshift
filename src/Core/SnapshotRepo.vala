@@ -53,7 +53,28 @@ public class SnapshotRepo : GLib.Object{
 		
 		snapshots = new Gee.ArrayList<Snapshot>();
 
-		if ((dev != null) && (dev.uuid.length > 0)){
+		init_from_device();
+	}
+
+	public SnapshotRepo.from_uuid(string uuid, Gtk.Window? parent_win){
+
+		device = Device.get_device_by_uuid(uuid);
+		if (device == null){
+			device = new Device();
+			device.uuid = uuid;
+		}
+			
+		this.use_snapshot_path_custom = false;
+		this.parent_window = parent_win;
+		
+		snapshots = new Gee.ArrayList<Snapshot>();
+
+		init_from_device();
+	}
+
+	private void init_from_device(){
+		
+		if ((device != null) && (device.uuid.length > 0)){
 			log_msg("");
 			unlock_and_mount_device();
 
@@ -63,6 +84,7 @@ public class SnapshotRepo : GLib.Object{
 		
 		check_status();
 	}
+	
 
 	public string snapshot_location {
 		owned get{
@@ -264,7 +286,7 @@ public class SnapshotRepo : GLib.Object{
 
 	public void check_status(){
 
-		//log_debug("check_status: check_status");
+		log_debug("check_status()");
 		
 		status_code = SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE;
 		status_message = "";
@@ -297,9 +319,12 @@ public class SnapshotRepo : GLib.Object{
 
 	public bool is_available(){
 
-		log_debug("check_status: is_available");
+		log_debug("is_available()");
 		
 		if (use_snapshot_path_custom){
+
+			log_debug("checking selected path");
+			
 			if (snapshot_path_user.strip().length == 0){
 				status_message = _("Snapshot location not selected");
 				status_details = _("Select the location for saving snapshots");
@@ -307,31 +332,39 @@ public class SnapshotRepo : GLib.Object{
 				return false;
 			}
 			else{
+				
+				log_debug("path: %s".printf(snapshot_path_user));
+				
 				if (!dir_exists(snapshot_path_user)){
-					status_message = _("Snapshot location not available!");
+
+					log_debug("path not found");
+					
+					status_message = _("Snapshot location not available");
 					status_details = _("Path not found") + ": '%s'".printf(snapshot_path_user);
 					status_code = SnapshotLocationStatus.NOT_AVAILABLE;
 					return false;
 				}
 				else{
+					log_debug("path exists");
+					
 					bool is_readonly;
 					bool hardlink_supported =
 						filesystem_supports_hardlinks(snapshot_path_user, out is_readonly);
 
 					if (is_readonly){
-						status_message = _("File system is read-only!");
+						status_message = _("File system is read-only");
 						status_details = _("Select another location for saving snapshots");
 						status_code = SnapshotLocationStatus.READ_ONLY_FS;
 						return false;
 					}
 					else if (!hardlink_supported){
-						status_message = _("File system does not support hard-links!");
+						status_message = _("File system does not support hard-links");
 						status_details = _("Select another location for saving snapshots");
 						status_code = SnapshotLocationStatus.HARDLINKS_NOT_SUPPORTED;
 						return false;
 					}
 					else{
-						log_msg("here-ok");
+						log_msg("is_available: ok");
 						// ok
 						return true;
 					}
@@ -339,6 +372,8 @@ public class SnapshotRepo : GLib.Object{
 			}
 		}
 		else{
+			log_debug("checking selected device");
+			
 			if (device == null){
 				status_message = _("Snapshot location not selected");
 				status_details = _("Select the location for saving snapshots");
@@ -346,12 +381,13 @@ public class SnapshotRepo : GLib.Object{
 				return false;
 			}
 			else if (device.device.length == 0){
-				status_message = _("Snapshot location not available!");
+				status_message = _("Snapshot location not available");
 				status_details = _("Device not found") + ": UUID='%s'".printf(device.uuid);
 				status_code = SnapshotLocationStatus.NOT_AVAILABLE;
 				return false;
 			}
 			else{
+				log_msg("is_available: ok");
 				// ok
 				return true;
 			}
@@ -359,22 +395,27 @@ public class SnapshotRepo : GLib.Object{
 	}
 	
 	public bool has_snapshots(){
-		//log_debug("check_status: has_snapshots");
+		log_debug("has_snapshots()");
 		load_snapshots();
 		return (snapshots.size > 0);
 	}
 
 	public bool has_space(){
 
-		//log_debug("check_status: has_space");
+		log_debug("has_space()");
 		
-		if (device != null){
+		if ((device != null) && (device.device.length > 0)){
 			device.query_disk_space();
+		}
+		else{
+			log_debug("device is NULL");
 		}
 		
 		if (snapshots.size > 0){
 			// has snapshots, check minimum space
 
+			log_debug("has snapshots");
+			
 			if (device.free_bytes < Main.MIN_FREE_SPACE){
 				status_message = _("Not enough disk space");
 				status_message += " (< %s)".printf(format_file_size(Main.MIN_FREE_SPACE));
@@ -398,8 +439,9 @@ public class SnapshotRepo : GLib.Object{
 		else {
 
 			// no snapshots, check estimated space
+			log_debug("no snapshots");
 			
-			var required_space = App.first_snapshot_size;
+			var required_space = Main.first_snapshot_size;
 
 			if (device.free_bytes < required_space){
 				status_message = _("Not enough disk space");

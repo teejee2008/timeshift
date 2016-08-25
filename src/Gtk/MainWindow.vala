@@ -44,6 +44,7 @@ class MainWindow : Gtk.Window{
 	private Gtk.ToolButton btn_delete_snapshot;
 	private Gtk.ToolButton btn_browse_snapshot;
 	private Gtk.ToolButton btn_settings;
+	private Gtk.ToolButton btn_wizard;
 	private Gtk.Menu menu_extra;
 	
 	//backup device
@@ -178,7 +179,7 @@ class MainWindow : Gtk.Window{
         btn_settings.clicked.connect (btn_settings_clicked);
 
         //btn_wizard
-		var btn_wizard = new Gtk.ToolButton.from_stock ("tools-wizard");
+		btn_wizard = new Gtk.ToolButton.from_stock ("tools-wizard");
 		btn_wizard.is_important = true;
 		btn_wizard.label = _("Wizard");
 		btn_wizard.set_tooltip_text (_("Settings wizard"));
@@ -565,7 +566,7 @@ class MainWindow : Gtk.Window{
 			
 				var title = message;
 				
-				var msg = details + "\n\n" + _("Select another device?");
+				var msg = _("Select another device?");
 				
 				var type = Gtk.MessageType.ERROR;
 				var buttons_type = Gtk.ButtonsType.YES_NO;
@@ -1000,21 +1001,25 @@ class MainWindow : Gtk.Window{
 	}
 
 	private void btn_settings_clicked(){
+		btn_settings.sensitive = false;
+		
 		var win = new WizardWindow("settings");
 		win.set_transient_for(this);
 		win.show_all();
 		win.destroy.connect(()=>{
-			//log_msg("here");
+			btn_settings.sensitive = true;
 			timer_backup_device_init = Timeout.add(100, init_ui_for_backup_device);
 		});
 	}
 
 	private void btn_wizard_clicked(){
+		btn_wizard.sensitive = false;
+		
 		var win = new WizardWindow("wizard");
 		win.set_transient_for(this);
 		win.show_all();
 		win.destroy.connect(()=>{
-			//log_msg("here1");
+			btn_wizard.sensitive = true;
 			timer_backup_device_init = Timeout.add(100, init_ui_for_backup_device);
 		});
 	}

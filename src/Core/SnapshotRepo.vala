@@ -33,6 +33,7 @@ public class SnapshotRepo : GLib.Object{
 		this.parent_window = parent_win;
 		
 		snapshots = new Gee.ArrayList<Snapshot>();
+		invalid_snapshots = new Gee.ArrayList<Snapshot>();
 
 		log_msg(_("Selected snapshot path") + ": %s".printf(path));
 		
@@ -53,6 +54,7 @@ public class SnapshotRepo : GLib.Object{
 		this.parent_window = parent_win;
 		
 		snapshots = new Gee.ArrayList<Snapshot>();
+		invalid_snapshots = new Gee.ArrayList<Snapshot>();
 
 		init_from_device();
 	}
@@ -69,6 +71,7 @@ public class SnapshotRepo : GLib.Object{
 		this.parent_window = parent_win;
 		
 		snapshots = new Gee.ArrayList<Snapshot>();
+		invalid_snapshots = new Gee.ArrayList<Snapshot>();
 
 		init_from_device();
 	}
@@ -224,8 +227,12 @@ public class SnapshotRepo : GLib.Object{
 				if (info.get_file_type() == FileType.DIRECTORY) {
 					if (info.get_name() != ".sync") {
 						Snapshot bak = new Snapshot(path + "/" + info.get_name());
-						if (bak.is_valid){
+						if (bak.valid){
 							snapshots.add(bak);
+						}
+						else{
+							// TODO: delete invalid snapshots on every run along with marked snapshots
+							invalid_snapshots.add(bak);
 						}
 					}
 				}
@@ -252,7 +259,7 @@ public class SnapshotRepo : GLib.Object{
 		var list = new Gee.ArrayList<Snapshot?>();
 
 		foreach(Snapshot bak in snapshots){
-			if (tag == "" || bak.has_tag(tag)){
+			if (bak.valid && (tag.length == 0) || bak.has_tag(tag)){
 				list.add(bak);
 			}
 		}
@@ -294,8 +301,8 @@ public class SnapshotRepo : GLib.Object{
 		status_details = "";
 
 		log_msg("");
-		log_msg("Config: Free space limit is %s".printf(
-			format_file_size(Main.MIN_FREE_SPACE)));
+		//log_msg("Config: Free space limit is %s".printf(
+		//	format_file_size(Main.MIN_FREE_SPACE)));
 
 		if (is_available()){
 			has_snapshots();
@@ -316,6 +323,8 @@ public class SnapshotRepo : GLib.Object{
 		
 		log_msg("Status: %s".printf(
 			status_code.to_string().replace("SNAPSHOT_LOCATION_STATUS_","")));
+
+		log_msg("");
 	}
 
 	public bool is_available(){
@@ -388,7 +397,7 @@ public class SnapshotRepo : GLib.Object{
 				return false;
 			}
 			else{
-				log_msg("is_available: ok");
+				log_debug("is_available: ok");
 				// ok
 				return true;
 			}
@@ -428,7 +437,7 @@ public class SnapshotRepo : GLib.Object{
 			}
 			else{
 				//ok
-				status_message = "ok";
+				status_message = "Device is OK";
 				
 				status_details = _("%d snapshots, %s free").printf(
 					snapshots.size, format_file_size(device.free_bytes));
@@ -469,11 +478,9 @@ public class SnapshotRepo : GLib.Object{
 
 	public void auto_remove(){
 		DateTime now = new DateTime.now_local();
-		int count = 0;
-		bool show_msg = false;
 		DateTime dt_limit;
 
-		// delete older backups - boot ---------------
+		// remove tags from older backups - boot ---------------
 
 		var list = get_snapshots_by_tag("boot");
 
@@ -486,7 +493,7 @@ public class SnapshotRepo : GLib.Object{
 			}
 		}
 
-		// delete older backups - hourly, daily, weekly, monthly ---------
+		// remove tags from older backups - hourly, daily, weekly, monthly ---------
 
 		string[] levels = { "hourly","daily","weekly","monthly" };
 
@@ -525,9 +532,9 @@ public class SnapshotRepo : GLib.Object{
 			}
 		}
 
-		// delete older backups - max days -------
+		// remove tags from older older backups - max days -------
 
-		show_msg = true;
+		/*show_msg = true;
 		count = 0;
 		foreach(var bak in snapshots){
 			if (bak.date.compare(now.add_days(-1 * App.retain_snapshots_max_days)) < 0){
@@ -544,8 +551,10 @@ public class SnapshotRepo : GLib.Object{
 					count++;
 				}
 			}
-		}
+		}*/
 
+		// delete untagged snapshots
+		
 		remove_untagged();
 
 		// delete older backups - minimum space -------
@@ -576,6 +585,14 @@ public class SnapshotRepo : GLib.Object{
 			device.query_disk_space();
 		}
 		* */
+
+		// delete snapshots marked for deletion
+
+		remove_marked_for_deletion();
+
+		// delete invalid snapshots
+
+		remove_invalid();
 	}
 
 	public void remove_untagged(){
@@ -585,36 +602,56 @@ public class SnapshotRepo : GLib.Object{
 			if (bak.tags.size == 0){
 
 				if (show_msg){
-					log_msg(_("Removing un-tagged snapshots..."));
+					log_msg(_("Removing snapshots") + " > " + _("un-tagged") + "...");
 					show_msg = false;
 				}
 
 				bak.remove();
 			}
 		}
+
+		load_snapshots(); // update the list
+	}
+
+	public void remove_marked_for_deletion(){
+		log_msg(_("Removing snapshots") + " > " + _("marked for deletion") + "...");
+		foreach(var bak in snapshots){
+			if (bak.marked_for_deletion){
+				bak.remove();
+			}
+		}
+		
+		load_snapshots(); // update the list
+	}
+	
+	public void remove_invalid(){
+		log_msg(_("Removing snapshots") + " > " + _("invalid") + "...");
+		foreach(var bak in invalid_snapshots){
+			bak.remove();
+		}
+		
+		load_snapshots(); // update the list
 	}
 
 	public bool remove_all(){
 		string timeshift_dir = snapshot_location + "/timeshift";
-		string sync_dir = snapshot_location + "/timeshift/snapshots/.sync";
 
 		if (dir_exists(timeshift_dir)){
+
+			log_msg(_("Removing snapshots") + " > " + _("all") + "...");
+			
 			//delete snapshots
 			foreach(var bak in snapshots){
-				if (!bak.remove()){
-					return false;
-				}
+				bak.remove();
 			}
 
-			//delete .sync
-			if (dir_exists(sync_dir)){
-				if (!delete_directory(sync_dir)){
-					return false;
-				}
-			}
+			remove_sync_dir();
 
-			//delete /timeshift
-			return delete_directory(timeshift_dir);
+			bool ok = delete_directory(timeshift_dir);
+
+			load_snapshots(); // update the list
+			
+			return ok;
 		}
 		else{
 			log_msg(_("No snapshots found") + " '%s'".printf(snapshot_location));
@@ -624,9 +661,23 @@ public class SnapshotRepo : GLib.Object{
 
 	public bool remove_sync_dir(){
 		string sync_dir = snapshot_location + "/timeshift/snapshots/.sync";
+		
 		//delete .sync
 		if (dir_exists(sync_dir)){
 			if (!delete_directory(sync_dir)){
+				return false;
+			}
+		}
+		
+		return true;
+	}
+
+	public bool remove_timeshift_dir(){
+		string timeshift_dir = snapshot_location + "/timeshift";
+		
+		// delete /timeshift
+		if (dir_exists(timeshift_dir)){
+			if (!delete_directory(timeshift_dir)){
 				return false;
 			}
 		}

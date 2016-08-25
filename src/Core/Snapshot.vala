@@ -19,7 +19,8 @@ public class Snapshot : GLib.Object{
 	public Gee.ArrayList<string> tags;
 	public Gee.ArrayList<string> exclude_list;
 	public Gee.ArrayList<FsTabEntry> fstab_list;
-	public bool is_valid = true;
+	public bool valid = true;
+	public bool marked_for_deletion = false;
 
 	// private
 	private bool thr_success = false;
@@ -116,7 +117,7 @@ public class Snapshot : GLib.Object{
 
 
 			if ((node == null)||(config == null)){
-				is_valid = false;
+				valid = false;
 				return;
 			}
 
@@ -131,9 +132,14 @@ public class Snapshot : GLib.Object{
 			taglist = json_get_string(config,"tags","");
 			description = json_get_string(config,"comments","");
 			app_version = json_get_string(config,"app-version","");
+
+			string delete_trigger_file = path + "/delete";
+			if (file_exists(delete_trigger_file)){
+				marked_for_deletion = true;
+			}
 		}
 		else{
-			is_valid = false;
+			valid = false;
 		}
 	}
 
@@ -152,7 +158,7 @@ public class Snapshot : GLib.Object{
 			}
 		}
 		else{
-			is_valid = false;
+			valid = false;
 		}
 	}
 
@@ -311,4 +317,9 @@ public class Snapshot : GLib.Object{
 		}
 	}
 
+	public void mark_for_deletion(){
+		string delete_trigger_file = path + "/delete";
+		file_write(delete_trigger_file, "");
+		marked_for_deletion = true;
+	}
 }

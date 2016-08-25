@@ -243,12 +243,13 @@ public class Main : GLib.Object{
 			log_error (e.message);
 		}
 
+		log_msg("");
+		log_msg(_("Running") + " %s v%s".printf(AppName, AppVersion));
+		
 		//get Linux distribution info -----------------------
 
 		this.current_distro = LinuxDistro.get_dist_info("/");
-		if ((app_mode == "")||(LOG_DEBUG)){
-			log_msg(_("Distribution") + ": " + current_distro.full_name(),true);
-		}
+		log_msg(_("Distribution") + ": " + current_distro.full_name());
 
 		//check dependencies ---------------------
 
@@ -1444,6 +1445,8 @@ public class Main : GLib.Object{
 				repo.load_snapshots();
 				repo.create_symlinks();
 			}
+			
+			log_msg("ok");
 		}
 		catch(Error e){
 			log_error (e.message);
@@ -1932,6 +1935,12 @@ public class Main : GLib.Object{
 				}
 			}
 
+			if ((snapshot_to_restore != null) && (snapshot_to_restore.marked_for_deletion)){
+				log_error(_("Invalid Snapshot"));
+				log_error(_("Selected snapshot is marked for deletion"));
+				return false;
+			}
+			
 			if (snapshot_to_restore != null){
 				//print snapshot name
 				log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);

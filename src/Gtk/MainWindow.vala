@@ -46,6 +46,9 @@ class MainWindow : Gtk.Window{
 	private Gtk.ToolButton btn_settings;
 	private Gtk.ToolButton btn_wizard;
 	private Gtk.Menu menu_extra;
+	private Gtk.Menu menu_snapshots;
+	private Gtk.ImageMenuItem mi_remove;
+	private Gtk.ImageMenuItem mi_mark;
 	
 	//backup device
 	//private Gtk.Box hbox_device;
@@ -118,6 +121,8 @@ class MainWindow : Gtk.Window{
 
 		init_ui_for_backup_device();
 
+		init_list_view_context_menu();
+		
 		if (App.first_run){
 			btn_wizard_clicked();
 		}
@@ -167,7 +172,7 @@ class MainWindow : Gtk.Window{
 		btn_delete_snapshot.set_tooltip_text (_("Delete selected snapshot"));
         toolbar.add(btn_delete_snapshot);
 
-        btn_delete_snapshot.clicked.connect (btn_delete_snapshot_clicked);
+        btn_delete_snapshot.clicked.connect (btn_mark_for_deletion_clicked);
 
         //btn_settings
 		btn_settings = new Gtk.ToolButton.from_stock ("gtk-preferences");
@@ -532,7 +537,6 @@ class MainWindow : Gtk.Window{
 			//statusbar_message(_("Estimating system size..."));
 		}
 
-		//refresh_cmb_backup_device();
 		refresh_tv_backups();
 		update_statusbar();
 		update_ui(true);
@@ -599,6 +603,7 @@ class MainWindow : Gtk.Window{
 		Snapshot bak;
 		model.get (iter, 0, out bak, -1);
 		(cell as Gtk.CellRendererText).text = bak.date.format ("%Y-%m-%d %I:%M %p");
+		(cell as Gtk.CellRendererText).sensitive = !bak.marked_for_deletion;
 	}
 
 	private void cell_tags_render(
@@ -606,6 +611,7 @@ class MainWindow : Gtk.Window{
 		Snapshot bak;
 		model.get (iter, 0, out bak, -1);
 		(cell as Gtk.CellRendererText).text = bak.taglist_short;
+		(cell as Gtk.CellRendererText).sensitive = !bak.marked_for_deletion;
 	}
 
 	private void cell_system_render(
@@ -613,6 +619,7 @@ class MainWindow : Gtk.Window{
 		Snapshot bak;
 		model.get (iter, 0, out bak, -1);
 		(cell as Gtk.CellRendererText).text = bak.sys_distro;
+		(cell as Gtk.CellRendererText).sensitive = !bak.marked_for_deletion;
 	}
 
 	private void cell_desc_render(
@@ -620,6 +627,7 @@ class MainWindow : Gtk.Window{
 		Snapshot bak;
 		model.get (iter, 0, out bak, -1);
 		(cell as Gtk.CellRendererText).text = bak.description;
+		(cell as Gtk.CellRendererText).sensitive = !bak.marked_for_deletion;
 	}
 
 	private void cell_desc_edited (string path, string new_text) {
@@ -631,6 +639,87 @@ class MainWindow : Gtk.Window{
 		model.get (iter, 0, out bak, -1);
 		bak.description = new_text;
 		bak.update_control_file();
+	}
+
+	private void init_list_view_context_menu(){
+		Gdk.RGBA gray = Gdk.RGBA();
+		gray.parse ("rgba(200,200,200,1)");
+
+		// menu_file
+		menu_snapshots = new Gtk.Menu();
+
+		// mi_remove
+		mi_remove = new ImageMenuItem.with_label("Delete");
+		mi_remove.image = get_shared_icon("gtk-delete","",16);
+		mi_remove.activate.connect(btn_delete_clicked);
+		menu_snapshots.append(mi_remove);
+
+		// mi_mark
+		mi_mark = new ImageMenuItem.with_label("Mark for deletion");
+		mi_mark.image = get_shared_icon("gtk-delete","",16);
+		mi_mark.activate.connect(btn_mark_for_deletion_clicked);
+		menu_snapshots.append(mi_mark);
+
+		
+		// miFileSeparator0
+		//var miFileSeparator0 = new Gtk.MenuItem();
+		//miFileSeparator0.override_color (StateFlags.NORMAL, gray);
+		//menu_file.append(miFileSeparator0);
+
+		// miFileSeparator1
+		//miFileSeparator1 = new Gtk.MenuItem();
+		//miFileSeparator1.override_color (StateFlags.NORMAL, gray);
+		//menu_file.append(miFileSeparator1);
+
+		// mi_file_open_temp_dir
+		//mi_file_open_temp_dir = new ImageMenuItem.from_stock("gtk-directory", null);
+		//mi_file_open_temp_dir.label = _("Open Temp Folder");
+		//mi_file_open_temp_dir.activate.connect(mi_file_open_temp_dir_clicked);
+		//menu_file.append(mi_file_open_temp_dir);
+
+		// mi_file_open_logfile
+		//mi_file_open_logfile = new ImageMenuItem.from_stock("gtk-info", null);
+		//mi_file_open_logfile.label = _("Open Log File");
+		//mi_file_open_logfile.activate.connect(mi_file_open_logfile_clicked);
+		//menu_file.append(mi_file_open_logfile);
+
+		
+		// mi_file_info
+		//mi_file_info = new ImageMenuItem.from_stock("gtk-properties", null);
+		//mi_file_info.label = _("File Info (Source)");
+		//mi_file_info.activate.connect(mi_file_info_clicked);
+		//menu_file.append(mi_file_info);
+
+		menu_snapshots.show_all();
+
+		// connect signal for shift+F10
+        tv_backups.popup_menu.connect(() => {
+			return menu_snapshots_popup (menu_snapshots, null);
+		});
+        
+        // connect signal for right-click
+		tv_backups.button_press_event.connect ((w, event) => {
+			if (event.button == 3) {
+				return menu_snapshots_popup (menu_snapshots, event);
+			}
+
+			return false;
+		});
+	}
+
+	 private bool menu_snapshots_popup (Gtk.Menu popup, Gdk.EventButton? event) {
+		TreeSelection selection = tv_backups.get_selection();
+		int count = selection.count_selected_rows();
+		mi_remove.sensitive = (count > 0);
+		mi_mark.sensitive = (count > 0);
+
+		if (event != null) {
+			menu_snapshots.popup (null, null, null, event.button, event.time);
+		} else {
+			menu_snapshots.popup (null, null, null, 0, Gtk.get_current_event_time());
+		}
+		
+		return true;
 	}
 
 	private void refresh_tv_backups(){
@@ -725,7 +814,7 @@ class MainWindow : Gtk.Window{
 		});
 	}
 
-	private void btn_delete_snapshot_clicked(){
+	private void btn_delete_clicked(){
 		TreeIter iter;
 		TreeIter iter_delete;
 		TreeSelection sel;
@@ -740,7 +829,7 @@ class MainWindow : Gtk.Window{
 		if (sel.count_selected_rows() == 0){
 			gtk_messagebox(
 				_("No Snapshots Selected"),
-				_("Please select the snapshots to delete"),
+				_("Select snapshots to be marked for deletion"),
 				this, false);
 				
 			return;
@@ -749,8 +838,6 @@ class MainWindow : Gtk.Window{
 		//update UI ------------------
 
 		update_ui(false);
-
-		//statusbar_message(_("Removing selected snapshots..."));
 
 		//get list of snapshots to delete --------------------
 
@@ -815,12 +902,61 @@ class MainWindow : Gtk.Window{
 		//update UI -------------------
 
 		App.update_partitions();
-		//refresh_cmb_backup_device();
 		refresh_tv_backups();
 		update_statusbar();
 
 		update_ui(true);
 	}
+
+	private void btn_mark_for_deletion_clicked(){
+		TreeIter iter;
+		TreeSelection sel;
+		bool is_success = true;
+
+		// check if device is online
+		if (!check_backup_device_online()) { return; }
+
+		// check selected count ----------------
+
+		sel = tv_backups.get_selection ();
+		if (sel.count_selected_rows() == 0){
+			gtk_messagebox(
+				_("No Snapshots Selected"),
+				_("Select the snapshots to mark for deletion"),
+				this, false);
+				
+			return;
+		}
+
+		// get selected snapshots --------------------
+
+		var store = (Gtk.ListStore) tv_backups.model;
+		bool iterExists = store.get_iter_first (out iter);
+		while (iterExists && is_success) {
+			if (sel.iter_is_selected (iter)){
+				Snapshot bak;
+				store.get (iter, 0, out bak);
+				// mark for deletion
+				bak.mark_for_deletion();
+			}
+			iterExists = store.iter_next (ref iter);
+		}
+
+		App.repo.load_snapshots();
+
+		gtk_messagebox(_("Marked for deletion"), 
+			_("Snapshots will be removed during the next scheduled run") + ".\n\n"
+			+ _("To delete the snapshots immediately, right-click and select 'Delete'."),
+			this, false);
+
+		//update UI -------------------
+
+		App.update_partitions();
+		refresh_tv_backups();
+		update_statusbar();
+		update_ui(true);
+	}
+
 
 	private void btn_restore_clicked(){
 		App.mirror_system = false;
@@ -848,19 +984,19 @@ class MainWindow : Gtk.Window{
 			sel = tv_backups.get_selection ();
 			if (sel.count_selected_rows() == 0){
 				gtk_messagebox(
-					_("No Snapshots Selected"),
-					_("Please select the snapshot to restore"),
+					_("No snapshots selected"),
+					_("Select the snapshot to restore"),
 					this, false);
 				return;
 			}
 			else if (sel.count_selected_rows() > 1){
 				gtk_messagebox(
-					_("Multiple Snapshots Selected"),
-					_("Please select a single snapshot"),
+					_("Multiple snapshots selected"),
+					_("Select a single snapshot to restore"),
 					this, false);
 				return;
 			}
-
+			
 			//get selected snapshot ------------------
 
 			Snapshot snapshot_to_restore = null;
@@ -874,6 +1010,14 @@ class MainWindow : Gtk.Window{
 					break;
 				}
 				iterExists = store.iter_next (ref iter);
+			}
+
+			if ((snapshot_to_restore != null) && (snapshot_to_restore.marked_for_deletion)){
+				gtk_messagebox(
+					_("Invalid Snapshot"),
+					_("Selected snapshot is marked for deletion"),
+					this, false);
+				return;
 			}
 
 			App.snapshot_to_restore = snapshot_to_restore;

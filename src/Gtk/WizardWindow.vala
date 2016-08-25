@@ -61,6 +61,7 @@ class WizardWindow : Gtk.Window{
 	private Gtk.Spinner spinner;
 	private Gtk.Label lbl_msg;
 	private Gtk.Label lbl_status;
+	private Gtk.TextView txtv_create;
 	private ProgressBar progressbar;
 
 	private Gtk.ButtonBox box_actions;
@@ -146,7 +147,9 @@ class WizardWindow : Gtk.Window{
 			tab_filters = create_tab_filters();
 		}
 
-		tab_finish = create_tab_final();
+		if (mode != "create"){
+			tab_finish = create_tab_final();
+		}
 
 		// add handler after tabs are created
 		notebook.switch_page.connect(page_changed);
@@ -329,9 +332,13 @@ class WizardWindow : Gtk.Window{
 		box.add (progressbar);
 
 		//lbl_status
-		lbl_status = add_label_scrolled(box, "", true);
+
+		lbl_status = add_label(box, "");
+		lbl_status.ellipsize = Pango.EllipsizeMode.MIDDLE;
 		lbl_status.max_width_chars = 45;
-		lbl_status.margin_top = 12;
+		
+		//txtv_create = add_text_view(box, "");
+		//txtv_create.margin_top = 12;
 
 		return box;
 	}
@@ -1283,7 +1290,7 @@ class WizardWindow : Gtk.Window{
 				string path;
 				tv_exclude.model.get (iter, 0, out path);
 				temp_exclude_list.remove(path);
-				App.first_snapshot_size = 0; //re-calculate
+				Main.first_snapshot_size = 0; //re-calculate
 			}
 			iterExists = tv_exclude.model.iter_next (ref iter);
 		}
@@ -1336,10 +1343,12 @@ class WizardWindow : Gtk.Window{
 				if (!temp_exclude_list.contains(path)){
 					temp_exclude_list.add(path);
 					tv_exclude_add_item(path);
-					App.first_snapshot_size = 0; //re-calculate
+					Main.first_snapshot_size = 0; //re-calculate
 				}
 			}
 		}
+
+		tv_exclude_save_changes();
 	}
 
 	private void menu_exclude_add_folder_clicked(){
@@ -1354,10 +1363,12 @@ class WizardWindow : Gtk.Window{
 				if (!temp_exclude_list.contains(path)){
 					temp_exclude_list.add(path);
 					tv_exclude_add_item(path);
-					App.first_snapshot_size = 0; //re-calculate
+					Main.first_snapshot_size = 0; //re-calculate
 				}
 			}
 		}
+
+		tv_exclude_save_changes();
 	}
 
 	private void menu_exclude_add_folder_contents_clicked(){
@@ -1372,10 +1383,12 @@ class WizardWindow : Gtk.Window{
 				if (!temp_exclude_list.contains(path)){
 					temp_exclude_list.add(path);
 					tv_exclude_add_item(path);
-					App.first_snapshot_size = 0; //re-calculate
+					Main.first_snapshot_size = 0; //re-calculate
 				}
 			}
 		}
+
+		tv_exclude_save_changes();
 	}
 
 	private void menu_include_add_files_clicked(){
@@ -1390,10 +1403,12 @@ class WizardWindow : Gtk.Window{
 				if (!temp_exclude_list.contains(path)){
 					temp_exclude_list.add(path);
 					tv_exclude_add_item(path);
-					App.first_snapshot_size = 0; //re-calculate
+					Main.first_snapshot_size = 0; //re-calculate
 				}
 			}
 		}
+
+		tv_exclude_save_changes();
 	}
 
 	private void menu_include_add_folder_clicked(){
@@ -1409,10 +1424,12 @@ class WizardWindow : Gtk.Window{
 				if (!temp_exclude_list.contains(path)){
 					temp_exclude_list.add(path);
 					tv_exclude_add_item(path);
-					App.first_snapshot_size = 0; //re-calculate
+					Main.first_snapshot_size = 0; //re-calculate
 				}
 			}
 		}
+
+		tv_exclude_save_changes();
 	}
 
 	private SList<string> browse_files(){
@@ -1452,7 +1469,7 @@ class WizardWindow : Gtk.Window{
 	// actions
 	
 	private void estimate_system_size(){
-		if (App.first_snapshot_size == 0){
+		if (Main.first_snapshot_size == 0){
 			App.calculate_size_of_first_snapshot();
 			App.save_app_config();
 		}
@@ -1468,33 +1485,24 @@ class WizardWindow : Gtk.Window{
 			log_error (e.message);
 		}
 		
-		var list = new Gee.ArrayList<string>();
-		int index = 0;
 		int64 last_count = 0;
 
 		while (thread_is_running){
 
-			//int max_index = App.task.status_lines.size - 1;
-			//while (index <= max_index){
-			//	var line = App.task.status_lines[index++];
-			//	list.add(line);
-			//}
-				
-			//while (list.size > 18){
-			//	list.remove_at(0);
+			lbl_status.label = App.task.status_line;
+			//string line = null;
+			//while((line = App.task.status_lines.pop_head()) != null){
+				//text_view_append(txtv_create, line + "\n");
+				//text_view_scroll_to_end(txtv_create);
+				//lbl_status.label = line;
+				//gtk_do_events();
 			//}
 			
-			var txt = "";
-			foreach(var line in App.task.status_lines){
-				txt += "%s\n".printf(line);
-			}
-			lbl_status.label = txt;
-
-			if ((App.first_snapshot_count > 0)
-				&& (App.task.status_line_count < App.first_snapshot_count)){
+			if ((Main.first_snapshot_count > 0)
+				&& (App.task.status_line_count < Main.first_snapshot_count)){
 
 				double fraction = (App.task.status_line_count * 1.0)
-					/ App.first_snapshot_count;
+					/ Main.first_snapshot_count;
 
 				if (App.task.status_line_count == last_count){
 					progressbar.fraction = progressbar.fraction + 0.0005;
@@ -1504,9 +1512,11 @@ class WizardWindow : Gtk.Window{
 				}
 
 				last_count = App.task.status_line_count;
-				
-				lbl_msg.label = App.progress_text;
 			}
+
+			lbl_msg.label = App.progress_text;
+
+			gtk_do_events();
 
 			sleep(100);
 			gtk_do_events();
@@ -1601,7 +1611,12 @@ class WizardWindow : Gtk.Window{
 			}
 		}
 		else if (notebook.page == page_num_take_snapshot){
-			notebook.page = page_num_schedule;
+			if (mode == "create"){
+				destroy();
+			}
+			else{
+				notebook.page = page_num_schedule;
+			}
 		}
 		else if (notebook.page == page_num_schedule){
 			notebook.page = page_num_finish;
@@ -1646,6 +1661,13 @@ class WizardWindow : Gtk.Window{
 				btn_cancel.hide();
 				box_actions.set_layout (Gtk.ButtonBoxStyle.EXPAND);
 			}
+		}
+		else if (mode == "create"){
+			btn_prev.hide();
+			btn_next.hide();
+			btn_cancel.show();
+			btn_close.hide();
+			box_actions.set_layout (Gtk.ButtonBoxStyle.CENTER);
 		}
 		else{
 			btn_prev.hide();
@@ -1939,7 +1961,31 @@ class WizardWindow : Gtk.Window{
 		
 		return label;
 	}
+
+	private Gtk.TextView add_text_view(
+		Gtk.Box box, string text){
+
+		// ScrolledWindow
+		var scrolled = new Gtk.ScrolledWindow(null, null);
+		scrolled.hscrollbar_policy = PolicyType.NEVER;
+		scrolled.vscrollbar_policy = PolicyType.ALWAYS;
+		scrolled.expand = true;
+		box.add(scrolled);
+		
+		var view = new Gtk.TextView();
+		view.wrap_mode = Gtk.WrapMode.WORD_CHAR;
+		view.accepts_tab = false;
+		view.editable = false;
+		view.cursor_visible = false;
+		view.buffer.text = text;
+		view.sensitive = false;
+		scrolled.add (view);
+
+		return view;
+	}
+		
 	
+		
 	private Gtk.Label add_label(
 		Gtk.Box box, string text, bool is_bold = false, bool is_italic = false, bool is_large = false){
 			

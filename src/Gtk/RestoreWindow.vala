@@ -1023,7 +1023,7 @@ public class RestoreWindow : Gtk.Dialog{
 				if (!temp_exclude_list.contains(path)){
 					temp_exclude_list.add(path);
 					tv_exclude_add_item(path);
-					App.first_snapshot_size = 0; //re-calculate
+					Main.first_snapshot_size = 0; //re-calculate
 				}
 			}
 		}
@@ -1041,7 +1041,7 @@ public class RestoreWindow : Gtk.Dialog{
 				if (!temp_exclude_list.contains(path)){
 					temp_exclude_list.add(path);
 					tv_exclude_add_item(path);
-					App.first_snapshot_size = 0; //re-calculate
+					Main.first_snapshot_size = 0; //re-calculate
 				}
 			}
 		}
@@ -1059,7 +1059,7 @@ public class RestoreWindow : Gtk.Dialog{
 				if (!temp_exclude_list.contains(path)){
 					temp_exclude_list.add(path);
 					tv_exclude_add_item(path);
-					App.first_snapshot_size = 0; //re-calculate
+					Main.first_snapshot_size = 0; //re-calculate
 				}
 			}
 		}
@@ -1077,7 +1077,7 @@ public class RestoreWindow : Gtk.Dialog{
 				if (!temp_exclude_list.contains(path)){
 					temp_exclude_list.add(path);
 					tv_exclude_add_item(path);
-					App.first_snapshot_size = 0; //re-calculate
+					Main.first_snapshot_size = 0; //re-calculate
 				}
 			}
 		}
@@ -1096,7 +1096,7 @@ public class RestoreWindow : Gtk.Dialog{
 				if (!temp_exclude_list.contains(path)){
 					temp_exclude_list.add(path);
 					tv_exclude_add_item(path);
-					App.first_snapshot_size = 0; //re-calculate
+					Main.first_snapshot_size = 0; //re-calculate
 				}
 			}
 		}
@@ -1146,7 +1146,7 @@ public class RestoreWindow : Gtk.Dialog{
 				string path;
 				tv_exclude.model.get (iter, 0, out path);
 				temp_exclude_list.remove(path);
-				App.first_snapshot_size = 0; //re-calculate
+				Main.first_snapshot_size = 0; //re-calculate
 			}
 			iterExists = tv_exclude.model.iter_next (ref iter);
 		}

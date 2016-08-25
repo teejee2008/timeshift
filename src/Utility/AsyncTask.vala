@@ -262,6 +262,9 @@ public abstract class AsyncTask : GLib.Object{
 		read_exit_code();
 		
 		is_running = false;
+		status_line = "";
+		err_line = "";
+		out_line = "";
 
 		if ((status != AppStatus.CANCELLED) && (status != AppStatus.PASSWORD_REQUIRED)) {
 			status = AppStatus.FINISHED;

@@ -20,13 +20,13 @@ public class RsyncTask : AsyncTask{
 	private Gee.HashMap<string, Regex> regex_list;
 
 	// status
-	public Gee.ArrayList<string> status_lines;
+	public GLib.Queue<string> status_lines;
 	public int64 status_line_count = 0;
 	public int64 total_size = 0;
 	
 	public RsyncTask(){
 		init_regular_expressions();
-		status_lines = new Gee.ArrayList<string>();
+		status_lines = new GLib.Queue<string>();
 	}
 
 	private void init_regular_expressions(){
@@ -55,7 +55,7 @@ public class RsyncTask : AsyncTask{
 		save_bash_script_temp(script_text, script_file);
 		log_debug("RsyncTask:prepare(): saved: %s".printf(script_file));
 
-		status_lines = new Gee.ArrayList<string>();
+		//status_lines = new GLib.Queue<string>();
 		status_line_count = 0;
 		total_size = 0;
 	}
@@ -67,7 +67,7 @@ public class RsyncTask : AsyncTask{
 			cmd += "ionice -c2 -n7 ";
 		}
 		else{
-			cmd += "ionice -c2 -n5 ";
+			cmd += "ionice -c2 -n7 ";
 		}
 		
 		cmd += "rsync -ai";
@@ -154,10 +154,10 @@ public class RsyncTask : AsyncTask{
 		if (regex_list["status"].match(line, 0, out match)) {
 			status_line = match.fetch(12);
 
-			status_lines.add(status_line);
-			if (status_lines.size > 15){
-				status_lines.remove_at(0);
-			}
+			//status_lines.push_tail(status_line);
+			//if (status_lines.get_length() > 15){
+			//	status_lines.pop_head();
+			//}
 		}
 		else if (regex_list["total-size"].match(line, 0, out match)) {
 			total_size = int64.parse(match.fetch(1).replace(",",""));

@@ -1618,7 +1618,7 @@ public class Main : GLib.Object{
 
 				// rsync file system with .sync
 
-				progress_text = _("Synching files...");
+				progress_text = _("Synching files with rsync...");
 				log_msg(progress_text);
 
 				var log_file = sync_path + "/rsync-log";
@@ -1685,7 +1685,8 @@ public class Main : GLib.Object{
 				DateTime dt_end = new DateTime.now_local();
 				TimeSpan elapsed = dt_end.difference(temp_dt_begin);
 				long seconds = (long)(elapsed * 1.0 / TimeSpan.SECOND);
-				msg = _("Snapshot saved successfully") + " (%lds)".printf(seconds);
+				msg = _("Snapshot saved successfully")
+					+ " (%lds)".printf(seconds);
 				log_msg(msg);
 				OSDNotify.notify_send("TimeShift",msg,10000,"low");
 
@@ -2965,8 +2966,11 @@ public class Main : GLib.Object{
 		this.count_hourly = json_get_int(config,"count_hourly",count_hourly);
 		this.count_boot = json_get_int(config,"count_boot",count_boot);
 
-		this.first_snapshot_size = json_get_int64(config,"first_snapshot_size",first_snapshot_size);
-		this.first_snapshot_count = json_get_int64(config,"first_snapshot_count",first_snapshot_count);
+		Main.first_snapshot_size = json_get_int64(config,"first_snapshot_size",
+			Main.first_snapshot_size);
+			
+		Main.first_snapshot_count = json_get_int64(config,"first_snapshot_count",
+			Main.first_snapshot_count);
 		
 		this.exclude_list_user.clear();
 		if (config.has_member ("exclude")){
@@ -3202,8 +3206,8 @@ public class Main : GLib.Object{
 
 	public int64 calculate_size_of_first_snapshot(){
 
-		if (this.first_snapshot_size > 0){
-			return this.first_snapshot_size;
+		if (Main.first_snapshot_size > 0){
+			return Main.first_snapshot_size;
 		}
 		else if (live_system()){
 			return 0;
@@ -3224,7 +3228,7 @@ public class Main : GLib.Object{
 			Thread.usleep((ulong) GLib.TimeSpan.MILLISECOND * 100);
 		}
 
-		return this.first_snapshot_size;
+		return Main.first_snapshot_size;
 	}
 
 	public void calculate_size_of_first_snapshot_thread(){
@@ -3302,8 +3306,8 @@ public class Main : GLib.Object{
 			required_space = root_device.used_bytes;
 		}
 
-		this.first_snapshot_size = required_space;
-		this.first_snapshot_count = file_count;
+		Main.first_snapshot_size = required_space;
+		Main.first_snapshot_count = file_count;
 
 		log_debug("First snapshot size: %s".printf(format_file_size(required_space)));
 		log_debug("File count: %lld".printf(first_snapshot_count));

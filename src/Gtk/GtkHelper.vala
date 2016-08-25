@@ -409,6 +409,31 @@ namespace TeeJee.GtkHelper{
 		return false;
 	}
 
+
+	private void text_view_append(Gtk.TextView view, string text){
+		TextIter iter;
+		view.buffer.get_end_iter(out iter);
+		view.buffer.insert(ref iter, text, text.length);
+	}
+
+	private void text_view_prepend(Gtk.TextView view, string text){
+		TextIter iter;
+		view.buffer.get_start_iter(out iter);
+		view.buffer.insert(ref iter, text, text.length);
+	}
+
+	private void text_view_scroll_to_end(Gtk.TextView view){
+		TextIter iter;
+		view.buffer.get_end_iter(out iter);
+		view.scroll_to_iter(iter, 0.0, false, 0.0, 0.0);
+	}
+
+	private void text_view_scroll_to_start(Gtk.TextView view){
+		TextIter iter;
+		view.buffer.get_start_iter(out iter);
+		view.scroll_to_iter(iter, 0.0, false, 0.0, 0.0);
+	}
+	
 	// file chooser ----------------
 	
 	public Gtk.FileFilter create_file_filter(string group_name, string[] patterns) {

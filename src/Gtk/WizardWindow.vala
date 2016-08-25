@@ -61,7 +61,6 @@ class WizardWindow : Gtk.Window{
 	private Gtk.Spinner spinner;
 	private Gtk.Label lbl_msg;
 	private Gtk.Label lbl_status;
-	private Gtk.TextView txtv_create;
 	private ProgressBar progressbar;
 
 	private Gtk.ButtonBox box_actions;
@@ -69,8 +68,6 @@ class WizardWindow : Gtk.Window{
 	private Gtk.Button btn_next;
 	private Gtk.Button btn_cancel;
 	private Gtk.Button btn_close;
-
-	private bool show_finish_page = false;
 
 	private bool thread_is_running = false;
 	
@@ -81,8 +78,6 @@ class WizardWindow : Gtk.Window{
 
 	//exclude
 	
-	private Box vbox_exclude;
-	private LinkButton lnk_default_list;
 	private TreeView tv_exclude;
 	private ScrolledWindow sw_exclude;
 	private TreeViewColumn col_exclude;
@@ -213,7 +208,7 @@ class WizardWindow : Gtk.Window{
 
 		//progressbar
 		var progressbar = new Gtk.ProgressBar();
-		progressbar.set_size_request(-1,25);
+		//progressbar.set_size_request(-1,25);
 		//progressbar.pulse_step = 0.1;
 		box.add (progressbar);
 		return box;
@@ -223,19 +218,21 @@ class WizardWindow : Gtk.Window{
 		var margin = (mode == "settings") ? 12 : 6;
 		var box = add_tab(notebook, _("Snapshot Device"), margin);
 		
-		add_label_header(box, _("Select Snapshot Location"), true);
-
-		// section device -------------------------------------
-
 		var hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
 		box.add(hbox);
-		
-		// radio
-		radio_device = add_radio(hbox, "<b>%s</b>".printf(_("Disk Partition:")), null);
+
+		add_label_header(hbox, _("Select Snapshot Location"), true);
 
 		// buffer
 		var label = add_label(hbox, "");
         label.hexpand = true;
+       
+		// radio
+		//radio_device = add_radio(hbox, "<b>%s</b>".printf(_("Disk Partition:")), null);
+
+		// buffer
+		//var label = add_label(hbox, "");
+       // label.hexpand = true;
         
 		// refresh device button
 		
@@ -252,7 +249,7 @@ class WizardWindow : Gtk.Window{
 				
 		//var lbl_device_subnote = add_label_subnote(box,msg);
 
-		radio_device.toggled.connect(() =>{
+		/*radio_device.toggled.connect(() =>{
 			tv_devices.sensitive = radio_device.active;
 
 			if (radio_device.active){
@@ -262,17 +259,18 @@ class WizardWindow : Gtk.Window{
 				}
 				log_debug("radio_device.toggled: active");
 			}
-		});
+		});*/
 
 		// treeview
 		create_device_list(box);
 
 		// tooltips
-		radio_device.set_tooltip_text(msg);
+		//radio_device.set_tooltip_text(msg);
 		tv_devices.set_tooltip_text(msg);
 
 		// section path -------------------------------------
 
+		/*
 		// radio
 		radio_path = add_radio(box, "<b>%s</b>".printf(_("Custom Path:")), radio_device);
 		radio_path.margin_top = 12;
@@ -296,6 +294,8 @@ class WizardWindow : Gtk.Window{
 			}
 		});
 
+		*/
+		
 		// infobar
 		create_infobar_location(box);
 
@@ -1068,6 +1068,7 @@ class WizardWindow : Gtk.Window{
 				case 3:
 				case 0:
 					infobar_location.hide();
+					// TODO: Show a disk icon with stats when selected device is OK
 					break;
 			}
 

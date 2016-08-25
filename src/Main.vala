@@ -106,10 +106,12 @@ public class Main : GLib.Object{
 
 	public int startup_delay_interval_mins = 10;
 	public int retain_snapshots_max_days = 200;
-	public int64 minimum_free_disk_space = 1 * GB;
 	public int64 first_snapshot_size = 0;
 	public int64 first_snapshot_count = 0;
 	public int64 snapshot_location_free_space = 0;
+
+	public static const int SHIELD_ICON_SIZE = 64;
+	public static const int64 MIN_FREE_SPACE = 1 * GB;
 	
 	public string log_dir = "";
 	public string log_file = "";
@@ -1180,12 +1182,11 @@ public class Main : GLib.Object{
 
 	//properties
 	
-	public bool is_scheduled{
+	public bool scheduled{
 		get{
-			return _is_scheduled;
-		}
-		set{
-			_is_scheduled = value;
+			return !live_system()
+			&& (schedule_boot || schedule_hourly || schedule_daily ||
+				schedule_weekly || schedule_monthly);
 		}
 	}
 
@@ -1242,7 +1243,7 @@ public class Main : GLib.Object{
 			if ((status_code != SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE)
 				&& (status_code != SnapshotLocationStatus.NO_SNAPSHOTS_HAS_SPACE)){
 					
-				is_scheduled = false;
+				//is_scheduled = false;
 				//log_error(message);
 				//log_error(details);
 				//log_debug("space_check: Failed!");
@@ -1271,7 +1272,7 @@ public class Main : GLib.Object{
 					update_symlinks = true;
 				}
 			}
-			else if (is_scheduled){
+			else if (scheduled){
 				Snapshot last_snapshot_boot = repo.get_latest_snapshot("boot");
 				Snapshot last_snapshot_hourly = repo.get_latest_snapshot("hourly");
 				Snapshot last_snapshot_daily = repo.get_latest_snapshot("daily");
@@ -2850,15 +2851,15 @@ public class Main : GLib.Object{
 
 	public void save_app_config(){
 		var config = new Json.Object();
-		//config.set_string_member("enabled", is_scheduled.to_string());
 
 		config.set_string_member("backup_device_uuid",
 			(repo.device == null) ? "" : repo.device.uuid);
 			
-		config.set_string_member("use_snapshot_path_custom", repo.use_snapshot_path_custom.to_string());
-		config.set_string_member("snapshot_path_custom", repo.snapshot_path_user.to_string());
-
-		config.set_string_member("is_scheduled", is_scheduled.to_string());
+		config.set_string_member("use_snapshot_path_user",
+			repo.use_snapshot_path_custom.to_string());
+			
+		config.set_string_member("snapshot_path_user",
+			repo.snapshot_path_user.to_string());
 
 		config.set_string_member("schedule_monthly", schedule_monthly.to_string());
 		config.set_string_member("schedule_weekly", schedule_weekly.to_string());
@@ -2871,9 +2872,6 @@ public class Main : GLib.Object{
 		config.set_string_member("count_daily", count_daily.to_string());
 		config.set_string_member("count_hourly", count_hourly.to_string());
 		config.set_string_member("count_boot", count_boot.to_string());
-
-		//config.set_string_member("max_days", retain_snapshots_max_days.to_string());
-		//config.set_string_member("min_space", (minimum_free_disk_space / (1.0 * GB)).to_string());
 
 		config.set_string_member("first_snapshot_size", first_snapshot_size.to_string());
 		config.set_string_member("first_snapshot_count", first_snapshot_count.to_string());
@@ -2922,12 +2920,11 @@ public class Main : GLib.Object{
 		// initialize repo using config file values
 
 		string uuid = json_get_string(config,"backup_device_uuid","");
-        var snapshot_path = json_get_string(config, "snapshot_path", "");
-		var use_snapshot_path = json_get_bool(config, "use_snapshot_path", false);
+        var snapshot_path_user = json_get_string(config, "snapshot_path_user", "");
+		var use_snapshot_path_user = json_get_bool(config, "use_snapshot_path_user", false);
 		
-		if (use_snapshot_path){
-			repo = new SnapshotRepo.from_path(snapshot_path, null);
-			repo.check_status();
+		if (use_snapshot_path_user){
+			repo = new SnapshotRepo.from_path(snapshot_path_user, null);
 		}
 		else{
 			var dev = Device.get_device_by_uuid(uuid);
@@ -2936,11 +2933,7 @@ public class Main : GLib.Object{
 				dev.uuid = uuid;
 			}
 			repo = new SnapshotRepo.from_device(dev, null);
-			//repo.check_status();
-			// TODO: move this code to main window
 		}
-
-		//TODO; repo.check_status() should not use App
 
 		// initialize repo using command line parameter
 		 
@@ -2964,20 +2957,6 @@ public class Main : GLib.Object{
 		 * 2) app is running command mode without backup device argument
 		 * */
 
-		//if (snapshot_device != null){
-			//if ((app_mode == "") || (cmd_backup_device.length == 0)){
-				//if (mount_backup_device(null)){
-				//	update_partitions();
-				//}
-				//else{
-				//	snapshot_device = null;
-				//}
-			//}
-			// TODO: mount separately
-		//}
-
-		this.is_scheduled = json_get_bool(config,"is_scheduled", is_scheduled);
-
         this.schedule_monthly = json_get_bool(config,"schedule_monthly",schedule_monthly);
 		this.schedule_weekly = json_get_bool(config,"schedule_weekly",schedule_weekly);
 		this.schedule_daily = json_get_bool(config,"schedule_daily",schedule_daily);
@@ -2990,10 +2969,6 @@ public class Main : GLib.Object{
 		this.count_hourly = json_get_int(config,"count_hourly",count_hourly);
 		this.count_boot = json_get_int(config,"count_boot",count_boot);
 
-		//this.retain_snapshots_max_days = json_get_int(config,"max_days",retain_snapshots_max_days);
-		//this.minimum_free_disk_space = json_get_int64(config,"min_space",minimum_free_disk_space);
-		//this.minimum_free_disk_space = this.minimum_free_disk_space * GB;
-		
 		this.first_snapshot_size = json_get_int64(config,"first_snapshot_size",first_snapshot_size);
 		this.first_snapshot_count = json_get_int64(config,"first_snapshot_count",first_snapshot_count);
 		
@@ -3420,7 +3395,7 @@ public class Main : GLib.Object{
 	}
 
 	private string get_crontab_entry_scheduled(){
-		if (is_scheduled){
+		if (scheduled){
 			if (schedule_hourly){
 				return "@hourly timeshift --backup";
 			}
@@ -3439,12 +3414,8 @@ public class Main : GLib.Object{
 	}
 
 	private string get_crontab_entry_boot(){
-		if (is_scheduled){
-			if (schedule_boot || schedule_hourly
-				|| schedule_daily || schedule_weekly || schedule_monthly){
-					
-				return "@reboot sleep %dm && timeshift --backup".printf(startup_delay_interval_mins);
-			}
+		if (scheduled){
+			return "@reboot sleep %dm && timeshift --backup".printf(startup_delay_interval_mins);
 		}
 
 		return "";
@@ -3655,34 +3626,6 @@ public class Main : GLib.Object{
 
 		//Gtk.main_quit ();
 	}
-
-	public bool is_rsync_running(){
-		string cmd = "rsync -ai --delete --numeric-ids --relative --delete-excluded";
-		string std_out, std_err;
-		exec_sync("ps w -C rsync", out std_out, out std_err);
-		foreach(string line in std_out.split("\n")){
-			if (line.index_of(cmd) != -1){
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public void kill_rsync(){
-		string cmd = "rsync -ai --delete --numeric-ids --relative --delete-excluded";
-
-		string std_out, std_err;
-		exec_sync ("ps w -C rsync", out std_out, out std_err);
-		string pid = "";
-		foreach(string line in std_out.split("\n")){
-			if (line.index_of(cmd) != -1){
-				pid = line.strip().split(" ")[0];
-				Posix.kill ((Pid) int.parse(pid), 15);
-				log_msg(_("Terminating rsync process") + ": [PID=" + pid + "] ");
-			}
-		}
-	}
-
 }
 
 

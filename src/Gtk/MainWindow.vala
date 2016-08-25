@@ -373,6 +373,7 @@ class MainWindow : Gtk.Window{
         statusbar.add(img_shield);
 
 		var vbox = new Box (Orientation.VERTICAL, 6);
+		vbox.margin_bottom = 0;
         statusbar.add (vbox);
         
 		//lbl_shield
@@ -383,7 +384,9 @@ class MainWindow : Gtk.Window{
 
         //lbl_shield_subnote
 		lbl_shield_subnote = add_label(vbox, "");
-
+		lbl_shield_subnote.yalign = (float) 0.5;
+		lbl_shield_subnote.hexpand = true;
+		
 		// snap_count
 		vbox = new Box (Orientation.VERTICAL, 6);
 		vbox.set_no_show_all(true);
@@ -475,11 +478,8 @@ class MainWindow : Gtk.Window{
 	}
 
 	private Gtk.MenuItem create_menu_item(
-		string label_text,
-		string icon_name_stock,
-		string icon_name_custom,
-		int icon_size,
-		string tooltip_text = ""){
+		string label_text, string icon_name_stock, string icon_name_custom,
+		int icon_size, string tooltip_text = ""){
 			
 		var menu_item = new Gtk.MenuItem();
 	
@@ -543,13 +543,9 @@ class MainWindow : Gtk.Window{
 
 		this.delete_event.disconnect(on_delete_event); //disconnect this handler
 
-		if (App.is_rsync_running()){
+		if (App.task.status == AppStatus.RUNNING){
 			log_error (_("Main window closed by user"));
-			App.kill_rsync();
-		}
-
-		if (!App.is_scheduled){
-			return false; //close window
+			App.task.stop();
 		}
 
 		//else - check backup device -------------------------------
@@ -557,40 +553,21 @@ class MainWindow : Gtk.Window{
 		string message,details;
 		int status_code = App.check_backup_location(out message, out details);
 
-		message = escape_html(message);
-		details = escape_html(details);
+		//message = escape_html(message);
+		//details = escape_html(details);
 		
 		switch(status_code){
 			case SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE:
-
-				var title = message;
-				
-				string msg = _("Scheduled snapshots will be disabled.");
-				
-				var type = Gtk.MessageType.WARNING;
-				var buttons_type = Gtk.ButtonsType.OK_CANCEL;
-
-				var dlg = new CustomMessageDialog(title, msg, type, this, buttons_type);
-				var response = dlg.run();
-				dlg.destroy();
-				
-				if (response == Gtk.ResponseType.OK){
-					App.is_scheduled = false;
-					return false; //close window
-				}
-				else{
-					this.delete_event.connect(on_delete_event); //reconnect this handler
-					return true; //keep window open
-				}
-
 			case SnapshotLocationStatus.NO_SNAPSHOTS_NO_SPACE:
-
-				var title = message;
+			case SnapshotLocationStatus.NOT_AVAILABLE:
+			case SnapshotLocationStatus.READ_ONLY_FS:
+			case SnapshotLocationStatus.HARDLINKS_NOT_SUPPORTED:
 			
-				var msg = _("Scheduled snapshots will be disabled till another device is selected.") + "\n";
-				msg += _("Do you want to select another device now?") + "\n";
-
-				var type = Gtk.MessageType.WARNING;
+				var title = message;
+				
+				var msg = details + "\n\n" + _("Select another device?");
+				
+				var type = Gtk.MessageType.ERROR;
 				var buttons_type = Gtk.ButtonsType.YES_NO;
 				
 				var dlg = new CustomMessageDialog(title, msg, type, this, buttons_type);
@@ -598,65 +575,47 @@ class MainWindow : Gtk.Window{
 				dlg.destroy();
 				
 				if (response == Gtk.ResponseType.YES){
-					this.delete_event.connect(on_delete_event); //reconnect this handler
-					return true; //keep window open
+					this.delete_event.connect(on_delete_event); // reconnect this handler
+					btn_wizard_clicked(); // open wizard
+					return true; // keep window open
 				}
 				else{
-					App.is_scheduled = false;
-					return false; //close window
+					return false; // close window
 				}
 
 			case SnapshotLocationStatus.NO_SNAPSHOTS_HAS_SPACE:
 			case SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE:
 				// TODO: Allow scheduled snapshots when first snapshot not taken
 				break;
-
-			case SnapshotLocationStatus.NOT_AVAILABLE:
-				var title = message;
-				
-				var msg = _("Scheduled snapshots will be disabled.") + "\n";
-				msg += _("Do you want to select another device?");
-
-				var type = Gtk.MessageType.INFO;
-				var buttons_type = Gtk.ButtonsType.OK_CANCEL;
-				
-				var dlg = new CustomMessageDialog(title, msg, type, this, buttons_type);
-				var response = dlg.run();
-				dlg.destroy();
-					
-				if (response == Gtk.ResponseType.YES){
-					this.delete_event.connect(on_delete_event); //reconnect this handler
-					return true; //keep window open
-				}
-				else{
-					App.is_scheduled = false;
-					return false; //close window
-				}
-
 		}
 
 		return false;
 	}
 
-	private void cell_date_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
+	private void cell_date_render(
+		CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
+			
 		Snapshot bak;
 		model.get (iter, 0, out bak, -1);
 		(cell as Gtk.CellRendererText).text = bak.date.format ("%Y-%m-%d %I:%M %p");
 	}
 
-	private void cell_tags_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
+	private void cell_tags_render(
+		CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
 		Snapshot bak;
 		model.get (iter, 0, out bak, -1);
 		(cell as Gtk.CellRendererText).text = bak.taglist_short;
 	}
 
-	private void cell_system_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
+	private void cell_system_render(
+		CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
 		Snapshot bak;
 		model.get (iter, 0, out bak, -1);
 		(cell as Gtk.CellRendererText).text = bak.sys_distro;
 	}
 
-	private void cell_desc_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
+	private void cell_desc_render(
+		CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
 		Snapshot bak;
 		model.get (iter, 0, out bak, -1);
 		(cell as Gtk.CellRendererText).text = bak.description;
@@ -671,13 +630,6 @@ class MainWindow : Gtk.Window{
 		model.get (iter, 0, out bak, -1);
 		bak.description = new_text;
 		bak.update_control_file();
-	}
-
-	private void cell_backup_device_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
-		Device info;
-		model.get (iter, 0, out info, -1);
-
-		(cell as Gtk.CellRendererText).markup = info.description_formatted();
 	}
 
 	private void refresh_tv_backups(){
@@ -1052,15 +1004,17 @@ class MainWindow : Gtk.Window{
 		win.set_transient_for(this);
 		win.show_all();
 		win.destroy.connect(()=>{
+			//log_msg("here");
 			timer_backup_device_init = Timeout.add(100, init_ui_for_backup_device);
 		});
 	}
 
 	private void btn_wizard_clicked(){
-		var win = new WizardWindow("");
+		var win = new WizardWindow("wizard");
 		win.set_transient_for(this);
 		win.show_all();
 		win.destroy.connect(()=>{
+			//log_msg("here1");
 			timer_backup_device_init = Timeout.add(100, init_ui_for_backup_device);
 		});
 	}
@@ -1241,8 +1195,6 @@ class MainWindow : Gtk.Window{
 		//message = escape_html(message);
 		//details = escape_html(details);
 
-		int SHIELD_SIZE = 64;
-		
 		// TODO; change this
 		
 		switch (status_code){
@@ -1258,7 +1210,7 @@ class MainWindow : Gtk.Window{
 			statusbar.show_all();
 
 			img_shield.pixbuf =
-				get_shared_icon("media-optical", "media-optical.png", SHIELD_SIZE).pixbuf;
+				get_shared_icon("media-optical", "media-optical.png", Main.SHIELD_ICON_SIZE).pixbuf;
 			set_shield_label(_("Live USB Mode (Restore Only)"));
 			set_shield_subnote("");
 
@@ -1291,7 +1243,7 @@ class MainWindow : Gtk.Window{
 			case SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE:
 			case SnapshotLocationStatus.NO_SNAPSHOTS_NO_SPACE:
 				img_shield.pixbuf =
-					get_shared_icon("", "security-low.svg", SHIELD_SIZE).pixbuf;
+					get_shared_icon("", "security-low.svg", Main.SHIELD_ICON_SIZE).pixbuf;
 				set_shield_label(message);
 				set_shield_subnote(details);
 				break;
@@ -1299,12 +1251,12 @@ class MainWindow : Gtk.Window{
 			case SnapshotLocationStatus.NO_SNAPSHOTS_HAS_SPACE:
 			case SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE:
 				// has space
-				if (App.is_scheduled){
+				if (App.scheduled){
 					// is scheduled
 					if (App.repo.has_snapshots()){
 						// has snaps
 						img_shield.pixbuf =
-							get_shared_icon("", "security-high.svg", SHIELD_SIZE).pixbuf;
+							get_shared_icon("", "security-high.svg", Main.SHIELD_ICON_SIZE).pixbuf;
 						set_shield_label(_("System is protected"));
 						set_shield_subnote(
 							_("Last snapshot taken at: ") + format_date(last_snapshot_date));
@@ -1313,7 +1265,7 @@ class MainWindow : Gtk.Window{
 					else{
 						// no snaps
 						img_shield.pixbuf =
-							get_shared_icon("", "security-low.svg", SHIELD_SIZE).pixbuf;
+							get_shared_icon("", "security-low.svg", Main.SHIELD_ICON_SIZE).pixbuf;
 						set_shield_label(_("No snapshots available"));
 						set_shield_subnote(_("Create a snapshot to start using Timeshift"));
 						//set_shield_subnote(_("Snapshots will be created at scheduled intervals"));
@@ -1327,14 +1279,14 @@ class MainWindow : Gtk.Window{
 					if (App.repo.has_snapshots()){
 						// has snaps
 						img_shield.pixbuf =
-							get_shared_icon("", "security-medium.svg", SHIELD_SIZE).pixbuf;
+							get_shared_icon("", "security-medium.svg", Main.SHIELD_ICON_SIZE).pixbuf;
 						set_shield_label(_("Scheduled snapshots are disabled"));
 						set_shield_subnote(_("Enable scheduled snapshots to protect your system"));
 					}
 					else{
 						// no snaps
 						img_shield.pixbuf =
-							get_shared_icon("", "security-low.svg", SHIELD_SIZE).pixbuf;
+							get_shared_icon("", "security-low.svg", Main.SHIELD_ICON_SIZE).pixbuf;
 						set_shield_label(_("No snapshots available"));
 						set_shield_subnote(_("Create snapshots manually or enable scheduled snapshots to protect your system"));
 					}

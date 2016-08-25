@@ -116,7 +116,7 @@ public class SettingsWindow : Gtk.Dialog{
 
 		//chk_schedule
         chk_schedule = new Gtk.CheckButton.with_label(_("Create scheduled/automatic snapshots"));
-        chk_schedule.active = App.is_scheduled;
+        //chk_schedule.active = App.is_scheduled;
         vbox_schedule.pack_start(chk_schedule,false,false,0);
 
         chk_schedule.notify["active"].connect(chk_schedule_changed);
@@ -600,10 +600,10 @@ public class SettingsWindow : Gtk.Dialog{
 		model.set (iter, 1, App.retain_snapshots_max_days);
 		model.set (iter, 2, "days");
 
-		model.append(out iter);
-		model.set (iter, 0, _("When free space less than"));
-		model.set (iter, 1, ((int) (App.minimum_free_disk_space / GB)));
-		model.set (iter, 2, "GB");
+		//model.append(out iter);
+		//model.set (iter, 0, _("When free space less than"));
+		//model.set (iter, 1, ((int) (App.minimum_free_disk_space / GB)));
+		//model.set (iter, 2, "GB");
 
 		tv_remove.set_model (model);
 		//tv_remove.columns_autosize ();
@@ -905,10 +905,6 @@ public class SettingsWindow : Gtk.Dialog{
 			}
 			iterExists = store.iter_next (ref iter);
 		}
-
-		if (!App.live_system()){
-			App.is_scheduled = chk_schedule.active;
-		}
 	}
 
 	private void tv_remove_save_changes(){
@@ -941,9 +937,6 @@ public class SettingsWindow : Gtk.Dialog{
 					break;
 				case 5:
 					App.retain_snapshots_max_days = count;
-					break;
-				case 6:
-					App.minimum_free_disk_space = count * 1000;
 					break;
 			}
 			iterExists = store.iter_next (ref iter);

@@ -69,20 +69,14 @@ namespace TeeJee.FileSystem{
 		
 		/* check if item exists on disk*/
 
-		try{
-			var item = File.parse_name(item_path);
-			return item.query_exists();
-		}
-		catch (Error e) {
-			log_error (e.message);
-			return false;
-		}
+		var item = File.parse_name(item_path);
+		return item.query_exists();
 	}
 	
 	public bool file_exists (string file_path){
 		/* Check if file exists */
 		return (FileUtils.test(file_path, GLib.FileTest.EXISTS)
-		&& !FileUtils.test(file_path, GLib.FileTest.IS_DIR));
+			&& !FileUtils.test(file_path, GLib.FileTest.IS_DIR));
 	}
 
 	public bool file_exists_regular (string file_path){
@@ -123,18 +117,11 @@ namespace TeeJee.FileSystem{
 
 		/* Check and delete file */
 
-		try {
-			var file = File.new_for_path (file_path);
-			if (file.query_exists ()) {
-				Posix.system("shred -u '%s'".printf(escape_single_quote(file_path)));
-			}
-			return true;
+		var file = File.new_for_path (file_path);
+		if (file.query_exists ()) {
+			Posix.system("shred -u '%s'".printf(escape_single_quote(file_path)));
 		}
-		catch (Error e) {
-	        log_error (e.message);
-	        log_error(_("Failed to delete file") + ": %s".printf(file_path));
-	        return false;
-	    }
+		return true;
 	}
 
 

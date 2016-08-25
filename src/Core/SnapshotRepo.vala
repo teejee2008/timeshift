@@ -42,6 +42,8 @@ public class SnapshotRepo : GLib.Object{
 			log_msg(_("Device") + ": %s".printf(device.device));
 			log_msg(_("Free space") + ": %s".printf(format_file_size(device.free_bytes)));
 		}
+		
+		check_status();
 	}
 
 	public SnapshotRepo.from_device(Device dev, Gtk.Window? parent_win){
@@ -58,6 +60,8 @@ public class SnapshotRepo : GLib.Object{
 			log_msg(_("Selected snapshot device") + ": %s".printf(device.device));
 			log_msg(_("Free space") + ": %s".printf(format_file_size(device.free_bytes)));;
 		}
+		
+		check_status();
 	}
 
 	public string snapshot_location {
@@ -260,13 +264,15 @@ public class SnapshotRepo : GLib.Object{
 
 	public void check_status(){
 
+		//log_debug("check_status: check_status");
+		
 		status_code = SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE;
 		status_message = "";
 		status_details = "";
 
 		log_msg("");
 		log_msg("Config: Free space limit is %s".printf(
-			format_file_size(App.minimum_free_disk_space)));
+			format_file_size(Main.MIN_FREE_SPACE)));
 
 		if (is_available()){
 			has_snapshots();
@@ -274,7 +280,7 @@ public class SnapshotRepo : GLib.Object{
 		}
 
 		if (use_snapshot_path_custom){
-			log_msg("Custom path is selected for snapshot location");
+			log_msg("Custom path selected");
 		}
 		
 		log_msg(_("Snapshot device") + ": '%s'".printf(
@@ -290,6 +296,9 @@ public class SnapshotRepo : GLib.Object{
 	}
 
 	public bool is_available(){
+
+		log_debug("check_status: is_available");
+		
 		if (use_snapshot_path_custom){
 			if (snapshot_path_user.strip().length == 0){
 				status_message = _("Snapshot location not selected");
@@ -322,6 +331,7 @@ public class SnapshotRepo : GLib.Object{
 						return false;
 					}
 					else{
+						log_msg("here-ok");
 						// ok
 						return true;
 					}
@@ -349,12 +359,15 @@ public class SnapshotRepo : GLib.Object{
 	}
 	
 	public bool has_snapshots(){
+		//log_debug("check_status: has_snapshots");
 		load_snapshots();
 		return (snapshots.size > 0);
 	}
 
 	public bool has_space(){
 
+		//log_debug("check_status: has_space");
+		
 		if (device != null){
 			device.query_disk_space();
 		}
@@ -362,11 +375,9 @@ public class SnapshotRepo : GLib.Object{
 		if (snapshots.size > 0){
 			// has snapshots, check minimum space
 
-			var min_free = App.minimum_free_disk_space;
-			
-			if (device.free_bytes < min_free){
+			if (device.free_bytes < Main.MIN_FREE_SPACE){
 				status_message = _("Not enough disk space");
-				status_message += " (< %s)".printf(format_file_size(min_free));
+				status_message += " (< %s)".printf(format_file_size(Main.MIN_FREE_SPACE));
 					
 				status_details = _("Select another device or free up some space");
 				
@@ -496,6 +507,7 @@ public class SnapshotRepo : GLib.Object{
 
 		// delete older backups - minimum space -------
 
+		/*
 		device.query_disk_space();
 
 		show_msg = true;
@@ -509,7 +521,7 @@ public class SnapshotRepo : GLib.Object{
 
 					if (show_msg){
 						log_msg(_("Free space is less than") + " %lld GB".printf(
-							App.minimum_free_disk_space / GB));
+							Main.MIN_FREE_SPACE / GB));
 						log_msg(_("Removing older backups to free disk space"));
 						show_msg = false;
 					}
@@ -520,6 +532,7 @@ public class SnapshotRepo : GLib.Object{
 			
 			device.query_disk_space();
 		}
+		* */
 	}
 
 	public void remove_untagged(){

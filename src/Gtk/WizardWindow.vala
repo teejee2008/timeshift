@@ -37,6 +37,7 @@ class WizardWindow : Gtk.Window{
 
 	private Gtk.Box vbox_main;
 	private Notebook notebook;
+	
 	private Gtk.TreeView tv_devices;
 	private Gtk.RadioButton radio_device;
 	private Gtk.RadioButton radio_path;
@@ -47,6 +48,8 @@ class WizardWindow : Gtk.Window{
 	private Gtk.Image img_shield;
 	private Gtk.Label lbl_shield;
 	private Gtk.Label lbl_shield_subnote;
+
+	private Label lbl_final_message;
 
 	private Gtk.Box tab_estimate;
 	private Gtk.Box tab_snapshot_location;
@@ -64,7 +67,7 @@ class WizardWindow : Gtk.Window{
 	private Gtk.Button btn_prev;
 	private Gtk.Button btn_next;
 	private Gtk.Button btn_cancel;
-	private Gtk.Button btn_abort;
+	private Gtk.Button btn_close;
 
 	private bool show_finish_page = false;
 
@@ -76,7 +79,7 @@ class WizardWindow : Gtk.Window{
 
 
 	//exclude
-	private Label lbl_exclude;
+	
 	private Box vbox_exclude;
 	private LinkButton lnk_default_list;
 	private TreeView tv_exclude;
@@ -144,6 +147,9 @@ class WizardWindow : Gtk.Window{
 		}
 
 		tab_finish = create_tab_final();
+
+		// add handler after tabs are created
+		notebook.switch_page.connect(page_changed);
 		
 		create_actions();
 
@@ -159,8 +165,6 @@ class WizardWindow : Gtk.Window{
 			tmr_init = 0;
 		}
 
-		tv_devices_refresh();
-
 		if (App.repo.snapshot_path_user.length > 0){
 			entry_backup_path.text = App.repo.snapshot_path_user;
 		}
@@ -172,27 +176,8 @@ class WizardWindow : Gtk.Window{
 			radio_device.active = true;
 		}
 
-		radio_device.toggled();
-		radio_path.toggled();
+		go_first();
 
-		chk_schedule_changed();
-		
-		// set initial tab
-		
-		if (App.live_system()){
-			notebook.page = page_num_snapshot_location;
-		}
-		else{
-			if (mode == "settings"){
-				notebook.page = page_num_snapshot_location;
-			}
-			else{
-				notebook.page = page_num_estimate;
-			}
-		}
-
-		initialize_current_tab();
-		
 		return false;
 	}
 	
@@ -261,9 +246,11 @@ class WizardWindow : Gtk.Window{
 			tv_devices.sensitive = radio_device.active;
 
 			if (radio_device.active){
-				App.repo.use_snapshot_path_custom = false;
+				if (App.repo.device != null){
+					App.repo = new SnapshotRepo.from_device(App.repo.device, this);
+					check_backup_location();
+				}
 				log_debug("radio_device.toggled: active");
-				check_backup_location();
 			}
 		});
 
@@ -291,9 +278,11 @@ class WizardWindow : Gtk.Window{
 			entry_backup_path.sensitive = radio_path.active;
 
 			if (radio_path.active){
-				App.repo.use_snapshot_path_custom = true;
+				if (App.repo != null){
+					App.repo = new SnapshotRepo.from_path(App.repo.snapshot_path_user, this);
+					check_backup_location();
+				}
 				log_debug("radio_path.toggled: active");
-				check_backup_location();
 			}
 		});
 
@@ -337,39 +326,6 @@ class WizardWindow : Gtk.Window{
 		lbl_status = add_label_scrolled(box, "", true);
 		lbl_status.max_width_chars = 45;
 		lbl_status.margin_top = 12;
-
-		return box;
-	}
-
-	private Gtk.Box create_tab_final(){
-		var margin = (mode == "settings") ? 12 : 6;
-		var box = add_tab(notebook, _("Notes"), margin);
-
-		if (mode != "settings"){
-			add_label_header(box, _("Setup Complete"), true);
-		}
-
-		var msg = "";
-
-		if (mode != "settings"){
-			msg += _("◈ Scheduled snapshots are enabled. Snapshots will be created automatically to protect your system.") + "\n\n";
-		}
-
-		msg += _("◈ You can rollback your system to a previous date by restoring a snapshot.") + "\n\n";
-
-		msg += _("◈ Restoring a snapshot only replaces system files and settings. Documents and other files in your home directory will not be affected. You can change this in Settings by adding a filter to include these files.") + "\n\n";
-
-		msg += _("◈ If the system is unable to boot, you can rescue your system by installing and running Timeshift on the Ubuntu Live CD / USB.") + "\n\n";
-
-		msg += _("◈ To guard against hard disk failures, select an external disk for the snapshot location instead of the primary hard disk.") + "\n\n";
-
-		msg += _("◈ Avoid storing snapshots on your system partition. Using another partition will allow you to format and re-install the OS on your system partition without losing the snapshots stored on it. You can even install another Linux distribution and later roll-back the previous distribution by restoring the snapshot.") + "\n\n";
-
-		msg += _("◈ Snapshots only store files which have changed. You can reduce the size by adding filters to exclude files which are not required.") + "\n\n";
-
-		msg += _("◈ Common files are hard-linked between snapshots. Copying the files manually to another location will duplicate files and break hard-links. Snapshots must be moved carefully by running 'rsync' from a terminal and the file system at destination path must support hard-links.") + "\n\n";
-		
-		add_label_scrolled(box, msg, false, true, 0);
 
 		return box;
 	}
@@ -487,6 +443,7 @@ class WizardWindow : Gtk.Window{
         hbox.add(img_shield);
 
 		var vbox = new Box (Orientation.VERTICAL, 6);
+		vbox.margin_bottom = 0;
         hbox.add (vbox);
         
 		// lbl_shield
@@ -497,6 +454,8 @@ class WizardWindow : Gtk.Window{
 
         // lbl_shield_subnote
 		lbl_shield_subnote = add_label(vbox, "");
+		lbl_shield_subnote.yalign = (float) 0.5;
+		lbl_shield_subnote.hexpand = true;
 
 		lbl_shield_subnote.wrap = true;
 		lbl_shield_subnote.wrap_mode = Pango.WrapMode.WORD;
@@ -686,7 +645,22 @@ class WizardWindow : Gtk.Window{
 		return box;
 	}
 
-	
+	private Gtk.Box create_tab_final(){
+		var margin = (mode == "settings") ? 12 : 6;
+		var box = add_tab(notebook, _("Notes"), margin);
+
+		if (mode != "settings"){
+			add_label_header(box, _("Setup Complete"), true);
+		}
+		
+		lbl_final_message = add_label_scrolled(box, "", false, true, 0);
+
+		update_final_message();
+		
+		return box;
+	}
+
+
 	private void create_actions(){
 		var hbox = new Gtk.ButtonBox (Gtk.Orientation.HORIZONTAL);
 		hbox.set_layout (Gtk.ButtonBoxStyle.EXPAND);
@@ -721,21 +695,23 @@ class WizardWindow : Gtk.Window{
 		// close
 		
 		img = new Image.from_stock("gtk-close", Gtk.IconSize.BUTTON);
-		btn_cancel = add_button(hbox, _("Close"), "", ref size_group, img);
+		btn_close = add_button(hbox, _("Close"), "", ref size_group, img);
 
-        btn_cancel.clicked.connect(()=>{
+        btn_close.clicked.connect(()=>{
+			App.cron_job_update();
 			this.destroy();
 		});
 
-		// abort
+		// cancel
 		
 		img = new Image.from_stock("gtk-cancel", Gtk.IconSize.BUTTON);
-		btn_abort = add_button(hbox, _("Cancel"), "", ref size_group, img);
+		btn_cancel = add_button(hbox, _("Cancel"), "", ref size_group, img);
 
-		//btn_abort.margin_left = btn_abort.margin_right = 100;
-		
-        btn_abort.clicked.connect(()=>{
-			App.task.stop(AppStatus.CANCELLED);
+        btn_cancel.clicked.connect(()=>{
+			if (App.task != null){
+				App.task.stop(AppStatus.CANCELLED);
+			}
+			
 			this.destroy(); // TODO: Show error page
 		});
 	}
@@ -969,14 +945,9 @@ class WizardWindow : Gtk.Window{
 
 		gtk_set_busy(true, this);
 		
-		//Device previous_device = App.snapshot_device;
 		App.repo = new SnapshotRepo.from_device(pi, this);
-		App.repo.check_status();
-		
-		//log_debug("selected: %s".printf(pi.device));
 
 		App.update_partitions();
-
 		var newpi = Device.find_device_in_list(App.partitions,pi.device,pi.uuid);
 
 		//log_debug("newpi: %s".printf(pi.device));
@@ -986,7 +957,6 @@ class WizardWindow : Gtk.Window{
 		
 		if ((pi.fstype == "luks") && !pi.has_children() && newpi.has_children()){
 			App.repo = new SnapshotRepo.from_device(newpi.children[0], this);
-			App.repo.check_status();
 			tv_devices_refresh();
 		}
 
@@ -1176,17 +1146,49 @@ class WizardWindow : Gtk.Window{
 		if (App.schedule_monthly || App.schedule_weekly || App.schedule_daily
 		|| App.schedule_hourly || App.schedule_boot){
 
-			img_shield.pixbuf = get_shared_icon("", "security-high.svg", 64).pixbuf;
+			img_shield.pixbuf =
+				get_shared_icon("", "security-high.svg", Main.SHIELD_ICON_SIZE).pixbuf;
 			set_shield_label(_("Scheduled snapshots are enabled"));
-			set_shield_subnote(_("Snapshots will be created at selected intervals if the snapshot disk has enough space (> 1 GB)"));
+			set_shield_subnote(_("Snapshots will be created at selected intervals if snapshot disk has enough space (> 1 GB)"));
 		}
 		else{
-			img_shield.pixbuf = get_shared_icon("", "security-low.svg", 64).pixbuf;
+			img_shield.pixbuf =
+				get_shared_icon("", "security-low.svg", Main.SHIELD_ICON_SIZE).pixbuf;
 			set_shield_label(_("Scheduled snapshots are disabled"));
-			set_shield_subnote(_("Select the intervals for creating snapshots automatically"));
+			set_shield_subnote(_("Select the intervals for creating snapshots"));
 		}
 	}
 
+	private void update_final_message(){
+
+		var msg = "";
+
+		if (mode != "settings"){
+			if (App.scheduled){
+				msg += _("◈ Scheduled snapshots are enabled. Snapshots will be created automatically at selected intervals.") + "\n\n";
+			}
+			else{
+				msg += _("◈ Scheduled snapshots are disabled. It's recommended to enable it so that you have a recent snapshot of your system to restore in case of issues.") + "\n\n";
+			}
+		}
+
+		msg += _("◈ You can rollback your system to a previous date by restoring a snapshot.") + "\n\n";
+
+		msg += _("◈ Restoring a snapshot only replaces system files and settings. Documents and other files in your home directory will not be affected. You can change this in Settings by adding a filter to include these files.") + "\n\n";
+
+		msg += _("◈ If the system is unable to boot, you can rescue your system by installing and running Timeshift on the Ubuntu Live CD / USB.") + "\n\n";
+
+		msg += _("◈ To guard against hard disk failures, select an external disk for the snapshot location instead of the primary hard disk.") + "\n\n";
+
+		msg += _("◈ Avoid storing snapshots on your system partition. Using another partition will allow you to format and re-install the OS on your system partition without losing the snapshots stored on it. You can even install another Linux distribution and later roll-back the previous distribution by restoring the snapshot.") + "\n\n";
+
+		msg += _("◈ Snapshots only store files which have changed. You can reduce the size by adding filters to exclude files which are not required.") + "\n\n";
+
+		msg += _("◈ Common files are hard-linked between snapshots. Copying the files manually to another location will duplicate files and break hard-links. Snapshots must be moved carefully by running 'rsync' from a terminal and the file system at destination path must support hard-links.") + "\n\n";
+		
+		lbl_final_message.label = msg;
+	}
+	
 	// filters ----------------
 
 	private void refresh_tv_exclude(){
@@ -1446,7 +1448,7 @@ class WizardWindow : Gtk.Window{
 	private void estimate_system_size(){
 		if (App.first_snapshot_size == 0){
 			App.calculate_size_of_first_snapshot();
-			go_next();
+			App.save_app_config();
 		}
 	}
 
@@ -1514,96 +1516,181 @@ class WizardWindow : Gtk.Window{
 		thread_is_running = false;
 	}
 
+	// navigation
+
+	private void page_changed(Widget page, uint page_num){
+		initialize_tab((int)page_num);
+	}
+	
+	private void go_first(){
+		
+		// set initial tab
+		
+		if (App.live_system()){
+			// skip tab_estimate and go to tab_snapshot_location
+			notebook.page = page_num_snapshot_location;
+		}
+		else{
+			if (App.first_snapshot_size == 0){
+				if (notebook.page != page_num_estimate){
+					notebook.page = page_num_estimate;
+				}
+				
+			}
+			else{
+				// skip tab_estimate
+				notebook.page = page_num_snapshot_location;
+				
+				if (mode == "create"){
+					// skip tab_snapshot_location if valid
+					go_next();
+				}
+			}
+		}
+	}
+	
 	private void go_prev(){
-		notebook.prev_page();
+		// btn_previous is visible only when mode != "settings"
+		
+		if (notebook.page == page_num_estimate){
+			// do nothing, btn_previous is disabled for this page
+		}
+		else if (notebook.page == page_num_snapshot_location){
+			// do nothing, btn_previous is disabled for this page
+		}
+		else if (notebook.page == page_num_take_snapshot){
+			// do nothing, btn_previous is disabled for this page
+		}
+		else if (notebook.page == page_num_schedule){
+			notebook.page = page_num_snapshot_location;
+		}
+		else if (notebook.page == page_num_filters){
+			// do nothing, page will not be visible when mode != "settings"
+		}
+		else if (notebook.page == page_num_finish){
+			notebook.page = page_num_schedule;
+		}
 	}
 	
 	private void go_next(){
-		if (validate_current_tab()){
-			if (notebook.page == notebook.get_n_pages() - 1){
-				btn_next.sensitive = false;
+		// btn_next is visible only when mode != "settings"
+		
+		if (!validate_current_tab()){
+			return;
+		}
+
+		if (notebook.page == page_num_estimate){
+			notebook.page = page_num_snapshot_location;
+		}
+		else if (notebook.page == page_num_snapshot_location){
+
+			if (!App.repo.has_snapshots() || (mode == "create")){
+				notebook.page = page_num_take_snapshot;
 			}
 			else{
-				notebook.next_page();
-				initialize_current_tab();
+				notebook.page = page_num_schedule;
 			}
+		}
+		else if (notebook.page == page_num_take_snapshot){
+			notebook.page = page_num_schedule;
+		}
+		else if (notebook.page == page_num_schedule){
+			notebook.page = page_num_finish;
+		}
+		else if (notebook.page == page_num_filters){
+			notebook.page = page_num_finish;
+		}
+		else if (notebook.page == page_num_finish){
+			// do nothing, btn_next is disabled for this page
 		}
 	}
 
-	private void initialize_current_tab(){
+	private void initialize_tab(int page_num){
 
-		log_debug("page: %d".printf(notebook.page));
-
-		if ((notebook.page == page_num_estimate)
-		|| (notebook.page == page_num_take_snapshot)){
-			btn_prev.hide();
-			btn_next.hide();
-			btn_cancel.hide();
-			btn_abort.show();
-
-			box_actions.set_layout (Gtk.ButtonBoxStyle.CENTER);
+		if (page_num < 0){
+			return;
 		}
-		else{
-			if (mode == "settings"){
+
+		log_msg("");
+		log_debug("page: %d".printf(page_num));
+
+		// show/hide actions -----------------------------------
+
+		btn_close.show();
+		box_actions.set_layout (Gtk.ButtonBoxStyle.CENTER);
+
+		if (mode == "wizard"){
+			if ((page_num == page_num_estimate)
+				|| (page_num == page_num_take_snapshot)){
+
 				btn_prev.hide();
 				btn_next.hide();
+				
+				btn_cancel.show();
+				box_actions.set_layout (Gtk.ButtonBoxStyle.CENTER);
 			}
 			else{
 				btn_prev.show();
 				btn_next.show();
+				
+				btn_cancel.hide();
+				box_actions.set_layout (Gtk.ButtonBoxStyle.EXPAND);
 			}
-			
-			btn_cancel.show();
-			btn_abort.hide();
-
-			btn_prev.sensitive = true;
-			btn_next.sensitive = true;
-
-			box_actions.set_layout (Gtk.ButtonBoxStyle.EXPAND);
+		}
+		else{
+			btn_prev.hide();
+			btn_next.hide();
+			btn_cancel.hide();
 		}
 		
-		if (notebook.page == page_num_estimate){
-			if (App.first_snapshot_size == 0){
-				estimate_system_size();
-			}
-			else{
-				log_debug("page: estimate: skip");
-				go_next(); // skip
-			}
+		// enable/disable actions ---------------------------------
+
+		btn_prev.sensitive = btn_prev.visible;
+		btn_next.sensitive = btn_next.visible;
+			
+		if (page_num == page_num_estimate){
+			// do nothing
 		}
-		else if (notebook.page == page_num_snapshot_location){
+		else if (page_num == page_num_snapshot_location){
 			btn_prev.sensitive = false;
-			if (mode == "create"){
-				log_debug("page: snapshot_location: skip");
-				go_next(); // skip if valid
-			}
 		}
-		else if (notebook.page == page_num_take_snapshot){
-			
-			if (!App.live_system() && !App.repo.has_snapshots()){
-				show_finish_page = true;
-			}
-			
-			if (!App.repo.has_snapshots() || (mode == "create")){
-				take_snapshot();
-			}
-			else{
-				log_debug("page: take_snapshot: skip");
-				go_next(); // skip
-			}
+		else if (page_num == page_num_take_snapshot){
+			// do nothing
 		}
-		else if (notebook.page == page_num_finish){
-			if (mode == "settings"){
-				log_debug("page: finish: skip");
-				go_next(); // skip
-			}
-			else{
-				btn_prev.sensitive = false;
-				btn_next.sensitive = false;
-				if ((mode == "create") || (show_finish_page == false)){
-					destroy(); // close window
-				}
-			}
+		else if (page_num == page_num_schedule){
+			// do nothing
+		}
+		else if (page_num == page_num_filters){
+			// do nothing
+		}
+		else if (page_num == page_num_finish){
+			btn_next.sensitive = false;
+		}
+		
+		// start actions -------------------
+		
+		if (page_num == page_num_estimate){
+			estimate_system_size();
+			go_next();
+		}
+		else if (page_num == page_num_snapshot_location){
+			tv_devices_refresh();
+			radio_device.toggled();
+			radio_path.toggled();
+			check_backup_location();
+		}
+		else if (page_num == page_num_take_snapshot){
+			take_snapshot();
+			go_next();
+		}
+		else if (page_num == page_num_schedule){
+			chk_schedule_changed();
+		}
+		else if (page_num == page_num_filters){
+			// do nothing
+		}
+		else if (page_num == page_num_finish){
+			update_final_message();
 		}
 	}
 
@@ -1612,10 +1699,8 @@ class WizardWindow : Gtk.Window{
 		if (notebook.page == page_num_snapshot_location){
 			if (!check_backup_location()){
 				
-				gtk_messagebox(
-					"Snapshot location not valid",
-					"Please select a valid device or path",
-					this, true);
+				gtk_messagebox(App.repo.status_message,
+					App.repo.status_details, this, true);
 					
 				return false;
 			}
@@ -2004,14 +2089,8 @@ class WizardWindow : Gtk.Window{
 			if (chooser.run() == Gtk.ResponseType.ACCEPT) {
 				entry.text = chooser.get_filename();
 
-				App.repo.use_snapshot_path_custom = true;
-				App.repo.snapshot_path_user = entry.text;
+				App.repo = new SnapshotRepo.from_path(entry.text, this);
 				check_backup_location();
-				//log_msg("here");
-				//if (!check_backup_location()){
-				//	App.use_snapshot_path = false;
-				//	log_msg("set false");
-				//}
 			}
 
 			chooser.destroy();

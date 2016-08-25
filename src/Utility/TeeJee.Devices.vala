@@ -945,7 +945,6 @@ namespace TeeJee.Devices{
 		}
 
 		public static bool mount_point_in_use(string mount_point){
-			bool mounted = false;
 			var list = Device.get_mounted_filesystems_using_mtab();
 			foreach (var dev in list){
 				foreach(var mp in dev.mount_points){

@@ -103,7 +103,8 @@ class WizardWindow : Gtk.Window{
 	private ImageMenuItem menu_include_add_folder;
 
 	private Gee.ArrayList<string> temp_exclude_list;
-	
+
+	private bool show_dummy_progress = false;
 	
 	public WizardWindow (string _mode) {
 
@@ -1476,7 +1477,9 @@ class WizardWindow : Gtk.Window{
 	}
 
 	private void take_snapshot(){
-	
+
+		show_dummy_progress = (App.repo.snapshots.size > 0);
+
 		try {
 			thread_is_running = true;
 			Thread.create<void> (take_snapshot_thread, true);
@@ -1484,12 +1487,12 @@ class WizardWindow : Gtk.Window{
 		catch (Error e) {
 			log_error (e.message);
 		}
-		
-		int64 last_count = 0;
 
+		string last_message = "";
+		
 		while (thread_is_running){
 
-			lbl_status.label = App.task.status_line;
+			lbl_status.label = escape_html(App.task.status_line);
 			//string line = null;
 			//while((line = App.task.status_lines.pop_head()) != null){
 				//text_view_append(txtv_create, line + "\n");
@@ -1498,28 +1501,28 @@ class WizardWindow : Gtk.Window{
 				//gtk_do_events();
 			//}
 			
-			if ((Main.first_snapshot_count > 0)
-				&& (App.task.status_line_count < Main.first_snapshot_count)){
-
+			if (show_dummy_progress){
+				if (progressbar.fraction < 99.0){	
+					progressbar.fraction = progressbar.fraction + 0.0005;
+				}
+			}
+			else{
 				double fraction = (App.task.status_line_count * 1.0)
 					/ Main.first_snapshot_count;
 
-				if (App.task.status_line_count == last_count){
-					progressbar.fraction = progressbar.fraction + 0.0005;
-				}
-				else{
-					progressbar.set_fraction(fraction);
-				}
-
-				last_count = App.task.status_line_count;
+				progressbar.fraction = fraction;
 			}
 
-			lbl_msg.label = App.progress_text;
-
+			if (App.progress_text != last_message){
+				progressbar.fraction = 0;
+				lbl_msg.label = App.progress_text;
+				last_message = App.progress_text;
+			}
+	
 			gtk_do_events();
 
 			sleep(100);
-			gtk_do_events();
+			//gtk_do_events();
 		}
 
 		//TODO: check errors.

@@ -177,15 +177,6 @@ class MainWindow : Gtk.Window{
 
         btn_settings.clicked.connect (btn_settings_clicked);
 
-        //btn_settings
-		btn_settings = new Gtk.ToolButton.from_stock ("gtk-preferences");
-		btn_settings.is_important = true;
-		btn_settings.label = _("Settings");
-		btn_settings.set_tooltip_text (_("Settings"));
-        toolbar.add(btn_settings);
-
-        btn_settings.clicked.connect (btn_settings2_clicked);
-
         //btn_wizard
 		var btn_wizard = new Gtk.ToolButton.from_stock ("tools-wizard");
 		btn_wizard.is_important = true;
@@ -1057,20 +1048,6 @@ class MainWindow : Gtk.Window{
 	}
 
 	private void btn_settings_clicked(){
-		var dialog = new SettingsWindow();
-		dialog.set_transient_for (this);
-		dialog.response.connect ((response_id) => {
-			if (response_id == Gtk.ResponseType.CANCEL || response_id == Gtk.ResponseType.DELETE_EVENT) {
-				dialog.hide_on_delete ();
-			}
-		});
-
-		dialog.show_all();
-		dialog.run();
-		update_statusbar();
-	}
-
-	private void btn_settings2_clicked(){
 		var win = new WizardWindow("settings");
 		win.set_transient_for(this);
 		win.show_all();

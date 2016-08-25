@@ -68,8 +68,8 @@ public class ExcludeMessageWindow : Gtk.Dialog{
 
 	    //vbox_main
         vbox_main = get_content_area ();
-		vbox_main.margin = 3;
-		vbox_main.spacing = 3;
+		vbox_main.margin = 6;
+		vbox_main.spacing = 6;
 
 		//lbl_header_exclude
 		lbl_header_exclude = new Gtk.Label("<b>" + _("Exclude List") + ":</b>");

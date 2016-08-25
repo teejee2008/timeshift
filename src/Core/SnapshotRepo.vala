@@ -364,7 +364,7 @@ public class SnapshotRepo : GLib.Object{
 						return false;
 					}
 					else{
-						log_msg("is_available: ok");
+						log_debug("is_available: ok");
 						// ok
 						return true;
 					}

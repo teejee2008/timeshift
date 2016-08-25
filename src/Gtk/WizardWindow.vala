@@ -75,7 +75,6 @@ class WizardWindow : Gtk.Window{
 
 	private string mode;
 
-
 	//exclude
 	
 	private TreeView tv_exclude;
@@ -733,7 +732,9 @@ class WizardWindow : Gtk.Window{
 	private void create_device_list(Gtk.Box box){
 		tv_devices = add_treeview(box);
 		tv_devices.vexpand = true;
+		tv_devices.headers_clickable = true;
 		tv_devices.rules_hint = true;
+		tv_devices.activate_on_single_click = true;
 		
 		// device name
 		
@@ -869,7 +870,7 @@ class WizardWindow : Gtk.Window{
 		
 		// events
 
-		tv_devices.cursor_changed.connect(() => {
+		tv_devices.row_activated.connect((path, column) => {
 			var store = (Gtk.TreeStore) tv_devices.model;
 			var selection = tv_devices.get_selection();
 
@@ -921,6 +922,8 @@ class WizardWindow : Gtk.Window{
 
 	private void try_change_device(Device dev){
 
+		log_debug("try_change_device: %s".printf(dev.device));
+		
 		if (dev.type == "disk"){
 			bool found_child = false;
 			foreach (var child in dev.children){
@@ -938,11 +941,11 @@ class WizardWindow : Gtk.Window{
 				infobar_location.show_all();
 			}
 		}
-		else if (!dev.has_children()){
-			change_backup_device(dev);
-		}
 		else if (dev.has_children()){
 			change_backup_device(dev.children[0]);
+		}
+		else if (!dev.has_children()){
+			change_backup_device(dev);
 		}
 		else {
 			lbl_infobar_location.label = "<span weight=\"bold\">%s</span>".printf(
@@ -958,25 +961,36 @@ class WizardWindow : Gtk.Window{
 		if ((App.repo.device != null) && (pi.uuid == App.repo.device.uuid)){ return; }
 
 		gtk_set_busy(true, this);
-		
+
+		log_debug("\n");
+		log_debug("selected device: %s".printf(pi.device));
+		log_debug("fstype: %s".printf(pi.fstype));
+
 		App.repo = new SnapshotRepo.from_device(pi, this);
 
-		App.update_partitions();
-		var newpi = Device.find_device_in_list(App.partitions,pi.device,pi.uuid);
+		if (pi.fstype == "luks"){
+			App.update_partitions();
 
-		//log_debug("newpi: %s".printf(pi.device));
-		//log_debug("pi.fstype: %s".printf(pi.fstype));
-		//log_debug("pi.child_device: %s".printf(
-		//	(pi.children.size == 0) ? "null" : pi.children[0].device));
-		
-		if ((pi.fstype == "luks") && !pi.has_children() && newpi.has_children()){
-			App.repo = new SnapshotRepo.from_device(newpi.children[0], this);
-			tv_devices_refresh();
+			var dev = Device.find_device_in_list(App.partitions, pi.device, pi.uuid);
+			
+			if (dev.has_children()){
+				
+				log_debug("has children");
+				
+				if (dev.children[0].has_linux_filesystem()){
+					
+					log_debug("has linux filesystem: %s".printf(dev.children[0].fstype));
+					log_debug("selecting child '%s' of parent '%s'".printf(
+						dev.children[0].device, dev.device));
+						
+					App.repo = new SnapshotRepo.from_device(dev.children[0], this);
+					tv_devices_refresh();
+				}
+				else{
+					log_debug("does not have linux filesystem");
+				}
+			}
 		}
-
-		//if (App.snapshot_device != null){
-		//	log_msg("Snapshot device: %s".printf(App.snapshot_device.description()));
-		//}
 
 		check_backup_location();
 
@@ -1091,11 +1105,7 @@ class WizardWindow : Gtk.Window{
 
 		Gdk.Pixbuf pix_device = get_shared_icon("disk","disk.png",16).pixbuf;
 
-		TreeIter iter0, iter_selected, iter_dummy;
-
-		model.append(out iter_dummy, null);
-		iter_selected = iter_dummy;
-		model.clear();
+		TreeIter iter0;
 
 		foreach(var disk in App.partitions) {
 			if (disk.type != "disk") { continue; }
@@ -1106,22 +1116,15 @@ class WizardWindow : Gtk.Window{
 			model.set(iter0, 2, pix_device, -1);
 			model.set(iter0, 3, false, -1);
 
-			tv_append_child_volumes(ref model, ref iter0, disk, ref iter_selected);
+			tv_append_child_volumes(ref model, ref iter0, disk);
 		}
-
-		//TODO: pre-select the current App.snapshot_device
-
-		//if (iter_selected != iter_dummy){
-			//tv_devices.get_selection().select_iter(iter_selected);
-		//}
 
 		tv_devices.expand_all();
 		tv_devices.columns_autosize();
 	}
 
 	private void tv_append_child_volumes(
-		ref Gtk.TreeStore model, ref Gtk.TreeIter iter0,
-		Device parent, ref Gtk.TreeIter iter_selected){
+		ref Gtk.TreeStore model, ref Gtk.TreeIter iter0, Device parent){
 			
 		Gdk.Pixbuf pix_device = get_shared_icon("disk","disk.png",16).pixbuf;
 		Gdk.Pixbuf pix_locked = get_shared_icon("locked","locked.png",16).pixbuf;
@@ -1138,21 +1141,19 @@ class WizardWindow : Gtk.Window{
 				model.set(iter1, 1, part.tooltip_text(), -1);
 				model.set(iter1, 2, (part.fstype == "luks") ? pix_locked : pix_device, -1);
 				
-				
 				if (parent.fstype == "luks"){
 					// change parent's icon to unlocked
 					model.set(iter0, 2, pix_unlocked, -1);
 				}
 
 				if ((App.repo.device != null) && (part.uuid == App.repo.device.uuid)){
-					//iter_selected = iter1;
 					model.set(iter1, 3, true, -1);
 				}
 				else{
 					model.set(iter1, 3, false, -1);
 				}
 
-				tv_append_child_volumes(ref model, ref iter1, part, ref iter_selected);
+				tv_append_child_volumes(ref model, ref iter1, part);
 			}
 		}
 	}

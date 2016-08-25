@@ -14,6 +14,7 @@ public class SnapshotRepo : GLib.Object{
 	public bool use_snapshot_path_custom = false;
 
 	public Gee.ArrayList<Snapshot?> snapshots;
+	public Gee.ArrayList<Snapshot?> invalid_snapshots;
 
 	public string status_message = "";
 	public string status_details = "";

@@ -230,10 +230,28 @@ class WizardWindow : Gtk.Window{
 		
 		add_label_header(box, _("Select Snapshot Location"), true);
 
-		// section device
-		
-		radio_device = add_radio(box, "<b>%s</b>".printf(_("Disk Partition:")), null);
+		// section device -------------------------------------
 
+		var hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
+		box.add(hbox);
+		
+		// radio
+		radio_device = add_radio(hbox, "<b>%s</b>".printf(_("Disk Partition:")), null);
+
+		// buffer
+		var label = add_label(hbox, "");
+        label.hexpand = true;
+        
+		// refresh device button
+		
+		Gtk.Image img = new Image.from_stock("gtk-refresh", Gtk.IconSize.BUTTON);
+		Gtk.SizeGroup size_group = null;
+		var btn_refresh = add_button(hbox, _("Refresh"), "", ref size_group, img);
+        btn_refresh.clicked.connect(()=>{
+			App.update_partitions();
+			tv_devices_refresh();
+		});
+		
 		var msg = _("Only Linux partitions are supported.");
 		msg += "\n" + _("Snapshots will be saved in folder /timeshift");
 				
@@ -248,20 +266,24 @@ class WizardWindow : Gtk.Window{
 				check_backup_location();
 			}
 		});
-		
+
+		// treeview
 		create_device_list(box);
 
+		// tooltips
 		radio_device.set_tooltip_text(msg);
 		tv_devices.set_tooltip_text(msg);
 
-		// section path
-		
+		// section path -------------------------------------
+
+		// radio
 		radio_path = add_radio(box, "<b>%s</b>".printf(_("Custom Path:")), radio_device);
 		radio_path.margin_top = 12;
 
 		msg = _("File system at selected path must support hard-links");
 		//var lbl_path_subnote = add_label_subnote(box,msg);
 
+		// chooser
 		entry_backup_path = add_directory_chooser(box, App.repo.snapshot_path_user);
 		entry_backup_path.margin_bottom = 12;
 		
@@ -275,8 +297,10 @@ class WizardWindow : Gtk.Window{
 			}
 		});
 
+		// infobar
 		create_infobar_location(box);
 
+		// tooltips
 		radio_path.set_tooltip_text(msg);
 		entry_backup_path.set_tooltip_text(msg);
 

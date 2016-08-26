@@ -56,7 +56,8 @@ class WizardWindow : Gtk.Window{
 	private Gtk.Box tab_take_snapshot;
 	private Gtk.Box tab_finish;
 	private Gtk.Box tab_schedule;
-	private Gtk.Box tab_filters;
+	private Gtk.Box tab_include;
+	private Gtk.Box tab_exclude;
 	
 	private Gtk.Spinner spinner;
 	private Gtk.Label lbl_msg;
@@ -75,26 +76,27 @@ class WizardWindow : Gtk.Window{
 
 	private string mode;
 
-	//exclude
+	// filters
 	
-	private TreeView tv_exclude;
-	private ScrolledWindow sw_exclude;
-	private TreeViewColumn col_exclude;
-	private Toolbar toolbar_exclude;
-	private ToolButton btn_remove;
-	private ToolButton btn_warning;
-	private ToolButton btn_reset_exclude_list;
+	private Gtk.TreeView tv_exclude;
+	private Gtk.TreeView tv_include;
+	//private ScrolledWindow sw_exclude;
+	//private TreeViewColumn col_exclude;
+	//private Toolbar toolbar_exclude;
+	//private ToolButton btn_remove;
+	//private ToolButton btn_warning;
+	//private ToolButton btn_reset_exclude_list;
 
-	private MenuToolButton btn_exclude;
-	private Gtk.Menu menu_exclude;
-	private ImageMenuItem menu_exclude_add_file;
-	private ImageMenuItem menu_exclude_add_folder;
-	private ImageMenuItem menu_exclude_add_folder_contents;
+	//private MenuToolButton btn_exclude;
+	//private Gtk.Menu menu_exclude;
+	//private ImageMenuItem menu_exclude_add_file;
+	//private ImageMenuItem menu_exclude_add_folder;
+	//private ImageMenuItem menu_exclude_add_folder_contents;
 
-	private MenuToolButton btn_include;
-	private Gtk.Menu menu_include;
-	private ImageMenuItem menu_include_add_file;
-	private ImageMenuItem menu_include_add_folder;
+	//private MenuToolButton btn_include;
+	//private Gtk.Menu menu_include;
+	//private ImageMenuItem menu_include_add_file;
+	//private ImageMenuItem menu_include_add_folder;
 
 	private Gee.ArrayList<string> temp_exclude_list;
 
@@ -115,6 +117,8 @@ class WizardWindow : Gtk.Window{
 		//this.delete_event.connect(on_delete_event);
 		this.icon = get_app_icon(16);
 
+		this.delete_event.connect(on_delete_event);
+		
 	    // vbox_main
         var box = new Box (Orientation.VERTICAL, 6);
         box.margin = 0; // keep 0 as we will hide tabs in Wizard view
@@ -139,7 +143,8 @@ class WizardWindow : Gtk.Window{
 		tab_schedule = create_tab_schedule();
 
 		if (mode == "settings"){
-			tab_filters = create_tab_filters();
+			tab_include = create_tab_include();
+			tab_exclude = create_tab_exclude();
 		}
 
 		if (mode != "create"){
@@ -160,6 +165,19 @@ class WizardWindow : Gtk.Window{
 
 		tmr_init = Timeout.add(100, init_delayed);
     }
+
+	private bool on_delete_event(Gdk.EventAny event){
+
+		log_debug("WizardWindow: on_destroy_event()");
+		
+		//this.delete_event.disconnect(on_delete_event); //disconnect this handler
+
+		if (mode == "settings"){
+			tv_filters_save_changes();
+		}
+		
+		return false; // close window
+	}
 
     private bool init_delayed(){
 
@@ -220,7 +238,7 @@ class WizardWindow : Gtk.Window{
 
 	private Gtk.Box create_tab_snapshot_device(){
 		var margin = (mode == "settings") ? 12 : 6;
-		var box = add_tab(notebook, _("Snapshot Device"), margin);
+		var box = add_tab(notebook, _("Device"), margin);
 		
 		var hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
 		box.add(hbox);
@@ -304,7 +322,7 @@ class WizardWindow : Gtk.Window{
 		create_infobar_location(box);
 
 		// tooltips
-		radio_path.set_tooltip_text(msg);
+		//radio_path.set_tooltip_text(msg);
 		entry_backup_path.set_tooltip_text(msg);
 
 		return box;
@@ -481,172 +499,204 @@ class WizardWindow : Gtk.Window{
 		return box;
 	}
 
-	private Gtk.Box create_tab_filters(){
+	private Gtk.Box create_tab_include(){
 		var margin = (mode == "settings") ? 12 : 6;
-		var box = add_tab(notebook, _("Filters"), margin);
+		var box = add_tab(notebook, _("Include"), margin);
 		box.spacing = 6;
 
-		add_label_header(box, _("Select Files to Include & Exclude"), true);
+		add_label_header(box, _("Include Files"), true);
 
-		//toolbar_exclude ---------------------------------------------------
+		add_label(box, _("Include these items in snapshots:"));
 
-        //toolbar_exclude
-		toolbar_exclude = new Gtk.Toolbar ();
-		toolbar_exclude.toolbar_style = ToolbarStyle.BOTH_HORIZ;
-		//toolbar_exclude.get_style_context().add_class(Gtk.STYLE_CLASS_PRIMARY_TOOLBAR);
-		//toolbar.set_size_request(-1,48);
-		box.add(toolbar_exclude);
+		// tv_exclude-----------------------------------------------
 
-		string png_exclude = App.share_folder + "/timeshift/images/item-gray.png";
-		string png_include = App.share_folder + "/timeshift/images/item-blue.png";
-
-		//btn_exclude
-		btn_exclude = new Gtk.MenuToolButton(null,"");
-		toolbar_exclude.add(btn_exclude);
-
-		btn_exclude.is_important = true;
-		btn_exclude.label = _("Exclude");
-		btn_exclude.set_tooltip_text (_("Exclude"));
-		btn_exclude.set_icon_widget(new Gtk.Image.from_file (png_exclude));
-
-		//btn_include
-		btn_include = new Gtk.MenuToolButton(null,"");
-		toolbar_exclude.add(btn_include);
-
-		btn_include.is_important = true;
-		btn_include.label = _("Include");
-		btn_include.set_tooltip_text (_("Include"));
-		btn_include.set_icon_widget(new Gtk.Image.from_file (png_include));
-
-		//btn_remove
-		btn_remove = new Gtk.ToolButton.from_stock("gtk-remove");
-		toolbar_exclude.add(btn_remove);
-
-		btn_remove.is_important = true;
-		btn_remove.label = _("Remove");
-		btn_remove.set_tooltip_text (_("Remove selected items"));
-
-		btn_remove.clicked.connect (btn_remove_clicked);
-
-		//btn_warning
-		btn_warning = new Gtk.ToolButton.from_stock("gtk-dialog-warning");
-		toolbar_exclude.add(btn_warning);
-
-		btn_warning.is_important = true;
-		btn_warning.label = _("Warning");
-		btn_warning.set_tooltip_text (_("Warning"));
-
-		btn_warning.clicked.connect (btn_warning_clicked);
-
-		//separator
-		var separator = new Gtk.SeparatorToolItem();
-		separator.set_draw (false);
-		separator.set_expand (true);
-		toolbar_exclude.add(separator);
-
-		//btn_reset_exclude_list
-		btn_reset_exclude_list = new Gtk.ToolButton.from_stock("gtk-refresh");
-		toolbar_exclude.add(btn_reset_exclude_list);
-
-		btn_reset_exclude_list.is_important = false;
-		btn_reset_exclude_list.label = _("Reset");
-		btn_reset_exclude_list.set_tooltip_text (_("Clear the list"));
-
-		btn_reset_exclude_list.clicked.connect (btn_reset_exclude_list_clicked);
-
-        //menu_exclude
-		menu_exclude = new Gtk.Menu();
-		btn_exclude.set_menu(menu_exclude);
-
-		//menu_exclude_add_file
-		menu_exclude_add_file = new ImageMenuItem.with_label ("");
-		menu_exclude_add_file.label = _("Exclude File(s)");
-		menu_exclude_add_file.set_image(new Gtk.Image.from_file (png_exclude));
-		menu_exclude.append(menu_exclude_add_file);
-
-		menu_exclude_add_file.activate.connect (menu_exclude_add_files_clicked);
-
-		//menu_exclude_add_folder
-		menu_exclude_add_folder = new ImageMenuItem.with_label ("");
-		menu_exclude_add_folder.label = _("Exclude Directory");
-		menu_exclude_add_folder.set_image(new Gtk.Image.from_file (png_exclude));
-		menu_exclude.append(menu_exclude_add_folder);
-
-		menu_exclude_add_folder.activate.connect (menu_exclude_add_folder_clicked);
-
-		//menu_exclude_add_folder_contents
-		menu_exclude_add_folder_contents = new ImageMenuItem.with_label ("");
-		menu_exclude_add_folder_contents.label = _("Exclude Directory Contents");
-		menu_exclude_add_folder_contents.set_image(new Gtk.Image.from_file (png_exclude));
-		menu_exclude.append(menu_exclude_add_folder_contents);
-
-		menu_exclude_add_folder_contents.activate.connect (menu_exclude_add_folder_contents_clicked);
-
-		//menu_include
-		menu_include = new Gtk.Menu();
-		btn_include.set_menu(menu_include);
-
-		//menu_include_add_file
-		menu_include_add_file = new ImageMenuItem.with_label ("");
-		menu_include_add_file.label = _("Include File(s)");
-		menu_include_add_file.set_image(new Gtk.Image.from_file (png_include));
-		menu_include.append(menu_include_add_file);
-
-		menu_include_add_file.activate.connect (menu_include_add_files_clicked);
-
-		//menu_include_add_folder
-		menu_include_add_folder = new ImageMenuItem.with_label ("");
-		menu_include_add_folder.label = _("Include Directory");
-		menu_include_add_folder.set_image(new Gtk.Image.from_file (png_include));
-		menu_include.append(menu_include_add_folder);
-
-		menu_include_add_folder.activate.connect (menu_include_add_folder_clicked);
-
-		menu_exclude.show_all();
-		menu_include.show_all();
-
-		//tv_exclude-----------------------------------------------
-
-		//tv_exclude
-		tv_exclude = new TreeView();
-		tv_exclude.get_selection().mode = SelectionMode.MULTIPLE;
-		tv_exclude.headers_visible = true;
-		tv_exclude.set_rules_hint (true);
+		// tv_include
+		var treeview = new TreeView();
+		treeview.get_selection().mode = SelectionMode.MULTIPLE;
+		treeview.headers_visible = false;
+		treeview.rules_hint = true;
+		treeview.reorderable = true;
 		//tv_exclude.row_activated.connect(tv_exclude_row_activated);
+		tv_include = treeview;
+		
+		// scrolled
+		var scrolled = new ScrolledWindow(null, null);
+		scrolled.set_shadow_type (ShadowType.ETCHED_IN);
+		scrolled.add (tv_include);
+		scrolled.expand = true;
+		box.add(scrolled);
 
-		//sw_exclude
-		sw_exclude = new ScrolledWindow(null, null);
-		sw_exclude.set_shadow_type (ShadowType.ETCHED_IN);
-		sw_exclude.add (tv_exclude);
-		sw_exclude.expand = true;
-		box.add(sw_exclude);
+        // column
+		var col = new TreeViewColumn();
+		col.title = _("File Pattern");
+		col.expand = true;
+		tv_include.append_column(col);
+		
+		// margin
+		var cell_text = new CellRendererText ();
+		cell_text.text = "";
+		col.pack_start (cell_text, false);
 
-        //col_exclude
-		col_exclude = new TreeViewColumn();
-		col_exclude.title = _("File Pattern");
-		col_exclude.expand = true;
+		// icon
+		var cell_icon = new CellRendererPixbuf ();
+		col.pack_start (cell_icon, false);
+		col.set_attributes(cell_icon, "pixbuf", 1);
 
-		CellRendererText cell_exclude_margin = new CellRendererText ();
-		cell_exclude_margin.text = "";
-		col_exclude.pack_start (cell_exclude_margin, false);
+		// pattern
+		cell_text = new CellRendererText ();
+		col.pack_start (cell_text, false);
+		col.set_cell_data_func (cell_text, cell_exclude_text_render);
+		//cell_text.editable = true;
+		
+		//cell_text.edited.connect (cell_exclude_text_edited);
 
-		CellRendererPixbuf cell_exclude_icon = new CellRendererPixbuf ();
-		col_exclude.pack_start (cell_exclude_icon, false);
-		col_exclude.set_attributes(cell_exclude_icon, "pixbuf", 1);
-
-		CellRendererText cell_exclude_text = new CellRendererText ();
-		col_exclude.pack_start (cell_exclude_text, false);
-		col_exclude.set_cell_data_func (cell_exclude_text, cell_exclude_text_render);
-		cell_exclude_text.editable = true;
-		tv_exclude.append_column(col_exclude);
-
-		cell_exclude_text.edited.connect (cell_exclude_text_edited);
-
-		// link
+		/* // link
 		var link = new LinkButton.with_label("",_("Some locations are excluded by default"));
 		link.xalign = (float) 0.0;
 		link.activate_link.connect(lnk_default_list_activate);
 		box.add(link);
+		*
+		* */
+
+		// actions
+
+		var hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
+		box.add(hbox);
+		
+		Gtk.SizeGroup size_group = null;
+		var button = add_button(hbox, _("Add Files"),
+			_("Add files to this list"), ref size_group, null);
+        button.clicked.connect(()=>{
+			menu_include_add_files_clicked();
+		});
+
+		size_group = null;
+		button = add_button(hbox, _("Add Folders"),
+			_("Add folders to this list"), ref size_group, null);
+        button.clicked.connect(()=>{
+			menu_include_add_folder_clicked();
+		});
+
+		size_group = null;
+		button = add_button(hbox, _("Add Contents"),
+			_("Add the contents of a folder to this list"), ref size_group, null);
+        button.clicked.connect(()=>{
+			menu_include_add_folder_contents_clicked();
+		});
+
+		size_group = null;
+		button = add_button(hbox, _("Remove"), "", ref size_group, null);
+        button.clicked.connect(()=>{
+			btn_include_remove_clicked();
+		});
+
+
+		//initialize ------------------
+
+		temp_exclude_list = new Gee.ArrayList<string>();
+
+		foreach(string path in App.exclude_list_user){
+			if (!temp_exclude_list.contains(path)){
+				temp_exclude_list.add(path);
+			}
+		}
+
+		refresh_tv_include();
+		
+		return box;
+	}
+
+	private Gtk.Box create_tab_exclude(){
+		var margin = (mode == "settings") ? 12 : 6;
+		var box = add_tab(notebook, _("Exclude"), margin);
+		box.spacing = 6;
+
+		add_label_header(box, _("Exclude Files"), true);
+
+		add_label(box, _("Exclude these items in snapshots:"));
+
+		// tv_exclude-----------------------------------------------
+
+		// tv_exclude
+		var treeview = new TreeView();
+		treeview.get_selection().mode = SelectionMode.MULTIPLE;
+		treeview.headers_visible = false;
+		treeview.rules_hint = true;
+		treeview.reorderable = true;
+		//tv_exclude.row_activated.connect(tv_exclude_row_activated);
+		tv_exclude = treeview;
+		
+		// scrolled
+		var scrolled = new ScrolledWindow(null, null);
+		scrolled.set_shadow_type (ShadowType.ETCHED_IN);
+		scrolled.add (tv_exclude);
+		scrolled.expand = true;
+		box.add(scrolled);
+
+        // column
+		var col = new TreeViewColumn();
+		col.title = _("File Pattern");
+		col.expand = true;
+		tv_exclude.append_column(col);
+		
+		// margin
+		var cell_text = new CellRendererText ();
+		cell_text.text = "";
+		col.pack_start (cell_text, false);
+
+		// icon
+		var cell_icon = new CellRendererPixbuf ();
+		col.pack_start (cell_icon, false);
+		col.set_attributes(cell_icon, "pixbuf", 1);
+
+		// pattern
+		cell_text = new CellRendererText ();
+		col.pack_start (cell_text, false);
+		col.set_cell_data_func (cell_text, cell_exclude_text_render);
+		//cell_text.editable = true;
+		
+		//cell_text.edited.connect (cell_exclude_text_edited);
+
+		/* // link
+		var link = new LinkButton.with_label("",_("Some locations are excluded by default"));
+		link.xalign = (float) 0.0;
+		link.activate_link.connect(lnk_default_list_activate);
+		box.add(link);
+		*
+		* */
+
+		// actions
+		
+		var hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
+		box.add(hbox);
+
+		Gtk.SizeGroup size_group = null;
+		var button = add_button(hbox, _("Add Files"),
+			_("Add files to this list"), ref size_group, null);
+        button.clicked.connect(()=>{
+			menu_exclude_add_files_clicked();
+		});
+
+		size_group = null;
+		button = add_button(hbox, _("Add Folders"),
+			_("Add folders to this list"), ref size_group, null);
+        button.clicked.connect(()=>{
+			menu_exclude_add_folder_clicked();
+		});
+
+		size_group = null;
+		button = add_button(hbox, _("Add Contents"),
+			_("Add the contents of a folder to this list"), ref size_group, null);
+        button.clicked.connect(()=>{
+			menu_exclude_add_folder_contents_clicked();
+		});
+
+		size_group = null;
+		button = add_button(hbox, _("Remove"), "", ref size_group, null);
+        button.clicked.connect(()=>{
+			btn_exclude_remove_clicked();
+		});
+
 
 		//initialize ------------------
 
@@ -717,6 +767,7 @@ class WizardWindow : Gtk.Window{
 
         btn_close.clicked.connect(()=>{
 			App.cron_job_update();
+			tv_filters_save_changes();
 			this.destroy();
 		});
 
@@ -1211,30 +1262,45 @@ class WizardWindow : Gtk.Window{
 	
 	// filters ----------------
 
+	private void refresh_tv_include(){
+		var model = new Gtk.ListStore(2, typeof(string), typeof(Gdk.Pixbuf));
+		tv_include.model = model;
+
+		foreach(string path in temp_exclude_list){
+			if (path.has_prefix("+ ")){
+				treeview_filters_add_item(tv_include, path);
+			}
+		}
+	}
+
 	private void refresh_tv_exclude(){
 		var model = new Gtk.ListStore(2, typeof(string), typeof(Gdk.Pixbuf));
 		tv_exclude.model = model;
 
 		foreach(string path in temp_exclude_list){
-			tv_exclude_add_item(path);
+			if (!path.has_prefix("+ ")){
+				treeview_filters_add_item(tv_exclude, path);
+			}
 		}
 	}
 
-	private void tv_exclude_add_item(string path){
+	private void treeview_filters_add_item(Gtk.TreeView treeview, string path){
 		Gdk.Pixbuf pix_exclude = null;
 		Gdk.Pixbuf pix_include = null;
 		Gdk.Pixbuf pix_selected = null;
 
 		try{
-			pix_exclude = new Gdk.Pixbuf.from_file (App.share_folder + "/timeshift/images/item-gray.png");
-			pix_include = new Gdk.Pixbuf.from_file (App.share_folder + "/timeshift/images/item-blue.png");
+			pix_exclude = new Gdk.Pixbuf.from_file (
+				App.share_folder + "/timeshift/images/item-gray.png");
+			pix_include = new Gdk.Pixbuf.from_file (
+				App.share_folder + "/timeshift/images/item-blue.png");
 		}
         catch(Error e){
 	        log_error (e.message);
 	    }
 
 		TreeIter iter;
-		var model = (Gtk.ListStore) tv_exclude.model;
+		var model = (Gtk.ListStore) treeview.model;
 		model.append(out iter);
 
 		if (path.has_prefix("+ ")){
@@ -1246,7 +1312,7 @@ class WizardWindow : Gtk.Window{
 
 		model.set (iter, 0, path, 1, pix_selected, -1);
 
-		Adjustment adj = tv_exclude.get_hadjustment();
+		var adj = treeview.get_hadjustment();
 		adj.value = adj.upper;
 	}
 
@@ -1257,7 +1323,9 @@ class WizardWindow : Gtk.Window{
 		(cell as Gtk.CellRendererText).text = pattern.has_prefix("+ ") ? pattern[2:pattern.length] : pattern;
 	}
 
-	private void cell_exclude_text_edited (string path, string new_text) {
+	private void cell_exclude_text_edited (
+		string path, string new_text) {
+			
 		string old_pattern;
 		string new_pattern;
 
@@ -1279,31 +1347,60 @@ class WizardWindow : Gtk.Window{
 		temp_exclude_list.remove(old_pattern);
 	}
 
-	private void tv_exclude_save_changes(){
+	private void tv_filters_save_changes(){
 		App.exclude_list_user.clear();
-		foreach(string path in temp_exclude_list){
-			if (!App.exclude_list_user.contains(path) && !App.exclude_list_default.contains(path) && !App.exclude_list_home.contains(path)){
+		
+		/*foreach(string path in temp_exclude_list){
+			if (!App.exclude_list_user.contains(path)
+			&& !App.exclude_list_default.contains(path)
+			&& !App.exclude_list_home.contains(path)){
+				
 				App.exclude_list_user.add(path);
 			}
-		}
-	}
+		}*/
 
-	private void btn_remove_clicked(){
-		TreeSelection sel = tv_exclude.get_selection ();
+		// add include list
 		TreeIter iter;
-		bool iterExists = tv_exclude.model.get_iter_first (out iter);
+		var store = (Gtk.ListStore) tv_include.model;
+		bool iterExists = store.get_iter_first (out iter);
 		while (iterExists) {
-			if (sel.iter_is_selected (iter)){
-				string path;
-				tv_exclude.model.get (iter, 0, out path);
-				temp_exclude_list.remove(path);
-				Main.first_snapshot_size = 0; //re-calculate
+			string path;
+			store.get (iter, 0, out path);
+
+			if (!App.exclude_list_user.contains(path)
+				&& !App.exclude_list_default.contains(path)
+				&& !App.exclude_list_home.contains(path)){
+				
+				App.exclude_list_user.add(path);
 			}
-			iterExists = tv_exclude.model.iter_next (ref iter);
+			
+			iterExists = store.iter_next (ref iter);
 		}
 
-		refresh_tv_exclude();
+		// add exclude list
+		store = (Gtk.ListStore) tv_exclude.model;
+		iterExists = store.get_iter_first (out iter);
+		while (iterExists) {
+			string path;
+			store.get (iter, 0, out path);
+
+			if (!App.exclude_list_user.contains(path)
+				&& !App.exclude_list_default.contains(path)
+				&& !App.exclude_list_home.contains(path)){
+				
+				App.exclude_list_user.add(path);
+			}
+			
+			iterExists = store.iter_next (ref iter);
+		}
+
+		log_debug("tv_filters_save_changes()");
+		foreach(var item in App.exclude_list_user){
+			log_debug(item);
+		}
+		log_debug("");
 	}
+
 
 	private void btn_warning_clicked(){
 		string msg = "";
@@ -1341,6 +1438,26 @@ class WizardWindow : Gtk.Window{
 	}
 
 
+
+	private void btn_exclude_remove_clicked(){
+		TreeSelection sel = tv_exclude.get_selection ();
+		TreeIter iter;
+		bool iterExists = tv_exclude.model.get_iter_first (out iter);
+		while (iterExists) {
+			if (sel.iter_is_selected (iter)){
+				string path;
+				tv_exclude.model.get (iter, 0, out path);
+				temp_exclude_list.remove(path);
+				Main.first_snapshot_size = 0; //re-calculate
+			}
+			iterExists = tv_exclude.model.iter_next (ref iter);
+		}
+
+		tv_filters_save_changes();
+
+		refresh_tv_exclude();
+	}
+
 	private void menu_exclude_add_files_clicked(){
 
 		var list = browse_files();
@@ -1349,13 +1466,17 @@ class WizardWindow : Gtk.Window{
 			foreach(string path in list){
 				if (!temp_exclude_list.contains(path)){
 					temp_exclude_list.add(path);
-					tv_exclude_add_item(path);
+					treeview_filters_add_item(tv_exclude, path);
+					log_debug("exclude file: %s".printf(path));
 					Main.first_snapshot_size = 0; //re-calculate
+				}
+				else{
+					log_debug("temp_exclude_list contains: %s".printf(path));
 				}
 			}
 		}
 
-		tv_exclude_save_changes();
+		tv_filters_save_changes();
 	}
 
 	private void menu_exclude_add_folder_clicked(){
@@ -1369,13 +1490,17 @@ class WizardWindow : Gtk.Window{
 
 				if (!temp_exclude_list.contains(path)){
 					temp_exclude_list.add(path);
-					tv_exclude_add_item(path);
+					treeview_filters_add_item(tv_exclude, path);
+					log_debug("exclude folder: %s".printf(path));
 					Main.first_snapshot_size = 0; //re-calculate
+				}
+				else{
+					log_debug("temp_exclude_list contains: %s".printf(path));
 				}
 			}
 		}
 
-		tv_exclude_save_changes();
+		tv_filters_save_changes();
 	}
 
 	private void menu_exclude_add_folder_contents_clicked(){
@@ -1389,15 +1514,39 @@ class WizardWindow : Gtk.Window{
 
 				if (!temp_exclude_list.contains(path)){
 					temp_exclude_list.add(path);
-					tv_exclude_add_item(path);
+					treeview_filters_add_item(tv_exclude, path);
+					log_debug("exclude contents: %s".printf(path));
 					Main.first_snapshot_size = 0; //re-calculate
+				}
+				else{
+					log_debug("temp_exclude_list contains: %s".printf(path));
 				}
 			}
 		}
 
-		tv_exclude_save_changes();
+		tv_filters_save_changes();
 	}
 
+
+	private void btn_include_remove_clicked(){
+		TreeSelection sel = tv_include.get_selection ();
+		TreeIter iter;
+		bool iterExists = tv_include.model.get_iter_first (out iter);
+		while (iterExists) {
+			if (sel.iter_is_selected (iter)){
+				string path;
+				tv_include.model.get (iter, 0, out path);
+				temp_exclude_list.remove(path);
+				Main.first_snapshot_size = 0; //re-calculate
+			}
+			iterExists = tv_include.model.iter_next (ref iter);
+		}
+
+		tv_filters_save_changes();
+		
+		refresh_tv_include();
+	}
+	
 	private void menu_include_add_files_clicked(){
 
 		var list = browse_files();
@@ -1409,13 +1558,17 @@ class WizardWindow : Gtk.Window{
 
 				if (!temp_exclude_list.contains(path)){
 					temp_exclude_list.add(path);
-					tv_exclude_add_item(path);
+					treeview_filters_add_item(tv_include,path);
+					log_debug("include file: %s".printf(path));
 					Main.first_snapshot_size = 0; //re-calculate
+				}
+				else{
+					log_debug("temp_exclude_list contains: %s".printf(path));
 				}
 			}
 		}
 
-		tv_exclude_save_changes();
+		tv_filters_save_changes();
 	}
 
 	private void menu_include_add_folder_clicked(){
@@ -1430,15 +1583,44 @@ class WizardWindow : Gtk.Window{
 
 				if (!temp_exclude_list.contains(path)){
 					temp_exclude_list.add(path);
-					tv_exclude_add_item(path);
+					treeview_filters_add_item(tv_include,path);
+					log_debug("include folder: %s".printf(path));
 					Main.first_snapshot_size = 0; //re-calculate
+				}
+				else{
+					log_debug("temp_exclude_list contains: %s".printf(path));
 				}
 			}
 		}
 
-		tv_exclude_save_changes();
+		tv_filters_save_changes();
 	}
 
+	private void menu_include_add_folder_contents_clicked(){
+
+		var list = browse_folder();
+
+		if (list.length() > 0){
+			foreach(string path in list){
+				path = path.has_prefix("+ ") ? path : "+ " + path;
+				path = path + "/*";
+
+				if (!temp_exclude_list.contains(path)){
+					temp_exclude_list.add(path);
+					treeview_filters_add_item(tv_include, path);
+					log_debug("include contents: %s".printf(path));
+					Main.first_snapshot_size = 0; //re-calculate
+				}
+				else{
+					log_debug("temp_exclude_list contains: %s".printf(path));
+				}
+			}
+		}
+
+		tv_filters_save_changes();
+	}
+
+	
 	private SList<string> browse_files(){
 		var dialog = new Gtk.FileChooserDialog(_("Select file(s)"), this, Gtk.FileChooserAction.OPEN,
 							"gtk-cancel", Gtk.ResponseType.CANCEL,
@@ -1590,7 +1772,10 @@ class WizardWindow : Gtk.Window{
 		else if (notebook.page == page_num_schedule){
 			notebook.page = page_num_snapshot_location;
 		}
-		else if (notebook.page == page_num_filters){
+		else if (notebook.page == page_num_include){
+			// do nothing, page will not be visible when mode != "settings"
+		}
+		else if (notebook.page == page_num_exclude){
 			// do nothing, page will not be visible when mode != "settings"
 		}
 		else if (notebook.page == page_num_finish){
@@ -1630,8 +1815,11 @@ class WizardWindow : Gtk.Window{
 		else if (notebook.page == page_num_schedule){
 			notebook.page = page_num_finish;
 		}
-		else if (notebook.page == page_num_filters){
-			notebook.page = page_num_finish;
+		else if (notebook.page == page_num_include){
+		//	notebook.page = page_num_exclude;
+		}
+		else if (notebook.page == page_num_exclude){
+		//	notebook.page = page_num_finish;
 		}
 		else if (notebook.page == page_num_finish){
 			// do nothing, btn_next is disabled for this page
@@ -1703,7 +1891,10 @@ class WizardWindow : Gtk.Window{
 		else if (page_num == page_num_schedule){
 			// do nothing
 		}
-		else if (page_num == page_num_filters){
+		else if (page_num == page_num_include){
+			// do nothing
+		}
+		else if (page_num == page_num_exclude){
 			// do nothing
 		}
 		else if (page_num == page_num_finish){
@@ -1726,7 +1917,10 @@ class WizardWindow : Gtk.Window{
 		else if (page_num == page_num_schedule){
 			// do nothing
 		}
-		else if (page_num == page_num_filters){
+		else if (page_num == page_num_include){
+			// do nothing
+		}
+		else if (page_num == page_num_exclude){
 			// do nothing
 		}
 		else if (page_num == page_num_finish){
@@ -1781,11 +1975,18 @@ class WizardWindow : Gtk.Window{
 		}
 	}
 
-	private int page_num_filters{
+	private int page_num_include{
 		get {
-			return notebook.page_num(tab_filters);
+			return notebook.page_num(tab_include);
 		}
 	}
+
+	private int page_num_exclude{
+		get {
+			return notebook.page_num(tab_exclude);
+		}
+	}
+
 
 	// utility ------------------
 	

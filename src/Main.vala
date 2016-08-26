@@ -3048,12 +3048,28 @@ public class Main : GLib.Object{
 			return false;
 		}
 		else{
-			//unmount
-			unmount_target_device();
 
 			//check and create restore mount point for restore
 			mount_point_restore = mount_point_app + "/restore";
 			dir_create(mount_point_restore);
+
+			/*var already_mounted = false;
+			var dev_mounted = Device.get_device_by_path(mount_point_restore);
+			if ((dev_mounted != null)
+				&& (dev_mounted.uuid == restore_target.uuid)){
+
+				foreach(var mp in dev_mounted.mount_points){
+					if ((mp.mount_point == mount_point_restore)
+						&& (mp.mount_options == "subvol=@")){
+							
+						 = true;
+						return; //already_mounted
+					}
+				}
+			}*/
+			
+			//unmount
+			unmount_target_device();
 
 			//unlock encrypted device
 			if (restore_target.is_encrypted()){

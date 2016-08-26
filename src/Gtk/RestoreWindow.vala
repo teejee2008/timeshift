@@ -698,7 +698,7 @@ public class RestoreWindow : Gtk.Dialog{
 	private void cell_fs_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
 		Device pi;
 		model.get (iter, 0, out pi, -1);
-		(cell as Gtk.CellRendererText).text = pi.type;
+		(cell as Gtk.CellRendererText).text = pi.fstype;
 		Gtk.CellRendererText ctxt = (cell as Gtk.CellRendererText);
 		set_cell_text_color(ref ctxt);
 	}

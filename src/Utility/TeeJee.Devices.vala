@@ -908,6 +908,14 @@ namespace TeeJee.Devices{
 			
 			return null;
 		}
+
+		public static Device? get_device_by_path(string path_to_check){
+			var list = Device.get_disk_space_using_df(path_to_check);
+			if (list.size > 0){
+				return list[0];
+			}
+			return null;
+		}
 		
 		public static string get_device_uuid(string device){
 			if (device_list == null){

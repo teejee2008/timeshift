@@ -880,6 +880,9 @@ class MainWindow : Gtk.Window{
 
 			is_success = bak.remove();
 
+			// TODO: use rsync to delete and show progress??
+			// It's much slower (10x)
+
 			if (!is_success){
 				//statusbar_message_with_timeout(_("Error: Unable to delete snapshot") + ": '%s'".printf(bak.name), false);
 				break;
@@ -1014,8 +1017,8 @@ class MainWindow : Gtk.Window{
 
 			if ((snapshot_to_restore != null) && (snapshot_to_restore.marked_for_deletion)){
 				gtk_messagebox(
-					_("Invalid Snapshot"),
-					_("Selected snapshot is marked for deletion"),
+					_("Invalid snapshot"),
+					_("Selected snapshot is marked for deletion and cannot be restored"),
 					this, false);
 				return;
 			}

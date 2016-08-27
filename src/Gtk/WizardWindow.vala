@@ -37,7 +37,17 @@ class WizardWindow : Gtk.Window{
 
 	private Gtk.Box vbox_main;
 	private Notebook notebook;
+
+	// tabs
+	private Gtk.Box tab_estimate;
+	private Gtk.Box tab_snapshot_location;
+	private Gtk.Box tab_take_snapshot;
+	private Gtk.Box tab_finish;
+	private Gtk.Box tab_schedule;
+	private Gtk.Box tab_include;
+	private Gtk.Box tab_exclude;
 	
+	// tab_snapshot_location
 	private Gtk.TreeView tv_devices;
 	private Gtk.RadioButton radio_device;
 	private Gtk.RadioButton radio_path;
@@ -49,21 +59,20 @@ class WizardWindow : Gtk.Window{
 	private Gtk.Label lbl_shield;
 	private Gtk.Label lbl_shield_subnote;
 
+	// tab_final
 	private Label lbl_final_message;
 
-	private Gtk.Box tab_estimate;
-	private Gtk.Box tab_snapshot_location;
-	private Gtk.Box tab_take_snapshot;
-	private Gtk.Box tab_finish;
-	private Gtk.Box tab_schedule;
-	private Gtk.Box tab_include;
-	private Gtk.Box tab_exclude;
-	
+	// tab_take_snapshot
 	private Gtk.Spinner spinner;
 	private Gtk.Label lbl_msg;
 	private Gtk.Label lbl_status;
 	private ProgressBar progressbar;
 
+	// tab_include, tab_exclude
+	private Gtk.TreeView tv_exclude;
+	private Gtk.TreeView tv_include;
+	
+	// actions
 	private Gtk.ButtonBox box_actions;
 	private Gtk.Button btn_prev;
 	private Gtk.Button btn_next;
@@ -75,28 +84,6 @@ class WizardWindow : Gtk.Window{
 	private uint tmr_init;
 
 	private string mode;
-
-	// filters
-	
-	private Gtk.TreeView tv_exclude;
-	private Gtk.TreeView tv_include;
-	//private ScrolledWindow sw_exclude;
-	//private TreeViewColumn col_exclude;
-	//private Toolbar toolbar_exclude;
-	//private ToolButton btn_remove;
-	//private ToolButton btn_warning;
-	//private ToolButton btn_reset_exclude_list;
-
-	//private MenuToolButton btn_exclude;
-	//private Gtk.Menu menu_exclude;
-	//private ImageMenuItem menu_exclude_add_file;
-	//private ImageMenuItem menu_exclude_add_folder;
-	//private ImageMenuItem menu_exclude_add_folder_contents;
-
-	//private MenuToolButton btn_include;
-	//private Gtk.Menu menu_include;
-	//private ImageMenuItem menu_include_add_file;
-	//private ImageMenuItem menu_include_add_folder;
 
 	private Gee.ArrayList<string> temp_exclude_list;
 
@@ -198,8 +185,8 @@ class WizardWindow : Gtk.Window{
 		}
 
 		tv_devices_refresh();
-		radio_device.toggled();
-		radio_path.toggled();
+		//radio_device.toggled();
+		//radio_path.toggled();
 		check_backup_location();
 		chk_schedule_changed();
 
@@ -238,7 +225,7 @@ class WizardWindow : Gtk.Window{
 
 	private Gtk.Box create_tab_snapshot_device(){
 		var margin = (mode == "settings") ? 12 : 6;
-		var box = add_tab(notebook, _("Device"), margin);
+		var box = add_tab(notebook, _("Backup"), margin);
 		
 		var hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
 		box.add(hbox);
@@ -1350,15 +1337,6 @@ class WizardWindow : Gtk.Window{
 	private void tv_filters_save_changes(){
 		App.exclude_list_user.clear();
 		
-		/*foreach(string path in temp_exclude_list){
-			if (!App.exclude_list_user.contains(path)
-			&& !App.exclude_list_default.contains(path)
-			&& !App.exclude_list_home.contains(path)){
-				
-				App.exclude_list_user.add(path);
-			}
-		}*/
-
 		// add include list
 		TreeIter iter;
 		var store = (Gtk.ListStore) tv_include.model;
@@ -1437,8 +1415,8 @@ class WizardWindow : Gtk.Window{
 		return true;
 	}
 
-
-
+	// TODO: Add link for default exclude items
+	
 	private void btn_exclude_remove_clicked(){
 		TreeSelection sel = tv_exclude.get_selection ();
 		TreeIter iter;

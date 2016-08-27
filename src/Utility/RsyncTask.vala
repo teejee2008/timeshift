@@ -105,7 +105,11 @@ public class RsyncTask : AsyncTask{
 
 		return cmd;
 	}
-	 
+
+	private void parse_log(){
+		
+	}
+	
 	// execution ----------------------------
 
 	public void execute() {

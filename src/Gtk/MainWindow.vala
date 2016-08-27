@@ -401,10 +401,8 @@ class MainWindow : Gtk.Window{
 
 		lbl_snap_count = new Label("<b>" + _("0.0%") + "</b>");
 		lbl_snap_count.set_use_markup(true);
+		lbl_snap_count.justify = Gtk.Justification.CENTER;
 		vbox.add(lbl_snap_count);
-
-		var label = new Label(_("Snapshots"));
-		vbox.add(label);
 
 		// free space
 		vbox = new Box (Orientation.VERTICAL, 6);
@@ -414,10 +412,9 @@ class MainWindow : Gtk.Window{
 
 		lbl_free_space = new Label("<b>" + _("0.0%") + "</b>");
 		lbl_free_space.set_use_markup(true);
+		lbl_free_space.justify = Gtk.Justification.CENTER;
 		vbox.add(lbl_free_space);
 
-		label = new Label(_("Free"));
-		vbox.add(label);
 	}
 	
     private bool menu_extra_popup(Gdk.EventButton? event){
@@ -1343,6 +1340,7 @@ class MainWindow : Gtk.Window{
 		int status_code = App.check_backup_location(out message, out details);
 		
 		DateTime last_snapshot_date = null;
+		DateTime oldest_snapshot_date = null;
 
 		//message = escape_html(message);
 		//details = escape_html(details);
@@ -1352,8 +1350,10 @@ class MainWindow : Gtk.Window{
 		switch (status_code){
 		case SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE:
 		case SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE:
-			Snapshot last_snapshot = App.repo.get_latest_snapshot();
+			var last_snapshot = App.repo.get_latest_snapshot();
 			last_snapshot_date = (last_snapshot == null) ? null : last_snapshot.date;
+			var oldest_snapshot = App.repo.get_oldest_snapshot();
+			oldest_snapshot_date = (oldest_snapshot == null) ? null : oldest_snapshot.date;
 			break;
 		}
 
@@ -1412,7 +1412,13 @@ class MainWindow : Gtk.Window{
 						//set_shield_label(_("System is protected"));
 						set_shield_label(_("Timeshift is active"));
 						set_shield_subnote(
-							_("Last snapshot taken at: ") + format_date(last_snapshot_date));
+							_("Latest snapshot:")
+							+ last_snapshot_date.format (" %B %d, %Y %I:%M %p") + "\n" +
+							_("Oldest snapshot:")
+							+ oldest_snapshot_date.format (" %B %d, %Y %I:%M %p")
+							//_("Latest snapshot:") + format_date(last_snapshot_date) + "\n" +
+							//_("Oldest snapshot:") + format_date(oldest_snapshot_date)
+							);
 
 					}
 					else{
@@ -1462,14 +1468,16 @@ class MainWindow : Gtk.Window{
 				vbox_snap_count.show_all();
 				
 				lbl_snap_count.label = format_text_large(
-					"%0d".printf(App.repo.snapshots.size));
+					"%0d".printf(App.repo.snapshots.size))
+					+ "\n%s".printf(_("Snapshots"));
 
 				vbox_free_space.no_show_all = false;
 				vbox_free_space.show_all();
 				
-				lbl_free_space.label =
-					format_text_large("%s".printf(
-						format_file_size(App.repo.device.free_bytes)));
+				lbl_free_space.label = format_text_large(
+					"%s".printf(format_file_size(App.repo.device.free_bytes)))
+					+ "\n%s\n%s".printf(_("Free"), App.repo.device.device);
+					
 				break;
 			}
 		}

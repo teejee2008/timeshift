@@ -41,6 +41,11 @@ public class FileItem : GLib.Object,Gee.Comparable<FileItem> {
 	public string file_path_prefix = "";
 	public FileType file_type = FileType.REGULAR;
 	public DateTime modified;
+	public string permissions = "";
+	public string owner_user = "";
+	public string owner_group = "";
+	public string content_type = "";
+	public string file_status = ""; 
 
 	public bool is_selected = false;
 	public bool is_symlink = false;
@@ -63,10 +68,7 @@ public class FileItem : GLib.Object,Gee.Comparable<FileItem> {
 	public long file_count_total = 0;
 	public long dir_count_total = 0;
 
-	public string permissions = "";
-	public string owner_user = "";
-	public string owner_group = "";
-	public string content_type = "";
+
 
 	//public string icon_name = "gtk-file";
 	public GLib.Icon icon;
@@ -206,6 +208,10 @@ public class FileItem : GLib.Object,Gee.Comparable<FileItem> {
 			item_type = FileType.DIRECTORY;
 		}
 
+		if (item_path.has_prefix("/")) {
+			item_path = item_path[1:item_path.length];
+		}
+
 		string dir_name = "";
 		string dir_path = "";
 
@@ -236,11 +242,14 @@ public class FileItem : GLib.Object,Gee.Comparable<FileItem> {
 
 		//add item
 		if (!current_dir.children.keys.contains(item_name)) {
+			
+			//log_debug("add_descendant: add_child()");
+			
 			current_dir.add_child(
 				item_path, item_type, item_size, item_size_compressed, false);
 		}
 
-		//log_debug("add_descendant=%s".printf(current_dir.children[item_name].file_path));
+		//log_debug("add_descendant: finished: %s".printf(item_path));
 		
 		return current_dir.children[item_name];
 	}
@@ -253,6 +262,8 @@ public class FileItem : GLib.Object,Gee.Comparable<FileItem> {
 		bool item_query_file_info){
 		
 		// create new item ------------------------------
+
+		//log_debug("add_child: %s".printf(item_file_path));
 		
 		FileItem item = new FileItem.from_path_and_type(item_file_path, item_file_type);
 		//item.tag = this.tag;
@@ -284,14 +295,17 @@ public class FileItem : GLib.Object,Gee.Comparable<FileItem> {
 
 		// copy prefix from parent
 		item.file_path_prefix = this.file_path_prefix;
-		
+
 		// query file properties
 		if (item_query_file_info){
+			//log_debug("add_child: query_file_info()");
 			item.query_file_info();
 		}
-		
+
 		if (item_file_type == FileType.REGULAR) {
 
+			//log_debug("add_child: regular file");
+			
 			// set file sizes
 			if (item_size > 0) {
 				item._size = item_size;
@@ -318,6 +332,9 @@ public class FileItem : GLib.Object,Gee.Comparable<FileItem> {
 			}
 		}
 		else if (item_file_type == FileType.DIRECTORY) {
+
+			//log_debug("add_child: directory");
+			
 			if (!existing_file){
 	
 				// update dir counts
@@ -334,9 +351,10 @@ public class FileItem : GLib.Object,Gee.Comparable<FileItem> {
 				}
 			}
 		}
-
-		//log_debug("%3ld %3ld %s".printf(file_count, dir_count, file_path));
-
+		
+		//log_debug("add_child: finished: fc=%lld dc=%lld path=%s".printf(
+		//	file_count, dir_count, item_file_path));
+		
 		return item;
 	}
 

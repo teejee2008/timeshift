@@ -1,0 +1,956 @@
+/*
+ * RsyncLogWindow.vala
+ *
+ * Copyright 2015 Tony George <teejee2008@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ *
+ *
+ */
+
+
+using Gtk;
+using Gee;
+
+using TeeJee.Logging;
+using TeeJee.FileSystem;
+using TeeJee.JsonHelper;
+using TeeJee.ProcessHelper;
+using TeeJee.GtkHelper;
+using TeeJee.Devices;
+using TeeJee.System;
+using TeeJee.Misc;
+
+public class RsyncLogWindow : Window {
+
+	private Gtk.Box vbox_main;
+
+	private Gtk.TreeView tv_files;
+	private Gtk.TreeModelFilter filter_files;
+	private Gtk.ComboBox cmb_filter;
+	private Gtk.Box hbox_filter;
+	
+	//window
+	private int def_width = 700;
+	private int def_height = 500;
+
+	//private uint tmr_task = 0;
+	private uint tmr_init = 0;
+
+	Gdk.Pixbuf pix_file = null;
+	Gdk.Pixbuf pix_folder = null;
+
+	private string rsync_log_file;
+	private FileItem log_root;
+	private bool flat_view = true;
+
+	int count = 0;
+	
+
+	/*private bool view_state_all = true;
+	private bool view_created = false;
+	private bool view_modified = false;
+	private bool view_deleted = false;
+
+	private bool view_modified_all = true;
+	private bool view_checksum = false;
+	private bool view_size = false;
+	private bool view_timestamp = false;
+	private bool view_permissions = false;
+	private bool view_owner = false;
+	private bool view_group = false;*/
+
+	private string filter = "";
+	
+	public RsyncLogWindow(string _rsync_log_file) {
+		//title = "rsync log for snapshot " + "%s".printf(bak.date.format ("%Y-%m-%d %I:%M %p"));
+		title = "View RSYNC Log";
+		window_position = WindowPosition.CENTER;
+		set_default_size(def_width, def_height);
+		icon = get_app_icon(16);
+		resizable = true;
+		modal = true;
+
+		rsync_log_file = _rsync_log_file;
+		
+		//vbox_main
+		vbox_main = new Box (Orientation.VERTICAL, 12);
+		vbox_main.margin = 12;
+		add (vbox_main);
+
+		add_label(vbox_main,
+			_("Following files have changed since previous snapshot:"), true);
+
+		init_toolbar();
+			
+		init_tv_files();
+
+		init_actions();
+
+		cmb_filter.changed.connect(() => {
+			filter = gtk_combobox_get_value(cmb_filter, 0, "");
+			log_debug("combo_changed(): filter=%s".printf(filter));
+
+			hbox_filter.sensitive = false;
+			gtk_set_busy(true, this);
+			filter_files.refilter();
+			hbox_filter.sensitive = true;
+			gtk_set_busy(false, this);
+		});
+
+		show_all();
+
+		tmr_init = Timeout.add(100, init_delayed);
+		
+	}
+
+	public bool init_delayed(){
+
+		log_debug("init_delayed()");
+		
+		if (tmr_init > 0){
+			Source.remove(tmr_init);
+			tmr_init = 0;
+		}
+
+		gtk_set_busy(true, this);
+
+		log_root = (new RsyncTask()).parse_log(rsync_log_file);
+
+		tv_files_refresh();
+
+		gtk_set_busy(false, this);
+
+		log_debug("init_delayed(): finish");
+		
+		return false;
+	}
+
+	private void init_actions(){
+		var hbox = new Gtk.ButtonBox (Gtk.Orientation.HORIZONTAL);
+		hbox.set_layout (Gtk.ButtonBoxStyle.CENTER);
+        vbox_main.add(hbox);
+
+		Gtk.SizeGroup size_group = null;
+
+		// close
+		
+		var img = new Image.from_stock("gtk-close", Gtk.IconSize.BUTTON);
+		var btn_close = add_button(hbox, _("Close"), "", ref size_group, img);
+
+        btn_close.clicked.connect(()=>{
+			this.destroy();
+		});
+	}
+
+	private void init_toolbar(){
+		log_debug("init_toolbar()");
+		
+		var hbox = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
+        vbox_main.add(hbox);
+		hbox_filter = hbox;
+		
+		var label = add_label(hbox, _("Filters:"));
+
+		int_combo_filter(hbox);
+
+		label = add_label(hbox, "");
+		label.hexpand = true;
+		
+		Gtk.SizeGroup size_group = null;
+		var btn_flat = add_toggle_button(hbox, _("Flat View"), "", ref size_group, null);
+		btn_flat.active = flat_view;
+        btn_flat.toggled.connect(()=>{
+			flat_view = btn_flat.active;
+			tv_files_refresh();
+		});
+
+		size_group = null;
+		var btn_exclude = add_button(hbox,
+			_("Exclude Selected"),
+			_("Exclude selected items from future snapshots (careful!)"),
+			ref size_group, null);
+			
+        btn_exclude.clicked.connect(()=>{
+			if (flat_view){
+				gtk_messagebox(_("Cannot exclude files in flat view"),
+					_("View has been changed to tree view. Select the parent item you want to exclude and click the 'Exclude' button."),this, true);
+
+				flat_view = false;
+			}
+			else{
+				exclude_selected_items();
+			}
+			
+			tv_files_refresh();
+		});
+
+		log_debug("init_toolbar(): finished");
+	}
+
+	/*
+	private void init_toolbar2(){
+		var hbox_row1 = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
+        vbox_main.add(hbox_row1);
+
+		Gtk.SizeGroup size_group = null;
+
+		// button box for state
+
+		var hbox_state = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
+		//hbox_state.set_layout (Gtk.ButtonBoxStyle.EXPAND);
+        hbox_row1.add(hbox_state);
+        
+		size_group = null;
+
+		var btn_state_all = add_toggle_button(hbox_state, _("All"), "", ref size_group, null);
+		btn_state_all.active = view_state_all;
+        btn_state_all.toggled.connect(()=>{
+			view_state_all = btn_state_all.active;
+			tv_files_refresh();
+		});
+		
+		var btn_created = add_toggle_button(hbox_state, _("Created"), "", ref size_group, null);
+		btn_created.active = view_created;
+        btn_created.toggled.connect(()=>{
+			view_created = btn_created.active;
+
+			if (view_created && btn_state_all.active){
+				btn_state_all.active = false;
+			}
+			else{
+				tv_files_refresh();
+			}
+		});
+
+		var btn_modified = add_toggle_button(hbox_state, _("Modified"), "", ref size_group, null);
+		btn_modified.active = view_modified;
+        btn_modified.toggled.connect(()=>{
+			view_modified = btn_modified.active;
+
+			if (view_modified && btn_state_all.active){
+				btn_state_all.active = false;
+			}
+			else{
+				tv_files_refresh();
+			}
+		});
+
+		var btn_deleted = add_toggle_button(hbox_state, _("Deleted"), "", ref size_group, null);
+		btn_deleted.active = view_deleted;
+        btn_deleted.toggled.connect(()=>{
+			view_deleted = btn_deleted.active;
+
+			if (view_deleted && btn_state_all.active){
+				btn_state_all.active = false;
+			}
+			else{
+				tv_files_refresh();
+			}
+		});
+
+		var label = add_label(hbox_row1, "");
+		label.hexpand = true;
+		
+		// flat view
+
+		size_group = null;
+		
+		var btn_flat = add_toggle_button(hbox_row1, _("Flat View"), "", ref size_group, null);
+		btn_flat.active = flat_view;
+        btn_flat.toggled.connect(()=>{
+			flat_view = btn_flat.active;
+			tv_files_refresh();
+		});
+
+		// next row ----------------
+
+
+		var hbox_row2 = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
+        vbox_main.add(hbox_row2);
+        
+		// button box - hbox_modified
+
+		var bbox_modified = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
+		//bbox_modified.set_layout (Gtk.ButtonBoxStyle.START);
+        hbox_row2.add(bbox_modified);
+
+		size_group = null;
+		
+        var btn_modified_all = add_toggle_button(bbox_modified, _("All"), "", ref size_group, null);
+		btn_modified_all.active = view_modified_all;
+        btn_modified_all.toggled.connect(()=>{
+			view_modified_all = btn_modified_all.active;
+			tv_files_refresh();
+		});
+		
+		size_group = null;
+		
+		var btn_checksum = add_toggle_button(
+			bbox_modified, _("Checksum"), "", ref size_group, null);
+			
+		btn_checksum.active = view_checksum;
+		
+        btn_checksum.toggled.connect(()=>{
+			view_checksum = btn_checksum.active;
+
+			if (view_checksum && btn_modified_all.active){
+				btn_modified_all.active = false;
+			}
+			else{
+				tv_files_refresh();
+			}
+		});
+
+		size_group = null;
+		
+		var btn_size = add_toggle_button(
+			bbox_modified, _("Size"), "", ref size_group, null);
+			
+		btn_size.active = view_size;
+		
+        btn_size.toggled.connect(()=>{
+			view_size = btn_size.active;
+
+			if (view_size && btn_modified_all.active){
+				btn_modified_all.active = false;
+			}
+			else{
+				tv_files_refresh();
+			}
+		});
+
+		size_group = null;
+		
+		var btn_timestamp = add_toggle_button(
+			bbox_modified, _("Timestamp"), "", ref size_group, null);
+			
+		btn_timestamp.active = view_timestamp;
+		
+        btn_timestamp.toggled.connect(()=>{
+			view_timestamp = btn_timestamp.active;
+
+			if (view_timestamp && btn_modified_all.active){
+				btn_modified_all.active = false;
+			}
+			else{
+				tv_files_refresh();
+			}
+		});
+
+		size_group = null;
+		
+		var btn_permissions = add_toggle_button(
+			bbox_modified, _("Permissions"), "", ref size_group, null);
+
+		btn_permissions.active = view_permissions;
+			
+        btn_permissions.toggled.connect(()=>{
+			view_permissions = btn_permissions.active;
+
+			if (view_permissions && btn_modified_all.active){
+				btn_modified_all.active = false;
+			}
+			else{
+				tv_files_refresh();
+			}
+		});
+
+		size_group = null;
+		
+		var btn_owner = add_toggle_button(
+			bbox_modified, _("Owner"), "", ref size_group, null);
+
+		btn_owner.active = view_owner;
+		
+        btn_owner.toggled.connect(()=>{
+			view_owner = btn_owner.active;
+
+			if (view_owner && btn_modified_all.active){
+				btn_modified_all.active = false;
+			}
+			else{
+				tv_files_refresh();
+			}
+		});
+
+		size_group = null;
+		
+		var btn_group = add_toggle_button(
+			bbox_modified, _("Group"), "", ref size_group, null);
+
+		btn_group.active = view_group;
+		
+        btn_group.toggled.connect(()=>{
+			view_group = btn_group.active;
+
+			if (view_group && btn_modified_all.active){
+				btn_modified_all.active = false;
+			}
+			else{
+				tv_files_refresh();
+			}
+		});
+
+		label = add_label(hbox_row2, "");
+		label.hexpand = true;
+	}
+	* */
+
+
+	private void init_tv_files() {
+		// tv_files
+		tv_files = new TreeView();
+		tv_files.get_selection().mode = SelectionMode.MULTIPLE;
+		tv_files.headers_clickable = true;
+		tv_files.rubber_banding = true;
+		tv_files.has_tooltip = true;
+		tv_files.set_rules_hint(true);
+
+		// sw_files
+		var sw_files = new ScrolledWindow(null, null);
+		sw_files.set_shadow_type (ShadowType.ETCHED_IN);
+		sw_files.add (tv_files);
+		sw_files.vexpand = true;
+		vbox_main.add(sw_files);
+		
+		// name ----------------------------------------------
+
+		// column
+		var col = new TreeViewColumn();
+		col.title = _("Name");
+		col.clickable = true;
+		col.resizable = true;
+		col.expand = true;
+		tv_files.append_column(col);
+
+		//col.sort_column_id = FileViewColumn.NAME;
+		//col.clicked.connect(()=>{ tv_files_sort(current_view, FileViewColumn.NAME); });
+
+		// cell icon
+		var cell_pix = new CellRendererPixbuf ();
+		cell_pix.stock_size = Gtk.IconSize.MENU;
+		col.pack_start(cell_pix, false);
+		col.set_attributes(cell_pix, "pixbuf", 3);
+
+		// cell text
+		var cell_text = new CellRendererText ();
+		cell_text.ellipsize = Pango.EllipsizeMode.END;
+		col.pack_start (cell_text, false);
+		col.set_attributes(cell_text, "text", 2);
+		
+		// render icon
+		/*col.set_cell_data_func (cell_pix, (cell_layout, cell, model, iter) => {
+			FileItem item;
+			bool odd_row;
+			model.get (iter, 0, out item, 1, out odd_row, -1);
+			
+			var icon_theme = Gtk.IconTheme.get_default();
+			
+			try {
+
+				if (item.file_type == FileType.DIRECTORY){
+					var pix = icon_theme.load_icon ("gtk-directory", Gtk.IconSize.MENU, 0);
+					(cell as Gtk.CellRendererPixbuf).pixbuf = pix;
+				}
+				else{
+					var pix = icon_theme.load_icon ("gtk-file", Gtk.IconSize.MENU, 0);
+					(cell as Gtk.CellRendererPixbuf).pixbuf = pix;
+				}
+			}
+			catch (Error e) {
+				warning (e.message);
+			}
+
+			(cell as Gtk.CellRendererPixbuf).stock_size = Gtk.IconSize.MENU;
+		});
+
+		// render text
+		col.set_cell_data_func (cell_text, (cell_layout, cell, model, iter) => {
+			FileItem item;
+			bool odd_row;
+			model.get (iter, 0, out item, 1, out odd_row, -1);
+			
+			string s = item.file_name;
+			if (flat_view){
+				s = item.file_path;
+			}
+			
+			if (item.is_symlink){
+				//if (App.show_symlink_target){
+				//	s += " → " + item.symlink_target;
+				//}
+				//s = "<span foreground=\"#2471A3\">%s</span>".printf(s);
+				(cell as Gtk.CellRendererText).markup = s;
+			}
+			else{
+				(cell as Gtk.CellRendererText).text = s;
+			}
+		});*/
+
+
+		// status ------------------------------------------------
+
+		col = new TreeViewColumn();
+		col.title = "Change";
+		//col.clickable = false;
+		//col.resizable = false;
+		tv_files.append_column(col);
+		//var col_spacer = col;
+		
+		// cell text
+		cell_text = new CellRendererText ();
+		col.pack_start (cell_text, false);
+
+		//render text
+		col.set_cell_data_func (cell_text, (cell_layout, cell, model, iter) => {
+			FileItem item;
+			bool odd_row;
+			model.get (iter, 0, out item, 1, out odd_row, -1);
+
+			(cell as Gtk.CellRendererText).text = item.file_status;
+		});
+		
+		// buffer ------------------------------------------------
+
+		col = new TreeViewColumn();
+		col.title = "";
+		col.clickable = false;
+		col.resizable = false;
+		col.min_width = 20;
+		tv_files.append_column(col);
+		//var col_spacer = col;
+		
+		// cell text
+		cell_text = new CellRendererText ();
+		col.pack_start (cell_text, false);
+
+		//render text
+		col.set_cell_data_func (cell_text, (cell_layout, cell, model, iter) => {
+			FileItem item;
+			bool odd_row;
+			model.get (iter, 0, out item, 1, out odd_row, -1);
+
+			(cell as Gtk.CellRendererText).text = "";
+		});
+	}
+
+	private void int_combo_filter(Gtk.Box hbox){
+		// combo
+		var combo = new Gtk.ComboBox ();
+		hbox.add(combo);
+		cmb_filter = combo;
+		
+		var cell_text = new CellRendererText ();
+		cell_text.text = "";
+		combo.pack_start (cell_text, false);
+
+		combo.set_cell_data_func(cell_text, (cell_layout, cell, model, iter)=>{
+			string val;
+			model.get (iter, 1, out val, -1);
+			(cell as Gtk.CellRendererText).text = val;
+		});
+
+		//populate combo
+		var model = new Gtk.ListStore(2, typeof(string), typeof(string));
+		cmb_filter.model = model;
+
+		TreeIter iter;
+		model.append(out iter);
+		model.set (iter, 0, "", 1, "All");
+		model.append(out iter);
+		model.set (iter, 0, "created", 1, "Created");
+		model.append(out iter);
+		model.set (iter, 0, "deleted", 1, "Deleted");
+		model.append(out iter);
+		model.set (iter, 0, "modified", 1, "Changed");
+		model.append(out iter);
+		model.set (iter, 0, "checksum", 1, "Changed - Checksum");
+		model.append(out iter);
+		model.set (iter, 0, "size", 1, "Changed - Size");
+		model.append(out iter);
+		model.set (iter, 0, "timestamp", 1, "Changed - Timestamp");
+		model.append(out iter);
+		model.set (iter, 0, "permissions", 1, "Changed - Permissions");
+		model.append(out iter);
+		model.set (iter, 0, "owner", 1, "Changed - Owner");
+		model.append(out iter);
+		model.set (iter, 0, "group", 1, "Changed - Group");
+
+		cmb_filter.active = 0;
+	}
+	
+	private void tv_files_refresh() {
+		log_debug("tv_files_refresh()");
+
+		hbox_filter.sensitive = false;
+		gtk_set_busy(true, this);
+
+		tv_files.show_expanders = !flat_view;
+		
+		var model = new Gtk.TreeStore(4,
+			typeof(FileItem),
+			typeof(bool),
+			typeof(string),
+			typeof(Gdk.Pixbuf)
+		);
+
+		var icon_theme = Gtk.IconTheme.get_default();
+		
+		try {
+			pix_folder = icon_theme.load_icon_for_scale (
+				"gtk-directory", Gtk.IconSize.MENU, 16, Gtk.IconLookupFlags.FORCE_SIZE);
+			pix_file = icon_theme.load_icon_for_scale (
+				"gtk-file", Gtk.IconSize.MENU, 16, Gtk.IconLookupFlags.FORCE_SIZE);
+		}
+		catch (Error e) {
+			warning (e.message);
+		}
+
+		TreeIter iter0;
+
+		// workaround for compiler error 'iter0 not set'
+		model.append(out iter0, null);
+		model.clear();
+		
+		var list = new ArrayList<FileItem>();
+		foreach(string key in log_root.children.keys) {
+			var item = log_root.children[key];
+			list.add(item);
+		}
+
+		list.sort((a,b)=> {
+			return strcmp(a.file_path, b.file_path);
+		});
+		
+		bool odd_row = false;
+		int row_index = -1;
+		foreach(FileItem item in list) {
+			row_index++;
+			odd_row = !odd_row;
+
+			if (check_visibility(item)){
+				// add row
+				model.append(out iter0, null);
+				model.set (iter0, 0, item);
+				model.set (iter0, 1, odd_row);
+
+				if (flat_view){
+					model.set (iter0, 2, "/%s".printf(item.file_path));
+				}
+				else{
+					model.set (iter0, 2, "%s".printf(item.file_name));
+				}
+				
+				if (item.file_type == FileType.DIRECTORY){
+					model.set (iter0, 3, pix_folder);
+				}
+				else{
+					model.set (iter0, 3, pix_file);
+				}
+			}
+
+			if (item.file_type == FileType.DIRECTORY){
+				tv_append_to_iter(ref model, ref iter0, item, odd_row, false);
+			}
+		}
+		
+		filter_files = new TreeModelFilter (model, null);
+		filter_files.set_visible_func(filter_packages_func);
+		tv_files.set_model (filter_files);
+		
+		//tv_files.set_model(model);
+		//tv_files.columns_autosize();
+
+		hbox_filter.sensitive = true;
+		gtk_set_busy(false, this);
+	}
+
+	private bool filter_packages_func (Gtk.TreeModel model, Gtk.TreeIter iter) {
+		FileItem item;
+		model.get (iter, 0, out item, -1);
+
+		if (item.file_type == FileType.DIRECTORY){
+			return !flat_view;
+		}
+		
+		if (filter.length == 0){
+			return true;
+		}
+		else{
+			return (item.file_status == filter);
+		}
+	}
+
+
+	private TreeIter? tv_append_to_iter(
+		ref TreeStore model, ref TreeIter iter0, FileItem? item,
+		bool odd_row, bool addItem = true) {
+
+		//append sub-directories
+
+		TreeIter iter1 = iter0;
+
+		if (addItem && (item.parent != null)) {
+
+			//log_debug("add:%s".printf(item.file_path));
+
+			if (check_visibility(item)){
+
+				// add row
+				if (flat_view){
+					model.append (out iter1, null);
+				}
+				else{
+					model.append (out iter1, iter0);
+				}
+
+				model.set (iter1, 0, item);
+				model.set (iter1, 1, odd_row);
+
+				if (flat_view){
+					model.set (iter1, 2, "/%s".printf(item.file_path));
+				}
+				else{
+					model.set (iter1, 2, "%s".printf(item.file_name));
+				}
+
+				if (item.file_type == FileType.DIRECTORY){
+					model.set (iter1, 3, pix_folder);
+				}
+				else{
+					model.set (iter1, 3, pix_file);
+				}
+			}
+		}
+
+		var list = new ArrayList<FileItem>();
+		foreach(string key in item.children.keys) {
+			var child = item.children[key];
+			list.add(child);
+		}
+
+		list.sort((a, b) => {
+			if ((a.file_type == FileType.DIRECTORY) && (b.file_type != FileType.DIRECTORY)){
+				return -1;
+			}
+			else if ((a.file_type != FileType.DIRECTORY) && (b.file_type == FileType.DIRECTORY)){
+				return 1;
+			}
+			else{
+				return strcmp(a.file_name.down(), b.file_name.down());
+			}
+		});
+
+		// add new child iters -------------------------
+		
+		foreach(var child in list) {
+			odd_row = !odd_row;
+			tv_append_to_iter(ref model, ref iter1, child, odd_row);
+		}
+
+		return iter1;
+	}
+
+	/*private bool check_visibility2(FileItem item){
+		bool is_visible = false;
+		
+		if (flat_view && (item.file_type == FileType.DIRECTORY)){
+			return false;
+		}
+		
+		if ((item.file_status == "new") && (view_state_all || view_created)){
+			return true;
+		}
+		
+		if ((item.file_status == "deleted") && (view_state_all || view_deleted)){
+			return true;
+		}
+
+		if ((item.file_status == "checksum") &&
+			view_modified && (view_modified_all || view_checksum)){
+			return true;
+		}
+
+		if ((item.file_status == "size") &&
+			view_modified && (view_modified_all || view_size)){
+			return true;
+		}
+
+		if ((item.file_status == "timestamp") &&
+			view_modified && (view_modified_all || view_timestamp)){
+			return true;
+		}
+
+		if ((item.file_status == "permissions") &&
+			view_modified && (view_modified_all || view_permissions)){
+			return true;
+		}
+
+		if ((item.file_status == "owner") &&
+			view_modified && (view_modified_all || view_owner)){
+			return true;
+		}
+
+		if ((item.file_status == "group") &&
+			view_modified && (view_modified_all || view_group)){
+			return true;
+		}
+		
+		return is_visible;
+	}*/
+	
+	private bool check_visibility(FileItem item){
+
+		if (item.file_type == FileType.DIRECTORY){
+			return !flat_view;
+		}
+		
+		if (filter.length == 0){
+			return true;
+		}
+		else{
+			return (item.file_status == filter);
+		}
+	}
+
+	private void remove_iter_children(ref TreeStore model, ref TreeIter iter0){
+		TreeIter iter1;
+		var list = new Gee.ArrayList<TreeIter?>();
+		bool iterExists = model.iter_children (out iter1, iter0);
+		while (iterExists) {
+			list.add(iter1);
+			iterExists = model.iter_next (ref iter1);
+		}
+
+		foreach(var iter in list){
+			FileItem item;
+			model.get (iter, 0, out item, -1);
+			//log_debug("remove:%s".printf(item.file_path));
+			
+			model.remove(ref iter);
+		}
+	}
+
+	private void exclude_selected_items(){
+		var list = new Gee.ArrayList<string>();
+		foreach(var pattern in App.exclude_list_user){
+			list.add(pattern);
+		}
+		App.exclude_list_user.clear();
+		
+		// add include list
+		TreeIter iter;
+		var store = (Gtk.ListStore) tv_files.model;
+		bool iterExists = store.get_iter_first (out iter);
+		while (iterExists) {
+			FileItem item;
+			store.get (iter, 0, out item);
+
+			string pattern = item.file_path;
+
+			if (item.file_type == FileType.DIRECTORY){
+				pattern = "%s/***".printf(pattern);
+			}
+			else{
+				//pattern = "%s/***".printf(pattern);
+			}
+			
+			if (!App.exclude_list_user.contains(pattern)
+				&& !App.exclude_list_default.contains(pattern)
+				&& !App.exclude_list_home.contains(pattern)){
+				
+				list.add(pattern);
+			}
+			
+			iterExists = store.iter_next (ref iter);
+		}
+
+		App.exclude_list_user = list;
+
+		log_debug("exclude_selected_items()");
+		foreach(var item in App.exclude_list_user){
+			log_debug(item);
+		}
+	}
+
+	private Gtk.Label add_label(
+		Gtk.Box box, string text, bool is_bold = false, bool is_italic = false, bool is_large = false){
+			
+		string msg = "<span%s%s%s>%s</span>".printf(
+			(is_bold ? " weight=\"bold\"" : ""),
+			(is_italic ? " style=\"italic\"" : ""),
+			(is_large ? " size=\"x-large\"" : ""),
+			text);
+			
+		var label = new Gtk.Label(msg);
+		label.set_use_markup(true);
+		label.xalign = (float) 0.0;
+		box.add(label);
+		return label;
+	}
+
+	private Gtk.Button add_button(
+		Gtk.Box box, string text, string tooltip,
+		ref Gtk.SizeGroup? size_group,
+		Gtk.Image? icon = null){
+			
+		var button = new Gtk.Button();
+        box.add(button);
+
+        button.set_label(text);
+        button.set_tooltip_text(tooltip);
+
+        if (icon != null){
+			button.set_image(icon);
+			button.set_always_show_image(true);
+		}
+
+		if (size_group == null){
+			size_group = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
+		}
+		
+		//size_group.add_widget(button);
+		
+        return button;
+	}
+
+	private Gtk.ToggleButton add_toggle_button(
+		Gtk.Box box, string text, string tooltip,
+		ref Gtk.SizeGroup? size_group,
+		Gtk.Image? icon = null){
+			
+		var button = new Gtk.ToggleButton();
+        box.add(button);
+
+        button.set_label(text);
+        button.set_tooltip_text(tooltip);
+
+        if (icon != null){
+			button.set_image(icon);
+			button.set_always_show_image(true);
+		}
+
+		if (size_group == null){
+			size_group = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
+		}
+		
+		size_group.add_widget(button);
+		
+        return button;
+	}
+	
+}

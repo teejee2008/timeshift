@@ -49,6 +49,7 @@ class MainWindow : Gtk.Window{
 	private Gtk.Menu menu_snapshots;
 	private Gtk.ImageMenuItem mi_remove;
 	private Gtk.ImageMenuItem mi_mark;
+	private Gtk.ImageMenuItem mi_view_log;
 	
 	//backup device
 	//private Gtk.Box hbox_device;
@@ -638,6 +639,8 @@ class MainWindow : Gtk.Window{
 		bak.update_control_file();
 	}
 
+	// context menu
+	
 	private void init_list_view_context_menu(){
 		Gdk.RGBA gray = Gdk.RGBA();
 		gray.parse ("rgba(200,200,200,1)");
@@ -656,6 +659,12 @@ class MainWindow : Gtk.Window{
 		mi_mark.image = get_shared_icon("gtk-delete","",16);
 		mi_mark.activate.connect(btn_mark_for_deletion_clicked);
 		menu_snapshots.append(mi_mark);
+
+		// mi_mark
+		mi_view_log = new ImageMenuItem.with_label("View Log");
+		mi_view_log.image = get_shared_icon("gtk-file","",16);
+		mi_view_log.activate.connect(btn_view_snapshot_log_clicked);
+		menu_snapshots.append(mi_view_log);
 
 		
 		// miFileSeparator0
@@ -704,7 +713,7 @@ class MainWindow : Gtk.Window{
 		});
 	}
 
-	 private bool menu_snapshots_popup (Gtk.Menu popup, Gdk.EventButton? event) {
+	private bool menu_snapshots_popup (Gtk.Menu popup, Gdk.EventButton? event) {
 		TreeSelection selection = tv_backups.get_selection();
 		int count = selection.count_selected_rows();
 		mi_remove.sensitive = (count > 0);
@@ -1223,7 +1232,16 @@ class MainWindow : Gtk.Window{
 				Snapshot bak;
 				store.get (iter, 0, out bak);
 
-				exo_open_textfile(bak.path + "/rsync-log");
+				//exo_open_textfile(bak.path + "/rsync-log");
+
+				this.hide();
+				
+				var win = new RsyncLogWindow(bak.path + "/rsync-log");
+				win.set_transient_for(this);
+				win.destroy.connect(()=>{
+					this.show();
+				});
+
 				return;
 			}
 			iterExists = store.iter_next (ref iter);

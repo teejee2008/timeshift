@@ -41,6 +41,15 @@ public class RsyncTask : AsyncTask{
 			regex_list["status"] = new Regex(
 				"""(.)(.)(c|\+|\.)(s|\+|\.)(t|\+|\.)(p|\+|\.)(o|\+|\.)(g|\+|\.)(u|\+|\.)(a|\+|\.)(x|\+|\.) (.*)""");
 
+			regex_list["created"] = new Regex(
+				"""[0-9/]+ [0-9:.]+ \[[0-9]+\] (.)(.)\+\+\+\+\+\+\+\+\+ (.*)""");
+
+			regex_list["deleted"] = new Regex(
+				"""[0-9/]+ [0-9:.]+ \[[0-9]+\] \*deleting[ \t]+(.*)""");
+
+			regex_list["modified"] = new Regex(
+				"""[0-9/]+ [0-9:.]+ \[[0-9]+\] (.)(.)(c|\+|\.)(s|\+|\.)(t|\+|\.)(p|\+|\.)(o|\+|\.)(g|\+|\.)(u|\+|\.)(a|\+|\.)(x|\+|\.) (.*)""");
+				
 			regex_list["total-size"] = new Regex(
 				"""total size is ([0-9,]+)[ \t]+speedup is [0-9.]+""");
 
@@ -106,8 +115,96 @@ public class RsyncTask : AsyncTask{
 		return cmd;
 	}
 
-	private void parse_log(){
+	public FileItem parse_log(string log_file_path){
+		var root = new FileItem.dummy_root();
+
+		//log_debug("parse rsync log: %s".printf(log_file_path));
 		
+		try {
+			string line;
+			var file = File.new_for_path(log_file_path);
+			if (!file.query_exists ()) {
+				log_error(_("File not found") + ": %s".printf(log_file_path));
+				return root;
+			}
+
+			var dis = new DataInputStream (file.read());
+			while ((line = dis.read_line (null)) != null) {
+				if (line.strip().length == 0) { continue; }
+
+				string item_path = "";
+				var item_type = FileType.REGULAR;
+				string item_status = "";
+				
+				MatchInfo match;
+				if (regex_list["created"].match(line, 0, out match)) {
+
+					//log_debug("matched: created:%s".printf(line));
+					
+					item_path = match.fetch(3).split(" -> ")[0].strip();
+					item_type = FileType.REGULAR;
+					if (match.fetch(2) == "d"){
+						item_type = FileType.DIRECTORY;
+					}
+
+					if (regex_list["created"].match(line, 0, out match)) {
+						item_status = _("new");
+					}
+				}
+				else if (regex_list["deleted"].match(line, 0, out match)) {
+					
+					//log_debug("matched: deleted:%s".printf(line));
+					
+					item_path = match.fetch(1).split(" -> ")[0].strip();
+					item_status = _("deleted");
+				}
+				else if (regex_list["modified"].match(line, 0, out match)) {
+
+					//log_debug("matched: modified:%s".printf(line));
+					
+					item_path = match.fetch(12).split(" -> ")[0].strip();
+					
+					if (match.fetch(2) == "d"){
+						item_type = FileType.DIRECTORY;
+					}
+					
+					if (match.fetch(3) == "c"){
+						item_status = "checksum";
+					}
+					else if (match.fetch(4) == "s"){
+						item_status = "size";
+					}
+					else if (match.fetch(5) == "t"){
+						item_status = "timestamp";
+					}
+					else if (match.fetch(6) == "p"){
+						item_status = "permissions";
+					}
+					else if (match.fetch(7) == "o"){
+						item_status = "owner";
+					}
+					else if (match.fetch(8) == "g"){
+						item_status = "group";
+					}
+				}
+				else{
+					//log_debug("not-matched: %s".printf(line));
+				}
+				
+				if (item_path.length > 0){
+					int64 item_size = 0;//int64.parse(size);
+					var item = root.add_descendant(item_path, item_type, item_size, 0);
+					item.file_status = item_status;
+					//log_debug("added: %s".printf(item_path));
+				}
+				
+			}
+		}
+		catch (Error e) {
+			log_error (e.message);
+		}
+		
+		return root;
 	}
 	
 	// execution ----------------------------

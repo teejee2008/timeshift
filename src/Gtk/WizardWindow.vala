@@ -67,6 +67,16 @@ class WizardWindow : Gtk.Window{
 	private Gtk.Label lbl_msg;
 	private Gtk.Label lbl_status;
 	private ProgressBar progressbar;
+	private Gtk.Label lbl_unchanged;
+	private Gtk.Label lbl_created;
+	private Gtk.Label lbl_deleted;
+	private Gtk.Label lbl_modified;
+	private Gtk.Label lbl_checksum;
+	private Gtk.Label lbl_size;
+	private Gtk.Label lbl_timestamp;
+	private Gtk.Label lbl_permissions;
+	private Gtk.Label lbl_owner;
+	private Gtk.Label lbl_group;
 
 	// tab_include, tab_exclude
 	private Gtk.TreeView tv_exclude;
@@ -344,20 +354,68 @@ class WizardWindow : Gtk.Window{
 		lbl_status = add_label(box, "");
 		lbl_status.ellipsize = Pango.EllipsizeMode.MIDDLE;
 		lbl_status.max_width_chars = 45;
-		
-		//txtv_create = add_text_view(box, "");
-		//txtv_create.margin_top = 12;
+		lbl_status.margin_bottom = 12;
 
-		/*var hbox = new Box (Orientation.HORIZONTAL, 6);
-		box.add (hbox_status);
+		var label = add_label(box, "");
+		label.vexpand = true;
 		
-		//lbl_msg
-		lbl_msg = add_label(hbox_status, _("Preparing..."));
-		lbl_msg.halign = Align.START;
-		lbl_msg.ellipsize = Pango.EllipsizeMode.END;
-		lbl_msg.max_width_chars = 50;*/
+		// add count labels ---------------------------------
+		
+		Gtk.SizeGroup sg_label = null;
+		Gtk.SizeGroup sg_value = null;
+		
+		lbl_unchanged = add_count_label(box, _("No Change"), ref sg_label, ref sg_value, 12);
+
+		lbl_created = add_count_label(box, _("Created"), ref sg_label, ref sg_value);
+		lbl_deleted = add_count_label(box, _("Deleted"), ref sg_label, ref sg_value);
+		lbl_modified = add_count_label(box, _("Changed"), ref sg_label, ref sg_value, 12);
+
+		lbl_checksum = add_count_label(box, _("Checksum"), ref sg_label, ref sg_value);
+		lbl_size = add_count_label(box, _("Size"), ref sg_label, ref sg_value);
+		lbl_timestamp = add_count_label(box, _("Timestamp"), ref sg_label, ref sg_value);
+		lbl_permissions = add_count_label(box, _("Permissions"), ref sg_label, ref sg_value);
+		lbl_owner = add_count_label(box, _("Owner"), ref sg_label, ref sg_value);
+		lbl_group = add_count_label(box, _("Group"), ref sg_label, ref sg_value, 24);
 
 		return box;
+	}
+
+	private Gtk.Label add_count_label(Gtk.Box box, string text,
+		ref Gtk.SizeGroup? sg_label, ref Gtk.SizeGroup? sg_value,
+		int add_margin_bottom = 0){
+			
+		var hbox = new Box (Orientation.HORIZONTAL, 6);
+		box.add (hbox);
+
+		var label = add_label(hbox, text + ":", true);
+		label.xalign = (float) 1.0;
+		label.margin_left = 12;
+		label.margin_right = 6;
+
+		if (add_margin_bottom > 0){
+			label.margin_bottom = add_margin_bottom;
+		}
+
+		// add to size group
+		if (sg_label == null){
+			sg_label = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
+		}
+		sg_label.add_widget(label);
+
+		label = add_label(hbox, "");
+		label.xalign = (float) 0.0;
+
+		if (add_margin_bottom > 0){
+			label.margin_bottom = add_margin_bottom;
+		}
+
+		// add to size group
+		if (sg_value == null){
+			sg_value = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
+		}
+		sg_value.add_widget(label);
+
+		return label;
 	}
 
 	private Gtk.Box create_tab_schedule(){
@@ -1690,6 +1748,17 @@ class WizardWindow : Gtk.Window{
 			progressbar.fraction = fraction;
 
 			lbl_msg.label = App.progress_text;
+
+			lbl_unchanged.label = "%'d".printf(App.task.count_unchanged);
+			lbl_created.label = "%'d".printf(App.task.count_created);
+			lbl_deleted.label = "%'d".printf(App.task.count_deleted);
+			lbl_modified.label = "%'d".printf(App.task.count_modified);
+			lbl_checksum.label = "%'d".printf(App.task.count_checksum);
+			lbl_size.label = "%'d".printf(App.task.count_size);
+			lbl_timestamp.label = "%'d".printf(App.task.count_timestamp);
+			lbl_permissions.label = "%'d".printf(App.task.count_permissions);
+			lbl_owner.label = "%'d".printf(App.task.count_owner);
+			lbl_group.label = "%'d".printf(App.task.count_group);
 
 			gtk_do_events();
 

@@ -24,6 +24,17 @@ public class RsyncTask : AsyncTask{
 	public GLib.Queue<string> status_lines;
 	public int64 status_line_count = 0;
 	public int64 total_size = 0;
+
+	public int64 count_created;
+	public int64 count_deleted;
+	public int64 count_modified;
+	public int64 count_checksum;
+	public int64 count_size;
+	public int64 count_timestamp;
+	public int64 count_permissions;
+	public int64 count_owner;
+	public int64 count_group;
+	public int64 count_unchanged;
 	
 	public RsyncTask(){
 		init_regular_expressions();
@@ -43,13 +54,28 @@ public class RsyncTask : AsyncTask{
 				"""(.)(.)(c|\+|\.| )(s|\+|\.| )(t|\+|\.| )(p|\+|\.| )(o|\+|\.| )(g|\+|\.| )(u|\+|\.| )(a|\+|\.| )(x|\+|\.| ) (.*)""");
 
 			regex_list["created"] = new Regex(
-				"""[0-9/]+ [0-9:.]+ \[[0-9]+\] (.)(.)\+\+\+\+\+\+\+\+\+ (.*)""");
+				"""(.)(.)\+\+\+\+\+\+\+\+\+ (.*)""");
 
+			regex_list["log-created"] = new Regex(
+				"""[0-9/]+ [0-9:.]+ \[[0-9]+\] (.)(.)\+\+\+\+\+\+\+\+\+ (.*)""");
+				
 			regex_list["deleted"] = new Regex(
+				"""\*deleting[ \t]+(.*)""");
+
+			regex_list["log-deleted"] = new Regex(
 				"""[0-9/]+ [0-9:.]+ \[[0-9]+\] \*deleting[ \t]+(.*)""");
 
 			regex_list["modified"] = new Regex(
-				"""[0-9/]+ [0-9:.]+ \[[0-9]+\] (.)(.)(c|\+|\.)(s|\+|\.)(t|\+|\.)(p|\+|\.)(o|\+|\.)(g|\+|\.)(u|\+|\.)(a|\+|\.)(x|\+|\.) (.*)""");
+				"""(.)(.)(c|\+|\.| )(s|\+|\.| )(t|\+|\.| )(p|\+|\.| )(o|\+|\.| )(g|\+|\.| )(u|\+|\.| )(a|\+|\.| )(x|\+|\.) (.*)""");
+
+			regex_list["log-modified"] = new Regex(
+				"""[0-9/]+ [0-9:.]+ \[[0-9]+\] (.)(.)(c|\+|\.| )(s|\+|\.| )(t|\+|\.| )(p|\+|\.| )(o|\+|\.| )(g|\+|\.| )(u|\+|\.| )(a|\+|\.| )(x|\+|\.) (.*)""");
+
+			regex_list["unchanged"] = new Regex(
+				"""(.)(.)          (.*)""");
+
+			regex_list["log-unchanged"] = new Regex(
+				"""[0-9/]+ [0-9:.]+ \[[0-9]+\] (.)(.)\+\+\+\+\+\+\+\+\+ (.*)""");
 				
 			regex_list["total-size"] = new Regex(
 				"""total size is ([0-9,]+)[ \t]+speedup is [0-9.]+""");
@@ -69,6 +95,17 @@ public class RsyncTask : AsyncTask{
 		//status_lines = new GLib.Queue<string>();
 		status_line_count = 0;
 		total_size = 0;
+
+		count_created = 0;
+		count_deleted = 0;
+		count_modified = 0;
+		count_checksum = 0;
+		count_size = 0;
+		count_timestamp = 0;
+		count_permissions = 0;
+		count_owner = 0;
+		count_group = 0;
+		count_unchanged = 0;
 	}
 
 	private string build_script() {
@@ -147,7 +184,7 @@ public class RsyncTask : AsyncTask{
 				string item_status = "";
 				
 				MatchInfo match;
-				if (regex_list["created"].match(line, 0, out match)) {
+				if (regex_list["log-created"].match(line, 0, out match)) {
 
 					//log_debug("matched: created:%s".printf(line));
 					
@@ -156,19 +193,16 @@ public class RsyncTask : AsyncTask{
 					if (match.fetch(2) == "d"){
 						item_type = FileType.DIRECTORY;
 					}
-
-					if (regex_list["created"].match(line, 0, out match)) {
-						item_status = _("new");
-					}
+					item_status = _("new");
 				}
-				else if (regex_list["deleted"].match(line, 0, out match)) {
+				else if (regex_list["log-deleted"].match(line, 0, out match)) {
 					
 					//log_debug("matched: deleted:%s".printf(line));
 					
 					item_path = match.fetch(1).split(" -> ")[0].strip();
 					item_status = _("deleted");
 				}
-				else if (regex_list["modified"].match(line, 0, out match)) {
+				else if (regex_list["log-modified"].match(line, 0, out match)) {
 
 					//log_debug("matched: modified:%s".printf(line));
 					
@@ -261,17 +295,71 @@ public class RsyncTask : AsyncTask{
 
 		status_line_count++;
 		
-		MatchInfo match;
-		if (regex_list["status"].match(line, 0, out match)) {
-			status_line = match.fetch(12);
+		//MatchInfo match;
+		//if (regex_list["status"].match(line, 0, out match)) {
+		//	status_line = match.fetch(12);
 
 			//status_lines.push_tail(status_line);
 			//if (status_lines.get_length() > 15){
 			//	status_lines.pop_head();
 			//}
+		//}
+		MatchInfo match;
+		if (regex_list["created"].match(line, 0, out match)) {
+
+			//log_debug("matched: created:%s".printf(line));
+			
+			count_created++;
+			status_line = match.fetch(3).split(" -> ")[0].strip();
+		}
+		else if (regex_list["deleted"].match(line, 0, out match)) {
+			
+			//log_debug("matched: deleted:%s".printf(line));
+
+			count_deleted++;
+			status_line = match.fetch(1).split(" -> ")[0].strip();
+		}
+		else if (regex_list["unchanged"].match(line, 0, out match)) {
+			
+			//log_debug("matched: deleted:%s".printf(line));
+
+			count_unchanged++;
+			status_line = match.fetch(3).split(" -> ")[0].strip();
+		}
+		else if (regex_list["modified"].match(line, 0, out match)) {
+
+			//log_debug("matched: modified:%s".printf(line));
+
+			count_modified++;
+			status_line = match.fetch(12).split(" -> ")[0].strip();
+			
+			if (match.fetch(3) == "c"){
+				count_checksum++;
+			}
+			else if (match.fetch(4) == "s"){
+				count_size++;
+			}
+			else if (match.fetch(5) == "t"){
+				count_timestamp++;
+			}
+			else if (match.fetch(6) == "p"){
+				count_permissions++;
+			}
+			else if (match.fetch(7) == "o"){
+				count_owner++;
+			}
+			else if (match.fetch(8) == "g"){
+				count_group++;
+			}
+			else{
+				count_unchanged++;
+			}
 		}
 		else if (regex_list["total-size"].match(line, 0, out match)) {
 			total_size = int64.parse(match.fetch(1).replace(",",""));
+		}
+		else{
+			log_debug("not-matched: %s".printf(line));
 		}
 
 		return true;

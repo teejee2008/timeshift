@@ -955,7 +955,7 @@ class MainWindow : Gtk.Window{
 
 		gtk_messagebox(_("Marked for deletion"), 
 			_("Snapshots will be removed during the next scheduled run") + ".\n\n"
-			+ _("To delete the snapshots immediately, right-click and select 'Delete'."),
+			+ _("To delete snapshots immediately, right-click and select 'Delete'."),
 			this, false);
 
 		//update UI -------------------

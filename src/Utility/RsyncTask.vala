@@ -11,6 +11,7 @@ public class RsyncTask : AsyncTask{
 	public bool delete_extra = true;
 	public string rsync_log_file = "";
 	public string exclude_from_file = "";
+	public string link_from_path = "";
 	public string source_path = "";
 	public string dest_path = "";
 	public bool verbose = true;
@@ -61,6 +62,7 @@ public class RsyncTask : AsyncTask{
 	
 	public void prepare() {
 		string script_text = build_script();
+		log_msg(script_text);
 		save_bash_script_temp(script_text, script_file);
 		log_debug("RsyncTask:prepare(): saved: %s".printf(script_file));
 
@@ -94,6 +96,14 @@ public class RsyncTask : AsyncTask{
 
 		cmd += " --numeric-ids --stats --relative --delete-excluded";
 
+		if (link_from_path.length > 0){
+			if (!link_from_path.has_suffix("/")){
+				link_from_path = "%s/".printf(link_from_path);
+			}
+			
+			cmd += " --link-dest='%s'".printf(escape_single_quote(link_from_path));
+		}
+		
 		if (rsync_log_file.length > 0){
 			cmd += " --log-file='%s'".printf(escape_single_quote(rsync_log_file));
 		}
@@ -191,7 +201,7 @@ public class RsyncTask : AsyncTask{
 					//log_debug("not-matched: %s".printf(line));
 				}
 				
-				if (item_path.length > 0){
+				if ((item_path.length > 0) && (item_path != "/./")){
 					int64 item_size = 0;//int64.parse(size);
 					var item = root.add_descendant(item_path, item_type, item_size, 0);
 					item.file_status = item_status;

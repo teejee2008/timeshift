@@ -210,7 +210,8 @@ public class SnapshotRepo : GLib.Object{
 	public bool load_snapshots(){
 
 		snapshots.clear();
-
+		invalid_snapshots.clear();
+		
 		string path = snapshot_location + "/timeshift/snapshots";
 
 		if (!dir_exists(path)){

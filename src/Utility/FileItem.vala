@@ -193,14 +193,14 @@ public class FileItem : GLib.Object,Gee.Comparable<FileItem> {
 	}
 
 	public FileItem add_descendant(
-		string file_path,
+		string _file_path,
 		FileType ? _file_type,
 		int64 item_size,
 		int64 item_size_compressed) {
 
-		//log_debug("add_descendant=%s".printf(file_path));
+		//log_debug("add_descendant=%s".printf(_file_path));
 		
-		string item_path = file_path.strip();
+		string item_path = _file_path.strip();
 		FileType item_type = (_file_type == null) ? FileType.REGULAR : _file_type;
 
 		if (item_path.has_suffix("/")) {

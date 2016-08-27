@@ -1456,41 +1456,26 @@ public class Main : GLib.Object{
 		return true;
 	}
 
-	private string temp_tag;
-	private DateTime temp_dt_created;
-	private DateTime temp_dt_begin;
-	
 	public bool backup_and_rotate(string tag, DateTime dt_created){
-		string cmd = "";
-		string std_out;
-		string std_err;
-		int ret_val = -1;
-		string msg;
+		//string msg;
 		File f;
 
-		//log_debug("backup_and_rotate()");
-		
-		temp_tag = tag;
-		temp_dt_created = dt_created;
-		
-		string time_stamp = dt_created.format("%Y-%m-%d_%H-%M-%S");
-		DateTime now = new DateTime.now_local();
 		bool backup_taken = false;
-		
-		string sync_name = ".sync";
-		string snapshot_dir = path_combine(repo.snapshot_location, "timeshift/snapshots");
-		string sync_path = snapshot_dir + "/" + sync_name;
+
+		// save start time
+		var dt_begin = new DateTime.now_local();
 
 		try{
-
+			// get system boot time
+			DateTime now = new DateTime.now_local();
 			DateTime dt_sys_boot = now.add_seconds((-1) * get_system_uptime_seconds());
 
-			//check if we can rotate an existing backup -------------
+			// check if we can rotate an existing backup -------------
 
-			Snapshot last_snapshot = repo.get_latest_snapshot();
+			var latest = repo.get_latest_snapshot();
 			DateTime dt_filter = null;
 
-			if ((tag != "ondemand") && (last_snapshot != null)){
+			if ((tag != "ondemand") && (latest != null)){
 				switch(tag){
 					case "boot":
 						dt_filter = dt_sys_boot;
@@ -1499,13 +1484,14 @@ public class Main : GLib.Object{
 					case "daily":
 					case "weekly":
 					case "monthly":
-						dt_filter = now.add_hours(-1);
+						dt_filter = now.add_hours(-1); // TODO: improve this logic
 						break;
 					default:
 						log_error(_("Unknown snapshot type") + ": %s".printf(tag));
 						return false;
 				}
 
+				// find a recent backup that can be used
 				Snapshot backup_to_rotate = null;
 				foreach(var bak in repo.snapshots){
 					if (bak.date.compare(dt_filter) > 0){
@@ -1515,125 +1501,89 @@ public class Main : GLib.Object{
 				}
 
 				if (backup_to_rotate != null){
+					
+					// tag the backup
 					backup_to_rotate.add_tag(tag);
+					
 					backup_taken = true;
-					msg = _("Snapshot") + " '%s' ".printf(backup_to_rotate.name) + _("tagged") + " '%s'".printf(tag);
-					log_msg(msg);
+					var message = "%s '%s' %s '%s'".printf(
+						_("Snapshot"), backup_to_rotate.name, _("tagged"), tag);
+					log_msg(message);
 				}
 			}
 
 			if (!backup_taken){
 
-				log_debug("Creating new backup...");
+				log_msg("Creating new backup...");
 				
 				// take new backup ---------------------------------
 
-				temp_dt_begin = new DateTime.now_local();
+				string time_stamp = dt_created.format("%Y-%m-%d_%H-%M-%S");
+				string snapshot_dir = path_combine(repo.snapshot_location, "timeshift/snapshots");
+				string snapshot_name = time_stamp;
+				string snapshot_path = path_combine(snapshot_dir, snapshot_name);
 
-				string exclude_from_file = sync_path + "/exclude.list";
+				Snapshot snapshot_to_link = null;
 
-				/*
-				Check if a control file was written after restore.
-				If control file exists, we will delete the existing
-				.sync snapshot and hard-link the restored snapshot to .sync.
-				This will save disk space as the new snapshot will share
-				almost all files with the restored snapshot.
-				*/
+				dir_create(path_combine(snapshot_path, "/localhost"));
+
+				// check if a snapshot was restored recently and use it for linking ---------
 				
-				Snapshot bak_restore = null;
-				string ctl_path = snapshot_dir + "/.sync-restore";
-
+				string ctl_path = path_combine(snapshot_dir, ".sync-restore");
 				f = File.new_for_path(ctl_path);
-				if(f.query_exists()){
-					string snapshot_path = file_read(ctl_path);
+				if (f.query_exists()){
 
+					// read snapshot name from file
+					string snap_path = file_read(ctl_path);
+					string snap_name = file_basename(snap_path);
+					
 					// find the snapshot that was restored
 					foreach(var bak in repo.snapshots){
-						if (bak.path == snapshot_path){
-							bak_restore = bak;
+						if (bak.name == snap_name){
+							// use for linking
+							snapshot_to_link = bak; 
 							break;
 						}
 					}
 
 					// delete the restore-control-file
 					f.delete();
-
-					if (bak_restore != null){
-						// delete the existing .sync snapshot
-
-						f = File.new_for_path(sync_path);
-						if(f.query_exists()){
-
-							f = File.new_for_path(sync_path + "/info.json");
-							if(!f.query_exists()){
-
-								progress_text = _("Removing partially completed snapshot...");
-								log_msg(progress_text);
-
-								if (repo.remove_sync_dir()){
-									return false;
-								}
-							}
-						}
-
-						// hard-link restored snapshot to .sync
-						
-						progress_text = _("Hard-linking files from previous snapshot...");
-						log_msg(progress_text);
-
-						cmd = "cp -alp \"%s\" \"%s\"".printf(bak_restore.path + "/localhost/.", sync_path + "/localhost/");
-
-						if (LOG_COMMANDS) { log_debug(cmd); }
-
-						Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-						if (ret_val != 0){
-							log_error(_("Failed to hard-link last snapshot"));
-							log_error (std_err);
-							return false;
-						}
-					}
 				}
 
-				// create sync directory if missing
+				// get latest snapshot to link if not set -------
 
-				dir_create(sync_path + "/localhost");
-				
-				// delete existing control file
-				
-				file_delete(sync_path + "/info.json");
+				if (snapshot_to_link == null){
+					snapshot_to_link = repo.get_latest_snapshot();
+				}
 
-				// save exclude list
+				string link_from_path = "";
+				if (snapshot_to_link != null){
+					log_msg("%s: %s".printf(_("Linking from snapshot"), snapshot_to_link.name));
+					link_from_path = "%s/localhost/".printf(snapshot_to_link.path);
+				}
 
-				save_exclude_list(sync_path);
+				// save exclude list ----------------
 
-				// update modification date of .sync directory
+				string exclude_from_file = save_exclude_list(snapshot_path);
 
-				cmd = "touch \"%s\"".printf(sync_path);
-				Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-
-				if (LOG_COMMANDS) { log_debug(cmd); }
-
-				if (ret_val != 0){
-					log_error(std_err);
-					log_error(_("Failed to update modification date"));
+				if (exclude_from_file.length == 0){
+					log_error(_("Failed to save exclude list"));
 					return false;
 				}
-
-				// rsync file system with .sync
-
+				
+				// rsync file system -------------------
+				
 				progress_text = _("Synching files with rsync...");
 				log_msg(progress_text);
 
-				var log_file = sync_path + "/rsync-log";
-				f = File.new_for_path(log_file);
-				if (f.query_exists()){
-					f.delete();
-				}
+				var log_file = snapshot_path + "/rsync-log";
+				file_delete(log_file);
 
 				task = create_new_rsync_task();
 
 				task.source_path = "";
-				task.dest_path = sync_path + "/localhost/";
+				task.dest_path = snapshot_path + "/localhost/";
+				task.link_from_path = link_from_path;
 				task.exclude_from_file = exclude_from_file;
 				task.rsync_log_file = log_file;
 
@@ -1650,52 +1600,29 @@ public class Main : GLib.Object{
 				}
 
 				if (task.total_size == 0){
-					log_error(_("rsync returned an error") + ": %d".printf(ret_val));
+					log_error(_("rsync returned an error"));
 					log_error(_("Failed to create new snapshot"));
 					return false;
 				}
 
-				// write control file ----------
+				// write control file
+				write_snapshot_control_file(snapshot_path, dt_created, tag);
 
-				write_snapshot_control_file(sync_path, temp_dt_created, temp_tag);
-
-				// rotate .sync to required level ----------
-
-				progress_text = _("Saving snapshot...");
-				log_msg(progress_text);
-
-				string new_name = time_stamp;
-				string new_path = snapshot_dir + "/" + new_name;
-
-				cmd = "cp -alp \"%s\" \"%s\"".printf(sync_path, new_path);
-
-				if (LOG_COMMANDS) { log_debug(cmd); }
-
-				try{
-					
-					Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-					if (ret_val != 0){
-						log_error(_("Failed to save snapshot") + ":'%s'".printf(new_name));
-						log_error (std_err);
-						return false;
-					}
-				}
-				catch(Error e){
-					log_error (e.message);
-					return false;
-				}
-
-				DateTime dt_end = new DateTime.now_local();
-				TimeSpan elapsed = dt_end.difference(temp_dt_begin);
+				// finish ------------------------------
+				
+				var dt_end = new DateTime.now_local();
+				TimeSpan elapsed = dt_end.difference(dt_begin);
 				long seconds = (long)(elapsed * 1.0 / TimeSpan.SECOND);
-				msg = _("Snapshot saved successfully")
-					+ " (%lds)".printf(seconds);
-				log_msg(msg);
-				OSDNotify.notify_send("TimeShift",msg,10000,"low");
+				
+				var message = "%s (%lds)".printf(_("Snapshot saved successfully"), seconds);
+				log_msg(message);
+				
+				OSDNotify.notify_send("TimeShift", message, 10000, "low");
 
-				log_msg(_("Snapshot") + " '%s' ".printf(new_name)
-					+ _("tagged") + " '%s'".printf(temp_tag));
-
+				message = "%s '%s' %s '%s'".printf(
+						_("Snapshot"), snapshot_name, _("tagged"), tag);
+				log_msg(message);
+	
 				repo.load_snapshots();
 			}
 		}
@@ -1707,7 +1634,7 @@ public class Main : GLib.Object{
 		return true;
 	}
 	
-	public void save_exclude_list(string snapshot_path){
+	public string save_exclude_list(string snapshot_path){
 
 		try{
 
@@ -1748,7 +1675,7 @@ public class Main : GLib.Object{
 
 			//write file -----------
 
-			string list_file = snapshot_path + "/exclude.list";
+			string list_file = path_combine(snapshot_path, "exclude.list");
 			string file_text = "";
 
 			var f = File.new_for_path(list_file);
@@ -1760,11 +1687,15 @@ public class Main : GLib.Object{
 				file_text += path + "\n";
 			}
 
-			file_write(list_file,file_text);
+			file_write(list_file, file_text);
+
+			return list_file;
 		}
 		catch (Error e) {
 	        log_error (e.message);
 	    }
+
+	    return "";
 	}
 
 	public Snapshot write_snapshot_control_file(string snapshot_path, DateTime dt_created, string tag){

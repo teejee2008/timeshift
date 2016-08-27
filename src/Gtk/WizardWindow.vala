@@ -1655,10 +1655,28 @@ class WizardWindow : Gtk.Window{
 		}
 
 		string last_message = "";
+		int wait_interval_millis = 100;
+		int status_line_counter = 0;
+		int status_line_counter_default = 1000 / wait_interval_millis;
+		string status_line = "";
+		string last_status_line = "";
 		
 		while (thread_is_running){
 
-			lbl_status.label = escape_html(App.task.status_line);
+			status_line = escape_html(App.task.status_line);
+			if (status_line != last_status_line){
+				lbl_status.label = status_line;
+				last_status_line = status_line;
+				status_line_counter = status_line_counter_default;
+			}
+			else{
+				status_line_counter--;
+				if (status_line_counter < 0){
+					status_line_counter = status_line_counter_default;
+					lbl_status.label = "";
+				}
+			}
+			
 			//string line = null;
 			//while((line = App.task.status_lines.pop_head()) != null){
 				//text_view_append(txtv_create, line + "\n");

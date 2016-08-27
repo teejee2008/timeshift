@@ -1439,7 +1439,9 @@ public class Main : GLib.Object{
 				cron_job_update();
 			}
 
-			repo.auto_remove();
+			if (app_mode.length != 0){
+				repo.auto_remove();
+			}
 
 			if (update_symlinks){
 				repo.load_snapshots();
@@ -1698,7 +1700,9 @@ public class Main : GLib.Object{
 	    return "";
 	}
 
-	public Snapshot write_snapshot_control_file(string snapshot_path, DateTime dt_created, string tag){
+	public Snapshot write_snapshot_control_file(
+		string snapshot_path, DateTime dt_created, string tag){
+			
 		var ctl_path = snapshot_path + "/info.json";
 		var config = new Json.Object();
 

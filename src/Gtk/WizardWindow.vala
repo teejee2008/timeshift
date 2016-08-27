@@ -348,6 +348,15 @@ class WizardWindow : Gtk.Window{
 		//txtv_create = add_text_view(box, "");
 		//txtv_create.margin_top = 12;
 
+		/*var hbox = new Box (Orientation.HORIZONTAL, 6);
+		box.add (hbox_status);
+		
+		//lbl_msg
+		lbl_msg = add_label(hbox_status, _("Preparing..."));
+		lbl_msg.halign = Align.START;
+		lbl_msg.ellipsize = Pango.EllipsizeMode.END;
+		lbl_msg.max_width_chars = 50;*/
+
 		return box;
 	}
 

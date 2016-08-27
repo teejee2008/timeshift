@@ -40,7 +40,7 @@ public class RsyncTask : AsyncTask{
 		try {
 			//Example: status=-1
 			regex_list["status"] = new Regex(
-				"""(.)(.)(c|\+|\.)(s|\+|\.)(t|\+|\.)(p|\+|\.)(o|\+|\.)(g|\+|\.)(u|\+|\.)(a|\+|\.)(x|\+|\.) (.*)""");
+				"""(.)(.)(c|\+|\.| )(s|\+|\.| )(t|\+|\.| )(p|\+|\.| )(o|\+|\.| )(g|\+|\.| )(u|\+|\.| )(a|\+|\.| )(x|\+|\.| ) (.*)""");
 
 			regex_list["created"] = new Regex(
 				"""[0-9/]+ [0-9:.]+ \[[0-9]+\] (.)(.)\+\+\+\+\+\+\+\+\+ (.*)""");
@@ -81,7 +81,7 @@ public class RsyncTask : AsyncTask{
 			cmd += "ionice -c2 -n7 ";
 		}
 		
-		cmd += "rsync -ai";
+		cmd += "rsync -aii";
 
 		if (verbose){
 			cmd += " --verbose";

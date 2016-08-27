@@ -87,8 +87,6 @@ class WizardWindow : Gtk.Window{
 
 	private Gee.ArrayList<string> temp_exclude_list;
 
-	private bool show_dummy_progress = false;
-	
 	public WizardWindow (string _mode) {
 
 		if (_mode.length == 0){
@@ -1644,8 +1642,6 @@ class WizardWindow : Gtk.Window{
 
 	private void take_snapshot(){
 
-		show_dummy_progress = (App.repo.snapshots.size > 0);
-
 		try {
 			thread_is_running = true;
 			Thread.create<void> (take_snapshot_thread, true);
@@ -1654,7 +1650,7 @@ class WizardWindow : Gtk.Window{
 			log_error (e.message);
 		}
 
-		string last_message = "";
+		//string last_message = "";
 		int wait_interval_millis = 100;
 		int status_line_counter = 0;
 		int status_line_counter_default = 1000 / wait_interval_millis;
@@ -1676,33 +1672,16 @@ class WizardWindow : Gtk.Window{
 					lbl_status.label = "";
 				}
 			}
-			
-			//string line = null;
-			//while((line = App.task.status_lines.pop_head()) != null){
-				//text_view_append(txtv_create, line + "\n");
-				//text_view_scroll_to_end(txtv_create);
-				//lbl_status.label = line;
-				//gtk_do_events();
-			//}
-			
-			if (show_dummy_progress){
-				if (progressbar.fraction < 99.0){	
-					progressbar.fraction = progressbar.fraction + 0.0005;
-				}
-			}
-			else{
-				double fraction = (App.task.status_line_count * 1.0)
-					/ Main.first_snapshot_count;
 
-				progressbar.fraction = fraction;
-			}
+			// TODO: show estimated time remaining and file counts
 
-			if (App.progress_text != last_message){
-				progressbar.fraction = 0;
-				lbl_msg.label = App.progress_text;
-				last_message = App.progress_text;
-			}
-	
+			double fraction = (App.task.status_line_count * 1.0)
+				/ Main.first_snapshot_count;
+
+			progressbar.fraction = fraction;
+
+			lbl_msg.label = App.progress_text;
+
 			gtk_do_events();
 
 			sleep(100);

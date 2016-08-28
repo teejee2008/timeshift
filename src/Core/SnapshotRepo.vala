@@ -305,7 +305,7 @@ public class SnapshotRepo : GLib.Object{
 		//log_msg("Config: Free space limit is %s".printf(
 		//	format_file_size(Main.MIN_FREE_SPACE)));
 
-		if (is_available()){
+		if (available()){
 			has_snapshots();
 			has_space();
 		}
@@ -328,7 +328,7 @@ public class SnapshotRepo : GLib.Object{
 		log_msg("");
 	}
 
-	public bool is_available(){
+	public bool available(){
 
 		log_debug("is_available()");
 		

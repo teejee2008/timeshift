@@ -453,7 +453,7 @@ namespace TeeJee.GtkHelper{
 			
         // notebook
 		var book = new Gtk.Notebook();
-		book.margin = 6;
+		book.margin = 0;
 		book.show_tabs = show_tabs;
 		book.show_border = show_border;
 		
@@ -464,7 +464,7 @@ namespace TeeJee.GtkHelper{
 
 	// add_tab
 	private Gtk.Box add_tab(
-		Gtk.Notebook book, string title, int margin = 6, int spacing = 6){
+		Gtk.Notebook book, string title, int margin = 12, int spacing = 6){
 			
 		// label
 		var label = new Gtk.Label(title);

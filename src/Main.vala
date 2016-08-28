@@ -98,7 +98,9 @@ public class Main : GLib.Object{
 
 	//global vars for controlling threads
 	public bool thr_success = false;
-	public bool thr_running = false;
+	public bool thread_estimate_running = false;
+	public bool thread_restore_running = false;
+	
 	public int thr_retval = -1;
 	public string thr_arg1 = "";
 	public bool thr_timeout_active = false;
@@ -224,6 +226,8 @@ public class Main : GLib.Object{
 			log_dir = "/var/log/timeshift";
 			log_file = log_dir + "/" + now.format("%Y-%m-%d_%H-%M-%S") + ".log";
 
+			string suffix = (app_mode.length == 0) ? "_gui" : "_" + app_mode;
+			
 			var file = File.new_for_path (log_dir);
 			if (!file.query_exists ()) {
 				file.make_directory_with_parents();
@@ -269,15 +273,15 @@ public class Main : GLib.Object{
 		if (!app_lock.create("timeshift", app_mode)){
 			if (app_mode == ""){
 				if (app_lock.lock_message == "backup"){
-					msg = _("A scheduled job is currently taking a system snapshot.") + "\n";
-					msg += _("Please wait for a few minutes and try again.");
+					msg = _("Another instance of Timeshift is creating a snapshot.") + "\n";
+					msg += _("Please wait a few minutes and try again.");
 				}
 				else{
 					msg = _("Another instance of timeshift is currently running!") + "\n";
 					msg += _("Please check if you have multiple windows open.") + "\n";
 				}
 
-				string title = _("Error");
+				string title = _("Scheduled snapshot in progress...");
 				gtk_messagebox(title, msg, null, true);
 			}
 			else{
@@ -1228,18 +1232,18 @@ public class Main : GLib.Object{
 			string message, details;
 			int status_code = check_backup_location(out message, out details);
 			
-			if (!is_ondemand){
+			//if (!is_ondemand){
 
-				log_debug("is_ondemand: false");
+				//log_debug("is_ondemand: false");
 				
 				// check if first snapshot was taken
-				if (status_code == 2){
-					log_error(message);
-					log_error(
-						_("Please take the first snapshot by running 'sudo timeshift --backup-now'"));
-					return false;
-				}
-			}
+				//if (status_code == 2){
+				//	log_error(message);
+				//	log_error(
+				//		_("Please take the first snapshot by running 'sudo timeshift --backup-now'"));
+				//	return false;
+				//}
+			//}
 
 			// check space
 			if ((status_code != SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE)
@@ -1742,7 +1746,7 @@ public class Main : GLib.Object{
 			var cmd_dev = Device.get_device_by_name(cmd_backup_device);
 			if (cmd_dev != null){
 				repo = new SnapshotRepo.from_device(cmd_dev, null);
-				if (!repo.is_available()){
+				if (!repo.available()){
 					exit_app();
 					exit(1);
 				}
@@ -1783,7 +1787,7 @@ public class Main : GLib.Object{
 				}
 
 				repo = new SnapshotRepo.from_device(dev, null);
-				if (!repo.is_available()){
+				if (!repo.available()){
 					exit_app();
 					exit(1);
 				}
@@ -2173,17 +2177,17 @@ public class Main : GLib.Object{
 		}
 
 		try {
-			thr_running = true;
+			thread_restore_running = true;
 			thr_success = false;
 			Thread.create<void> (restore_snapshot_thread, true);
 		}
 		catch (ThreadError e) {
-			thr_running = false;
+			thread_restore_running = false;
 			thr_success = false;
 			log_error (e.message);
 		}
 
-		while (thr_running){
+		while (thread_restore_running){
 			gtk_do_events ();
 			Thread.usleep((ulong) GLib.TimeSpan.MILLISECOND * 100);
 		}
@@ -2429,7 +2433,7 @@ public class Main : GLib.Object{
 				if (mount_point_restore.strip().length == 0){
 					log_error(_("Target device is not mounted"));
 					thr_success = false;
-					thr_running = false;
+					thread_restore_running = false;
 					return;
 				}
 			}
@@ -2577,12 +2581,12 @@ public class Main : GLib.Object{
 			if (ret_val != 0){
 				log_error(_("Restore failed with exit code") + ": %d".printf(ret_val));
 				thr_success = false;
-				thr_running = false;
+				thread_restore_running = false;
 			}
 			else{
 				log_msg(_("Restore completed without errors"));
-				thr_success = true;
-				thr_running = false;
+				//thr_success = true;
+				//thread_restore_running = false;
 			}
 
 			//update /etc/fstab when restoring to another device --------------------
@@ -2690,8 +2694,10 @@ public class Main : GLib.Object{
 		catch(Error e){
 			log_error (e.message);
 			thr_success = false;
-			thr_running = false;
+			thread_restore_running = false;
 		}
+
+		thread_restore_running = false;
 	}
 
 	public void save_exclude_list_for_restore(string file_path){
@@ -3164,7 +3170,7 @@ public class Main : GLib.Object{
 		//return false;
 	}
 
-	public int64 calculate_size_of_first_snapshot(){
+	public int64 estimate_system_size(){
 
 		if (Main.first_snapshot_size > 0){
 			return Main.first_snapshot_size;
@@ -3174,25 +3180,27 @@ public class Main : GLib.Object{
 		}
 
 		try {
-			thr_running = true;
+			thread_estimate_running = true;
 			thr_success = false;
-			Thread.create<void> (calculate_size_of_first_snapshot_thread, true);
+			Thread.create<void> (estimate_system_size_thread, true);
 		} catch (ThreadError e) {
-			thr_running = false;
+			thread_estimate_running = false;
 			thr_success = false;
 			log_error (e.message);
 		}
 
-		while (thr_running){
+		while (thread_estimate_running){
 			gtk_do_events ();
 			Thread.usleep((ulong) GLib.TimeSpan.MILLISECOND * 100);
 		}
 
+		save_app_config();
+		
 		return Main.first_snapshot_size;
 	}
 
-	public void calculate_size_of_first_snapshot_thread(){
-		thr_running = true;
+	public void estimate_system_size_thread(){
+		thread_estimate_running = true;
 
 		string cmd = "";
 		string std_out;
@@ -3272,7 +3280,7 @@ public class Main : GLib.Object{
 		log_debug("First snapshot size: %s".printf(format_file_size(required_space)));
 		log_debug("File count: %lld".printf(first_snapshot_count));
 
-		thr_running = false;
+		thread_estimate_running = false;
 	}
 
 	//cron jobs

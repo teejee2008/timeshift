@@ -806,16 +806,17 @@ class MainWindow : Gtk.Window{
 			break;
 		default:
 			gtk_messagebox(message, details, this, true);
-			return;
+			break; // allow user to continue with wizard
 		}
 
 		// run wizard window
 		
-		var win = new WizardWindow("create");
+		btn_backup.sensitive = false;
+		
+		var win = new BackupWindow();
 		win.set_transient_for(this);
-		win.show_all();
 		win.destroy.connect(()=>{
-			App.update_partitions();
+			btn_backup.sensitive = true;
 			timer_backup_device_init = Timeout.add(100, init_ui_for_backup_device);
 		});
 	}
@@ -1156,9 +1157,8 @@ class MainWindow : Gtk.Window{
 	private void btn_settings_clicked(){
 		btn_settings.sensitive = false;
 		
-		var win = new WizardWindow("settings");
+		var win = new SettingsWindow();
 		win.set_transient_for(this);
-		win.show_all();
 		win.destroy.connect(()=>{
 			btn_settings.sensitive = true;
 			timer_backup_device_init = Timeout.add(100, init_ui_for_backup_device);
@@ -1168,9 +1168,8 @@ class MainWindow : Gtk.Window{
 	private void btn_wizard_clicked(){
 		btn_wizard.sensitive = false;
 		
-		var win = new WizardWindow("wizard");
+		var win = new SetupWizardWindow();
 		win.set_transient_for(this);
-		win.show_all();
 		win.destroy.connect(()=>{
 			btn_wizard.sensitive = true;
 			timer_backup_device_init = Timeout.add(100, init_ui_for_backup_device);

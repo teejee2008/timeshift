@@ -46,28 +46,10 @@ class MainWindow : Gtk.Window{
 	private Gtk.ToolButton btn_settings;
 	private Gtk.ToolButton btn_wizard;
 	private Gtk.Menu menu_extra;
-	private Gtk.Menu menu_snapshots;
-	private Gtk.ImageMenuItem mi_remove;
-	private Gtk.ImageMenuItem mi_mark;
-	private Gtk.ImageMenuItem mi_view_log;
+
+
+	private SnapshotListBox snapshot_list_box;
 	
-	//backup device
-	//private Gtk.Box hbox_device;
-	//private Gtk.Label lbl_backup_device;
-	//private Gtk.ComboBox cmb_backup_device;
-	//private Gtk.Button btn_refresh_backup_device_list;
-	//private Gtk.Label lbl_backup_device_warning;
-
-	//snapshots
-	private Gtk.ScrolledWindow sw_backups;
-	private Gtk.TreeView tv_backups;
-    private Gtk.TreeViewColumn col_date;
-    private Gtk.TreeViewColumn col_tags;
-    private Gtk.TreeViewColumn col_system;
-    private Gtk.TreeViewColumn col_desc;
-	private int tv_backups_sort_column_index = 0;
-	private bool tv_backups_sort_column_desc = true;
-
 	//statusbar
 	private Gtk.Box statusbar;
 	private Gtk.Image img_shield;
@@ -83,9 +65,6 @@ class MainWindow : Gtk.Window{
 	private uint timer_progress;
 	private uint timer_backup_device_init;
 	private uint tmr_init;
-
-	//other
-	//private Device snapshot_device_original;
 
 	public MainWindow () {
 		this.title = AppName + " v" + AppVersion;
@@ -120,10 +99,8 @@ class MainWindow : Gtk.Window{
 			tmr_init = 0;
 		}
 
-		init_ui_for_backup_device();
+		refresh_all();
 
-		init_list_view_context_menu();
-		
 		if (App.first_run){
 			btn_wizard_clicked();
 		}
@@ -146,7 +123,7 @@ class MainWindow : Gtk.Window{
 		btn_backup.set_tooltip_text (_("Create snapshot of current system"));
         toolbar.add(btn_backup);
 
-        btn_backup.clicked.connect (btn_backup_clicked);
+        btn_backup.clicked.connect (create_snapshot);
 
 		//btn_restore
 		btn_restore = new Gtk.ToolButton.from_stock ("gtk-apply");
@@ -164,7 +141,7 @@ class MainWindow : Gtk.Window{
 		btn_browse_snapshot.set_tooltip_text (_("Browse selected snapshot"));
         toolbar.add(btn_browse_snapshot);
 
-        btn_browse_snapshot.clicked.connect (btn_browse_snapshot_clicked);
+        btn_browse_snapshot.clicked.connect (browse_selected);
 
 		//btn_delete_snapshot
 		btn_delete_snapshot = new Gtk.ToolButton.from_stock ("gtk-delete");
@@ -173,7 +150,7 @@ class MainWindow : Gtk.Window{
 		btn_delete_snapshot.set_tooltip_text (_("Delete selected snapshot"));
         toolbar.add(btn_delete_snapshot);
 
-        btn_delete_snapshot.clicked.connect (btn_mark_for_deletion_clicked);
+        btn_delete_snapshot.clicked.connect (delete_selected);
 
         //btn_settings
 		btn_settings = new Gtk.ToolButton.from_stock ("gtk-preferences");
@@ -214,155 +191,17 @@ class MainWindow : Gtk.Window{
 	}
 
 	private void init_ui_snapshot_list(){
-        //tv_backups
-		tv_backups = new TreeView();
-		tv_backups.get_selection().mode = SelectionMode.MULTIPLE;
-		tv_backups.headers_clickable = true;
-		tv_backups.has_tooltip = true;
-		tv_backups.set_rules_hint (true);
+		snapshot_list_box = new SnapshotListBox(this);
+		vbox_main.add(snapshot_list_box);
 
-		//sw_backups
-		sw_backups = new ScrolledWindow(null, null);
-		sw_backups.set_shadow_type (ShadowType.ETCHED_IN);
-		sw_backups.add (tv_backups);
-		sw_backups.expand = true;
-		sw_backups.margin_left = 6;
-		sw_backups.margin_right = 6;
-		sw_backups.margin_top = 6;
-		sw_backups.margin_bottom = 6;
-		vbox_main.add(sw_backups);
-
-        //col_date
-		col_date = new TreeViewColumn();
-		col_date.title = _("Snapshot");
-		col_date.clickable = true;
-		col_date.resizable = true;
-		col_date.spacing = 1;
-
-		CellRendererPixbuf cell_backup_icon = new CellRendererPixbuf ();
-		cell_backup_icon.pixbuf = get_shared_icon_pixbuf("clock","clock.png",16);
-		//cell_backup_icon.xpad = 1;
-		cell_backup_icon.xpad = 4;
-		cell_backup_icon.ypad = 6;
-		col_date.pack_start (cell_backup_icon, false);
-
-		CellRendererText cell_date = new CellRendererText ();
-		col_date.pack_start (cell_date, false);
-		col_date.set_cell_data_func (cell_date, cell_date_render);
-
-		tv_backups.append_column(col_date);
-
-		col_date.clicked.connect(() => {
-			if(tv_backups_sort_column_index == 0){
-				tv_backups_sort_column_desc = !tv_backups_sort_column_desc;
-			}
-			else{
-				tv_backups_sort_column_index = 0;
-				tv_backups_sort_column_desc = true;
-			}
-			refresh_tv_backups();
-		});
-
-		//col_system
-		col_system = new TreeViewColumn();
-		col_system.title = _("System");
-		col_system.resizable = true;
-		col_system.clickable = true;
-		col_system.min_width = 150;
-
-		CellRendererText cell_system = new CellRendererText ();
-		cell_system.ellipsize = Pango.EllipsizeMode.END;
-		col_system.pack_start (cell_system, false);
-		col_system.set_cell_data_func (cell_system, cell_system_render);
-		tv_backups.append_column(col_system);
-
-		col_system.clicked.connect(() => {
-			if(tv_backups_sort_column_index == 1){
-				tv_backups_sort_column_desc = !tv_backups_sort_column_desc;
-			}
-			else{
-				tv_backups_sort_column_index = 1;
-				tv_backups_sort_column_desc = false;
-			}
-			refresh_tv_backups();
-		});
-
-		//col_tags
-		col_tags = new TreeViewColumn();
-		col_tags.title = _("Tags");
-		col_tags.resizable = true;
-		//col_tags.min_width = 80;
-		col_tags.clickable = true;
-		CellRendererText cell_tags = new CellRendererText ();
-		cell_tags.ellipsize = Pango.EllipsizeMode.END;
-		col_tags.pack_start (cell_tags, false);
-		col_tags.set_cell_data_func (cell_tags, cell_tags_render);
-		tv_backups.append_column(col_tags);
-
-		col_tags.clicked.connect(() => {
-			if(tv_backups_sort_column_index == 2){
-				tv_backups_sort_column_desc = !tv_backups_sort_column_desc;
-			}
-			else{
-				tv_backups_sort_column_index = 2;
-				tv_backups_sort_column_desc = false;
-			}
-			refresh_tv_backups();
-		});
-
-		//cell_desc
-		col_desc = new TreeViewColumn();
-		col_desc.title = _("Comments");
-		col_desc.resizable = true;
-		col_desc.clickable = true;
-		//col_desc.expand = true;
-		CellRendererText cell_desc = new CellRendererText ();
-		cell_desc.ellipsize = Pango.EllipsizeMode.END;
-		col_desc.pack_start (cell_desc, false);
-		col_desc.set_cell_data_func (cell_desc, cell_desc_render);
-		tv_backups.append_column(col_desc);
-		cell_desc.editable = true;
-
-		cell_desc.edited.connect (cell_desc_edited);
-
-		var col_buffer = new TreeViewColumn();
-		var cell_text = new CellRendererText();
-		cell_text.width = 20;
-		col_buffer.pack_start (cell_text, false);
-		tv_backups.append_column(col_buffer);
+		snapshot_list_box.delete_selected.connect(delete_selected);
 		
-		//tooltips
-		tv_backups.query_tooltip.connect ((x, y, keyboard_tooltip, tooltip) => {
-			TreeModel model;
-			TreePath path;
-			TreeIter iter;
-			TreeViewColumn col;
-			if (tv_backups.get_tooltip_context (ref x, ref y, keyboard_tooltip, out model, out path, out iter)){
-				int bx, by;
-				tv_backups.convert_widget_to_bin_window_coords(x, y, out bx, out by);
-				if (tv_backups.get_path_at_pos (bx, by, null, out col, null, null)){
-					if (col == col_date){
-						tooltip.set_markup(_("<b>Snapshot Date:</b> Date on which snapshot was created"));
-						return true;
-					}
-					else if (col == col_desc){
-						tooltip.set_markup(_("<b>Comments</b> (double-click to edit)"));
-						return true;
-					}
-					else if (col == col_system){
-						tooltip.set_markup(_("<b>System:</b> Installed Linux distribution"));
-						return true;
-					}
-					else if (col == col_tags){
-						tooltip.set_markup(_("<b>Backup Levels</b>\n\nO	On demand (manual)\nB	Boot\nH	Hourly\nD	Daily\nW	Weekly\nM	Monthly"));
-						return true;
-					}
-				}
-			}
+		snapshot_list_box.mark_selected.connect(mark_selected);
 
-			return false;
-		});
-	}
+		snapshot_list_box.browse_selected.connect(browse_selected);
+
+		snapshot_list_box.view_snapshot_log.connect(view_snapshot_log);
+    }
 
 	private void init_ui_statusbar(){
 
@@ -438,15 +277,14 @@ class MainWindow : Gtk.Window{
 		menu_item = create_menu_item(_("Refresh Snapshot List"),"gtk-refresh","",16);
 		menu_extra.append(menu_item);
 		menu_item.activate.connect(() => {
-			if (!check_backup_device_online()) { return; }
 			App.repo.load_snapshots();
-			refresh_tv_backups();
+			snapshot_list_box.refresh();
 		});
 		
 		// snapshot logs
 		menu_item = create_menu_item(_("View rsync log for selected snapshot"), "gtk-file", "", 16);
 		menu_extra.append(menu_item);
-		menu_item.activate.connect(btn_view_snapshot_log_clicked);
+		menu_item.activate.connect(view_snapshot_log);
 
 		if (!App.live_system()){
 			// app logs
@@ -517,7 +355,7 @@ class MainWindow : Gtk.Window{
 	}
 
 	
-	private bool init_ui_for_backup_device(){
+	private bool refresh_all(){
 
 		/* updates statusbar messages and snapshot list after backup device is changed */
 
@@ -526,18 +364,12 @@ class MainWindow : Gtk.Window{
 			timer_backup_device_init = 0;
 		}
 
-		update_ui(false);
+		ui_sensitive(false);
 
-		if (App.live_system()){
-			//statusbar_message(_("Checking backup device..."));
-		}
-		else{
-			//statusbar_message(_("Estimating system size..."));
-		}
-
-		refresh_tv_backups();
+		snapshot_list_box.refresh();
 		update_statusbar();
-		update_ui(true);
+		
+		ui_sensitive(true);
 
 		return false;
 	}
@@ -551,306 +383,112 @@ class MainWindow : Gtk.Window{
 			App.task.stop();
 		}
 
-		//else - check backup device -------------------------------
+		// check backup device -------------------------------
 
-		string message,details;
-		int status_code = App.check_backup_location(out message, out details);
+		if (!App.repo.available() || !App.repo.has_space()){
 
-		//message = escape_html(message);
-		//details = escape_html(details);
-		
-		switch(status_code){
-			case SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE:
-			case SnapshotLocationStatus.NO_SNAPSHOTS_NO_SPACE:
-			case SnapshotLocationStatus.NOT_AVAILABLE:
-			case SnapshotLocationStatus.READ_ONLY_FS:
-			case SnapshotLocationStatus.HARDLINKS_NOT_SUPPORTED:
+			var title = App.repo.status_message;
 			
-				var title = message;
-				
-				var msg = _("Select another device?");
-				
-				var type = Gtk.MessageType.ERROR;
-				var buttons_type = Gtk.ButtonsType.YES_NO;
-				
-				var dlg = new CustomMessageDialog(title, msg, type, this, buttons_type);
-				var response = dlg.run();
-				dlg.destroy();
-				
-				if (response == Gtk.ResponseType.YES){
-					this.delete_event.connect(on_delete_event); // reconnect this handler
-					btn_wizard_clicked(); // open wizard
-					return true; // keep window open
-				}
-				else{
-					return false; // close window
-				}
-
-			case SnapshotLocationStatus.NO_SNAPSHOTS_HAS_SPACE:
-			case SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE:
-				// TODO: Allow scheduled snapshots when first snapshot not taken
-				break;
+			var msg = _("Select another device?");
+			
+			var type = Gtk.MessageType.ERROR;
+			var buttons_type = Gtk.ButtonsType.YES_NO;
+			
+			var dlg = new CustomMessageDialog(title, msg, type, this, buttons_type);
+			var response = dlg.run();
+			dlg.destroy();
+			
+			if (response == Gtk.ResponseType.YES){
+				this.delete_event.connect(on_delete_event); // reconnect this handler
+				btn_wizard_clicked(); // open wizard
+				return true; // keep window open
+			}
+			else{
+				return false; // close window
+			}
 		}
 
 		return false;
 	}
 
-	private void cell_date_render(
-		CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
-			
-		Snapshot bak;
-		model.get (iter, 0, out bak, -1);
-		(cell as Gtk.CellRendererText).text = bak.date.format ("%Y-%m-%d %I:%M %p");
-		(cell as Gtk.CellRendererText).sensitive = !bak.marked_for_deletion;
-	}
-
-	private void cell_tags_render(
-		CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
-		Snapshot bak;
-		model.get (iter, 0, out bak, -1);
-		(cell as Gtk.CellRendererText).text = bak.taglist_short;
-		(cell as Gtk.CellRendererText).sensitive = !bak.marked_for_deletion;
-	}
-
-	private void cell_system_render(
-		CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
-		Snapshot bak;
-		model.get (iter, 0, out bak, -1);
-		(cell as Gtk.CellRendererText).text = bak.sys_distro;
-		(cell as Gtk.CellRendererText).sensitive = !bak.marked_for_deletion;
-	}
-
-	private void cell_desc_render(
-		CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
-		Snapshot bak;
-		model.get (iter, 0, out bak, -1);
-		(cell as Gtk.CellRendererText).text = bak.description;
-		(cell as Gtk.CellRendererText).sensitive = !bak.marked_for_deletion;
-	}
-
-	private void cell_desc_edited (string path, string new_text) {
-		Snapshot bak;
-
-		TreeIter iter;
-		var model = (Gtk.ListStore) tv_backups.model;
-		model.get_iter_from_string (out iter, path);
-		model.get (iter, 0, out bak, -1);
-		bak.description = new_text;
-		bak.update_control_file();
-	}
 
 	// context menu
 	
-	private void init_list_view_context_menu(){
-		Gdk.RGBA gray = Gdk.RGBA();
-		gray.parse ("rgba(200,200,200,1)");
 
-		// menu_file
-		menu_snapshots = new Gtk.Menu();
+	public void create_snapshot(){
 
-		// mi_remove
-		mi_remove = new ImageMenuItem.with_label("Delete");
-		mi_remove.image = get_shared_icon("gtk-delete","",16);
-		mi_remove.activate.connect(btn_delete_clicked);
-		menu_snapshots.append(mi_remove);
-
-		// mi_mark
-		mi_mark = new ImageMenuItem.with_label("Mark for deletion");
-		mi_mark.image = get_shared_icon("gtk-delete","",16);
-		mi_mark.activate.connect(btn_mark_for_deletion_clicked);
-		menu_snapshots.append(mi_mark);
-
-		// mi_mark
-		mi_view_log = new ImageMenuItem.with_label("View Log");
-		mi_view_log.image = get_shared_icon("gtk-file","",16);
-		mi_view_log.activate.connect(btn_view_snapshot_log_clicked);
-		menu_snapshots.append(mi_view_log);
-
-		
-		// miFileSeparator0
-		//var miFileSeparator0 = new Gtk.MenuItem();
-		//miFileSeparator0.override_color (StateFlags.NORMAL, gray);
-		//menu_file.append(miFileSeparator0);
-
-		// miFileSeparator1
-		//miFileSeparator1 = new Gtk.MenuItem();
-		//miFileSeparator1.override_color (StateFlags.NORMAL, gray);
-		//menu_file.append(miFileSeparator1);
-
-		// mi_file_open_temp_dir
-		//mi_file_open_temp_dir = new ImageMenuItem.from_stock("gtk-directory", null);
-		//mi_file_open_temp_dir.label = _("Open Temp Folder");
-		//mi_file_open_temp_dir.activate.connect(mi_file_open_temp_dir_clicked);
-		//menu_file.append(mi_file_open_temp_dir);
-
-		// mi_file_open_logfile
-		//mi_file_open_logfile = new ImageMenuItem.from_stock("gtk-info", null);
-		//mi_file_open_logfile.label = _("Open Log File");
-		//mi_file_open_logfile.activate.connect(mi_file_open_logfile_clicked);
-		//menu_file.append(mi_file_open_logfile);
-
-		
-		// mi_file_info
-		//mi_file_info = new ImageMenuItem.from_stock("gtk-properties", null);
-		//mi_file_info.label = _("File Info (Source)");
-		//mi_file_info.activate.connect(mi_file_info_clicked);
-		//menu_file.append(mi_file_info);
-
-		menu_snapshots.show_all();
-
-		// connect signal for shift+F10
-        tv_backups.popup_menu.connect(() => {
-			return menu_snapshots_popup (menu_snapshots, null);
-		});
-        
-        // connect signal for right-click
-		tv_backups.button_press_event.connect ((w, event) => {
-			if (event.button == 3) {
-				return menu_snapshots_popup (menu_snapshots, event);
-			}
-
-			return false;
-		});
-	}
-
-	private bool menu_snapshots_popup (Gtk.Menu popup, Gdk.EventButton? event) {
-		TreeSelection selection = tv_backups.get_selection();
-		int count = selection.count_selected_rows();
-		mi_remove.sensitive = (count > 0);
-		mi_mark.sensitive = (count > 0);
-
-		if (event != null) {
-			menu_snapshots.popup (null, null, null, event.button, event.time);
-		} else {
-			menu_snapshots.popup (null, null, null, 0, Gtk.get_current_event_time());
-		}
-		
-		return true;
-	}
-
-	private void refresh_tv_backups(){
-
-		App.repo.load_snapshots();
-
-		var model = new Gtk.ListStore(1, typeof(Snapshot));
-
-		var list = App.repo.snapshots;
-
-		if (tv_backups_sort_column_index == 0){
-
-			if (tv_backups_sort_column_desc)
-			{
-				list.sort((a,b) => {
-					Snapshot t1 = (Snapshot) a;
-					Snapshot t2 = (Snapshot) b;
-
-					return (t1.date.compare(t2.date));
-				});
-			}
-			else{
-				list.sort((a,b) => {
-					Snapshot t1 = (Snapshot) a;
-					Snapshot t2 = (Snapshot) b;
-
-					return -1 * (t1.date.compare(t2.date));
-				});
-			}
-		}
-		else{
-			if (tv_backups_sort_column_desc)
-			{
-				list.sort((a,b) => {
-					Snapshot t1 = (Snapshot) a;
-					Snapshot t2 = (Snapshot) b;
-
-					return strcmp(t1.taglist,t2.taglist);
-				});
-			}
-			else{
-				list.sort((a,b) => {
-					Snapshot t1 = (Snapshot) a;
-					Snapshot t2 = (Snapshot) b;
-
-					return -1 * strcmp(t1.taglist,t2.taglist);
-				});
-			}
-		}
-
-		TreeIter iter;
-		foreach(Snapshot bak in list) {
-			model.append(out iter);
-			model.set (iter, 0, bak);
-		}
-
-		tv_backups.set_model (model);
-		tv_backups.columns_autosize ();
-	}
-
-	private void btn_backup_clicked(){
-
-		//check root device --------------
+		// check root device --------------
 
 		if (App.check_btrfs_root_layout() == false){
 			return;
 		}
 
-		//check snapshot device -----------
+		// check snapshot device -----------
 
-		string message, details;
-		int status_code = App.check_backup_location(out message, out details);
-
-		switch(status_code){
-		case SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE:
-		case SnapshotLocationStatus.NO_SNAPSHOTS_HAS_SPACE:
-			//ok
-			break;
-		default:
-			gtk_messagebox(message, details, this, true);
-			break; // allow user to continue with wizard
+		if (!App.repo.available() || !App.repo.has_space()){
+			gtk_messagebox(App.repo.status_message, App.repo.status_details, this, true);
+			// allow user to continue after showing message
 		}
 
-		// run wizard window
-		
-		btn_backup.sensitive = false;
+		// run wizard window ------------------
+
+		ui_sensitive(false);
 		
 		var win = new BackupWindow();
 		win.set_transient_for(this);
 		win.destroy.connect(()=>{
-			btn_backup.sensitive = true;
-			timer_backup_device_init = Timeout.add(100, init_ui_for_backup_device);
+			ui_sensitive(true);
 		});
 	}
 
-	private void btn_delete_clicked(){
+	public void delete_selected(){
 		TreeIter iter;
 		TreeIter iter_delete;
-		TreeSelection sel;
 		bool is_success = true;
 
-		//check if device is online
-		if (!check_backup_device_online()) { return; }
+		// check snapshot device -----------
 
-		//check selected count ----------------
-
-		sel = tv_backups.get_selection ();
-		if (sel.count_selected_rows() == 0){
+		if (!App.repo.available()){
 			gtk_messagebox(
-				_("No Snapshots Selected"),
-				_("Select snapshots to be marked for deletion"),
+				App.repo.status_message,
+				_("Select another device to delete snasphots"),
 				this, false);
-				
+			return;
+		}
+		else if (!App.repo.has_snapshots()){
+			gtk_messagebox(
+				_("No snapshots on device"),
+				_("Select another device to delete snasphots"),
+				this, false);
 			return;
 		}
 
+		// get selected snapshots
+
+		App.delete_list = snapshot_list_box.selected_snapshots();
+
+		// run wizard window ------------------
+
+		ui_sensitive(false);
+		
+		var win = new DeleteWindow();
+		win.set_transient_for(this);
+		win.destroy.connect(()=>{
+			ui_sensitive(true);
+		});
+
+		return;
+
 		//update UI ------------------
 
-		update_ui(false);
+		ui_sensitive(false);
 
 		//get list of snapshots to delete --------------------
 
 		var list_of_snapshots_to_delete = new Gee.ArrayList<Snapshot>();
-		var store = (Gtk.ListStore) tv_backups.model;
-
+		var store = (Gtk.ListStore) snapshot_list_box.treeview.model;
+		var sel = snapshot_list_box.treeview.get_selection();
+		
 		bool iterExists = store.get_iter_first (out iter);
 		while (iterExists && is_success) {
 			if (sel.iter_is_selected (iter)){
@@ -863,7 +501,7 @@ class MainWindow : Gtk.Window{
 
 		//clear selection ---------------
 
-		tv_backups.get_selection().unselect_all();
+		snapshot_list_box.treeview.get_selection().unselect_all();
 
 		//delete snapshots --------------------------
 
@@ -881,7 +519,7 @@ class MainWindow : Gtk.Window{
 			}
 
 			//select the iter being deleted
-			tv_backups.get_selection().select_iter(iter_delete);
+			snapshot_list_box.treeview.get_selection().select_iter(iter_delete);
 
 			//statusbar_message(_("Deleting snapshot") + ": '%s'...".printf(bak.name));
 
@@ -909,26 +547,18 @@ class MainWindow : Gtk.Window{
 			//statusbar_message_with_timeout(_("Snapshots deleted successfully"), true);
 		}
 
-		//update UI -------------------
-
-		App.update_partitions();
-		refresh_tv_backups();
-		update_statusbar();
-
-		update_ui(true);
+		snapshot_list_box.refresh();
+		
+		ui_sensitive(true);
 	}
 
-	private void btn_mark_for_deletion_clicked(){
+	public void mark_selected(){
 		TreeIter iter;
-		TreeSelection sel;
 		bool is_success = true;
-
-		// check if device is online
-		if (!check_backup_device_online()) { return; }
 
 		// check selected count ----------------
 
-		sel = tv_backups.get_selection ();
+		var sel = snapshot_list_box.treeview.get_selection();
 		if (sel.count_selected_rows() == 0){
 			gtk_messagebox(
 				_("No Snapshots Selected"),
@@ -940,7 +570,7 @@ class MainWindow : Gtk.Window{
 
 		// get selected snapshots --------------------
 
-		var store = (Gtk.ListStore) tv_backups.model;
+		var store = (Gtk.ListStore) snapshot_list_box.treeview.model;
 		bool iterExists = store.get_iter_first (out iter);
 		while (iterExists && is_success) {
 			if (sel.iter_is_selected (iter)){
@@ -959,14 +589,73 @@ class MainWindow : Gtk.Window{
 			+ _("To delete snapshots immediately, right-click and select 'Delete'."),
 			this, false);
 
-		//update UI -------------------
-
-		App.update_partitions();
-		refresh_tv_backups();
-		update_statusbar();
-		update_ui(true);
+		snapshot_list_box.refresh();
 	}
 
+	public void browse_selected(){
+		var sel = snapshot_list_box.treeview.get_selection ();
+		if (sel.count_selected_rows() == 0){
+			string snapshot_dir = path_combine(App.repo.snapshot_location, "timeshift/snapshots");
+			var f = File.new_for_path(snapshot_dir);
+			if (f.query_exists()){
+				exo_open_folder(snapshot_dir);
+			}
+			else{
+				exo_open_folder(App.repo.snapshot_location);
+			}
+			return;
+		}
+
+		TreeIter iter;
+		var store = (Gtk.ListStore) snapshot_list_box.treeview.model;
+
+		bool iterExists = store.get_iter_first (out iter);
+		while (iterExists) {
+			if (sel.iter_is_selected (iter)){
+				Snapshot bak;
+				store.get (iter, 0, out bak);
+
+				exo_open_folder(bak.path + "/localhost");
+				return;
+			}
+			iterExists = store.iter_next (ref iter);
+		}
+	}
+
+	public void view_snapshot_log(){
+		var sel = snapshot_list_box.treeview.get_selection ();
+		if (sel.count_selected_rows() == 0){
+			gtk_messagebox(
+				_("Select Snapshot"),
+				_("Please select a snapshot to view the log!"),
+				this, false);
+			return;
+		}
+
+		TreeIter iter;
+		var store = (Gtk.ListStore) snapshot_list_box.treeview.model;
+
+		bool iterExists = store.get_iter_first (out iter);
+		while (iterExists) {
+			if (sel.iter_is_selected (iter)){
+				Snapshot bak;
+				store.get (iter, 0, out bak);
+
+				//exo_open_textfile(bak.path + "/rsync-log");
+
+				this.hide();
+				
+				var win = new RsyncLogWindow(bak.path + "/rsync-log");
+				win.set_transient_for(this);
+				win.destroy.connect(()=>{
+					this.show();
+				});
+
+				return;
+			}
+			iterExists = store.iter_next (ref iter);
+		}
+	}
 
 	private void btn_restore_clicked(){
 		App.mirror_system = false;
@@ -983,15 +672,10 @@ class MainWindow : Gtk.Window{
 		TreeSelection sel;
 
 		if (!App.mirror_system){
-			//check if backup device is online (check #1)
-			if (!check_backup_device_online()) { return; }
-		}
-
-		if (!App.mirror_system){
 
 			//check if single snapshot is selected -------------
 
-			sel = tv_backups.get_selection ();
+			sel = snapshot_list_box.treeview.get_selection ();
 			if (sel.count_selected_rows() == 0){
 				gtk_messagebox(
 					_("No snapshots selected"),
@@ -1011,8 +695,7 @@ class MainWindow : Gtk.Window{
 
 			Snapshot snapshot_to_restore = null;
 
-			var store = (Gtk.ListStore) tv_backups.model;
-			sel = tv_backups.get_selection();
+			var store = (Gtk.ListStore) snapshot_list_box.treeview.model;
 			bool iterExists = store.get_iter_first (out iter);
 			while (iterExists) {
 				if (sel.iter_is_selected (iter)){
@@ -1051,18 +734,13 @@ class MainWindow : Gtk.Window{
 			return; //cancel
 		}
 
-		if (!App.mirror_system){
-			//check if backup device is online (check #2)
-			if (!check_backup_device_online()) { return; }
-		}
-
 		//update UI ----------------
 
-		update_ui(false);
+		ui_sensitive(false);
 
 		//take a snapshot if current system is being restored -----------------
 
-		if (!App.live_system() && (App.restore_target.device == App.root_device.device) && (App.restore_target.uuid == App.root_device.uuid)){
+		/*if (!App.live_system() && (App.restore_target.device == App.root_device.device) && (App.restore_target.uuid == App.root_device.uuid)){
 
 			string msg = _("Do you want to take a snapshot of the current system before restoring the selected snapshot?");
 
@@ -1075,29 +753,22 @@ class MainWindow : Gtk.Window{
 			dlg.destroy();
 
 			if (response == Gtk.ResponseType.YES){
-				//statusbar_message(_("Taking snapshot..."));
 
-				update_progress_start();
-
-				bool is_success = App.take_snapshot(true,"",this);
-
-				update_progress_stop();
-
-				if (is_success){
-					App.repo.load_snapshots();
-					var latest = App.repo.get_latest_snapshot("ondemand");
-					latest.description = _("Before restoring") + " '%s'".printf(App.snapshot_to_restore.name);
-					latest.update_control_file();
-				}
+				create_snapshot();
+				
+				App.repo.load_snapshots();
+				var latest = App.repo.get_latest_snapshot("ondemand");
+				latest.description =
+					"%s '%s'".printf(_("Before restoring"), App.snapshot_to_restore.name);
+				latest.update_control_file();
 			}
-		}
+		}*/
 
 		if (!App.mirror_system){
-			//check if backup device is online (check #3)
-			if (!check_backup_device_online()) { return; }
+			if (!App.repo.available()) { return; }
 		}
 
-		//restore the snapshot --------------------
+		// restore the snapshot --------------------
 
 		if (App.snapshot_to_restore != null){
 			log_msg("Restoring snapshot '%s' to device '%s'".printf(App.snapshot_to_restore.name,App.restore_target.device),true);
@@ -1151,7 +822,7 @@ class MainWindow : Gtk.Window{
 
 		//update UI ----------------
 
-		update_ui(true);
+		ui_sensitive(true);
 	}
 
 	private void btn_settings_clicked(){
@@ -1161,7 +832,7 @@ class MainWindow : Gtk.Window{
 		win.set_transient_for(this);
 		win.destroy.connect(()=>{
 			btn_settings.sensitive = true;
-			timer_backup_device_init = Timeout.add(100, init_ui_for_backup_device);
+			refresh_all();
 		});
 	}
 
@@ -1172,79 +843,8 @@ class MainWindow : Gtk.Window{
 		win.set_transient_for(this);
 		win.destroy.connect(()=>{
 			btn_wizard.sensitive = true;
-			timer_backup_device_init = Timeout.add(100, init_ui_for_backup_device);
+			refresh_all();
 		});
-	}
-
-	private void btn_browse_snapshot_clicked(){
-
-		//check if device is online
-		if (!check_backup_device_online()) {
-			return;
-		}
-
-		TreeSelection sel = tv_backups.get_selection ();
-		if (sel.count_selected_rows() == 0){
-			string snapshot_dir = path_combine(App.repo.snapshot_location, "timeshift/snapshots");
-			var f = File.new_for_path(snapshot_dir);
-			if (f.query_exists()){
-				exo_open_folder(snapshot_dir);
-			}
-			else{
-				exo_open_folder(App.repo.snapshot_location);
-			}
-			return;
-		}
-
-		TreeIter iter;
-		var store = (Gtk.ListStore)tv_backups.model;
-
-		bool iterExists = store.get_iter_first (out iter);
-		while (iterExists) {
-			if (sel.iter_is_selected (iter)){
-				Snapshot bak;
-				store.get (iter, 0, out bak);
-
-				exo_open_folder(bak.path + "/localhost");
-				return;
-			}
-			iterExists = store.iter_next (ref iter);
-		}
-	}
-
-	private void btn_view_snapshot_log_clicked(){
-		TreeSelection sel = tv_backups.get_selection ();
-		if (sel.count_selected_rows() == 0){
-			gtk_messagebox(
-				_("Select Snapshot"),
-				_("Please select a snapshot to view the log!"),
-				this, false);
-			return;
-		}
-
-		TreeIter iter;
-		var store = (Gtk.ListStore)tv_backups.model;
-
-		bool iterExists = store.get_iter_first (out iter);
-		while (iterExists) {
-			if (sel.iter_is_selected (iter)){
-				Snapshot bak;
-				store.get (iter, 0, out bak);
-
-				//exo_open_textfile(bak.path + "/rsync-log");
-
-				this.hide();
-				
-				var win = new RsyncLogWindow(bak.path + "/rsync-log");
-				win.set_transient_for(this);
-				win.destroy.connect(()=>{
-					this.show();
-				});
-
-				return;
-			}
-			iterExists = store.iter_next (ref iter);
-		}
 	}
 
 	private void btn_view_app_logs_clicked(){
@@ -1308,48 +908,10 @@ class MainWindow : Gtk.Window{
 	}
 
 
-	private void update_ui(bool enable){
+	private void ui_sensitive(bool enable){
 		toolbar.sensitive = enable;
-		sw_backups.sensitive = enable;
+		snapshot_list_box.treeview.sensitive = enable;
 		gtk_set_busy(!enable, this);
-	}
-
-	private void update_progress_start(){
-		timer_progress = Timeout.add_seconds(1, update_progress);
-	}
-
-    private bool update_progress (){
-		if (timer_progress > 0){
-			Source.remove(timer_progress);
-			timer_progress = 0;
-		}
-
-		lbl_status.label = App.progress_text;
-
-		timer_progress = Timeout.add_seconds(1, update_progress);
-		return true;
-	}
-
-	private void update_progress_stop(){
-		if (timer_progress > 0){
-			Source.remove(timer_progress);
-			timer_progress = 0;
-		}
-	}
-
-	private bool check_backup_device_online(){
-		if (!App.backup_device_online()){
-			// TODO: use message and details
-			gtk_messagebox(
-				_("Snapshot location is not available"),
-				"",
-				this, true);
-			update_statusbar();
-			return false;
-		}
-		else{
-			return true;
-		}
 	}
 
 	private void update_statusbar(){		
@@ -1500,35 +1062,12 @@ class MainWindow : Gtk.Window{
 		}
 	}
 
+	// ui helpers --------
+	
 	private string format_text_large(string text){
 		return "<span size='xx-large'><b>" + text + "</b></span>";
 	}
 	
-	// TODO: Move this to GtkHelper
-	private Gtk.Label add_label(
-		Gtk.Box box, string text, bool is_bold = false, bool is_italic = false, bool is_large = false){
-			
-		string msg = "<span%s%s%s>%s</span>".printf(
-			(is_bold ? " weight=\"bold\"" : ""),
-			(is_italic ? " style=\"italic\"" : ""),
-			(is_large ? " size=\"x-large\"" : ""),
-			text);
-			
-		var label = new Gtk.Label(msg);
-		label.set_use_markup(true);
-		label.xalign = (float) 0.0;
-		box.add(label);
-		return label;
-	}
-
-	private Gtk.Label add_label_header(
-		Gtk.Box box, string text, bool large_heading = false){
-		
-		var label = add_label(box, text, true, false, large_heading);
-		label.margin_bottom = 12;
-		return label;
-	}
-
 	private void set_shield_label(
 		string text, bool is_bold = true, bool is_italic = false, bool is_large = true){
 			

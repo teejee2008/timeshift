@@ -592,6 +592,8 @@ public class RsyncLogWindow : Window {
 			list.add(pattern);
 		}
 		App.exclude_list_user.clear();
+
+		// TODO: Not working
 		
 		// add include list
 		TreeIter iter;

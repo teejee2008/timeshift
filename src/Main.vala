@@ -120,6 +120,8 @@ public class Main : GLib.Object{
 	public string log_file = "";
 	public AppLock app_lock;
 
+	public Gee.ArrayList<Snapshot> delete_list;
+	
 	public Snapshot snapshot_to_delete;
 	public Snapshot snapshot_to_restore;
 	public Device restore_target;
@@ -333,7 +335,8 @@ public class Main : GLib.Object{
 		exclude_list_apps = new Gee.ArrayList<AppExcludeEntry>();
 		partitions = new Gee.ArrayList<Device>();
 		mount_list = new Gee.ArrayList<MountEntry>();
-
+		delete_list = new Gee.ArrayList<Snapshot>();
+		
 		add_default_exclude_entries();
 		//add_app_exclude_entries();
 

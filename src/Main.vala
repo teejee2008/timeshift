@@ -71,11 +71,7 @@ public class Main : GLib.Object{
 
 	public Device root_device;
 	public Device home_device;
-	//public Device snapshot_device;
-	//public bool use_snapshot_path = false;
-	//public string snapshot_path = "";
 
-	//public string mount_point_backup = "";
 	public string mount_point_restore = "";
 	public string mount_point_app = "/mnt/timeshift";
 
@@ -3439,8 +3435,12 @@ public class Main : GLib.Object{
 
 	private string get_crontab_entry_scheduled(){
 		if (scheduled){
+			// run once every hour
+			return "@hourly timeshift --backup";
+
+			/*
 			if (schedule_hourly){
-				return "@hourly timeshift --backup";
+				
 			}
 			else if (schedule_daily){
 				return "@daily timeshift --backup";
@@ -3450,7 +3450,7 @@ public class Main : GLib.Object{
 			}
 			else if (schedule_monthly){
 				return "@monthly timeshift --backup";
-			}
+			}*/
 		}
 
 		return "";

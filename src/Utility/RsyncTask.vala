@@ -15,7 +15,7 @@ public class RsyncTask : AsyncTask{
 	public string source_path = "";
 	public string dest_path = "";
 	public bool verbose = true;
-	public bool io_nice = false;
+	public bool io_nice = true;
 
 	// regex
 	private Gee.HashMap<string, Regex> regex_list;
@@ -114,10 +114,7 @@ public class RsyncTask : AsyncTask{
 		if (io_nice){
 			cmd += "ionice -c2 -n7 ";
 		}
-		else{
-			cmd += "ionice -c2 -n7 ";
-		}
-		
+
 		cmd += "rsync -aii";
 
 		if (verbose){

@@ -446,6 +446,8 @@ class MainWindow : Gtk.Window{
 		TreeIter iter_delete;
 		bool is_success = true;
 
+		log_debug("main window: delete_selected()");
+		
 		// check snapshot device -----------
 
 		if (!App.repo.available()){
@@ -466,6 +468,8 @@ class MainWindow : Gtk.Window{
 		// get selected snapshots
 
 		App.delete_list = snapshot_list_box.selected_snapshots();
+
+		log_debug("main window: delete_selected(): count=%d".printf(App.delete_list.size));
 
 		// run wizard window ------------------
 

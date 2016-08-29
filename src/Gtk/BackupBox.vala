@@ -193,7 +193,9 @@ class BackupBox : Gtk.Box{
 			double fraction = (App.task.status_line_count * 1.0)
 				/ Main.first_snapshot_count;
 
-			progressbar.fraction = fraction;
+			if (fraction < 0.99){
+				progressbar.fraction = fraction;
+			}
 
 			lbl_msg.label = App.progress_text;
 

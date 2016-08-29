@@ -98,9 +98,16 @@ public class Main : GLib.Object{
 
 	//global vars for controlling threads
 	public bool thr_success = false;
-	public bool thread_estimate_running = false;
-	public bool thread_restore_running = false;
 	
+	public bool thread_estimate_running = false;
+	public bool thread_estimate_success = false;
+	
+	public bool thread_restore_running = false;
+	public bool thread_restore_success = false;
+
+	public bool thread_delete_running = false;
+	public bool thread_delete_success = false;
+			
 	public int thr_retval = -1;
 	public string thr_arg1 = "";
 	public bool thr_timeout_active = false;
@@ -145,6 +152,7 @@ public class Main : GLib.Object{
 	public const string TERM_COLOR_RESET = "\033[" + "0" + "m";
 
 	public RsyncTask task;
+	public DeleteFileTask delete_file_task;
 	
 	//initialization
 
@@ -350,11 +358,8 @@ public class Main : GLib.Object{
 		load_app_config();
 		//update_snapshot_list();
 
-		task = create_new_rsync_task();
-	}
-
-	public RsyncTask create_new_rsync_task(){
-		return new RsyncTask();
+		task = new RsyncTask();
+		delete_file_task = new DeleteFileTask();
 	}
 
 	public bool start_application(string[] args){
@@ -1588,7 +1593,7 @@ public class Main : GLib.Object{
 				var log_file = snapshot_path + "/rsync-log";
 				file_delete(log_file);
 
-				task = create_new_rsync_task();
+				task = new RsyncTask();
 
 				task.source_path = "";
 				task.dest_path = snapshot_path + "/localhost/";
@@ -2327,6 +2332,73 @@ public class Main : GLib.Object{
 		return repo.remove_all();
 	}
 
+	// gui delete
+
+	public void delete_begin(){
+
+		log_debug("delete_begin()");
+		
+		try {
+			thread_delete_running = true;
+			thread_delete_success = false;
+			Thread.create<void> (delete_thread, true);
+			log_debug("delete_begin(): thread created");
+		}
+		catch (ThreadError e) {
+			thread_delete_running = false;
+			thread_delete_success = false;
+			log_error (e.message);
+		}
+	}
+
+	public void delete_thread(){
+
+		log_debug("delete_thread()");
+
+		foreach(var bak in delete_list){
+			bak.mark_for_deletion();
+		}
+		
+		while (delete_list.size > 0){
+
+			var bak = delete_list[0];
+			
+			var message = _("Removing snapshot") + " '%s'...".printf(bak.name);
+			progress_text = message;
+			log_msg(message);
+
+			var dt_begin = new DateTime.now_local();
+
+			delete_file_task = new DeleteFileTask();
+			delete_file_task.dest_path = "%s/".printf(bak.path);
+			delete_file_task.status_message = message;
+			delete_file_task.execute();
+
+			log_debug("delete_file_task.execute()");
+
+			while (delete_file_task.status == AppStatus.RUNNING){
+				sleep(1000);
+				gtk_do_events();
+			}
+
+			if (App.delete_file_task.status != AppStatus.CANCELLED){
+				var dt_end = new DateTime.now_local();
+				TimeSpan elapsed = dt_end.difference(dt_begin);
+				long seconds = (long)(elapsed * 1.0 / TimeSpan.SECOND);
+
+				message =_("Removed") + " '%s' (%ld)".printf(bak.name, seconds);
+				log_msg(message);
+				
+				OSDNotify.notify_send("TimeShift", message, 10000, "low");
+
+				delete_list.remove(bak);
+			}
+		}
+
+		thread_delete_running = false;
+		thread_delete_success = false;
+	}
+	
 	// todo: remove
 	public Device unlock_encrypted_device(Device luks_device, Gtk.Window? parent_win){
 		Device luks_unlocked = null;

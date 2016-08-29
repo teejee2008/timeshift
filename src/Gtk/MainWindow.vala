@@ -207,7 +207,7 @@ class MainWindow : Gtk.Window{
 
 		// hbox_shield
 		var box = new Box (Orientation.HORIZONTAL, 6);
-        box.margin_bottom = 6;
+        box.margin_bottom = 12;
         box.margin_left = 6;
         box.margin_right = 12;
         vbox_main.add (box);
@@ -437,14 +437,12 @@ class MainWindow : Gtk.Window{
 		var win = new BackupWindow();
 		win.set_transient_for(this);
 		win.destroy.connect(()=>{
+			refresh_all();
 			ui_sensitive(true);
 		});
 	}
 
 	public void delete_selected(){
-		TreeIter iter;
-		TreeIter iter_delete;
-		bool is_success = true;
 
 		log_debug("main window: delete_selected()");
 		
@@ -467,9 +465,24 @@ class MainWindow : Gtk.Window{
 
 		// get selected snapshots
 
-		App.delete_list = snapshot_list_box.selected_snapshots();
+		if (!App.thread_delete_running){
+			// check and add by name since snapshot_list would have changed
+			foreach (var item in snapshot_list_box.selected_snapshots()){
+				bool already_in_list = false;
+				foreach(var bak in App.delete_list){
+					if (bak.name == item.name){
+						already_in_list = true;
+						break;
+					}
+				}
+				if (!already_in_list){
+					App.delete_list.add(item);
+				}
+			}
+		}
 
-		log_debug("main window: delete_selected(): count=%d".printf(App.delete_list.size));
+		log_debug("main window: delete_selected(): count=%d".printf(
+			App.delete_list.size));
 
 		// run wizard window ------------------
 
@@ -478,82 +491,9 @@ class MainWindow : Gtk.Window{
 		var win = new DeleteWindow();
 		win.set_transient_for(this);
 		win.destroy.connect(()=>{
+			refresh_all();
 			ui_sensitive(true);
 		});
-
-		return;
-
-		//update UI ------------------
-
-		ui_sensitive(false);
-
-		//get list of snapshots to delete --------------------
-
-		var list_of_snapshots_to_delete = new Gee.ArrayList<Snapshot>();
-		var store = (Gtk.ListStore) snapshot_list_box.treeview.model;
-		var sel = snapshot_list_box.treeview.get_selection();
-		
-		bool iterExists = store.get_iter_first (out iter);
-		while (iterExists && is_success) {
-			if (sel.iter_is_selected (iter)){
-				Snapshot bak;
-				store.get (iter, 0, out bak);
-				list_of_snapshots_to_delete.add(bak);
-			}
-			iterExists = store.iter_next (ref iter);
-		}
-
-		//clear selection ---------------
-
-		snapshot_list_box.treeview.get_selection().unselect_all();
-
-		//delete snapshots --------------------------
-
-		foreach(Snapshot bak in list_of_snapshots_to_delete){
-
-			//find the iter being deleted
-			iterExists = store.get_iter_first (out iter_delete);
-			while (iterExists) {
-				Snapshot bak_current;
-				store.get (iter_delete, 0, out bak_current);
-				if (bak_current.path == bak.path){
-					break;
-				}
-				iterExists = store.iter_next (ref iter_delete);
-			}
-
-			//select the iter being deleted
-			snapshot_list_box.treeview.get_selection().select_iter(iter_delete);
-
-			//statusbar_message(_("Deleting snapshot") + ": '%s'...".printf(bak.name));
-
-			is_success = bak.remove();
-
-			// TODO: use rsync to delete and show progress??
-			// It's much slower (10x)
-
-			if (!is_success){
-				//statusbar_message_with_timeout(_("Error: Unable to delete snapshot") + ": '%s'".printf(bak.name), false);
-				break;
-			}
-
-			//remove iter from tv_backups
-			store.remove(iter_delete);
-		}
-
-		App.repo.load_snapshots();
-		if (!App.repo.has_snapshots()){
-			//statusbar_message(_("Deleting snapshot") + ": '.sync'...");
-			App.repo.remove_all();
-		}
-
-		if (is_success){
-			//statusbar_message_with_timeout(_("Snapshots deleted successfully"), true);
-		}
-
-		snapshot_list_box.refresh();
-		
-		ui_sensitive(true);
 	}
 
 	public void mark_selected(){

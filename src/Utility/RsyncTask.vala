@@ -291,6 +291,11 @@ public class RsyncTask : AsyncTask{
 		}
 
 		status_line_count++;
+
+		if (prg_count_total > 0){
+			prg_count = status_line_count;
+			progress = (prg_count * 1.0) / prg_count_total;
+		}
 		
 		//MatchInfo match;
 		//if (regex_list["status"].match(line, 0, out match)) {
@@ -356,7 +361,7 @@ public class RsyncTask : AsyncTask{
 			total_size = int64.parse(match.fetch(1).replace(",",""));
 		}
 		else{
-			log_debug("not-matched: %s".printf(line));
+			//log_debug("not-matched: %s".printf(line));
 		}
 
 		return true;

@@ -38,6 +38,7 @@ class BackupBox : Gtk.Box{
 	private Gtk.Spinner spinner;
 	public Gtk.Label lbl_msg;
 	public Gtk.Label lbl_status;
+	public Gtk.Label lbl_remaining;
 	public Gtk.ProgressBar progressbar;
 	public Gtk.Label lbl_unchanged;
 	public Gtk.Label lbl_created;
@@ -72,9 +73,11 @@ class BackupBox : Gtk.Box{
 		
 		//lbl_msg
 		lbl_msg = add_label(hbox_status, _("Preparing..."));
-		lbl_msg.halign = Align.START;
+		lbl_msg.hexpand = true;
 		lbl_msg.ellipsize = Pango.EllipsizeMode.END;
 		lbl_msg.max_width_chars = 50;
+
+		lbl_remaining = add_label(hbox_status, "");
 
 		//progressbar
 		progressbar = new Gtk.ProgressBar();
@@ -90,6 +93,8 @@ class BackupBox : Gtk.Box{
 		lbl_status.max_width_chars = 45;
 		lbl_status.margin_bottom = 12;
 
+		// TODO: Add move to background button
+
 		var label = add_label(this, "");
 		label.vexpand = true;
 		
@@ -98,7 +103,7 @@ class BackupBox : Gtk.Box{
 		Gtk.SizeGroup sg_label = null;
 		Gtk.SizeGroup sg_value = null;
 
-		label = add_label(this, _("Files and directories:"), true);
+		label = add_label(this, _("Files and directory counts:"), true);
 		label.margin_bottom = 6;
 		
 		lbl_unchanged = add_count_label(this, _("No Change"), ref sg_label, ref sg_value);
@@ -106,7 +111,7 @@ class BackupBox : Gtk.Box{
 		lbl_deleted = add_count_label(this, _("Deleted"), ref sg_label, ref sg_value);
 		lbl_modified = add_count_label(this, _("Changed"), ref sg_label, ref sg_value, 12);
 
-		label = add_label(this, _("Changed files and directories:"), true);
+		label = add_label(this, _("Changed items:"), true);
 		label.margin_bottom = 6;
 		
 		lbl_checksum = add_count_label(this, _("Checksum"), ref sg_label, ref sg_value);
@@ -171,7 +176,7 @@ class BackupBox : Gtk.Box{
 		int status_line_counter_default = 1000 / wait_interval_millis;
 		string status_line = "";
 		string last_status_line = "";
-		
+		int remaining_counter = 10;
 		while (thread_is_running){
 
 			status_line = escape_html(App.task.status_line);
@@ -190,9 +195,17 @@ class BackupBox : Gtk.Box{
 
 			// TODO: show estimated time remaining and file counts
 
-			double fraction = (App.task.status_line_count * 1.0)
-				/ Main.first_snapshot_count;
+			double fraction = App.task.progress;
 
+			// time remaining
+			remaining_counter--;
+			if (remaining_counter == 0){
+				lbl_remaining.label =
+					App.task.stat_time_remaining + " remaining";
+
+				remaining_counter = 10;
+			}	
+			
 			if (fraction < 0.99){
 				progressbar.fraction = fraction;
 			}

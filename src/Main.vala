@@ -385,8 +385,8 @@ public class Main : GLib.Object{
 				return is_success;
 
 			case "delete":
-				is_success = delete_snapshot();
-				return is_success;
+				delete_snapshot();
+				return true;
 
 			case "delete-all":
 				is_success = delete_all_snapshots();
@@ -815,9 +815,9 @@ public class Main : GLib.Object{
 		if (app_mode == ""){
 			//Initialize GTK
 			LOG_TIMESTAMP = true;
-			Gtk.init(ref args);
 		}
 
+		Gtk.init(ref args);
 	}
 
 	public void list_snapshots(bool paginate){
@@ -1207,7 +1207,9 @@ public class Main : GLib.Object{
 
 	//backup
 
-	public bool take_snapshot (bool is_ondemand, string snapshot_comments, Gtk.Window? parent_win){
+	public bool take_snapshot (
+		bool is_ondemand, string snapshot_comments, Gtk.Window? parent_win){
+
 		bool status;
 		bool update_symlinks = false;
 
@@ -1596,7 +1598,8 @@ public class Main : GLib.Object{
 				task.link_from_path = link_from_path;
 				task.exclude_from_file = exclude_from_file;
 				task.rsync_log_file = log_file;
-
+				task.prg_count_total = Main.first_snapshot_count;
+				
 				if (app_mode.length > 0){
 					// console mode
 					task.io_nice = true;
@@ -2255,7 +2258,7 @@ public class Main : GLib.Object{
 
 	// delete from terminal
 
-	public bool delete_snapshot(Snapshot? snapshot = null){
+	public void delete_snapshot(Snapshot? snapshot = null){
 
 		bool found = false;
 		
@@ -2278,7 +2281,7 @@ public class Main : GLib.Object{
 				//check if found
 				if (!found){
 					log_error(_("Could not find snapshot") + ": '%s'".printf(cmd_snapshot));
-					return false;
+					return;
 				}
 			}
 
@@ -2288,7 +2291,7 @@ public class Main : GLib.Object{
 				if (repo.snapshots.size == 0){
 					log_msg(_("No snapshots found on device") +
 						" '%s'".printf(repo.device.device));
-					return false;
+					return;
 				}
 
 				log_msg("");
@@ -2318,10 +2321,10 @@ public class Main : GLib.Object{
 		if (snapshot_to_delete == null){
 			//print error
 			log_error(_("Snapshot to delete not specified!"));
-			return false;
+			return;
 		}
 
-		return snapshot_to_delete.remove();
+		snapshot_to_delete.remove(true);
 	}
 
 	public bool delete_all_snapshots(){
@@ -2358,31 +2361,18 @@ public class Main : GLib.Object{
 		while (delete_list.size > 0){
 
 			var bak = delete_list[0];
+			bak.mark_for_deletion(); // mark for deletion again since initial list may have changed
 			
-			var message = _("Removing snapshot") + " '%s'...".printf(bak.name);
-			progress_text = message;
-			log_msg(message);
-
-			var dt_begin = new DateTime.now_local();
-
-			delete_file_task = new DeleteFileTask();
-			delete_file_task.dest_path = "%s/".printf(bak.path);
-			delete_file_task.status_message = message;
-			delete_file_task.execute();
-
-			log_debug("delete_file_task.execute()");
-
-			while (delete_file_task.status == AppStatus.RUNNING){
-				sleep(1000);
-				gtk_do_events();
-			}
+			App.delete_file_task = bak.delete_file_task;
+			App.delete_file_task.prg_count_total = Main.first_snapshot_count;
+			
+			bak.remove(true); // wait till complete
 
 			if (App.delete_file_task.status != AppStatus.CANCELLED){
-				var dt_end = new DateTime.now_local();
-				TimeSpan elapsed = dt_end.difference(dt_begin);
-				long seconds = (long)(elapsed * 1.0 / TimeSpan.SECOND);
-
-				message =_("Removed") + " '%s' (%ld)".printf(bak.name, seconds);
+				
+				var message = "%s '%s' (%s)".printf(
+					_("Removed"), bak.name, App.delete_file_task.stat_time_elapsed);
+					
 				log_msg(message);
 				
 				OSDNotify.notify_send("TimeShift", message, 10000, "low");

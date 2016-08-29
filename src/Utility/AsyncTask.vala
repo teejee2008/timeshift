@@ -31,7 +31,6 @@ public abstract class AsyncTask : GLib.Object{
 	
 	// public
 	public AppStatus status;
-	public bool is_running = false;
 	public string status_line = "";
 	public int exit_code = 0;
 	public string error_msg = "";
@@ -42,6 +41,7 @@ public abstract class AsyncTask : GLib.Object{
 	public int64 prg_count_total = 0;
 	public int64 prg_bytes = 0;
 	public int64 prg_bytes_total = 0;
+	public bool is_running = false;
 	
 	// signals
 	public signal void stdout_line_read(string line);
@@ -361,6 +361,9 @@ public abstract class AsyncTask : GLib.Object{
 			if (progress > 0){
 				long elapsed = (long) timer_elapsed(timer);
 				long remaining = (long)((elapsed / progress) * (1.0 - progress));
+				if (remaining < 0){
+					remaining = 0;
+				}
 				return format_duration(remaining);
 			}
 			else{

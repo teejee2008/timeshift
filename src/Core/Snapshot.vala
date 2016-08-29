@@ -22,10 +22,7 @@ public class Snapshot : GLib.Object{
 	public bool valid = true;
 	public bool marked_for_deletion = false;
 
-	// private
-	private bool thr_success = false;
-	private bool thr_running = false;
-	//private int thr_retval = -1;
+	public DeleteFileTask delete_file_task;
 
 	public Snapshot(string dir_path){
 
@@ -41,7 +38,8 @@ public class Snapshot : GLib.Object{
 			tags = new Gee.ArrayList<string>();
 			exclude_list = new Gee.ArrayList<string>();
 			fstab_list = new Gee.ArrayList<FsTabEntry>();
-
+			delete_file_task = new DeleteFileTask();
+			
 			read_control_file();
 			read_exclude_list();
 			read_fstab_file();
@@ -254,69 +252,23 @@ public class Snapshot : GLib.Object{
 
 	// actions
 
-	public bool remove(){
-		try {
-			thr_running = true;
-			thr_success = false;
-			Thread.create<void> (remove_snapshot_thread, true);
-		} catch (ThreadError e) {
-			thr_running = false;
-			thr_success = false;
-			log_error (e.message);
-		}
+	public void remove(bool wait){
 
-		while (thr_running){
-			gtk_do_events ();
-			Thread.usleep((ulong) GLib.TimeSpan.MILLISECOND * 500);
-		}
+		var message = _("Removing") + " '%s'...".printf(name);
+		log_msg(message);
 
-		return thr_success;
-	}
+		delete_file_task.dest_path = "%s/".printf(path);
+		delete_file_task.status_message = message;
+		delete_file_task.execute();
 
-	private void remove_snapshot_thread(){
-		string cmd = "";
-		string std_out;
-		string std_err;
-		int ret_val;
-
-		log_msg(_("Removing snapshot") + " '%s'...".printf(name));
-
-		try{
-			var f = File.new_for_path(path);
-			if(f.query_exists()){
-				cmd = "rm -rf \"%s\"".printf(path);
-
-				if (LOG_COMMANDS) { log_debug(cmd); }
-
-				Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-
-				if (ret_val != 0){
-					log_error(_("Failed to remove") + ": '%s'".printf(path));
-					thr_success = false;
-					thr_running = false;
-					return;
-				}
-				else{
-					log_msg(_("Removed") + ": '%s'".printf(path));
-					thr_success = true;
-					thr_running = false;
-					return;
-				}
-			}
-			else{
-				log_error(_("Directory not found") + ": '%s'".printf(path));
-				thr_success = true;
-				thr_running = false;
+		if (wait){
+			while (delete_file_task.is_running){
+				gtk_do_events ();
+				sleep(1000);
 			}
 		}
-		catch(Error e){
-			log_error (e.message);
-			thr_success = false;
-			thr_running = false;
-			return;
-		}
 	}
-
+	
 	public void mark_for_deletion(){
 		string delete_trigger_file = path + "/delete";
 		file_write(delete_trigger_file, "");

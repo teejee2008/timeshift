@@ -607,7 +607,7 @@ public class SnapshotRepo : GLib.Object{
 					show_msg = false;
 				}
 
-				bak.remove();
+				bak.remove(true);
 			}
 		}
 
@@ -618,7 +618,7 @@ public class SnapshotRepo : GLib.Object{
 		log_msg(_("Removing snapshots") + " > " + _("marked for deletion") + "...");
 		foreach(var bak in snapshots){
 			if (bak.marked_for_deletion){
-				bak.remove();
+				bak.remove(true);
 			}
 		}
 		
@@ -628,7 +628,7 @@ public class SnapshotRepo : GLib.Object{
 	public void remove_invalid(){
 		log_msg(_("Removing snapshots") + " > " + _("invalid") + "...");
 		foreach(var bak in invalid_snapshots){
-			bak.remove();
+			bak.remove(true);
 		}
 		
 		load_snapshots(); // update the list
@@ -643,7 +643,7 @@ public class SnapshotRepo : GLib.Object{
 			
 			//delete snapshots
 			foreach(var bak in snapshots){
-				bak.remove();
+				bak.remove(true);
 			}
 
 			remove_sync_dir();

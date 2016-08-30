@@ -2218,42 +2218,51 @@ public class Main : GLib.Object{
 		}
 
 		foreach(FsTabEntry mnt in fstab_list){
-			switch(mnt.mount_point){
-				case "/":
-				case "/boot":
-				case "/home":
-					Device mnt_dev = null;
-					if (mnt.device.down().has_prefix("uuid=")){
-						string uuid = mnt.device.down()["uuid=".length:mnt.device.length];
-						mnt_dev = Device.find_device_in_list(partitions, "", uuid);
-					}
-					else{
-						foreach(Device dev in partitions){
-							if (dev.device == mnt.device){
-								mnt_dev = dev;
-								break;
-							}
-							else{
-								foreach(string symlink in dev.symlinks){
-									if (symlink == mnt.device){
-										mnt_dev = dev;
-										break;
-									}
-								}
-								if (mnt_dev != null) { break; }
-							}
-						}
-					}
-					if (mnt_dev != null){
-						mount_list.add(new MountEntry(mnt_dev, mnt.mount_point, ""));
-					}
-					break;
+
+			if (mnt.mount_point.has_prefix("/mnt") || mnt.mount_point.has_prefix("/mount")
+				|| mnt.mount_point.has_prefix("/sdcard") || mnt.mount_point.has_prefix("/cdrom")){
+				// skip mounting for non-system devices
+				continue;
+			}
+
+			Device mnt_dev = null;
+			if (mnt.device.down().has_prefix("uuid=")){
+				string uuid = mnt.device["uuid=".length:mnt.device.length];
+				mnt_dev = Device.get_device_by_uuid(uuid);
+			}
+			else{
+				mnt_dev = Device.get_device_by_name(mnt.device);
+			}
+			if (mnt_dev != null){
+				mount_list.add(new MountEntry(mnt_dev, mnt.mount_point, mnt.options));
+				log_debug("found: %s".printf(mnt_dev.device));
+			}
+			else{
+				//log_debug("device is null");
 			}
 		}
 
-		/*foreach(MountEntry mnt in mount_list){
-			log_msg("Entry:%s -> %s".printf(mnt.device.device,mnt.mount_point));
-		}*/
+		/*
+		While cloning the system, /boot is the only mount point that
+		we will leave unchanged (to avoid encrypted systems from breaking).
+		All other mounts like /home will be defaulted to target device
+		(to prevent the "cloned" system from using the original device)
+		*/
+		
+		if (App.mirror_system){
+			//default all mount points to root device except /boot
+			for (int i = mount_list.size - 1; i >= 0; i--){
+				MountEntry mnt = App.mount_list[i];
+				if (mnt.mount_point != "/boot"){
+					App.mount_list.remove_at(i);
+				}
+			}
+			
+		}
+
+		foreach(MountEntry mnt in mount_list){
+			log_debug("Entry: %s -> %s".printf(mnt.device.device, mnt.mount_point));
+		}
 	}
 
 	// delete from terminal

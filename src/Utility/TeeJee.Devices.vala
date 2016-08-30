@@ -31,7 +31,7 @@ namespace TeeJee.Devices{
 	using TeeJee.ProcessHelper;
 
 	public class Device : GLib.Object{
-		
+
 		/* Class for storing disk information */
 
 		public static double KB = 1000;
@@ -524,6 +524,47 @@ namespace TeeJee.Devices{
 				return (a.order - b.order);
 			});*/
 
+			// add aliases from /dev/disk/by-uuid/
+
+			foreach(var dev in list){
+				var dev_by_uuid = path_combine("/dev/disk/by-uuid/", dev.uuid);
+				if (file_exists(dev_by_uuid)){
+					dev.symlinks.add(dev_by_uuid);
+				}
+			}
+
+			// add aliases from /dev/mapper/
+			
+			try
+			{
+				File f_dev_mapper = File.new_for_path ("/dev/mapper");
+				
+				FileEnumerator enumerator = f_dev_mapper.enumerate_children (
+					"%s,%s".printf(
+						FileAttribute.STANDARD_NAME, FileAttribute.STANDARD_SYMLINK_TARGET),
+				    FileQueryInfoFlags.NOFOLLOW_SYMLINKS);
+				    
+				FileInfo info;
+				while ((info = enumerator.next_file ()) != null) {
+					
+					File f_mapped = f_dev_mapper.resolve_relative_path(info.get_name());
+					
+					string symlink_path = f_mapped.get_path();
+					string symlink_target = resolve_device_name(info.get_symlink_target());
+
+					foreach(var dev in list){
+						if (dev.device == symlink_target){
+							dev.symlinks.add(symlink_path);
+							//log_debug("found link: %s -> %s".printf(symlink_path, dev.device));
+							break;
+						}
+					}
+				}
+			}
+			catch (Error e) {
+				log_error (e.message);
+			}
+
 			device_list = list;
 
 			return list;
@@ -886,9 +927,7 @@ namespace TeeJee.Devices{
 		}
 
 		public static Device? get_device_by_uuid(string uuid){
-			var list = Device.get_block_devices_using_lsblk();
-			
-			foreach(var dev in list){
+			foreach(var dev in device_list){
 				if (dev.uuid == uuid){
 					return dev;
 				}
@@ -898,10 +937,11 @@ namespace TeeJee.Devices{
 		}
 
 		public static Device? get_device_by_name(string file_name){
-			var list = Device.get_block_devices_using_lsblk();
+
+			var device_name = resolve_device_name(file_name);
 			
-			foreach(var dev in list){
-				if (dev.device == file_name){
+			foreach(var dev in device_list){
+				if (dev.device == device_name){
 					return dev;
 				}
 			}

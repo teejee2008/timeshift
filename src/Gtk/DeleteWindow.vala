@@ -1,5 +1,5 @@
 /*
- * RestoreWindow.vala
+ * DeleteWindow.vala
  *
  * Copyright 2013 Tony George <teejee@tony-pc>
  *
@@ -33,16 +33,14 @@ using TeeJee.GtkHelper;
 using TeeJee.System;
 using TeeJee.Misc;
 
-class RestoreWindow : Gtk.Window{
+class DeleteWindow : Gtk.Window{
 	private Gtk.Box vbox_main;
 	private Gtk.Notebook notebook;
 	private Gtk.ButtonBox bbox_action;
 
 	// tabs
-	//private TargetSystemBox system_box;
-	private RestoreDeviceBox restore_device_box;
-	private RestoreSummaryBox summary_box;
-	private RestoreBox restore_box;
+	private SnapshotListBox snapshot_list_box;
+	private DeleteBox delete_box;
 
 	// actions
 	private Gtk.Button btn_prev;
@@ -52,8 +50,8 @@ class RestoreWindow : Gtk.Window{
 
 	private uint tmr_init;
 
-	public RestoreWindow() {
-		this.title = _("Restore");
+	public DeleteWindow() {
+		this.title = _("Delete Snapshots");
         this.window_position = WindowPosition.CENTER;
         this.modal = true;
         this.set_default_size (500, 500);
@@ -69,22 +67,28 @@ class RestoreWindow : Gtk.Window{
 		// add notebook
 		notebook = add_notebook(vbox_main, false, false);
 
-		Gtk.Label label;
+		// create tab
 		
-		label = new Gtk.Label(_("Restore Device"));
-		restore_device_box = new RestoreDeviceBox(this);
-		restore_device_box.margin = 0;
-		notebook.append_page (restore_device_box, label);
+		var vbox_tab = new Box (Orientation.VERTICAL, 6);
+        vbox_tab.margin = 0;
+ 
+		add_label_header(vbox_tab, _("Select Snapshots"), true);
 
-		label = new Gtk.Label(_("Summary"));
-		summary_box = new RestoreSummaryBox(this);
-		summary_box.margin = 0;
-		notebook.append_page (summary_box, label);
-
-		label = new Gtk.Label(_("Restore"));
-		restore_box = new RestoreBox(this);
-		restore_box.margin = 0;
-		notebook.append_page (restore_box, label);
+		add_label(vbox_tab, _("Select the snapshots to be deleted"));
+		
+		var label = new Gtk.Label(_("Snapshots"));
+		
+		snapshot_list_box = new SnapshotListBox(this);
+		snapshot_list_box.hide_context_menu();
+		snapshot_list_box.margin = 0;
+		vbox_tab.add(snapshot_list_box);
+		
+		notebook.append_page (vbox_tab, label);
+		
+		label = new Gtk.Label(_("Delete"));
+		delete_box = new DeleteBox(this);
+		delete_box.margin = 0;
+		notebook.append_page (delete_box, label);
 
 		create_actions();
 
@@ -107,13 +111,7 @@ class RestoreWindow : Gtk.Window{
 
 	private bool on_delete_event(Gdk.EventAny event){
 
-		save_changes();
-		
 		return false; // close window
-	}
-	
-	private void save_changes(){
-		App.cron_job_update();
 	}
 	
 	private void create_actions(){
@@ -153,7 +151,6 @@ class RestoreWindow : Gtk.Window{
 		btn_close = add_button(hbox, _("Close"), "", ref size_group, img);
 
         btn_close.clicked.connect(()=>{
-			save_changes();
 			this.destroy();
 		});
 
@@ -163,41 +160,37 @@ class RestoreWindow : Gtk.Window{
 		btn_cancel = add_button(hbox, _("Cancel"), "", ref size_group, img);
 
         btn_cancel.clicked.connect(()=>{
-			if (App.task != null){
-				App.task.stop(AppStatus.CANCELLED);
+			// clear queue
+			App.delete_list.clear();
+			// kill current task
+			if (App.delete_file_task != null){
+				App.delete_file_task.stop(AppStatus.CANCELLED);
 			}
 			
 			this.destroy(); // TODO: Show error page
 		});
 	}
 	
-
 	// navigation
 
 	private void go_first(){
 		
 		// set initial tab
-
-		notebook.page = Tabs.TARGET_DEVICE;
 		
-		/*if (Main.first_snapshot_size == 0){
-			notebook.page = Tabs.ESTIMATE;
+		if ((App.delete_list.size == 0) && !App.thread_delete_running){
+			notebook.page = Tabs.SNAPSHOT_LIST;
 		}
-		else if (!App.repo.available() || !App.repo.has_space()){
-			notebook.page = Tabs.BACKUP_DEVICE;
+		else {
+			notebook.page = Tabs.DELETE;
 		}
-		else{
-			notebook.page = Tabs.BACKUP;
-		}*/
 
 		initialize_tab();
 	}
 	
 	private void go_prev(){
 		switch(notebook.page){
-		case Tabs.TARGET_DEVICE:
-		case Tabs.SUMMARY: // TODO: Allow previous?
-		case Tabs.RESTORE:
+		case Tabs.SNAPSHOT_LIST:
+		case Tabs.DELETE:
 			// btn_previous is disabled for this page
 			break;
 		}
@@ -212,13 +205,11 @@ class RestoreWindow : Gtk.Window{
 		}
 		
 		switch(notebook.page){
-		case Tabs.TARGET_DEVICE:
-			notebook.page = Tabs.SUMMARY;
+		case Tabs.SNAPSHOT_LIST:
+			App.delete_list = snapshot_list_box.selected_snapshots();
+			notebook.page = Tabs.DELETE;
 			break;
-		case Tabs.SUMMARY:
-			notebook.page = Tabs.RESTORE;
-			break;
-		case Tabs.RESTORE:
+		case Tabs.DELETE:
 			destroy();
 			break;
 		}
@@ -238,15 +229,14 @@ class RestoreWindow : Gtk.Window{
 		// show/hide actions -----------------------------------
 
 		switch(notebook.page){
-		case Tabs.RESTORE:
+		case Tabs.DELETE:
 			btn_prev.hide();
 			btn_next.hide();
 			btn_close.hide();
 			btn_cancel.show();
 			bbox_action.set_layout (Gtk.ButtonBoxStyle.CENTER);
 			break;
-		case Tabs.TARGET_DEVICE:
-		case Tabs.SUMMARY:
+		case Tabs.SNAPSHOT_LIST:
 			btn_prev.show();
 			btn_next.show();
 			btn_close.show();
@@ -261,33 +251,39 @@ class RestoreWindow : Gtk.Window{
 		// actions
 
 		switch(notebook.page){
-		case Tabs.TARGET_DEVICE:
-			restore_device_box.refresh();
+		case Tabs.SNAPSHOT_LIST:
+			snapshot_list_box.refresh();
 			break;
-		case Tabs.SUMMARY:
-			summary_box.refresh();
-			break;
-		case Tabs.RESTORE:
-			restore_box.restore();
-			go_next();
+		case Tabs.DELETE:
+			delete_box.delete_snapshots();
+			//destroy();
 			break;
 		}
 	}
 
 	private bool validate_current_tab(){
-		
-		if (notebook.page == Tabs.TARGET_DEVICE){
+		switch(notebook.page){
+		case Tabs.SNAPSHOT_LIST:
+			var sel = snapshot_list_box.treeview.get_selection ();
+			if (sel.count_selected_rows() == 0){
+				gtk_messagebox(
+					_("No Snapshots Selected"),
+					_("Select snapshots to delete"),
+					this, false);;
+				return false;
+			}
+			else{
+				return true;
+			}
 			
-			
+		default:
+			return true;
 		}
-
-		return true;
 	}
 
 	public enum Tabs{
-		TARGET_DEVICE = 0,
-		SUMMARY = 1,
-		RESTORE = 2
+		SNAPSHOT_LIST = 0,
+		DELETE = 1
 	}
 }
 

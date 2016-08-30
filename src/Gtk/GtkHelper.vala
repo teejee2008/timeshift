@@ -514,6 +514,7 @@ namespace TeeJee.GtkHelper{
 		return col;
 	}
 
+
 	// add_column_icon
 	private Gtk.TreeViewColumn add_column_icon(
 		Gtk.TreeView treeview, string title, out Gtk.CellRendererPixbuf cell){

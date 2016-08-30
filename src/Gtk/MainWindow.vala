@@ -667,16 +667,17 @@ class MainWindow : Gtk.Window{
 
 		//show restore window -----------------
 
-		var dialog = new RestoreWindow();
-		dialog.set_transient_for (this);
-		dialog.show_all();
-		int response = dialog.run();
-		dialog.destroy();
+		var window = new RestoreWindow();
+		window.set_transient_for (this);
+		window.show_all();
 
-		if (response != Gtk.ResponseType.OK){
+		return;
+		//dialog.destroy();
+
+		/*if (response != Gtk.ResponseType.OK){
 			App.unmount_target_device();
 			return; //cancel
-		}
+		}*/
 
 		//update UI ----------------
 

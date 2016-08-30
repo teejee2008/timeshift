@@ -144,6 +144,10 @@ public class RsyncTask : AsyncTask{
 
 		if (exclude_from_file.length > 0){
 			cmd += " --exclude-from='%s'".printf(escape_single_quote(exclude_from_file));
+
+			if (delete_extra){
+				cmd += " --delete-excluded";
+			}
 		}
 
 		source_path = remove_trailing_slash(source_path);

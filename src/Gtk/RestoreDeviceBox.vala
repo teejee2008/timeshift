@@ -159,8 +159,14 @@ class RestoreDeviceBox : Gtk.Box{
 			combo.get_active_iter (out iter);
 			combo.model.get (iter, 0, out dev, -1);
 			
-			//tooltip.set_icon(get_shared_icon_pixbuf("drive-harddisk", "drive-harddisk", 256)); 
-			tooltip.set_markup(dev.tooltip_text());
+			//tooltip.set_icon(get_shared_icon_pixbuf("drive-harddisk", "drive-harddisk", 256));
+			if (dev != null){
+				tooltip.set_markup(dev.tooltip_text());
+			}
+			else{
+				tooltip.set_markup(_("Keep this mount path on the root filesystem"));
+			}
+			
 			return true;
 		});
 
@@ -168,16 +174,29 @@ class RestoreDeviceBox : Gtk.Box{
 			Device dev;
 			model.get (iter, 0, out dev, -1);
 
-			(cell as Gtk.CellRendererText).markup = dev.description_formatted();
+			if (dev != null){
+				(cell as Gtk.CellRendererText).markup = dev.description_formatted();
+			}
+			else{
+				(cell as Gtk.CellRendererText).markup = _("Keep on Root Device");
+			}
 		});
 		
 		// populate combo
 		var model = new Gtk.ListStore(2, typeof(Device), typeof(MountEntry));
 		combo.model = model;
-
+		
 		var active = 0;
-		var index = 0;
+		var index = -1;
 		TreeIter iter;
+
+		if (entry.mount_point != "/"){
+			index++;
+			model.append(out iter);
+			model.set (iter, 0, null);
+			model.set (iter, 1, entry);
+		}
+	
 		foreach(var dev in App.partitions){
 			// skip disk and loop devices
 			if ((dev.type == "disk")||(dev.type == "loop")){
@@ -191,6 +210,7 @@ class RestoreDeviceBox : Gtk.Box{
 				}
 			}
 
+			index++;
 			model.append(out iter);
 			model.set (iter, 0, dev);
 			model.set (iter, 1, entry);
@@ -198,8 +218,6 @@ class RestoreDeviceBox : Gtk.Box{
 			if ((entry.device != null) && (dev.uuid == entry.device.uuid)){
 				active = index;
 			}
-
-			index++;
 		}
 
 		combo.active = active;
@@ -210,13 +228,8 @@ class RestoreDeviceBox : Gtk.Box{
 			TreeIter iter_active;
 			combo.get_active_iter (out iter_active);
 			combo.model.get(iter_active, 0, out current_dev, 1, out current_entry, -1);
-			
-			foreach(var item in App.mount_list){
-				if (item.mount_point == current_entry.mount_point){
-					current_entry.device = current_dev;
-					break;
-				}
-			}
+
+			current_entry.device = current_dev;
 		});
 
 		return combo;
@@ -273,7 +286,7 @@ class RestoreDeviceBox : Gtk.Box{
 					"<b>%s (MBR)</b>".printf(dev.description_formatted());
 			}
 			else{
-				(cell as Gtk.CellRendererText).text = "   " + dev.description();
+				(cell as Gtk.CellRendererText).text = dev.description();
 			}
 		});
 

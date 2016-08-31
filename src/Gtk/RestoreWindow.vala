@@ -41,6 +41,7 @@ class RestoreWindow : Gtk.Window{
 	// tabs
 	//private TargetSystemBox system_box;
 	private RestoreDeviceBox restore_device_box;
+	private RestoreExcludeBox restore_exclude_box;
 	private RestoreSummaryBox summary_box;
 	private RestoreBox restore_box;
 
@@ -75,6 +76,11 @@ class RestoreWindow : Gtk.Window{
 		restore_device_box = new RestoreDeviceBox(this);
 		restore_device_box.margin = 0;
 		notebook.append_page (restore_device_box, label);
+
+		label = new Gtk.Label(_("Restore Exclude"));
+		restore_exclude_box = new RestoreExcludeBox(this);
+		restore_exclude_box.margin = 0;
+		notebook.append_page (restore_exclude_box, label);
 
 		label = new Gtk.Label(_("Summary"));
 		summary_box = new RestoreSummaryBox(this);
@@ -195,8 +201,13 @@ class RestoreWindow : Gtk.Window{
 	
 	private void go_prev(){
 		switch(notebook.page){
+		case Tabs.RESTORE_EXCLUDE:
+			notebook.page = Tabs.TARGET_DEVICE;
+			break;
+		case Tabs.SUMMARY:
+			notebook.page = Tabs.RESTORE_EXCLUDE;
+			break;
 		case Tabs.TARGET_DEVICE:
-		case Tabs.SUMMARY: // TODO: Allow previous?
 		case Tabs.RESTORE:
 			// btn_previous is disabled for this page
 			break;
@@ -213,6 +224,9 @@ class RestoreWindow : Gtk.Window{
 		
 		switch(notebook.page){
 		case Tabs.TARGET_DEVICE:
+			notebook.page = Tabs.RESTORE_EXCLUDE;
+			break;
+		case Tabs.RESTORE_EXCLUDE:
 			notebook.page = Tabs.SUMMARY;
 			break;
 		case Tabs.SUMMARY:
@@ -246,6 +260,7 @@ class RestoreWindow : Gtk.Window{
 			bbox_action.set_layout (Gtk.ButtonBoxStyle.CENTER);
 			break;
 		case Tabs.TARGET_DEVICE:
+		case Tabs.RESTORE_EXCLUDE:
 		case Tabs.SUMMARY:
 			btn_prev.show();
 			btn_next.show();
@@ -263,6 +278,9 @@ class RestoreWindow : Gtk.Window{
 		switch(notebook.page){
 		case Tabs.TARGET_DEVICE:
 			restore_device_box.refresh();
+			break;
+		case Tabs.RESTORE_EXCLUDE:
+			restore_exclude_box.refresh();
 			break;
 		case Tabs.SUMMARY:
 			summary_box.refresh();
@@ -286,8 +304,9 @@ class RestoreWindow : Gtk.Window{
 
 	public enum Tabs{
 		TARGET_DEVICE = 0,
-		SUMMARY = 1,
-		RESTORE = 2
+		RESTORE_EXCLUDE = 1,
+		SUMMARY = 2,
+		RESTORE = 3
 	}
 }
 

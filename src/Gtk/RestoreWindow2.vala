@@ -727,7 +727,7 @@ public class RestoreWindow2 : Gtk.Dialog{
 	private void cell_device_grub_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
 		Device dev;
 		model.get (iter, 0, out dev, -1);
-		if (dev.devtype == "disk"){
+		if (dev.type == "disk"){
 			(cell as Gtk.CellRendererText).markup = "<b>" + dev.description() + " (MBR)</b>";
 		}
 		else{

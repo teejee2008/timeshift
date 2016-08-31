@@ -49,10 +49,9 @@ namespace TeeJee.Devices{
 		public string name = "";
 		public string mapped_name = "";
 		
-		public string type = "";
+		public string type = ""; // disk, part, crypt, loop
 		public string fstype = "";
-		public string devtype = ""; //disk or partition
-		
+
 		public string label = "";
 		public string uuid = "";
 		public int order = -1;
@@ -102,8 +101,8 @@ namespace TeeJee.Devices{
 						symlink = sym;
 					}
 				}
-				text = device + ((symlink.length > 0) ? " (" + symlink + ")" : ""); //→
-				if (devtype == "partition"){
+				text = device + ((symlink.length > 0) ? " → " + symlink + "" : ""); //→
+				if (type == "part"){
 					return text;
 				}
 				else{
@@ -137,15 +136,25 @@ namespace TeeJee.Devices{
 		public string description_formatted(){
 			string s = "";
 
-			if (devtype == "disk"){
-				s += "<b>" + short_name_with_alias + "</b>";
-				s += ((vendor.length > 0)||(model.length > 0)) ? (" ~ " + vendor + " " + model) : "";
+			if (type == "disk"){
+				s += "<b>" + kname + "</b> ~";
+				if (vendor.length > 0){
+					s += " " + vendor;
+				}
+				if (model.length > 0){
+					s += " " + model;
+				}
+				if (size_bytes > 0) {
+					s += " (%s)".printf(format_file_size(size_bytes));
+				}
 			}
 			else{
-				s += "<b>" + short_name_with_alias + "</b>" ;
+				s += "<b>" + kname + "</b>" ;
 				s += (label.length > 0) ? " (" + label + ")": "";
 				s += (fstype.length > 0) ? " ~ " + fstype : "";
-				s += (used.length > 0) ? " ~ " + used + " / " + size + " GB used (" + used_percent + ")" : "";
+				if (size_bytes > 0) {
+					s += " (%s)".printf(format_file_size(size_bytes));
+				}
 			}
 
 			return s;
@@ -154,7 +163,7 @@ namespace TeeJee.Devices{
 		public string description_full_free(){
 			string s = "";
 
-			if (devtype == "disk"){
+			if (type == "disk"){
 				s += "%s %s".printf(model, vendor).strip();
 				if (s.length == 0){
 					s = "%s Disk".printf(format_file_size(size_bytes));
@@ -212,37 +221,40 @@ namespace TeeJee.Devices{
 		public string tooltip_text(){
 			string tt = "";
 
-			if (devtype == "disk"){
-				tt += "%-7s\t: %s\n".printf(_("Device"), full_name_with_alias);
-				tt += "%-7s\t: %s\n".printf(_("Vendor"), vendor);
-				tt += "%-7s\t: %s\n".printf(_("Model"), model);
-				tt += "%-7s\t: %s\n".printf(_("Serial"), serial);
-				tt += "%-7s\t: %s\n".printf(_("Revision"), revision);
+			if (type == "disk"){
+				tt += "%-15s: %s\n".printf(_("Device"), device);
+				tt += "%-15s: %s\n".printf(_("Vendor"), vendor);
+				tt += "%-15s: %s\n".printf(_("Model"), model);
+				tt += "%-15s: %s\n".printf(_("Serial"), serial);
+				tt += "%-15s: %s\n".printf(_("Revision"), revision);
 
-				tt += "%-7s\t: %s\n".printf(
-					_("Size"),
+				tt += "%-15s: %s\n".printf( _("Size"),
 					(size_bytes > 0) ? format_file_size(size_bytes) : "N/A");
 			}
 			else{
-				tt += "%-7s\t: %s\n".printf(_("Device"),full_name_with_alias);
-				tt += "%-7s\t: %s\n".printf(_("UUID"),uuid);
-				tt += "%-7s\t: %s\n".printf(_("Type"),type);
-				tt += "%-7s\t: %s\n".printf(_("Label"),label);
+				tt += "%-15s: %s\n".printf(_("Device"),
+					(mapped_name.length > 0) ? "%s → %s".printf(device, mapped_name) : device);
+					
+				if (has_parent()){
+					tt += "%-15s: %s\n".printf(_("Parent Device"), parent.device);
+				}
+				tt += "%-15s: %s\n".printf(_("UUID"),uuid);
+				tt += "%-15s: %s\n".printf(_("Type"),type);
+				tt += "%-15s: %s\n".printf(_("Filesystem"),fstype);
+				tt += "%-15s: %s\n".printf(_("Label"),label);
 				
-				tt += "%-7s\t: %s\n".printf(
-					_("Size"),
+				tt += "%-15s: %s\n".printf(_("Size"),
 					(size_bytes > 0) ? format_file_size(size_bytes) : "N/A");
 					
-				tt += "%-7s\t: %s\n".printf(
-					_("Used"),
+				tt += "%-15s: %s\n".printf(_("Used"),
 					(used_bytes > 0) ? format_file_size(used_bytes) : "N/A");
 
-				tt += "%-7s\t: %s\n".printf(_("System"),dist_info);
+				tt += "%-15s: %s\n".printf(_("System"),dist_info);
 			}
 
-			return tt;
+			return "<tt>%s</tt>".printf(tt);
 		}
-		
+
 		public int64 free_bytes{
 			get{
 				return (size_bytes - used_bytes);
@@ -301,7 +313,7 @@ namespace TeeJee.Devices{
 		}
 
 		public bool is_encrypted(){
-			return (fstype.contains("luks") || fstype.contains("crypt"));
+			return (type.contains("crypt") || fstype.contains("luks") || fstype.contains("crypt"));
 		}
 
 		public bool has_children(){
@@ -333,7 +345,7 @@ namespace TeeJee.Devices{
 			
 			this.type = dev2.type;
 			this.fstype = dev2.fstype;
-			this.devtype = dev2.devtype;
+			//this.devtype = dev2.devtype;
 			
 			this.size_bytes = dev2.size_bytes;
 			this.used_bytes = dev2.used_bytes;
@@ -549,13 +561,19 @@ namespace TeeJee.Devices{
 					
 					File f_mapped = f_dev_mapper.resolve_relative_path(info.get_name());
 					
-					string symlink_path = f_mapped.get_path();
-					string symlink_target = resolve_device_name(info.get_symlink_target());
-
+					string mapped_file = f_mapped.get_path();
+					string mapped_device = info.get_symlink_target();
+					mapped_device = mapped_device.replace("..","/dev");
+					log_debug("info.get_name(): %s".printf(info.get_name()));
+					log_debug("info.get_symlink_target(): %s".printf(info.get_symlink_target()));
+					log_debug("mapped_file: %s".printf(mapped_file));
+					log_debug("mapped_device: %s".printf(mapped_device));
+					
 					foreach(var dev in list){
-						if (dev.device == symlink_target){
-							dev.symlinks.add(symlink_path);
-							//log_debug("found link: %s -> %s".printf(symlink_path, dev.device));
+						if (dev.device == mapped_device){
+							dev.mapped_name = mapped_file;
+							dev.symlinks.add(mapped_file);
+							log_debug("found link: %s -> %s".printf(mapped_file, dev.device));
 							break;
 						}
 					}
@@ -566,6 +584,8 @@ namespace TeeJee.Devices{
 			}
 
 			device_list = list;
+
+			print_device_list(list);
 
 			return list;
 		}
@@ -1545,10 +1565,19 @@ namespace TeeJee.Devices{
 		public string mount_point = "";
 		public string mount_options = "";
 		
-		public MountEntry(Device device, string mount_point, string mount_options){
+		public MountEntry(Device? device, string mount_point, string mount_options){
 			this.device = device;
 			this.mount_point = mount_point;
 			this.mount_options = mount_options;
+		}
+
+		public string subvolume_name(){
+			if (mount_options.contains("subvol=")){
+				return mount_options.split("subvol=")[1].split(",")[0].strip();
+			}
+			else{
+				return "";
+			}
 		}
 	}
 
@@ -1599,7 +1628,7 @@ namespace TeeJee.Devices{
 					dev.vendor = vendor.strip();
 					dev.model = model.strip();
 					dev.removable = (removable == "0") ? false : true;
-					dev.devtype = "disk";
+					dev.type = "disk";
 					device_list.add(dev);
 				}
 			}

@@ -953,7 +953,7 @@ public class Main : GLib.Object{
 			grid[row, ++col] = ">";
 			grid[row, ++col] = "%s".printf(pi.short_name_with_alias);
 
-			if (pi.devtype == "disk"){
+			if (pi.type == "disk"){
 				desc = "%s".printf(((pi.vendor.length > 0)||(pi.model.length > 0)) ? (pi.vendor + " " + pi.model  + " [MBR]") : "");
 			}
 			else{
@@ -1052,7 +1052,7 @@ public class Main : GLib.Object{
 		if (int64.try_parse(index_string, out index)){
 			int i = -1;
 			foreach(Device pi in device_list) {
-				if ((pi.devtype == "partition") && !pi.has_linux_filesystem()) { continue; }
+				if ((pi.type == "partition") && !pi.has_linux_filesystem()) { continue; }
 				if (++i == index){
 					return pi;
 				}
@@ -2081,7 +2081,7 @@ public class Main : GLib.Object{
 						break;
 					}
 					else {
-						if (dev.devtype == "partition"){
+						if (dev.type == "part"){
 							foreach(string symlink in dev.symlinks){
 								if (symlink == cmd_grub_device){
 									grub_device = dev.device;
@@ -2217,8 +2217,10 @@ public class Main : GLib.Object{
 			fstab_list = FsTabEntry.read_fstab_file(fstab_path);
 		}
 
+		bool root_found = false;
+		bool boot_found = false;
+		bool home_found = false;
 		foreach(FsTabEntry mnt in fstab_list){
-
 			if (mnt.mount_point.has_prefix("/mnt") || mnt.mount_point.has_prefix("/mount")
 				|| mnt.mount_point.has_prefix("/sdcard") || mnt.mount_point.has_prefix("/cdrom")){
 				// skip mounting for non-system devices
@@ -2236,10 +2238,32 @@ public class Main : GLib.Object{
 			if (mnt_dev != null){
 				mount_list.add(new MountEntry(mnt_dev, mnt.mount_point, mnt.options));
 				log_debug("found: %s".printf(mnt_dev.device));
+
+				if (mnt.mount_point == "/"){
+					root_found = true;
+				}
+				if (mnt.mount_point == "/boot"){
+					boot_found = true;
+				}
+				if (mnt.mount_point == "/home"){
+					home_found = true;
+				}
 			}
 			else{
 				//log_debug("device is null");
 			}
+		}
+
+		if (!root_found){
+			mount_list.add(new MountEntry(null, "/", "")); // add root entry
+		}
+
+		if (!boot_found){
+			mount_list.add(new MountEntry(null, "/boot", "")); // add boot entry
+		}
+
+		if (!home_found){
+			mount_list.add(new MountEntry(null, "/home", "")); // add home entry
 		}
 
 		/*
@@ -2261,7 +2285,12 @@ public class Main : GLib.Object{
 		}
 
 		foreach(MountEntry mnt in mount_list){
-			log_debug("Entry: %s -> %s".printf(mnt.device.device, mnt.mount_point));
+			if (mnt.device != null){
+				log_debug("Entry: %s -> %s".printf(mnt.device.device, mnt.mount_point));
+			}
+			else{
+				log_debug("Entry: null -> %s".printf(mnt.mount_point));
+			}
 		}
 	}
 

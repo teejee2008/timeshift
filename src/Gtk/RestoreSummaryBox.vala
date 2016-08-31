@@ -52,12 +52,10 @@ class RestoreSummaryBox : Gtk.Box{
 		// header
 		add_label_header(this, _("Summary"), true);
 
-		
+		add_label_header(this, _("Summary"), true);
     }
 
     public void refresh(){
 
 	}
-
-	
 }

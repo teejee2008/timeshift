@@ -36,10 +36,11 @@ using TeeJee.Misc;
 
 class RestoreDeviceBox : Gtk.Box{
 
-	private Gtk.TreeView tv_devices;
 	private Gtk.InfoBar infobar_location;
 	private Gtk.Label lbl_infobar_location;
 	private Gtk.Box option_box;
+	private Gtk.ComboBox cmb_boot_device;
+	private Gtk.CheckButton chk_skip_grub_install;
 
 	private Gtk.SizeGroup sg_mount_point = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
 	private Gtk.SizeGroup sg_device = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
@@ -55,7 +56,7 @@ class RestoreDeviceBox : Gtk.Box{
 		var hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
 		add(hbox);
 
-		add_label_header(hbox, _("Select Target Volumes"), true);
+		add_label_header(hbox, _("Select Target Device"), true);
 
 		// buffer
 		var label = add_label(hbox, "");
@@ -71,8 +72,8 @@ class RestoreDeviceBox : Gtk.Box{
 			refresh();
 		});
 
-		add_label(this, _("Select the partitions where files will be restored."));
-		add_label(this, _("Partitions from which snapshot was created are pre-selected."));
+		add_label(this, _("Select the partitions where files will be restored.") + "\n"
+			+ _("Partitions from which snapshot was created are pre-selected."));
 
 		// headings
 		
@@ -81,17 +82,24 @@ class RestoreDeviceBox : Gtk.Box{
 		add(hbox);
 
 		label = add_label(hbox, _("Mount Path") + " ", true, true);
+		label.xalign = (float) 0.5;
 		sg_mount_point.add_widget(label);
 		
-		label = add_label(hbox, _("Partition"), true, true);
+		label = add_label(hbox, _("Device"), true, true);
+		label.xalign = (float) 0.5;
 		sg_device.add_widget(label);
 		
 		label = add_label(hbox, _("Mount Options"), true, true);
-
+		label.xalign = (float) 0.5;
+		
 		// options
 		
 		option_box = new Gtk.Box(Gtk.Orientation.VERTICAL, 6);
 		add(option_box);
+
+		// bootloader
+
+		add_bootloader_options();
 
 		// infobar
 		
@@ -100,6 +108,7 @@ class RestoreDeviceBox : Gtk.Box{
 
     public void refresh(){
 		create_device_selection_options();
+		refresh_cmb_boot_device();
 	}
 
 	private void create_device_selection_options(){
@@ -126,7 +135,11 @@ class RestoreDeviceBox : Gtk.Box{
 		var combo = add_device_combo(box, entry);
 		sg_device.add_widget(combo);
 
-		label = add_label(box, entry.mount_options, false);
+		string txt = "";
+		if (entry.subvolume_name().length > 0){
+			txt = "subvol=%s".printf(entry.subvolume_name());
+		}
+		label = add_label(box, txt, false);
 		sg_mount_options.add_widget(label);
 	}
 
@@ -138,34 +151,51 @@ class RestoreDeviceBox : Gtk.Box{
 		var cell_text = new Gtk.CellRendererText();
 		cell_text.xalign = (float) 0.0;
 		combo.pack_start (cell_text, false);
-		
+
+		combo.has_tooltip = true;
+		combo.query_tooltip.connect((x, y, keyboard_tooltip, tooltip) => {
+			Device dev;
+			TreeIter iter;
+			combo.get_active_iter (out iter);
+			combo.model.get (iter, 0, out dev, -1);
+			
+			//tooltip.set_icon(get_shared_icon_pixbuf("drive-harddisk", "drive-harddisk", 256)); 
+			tooltip.set_markup(dev.tooltip_text());
+			return true;
+		});
+
 		combo.set_cell_data_func(cell_text, (cell_layout, cell, model, iter)=>{
 			Device dev;
 			model.get (iter, 0, out dev, -1);
 
-			if (dev.type != "disk"){
-				var txt = "%s ~ %s".printf(dev.kname, dev.fstype).strip();
-				if (dev.size_bytes > 0) {
-					txt += " ~ %s".printf(format_file_size(dev.size_bytes));
-				}
-				
-				(cell as Gtk.CellRendererText).text = txt.strip();
-			}
+			(cell as Gtk.CellRendererText).markup = dev.description_formatted();
 		});
 		
 		// populate combo
-		var model = new Gtk.ListStore(1, typeof(Device));
+		var model = new Gtk.ListStore(2, typeof(Device), typeof(MountEntry));
 		combo.model = model;
 
 		var active = 0;
 		var index = 0;
 		TreeIter iter;
 		foreach(var dev in App.partitions){
+			// skip disk and loop devices
+			if ((dev.type == "disk")||(dev.type == "loop")){
+				continue;
+			}
+
+			// display only linux filesystem for / and /home
+			if ((entry.mount_point == "/") || (entry.mount_point == "/home")){
+				if (!dev.has_linux_filesystem()){
+					continue;
+				}
+			}
+
 			model.append(out iter);
 			model.set (iter, 0, dev);
 			model.set (iter, 1, entry);
 
-			if (dev.uuid == entry.device.uuid){
+			if ((entry.device != null) && (dev.uuid == entry.device.uuid)){
 				active = index;
 			}
 
@@ -191,7 +221,136 @@ class RestoreDeviceBox : Gtk.Box{
 
 		return combo;
 	}
-	
+
+	private void add_bootloader_options(){
+
+		//var label = add_label(this, "");
+		//label.vexpand = true;
+		
+		//lbl_header_bootloader
+		var label = add_label_header(this, _("Select Boot Device"), true);
+		label.margin_top = 48;
+		
+		add_label(this, _("Select device for installing GRUB2 bootloader:"));
+		
+		var hbox_grub = new Box (Orientation.HORIZONTAL, 6);
+        add (hbox_grub);
+
+		//cmb_boot_device
+		cmb_boot_device = new ComboBox ();
+		cmb_boot_device.hexpand = true;
+		hbox_grub.add(cmb_boot_device);
+
+		var cell_text = new CellRendererText ();
+		cell_text.text = "";
+		cmb_boot_device.pack_start(cell_text, false);
+
+		var cell_icon = new CellRendererPixbuf ();
+		cell_icon.xpad = 4;
+		cmb_boot_device.pack_start(cell_icon, false);
+
+		cell_text = new CellRendererText();
+        cmb_boot_device.pack_start(cell_text, false);
+
+		cmb_boot_device.set_cell_data_func(cell_icon, (cell_layout, cell, model, iter)=>{
+			Device dev;
+			model.get (iter, 0, out dev, -1);
+
+			Gdk.Pixbuf pix = null;
+			model.get (iter, 1, out pix, -1);
+
+			(cell as Gtk.CellRendererPixbuf).pixbuf = pix;
+			(cell as Gtk.CellRendererPixbuf).visible = (dev.type == "disk");
+		});
+		
+        cmb_boot_device.set_cell_data_func(cell_text, (cell_layout, cell, model, iter)=>{
+			Device dev;
+			model.get (iter, 0, out dev, -1);
+
+			if (dev.type == "disk"){
+				//log_msg("desc:" + dev.description());
+				(cell as Gtk.CellRendererText).markup =
+					"<b>%s (MBR)</b>".printf(dev.description_formatted());
+			}
+			else{
+				(cell as Gtk.CellRendererText).text = "   " + dev.description();
+			}
+		});
+
+		string tt = "<b>" + _("** Advanced Users **") + "</b>\n\n"+ _("Skips bootloader (re)installation on target device.\nFiles in /boot directory on target partition will remain untouched.\n\nIf you are restoring a system that was bootable previously then it should boot successfully.\nOtherwise the system may fail to boot.");
+
+		//chk_skip_grub_install
+		chk_skip_grub_install = new CheckButton.with_label(
+			_("Skip bootloader installation (not recommended)"));
+		chk_skip_grub_install.active = false;
+		chk_skip_grub_install.set_tooltip_markup(tt);
+		chk_skip_grub_install.margin_bottom = 12;
+		add (chk_skip_grub_install);
+
+		chk_skip_grub_install.toggled.connect(()=>{
+			cmb_boot_device.sensitive = !chk_skip_grub_install.active;
+		});
+	}
+
+	private void refresh_cmb_boot_device(){
+		var store = new Gtk.ListStore(2, typeof(Device), typeof(Gdk.Pixbuf));
+
+		Gdk.Pixbuf pix_device = get_shared_icon("drive-harddisk","disk.png",16).pixbuf;
+		
+		TreeIter iter;
+		foreach(Device dev in Device.get_block_devices_using_lsblk()) {
+			// select disk and normal partitions, skip others (loop and crypt)
+			if ((dev.type != "disk") && (dev.type != "part")){
+				continue;
+			}
+
+			// skip luks partitions
+			if (dev.fstype == "luks"){
+				continue;
+			}
+			
+			store.append(out iter);
+			store.set (iter, 0, dev);
+			store.set (iter, 1, pix_device);
+		}
+
+		cmb_boot_device.set_model (store);
+		cmb_boot_device_select_default();
+	}
+
+	private void cmb_boot_device_select_default(){
+		if (App.restore_target == null){
+			cmb_boot_device.active = -1;
+			return;
+		}
+
+		TreeIter iter;
+		var store = (Gtk.ListStore) cmb_boot_device.model;
+		int index = -1;
+
+		int first_mbr_device_index = -1;
+		for (bool next = store.get_iter_first (out iter); next; next = store.iter_next (ref iter)) {
+			Device dev;
+			store.get(iter, 0, out dev);
+
+			index++;
+
+			if (dev.device == App.restore_target.device[0:8]){
+				cmb_boot_device.active = index;
+				break;
+			}
+
+			if ((first_mbr_device_index == -1) && (dev.device.length == "/dev/sdX".length)){
+				first_mbr_device_index = index;
+			}
+		}
+
+		//select first MBR device if not found
+		if (cmb_boot_device.active == -1){
+			cmb_boot_device.active = first_mbr_device_index;
+		}
+	}
+
 	private void create_infobar_location(){
 		var infobar = new Gtk.InfoBar();
 		infobar.no_show_all = true;
@@ -203,157 +362,186 @@ class RestoreDeviceBox : Gtk.Box{
 		lbl_infobar_location = label;
 	}
 
-	private void try_change_device(Device dev){
 
-		log_debug("try_change_device: %s".printf(dev.device));
+	private bool check_and_mount_devices(){
+
+		// check if all partitions are selected
 		
-		if (dev.type == "disk"){
-			bool found_child = false;
-			foreach (var child in dev.children){
-				if (child.has_linux_filesystem()){
-					change_backup_device(child);
-					found_child = true;
-					break;
+		foreach(var entry in App.mount_list){
+			if (entry.device == null){
+				string title = _("Partition Not Selected");
+				string msg = _("Select the partition for mount path")
+					+ " '%s'".printf(entry.mount_point);
+				gtk_messagebox(title, msg, parent_window, true);
+				return false;
+			}
+		}
+
+		// TODO: add boot device selection
+
+		// TODO: check on next
+
+		//check if grub device selected ---------------
+
+		if (!chk_skip_grub_install.active && cmb_boot_device.active < 0){
+			string title =_("Boot device not selected");
+			string msg = _("Please select the boot device");
+			gtk_messagebox(title, msg, parent_window, true);
+			return false;
+		}
+
+		// get root partition
+		
+		App.restore_target = null;
+		
+		foreach(var entry in App.mount_list){
+			if (entry.mount_point == "/"){
+				App.restore_target = entry.device;
+				break;
+			}
+		}
+
+		// check if we are restoring the current system
+		
+		if (App.restore_target == App.root_device){
+			return true; // all required devices are already mounted
+		}
+
+		//check BTRFS subvolume layout --------------
+
+		if (App.restore_target.type == "btrfs"){
+			if (App.check_btrfs_volume(App.restore_target) == false){
+				var title = _("Unsupported Subvolume Layout")
+					+ " (%s)".printf(App.restore_target.device);
+				var msg = _("Partition has an unsupported subvolume layout.") + " ";
+				msg += _("Only ubuntu-type layouts with @ and @home subvolumes are currently supported.") + "\n\n";
+				gtk_messagebox(title, msg, parent_window, true);
+				return false;
+			}
+		}
+
+		// mount target device -------------
+
+		bool status = App.mount_target_device(parent_window);
+		if (status == false){
+			string title = _("Error");
+			string msg = _("Failed to mount device") + ": %s".printf(App.restore_target.device);
+			gtk_messagebox(title, msg, parent_window, true);
+			return false;
+		}
+
+		
+
+
+		/*
+		TreeIter iter;
+		Gtk.ListStore store;
+		TreeSelection sel;
+			
+		//check if target device selected ---------------
+		
+		if (radio_sys.active){
+			//we are restoring the current system - no need to mount devices
+			App.restore_target = App.root_device;
+			return true;
+		}
+		else{
+			//we are restoring to another disk - mount selected devices
+
+			App.restore_target = null;
+			App.mount_list.clear();
+			bool no_mount_points_set_by_user = true;
+
+			//find the root mount point set by user
+			store = (Gtk.ListStore) tv_partitions.model;
+			for (bool next = store.get_iter_first (out iter); next; next = store.iter_next (ref iter)) {
+				Device pi;
+				string mount_point;
+				store.get(iter, 0, out pi);
+				store.get(iter, 1, out mount_point);
+
+				if ((mount_point != null) && (mount_point.length > 0)){
+					mount_point = mount_point.strip();
+					no_mount_points_set_by_user = false;
+
+					App.mount_list.add(new MountEntry(pi,mount_point,""));
+
+					if (mount_point == "/"){
+						App.restore_target = pi;
+					}
 				}
 			}
-			if (!found_child){
-				lbl_infobar_location.label = "<span weight=\"bold\">%s</span>".printf(
-				_("Selected disk does not have Linux partitions"));
-				infobar_location.message_type = Gtk.MessageType.ERROR;
-				infobar_location.no_show_all = false;
-				infobar_location.show_all();
-			}
-		}
-		else if (dev.has_children()){
-			change_backup_device(dev.children[0]);
-		}
-		else if (!dev.has_children()){
-			change_backup_device(dev);
-		}
-		else {
-			lbl_infobar_location.label = "<span weight=\"bold\">%s</span>".printf(
-				_("Select a partition on this disk"));
-			infobar_location.message_type = Gtk.MessageType.ERROR;
-			infobar_location.no_show_all = false;
-			infobar_location.show_all();
-		}
-	}
 
-	private void change_backup_device(Device pi){
-		// return if device has not changed
-		if ((App.repo.device != null) && (pi.uuid == App.repo.device.uuid)){ return; }
+			if (App.restore_target == null){
+				//no root mount point was set by user
 
-		gtk_set_busy(true, parent_window);
+				if (no_mount_points_set_by_user){
+					//user has not set any mount points
 
-		log_debug("\n");
-		log_debug("selected device: %s".printf(pi.device));
-		log_debug("fstype: %s".printf(pi.fstype));
-
-		App.repo = new SnapshotRepo.from_device(pi, parent_window);
-
-		if (pi.fstype == "luks"){
-			App.update_partitions();
-
-			var dev = Device.find_device_in_list(App.partitions, pi.device, pi.uuid);
-			
-			if (dev.has_children()){
-				
-				log_debug("has children");
-				
-				if (dev.children[0].has_linux_filesystem()){
-					
-					log_debug("has linux filesystem: %s".printf(dev.children[0].fstype));
-					log_debug("selecting child '%s' of parent '%s'".printf(
-						dev.children[0].device, dev.device));
-						
-					App.repo = new SnapshotRepo.from_device(dev.children[0], parent_window);
-					tv_devices_refresh();
+					//check if a device is selected in treeview
+					sel = tv_partitions.get_selection ();
+					if (sel.count_selected_rows() == 1){
+						//use selected device as the root mount point
+						for (bool next = store.get_iter_first (out iter); next; next = store.iter_next (ref iter)) {
+							if (sel.iter_is_selected (iter)){
+								Device pi;
+								store.get(iter, 0, out pi);
+								App.restore_target = pi;
+								App.mount_list.add(new MountEntry(pi,"/",""));
+								break;
+							}
+						}
+					}
+					else{
+						//no device selected and no mount points set by user
+						string title = _("Select Target Device");
+						string msg = _("Please select the target device from the list");
+						gtk_messagebox(title, msg, this, true);
+						return false;
+					}
 				}
 				else{
-					log_debug("does not have linux filesystem");
+					//user has set some mount points but not set the root mount point
+					string title = _("Select Root Device");
+					string msg = _("Please select the root device (/)");
+					gtk_messagebox(title, msg, this, true);
+					return false;
 				}
+			}
+
+			//check BTRFS subvolume layout --------------
+
+			if (App.restore_target.type == "btrfs"){
+				if (App.check_btrfs_volume(App.restore_target) == false){
+					string title = _("Unsupported Subvolume Layout");
+					string msg = _("The target partition has an unsupported subvolume layout.") + " ";
+					msg += _("Only ubuntu-type layouts with @ and @home subvolumes are currently supported.") + "\n\n";
+					gtk_messagebox(title, msg, this, true);
+					return false;
+				}
+			}
+
+			//mount target device -------------
+
+			bool status = App.mount_target_device(this);
+			if (status == false){
+				string title = _("Error");
+				string msg = _("Failed to mount device") + ": %s".printf(App.restore_target.device);
+				gtk_messagebox(title, msg, this, true);
+				return false;
 			}
 		}
 
-		//check_backup_location();
+		//check if grub device selected ---------------
 
-		gtk_set_busy(false, parent_window);
-	}
-
-	private void tv_devices_refresh(){
-		App.update_partitions();
-
-		var model = new Gtk.TreeStore(5,
-			typeof(Device),
-			typeof(string),
-			typeof(Gdk.Pixbuf),
-			typeof(bool),
-			typeof(string));
-		
-		tv_devices.set_model (model);
-
-		Gdk.Pixbuf pix_device = get_shared_icon("disk","disk.png",16).pixbuf;
-
-		TreeIter iter0;
-
-		foreach(var disk in App.partitions) {
-			if (disk.type != "disk") { continue; }
-
-			model.append(out iter0, null);
-			model.set(iter0, 0, disk, -1);
-			model.set(iter0, 1, disk.tooltip_text(), -1);
-			model.set(iter0, 2, pix_device, -1);
-			model.set(iter0, 3, false, -1);
-			model.set(iter0, 4, "", -1);
-			
-			tv_append_child_volumes(ref model, ref iter0, disk);
+		if (!chk_skip_grub_install.active && cmb_boot_device.active < 0){
+			string title =_("Boot device not selected");
+			string msg = _("Please select the boot device");
+			gtk_messagebox(title, msg, this, true);
+			return false;
 		}
+		* */
 
-		tv_devices.expand_all();
-		tv_devices.columns_autosize();
+		return true;
 	}
-
-	private void tv_append_child_volumes(
-		ref Gtk.TreeStore model, ref Gtk.TreeIter iter0, Device parent){
-			
-		Gdk.Pixbuf pix_device = get_shared_icon("disk","disk.png",16).pixbuf;
-		Gdk.Pixbuf pix_locked = get_shared_icon("locked","locked.png",16).pixbuf;
-		Gdk.Pixbuf pix_unlocked = get_shared_icon("unlocked","unlocked.png",16).pixbuf;
-		
-		foreach(var part in App.partitions) {
-
-			if (!part.has_linux_filesystem()){ continue; }
-			
-			if (part.pkname == parent.kname) {
-				TreeIter iter1;
-				model.append(out iter1, iter0);
-				model.set(iter1, 0, part, -1);
-				model.set(iter1, 1, part.tooltip_text(), -1);
-				model.set(iter1, 2, (part.fstype == "luks") ? pix_locked : pix_device, -1);
-				
-				if (parent.fstype == "luks"){
-					// change parent's icon to unlocked
-					model.set(iter0, 2, pix_unlocked, -1);
-				}
-
-				if ((App.repo.device != null) && (part.uuid == App.repo.device.uuid)){
-					model.set(iter1, 3, true, -1);
-				}
-				else{
-					model.set(iter1, 3, false, -1);
-				}
-
-				model.set(iter1, 4, "", -1);
-
-				foreach(MountEntry mnt in App.mount_list){
-				if (mnt.device.uuid == part.uuid){
-					model.set(iter1, 4, mnt.mount_point, -1);
-				}
-			}
-				
-				tv_append_child_volumes(ref model, ref iter1, part);
-			}
-		}
-	}
-
 }

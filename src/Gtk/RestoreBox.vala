@@ -233,7 +233,7 @@ class RestoreBox : Gtk.Box{
 	}
 	
 	private void restore_thread(){
-		//App.take_snapshot(true,"",parent_window);
+		App.restore_snapshot(parent_window);
 		thread_is_running = false;
 	}
 }

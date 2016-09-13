@@ -50,12 +50,21 @@ class RestoreSummaryBox : Gtk.Box{
 		margin = 12;
 		
 		// header
-		add_label_header(this, _("Summary"), true);
+		//add_label_header(this, _("Summary"), true);
 
-		add_label_header(this, _("Summary"), true);
+		lbl_msg = add_label_scrolled(this, "", false, true);
+		
+
+		//add_label_header(this, _("Summary"), true);
+
+		refresh();
     }
 
     public void refresh(){
+		string msg = "";
 
+		msg += App.disclaimer_pre_restore(true);
+
+		lbl_msg.label = msg;
 	}
 }

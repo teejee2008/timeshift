@@ -620,14 +620,14 @@ namespace TeeJee.GtkHelper{
 		label.xalign = (float) 0.0;
 		label.yalign = (float) 0.0;
 		label.margin = 6;
+		label.set_use_markup(true);
 		scroll.add(label);
 
 		if (wrap){
 			label.wrap = true;
 			label.wrap_mode = Pango.WrapMode.WORD;
 		}
-
-		if (ellipsize_chars > 0){
+		else {
 			label.wrap = false;
 			label.ellipsize = Pango.EllipsizeMode.MIDDLE;
 			label.max_width_chars = ellipsize_chars;

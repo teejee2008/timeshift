@@ -103,7 +103,7 @@ class BackupBox : Gtk.Box{
 		Gtk.SizeGroup sg_label = null;
 		Gtk.SizeGroup sg_value = null;
 
-		label = add_label(this, _("Files and directory counts:"), true);
+		label = add_label(this, _("File and directory counts:"), true);
 		label.margin_bottom = 6;
 		
 		lbl_unchanged = add_count_label(this, _("No Change"), ref sg_label, ref sg_value);

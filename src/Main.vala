@@ -195,6 +195,7 @@ public class Main : GLib.Object{
 	}
 
 	private static void set_locale(){
+		log_debug("setting locale...");
 		Intl.setlocale(GLib.LocaleCategory.MESSAGES, "timeshift");
 		Intl.textdomain(GETTEXT_PACKAGE);
 		Intl.bind_textdomain_codeset(GETTEXT_PACKAGE, "utf-8");
@@ -202,6 +203,9 @@ public class Main : GLib.Object{
 	}
 
 	public Main(string[] args){
+
+		log_debug("Main()");
+		
 		string msg = "";
 
 		//parse arguments (initial) ------------
@@ -356,11 +360,15 @@ public class Main : GLib.Object{
 
 		task = new RsyncTask();
 		delete_file_task = new DeleteFileTask();
+
+		log_debug("Main(): ok");
 	}
 
 	public bool start_application(string[] args){
 		bool is_success = true;
 
+		log_debug("start_application()");
+		
 		switch(app_mode){
 			case "backup":
 			case "ondemand":
@@ -431,6 +439,8 @@ public class Main : GLib.Object{
 	public bool check_dependencies(out string msg){
 		msg = "";
 
+		log_debug("check_dependencies()");
+		
 		string[] dependencies = { "rsync","/sbin/blkid","df","mount","umount","fuser","crontab","cp","rm","touch","ln","sync"}; //"shutdown","chroot",
 
 		string path;
@@ -453,6 +463,9 @@ public class Main : GLib.Object{
 	}
 
 	public bool check_btrfs_root_layout(){
+
+		log_debug("check_btrfs_root_layout()");
+		
 		//check if root device is a BTRFS volume
 		if ((root_device != null) && (root_device.fstype == "btrfs")){
 			//check subvolume layout
@@ -702,6 +715,9 @@ public class Main : GLib.Object{
 	}
 
 	private void parse_arguments(string[] args){
+
+		log_debug("parse_arguments()");
+		
 		for (int k = 1; k < args.length; k++) // Oth arg is app path
 		{
 			switch (args[k].down()){
@@ -1095,7 +1111,7 @@ public class Main : GLib.Object{
 			log_msg("");
 		}
 		else if (line.contains("_")||line.contains("-")){
-			//TODO
+			//TODO: read name
 			log_error("Invalid input");
 		}
 		else if ((line == null)||(line.length == 0)){
@@ -1226,43 +1242,17 @@ public class Main : GLib.Object{
 
 			log_debug("checking if snapshot device is mounted...");
 			
-			// mount_backup_device
-			//if (!mount_backup_device(parent_win)){
-				//return false;
-			//}
-			// TODO: check if needs to be mounted
-
 			log_debug("checking snapshot device...");
 			
-			//check backup device
+			// check backup device
 			string message, details;
 			int status_code = check_backup_location(out message, out details);
 			
-			//if (!is_ondemand){
-
-				//log_debug("is_ondemand: false");
-				
-				// check if first snapshot was taken
-				//if (status_code == 2){
-				//	log_error(message);
-				//	log_error(
-				//		_("Please take the first snapshot by running 'sudo timeshift --backup-now'"));
-				//	return false;
-				//}
-			//}
-
 			// check space
 			if ((status_code != SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE)
 				&& (status_code != SnapshotLocationStatus.NO_SNAPSHOTS_HAS_SPACE)){
 					
-				//is_scheduled = false;
-				//log_error(message);
-				//log_error(details);
-				//log_debug("space_check: Failed!");
 				return false;
-			}
-			else{
-				//log_debug("space_check: OK");
 			}
 
 			string snapshot_dir = path_combine(repo.snapshot_location, "timeshift/snapshots");
@@ -1496,7 +1486,7 @@ public class Main : GLib.Object{
 					case "daily":
 					case "weekly":
 					case "monthly":
-						dt_filter = now.add_hours(-1); // TODO: improve this logic
+						dt_filter = now.add_hours(-1);
 						break;
 					default:
 						log_error(_("Unknown snapshot type") + ": %s".printf(tag));
@@ -1813,9 +1803,6 @@ public class Main : GLib.Object{
 				log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
 				log_msg(_("Backup Device") + ": %s".printf(repo.device.device), true);
 				log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
-				//mount_backup_device(parent_win);
-				//repo.load_snapshots();
-				//TODO: check if repo needs to be re-initialized
 			}
 			else{
 				//print error
@@ -2161,9 +2148,10 @@ public class Main : GLib.Object{
 		}
 
 		if ((app_mode != "")&&(cmd_confirm == false)){
-			string msg = disclaimer_pre_restore();
+			string msg = disclaimer_pre_restore(false);
 			msg += "\n";
 			msg = msg.replace("<b>",TERM_COLOR_RED).replace("</b>",TERM_COLOR_RESET);
+			msg = msg.replace("<tt>","").replace("</tt>","");
 			log_msg(msg);
 
 			int attempts = 0;
@@ -2479,21 +2467,65 @@ public class Main : GLib.Object{
 		return luks_unlocked;
 	}
 
-	public string disclaimer_pre_restore(){
+	public string disclaimer_pre_restore(bool formatted){
 		string msg = "";
-		msg += "<b>" + _("WARNING") + ":</b>\n\n";
-		msg += _("Files will be overwritten on the target device!") + "\n";
-		msg += _("If restore fails and you are unable to boot the system, \nthen boot from the Ubuntu Live CD, install Timeshift, and try again.") + "\n";
+		string txt = "";
+		
+		if (formatted){
+			msg += "<span size=\"x-large\">%s</span>\n\n".printf(_("WARNING"));
+		}
+		else{
+			msg += "%s\n\n".printf(_("WARNING"));
+		}
+		
+		msg += _("Data will be modified on following devices:") + "\n\n";
+
+		int max_mount = _("Mount Point").length;
+		int max_dev = _("Device").length;
+
+		foreach(MountEntry mnt in mount_list){
+			string dev_name = mnt.device.short_name_with_alias;
+			if (dev_name.length > max_dev){ max_dev = dev_name.length; }
+			if (mnt.mount_point.length > max_mount){ max_mount = mnt.mount_point.length; }
+		}
+
+		txt = ("%%-%ds  %%-%ds\n".printf(max_dev, max_mount))
+			.printf(_("Device"),_("Mount Point"));
+
+		txt += string.nfill(max_dev, '-') + "  " + string.nfill(max_mount, '-') + "\n";
+		
+		foreach(MountEntry mnt in App.mount_list){
+			txt += ("%%-%ds  %%-%ds\n".printf(max_dev, max_mount)).printf(
+				mnt.device.short_name_with_alias, mnt.mount_point);
+		}
+		
+		if (formatted){
+			msg += "<tt>%s</tt>\n".printf(txt);
+		}
+		else{
+			msg += "%s\n".printf(txt);
+		}
+
+		//msg += _("Files will be overwritten on the target device!") + "\n";
+		msg += _("If restore fails and you are unable to boot the system, then boot from the Ubuntu Live CD, install Timeshift, and try to restore again.") + "\n";
 
 		if ((root_device != null) && (restore_target.device == root_device.device)){
 			msg += "\n<b>" + _("Please save your work and close all applications.") + "\n";
 			msg += _("System will reboot to complete the restore process.") + "</b>\n";
 		}
 
-		msg += "\n";
-		msg += "<b>" + _("DISCLAIMER") + ":</b>\n\n";
-		msg += _("This software comes without absolutely NO warranty and the author takes\nno responsibility for any damage arising from the use of this program.");
-		msg += "\n" + _("If these terms are not acceptable to you, please do not proceed\nbeyond this point!");
+		if (formatted){
+			msg += "\n<span size=\"x-large\">%s</span>\n\n".printf(_("DISCLAIMER"));
+		}
+		else{
+			msg += "\n%s\n\n".printf(_("DISCLAIMER"));
+		}
+
+		msg += _("This software comes without absolutely NO warranty and the author takes no responsibility for any damage arising from the use of this program.");
+		msg += " " + _("If these terms are not acceptable to you, please do not proceed beyond this point!");
+
+		msg += "\n\n" + _("Click Next to continue") + "\n";
+		
 		return msg;
 	}
 
@@ -2901,6 +2933,9 @@ public class Main : GLib.Object{
 	//app config
 
 	public void save_app_config(){
+
+		log_debug("load_app_config()");
+		
 		var config = new Json.Object();
 
 		config.set_string_member("backup_device_uuid",
@@ -2952,6 +2987,9 @@ public class Main : GLib.Object{
 	}
 
 	public void load_app_config(){
+
+		log_debug("load_app_config()");
+		
 		var f = File.new_for_path(this.app_conf_path);
 		if (!f.query_exists()) {
 			first_run = true;
@@ -2971,15 +3009,22 @@ public class Main : GLib.Object{
 		// initialize repo using config file values
 
 		string uuid = json_get_string(config,"backup_device_uuid","");
-        var snapshot_path_user = json_get_string(config, "snapshot_path_user", "");
-		var use_snapshot_path_user = json_get_bool(config, "use_snapshot_path_user", false);
+       // var snapshot_path_user = json_get_string(config, "snapshot_path_user", "");
+		//var use_snapshot_path_user = json_get_bool(config, "use_snapshot_path_user", false);
 		
-		if (use_snapshot_path_user){
-			repo = new SnapshotRepo.from_path(snapshot_path_user, null);
-		}
-		else{
+		//if (use_snapshot_path_user){
+		//	log_debug("using snapshot()");
+		//	repo = new SnapshotRepo.from_path(snapshot_path_user, null);
+		//}
+		//else{
+		if (uuid.length > 0){
 			repo = new SnapshotRepo.from_uuid(uuid, null);
 		}
+		else{
+			repo = new SnapshotRepo.from_device(root_device, null);
+		}
+		
+		//}
 
 		// initialize repo using command line parameter
 		 
@@ -3039,6 +3084,9 @@ public class Main : GLib.Object{
 	//core functions
 
 	public void update_partitions(){
+
+		log_debug("update_partitions()");
+		
 		partitions.clear();
 		partitions = Device.get_filesystems();
 
@@ -3059,6 +3107,9 @@ public class Main : GLib.Object{
 	}
 
 	public void detect_system_devices(){
+
+		log_debug("detect_system_devices()");
+		
 		foreach(Device pi in partitions){
 			foreach(var mp in pi.mount_points){
 				if (mp.mount_point == "/"){
@@ -3084,6 +3135,8 @@ public class Main : GLib.Object{
 		 * Existing mount points are not used since we need to mount other devices in sub-directories
 		 * */
 
+		log_debug("mount_target_device()");
+		
 		if (restore_target == null){
 			return false;
 		}
@@ -3193,6 +3246,8 @@ public class Main : GLib.Object{
 
 	public void unmount_target_device(bool exit_on_error = true){
 		if (mount_point_restore == null) { return; }
+
+		log_debug("unmount_target_device()");
 		
 		//unmount the target device only if it was mounted by application
 		if (mount_point_restore.has_prefix(mount_point_app)){   //always true
@@ -3227,6 +3282,9 @@ public class Main : GLib.Object{
 	}
 
 	public bool check_btrfs_volume(Device dev){
+
+		log_debug("check_btrfs_volume()");
+		
 		string mnt_btrfs = mount_point_app + "/btrfs";
 		dir_create(mnt_btrfs);
 
@@ -3271,6 +3329,8 @@ public class Main : GLib.Object{
 
 	public int64 estimate_system_size(){
 
+		log_debug("estimate_system_size()");
+		
 		if (Main.first_snapshot_size > 0){
 			return Main.first_snapshot_size;
 		}
@@ -3294,6 +3354,8 @@ public class Main : GLib.Object{
 		}
 
 		save_app_config();
+
+		log_debug("estimate_system_size(): ok");
 		
 		return Main.first_snapshot_size;
 	}
@@ -3641,6 +3703,8 @@ public class Main : GLib.Object{
 
 	public void clean_logs(){
 
+		log_debug("clean_logs()");
+		
 		Gee.ArrayList<string> list = new Gee.ArrayList<string>();
 
 		try{
@@ -3682,6 +3746,9 @@ public class Main : GLib.Object{
 	}
 
 	public void exit_app (){
+
+		log_debug("exit_app()");
+		
 		if (app_mode == ""){
 			//update app config only in GUI mode
 			save_app_config();

@@ -287,7 +287,7 @@ class RestoreWindow : Gtk.Window{
 			break;
 		case Tabs.RESTORE:
 			restore_box.restore();
-			go_next();
+			//go_next();
 			break;
 		}
 	}

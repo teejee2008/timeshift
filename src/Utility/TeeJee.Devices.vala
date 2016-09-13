@@ -1581,62 +1581,6 @@ namespace TeeJee.Devices{
 		}
 	}
 
-	public Gee.ArrayList<Device> get_block_devices(){
-
-		/* Returns a list of all storage devices including vendor and model number */
-
-		var device_list = new Gee.ArrayList<Device>();
-
-		string letters = "abcdefghijklmnopqrstuvwxyz";
-		string letter = "";
-		string path = "";
-		string device = "";
-		string model = "";
-		string vendor = "";
-		string removable = "";
-		File f;
-
-		for(int i=0; i<26; i++){
-			letter = letters[i:i+1];
-
-			path = "/sys/block/sd%s".printf(letter);
-			f = File.new_for_path(path);
-			if (f.query_exists()){
-
-				device = "";
-				model = "";
-				removable = "0";
-
-				f = File.new_for_path(path + "/device/vendor");
-				if (f.query_exists()){
-					vendor = file_read(path + "/device/vendor");
-				}
-
-				f = File.new_for_path(path + "/device/model");
-				if (f.query_exists()){
-					model = file_read(path + "/device/model");
-				}
-
-				f = File.new_for_path(path + "/removable");
-				if (f.query_exists()){
-					removable = file_read(path + "/removable");
-				}
-
-				if ((vendor.length > 0) || (model.length > 0)){
-					var dev = new Device();
-					dev.device = "/dev/sd%s".printf(letter);
-					dev.vendor = vendor.strip();
-					dev.model = model.strip();
-					dev.removable = (removable == "0") ? false : true;
-					dev.type = "disk";
-					device_list.add(dev);
-				}
-			}
-		}
-
-		return device_list;
-	}
-
 }
 
 

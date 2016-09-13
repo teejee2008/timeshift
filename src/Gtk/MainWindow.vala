@@ -255,6 +255,9 @@ class MainWindow : Gtk.Window{
 		lbl_free_space.justify = Gtk.Justification.CENTER;
 		vbox.add(lbl_free_space);
 
+		// TODO: add a refresh button for device when device is offline
+
+		// TODO: refresh device list automatically when a device is plugged in
 	}
 	
     private bool menu_extra_popup(Gdk.EventButton? event){

@@ -9,6 +9,8 @@ public class RsyncTask : AsyncTask{
 
 	// settings
 	public bool delete_extra = true;
+	public bool delete_after = false;
+	public bool delete_excluded = false;
 	public string rsync_log_file = "";
 	public string exclude_from_file = "";
 	public string link_from_path = "";
@@ -128,8 +130,16 @@ public class RsyncTask : AsyncTask{
 			cmd += " --delete";
 		}
 
-		cmd += " --numeric-ids --stats --relative --delete-excluded";
+		if (delete_after){
+			cmd += " --delete-after";
+		}
 
+		cmd += " --numeric-ids --stats --relative";
+
+		if (delete_excluded){
+			cmd += " --delete-excluded";
+		}
+		
 		if (link_from_path.length > 0){
 			if (!link_from_path.has_suffix("/")){
 				link_from_path = "%s/".printf(link_from_path);
@@ -145,7 +155,7 @@ public class RsyncTask : AsyncTask{
 		if (exclude_from_file.length > 0){
 			cmd += " --exclude-from='%s'".printf(escape_single_quote(exclude_from_file));
 
-			if (delete_extra){
+			if (delete_extra && delete_excluded){
 				cmd += " --delete-excluded";
 			}
 		}

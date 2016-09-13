@@ -1590,7 +1590,12 @@ public class Main : GLib.Object{
 				task.exclude_from_file = exclude_from_file;
 				task.rsync_log_file = log_file;
 				task.prg_count_total = Main.first_snapshot_count;
-				
+
+				task.verbose = true;
+				task.delete_extra = true;
+				task.delete_excluded = true;
+				task.delete_after = false;
+					
 				if (app_mode.length > 0){
 					// console mode
 					task.io_nice = true;
@@ -2712,7 +2717,10 @@ public class Main : GLib.Object{
 				log_msg(_("Cloning system..."));
 			}
 
-			if (app_mode == ""){ //gui
+			if (app_mode == ""){
+
+				// gui mode --------------
+				
 				if (restore_current_system){
 					//current system, gui, fullscreen
 					temp_script = save_bash_script_temp(sh);
@@ -2723,14 +2731,48 @@ public class Main : GLib.Object{
 					
 				}
 				else{
-					//other system, gui
-					string std_out, std_err;
-					ret_val = exec_script_sync(sh, out std_out, out std_err);
-					log_to_file(std_out);
-					log_to_file(std_err);
+					// other system, gui ------------------------
+					
+					task = new RsyncTask();
+
+					task.verbose = true;
+					task.delete_extra = true;
+					task.delete_excluded = false;
+					task.delete_after = true;
+					
+					if (mirror_system){
+						task.source_path = "/";
+					}
+					else{
+						task.source_path =
+							path_combine(source_path, "localhost");
+					}
+
+					task.dest_path = target_path;
+					
+					task.exclude_from_file =
+						path_combine(source_path, "exclude-restore.list");
+
+					task.rsync_log_file = log_path;
+					
+					task.prg_count_total = Main.first_snapshot_count;
+					
+					task.execute();
+
+					while (task.status == AppStatus.RUNNING){
+						sleep(1000);
+						gtk_do_events();
+					}
+
+					if (task.total_size == 0){
+						ret_val = -1;
+					}
 				}
 			}
-			else{ //console
+			else{
+
+				// console mode ----------
+				
 				if (cmd_verbose){
 					//current/other system, console, verbose
 					ret_val = exec_script_sync(sh);
@@ -2745,7 +2787,7 @@ public class Main : GLib.Object{
 				}
 			}
 
-			//check for errors ----------------------
+			// check for errors ----------------------
 
 			if (ret_val != 0){
 				log_error(_("Restore failed with exit code") + ": %d".printf(ret_val));

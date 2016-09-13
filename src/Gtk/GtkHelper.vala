@@ -668,13 +668,13 @@ namespace TeeJee.GtkHelper{
 		
 	// add_label
 	private Gtk.Label add_label(
-		Gtk.Box box, string text, bool is_bold = false,
-		bool is_italic = false, bool is_large = false){
+		Gtk.Box box, string text, bool bold = false,
+		bool italic = false, bool large = false){
 			
 		string msg = "<span%s%s%s>%s</span>".printf(
-			(is_bold ? " weight=\"bold\"" : ""),
-			(is_italic ? " style=\"italic\"" : ""),
-			(is_large ? " size=\"x-large\"" : ""),
+			(bold ? " weight=\"bold\"" : ""),
+			(italic ? " style=\"italic\"" : ""),
+			(large ? " size=\"x-large\"" : ""),
 			text);
 			
 		var label = new Gtk.Label(msg);
@@ -682,6 +682,19 @@ namespace TeeJee.GtkHelper{
 		label.xalign = (float) 0.0;
 		box.add(label);
 		return label;
+	}
+
+	private string format_text(
+		string text,
+		bool bold = false, bool italic = false, bool large = false){
+			
+		string msg = "<span%s%s%s>%s</span>".printf(
+			(bold ? " weight=\"bold\"" : ""),
+			(italic ? " style=\"italic\"" : ""),
+			(large ? " size=\"x-large\"" : ""),
+			escape_html(text));
+			
+		return msg;
 	}
 
 	// add_label_header

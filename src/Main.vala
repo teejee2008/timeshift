@@ -355,7 +355,6 @@ public class Main : GLib.Object{
 		//finish initialization --------------
 
 		load_app_config();
-		//update_snapshot_list();
 
 		task = new RsyncTask();
 		delete_file_task = new DeleteFileTask();
@@ -2202,13 +2201,17 @@ public class Main : GLib.Object{
 		mount_list.clear();
 
 		Gee.ArrayList<FsTabEntry> fstab_list = null;
+		Gee.ArrayList<CryptTabEntry> crypttab_list = null;
+		
 		if (mirror_system){
 			string fstab_path = "/etc/fstab";
-			fstab_list = FsTabEntry.read_fstab_file(fstab_path);
+			fstab_list = FsTabEntry.read_file(fstab_path);
+			string cryttab_path = "/etc/crypttab";
+			crypttab_list = CryptTabEntry.read_file(cryttab_path);
 		}
 		else{
-			string fstab_path = snapshot_to_restore.path + "/localhost/etc/fstab";
-			fstab_list = FsTabEntry.read_fstab_file(fstab_path);
+			fstab_list = snapshot_to_restore.fstab_list;
+			crypttab_list = snapshot_to_restore.cryttab_list;
 		}
 
 		bool root_found = false;
@@ -2216,7 +2219,7 @@ public class Main : GLib.Object{
 		bool home_found = false;
 		restore_target = null;
 		
-		foreach(FsTabEntry mnt in fstab_list){
+		foreach(var mnt in fstab_list){
 
 			// skip mounting for non-system devices
 			
@@ -2227,6 +2230,24 @@ public class Main : GLib.Object{
 				continue;
 			}
 
+			// replaced mapped name with parent device
+			
+			/*
+			Note: This is required since the mapped name will be different on running system.
+			Since we don't have the same mapped name, we cannot resolve the device without
+			identifying the parent partition
+			*/
+
+			if (mnt.device.has_prefix("/dev/mapper/")){
+				string mapped_name = mnt.device.replace("/dev/mapper/","");
+				foreach(var entry in crypttab_list){
+					if (entry.mapped_name == mapped_name){
+						mnt.device = entry.device;
+						break;
+					}
+				}
+			}
+			
 			// find device by name or uuid
 			
 			Device mnt_dev = null;
@@ -2291,7 +2312,7 @@ public class Main : GLib.Object{
 			
 		}
 
-		foreach(MountEntry mnt in mount_list){
+		foreach(var mnt in mount_list){
 			if (mnt.device != null){
 				log_debug("Entry: %s -> %s".printf(mnt.device.device, mnt.mount_point));
 			}
@@ -2596,7 +2617,10 @@ public class Main : GLib.Object{
 			bool restore_current_system;
 			string target_path;
 
-			if ((root_device != null) && ((restore_target.device == root_device.device) || (restore_target.uuid == root_device.uuid))){
+			if ((root_device != null)
+				&& ((restore_target.device == root_device.device)
+				|| (restore_target.uuid == root_device.uuid))){
+					
 				restore_current_system = true;
 				target_path = "/";
 			}
@@ -2652,23 +2676,27 @@ public class Main : GLib.Object{
 
 			//chroot and re-install grub2 --------
 
+			var sh_grub = "";
 			if (reinstall_grub2 && (grub_device != null) && (grub_device.length > 0)){
-				sh += "echo '' \n";
-				sh += "echo '" + _("Re-installing GRUB2 bootloader...") + "' \n";
-				sh += "for i in /dev /proc /run /sys; do mount --bind \"$i\" \"%s$i\"; done \n".printf(target_path);
-				//sh += "chroot \"%s\" os-prober \n".printf(target_path);
-				sh += "chroot \"%s\" grub-install --recheck %s \n".printf(target_path, grub_device);
-				//sh += "chroot \"%s\" grub-mkconfig -o /boot/grub/grub.cfg \n".printf(target_path);
-				sh += "chroot \"%s\" update-grub \n".printf(target_path);
-				sh += "echo '' \n";
-				sh += "echo '" + _("Synching file systems...") + "' \n";
-				sh += "sync \n";
+				sh_grub += "echo '' \n";
+				sh_grub += "echo '" + _("Re-installing GRUB2 bootloader...") + "' \n";
+				sh_grub += "for i in /dev /proc /run /sys; do mount --bind \"$i\" \"%s$i\"; done \n".printf(target_path);
+				//sh_grub += "chroot \"%s\" os-prober \n".printf(target_path);
+				sh_grub += "chroot \"%s\" grub-install --recheck %s \n".printf(
+					target_path, grub_device);
+				//sh_grub += "chroot \"%s\" grub-mkconfig -o /boot/grub/grub.cfg \n".printf(target_path);
+				sh_grub += "chroot \"%s\" update-grub \n".printf(target_path);
+				sh_grub += "echo '' \n";
+				sh_grub += "echo '" + _("Synching file systems...") + "' \n";
+				sh_grub += "sync \n";
 
-				sh += "echo '' \n";
-				sh += "echo '" + _("Cleaning up...") + "' \n";
-				sh += "sync \n";
-				sh += "for i in /dev /proc /run /sys; do umount -f \"%s$i\"; done \n".printf(target_path);
-				sh += "sync \n";
+				sh_grub += "echo '' \n";
+				sh_grub += "echo '" + _("Cleaning up...") + "' \n";
+				sh_grub += "sync \n";
+				sh_grub += "for i in /dev /proc /run /sys; do umount -f \"%s$i\"; done \n".printf(target_path);
+				sh_grub += "sync \n";
+
+				sh += sh_grub;
 			}
 
 			//reboot if required --------
@@ -2709,13 +2737,16 @@ public class Main : GLib.Object{
 			}
 
 			//run the script --------------------
-
+		
 			if (snapshot_to_restore != null){
 				log_msg(_("Restoring snapshot..."));
 			}
 			else{
 				log_msg(_("Cloning system..."));
 			}
+
+			progress_text = _("Synching files with rsync...");
+			log_msg(progress_text);
 
 			if (app_mode == ""){
 
@@ -2732,6 +2763,8 @@ public class Main : GLib.Object{
 				}
 				else{
 					// other system, gui ------------------------
+
+					App.progress_text = "Sync";
 					
 					task = new RsyncTask();
 
@@ -2764,9 +2797,14 @@ public class Main : GLib.Object{
 						gtk_do_events();
 					}
 
-					if (task.total_size == 0){
-						ret_val = -1;
-					}
+					App.progress_text = "Re-installing GRUB2 bootloader...";
+
+					string std_out, std_err;
+					ret_val = exec_script_sync(sh_grub, out std_out, out std_err);
+					log_to_file(std_out);
+					log_to_file(std_err);
+
+					ret_val = task.exit_code;
 				}
 			}
 			else{
@@ -2804,11 +2842,11 @@ public class Main : GLib.Object{
 
 			if (!restore_current_system){
 				string fstab_path = target_path + "etc/fstab";
-				var fstab_list = FsTabEntry.read_fstab_file(fstab_path);
+				var fstab_list = FsTabEntry.read_file(fstab_path);
 
-				foreach(MountEntry mount_entry in mount_list){
+				foreach(var mount_entry in mount_list){
 					bool found = false;
-					foreach(FsTabEntry fstab_entry in fstab_list){
+					foreach(var fstab_entry in fstab_list){
 						if (fstab_entry.mount_point == mount_entry.mount_point){
 							found = true;
 							//update fstab entry
@@ -2853,7 +2891,7 @@ public class Main : GLib.Object{
 
 				bool found_home_in_fstab = false;
 				FsTabEntry fstab_home_entry = null;
-				foreach(FsTabEntry fstab_entry in fstab_list){
+				foreach(var fstab_entry in fstab_list){
 					if (fstab_entry.mount_point == "/home"){
 						found_home_in_fstab = true;
 						fstab_home_entry = fstab_entry;
@@ -2877,7 +2915,7 @@ public class Main : GLib.Object{
 				//write the updated file --------------
 
 				string text = "# <file system> <mount point> <type> <options> <dump> <pass>\n\n";
-				text += FsTabEntry.create_fstab_file(fstab_list.to_array(), false);
+				text += FsTabEntry.create_file(fstab_list.to_array(), false);
 				if (file_exists(fstab_path)){
 					file_delete(fstab_path);
 				}
@@ -2887,7 +2925,7 @@ public class Main : GLib.Object{
 
 				//create folders for mount points in /etc/fstab to prevent mount errors during boot ---------
 
-				foreach(FsTabEntry fstab_entry in fstab_list){
+				foreach(var fstab_entry in fstab_list){
 					if (fstab_entry.mount_point.length == 0){ continue; }
 
 					string mount_path = target_path + fstab_entry.mount_point[1:fstab_entry.mount_point.length];
@@ -3073,6 +3111,7 @@ public class Main : GLib.Object{
 		var f = File.new_for_path(this.app_conf_path);
 		if (!f.query_exists()) {
 			first_run = true;
+			log_debug("first run mode: config file not found");
 			repo = new SnapshotRepo.from_device(root_device, null);
 			return;
 		}
@@ -3089,29 +3128,28 @@ public class Main : GLib.Object{
 		// initialize repo using config file values
 
 		string uuid = json_get_string(config,"backup_device_uuid","");
-       // var snapshot_path_user = json_get_string(config, "snapshot_path_user", "");
-		//var use_snapshot_path_user = json_get_bool(config, "use_snapshot_path_user", false);
+
+		log_debug("uuid=%s".printf(uuid));
 		
-		//if (use_snapshot_path_user){
-		//	log_debug("using snapshot()");
-		//	repo = new SnapshotRepo.from_path(snapshot_path_user, null);
-		//}
-		//else{
 		if (uuid.length > 0){
+			log_debug("repo: creating from uuid");
 			repo = new SnapshotRepo.from_uuid(uuid, null);
+			
 		}
 		else{
+			log_debug("repo: uuid is empty, creating from root device");
 			repo = new SnapshotRepo.from_device(root_device, null);
+			
 		}
-		
-		//}
 
 		// initialize repo using command line parameter
 		 
 		if (cmd_backup_device.length > 0){
 			var cmd_dev = Device.get_device_by_name(cmd_backup_device);
 			if (cmd_dev != null){
+				log_debug("repo: creating from command argument: %s".printf(cmd_backup_device));
 				repo = new SnapshotRepo.from_device(cmd_dev, null);
+				
 				// TODO: move this code to main window
 			}
 			else{
@@ -3170,9 +3208,9 @@ public class Main : GLib.Object{
 		partitions.clear();
 		partitions = Device.get_filesystems();
 
-		foreach(Device pi in partitions){
+		foreach(var pi in partitions){
 			//root_device and home_device will be detected by detect_system_devices()
-			if ((repo.device != null) && (pi.uuid == repo.device.uuid)){
+			if ((repo != null) && (repo.device != null) && (pi.uuid == repo.device.uuid)){
 				repo.device = pi;
 			}
 			if (pi.is_mounted){
@@ -3183,7 +3221,7 @@ public class Main : GLib.Object{
 			log_error("ts: " + _("Failed to get partition list."));
 		}
 
-		//log_debug(_("Partition list updated"));
+		log_debug("partition list updated");
 	}
 
 	public void detect_system_devices(){
@@ -3245,7 +3283,7 @@ public class Main : GLib.Object{
 			unmount_target_device();
 
 			// unlock encrypted device
-			if (restore_target.is_encrypted()){
+			if (restore_target.is_encrypted_partition()){
 				restore_target = unlock_encrypted_device(restore_target, parent_win);
 
 				//exit if not found
@@ -3305,7 +3343,7 @@ public class Main : GLib.Object{
 				if (mnt.mount_point != "/"){
 
 					// unlock encrypted device
-					if (mnt.device.is_encrypted()){
+					if (mnt.device.is_encrypted_partition()){
 						mnt.device = unlock_encrypted_device(mnt.device, parent_win);
 
 						//exit if not found

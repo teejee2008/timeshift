@@ -117,7 +117,7 @@ public class RsyncTask : AsyncTask{
 			cmd += "ionice -c2 -n7 ";
 		}
 
-		cmd += "rsync -aii";
+		cmd += "rsync -aii --recursive";
 
 		if (verbose){
 			cmd += " --verbose";
@@ -133,6 +133,8 @@ public class RsyncTask : AsyncTask{
 		if (delete_after){
 			cmd += " --delete-after";
 		}
+
+		cmd += " --force"; // allow deletion of non-empty directories
 
 		cmd += " --numeric-ids --stats --relative";
 

@@ -368,6 +368,11 @@ class RestoreDeviceBox : Gtk.Box{
 				break;
 			}
 
+			if (dev.has_parent() && (dev.parent.device == App.restore_target.device[0:8])){
+				cmb_boot_device.active = index;
+				break;
+			}
+
 			if ((first_mbr_device_index == -1) && (dev.device.length == "/dev/sdX".length)){
 				first_mbr_device_index = index;
 			}

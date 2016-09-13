@@ -62,7 +62,12 @@ class RestoreBox : Gtk.Box{
 		margin = 12;
 		
 		// header
-		add_label_header(this, _("Creating Snapshot..."), true);
+		if (App.mirror_system){
+			add_label_header(this, _("Cloning System..."), true);
+		}
+		else{
+			add_label_header(this, _("Restoring Snapshot..."), true);
+		}
 
 		var hbox_status = new Box (Orientation.HORIZONTAL, 6);
 		add (hbox_status);
@@ -160,7 +165,7 @@ class RestoreBox : Gtk.Box{
 		return label;
 	}
 
-	public void restore(){
+	public bool restore(){
 
 		try {
 			thread_is_running = true;
@@ -229,7 +234,7 @@ class RestoreBox : Gtk.Box{
 			//gtk_do_events();
 		}
 
-		//TODO: check errors.
+		return (App.task.exit_code == 0);
 	}
 	
 	private void restore_thread(){

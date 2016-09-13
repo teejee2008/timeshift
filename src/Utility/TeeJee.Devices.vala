@@ -312,8 +312,12 @@ namespace TeeJee.Devices{
 			}
 		}
 
-		public bool is_encrypted(){
-			return (type.contains("crypt") || fstype.contains("luks") || fstype.contains("crypt"));
+		public bool is_encrypted_partition(){
+			return (type == "part") && fstype.down().contains("luks");
+		}
+
+		public bool is_on_encrypted_partition(){
+			return (type == "crypt");
 		}
 
 		public bool has_children(){
@@ -573,7 +577,7 @@ namespace TeeJee.Devices{
 					
 					foreach(var dev in list){
 						if (dev.device == mapped_device){
-							dev.mapped_name = mapped_file;
+							dev.mapped_name = mapped_file.replace("/dev/mapper/","");
 							dev.symlinks.add(mapped_file);
 							log_debug("found link: %s -> %s".printf(mapped_file, dev.device));
 							break;

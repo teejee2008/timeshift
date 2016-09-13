@@ -44,6 +44,7 @@ class RestoreWindow : Gtk.Window{
 	private RestoreExcludeBox restore_exclude_box;
 	private RestoreSummaryBox summary_box;
 	private RestoreBox restore_box;
+	private RestoreFinishBox restore_finish_box;
 
 	// actions
 	private Gtk.Button btn_prev;
@@ -52,7 +53,8 @@ class RestoreWindow : Gtk.Window{
 	private Gtk.Button btn_close;
 
 	private uint tmr_init;
-
+	private bool success = false;
+	
 	public RestoreWindow() {
 		this.title = _("Restore");
         this.window_position = WindowPosition.CENTER;
@@ -91,6 +93,11 @@ class RestoreWindow : Gtk.Window{
 		restore_box = new RestoreBox(this);
 		restore_box.margin = 0;
 		notebook.append_page (restore_box, label);
+
+		label = new Gtk.Label(_("Finished"));
+		restore_finish_box = new RestoreFinishBox(this);
+		restore_finish_box.margin = 0;
+		notebook.append_page (restore_finish_box, label);
 
 		create_actions();
 
@@ -209,6 +216,7 @@ class RestoreWindow : Gtk.Window{
 			break;
 		case Tabs.TARGET_DEVICE:
 		case Tabs.RESTORE:
+		case Tabs.FINISH:
 			// btn_previous is disabled for this page
 			break;
 		}
@@ -233,6 +241,9 @@ class RestoreWindow : Gtk.Window{
 			notebook.page = Tabs.RESTORE;
 			break;
 		case Tabs.RESTORE:
+			notebook.page = Tabs.FINISH;
+			break;
+		case Tabs.FINISH:
 			destroy();
 			break;
 		}
@@ -271,6 +282,16 @@ class RestoreWindow : Gtk.Window{
 			btn_close.sensitive = true;
 			bbox_action.set_layout (Gtk.ButtonBoxStyle.EXPAND);
 			break;
+		case Tabs.FINISH:
+			btn_prev.show();
+			btn_next.show();
+			btn_close.show();
+			btn_cancel.hide();
+			btn_prev.sensitive = false;
+			btn_next.sensitive = false;
+			btn_close.sensitive = true;
+			bbox_action.set_layout (Gtk.ButtonBoxStyle.EXPAND);
+			break;
 		}
 		
 		// actions
@@ -286,8 +307,11 @@ class RestoreWindow : Gtk.Window{
 			summary_box.refresh();
 			break;
 		case Tabs.RESTORE:
-			restore_box.restore();
-			//go_next();
+			success = restore_box.restore();
+			go_next();
+			break;
+		case Tabs.FINISH:
+			restore_finish_box.update_message(success);
 			break;
 		}
 	}
@@ -321,7 +345,8 @@ class RestoreWindow : Gtk.Window{
 		TARGET_DEVICE = 0,
 		RESTORE_EXCLUDE = 1,
 		SUMMARY = 2,
-		RESTORE = 3
+		RESTORE = 3,
+		FINISH = 4
 	}
 }
 

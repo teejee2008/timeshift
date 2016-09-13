@@ -19,6 +19,7 @@ public class Snapshot : GLib.Object{
 	public Gee.ArrayList<string> tags;
 	public Gee.ArrayList<string> exclude_list;
 	public Gee.ArrayList<FsTabEntry> fstab_list;
+	public Gee.ArrayList<CryptTabEntry> cryttab_list;
 	public bool valid = true;
 	public bool marked_for_deletion = false;
 
@@ -43,6 +44,7 @@ public class Snapshot : GLib.Object{
 			read_control_file();
 			read_exclude_list();
 			read_fstab_file();
+			read_crypttab_file();
 		}
 		catch(Error e){
 			log_error (e.message);
@@ -162,7 +164,12 @@ public class Snapshot : GLib.Object{
 
 	public void read_fstab_file(){
 		string fstab_path = path + "/localhost/etc/fstab";
-		fstab_list = FsTabEntry.read_fstab_file(fstab_path);
+		fstab_list = FsTabEntry.read_file(fstab_path);
+	}
+
+	public void read_crypttab_file(){
+		string crypttab_path = path + "/localhost/etc/crypttab";
+		cryttab_list = CryptTabEntry.read_file(crypttab_path);
 	}
 
 	public void update_control_file(){

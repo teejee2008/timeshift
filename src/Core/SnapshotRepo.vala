@@ -28,6 +28,9 @@ public class SnapshotRepo : GLib.Object{
 	private string thr_args1 = "";
 
 	public SnapshotRepo.from_path(string path, Gtk.Window? parent_win){
+
+		log_debug("SnapshotRepo: from_path()");
+		
 		this.snapshot_path_user = path;
 		this.use_snapshot_path_custom = true;
 		this.parent_window = parent_win;
@@ -49,6 +52,9 @@ public class SnapshotRepo : GLib.Object{
 	}
 
 	public SnapshotRepo.from_device(Device dev, Gtk.Window? parent_win){
+
+		log_debug("SnapshotRepo: from_device()");
+		
 		this.device = dev;
 		this.use_snapshot_path_custom = false;
 		this.parent_window = parent_win;
@@ -61,6 +67,8 @@ public class SnapshotRepo : GLib.Object{
 
 	public SnapshotRepo.from_uuid(string uuid, Gtk.Window? parent_win){
 
+		log_debug("SnapshotRepo: from_uuid(%s)".printf(uuid));
+		
 		device = Device.get_device_by_uuid(uuid);
 		if (device == null){
 			device = new Device();
@@ -77,6 +85,8 @@ public class SnapshotRepo : GLib.Object{
 	}
 
 	private void init_from_device(){
+
+		log_debug("SnapshotRepo: init_from_device()");
 		
 		if ((device != null) && (device.uuid.length > 0)){
 			log_msg("");
@@ -104,9 +114,18 @@ public class SnapshotRepo : GLib.Object{
 	// load
 
 	public bool unlock_and_mount_device(){
+
+		log_debug("SnapshotRepo: unlock_and_mount_device()");
+
+		if (device == null){
+			log_debug("device=null");
+		}
+		else{
+			log_debug("device=%s".printf(device.device));
+		}
 		
 		// unlock encrypted device
-		if (device.is_encrypted()){
+		if (device.is_encrypted_partition()){
 
 			device = unlock_encrypted_device(device);
 			
@@ -150,7 +169,18 @@ public class SnapshotRepo : GLib.Object{
 		return false;
 	}
 
-	public Device unlock_encrypted_device(Device luks_device){
+	public Device? unlock_encrypted_device(Device luks_device){
+
+		log_debug("SnapshotRepo: unlock_encrypted_device()");
+		
+		if (luks_device == null){
+			log_debug("luks_device=null".printf());
+			return null;
+		}
+		else{
+			log_debug("luks_device=%s".printf(luks_device.device));
+		}
+
 		Device luks_unlocked = null;
 
 		string mapped_name = "%s_unlocked".printf(luks_device.name);
@@ -209,6 +239,8 @@ public class SnapshotRepo : GLib.Object{
 	
 	public bool load_snapshots(){
 
+		log_debug("SnapshotRepo: load_snapshots()");
+		
 		snapshots.clear();
 		invalid_snapshots.clear();
 		
@@ -295,7 +327,7 @@ public class SnapshotRepo : GLib.Object{
 
 	public void check_status(){
 
-		log_debug("check_status()");
+		log_debug("SnapshotRepo: check_status()");
 		
 		status_code = SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE;
 		status_message = "";
@@ -330,7 +362,7 @@ public class SnapshotRepo : GLib.Object{
 
 	public bool available(){
 
-		log_debug("is_available()");
+		log_debug("SnapshotRepo: available()");
 		
 		if (use_snapshot_path_custom){
 
@@ -406,14 +438,16 @@ public class SnapshotRepo : GLib.Object{
 	}
 	
 	public bool has_snapshots(){
-		log_debug("has_snapshots()");
+		
+		log_debug("SnapshotRepo: has_snapshots()");
+		
 		load_snapshots();
 		return (snapshots.size > 0);
 	}
 
 	public bool has_space(){
 
-		log_debug("has_space()");
+		log_debug("SnapshotRepo: has_space()");
 		
 		if ((device != null) && (device.device.length > 0)){
 			device.query_disk_space();
@@ -478,6 +512,9 @@ public class SnapshotRepo : GLib.Object{
 	// actions
 
 	public void auto_remove(){
+
+		log_debug("SnapshotRepo: auto_remove()");
+		
 		DateTime now = new DateTime.now_local();
 		DateTime dt_limit;
 
@@ -597,6 +634,9 @@ public class SnapshotRepo : GLib.Object{
 	}
 
 	public void remove_untagged(){
+
+		log_debug("SnapshotRepo: remove_untagged()");
+		
 		bool show_msg = true;
 
 		foreach(Snapshot bak in snapshots){

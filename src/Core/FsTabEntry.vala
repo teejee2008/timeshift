@@ -10,6 +10,7 @@ using TeeJee.Misc;
 public class FsTabEntry : GLib.Object{
 	public bool is_comment = false;
 	public bool is_empty_line = false;
+	
 	public string device = "";
 	public string mount_point = "";
 	public string type = "";
@@ -18,15 +19,15 @@ public class FsTabEntry : GLib.Object{
 	public string pass = "0";
 	public string line = "";
 
-	public static Gee.ArrayList<FsTabEntry> read_fstab_file(string fstab_file_path){
-		Gee.ArrayList<FsTabEntry> list = new Gee.ArrayList<FsTabEntry>();
+	public static Gee.ArrayList<FsTabEntry> read_file(string file_path){
+		var list = new Gee.ArrayList<FsTabEntry>();
 
-		if (!file_exists(fstab_file_path)){ return list; }
+		if (!file_exists(file_path)){ return list; }
 
-		string text = file_read(fstab_file_path);
+		string text = file_read(file_path);
 		string[] lines = text.split("\n");
 		foreach(string line in lines){
-			FsTabEntry entry = new FsTabEntry();
+			var entry = new FsTabEntry();
 			list.add(entry);
 
 			entry.is_comment = line.strip().has_prefix("#");
@@ -72,16 +73,20 @@ public class FsTabEntry : GLib.Object{
 		return list;
 	}
 
-	public static string create_fstab_file(FsTabEntry[] fstab_entries, bool keep_comments_and_empty_lines = true){
+	public static string create_file(
+		FsTabEntry[] entries, bool keep_comments_and_empty_lines = true){
+			
 		string text = "";
-		foreach(FsTabEntry entry in fstab_entries){
+		foreach(var entry in entries){
 			if (entry.is_comment || entry.is_empty_line){
 				if (keep_comments_and_empty_lines){
 					text += "%s\n".printf(entry.line);
 				}
 			}
 			else {
-				text += "%s\t%s\t%s\t%s\t%s\t%s\n".printf(entry.device, entry.mount_point, entry.type, entry.options, entry.dump, entry.pass);
+				text += "%s\t%s\t%s\t%s\t%s\t%s\n".printf(
+					entry.device, entry.mount_point, entry.type,
+					entry.options, entry.dump, entry.pass);
 			}
 		}
 		return text;

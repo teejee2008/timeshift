@@ -3199,10 +3199,10 @@ public class Main : GLib.Object{
 				}
 			}*/
 			
-			//unmount
+			// unmount
 			unmount_target_device();
 
-			//unlock encrypted device
+			// unlock encrypted device
 			if (restore_target.is_encrypted()){
 				restore_target = unlock_encrypted_device(restore_target, parent_win);
 
@@ -3221,7 +3221,7 @@ public class Main : GLib.Object{
 				}
 			}
 
-			//mount root device
+			// mount root device
 			if (restore_target.fstype == "btrfs"){
 
 				//check subvolume layout
@@ -3258,11 +3258,11 @@ public class Main : GLib.Object{
 				}
 			}
 
-			//mount remaining devices
-			foreach (MountEntry mnt in mount_list) {
+			// mount remaining devices
+			foreach (var mnt in mount_list) {
 				if (mnt.mount_point != "/"){
 
-					//unlock encrypted device
+					// unlock encrypted device
 					if (mnt.device.is_encrypted()){
 						mnt.device = unlock_encrypted_device(mnt.device, parent_win);
 

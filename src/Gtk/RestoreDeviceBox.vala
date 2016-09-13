@@ -273,23 +273,23 @@ class RestoreDeviceBox : Gtk.Box{
 		cell_text.text = "";
 		cmb_boot_device.pack_start(cell_text, false);
 
-		var cell_icon = new CellRendererPixbuf ();
-		cell_icon.xpad = 4;
-		cmb_boot_device.pack_start(cell_icon, false);
+		//var cell_icon = new CellRendererPixbuf ();
+		//cell_icon.xpad = 4;
+		//cmb_boot_device.pack_start(cell_icon, false);
 
 		cell_text = new CellRendererText();
         cmb_boot_device.pack_start(cell_text, false);
 
-		cmb_boot_device.set_cell_data_func(cell_icon, (cell_layout, cell, model, iter)=>{
+		/*cmb_boot_device.set_cell_data_func(cell_icon, (cell_layout, cell, model, iter)=>{
 			Device dev;
 			model.get (iter, 0, out dev, -1);
 
 			Gdk.Pixbuf pix = null;
 			model.get (iter, 1, out pix, -1);
 
-			(cell as Gtk.CellRendererPixbuf).pixbuf = pix;
+			//(cell as Gtk.CellRendererPixbuf).pixbuf = pix;
 			(cell as Gtk.CellRendererPixbuf).visible = (dev.type == "disk");
-		});
+		});*/
 		
         cmb_boot_device.set_cell_data_func(cell_text, (cell_layout, cell, model, iter)=>{
 			Device dev;
@@ -391,7 +391,7 @@ class RestoreDeviceBox : Gtk.Box{
 	}
 
 
-	private bool check_and_mount_devices(){
+	public bool check_and_mount_devices(){
 
 		// check if all partitions are selected
 		
@@ -404,8 +404,6 @@ class RestoreDeviceBox : Gtk.Box{
 				return false;
 			}
 		}
-
-		// TODO: add boot device selection
 
 		// TODO: check on next
 
@@ -435,7 +433,7 @@ class RestoreDeviceBox : Gtk.Box{
 			return true; // all required devices are already mounted
 		}
 
-		//check BTRFS subvolume layout --------------
+		// check BTRFS subvolume layout --------------
 
 		if (App.restore_target.type == "btrfs"){
 			if (App.check_btrfs_volume(App.restore_target) == false){

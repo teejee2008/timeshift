@@ -309,6 +309,8 @@ class RestoreWindow : Gtk.Window{
 					App.restore_target = entry.device;
 				}
 			}
+
+			restore_device_box.check_and_mount_devices();
 			
 		}
 

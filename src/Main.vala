@@ -2764,7 +2764,7 @@ public class Main : GLib.Object{
 				else{
 					// other system, gui ------------------------
 
-					App.progress_text = "Sync";
+					//App.progress_text = "Sync";
 					
 					task = new RsyncTask();
 

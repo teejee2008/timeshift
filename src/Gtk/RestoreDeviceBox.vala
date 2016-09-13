@@ -363,12 +363,16 @@ class RestoreDeviceBox : Gtk.Box{
 
 			index++;
 
+			// resolve grub device from target device name
 			if (dev.device == App.restore_target.device[0:8]){
 				cmb_boot_device.active = index;
 				break;
 			}
 
-			if (dev.has_parent() && (dev.parent.device == App.restore_target.device[0:8])){
+			// resolve grub device from parent of target device
+			if (App.restore_target.has_parent()
+				&& (dev.device == App.restore_target.parent.device[0:8])){
+					
 				cmb_boot_device.active = index;
 				break;
 			}

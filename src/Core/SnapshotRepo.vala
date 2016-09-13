@@ -92,11 +92,15 @@ public class SnapshotRepo : GLib.Object{
 			log_msg("");
 			unlock_and_mount_device();
 
-			log_msg(_("Selected snapshot device") + ": %s".printf(device.device));
-			log_msg(_("Free space") + ": %s".printf(format_file_size(device.free_bytes)));;
+			if (device != null){
+				log_msg(_("Selected snapshot device") + ": %s".printf(device.device));
+				log_msg(_("Free space") + ": %s".printf(format_file_size(device.free_bytes)));
+			}
 		}
-		
-		check_status();
+
+		if (device != null){
+			check_status();
+		}
 	}
 	
 

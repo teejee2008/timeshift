@@ -295,12 +295,18 @@ class RestoreWindow : Gtk.Window{
 	private bool validate_current_tab(){
 		
 		if (notebook.page == Tabs.TARGET_DEVICE){
+
+			App.restore_target = null;
 			
 			// remove mount points which will remain on root fs
 			for(int i = App.mount_list.size-1; i >= 0; i--){
 				var entry = App.mount_list[i];
 				if (entry.device == null){
 					App.mount_list.remove(entry);
+				}
+
+				if (entry.mount_point == "/"){
+					App.restore_target = entry.device;
 				}
 			}
 			

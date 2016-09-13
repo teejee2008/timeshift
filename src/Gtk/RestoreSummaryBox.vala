@@ -35,13 +35,8 @@ using TeeJee.System;
 using TeeJee.Misc;
 
 class RestoreSummaryBox : Gtk.Box{
-	private Gtk.Spinner spinner;
 	public Gtk.Label lbl_msg;
-	public Gtk.Label lbl_status;
-
 	private Gtk.Window parent_window;
-
-	private bool thread_is_running = false;
 
 	public RestoreSummaryBox (Gtk.Window _parent_window) {
 		//base(Gtk.Orientation.VERTICAL, 6); // issue with vala

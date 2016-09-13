@@ -60,7 +60,7 @@ class FinishBox : Gtk.Box{
 		update_message();
     }
 
-	private void update_message(){
+	public void update_message(){
 
 		var msg = "";
 

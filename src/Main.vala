@@ -2496,14 +2496,33 @@ public class Main : GLib.Object{
 			if (mnt.mount_point.length > max_mount){ max_mount = mnt.mount_point.length; }
 		}
 
+		bool show_subvolume = false;
+		foreach(var entry in App.mount_list){
+			if ((entry.device != null) && (entry.subvolume_name().length > 0)){
+				// subvolumes are used - show subvolume column
+				show_subvolume = true;
+				break;
+			}
+		}
+		
 		txt = ("%%-%ds  %%-%ds\n".printf(max_dev, max_mount))
 			.printf(_("Device"),_("Mount Point"));
 
+		if (show_subvolume){
+			txt += "  %s".printf(_("Subvolume"));
+		}
+
 		txt += string.nfill(max_dev, '-') + "  " + string.nfill(max_mount, '-') + "\n";
 		
-		foreach(MountEntry mnt in App.mount_list){
-			txt += ("%%-%ds  %%-%ds\n".printf(max_dev, max_mount)).printf(
+		foreach(var mnt in App.mount_list){
+			txt += ("%%-%ds  %%-%ds".printf(max_dev, max_mount)).printf(
 				mnt.device.short_name_with_alias, mnt.mount_point);
+
+			if (show_subvolume){
+				txt += "  %s".printf(mnt.subvolume_name());
+			}
+
+			txt += "\n";
 		}
 		
 		if (formatted){

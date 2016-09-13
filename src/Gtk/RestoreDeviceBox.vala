@@ -41,7 +41,8 @@ class RestoreDeviceBox : Gtk.Box{
 	private Gtk.Box option_box;
 	private Gtk.ComboBox cmb_boot_device;
 	private Gtk.CheckButton chk_skip_grub_install;
-
+	private bool show_subvolume = false;
+	
 	private Gtk.SizeGroup sg_mount_point = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
 	private Gtk.SizeGroup sg_device = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
 	private Gtk.SizeGroup sg_mount_options = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
@@ -75,6 +76,16 @@ class RestoreDeviceBox : Gtk.Box{
 		add_label(this, _("Select the partitions where files will be restored.") + "\n"
 			+ _("Partitions from which snapshot was created are pre-selected."));
 
+
+		show_subvolume = false;
+		foreach(var entry in App.mount_list){
+			if ((entry.device != null) && (entry.subvolume_name().length > 0)){
+				// subvolumes are used - show the mount options column
+				show_subvolume = true;
+				break;
+			}
+		}
+		
 		// headings
 		
 		hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
@@ -88,9 +99,11 @@ class RestoreDeviceBox : Gtk.Box{
 		label = add_label(hbox, _("Device"), true, true);
 		label.xalign = (float) 0.5;
 		sg_device.add_widget(label);
-		
-		label = add_label(hbox, _("Mount Options"), true, true);
-		label.xalign = (float) 0.5;
+
+		if (show_subvolume){
+			label = add_label(hbox, _("Subvolume"), true, true);
+			label.xalign = (float) 0.5;
+		}
 		
 		// options
 		
@@ -135,12 +148,14 @@ class RestoreDeviceBox : Gtk.Box{
 		var combo = add_device_combo(box, entry);
 		sg_device.add_widget(combo);
 
-		string txt = "";
-		if (entry.subvolume_name().length > 0){
-			txt = "subvol=%s".printf(entry.subvolume_name());
+		if (show_subvolume){
+			string txt = "";
+			if (entry.subvolume_name().length > 0){
+				txt = "%s".printf(entry.subvolume_name());
+			}
+			label = add_label(box, txt, false);
+			sg_mount_options.add_widget(label);
 		}
-		label = add_label(box, txt, false);
-		sg_mount_options.add_widget(label);
 	}
 
 	private Gtk.ComboBox add_device_combo(Gtk.Box box, MountEntry entry){

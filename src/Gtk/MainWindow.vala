@@ -869,19 +869,11 @@ class MainWindow : Gtk.Window{
 		DateTime last_snapshot_date = null;
 		DateTime oldest_snapshot_date = null;
 
-		//message = escape_html(message);
-		//details = escape_html(details);
-
-		// TODO; change this
-		
-		switch (status_code){
-		case SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE:
-		case SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE:
+		if (App.repo.has_snapshots()){
 			var last_snapshot = App.repo.get_latest_snapshot();
 			last_snapshot_date = (last_snapshot == null) ? null : last_snapshot.date;
 			var oldest_snapshot = App.repo.get_oldest_snapshot();
 			oldest_snapshot_date = (oldest_snapshot == null) ? null : oldest_snapshot.date;
-			break;
 		}
 
 		if (App.live_system()){

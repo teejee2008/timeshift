@@ -938,8 +938,10 @@ public class Main : GLib.Object{
 	public void list_grub_devices(bool print_to_console = true){
 		//add devices
 		grub_device_list = new Gee.ArrayList<Device>();
-		foreach(Device di in get_block_devices()) {
-			grub_device_list.add(di);
+		foreach(Device di in Device.get_block_devices_using_lsblk()) {
+			if (di.type == "disk"){
+				grub_device_list.add(di);
+			}
 		}
 
 		//add partitions
@@ -2210,7 +2212,8 @@ public class Main : GLib.Object{
 		bool home_found = false;
 		foreach(FsTabEntry mnt in fstab_list){
 			if (mnt.mount_point.has_prefix("/mnt") || mnt.mount_point.has_prefix("/mount")
-				|| mnt.mount_point.has_prefix("/sdcard") || mnt.mount_point.has_prefix("/cdrom")){
+				|| mnt.mount_point.has_prefix("/sdcard") || mnt.mount_point.has_prefix("/cdrom")
+				|| mnt.mount_point.has_prefix("/media") || (mnt.mount_point == "none")){
 				// skip mounting for non-system devices
 				continue;
 			}
@@ -2280,6 +2283,11 @@ public class Main : GLib.Object{
 				log_debug("Entry: null -> %s".printf(mnt.mount_point));
 			}
 		}
+
+		// sort - parent mountpoints will be placed above children
+		mount_list.sort((a,b) => {
+			return strcmp(a.mount_point, b.mount_point);
+		});
 	}
 
 	// delete from terminal

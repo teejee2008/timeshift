@@ -167,6 +167,10 @@ class RestoreBox : Gtk.Box{
 
 	public bool restore(){
 
+		if ((App.root_device != null) && (App.restore_target.uuid == App.root_device.uuid)){
+			parent_window.hide();
+		}
+		
 		try {
 			thread_is_running = true;
 			Thread.create<void> (restore_thread, true);

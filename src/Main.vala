@@ -1590,6 +1590,7 @@ public class Main : GLib.Object{
 				task.rsync_log_file = log_file;
 				task.prg_count_total = Main.first_snapshot_count;
 
+				task.relative = true;
 				task.verbose = true;
 				task.delete_extra = true;
 				task.delete_excluded = true;
@@ -2678,6 +2679,7 @@ public class Main : GLib.Object{
 
 			var sh_grub = "";
 			if (reinstall_grub2 && (grub_device != null) && (grub_device.length > 0)){
+				sh_grub += "sync \n";
 				sh_grub += "echo '' \n";
 				sh_grub += "echo '" + _("Re-installing GRUB2 bootloader...") + "' \n";
 				sh_grub += "for i in /dev /proc /run /sys; do mount --bind \"$i\" \"%s$i\"; done \n".printf(target_path);
@@ -2765,9 +2767,12 @@ public class Main : GLib.Object{
 					// other system, gui ------------------------
 
 					//App.progress_text = "Sync";
-					
+
+					progress_text = _("Building file list...");
+
 					task = new RsyncTask();
 
+					task.relative = false;
 					task.verbose = true;
 					task.delete_extra = true;
 					task.delete_excluded = false;
@@ -2794,6 +2799,11 @@ public class Main : GLib.Object{
 
 					while (task.status == AppStatus.RUNNING){
 						sleep(1000);
+
+						if (App.task.status_line.length > 0){
+							progress_text = _("Synching files with rsync...");
+						}
+						
 						gtk_do_events();
 					}
 

@@ -95,7 +95,7 @@ class EstimateBox : Gtk.Box{
 		// wait for completion and increment progressbar
 		while (thread_is_running){
 			if (progressbar.fraction < 98.0){
-				progressbar.fraction += 0.01;
+				progressbar.fraction += 0.005;
 			}
 			
 			gtk_do_events();

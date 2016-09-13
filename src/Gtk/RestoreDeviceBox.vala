@@ -93,11 +93,11 @@ class RestoreDeviceBox : Gtk.Box{
 		add(hbox);
 
 		label = add_label(hbox, _("Mount Path") + " ", true, true);
-		label.xalign = (float) 0.5;
+		label.xalign = (float) 0.0;
 		sg_mount_point.add_widget(label);
 		
 		label = add_label(hbox, _("Device"), true, true);
-		label.xalign = (float) 0.5;
+		label.xalign = (float) 0.0;
 		sg_device.add_widget(label);
 
 		if (show_subvolume){

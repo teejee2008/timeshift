@@ -11,6 +11,8 @@ public class RsyncTask : AsyncTask{
 	public bool delete_extra = true;
 	public bool delete_after = false;
 	public bool delete_excluded = false;
+	public bool relative = false;
+	
 	public string rsync_log_file = "";
 	public string exclude_from_file = "";
 	public string link_from_path = "";
@@ -136,8 +138,12 @@ public class RsyncTask : AsyncTask{
 
 		cmd += " --force"; // allow deletion of non-empty directories
 
-		cmd += " --numeric-ids --stats --relative";
+		cmd += " --numeric-ids --stats";
 
+		if (relative){
+			cmd += " --relative";
+		}
+		
 		if (delete_excluded){
 			cmd += " --delete-excluded";
 		}
@@ -170,8 +176,6 @@ public class RsyncTask : AsyncTask{
 
 		cmd += " '%s/'".printf(escape_single_quote(dest_path));
 		
-		//cmd += " /. \"%s\"".printf(sync_path + "/localhost/");
-
 		return cmd;
 	}
 

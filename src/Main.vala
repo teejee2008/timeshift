@@ -2209,14 +2209,21 @@ public class Main : GLib.Object{
 		bool root_found = false;
 		bool boot_found = false;
 		bool home_found = false;
+		restore_target = null;
+		
 		foreach(FsTabEntry mnt in fstab_list){
+
+			// skip mounting for non-system devices
+			
 			if (mnt.mount_point.has_prefix("/mnt") || mnt.mount_point.has_prefix("/mount")
 				|| mnt.mount_point.has_prefix("/sdcard") || mnt.mount_point.has_prefix("/cdrom")
 				|| mnt.mount_point.has_prefix("/media") || (mnt.mount_point == "none")){
-				// skip mounting for non-system devices
+				
 				continue;
 			}
 
+			// find device by name or uuid
+			
 			Device mnt_dev = null;
 			if (mnt.device.down().has_prefix("uuid=")){
 				string uuid = mnt.device["uuid=".length:mnt.device.length];
@@ -2225,12 +2232,17 @@ public class Main : GLib.Object{
 			else{
 				mnt_dev = Device.get_device_by_name(mnt.device);
 			}
+			
 			if (mnt_dev != null){
+				
+				// add to mount list
+				
 				mount_list.add(new MountEntry(mnt_dev, mnt.mount_point, mnt.options));
 				log_debug("found: %s".printf(mnt_dev.device));
 
 				if (mnt.mount_point == "/"){
 					root_found = true;
+					restore_target = mnt_dev;
 				}
 				if (mnt.mount_point == "/boot"){
 					boot_found = true;

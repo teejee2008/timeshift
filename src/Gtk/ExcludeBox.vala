@@ -126,13 +126,16 @@ class ExcludeBox : Gtk.Box{
 			add_folder_clicked();
 		});
 
-		size_group = null;
-		button = add_button(hbox, _("Add Contents"),
-			_("Add the contents of a folder to this list"), ref size_group, null);
-        button.clicked.connect(()=>{
-			add_folder_contents_clicked();
-		});
-
+		if (!include){
+			// for exclude only - Including contents without including directory is not logical
+			size_group = null;
+			button = add_button(hbox, _("Add Contents"),
+				_("Add the contents of a folder to this list"), ref size_group, null);
+			button.clicked.connect(()=>{
+				add_folder_contents_clicked();
+			});
+		}
+		
 		size_group = null;
 		button = add_button(hbox, _("Remove"), "", ref size_group, null);
         button.clicked.connect(()=>{
@@ -217,9 +220,17 @@ class ExcludeBox : Gtk.Box{
 				else if (!include && pattern.has_prefix("+ ")){
 					pattern = pattern[2:pattern.length];
 				}
-				
-				if (!pattern.has_suffix("/")){
-					pattern = "%s/".printf(pattern);
+
+				if (include){
+					// Note: *** matches / also, includes everything under the directory
+					if (!pattern.has_suffix("/***")){
+						pattern = "%s/***".printf(pattern);
+					}
+				}
+				else{
+					if (!pattern.has_suffix("/")){
+						pattern = "%s/".printf(pattern);
+					}
 				}
 
 				if (!App.exclude_list_user.contains(pattern)){

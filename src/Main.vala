@@ -78,7 +78,6 @@ public class Main : GLib.Object{
 	public LinuxDistro current_distro;
 	public bool mirror_system = false;
 
-	public bool _is_scheduled = false;
 	public bool schedule_monthly = false;
 	public bool schedule_weekly = false;
 	public bool schedule_daily = true;

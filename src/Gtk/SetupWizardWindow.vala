@@ -294,7 +294,7 @@ class SetupWizardWindow : Gtk.Window{
 			schedule_box.update_statusbar();
 			break;
 		case Tabs.FINISH:
-			// do nothing
+			finish_box.update_message();
 			break;
 		}
 	}

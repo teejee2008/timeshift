@@ -558,16 +558,18 @@ namespace TeeJee.Devices{
 				    
 				FileInfo info;
 				while ((info = enumerator.next_file ()) != null) {
+
+					if (info.get_name() == "control") { continue; }
 					
 					File f_mapped = f_dev_mapper.resolve_relative_path(info.get_name());
 					
 					string mapped_file = f_mapped.get_path();
 					string mapped_device = info.get_symlink_target();
 					mapped_device = mapped_device.replace("..","/dev");
-					log_debug("info.get_name(): %s".printf(info.get_name()));
-					log_debug("info.get_symlink_target(): %s".printf(info.get_symlink_target()));
-					log_debug("mapped_file: %s".printf(mapped_file));
-					log_debug("mapped_device: %s".printf(mapped_device));
+					//log_debug("info.get_name(): %s".printf(info.get_name()));
+					//log_debug("info.get_symlink_target(): %s".printf(info.get_symlink_target()));
+					//log_debug("mapped_file: %s".printf(mapped_file));
+					//log_debug("mapped_device: %s".printf(mapped_device));
 					
 					foreach(var dev in list){
 						if (dev.device == mapped_device){

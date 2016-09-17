@@ -67,7 +67,7 @@ public class Main : GLib.Object{
 	public SnapshotRepo repo; 
 
 	//temp
-	private Gee.ArrayList<Device> grub_device_list;
+	//private Gee.ArrayList<Device> grub_device_list;
 
 	public Device root_device;
 	public Device home_device;
@@ -834,7 +834,7 @@ public class Main : GLib.Object{
 		Gtk.init(ref args);
 	}
 
-	public void list_snapshots(bool paginate){
+	private void list_snapshots(bool paginate){
 		int count = 0;
 		for(int index = 0; index < repo.snapshots.size; index++){
 			if (!paginate || ((index >= snapshot_list_start_index) && (index < snapshot_list_start_index + 10))){
@@ -870,14 +870,17 @@ public class Main : GLib.Object{
 		print_grid(grid, right_align);
 	}
 
-	public void list_devices(){
-		int count = 0;
-		foreach(Device pi in partitions) {
-			if (!pi.has_linux_filesystem()) { continue; }
-			count++;
+	private Gee.ArrayList<Device> list_devices(){
+
+		//add devices
+		var device_list = new Gee.ArrayList<Device>();
+		foreach(var dev in Device.get_block_devices_using_lsblk()) {
+			if (dev.has_linux_filesystem()){
+				device_list.add(dev);
+			}
 		}
 
-		string[,] grid = new string[count+1,6];
+		string[,] grid = new string[device_list.size+1,6];
 		bool[] right_align = { false, false, false, true, true, false};
 
 		int row = 0;
@@ -891,9 +894,7 @@ public class Main : GLib.Object{
 		grid[row, ++col] = _("Label");
 		row++;
 
-		foreach(Device pi in partitions) {
-			if (!pi.has_linux_filesystem()) { continue; }
-
+		foreach(var pi in device_list) {
 			col = -1;
 			grid[row, ++col] = "%d".printf(row - 1);
 			grid[row, ++col] = ">";
@@ -906,47 +907,23 @@ public class Main : GLib.Object{
 		}
 
 		print_grid(grid, right_align);
+
+		return device_list;
 	}
 
-	public void print_grid(string[,] grid, bool[] right_align, bool has_header = true){
-		int[] col_width = new int[grid.length[1]];
-
-		for(int col=0; col<grid.length[1]; col++){
-			for(int row=0; row<grid.length[0]; row++){
-				if (grid[row,col].length > col_width[col]){
-					col_width[col] = grid[row,col].length;
+	private Gee.ArrayList<Device> list_grub_devices(bool print_to_console = true){
+		//add devices
+		var grub_device_list = new Gee.ArrayList<Device>();
+		foreach(var dev in Device.get_block_devices_using_lsblk()) {
+			if (dev.type == "disk"){
+				grub_device_list.add(dev);
+			}
+			else if (dev.type == "part"){ 
+				if (dev.has_linux_filesystem()){
+					grub_device_list.add(dev);
 				}
 			}
-		}
-
-		for(int row=0; row<grid.length[0]; row++){
-			for(int col=0; col<grid.length[1]; col++){
-				string fmt = "%" + (right_align[col] ? "+" : "-") + col_width[col].to_string() + "s  ";
-				stdout.printf(fmt.printf(grid[row,col]));
-			}
-			stdout.printf("\n");
-
-			if (has_header && (row == 0)){
-				stdout.printf(string.nfill(78, '-'));
-				stdout.printf("\n");
-			}
-		}
-	}
-
-	public void list_grub_devices(bool print_to_console = true){
-		//add devices
-		grub_device_list = new Gee.ArrayList<Device>();
-		foreach(Device di in Device.get_block_devices_using_lsblk()) {
-			if (di.type == "disk"){
-				grub_device_list.add(di);
-			}
-		}
-
-		//add partitions
-		foreach(Device pi in partitions) {
-			if (!pi.has_linux_filesystem()) { continue; }
-			if (pi.device.has_prefix("/dev/dm-")) { continue; }
-			grub_device_list.add(pi);
+			// skip crypt/loop
 		}
 
 		/*Note: Lists are already sorted. No need to sort again */
@@ -982,11 +959,39 @@ public class Main : GLib.Object{
 		}
 
 		print_grid(grid, right_align);
+
+		return grub_device_list;
 	}
+
+	private void print_grid(string[,] grid, bool[] right_align, bool has_header = true){
+		int[] col_width = new int[grid.length[1]];
+
+		for(int col=0; col<grid.length[1]; col++){
+			for(int row=0; row<grid.length[0]; row++){
+				if (grid[row,col].length > col_width[col]){
+					col_width[col] = grid[row,col].length;
+				}
+			}
+		}
+
+		for(int row=0; row<grid.length[0]; row++){
+			for(int col=0; col<grid.length[1]; col++){
+				string fmt = "%" + (right_align[col] ? "+" : "-") + col_width[col].to_string() + "s  ";
+				stdout.printf(fmt.printf(grid[row,col]));
+			}
+			stdout.printf("\n");
+
+			if (has_header && (row == 0)){
+				stdout.printf(string.nfill(78, '-'));
+				stdout.printf("\n");
+			}
+		}
+	}
+
 
 	//prompt for input
 
-	public Device? read_stdin_device(Gee.ArrayList<Device> device_list){
+	private Device? read_stdin_device(Gee.ArrayList<Device> device_list){
 		var counter = new TimeoutCounter();
 		counter.exit_on_timeout();
 		string? line = stdin.read_line();
@@ -1020,7 +1025,7 @@ public class Main : GLib.Object{
 		return selected_device;
 	}
 
-	public Device? read_stdin_device_mounts(Gee.ArrayList<Device> device_list, MountEntry mnt){
+	private Device? read_stdin_device_mounts(Gee.ArrayList<Device> device_list, MountEntry mnt){
 		var counter = new TimeoutCounter();
 		counter.exit_on_timeout();
 		string? line = stdin.read_line();
@@ -1063,12 +1068,12 @@ public class Main : GLib.Object{
 		return selected_device;
 	}
 
-	public Device? get_device_from_index(Gee.ArrayList<Device> device_list, string index_string){
+	private Device? get_device_from_index(Gee.ArrayList<Device> device_list, string index_string){
 		int64 index;
 		if (int64.try_parse(index_string, out index)){
 			int i = -1;
 			foreach(Device pi in device_list) {
-				if (!pi.has_linux_filesystem()) { continue; }
+				//if (!pi.has_linux_filesystem()) { continue; }
 				if (++i == index){
 					return pi;
 				}
@@ -1078,7 +1083,7 @@ public class Main : GLib.Object{
 		return null;
 	}
 
-	public Snapshot read_stdin_snapshot(){
+	private Snapshot read_stdin_snapshot(){
 		var counter = new TimeoutCounter();
 		counter.exit_on_timeout();
 		string? line = stdin.read_line();
@@ -1135,7 +1140,7 @@ public class Main : GLib.Object{
 		return selected_snapshot;
 	}
 
-	public bool read_stdin_grub_install(){
+	private bool read_stdin_grub_install(){
 		var counter = new TimeoutCounter();
 		counter.exit_on_timeout();
 		string? line = stdin.read_line();
@@ -1173,7 +1178,7 @@ public class Main : GLib.Object{
 		}
 	}
 
-	public bool read_stdin_restore_confirm(){
+	private bool read_stdin_restore_confirm(){
 		var counter = new TimeoutCounter();
 		counter.exit_on_timeout();
 		
@@ -1777,7 +1782,15 @@ public class Main : GLib.Object{
 					stdout.printf(TERM_COLOR_YELLOW +
 						_("Enter device name or number (a=Abort)") + ": " + TERM_COLOR_RESET);
 					stdout.flush();
-					dev = read_stdin_device(partitions);
+
+					var list = new Gee.ArrayList<Device>();
+					foreach(var pi in partitions){
+						if (pi.has_linux_filesystem()){
+							list.add(pi);
+						}
+					}
+					
+					dev = read_stdin_device(list);
 				}
 
 				log_msg("");
@@ -1894,7 +1907,7 @@ public class Main : GLib.Object{
 		}
 
 		//set target device -----------------------------------------------
-
+		
 		if (app_mode != ""){ //command line mode
 
 			if (cmd_target_device.length > 0){
@@ -1942,7 +1955,15 @@ public class Main : GLib.Object{
 					if (attempts > 3) { break; }
 					stdout.printf(TERM_COLOR_YELLOW + _("Enter device name or number (a=Abort)") + ": " + TERM_COLOR_RESET);
 					stdout.flush();
-					restore_target = read_stdin_device(partitions);
+
+					var device_list = new Gee.ArrayList<Device>();
+					foreach(var pi in partitions){
+						if (pi.has_linux_filesystem()){
+							device_list.add(pi);
+						}
+					}
+					
+					restore_target = read_stdin_device(device_list);
 				}
 				log_msg("");
 
@@ -1976,11 +1997,14 @@ public class Main : GLib.Object{
 
 		//select other devices in mount_list --------------------
 
+		log_debug("Selecting devices for mount points");
+		
 		if (app_mode != ""){ //command line mode
 			init_mount_list();
 
 			// ask user to map devices if restoring to another system
 			if (restore_target.uuid !=  root_device.uuid){
+				
 				for(int i = mount_list.size - 1; i >= 0; i--){
 					MountEntry mnt = mount_list[i];
 					Device dev = null;
@@ -2004,17 +2028,23 @@ public class Main : GLib.Object{
 					if (dev == null){
 						log_msg("");
 						log_msg(TERM_COLOR_YELLOW + _("Select '%s' device (default = %s)").printf(mnt.mount_point, default_device) + ":\n" + TERM_COLOR_RESET);
-						list_devices();
+						var device_list = list_devices();
 						log_msg("");
 
 						int attempts = 0;
 						while (dev == null){
 							attempts++;
 							if (attempts > 3) { break; }
-							stdout.printf(TERM_COLOR_YELLOW + _("[a = Abort, d = Default (%s), r = Root device]").printf(default_device) + "\n\n" + TERM_COLOR_RESET);
-							stdout.printf(TERM_COLOR_YELLOW + _("Enter device name or number") + ": " + TERM_COLOR_RESET);
+							
+							stdout.printf(TERM_COLOR_YELLOW +
+								_("[a = Abort, d = Default (%s), r = Root device]").printf(default_device) + "\n\n" + TERM_COLOR_RESET);
+								
+							stdout.printf(
+								TERM_COLOR_YELLOW + _("Enter device name or number")
+									+ ": " + TERM_COLOR_RESET);
+									
 							stdout.flush();
-							dev = read_stdin_device_mounts(partitions, mnt);
+							dev = read_stdin_device_mounts(device_list, mnt);
 						}
 						log_msg("");
 
@@ -2033,11 +2063,13 @@ public class Main : GLib.Object{
 						}
 
 						log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
+						
 						if (dev.device == restore_target.device){
 							log_msg(_("'%s' will be on root device").printf(mnt.mount_point), true);
 						}
 						else{
-							log_msg(_("'%s' will be on '%s'").printf(mnt.mount_point, mnt.device.short_name_with_alias), true);
+							log_msg(_("'%s' will be on '%s'").printf(
+								mnt.mount_point, mnt.device.short_name_with_alias), true);
 						}
 						log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
 					}
@@ -2047,9 +2079,10 @@ public class Main : GLib.Object{
 
 		//mount selected devices ---------------------------------------
 
+		log_debug("Mounting selected devices");
+		
 		if (restore_target != null){
 			if (app_mode != ""){ //commandline mode
-
 				if (restore_target.uuid !=  root_device.uuid){
 					//mount target device and other devices
 					bool status = mount_target_device(null);
@@ -2070,16 +2103,23 @@ public class Main : GLib.Object{
 
 		//set grub device -----------------------------------------------
 
+		log_debug("Setting grub device");
+		
 		if (app_mode != ""){ //command line mode
 
 			if (cmd_grub_device.length > 0){
 
+				log_debug("Grub device is specified as command argument");
+				
 				//check command line arguments
 				found = false;
-				list_grub_devices(false);
-				foreach(Device dev in grub_device_list) {
+				var device_list = list_grub_devices(false);
+				
+				foreach(Device dev in device_list) {
+					
 					if ((dev.device == cmd_grub_device)
 						||((dev.uuid.length > 0) && (dev.uuid == cmd_grub_device))){
+
 						grub_device = dev.device;
 						found = true;
 						break;
@@ -2130,7 +2170,7 @@ public class Main : GLib.Object{
 			if ((reinstall_grub2) && (grub_device.length == 0)){
 				log_msg("");
 				log_msg(TERM_COLOR_YELLOW + _("Select GRUB device") + ":\n" + TERM_COLOR_RESET);
-				list_grub_devices();
+				var device_list = list_grub_devices();
 				log_msg("");
 
 				int attempts = 0;
@@ -2139,7 +2179,15 @@ public class Main : GLib.Object{
 					if (attempts > 3) { break; }
 					stdout.printf(TERM_COLOR_YELLOW + _("Enter device name or number (a=Abort)") + ": " + TERM_COLOR_RESET);
 					stdout.flush();
-					Device dev = read_stdin_device(grub_device_list);
+
+					var list = new Gee.ArrayList<Device>();
+					foreach(var pi in partitions){
+						if (pi.has_linux_filesystem()){
+							list.add(pi);
+						}
+					}
+					
+					Device dev = read_stdin_device(device_list);
 					if (dev != null) { grub_device = dev.device; }
 				}
 				log_msg("");
@@ -2540,14 +2588,23 @@ public class Main : GLib.Object{
 		int max_mount = _("Mount Point").length;
 		int max_dev = _("Device").length;
 
-		foreach(MountEntry mnt in mount_list){
-			string dev_name = mnt.device.short_name_with_alias;
-			if (dev_name.length > max_dev){ max_dev = dev_name.length; }
-			if (mnt.mount_point.length > max_mount){ max_mount = mnt.mount_point.length; }
+		foreach(var entry in mount_list){
+			if (entry.device == null){ continue; }
+
+			string dev_name = entry.device.short_name_with_alias;
+			
+			if (dev_name.length > max_dev){
+				max_dev = dev_name.length;
+			}
+			if (entry.mount_point.length > max_mount){
+				max_mount = entry.mount_point.length;
+			}
 		}
 
 		bool show_subvolume = false;
 		foreach(var entry in App.mount_list){
+			if (entry.device == null){ continue; }
+			
 			if ((entry.device != null) && (entry.subvolume_name().length > 0)){
 				// subvolumes are used - show subvolume column
 				show_subvolume = true;
@@ -2564,12 +2621,14 @@ public class Main : GLib.Object{
 
 		txt += string.nfill(max_dev, '-') + "  " + string.nfill(max_mount, '-') + "\n";
 		
-		foreach(var mnt in App.mount_list){
+		foreach(var entry in App.mount_list){
+			if (entry.device == null){ continue; }
+			
 			txt += ("%%-%ds  %%-%ds".printf(max_dev, max_mount)).printf(
-				mnt.device.short_name_with_alias, mnt.mount_point);
+				entry.device.short_name_with_alias, entry.mount_point);
 
 			if (show_subvolume){
-				txt += "  %s".printf(mnt.subvolume_name());
+				txt += "  %s".printf(entry.subvolume_name());
 			}
 
 			txt += "\n";

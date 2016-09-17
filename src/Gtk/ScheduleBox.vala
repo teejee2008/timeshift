@@ -143,7 +143,7 @@ class ScheduleBox : Gtk.Box{
 
 		// shield
 		var hbox = new Gtk.Box (Orientation.HORIZONTAL, 6);
-        hbox.margin_bottom = 6;
+        hbox.margin_bottom = 24;
         hbox.margin_left = 6;
         hbox.margin_right = 6;
         add (hbox);

@@ -1424,20 +1424,20 @@ namespace TeeJee.Devices{
 
 		public static void print_device_list(Gee.ArrayList<Device> list){
 
-			stdout.printf("\n");
+			log_debug("\n");
 			
-			stdout.printf("%-20s %-25s %-10s %-10s %s\n".printf(
+			log_debug("%-20s %-25s %-10s %-10s %s\n".printf(
 				"device",
 				"label",
 				"pkname",
 				"kname",
 				"uuid"));
 
-			stdout.printf(string.nfill(100, '-'));
-			stdout.printf("\n");
+			log_debug(string.nfill(100, '-'));
+			log_debug("\n");
 			
 			foreach(var dev in list){
-				stdout.printf("%-20s %-25s %-10s %-10s %s\n".printf(
+				log_debug("%-20s %-25s %-10s %-10s %s\n".printf(
 					dev.device + ((dev.mapped_name.length > 0) ? " -> " + dev.mapped_name : ""),
 					dev.label,
 					dev.pkname,
@@ -1446,9 +1446,9 @@ namespace TeeJee.Devices{
 					));
 			}
 
-			stdout.printf("\n");
+			log_debug("\n");
 			
-			stdout.printf("%-20s %-10s %-10s %s %s %s %s\n".printf(
+			log_debug("%-20s %-10s %-10s %s %s %s %s\n".printf(
 				"device",
 				"pkname",
 				"kname",
@@ -1457,11 +1457,11 @@ namespace TeeJee.Devices{
 				"serial",
 				"rev"));
 
-			stdout.printf(string.nfill(100, '-'));
-			stdout.printf("\n");
+			log_debug(string.nfill(100, '-'));
+			log_debug("\n");
 			
 			foreach(var dev in list){
-				stdout.printf("%-20s %-10s %-10s %s %s %s %s\n".printf(
+				log_debug("%-20s %-10s %-10s %s %s %s %s\n".printf(
 					dev.device + ((dev.mapped_name.length > 0) ? " -> " + dev.mapped_name : ""),
 					//dev.name,
 					dev.pkname,
@@ -1473,9 +1473,9 @@ namespace TeeJee.Devices{
 					));
 			}
 
-			stdout.printf("\n");
+			log_debug("\n");
 			
-			stdout.printf("%-20s %-10s %-15s %-10s %10s %10s %10s\n".printf(
+			log_debug("%-20s %-10s %-15s %-10s %10s %10s %10s\n".printf(
 				"device",
 				"type",
 				"fstype",
@@ -1484,11 +1484,11 @@ namespace TeeJee.Devices{
 				"size",
 				"used"));
 
-			stdout.printf(string.nfill(100, '-'));
-			stdout.printf("\n");
+			log_debug(string.nfill(100, '-'));
+			log_debug("\n");
 			
 			foreach(var dev in list){
-				stdout.printf("%-20s %-10s %-15s %-10s %10s %10s %10s\n".printf(
+				log_debug("%-20s %-10s %-15s %-10s %10s %10s %10s\n".printf(
 					dev.device,
 					dev.type,
 					dev.fstype,
@@ -1499,21 +1499,21 @@ namespace TeeJee.Devices{
 					));
 			}
 
-			stdout.printf("\n");
+			log_debug("\n");
 		}
 
 		public static void print_device_mounts(Gee.ArrayList<Device> list){
 
-			stdout.printf("\n");
+			log_debug("\n");
 			
-			stdout.printf("%-15s %s\n".printf(
+			log_debug("%-15s %s\n".printf(
 				"device",
 				//"fstype",
 				"> mount_points (mount_options)"
 			));
 
-			stdout.printf(string.nfill(100, '-'));
-			stdout.printf("\n");
+			log_debug(string.nfill(100, '-'));
+			log_debug("\n");
 			
 			foreach(var dev in list){
 
@@ -1525,7 +1525,7 @@ namespace TeeJee.Devices{
 					}
 				}
 
-				stdout.printf("%-15s %s\n\n".printf(
+				log_debug("%-15s %s\n\n".printf(
 					dev.device,
 					//dev.fstype,
 					mps
@@ -1533,13 +1533,13 @@ namespace TeeJee.Devices{
 				
 			}
 
-			stdout.printf("\n");
+			log_debug("\n");
 		}
 
 		public static void print_device_disk_space(Gee.ArrayList<Device> list){
-			stdout.printf("\n");
+			log_debug("\n");
 			
-			stdout.printf("%-15s %-12s %15s %15s %15s %10s\n".printf(
+			log_debug("%-15s %-12s %15s %15s %15s %10s\n".printf(
 				"device",
 				"fstype",
 				"size",
@@ -1548,11 +1548,11 @@ namespace TeeJee.Devices{
 				"used_percent"
 			));
 
-			stdout.printf(string.nfill(100, '-'));
-			stdout.printf("\n");
+			log_debug(string.nfill(100, '-'));
+			log_debug("\n");
 			
 			foreach(var dev in list){
-				stdout.printf("%-15s %-12s %15s %15s %15s %10s\n".printf(
+				log_debug("%-15s %-12s %15s %15s %15s %10s\n".printf(
 					dev.device,
 					dev.fstype,
 					format_file_size(dev.size_bytes, true),
@@ -1562,7 +1562,7 @@ namespace TeeJee.Devices{
 				));
 			}
 
-			stdout.printf("\n");
+			log_debug("\n");
 		}
 	}
 

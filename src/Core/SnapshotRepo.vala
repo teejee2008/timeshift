@@ -84,7 +84,7 @@ public class SnapshotRepo : GLib.Object{
 
 		init_from_device();
 
-		log_msg("SnapshotRepo: from_uuid(): exit");
+		log_debug("SnapshotRepo: from_uuid(): exit");
 	}
 
 	private void init_from_device(){
@@ -105,7 +105,7 @@ public class SnapshotRepo : GLib.Object{
 			check_status();
 		}
 
-		log_msg("SnapshotRepo: init_from_device(): exit");
+		log_debug("SnapshotRepo: init_from_device(): exit");
 	}
 	
 
@@ -359,7 +359,7 @@ public class SnapshotRepo : GLib.Object{
 			has_space();
 		}
 
-		if (App.app_mode.length == 0){
+		if ((App != null) && (App.app_mode.length == 0)){
 			
 			log_msg("%s: '%s'".printf(
 				_("Snapshot device"),
@@ -480,12 +480,13 @@ public class SnapshotRepo : GLib.Object{
 		}
 		else{
 			log_debug("device is NULL");
+			return false;
 		}
 		
 		if (snapshots.size > 0){
 			// has snapshots, check minimum space
 
-			log_debug("has snapshots");
+			//log_debug("has snapshots");
 			
 			if (device.free_bytes < Main.MIN_FREE_SPACE){
 				status_message = _("Not enough disk space");
@@ -535,12 +536,6 @@ public class SnapshotRepo : GLib.Object{
 		}
 	}
 
-	public bool partition_or_volume_exists(){
-		return
-		((device.type == "part")||(device.type == "crypt"))
-			&& (device.device.length > 0) && (device.uuid.length > 0);
-	}
-	
 	// actions
 
 	public void auto_remove(){

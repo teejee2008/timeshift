@@ -53,6 +53,9 @@ public class Main : GLib.Object{
 	public string rsnapshot_conf_path = "";
 	public string app_conf_path = "";
 	public bool first_run = false;
+
+	public string backup_uuid = "";
+	public string backup_parent_uuid = "";
 	
 	public Gee.ArrayList<Device> partitions;
 
@@ -3009,12 +3012,16 @@ public class Main : GLib.Object{
 
 				foreach(var fstab_entry in fstab_list){
 					if (fstab_entry.mount_point.length == 0){ continue; }
-
+					if (!fstab_entry.mount_point.has_prefix("/")){ continue; }
+					
 					string mount_path = target_path + fstab_entry.mount_point[1:fstab_entry.mount_point.length];
 					if (fstab_entry.is_comment || fstab_entry.is_empty_line || (mount_path.length == 0)){ continue; }
 
 					if (!dir_exists(mount_path)){
-						log_msg("Created mount point on target device: %s".printf(fstab_entry.mount_point));
+						
+						log_msg("Created mount point on target device: %s".printf(
+							fstab_entry.mount_point));
+							
 						dir_create(mount_path);
 					}
 				}
@@ -3138,12 +3145,21 @@ public class Main : GLib.Object{
 		
 		var config = new Json.Object();
 
-		config.set_string_member("backup_device_uuid",
-			(repo.device == null) ? "" : repo.device.uuid);
-
-		config.set_string_member("parent_device_uuid",
-			(repo.device.has_parent()) ? repo.device.parent.uuid : "");
+		if ((repo != null) && repo.available()){
+			// save backup device uuid
+			config.set_string_member("backup_device_uuid",
+				(repo.device == null) ? "" : repo.device.uuid);
 			
+			// save parent uuid if backup device has parent
+			config.set_string_member("parent_device_uuid",
+				(repo.device.has_parent()) ? repo.device.parent.uuid : "");
+		}
+		else{
+			// retain values for next run
+			config.set_string_member("backup_device_uuid", backup_uuid);
+			config.set_string_member("parent_device_uuid", backup_parent_uuid); 
+		}
+
 		config.set_string_member("use_snapshot_path_user",
 			repo.use_snapshot_path_custom.to_string());
 			
@@ -3212,27 +3228,26 @@ public class Main : GLib.Object{
 
 		// initialize repo using config file values
 
-		string uuid = json_get_string(config,"backup_device_uuid","");
-		string parent_uuid = json_get_string(config,"parent_device_uuid","");
+		backup_uuid = json_get_string(config,"backup_device_uuid", backup_uuid);
+		backup_parent_uuid = json_get_string(config,"parent_device_uuid", backup_parent_uuid);
 		
-		log_debug("uuid=%s".printf(uuid));
-		log_debug("parent_uuid=%s".printf(parent_uuid));
+		log_debug("backup_uuid=%s".printf(backup_uuid));
+		log_debug("backup_parent_uuid=%s".printf(backup_parent_uuid));
 		
-		if (uuid.length > 0){
+		if (backup_uuid.length > 0){
 			log_debug("repo: creating from uuid");
-			repo = new SnapshotRepo.from_uuid(uuid, null);
+			repo = new SnapshotRepo.from_uuid(backup_uuid, null);
 
-			if ((repo == null) || !repo.partition_or_volume_exists()){
-				if (parent_uuid.length > 0){
+			if ((repo == null) || !repo.available()){
+				if (backup_parent_uuid.length > 0){
 					log_debug("repo: creating from parent uuid");
-					repo = new SnapshotRepo.from_uuid(parent_uuid, null);
+					repo = new SnapshotRepo.from_uuid(backup_parent_uuid, null);
 				}
 			}
 		}
 		else{
 			log_debug("repo: uuid is empty, creating from root device");
 			repo = new SnapshotRepo.from_device(root_device, null);
-			
 		}
 
 		// initialize repo using command line parameter
@@ -3278,10 +3293,16 @@ public class Main : GLib.Object{
 			Main.first_snapshot_count);
 		
 		this.exclude_list_user.clear();
+		
 		if (config.has_member ("exclude")){
 			foreach (Json.Node jnode in config.get_array_member ("exclude").get_elements()) {
+				
 				string path = jnode.get_string();
-				if (!exclude_list_user.contains(path) && !exclude_list_default.contains(path) && !exclude_list_home.contains(path)){
+				
+				if (!exclude_list_user.contains(path)
+					&& !exclude_list_default.contains(path)
+					&& !exclude_list_home.contains(path)){
+						
 					this.exclude_list_user.add(path);
 				}
 			}

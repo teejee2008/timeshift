@@ -118,7 +118,7 @@ class SnapshotListBox : Gtk.Box{
 		col_system.title = _("System");
 		col_system.resizable = true;
 		col_system.clickable = true;
-		col_system.min_width = 150;
+		col_system.min_width = 200;
 
 		CellRendererText cell_system = new CellRendererText ();
 		cell_system.ellipsize = Pango.EllipsizeMode.END;
@@ -165,7 +165,7 @@ class SnapshotListBox : Gtk.Box{
 		col_desc.title = _("Comments");
 		col_desc.resizable = true;
 		col_desc.clickable = true;
-		//col_desc.expand = true;
+		col_desc.expand = true;
 		CellRendererText cell_desc = new CellRendererText ();
 		cell_desc.ellipsize = Pango.EllipsizeMode.END;
 		col_desc.pack_start (cell_desc, false);

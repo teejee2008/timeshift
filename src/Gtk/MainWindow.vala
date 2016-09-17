@@ -96,6 +96,13 @@ class MainWindow : Gtk.Window{
 			tmr_init = 0;
 		}
 
+		if (!App.repo.available()){
+			if (App.backup_parent_uuid.length > 0){
+				log_debug("repo: creating from parent uuid");
+				App.repo = new SnapshotRepo.from_uuid(App.backup_parent_uuid, this);
+			}
+		}
+
 		refresh_all();
 
 		if (App.first_run){

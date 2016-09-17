@@ -67,7 +67,8 @@ public class SnapshotRepo : GLib.Object{
 
 	public SnapshotRepo.from_uuid(string uuid, Gtk.Window? parent_win){
 
-		log_debug("SnapshotRepo: from_uuid(%s)".printf(uuid));
+		log_debug("SnapshotRepo: from_uuid()");
+		log_debug("uuid=%s".printf(uuid));
 		
 		device = Device.get_device_by_uuid(uuid);
 		if (device == null){
@@ -82,6 +83,8 @@ public class SnapshotRepo : GLib.Object{
 		invalid_snapshots = new Gee.ArrayList<Snapshot>();
 
 		init_from_device();
+
+		log_msg("SnapshotRepo: from_uuid(): exit");
 	}
 
 	private void init_from_device(){
@@ -92,15 +95,17 @@ public class SnapshotRepo : GLib.Object{
 			log_msg("");
 			unlock_and_mount_device();
 
-			if (device != null){
+			if ((device != null) && (device.device.length > 0)){
 				log_msg(_("Selected snapshot device") + ": %s".printf(device.device));
 				log_msg(_("Free space") + ": %s".printf(format_file_size(device.free_bytes)));
 			}
 		}
 
-		if (device != null){
+		if ((device != null) && (device.device.length > 0)){
 			check_status();
 		}
+
+		log_msg("SnapshotRepo: init_from_device(): exit");
 	}
 	
 
@@ -134,6 +139,8 @@ public class SnapshotRepo : GLib.Object{
 			device = unlock_encrypted_device(device);
 			
 			if (device == null){
+				log_debug("device is null");
+				log_debug("SnapshotRepo: unlock_and_mount_device(): exit");
 				return false;
 			}
 		}
@@ -169,7 +176,9 @@ public class SnapshotRepo : GLib.Object{
 				}
 			}
 		}
-		
+
+		log_debug("SnapshotRepo: unlock_and_mount_device(): exit");
+				
 		return false;
 	}
 
@@ -229,11 +238,15 @@ public class SnapshotRepo : GLib.Object{
 				_("Enter passphrase to unlock '%s'").printf(luks_device.name),
 				parent_window, true);
 
+			gtk_set_busy(true, parent_window);
+
 			string message, details;
 			luks_unlocked = Device.luks_unlock(luks_device, mapped_name, passphrase,
 				out message, out details);
 
 			bool is_error = (luks_unlocked == null);
+
+			gtk_set_busy(false, parent_window);
 			
 			gtk_messagebox(message, details, null, is_error);
 		}
@@ -346,22 +359,26 @@ public class SnapshotRepo : GLib.Object{
 			has_space();
 		}
 
-		if (use_snapshot_path_custom){
-			log_msg("Custom path selected");
-		}
-		
-		log_msg(_("Snapshot device") + ": '%s'".printf(
-			(device == null) ? " UNKNOWN" : device.device));
+		if (App.app_mode.length == 0){
 			
-		log_msg(_("Snapshot location") + ": '%s'".printf(snapshot_location));
+			log_msg("%s: '%s'".printf(
+				_("Snapshot device"),
+				(device == null) ? " UNKNOWN" : device.device));
+				
+			log_msg("%s: %s".printf(
+				_("Snapshot location"), snapshot_location));
 
-		log_msg(status_message);
-		log_msg(status_details);
-		
-		log_msg("Status: %s".printf(
-			status_code.to_string().replace("SNAPSHOT_LOCATION_STATUS_","")));
+			log_msg(status_message);
+			log_msg(status_details);
+			
+			log_msg("%s: %s".printf(
+				_("Status"),
+				status_code.to_string().replace("SNAPSHOT_LOCATION_STATUS_","")));
 
-		log_msg("");
+			log_msg("");
+		}
+
+		log_debug("SnapshotRepo: check_status(): exit");
 	}
 
 	public bool available(){
@@ -402,12 +419,14 @@ public class SnapshotRepo : GLib.Object{
 						status_message = _("File system is read-only");
 						status_details = _("Select another location for saving snapshots");
 						status_code = SnapshotLocationStatus.READ_ONLY_FS;
+						log_debug("is_available: false");
 						return false;
 					}
 					else if (!hardlink_supported){
 						status_message = _("File system does not support hard-links");
 						status_details = _("Select another location for saving snapshots");
 						status_code = SnapshotLocationStatus.HARDLINKS_NOT_SUPPORTED;
+						log_debug("is_available: false");
 						return false;
 					}
 					else{
@@ -422,15 +441,18 @@ public class SnapshotRepo : GLib.Object{
 			log_debug("checking selected device");
 			
 			if (device == null){
+				log_debug("device is null");
 				status_message = _("Snapshot location not selected");
 				status_details = _("Select the location for saving snapshots");
 				status_code = SnapshotLocationStatus.NOT_SELECTED;
+				log_debug("is_available: false");
 				return false;
 			}
 			else if (device.device.length == 0){
 				status_message = _("Snapshot location not available");
 				status_details = _("Device not found") + ": UUID='%s'".printf(device.uuid);
 				status_code = SnapshotLocationStatus.NOT_AVAILABLE;
+				log_debug("is_available: false");
 				return false;
 			}
 			else{
@@ -513,6 +535,12 @@ public class SnapshotRepo : GLib.Object{
 		}
 	}
 
+	public bool partition_or_volume_exists(){
+		return
+		((device.type == "part")||(device.type == "crypt"))
+			&& (device.device.length > 0) && (device.uuid.length > 0);
+	}
+	
 	// actions
 
 	public void auto_remove(){

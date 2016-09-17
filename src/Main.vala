@@ -3140,6 +3140,9 @@ public class Main : GLib.Object{
 
 		config.set_string_member("backup_device_uuid",
 			(repo.device == null) ? "" : repo.device.uuid);
+
+		config.set_string_member("parent_device_uuid",
+			(repo.device.has_parent()) ? repo.device.parent.uuid : "");
 			
 		config.set_string_member("use_snapshot_path_user",
 			repo.use_snapshot_path_custom.to_string());
@@ -3210,13 +3213,21 @@ public class Main : GLib.Object{
 		// initialize repo using config file values
 
 		string uuid = json_get_string(config,"backup_device_uuid","");
-
+		string parent_uuid = json_get_string(config,"parent_device_uuid","");
+		
 		log_debug("uuid=%s".printf(uuid));
+		log_debug("parent_uuid=%s".printf(parent_uuid));
 		
 		if (uuid.length > 0){
 			log_debug("repo: creating from uuid");
 			repo = new SnapshotRepo.from_uuid(uuid, null);
-			
+
+			if ((repo == null) || !repo.partition_or_volume_exists()){
+				if (parent_uuid.length > 0){
+					log_debug("repo: creating from parent uuid");
+					repo = new SnapshotRepo.from_uuid(parent_uuid, null);
+				}
+			}
 		}
 		else{
 			log_debug("repo: uuid is empty, creating from root device");

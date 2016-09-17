@@ -142,9 +142,9 @@ public class RsyncTask : AsyncTask{
 
 		cmd += " --numeric-ids --stats";
 
-		if (relative){
-			cmd += " --relative";
-		}
+		//if (relative){
+		//	cmd += " --relative";
+		//}
 		
 		if (delete_excluded){
 			cmd += " --delete-excluded";

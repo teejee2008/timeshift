@@ -1979,60 +1979,68 @@ public class Main : GLib.Object{
 		if (app_mode != ""){ //command line mode
 			init_mount_list();
 
-			for(int i = mount_list.size - 1; i >= 0; i--){
-				MountEntry mnt = mount_list[i];
-				Device dev = null;
-				string default_device = "";
+			// ask user to map devices if restoring to another system
+			if (restore_target.uuid !=  root_device.uuid){
+				for(int i = mount_list.size - 1; i >= 0; i--){
+					MountEntry mnt = mount_list[i];
+					Device dev = null;
+					string default_device = "";
 
-				if (mnt.mount_point == "/"){ continue; }
+					if (mnt.mount_point == "/"){ continue; }
 
-				if (mirror_system){
-					default_device = restore_target.device;
-				}
-				else{
-					default_device = mnt.device.device;
-				}
-
-				//prompt user for device
-				if (dev == null){
-					log_msg("");
-					log_msg(TERM_COLOR_YELLOW + _("Select '%s' device (default = %s)").printf(mnt.mount_point, default_device) + ":\n" + TERM_COLOR_RESET);
-					list_devices();
-					log_msg("");
-
-					int attempts = 0;
-					while (dev == null){
-						attempts++;
-						if (attempts > 3) { break; }
-						stdout.printf(TERM_COLOR_YELLOW + _("[a = Abort, d = Default (%s), r = Root device]").printf(default_device) + "\n\n" + TERM_COLOR_RESET);
-						stdout.printf(TERM_COLOR_YELLOW + _("Enter device name or number") + ": " + TERM_COLOR_RESET);
-						stdout.flush();
-						dev = read_stdin_device_mounts(partitions, mnt);
-					}
-					log_msg("");
-
-					if (dev == null){
-						log_error(_("Failed to get input from user in 3 attempts"));
-						log_msg(_("Aborted."));
-						exit_app();
-						exit(0);
-					}
-				}
-
-				if (dev != null){
-					mnt.device = dev;
-					if (dev.device == restore_target.device){
-						mount_list.remove_at(i);
-					}
-
-					log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
-					if (dev.device == restore_target.device){
-						log_msg(_("'%s' will be on root device").printf(mnt.mount_point), true);
+					if (mirror_system){
+						default_device = restore_target.device;
 					}
 					else{
-						log_msg(_("'%s' will be on '%s'").printf(mnt.mount_point, mnt.device.short_name_with_alias), true);
+						if (mnt.device != null){
+							default_device = mnt.device.device;
+						}
+						else{
+							default_device = restore_target.device;
+						}
 					}
-					log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
+
+					//prompt user for device
+					if (dev == null){
+						log_msg("");
+						log_msg(TERM_COLOR_YELLOW + _("Select '%s' device (default = %s)").printf(mnt.mount_point, default_device) + ":\n" + TERM_COLOR_RESET);
+						list_devices();
+						log_msg("");
+
+						int attempts = 0;
+						while (dev == null){
+							attempts++;
+							if (attempts > 3) { break; }
+							stdout.printf(TERM_COLOR_YELLOW + _("[a = Abort, d = Default (%s), r = Root device]").printf(default_device) + "\n\n" + TERM_COLOR_RESET);
+							stdout.printf(TERM_COLOR_YELLOW + _("Enter device name or number") + ": " + TERM_COLOR_RESET);
+							stdout.flush();
+							dev = read_stdin_device_mounts(partitions, mnt);
+						}
+						log_msg("");
+
+						if (dev == null){
+							log_error(_("Failed to get input from user in 3 attempts"));
+							log_msg(_("Aborted."));
+							exit_app();
+							exit(0);
+						}
+					}
+
+					if (dev != null){
+						mnt.device = dev;
+						if (dev.device == restore_target.device){
+							mount_list.remove_at(i);
+						}
+
+						log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
+						if (dev.device == restore_target.device){
+							log_msg(_("'%s' will be on root device").printf(mnt.mount_point), true);
+						}
+						else{
+							log_msg(_("'%s' will be on '%s'").printf(mnt.mount_point, mnt.device.short_name_with_alias), true);
+						}
+						log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
+					}
 				}
 			}
 		}
@@ -2041,10 +2049,13 @@ public class Main : GLib.Object{
 
 		if (restore_target != null){
 			if (app_mode != ""){ //commandline mode
-				//mount target device and other devices
-				bool status = mount_target_device(null);
-				if (status == false){
-					return false;
+
+				if (restore_target.uuid !=  root_device.uuid){
+					//mount target device and other devices
+					bool status = mount_target_device(null);
+					if (status == false){
+						return false;
+					}
 				}
 			}
 			else{

@@ -408,6 +408,7 @@ public class Main : GLib.Object{
 					log_msg(_("Snapshots on device %s").printf(
 						repo.device.full_name_with_alias) + ":\n");
 					list_snapshots(false);
+					log_msg("");
 					return true;
 				}
 				else{
@@ -419,6 +420,7 @@ public class Main : GLib.Object{
 				LOG_ENABLE = true;
 				log_msg(_("Devices with Linux file systems") + ":\n");
 				list_devices();
+				log_msg("");
 				return true;
 
 			default:

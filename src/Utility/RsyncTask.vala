@@ -92,7 +92,9 @@ public class RsyncTask : AsyncTask{
 	
 	public void prepare() {
 		string script_text = build_script();
-		log_msg(script_text);
+		
+		log_debug(script_text);
+		
 		save_bash_script_temp(script_text, script_file);
 		log_debug("RsyncTask:prepare(): saved: %s".printf(script_file));
 

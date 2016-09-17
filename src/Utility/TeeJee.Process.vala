@@ -518,7 +518,7 @@ namespace TeeJee.ProcessHelper{
 
 		public bool active = false;
 		public string process_to_kill = "";
-		public int seconds_to_wait = 20;
+		public int seconds_to_wait = 30;
 		public bool exit_app = false;
 		
 		public void kill_process_on_timeout(

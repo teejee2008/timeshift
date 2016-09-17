@@ -45,8 +45,8 @@ class MainWindow : Gtk.Window{
 	private Gtk.ToolButton btn_browse_snapshot;
 	private Gtk.ToolButton btn_settings;
 	private Gtk.ToolButton btn_wizard;
+	private Gtk.ToolButton btn_clone;
 	private Gtk.Menu menu_extra;
-
 
 	private SnapshotListBox snapshot_list_box;
 	
@@ -55,15 +55,12 @@ class MainWindow : Gtk.Window{
 	private Gtk.Image img_shield;
 	private Gtk.Label lbl_shield;
 	private Gtk.Label lbl_shield_subnote;
-	private Gtk.Label lbl_status;
 	private Gtk.Label lbl_snap_count;
 	private Gtk.Label lbl_free_space;
 	private Gtk.Box vbox_snap_count;
 	private Gtk.Box vbox_free_space;
 
 	//timers
-	private uint timer_progress;
-	private uint timer_backup_device_init;
 	private uint tmr_init;
 
 	public MainWindow () {
@@ -134,15 +131,6 @@ class MainWindow : Gtk.Window{
 
 		btn_restore.clicked.connect (btn_restore_clicked);
 
-	    //btn_browse_snapshot
-		btn_browse_snapshot = new Gtk.ToolButton.from_stock ("gtk-directory");
-		btn_browse_snapshot.is_important = true;
-		btn_browse_snapshot.label = _("Browse");
-		btn_browse_snapshot.set_tooltip_text (_("Browse selected snapshot"));
-        toolbar.add(btn_browse_snapshot);
-
-        btn_browse_snapshot.clicked.connect (browse_selected);
-
 		//btn_delete_snapshot
 		btn_delete_snapshot = new Gtk.ToolButton.from_stock ("gtk-delete");
 		btn_delete_snapshot.is_important = true;
@@ -151,6 +139,15 @@ class MainWindow : Gtk.Window{
         toolbar.add(btn_delete_snapshot);
 
         btn_delete_snapshot.clicked.connect (delete_selected);
+        
+	    //btn_browse_snapshot
+		btn_browse_snapshot = new Gtk.ToolButton.from_stock ("gtk-directory");
+		btn_browse_snapshot.is_important = true;
+		btn_browse_snapshot.label = _("Browse");
+		btn_browse_snapshot.set_tooltip_text (_("Browse selected snapshot"));
+        toolbar.add(btn_browse_snapshot);
+
+        btn_browse_snapshot.clicked.connect (browse_selected);
 
         //btn_settings
 		btn_settings = new Gtk.ToolButton.from_stock ("gtk-preferences");
@@ -170,7 +167,18 @@ class MainWindow : Gtk.Window{
         toolbar.add(btn_wizard);
 
         btn_wizard.clicked.connect (btn_wizard_clicked);
+	
+        //btn_clone
+		btn_clone = new Gtk.ToolButton.from_stock ("edit-copy");
+		btn_clone.is_important = true;
+		btn_clone.label = _("Clone");
+		btn_clone.set_tooltip_text (_("Clone system to another disk"));
+        toolbar.add(btn_clone);
+        
+		btn_clone.clicked.connect (btn_clone_clicked);
 
+		// TODO: replace gtk icon names with desktop-neutral names
+		
         //separator
 		var separator = new Gtk.SeparatorToolItem();
 		separator.set_draw (false);
@@ -362,11 +370,6 @@ class MainWindow : Gtk.Window{
 
 		/* updates statusbar messages and snapshot list after backup device is changed */
 
-		if (timer_backup_device_init > 0){
-			Source.remove(timer_backup_device_init);
-			timer_backup_device_init = 0;
-		}
-
 		ui_sensitive(false);
 
 		snapshot_list_box.refresh();
@@ -414,10 +417,8 @@ class MainWindow : Gtk.Window{
 		return false;
 	}
 
-
 	// context menu
 	
-
 	public void create_snapshot(){
 
 		// check root device --------------

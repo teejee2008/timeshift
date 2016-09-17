@@ -44,6 +44,8 @@ class RestoreExcludeBox : Gtk.Box{
 		parent_window = _parent_window;
 		margin = 12;
 
+		log_debug("RestoreExcludeBox: RestoreExcludeBox()");
+
 		// header ---------------
 		
 		var label = add_label_header(this, _("Exclude Personal Files"), true);
@@ -112,6 +114,8 @@ class RestoreExcludeBox : Gtk.Box{
 		
 		//chk.set_tooltip_text(tt);
 		//label.set_tooltip_text(tt);
+
+		log_debug("RestoreExcludeBox: RestoreExcludeBox(): exit");
     }
 
 

@@ -43,16 +43,14 @@ class RestoreSummaryBox : Gtk.Box{
 		Object(orientation: Gtk.Orientation.VERTICAL, spacing: 6); // work-around
 		parent_window = _parent_window;
 		margin = 12;
-		
-		// header
-		//add_label_header(this, _("Summary"), true);
 
+		log_debug("RestoreSummaryBox: RestoreSummaryBox()");
+		
 		lbl_msg = add_label_scrolled(this, "", false, true);
-		
-
-		//add_label_header(this, _("Summary"), true);
 
 		refresh();
+
+		log_debug("RestoreSummaryBox: RestoreSummaryBox(): exit");
     }
 
     public void refresh(){

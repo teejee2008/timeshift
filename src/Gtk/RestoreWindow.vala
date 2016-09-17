@@ -56,6 +56,9 @@ class RestoreWindow : Gtk.Window{
 	private bool success = false;
 	
 	public RestoreWindow() {
+
+		log_debug("RestoreWindow: RestoreWindow()");
+		
 		this.title = _("Restore");
         this.window_position = WindowPosition.CENTER;
         this.modal = true;
@@ -104,6 +107,8 @@ class RestoreWindow : Gtk.Window{
 		show_all();
 
 		tmr_init = Timeout.add(100, init_delayed);
+
+		log_debug("RestoreWindow: RestoreWindow(): exit");
     }
     
 	private bool init_delayed(){
@@ -321,6 +326,49 @@ class RestoreWindow : Gtk.Window{
 		if (notebook.page == Tabs.TARGET_DEVICE){
 
 			App.restore_target = null;
+
+			// check if target device is selected for /
+			foreach(var entry in App.mount_list){
+				if ((entry.mount_point == "/") && (entry.device == null)){
+					
+					gtk_messagebox(
+						_("Root device not selected"),
+						_("Select the device for root file system (/)"),
+						this, true);
+						
+					return false;
+				}
+			}
+
+			if (App.mirror_system){
+
+				// check if target_device != root_device
+				foreach(var entry in App.mount_list){
+					if (entry.mount_point != "/"){ continue; }
+
+					bool same = false;
+					if (entry.device.uuid == App.root_device.uuid){
+						same = true;
+					}
+					else if (entry.device.has_parent() && App.root_device.has_parent()){
+						if (entry.device.uuid == App.root_device.parent.uuid){
+							same = true;
+						}
+					}
+					
+					if (same){
+						
+						gtk_messagebox(
+							_("Target device is same as system device"),
+							_("Select another device for root file system (/)"),
+							this, true);
+							
+						return false;
+					}
+
+					break;
+				}
+			}
 			
 			// remove mount points which will remain on root fs
 			for(int i = App.mount_list.size-1; i >= 0; i--){

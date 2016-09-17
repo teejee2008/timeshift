@@ -91,4 +91,13 @@ public class FsTabEntry : GLib.Object{
 		}
 		return text;
 	}
+
+	public string get_uuid(){
+		if (device.down().has_prefix("uuid=")){
+			return device.replace("\"","").replace("'","").split("=")[1];
+		}
+		else{
+			return "";
+		}
+	}
 }

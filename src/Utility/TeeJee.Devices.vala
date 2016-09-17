@@ -129,6 +129,18 @@ namespace TeeJee.Devices{
 			}
 		}
 
+		public string short_name_with_parent{
+			owned get{
+				string text = kname;
+
+				if (has_parent() && (parent.type == "part")){
+					text += ", %s".printf(pkname);
+				}
+				
+				return text;
+			}
+		}
+
 		public string description(){
 			return description_formatted().replace("<b>","").replace("</b>","");
 		}
@@ -454,6 +466,7 @@ namespace TeeJee.Devices{
 				(device_file.length > 0) ? device_file : "");
 
 			if (LOG_DEBUG){
+				log_debug("");
 				log_debug(cmd);
 			}
 				
@@ -1424,48 +1437,43 @@ namespace TeeJee.Devices{
 
 		public static void print_device_list(Gee.ArrayList<Device> list){
 
-			log_debug("\n");
+			log_debug("");
 			
-			log_debug("%-20s %-25s %-10s %-10s %s\n".printf(
+			log_debug("%-20s %-10s %-10s %-36s %s".printf(
 				"device",
-				"label",
 				"pkname",
 				"kname",
-				"uuid"));
+				"uuid",
+				"mapped_name"));
 
 			log_debug(string.nfill(100, '-'));
-			log_debug("\n");
-			
+
 			foreach(var dev in list){
-				log_debug("%-20s %-25s %-10s %-10s %s\n".printf(
-					dev.device + ((dev.mapped_name.length > 0) ? " -> " + dev.mapped_name : ""),
-					dev.label,
+				log_debug("%-20s %-10s %-10s %-36s %s".printf(
+					dev.device ,
 					dev.pkname,
 					dev.kname,
-					dev.uuid
+					dev.uuid,
+					dev.mapped_name
 					));
 			}
 
-			log_debug("\n");
+			log_debug("");
 			
-			log_debug("%-20s %-10s %-10s %s %s %s %s\n".printf(
+			log_debug("%-20s %-20s %s %s %s %s".printf(
 				"device",
-				"pkname",
-				"kname",
+				"label",
 				"vendor",
 				"model",
 				"serial",
 				"rev"));
 
 			log_debug(string.nfill(100, '-'));
-			log_debug("\n");
-			
+
 			foreach(var dev in list){
-				log_debug("%-20s %-10s %-10s %s %s %s %s\n".printf(
-					dev.device + ((dev.mapped_name.length > 0) ? " -> " + dev.mapped_name : ""),
-					//dev.name,
-					dev.pkname,
-					dev.kname,
+				log_debug("%-20s %-20s %s %s %s %s".printf(
+					dev.device,
+					dev.label,
 					dev.vendor,
 					dev.model,
 					dev.serial,
@@ -1473,9 +1481,9 @@ namespace TeeJee.Devices{
 					));
 			}
 
-			log_debug("\n");
+			log_debug("");
 			
-			log_debug("%-20s %-10s %-15s %-10s %10s %10s %10s\n".printf(
+			log_debug("%-20s %-10s %-15s %-3s %-3s %15s %15s".printf(
 				"device",
 				"type",
 				"fstype",
@@ -1485,10 +1493,9 @@ namespace TeeJee.Devices{
 				"used"));
 
 			log_debug(string.nfill(100, '-'));
-			log_debug("\n");
-			
+
 			foreach(var dev in list){
-				log_debug("%-20s %-10s %-15s %-10s %10s %10s %10s\n".printf(
+				log_debug("%-20s %-10s %-15s %-3s %-3s %15s %15s".printf(
 					dev.device,
 					dev.type,
 					dev.fstype,
@@ -1499,22 +1506,21 @@ namespace TeeJee.Devices{
 					));
 			}
 
-			log_debug("\n");
+			log_debug("");
 		}
 
 		public static void print_device_mounts(Gee.ArrayList<Device> list){
 
-			log_debug("\n");
+			log_debug("");
 			
-			log_debug("%-15s %s\n".printf(
+			log_debug("%-15s %s".printf(
 				"device",
 				//"fstype",
 				"> mount_points (mount_options)"
 			));
 
 			log_debug(string.nfill(100, '-'));
-			log_debug("\n");
-			
+
 			foreach(var dev in list){
 
 				string mps = "";
@@ -1525,7 +1531,7 @@ namespace TeeJee.Devices{
 					}
 				}
 
-				log_debug("%-15s %s\n\n".printf(
+				log_debug("%-15s %s".printf(
 					dev.device,
 					//dev.fstype,
 					mps
@@ -1533,13 +1539,13 @@ namespace TeeJee.Devices{
 				
 			}
 
-			log_debug("\n");
+			log_debug("");
 		}
 
 		public static void print_device_disk_space(Gee.ArrayList<Device> list){
-			log_debug("\n");
+			log_debug("");
 			
-			log_debug("%-15s %-12s %15s %15s %15s %10s\n".printf(
+			log_debug("%-15s %-12s %15s %15s %15s %10s".printf(
 				"device",
 				"fstype",
 				"size",
@@ -1549,10 +1555,9 @@ namespace TeeJee.Devices{
 			));
 
 			log_debug(string.nfill(100, '-'));
-			log_debug("\n");
-			
+
 			foreach(var dev in list){
-				log_debug("%-15s %-12s %15s %15s %15s %10s\n".printf(
+				log_debug("%-15s %-12s %15s %15s %15s %10s".printf(
 					dev.device,
 					dev.fstype,
 					format_file_size(dev.size_bytes, true),
@@ -1562,7 +1567,7 @@ namespace TeeJee.Devices{
 				));
 			}
 
-			log_debug("\n");
+			log_debug("");
 		}
 	}
 

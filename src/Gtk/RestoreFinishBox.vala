@@ -44,8 +44,12 @@ class RestoreFinishBox : Gtk.Box{
 		parent_window = _parent_window;
 		margin = 12;
 
+		log_debug("RestoreFinishBox: RestoreFinishBox()");
+
 		lbl_header = add_label_header(this, _("Completed"), true);
 		lbl_message = add_label_scrolled(this, "", false, true, 0);
+
+		log_debug("RestoreFinishBox: RestoreFinishBox(): exit");
     }
 
 	public void update_message(bool success){

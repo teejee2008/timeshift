@@ -73,6 +73,7 @@ public class Main : GLib.Object{
 	//private Gee.ArrayList<Device> grub_device_list;
 
 	public Device root_device;
+	public Device boot_device;
 	public Device home_device;
 
 	public string mount_point_restore = "";
@@ -2263,6 +2264,9 @@ public class Main : GLib.Object{
 	}
 
 	public void init_mount_list(){
+
+		log_debug("Main: init_mount_list()");
+		
 		mount_list.clear();
 
 		Gee.ArrayList<FsTabEntry> fstab_list = null;
@@ -2290,47 +2294,62 @@ public class Main : GLib.Object{
 			
 			if (mnt.mount_point.has_prefix("/mnt") || mnt.mount_point.has_prefix("/mount")
 				|| mnt.mount_point.has_prefix("/sdcard") || mnt.mount_point.has_prefix("/cdrom")
-				|| mnt.mount_point.has_prefix("/media") || (mnt.mount_point == "none")){
+				|| mnt.mount_point.has_prefix("/media") || (mnt.mount_point == "none")
+				|| !mnt.mount_point.has_prefix("/")
+				|| (!mnt.device.has_prefix("/dev/") && !mnt.device.down().has_prefix("uuid="))){
 				
 				continue;
 			}
 
-			// replaced mapped name with parent device
-			
-			/*
-			Note: This is required since the mapped name will be different on running system.
-			Since we don't have the same mapped name, we cannot resolve the device without
-			identifying the parent partition
-			*/
-
-			if (mnt.device.has_prefix("/dev/mapper/")){
-				string mapped_name = mnt.device.replace("/dev/mapper/","");
-				foreach(var entry in crypttab_list){
-					if (entry.mapped_name == mapped_name){
-						mnt.device = entry.device;
-						break;
-					}
-				}
-			}
-			
 			// find device by name or uuid
 			
 			Device mnt_dev = null;
-			if (mnt.device.down().has_prefix("uuid=")){
-				string uuid = mnt.device["uuid=".length:mnt.device.length];
-				mnt_dev = Device.get_device_by_uuid(uuid);
+			if (mnt.get_uuid().length > 0){
+				mnt_dev = Device.get_device_by_uuid(mnt.get_uuid());
 			}
 			else{
 				mnt_dev = Device.get_device_by_name(mnt.device);
 			}
+
+			// replace mapped name with parent device
+
+			if (mnt_dev == null){
+				
+				/*
+				Note: This is required since the mapped name may be different on running system.
+				Since we don't have the same mapped name, we cannot resolve the device without
+				identifying the parent partition
+				*/
+
+				if (mnt.device.has_prefix("/dev/mapper/")){
+					string mapped_name = mnt.device.replace("/dev/mapper/","");
+					foreach(var entry in crypttab_list){
+						if (entry.mapped_name == mapped_name){
+							mnt.device = entry.device;
+							break;
+						}
+					}
+				}
+
+				// try again - find device by name or uuid
 			
+				if (mnt.get_uuid().length > 0){
+					mnt_dev = Device.get_device_by_uuid(mnt.get_uuid());
+				}
+				else{
+					mnt_dev = Device.get_device_by_name(mnt.device);
+				}
+			}
+
 			if (mnt_dev != null){
 				
 				// add to mount list
 				
+				log_debug("added: dev: %s, path: %s, options: %s".printf(
+					mnt_dev.device, mnt.mount_point, mnt.options));
+					
 				mount_list.add(new MountEntry(mnt_dev, mnt.mount_point, mnt.options));
-				log_debug("found: %s".printf(mnt_dev.device));
-
+				
 				if (mnt.mount_point == "/"){
 					root_found = true;
 					restore_target = mnt_dev;
@@ -2343,7 +2362,10 @@ public class Main : GLib.Object{
 				}
 			}
 			else{
-				//log_debug("device is null");
+				log_debug("missing: dev: %s, path: %s, options: %s".printf(
+					mnt.device, mnt.mount_point, mnt.options));
+
+				mount_list.add(new MountEntry(null, mnt.mount_point, mnt.options));
 			}
 		}
 
@@ -2367,12 +2389,9 @@ public class Main : GLib.Object{
 		*/
 		
 		if (App.mirror_system){
-			//default all mount points to root device except /boot
-			for (int i = mount_list.size - 1; i >= 0; i--){
-				MountEntry mnt = App.mount_list[i];
-				if (mnt.mount_point != "/boot"){
-					App.mount_list.remove_at(i);
-				}
+			foreach (var entry in mount_list){
+				// user should select another device
+				entry.device = null; 
 			}
 			
 		}
@@ -2390,6 +2409,8 @@ public class Main : GLib.Object{
 		mount_list.sort((a,b) => {
 			return strcmp(a.mount_point, b.mount_point);
 		});
+
+		log_debug("Main: init_mount_list(): exit");
 	}
 
 	// delete from terminal
@@ -2477,9 +2498,12 @@ public class Main : GLib.Object{
 			thread_delete_running = true;
 			thread_delete_success = false;
 			Thread.create<void> (delete_thread, true);
+
+			//new Thread<bool> ("", delete_thread);
+
 			log_debug("delete_begin(): thread created");
 		}
-		catch (ThreadError e) {
+		catch (Error e) {
 			thread_delete_running = false;
 			thread_delete_success = false;
 			log_error (e.message);
@@ -2519,6 +2543,8 @@ public class Main : GLib.Object{
 
 		thread_delete_running = false;
 		thread_delete_success = false;
+
+		//return thread_delete_success;
 	}
 	
 	// todo: remove
@@ -2580,9 +2606,11 @@ public class Main : GLib.Object{
 	public string disclaimer_pre_restore(bool formatted){
 		string msg = "";
 		string txt = "";
+
+		log_debug("Main: disclaimer_pre_restore()");
 		
 		if (formatted){
-			msg += "<span size=\"x-large\">%s</span>\n\n".printf(_("WARNING"));
+			msg += "<span size=\"x-large\" weight=\"bold\">%s</span>\n\n".printf(_("WARNING"));
 		}
 		else{
 			msg += "%s\n\n".printf(_("WARNING"));
@@ -2590,8 +2618,9 @@ public class Main : GLib.Object{
 		
 		msg += _("Data will be modified on following devices:") + "\n\n";
 
-		int max_mount = _("Mount Point").length;
+		int max_mount = _("Mount").length;
 		int max_dev = _("Device").length;
+		int max_vol = _("Subvol").length;
 
 		foreach(var entry in mount_list){
 			if (entry.device == null){ continue; }
@@ -2603,6 +2632,9 @@ public class Main : GLib.Object{
 			}
 			if (entry.mount_point.length > max_mount){
 				max_mount = entry.mount_point.length;
+			}
+			if (entry.subvolume_name().length > max_vol){
+				max_vol = entry.subvolume_name().length;
 			}
 		}
 
@@ -2617,20 +2649,24 @@ public class Main : GLib.Object{
 			}
 		}
 		
-		txt = ("%%-%ds  %%-%ds\n".printf(max_dev, max_mount))
-			.printf(_("Device"),_("Mount Point"));
-
+		txt = ("%%-%ds  %%-%ds".printf(max_dev, max_mount))
+			.printf(_("Device"),_("Mount"));
 		if (show_subvolume){
-			txt += "  %s".printf(_("Subvolume"));
+			txt += "  %s".printf(_("Subvol"));
 		}
+		txt += "\n";
 
-		txt += string.nfill(max_dev, '-') + "  " + string.nfill(max_mount, '-') + "\n";
+		txt += string.nfill(max_dev, '-') + "  " + string.nfill(max_mount, '-');
+		if (show_subvolume){
+			txt += "  " + string.nfill(max_vol, '-');
+		}
+		txt += "\n";
 		
 		foreach(var entry in App.mount_list){
 			if (entry.device == null){ continue; }
 			
 			txt += ("%%-%ds  %%-%ds".printf(max_dev, max_mount)).printf(
-				entry.device.short_name_with_alias, entry.mount_point);
+				entry.device.short_name_with_parent, entry.mount_point);
 
 			if (show_subvolume){
 				txt += "  %s".printf(entry.subvolume_name());
@@ -2640,7 +2676,7 @@ public class Main : GLib.Object{
 		}
 		
 		if (formatted){
-			msg += "<tt>%s</tt>\n".printf(txt);
+			msg += "<span size=\"medium\"><tt>%s</tt></span>\n".printf(txt);
 		}
 		else{
 			msg += "%s\n".printf(txt);
@@ -2649,13 +2685,15 @@ public class Main : GLib.Object{
 		//msg += _("Files will be overwritten on the target device!") + "\n";
 		msg += _("If restore fails and you are unable to boot the system, then boot from the Ubuntu Live CD, install Timeshift, and try to restore again.") + "\n";
 
-		if ((root_device != null) && (restore_target.device == root_device.device)){
+		if ((root_device != null) &&
+			(restore_target != null) && (restore_target.device == root_device.device)){
+				
 			msg += "\n<b>" + _("Please save your work and close all applications.") + "\n";
 			msg += _("System will reboot to complete the restore process.") + "</b>\n";
 		}
 
 		if (formatted){
-			msg += "\n<span size=\"x-large\">%s</span>\n\n".printf(_("DISCLAIMER"));
+			msg += "\n<span size=\"x-large\" weight=\"bold\">%s</span>\n\n".printf(_("DISCLAIMER"));
 		}
 		else{
 			msg += "\n%s\n\n".printf(_("DISCLAIMER"));
@@ -2664,7 +2702,11 @@ public class Main : GLib.Object{
 		msg += _("This software comes without absolutely NO warranty and the author takes no responsibility for any damage arising from the use of this program.");
 		msg += " " + _("If these terms are not acceptable to you, please do not proceed beyond this point!");
 
-		msg += "\n\n" + _("Click Next to continue") + "\n";
+		if (formatted){
+			msg += "\n\n<span size=\"x-large\">%s</span>\n".printf(_("Click Next to continue"));
+		}
+
+		log_debug("Main: disclaimer_pre_restore(): exit");
 		
 		return msg;
 	}

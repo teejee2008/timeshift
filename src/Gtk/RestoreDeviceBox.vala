@@ -54,6 +54,8 @@ class RestoreDeviceBox : Gtk.Box{
 		parent_window = _parent_window;
 		margin = 12;
 
+		log_debug("RestoreDeviceBox: RestoreDeviceBox()");
+
 		var hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
 		add(hbox);
 
@@ -73,9 +75,16 @@ class RestoreDeviceBox : Gtk.Box{
 			refresh();
 		});
 
-		add_label(this, _("Select the partitions where files will be restored.") + "\n"
-			+ _("Partitions from which snapshot was created are pre-selected."));
 
+		if (App.mirror_system){
+			add_label(this,
+				_("Select the target partitions where system will be cloned."));
+		}
+		else{
+			add_label(this,
+				_("Select the partitions where files will be restored.") + "\n" +
+				_("Partitions from which snapshot was created are pre-selected."));
+		}
 
 		show_subvolume = false;
 		foreach(var entry in App.mount_list){
@@ -117,6 +126,8 @@ class RestoreDeviceBox : Gtk.Box{
 		// infobar
 		
 		create_infobar_location();
+
+		log_debug("RestoreDeviceBox: RestoreDeviceBox(): exit");
     }
 
     public void refresh(){
@@ -171,7 +182,10 @@ class RestoreDeviceBox : Gtk.Box{
 		combo.query_tooltip.connect((x, y, keyboard_tooltip, tooltip) => {
 			Device dev;
 			TreeIter iter;
-			combo.get_active_iter (out iter);
+			bool ok = combo.get_active_iter (out iter);
+
+			if (!ok) { return true; }
+			
 			combo.model.get (iter, 0, out dev, -1);
 			
 			//tooltip.set_icon(get_shared_icon_pixbuf("drive-harddisk", "drive-harddisk", 256));
@@ -201,7 +215,7 @@ class RestoreDeviceBox : Gtk.Box{
 		var model = new Gtk.ListStore(2, typeof(Device), typeof(MountEntry));
 		combo.model = model;
 		
-		var active = 0;
+		var active = -1;
 		var index = -1;
 		TreeIter iter;
 
@@ -211,7 +225,7 @@ class RestoreDeviceBox : Gtk.Box{
 			model.set (iter, 0, null);
 			model.set (iter, 1, entry);
 		}
-	
+		
 		foreach(var dev in App.partitions){
 			// skip disk and loop devices
 			if ((dev.type == "disk")||(dev.type == "loop")){
@@ -235,6 +249,10 @@ class RestoreDeviceBox : Gtk.Box{
 			}
 		}
 
+		if ((active == -1) && (entry.mount_point != "/")){
+			active = 0; // keep on root device
+		}
+		
 		combo.active = active;
 
 		combo.changed.connect((path) => {

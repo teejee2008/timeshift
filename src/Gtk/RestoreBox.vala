@@ -60,6 +60,8 @@ class RestoreBox : Gtk.Box{
 		Object(orientation: Gtk.Orientation.VERTICAL, spacing: 6); // work-around
 		parent_window = _parent_window;
 		margin = 12;
+
+		log_debug("RestoreBox: RestoreBox()");
 		
 		// header
 		if (App.mirror_system){
@@ -125,6 +127,8 @@ class RestoreBox : Gtk.Box{
 		lbl_permissions = add_count_label(this, _("Permissions"), ref sg_label, ref sg_value);
 		lbl_owner = add_count_label(this, _("Owner"), ref sg_label, ref sg_value);
 		lbl_group = add_count_label(this, _("Group"), ref sg_label, ref sg_value, 24);
+
+		log_debug("RestoreBox: RestoreBox(): exit");
     }
 
 	private Gtk.Label add_count_label(Gtk.Box box, string text,

@@ -1068,7 +1068,7 @@ public class Main : GLib.Object{
 		if (int64.try_parse(index_string, out index)){
 			int i = -1;
 			foreach(Device pi in device_list) {
-				if ((pi.type == "partition") && !pi.has_linux_filesystem()) { continue; }
+				if (!pi.has_linux_filesystem()) { continue; }
 				if (++i == index){
 					return pi;
 				}

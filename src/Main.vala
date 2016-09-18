@@ -3001,20 +3001,28 @@ public class Main : GLib.Object{
 					foreach(var fstab_entry in fstab_list){
 						if (fstab_entry.mount_point == mount_entry.mount_point){
 							found = true;
+							
 							//update fstab entry
 							fstab_entry.device = "UUID=%s".printf(mount_entry.device.uuid);
 							fstab_entry.type = mount_entry.device.fstype;
 
 							//fix mount options for / and /home
 							if (restore_target.fstype != "btrfs"){
-								if ((fstab_entry.mount_point == "/") && fstab_entry.options.contains("subvol=@")){
+								
+								if ((fstab_entry.mount_point == "/")
+									&& fstab_entry.options.contains("subvol=@")){
+										
 									fstab_entry.options = fstab_entry.options.replace("subvol=@","").strip();
+									
 									if (fstab_entry.options.has_suffix(",")){
 										fstab_entry.options = fstab_entry.options[0:fstab_entry.options.length - 1];
 									}
 								}
-								else if ((fstab_entry.mount_point == "/home") && fstab_entry.options.contains("subvol=@home")){
+								else if ((fstab_entry.mount_point == "/home")
+									&& fstab_entry.options.contains("subvol=@home")){
+										
 									fstab_entry.options = fstab_entry.options.replace("subvol=@home","").strip();
+
 									if (fstab_entry.options.has_suffix(",")){
 										fstab_entry.options = fstab_entry.options[0:fstab_entry.options.length - 1];
 									}
@@ -3064,10 +3072,17 @@ public class Main : GLib.Object{
 					fstab_list.remove(fstab_home_entry);
 				}
 
+				// sort the entries based on mount path
+				// this is critical to ensure that base paths are mounted before child paths
+
+				fstab_list.sort((a, b)=>{
+					return strcmp(a.mount_point, b.mount_point);
+				});
+
 				//write the updated file --------------
 
 				string text = "# <file system> <mount point> <type> <options> <dump> <pass>\n\n";
-				text += FsTabEntry.create_file(fstab_list.to_array(), false);
+				text += FsTabEntry.create_file_text(fstab_list.to_array(), false);
 				if (file_exists(fstab_path)){
 					file_delete(fstab_path);
 				}
@@ -3081,8 +3096,14 @@ public class Main : GLib.Object{
 					if (fstab_entry.mount_point.length == 0){ continue; }
 					if (!fstab_entry.mount_point.has_prefix("/")){ continue; }
 					
-					string mount_path = target_path + fstab_entry.mount_point[1:fstab_entry.mount_point.length];
-					if (fstab_entry.is_comment || fstab_entry.is_empty_line || (mount_path.length == 0)){ continue; }
+					string mount_path = target_path +
+						fstab_entry.mount_point[1:fstab_entry.mount_point.length];
+						
+					if (fstab_entry.is_comment || fstab_entry.is_empty_line
+					|| (mount_path.length == 0)){
+						
+						continue;
+					}
 
 					if (!dir_exists(mount_path)){
 						

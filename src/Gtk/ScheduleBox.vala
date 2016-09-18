@@ -155,6 +155,7 @@ class ScheduleBox : Gtk.Box{
 
 		var vbox = new Box (Orientation.VERTICAL, 6);
 		vbox.margin_bottom = 0;
+		vbox.margin_top = 6;
         hbox.add (vbox);
         
 		// lbl_shield

@@ -73,7 +73,7 @@ public class FsTabEntry : GLib.Object{
 		return list;
 	}
 
-	public static string create_file(
+	public static string create_file_text(
 		FsTabEntry[] entries, bool keep_comments_and_empty_lines = true){
 			
 		string text = "";

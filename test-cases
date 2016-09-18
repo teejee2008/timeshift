@@ -1,0 +1,21 @@
+System-1: Ubuntu installed on single ext4 partition (/dev/hda1)
+System-2: Ubuntu installed on luks-encrypted btfs partition (/dev/hda2) with /boot mounted on /dev/hda1
+
+Test Cases:
+
+1. Restore a snapshot on sys-1.
+2. Restore a snapshot on sys-2.
+3. Restore snapshot on sys-1 while running sys-2. Verify restored system.
+4. Restore snapshot on sys-2 while running sys-1. Verify restored system.
+
+For 1,2,3,4: Create a file named include.txt containing text old" or "new" in Home and add a include filter for the file. Change the wallper for each snapshot. Verify wallpaper and include.txt contents after restore.
+
+5. Clone sys-1 on empty disk /dev/hdc1. Boot cloned system and verify /etc/fstab.
+6. Clone sys-1 on empty disk /dev/hdc2 with /boot on /dev/hdc1 and /home on /dev/hdc3.  Boot cloned system and verify /etc/fstab.
+7. Repeat steps 5,6 for sys-2.
+
+For 5,6,7: Verify /etc/fstab and /etc/crypttab. They should contain the device mappings that were selected before cloning the system.
+
+8. Run timeshift from Live system and verify that backup options are disabled. Restore options should be available.
+
+9. Run TC-1 from Fedora, OpenSUSE, Elementary OS and Manjaro.

@@ -180,6 +180,7 @@ class MainWindow : Gtk.Window{
 		btn_clone.is_important = true;
 		btn_clone.label = _("Clone");
 		btn_clone.set_tooltip_text (_("Clone system to another disk"));
+		btn_clone.icon_widget = get_shared_icon("edit-copy","edit-copy.svg",24);
         toolbar.add(btn_clone);
         
 		btn_clone.clicked.connect (btn_clone_clicked);
@@ -207,6 +208,7 @@ class MainWindow : Gtk.Window{
 
 	private void init_ui_snapshot_list(){
 		snapshot_list_box = new SnapshotListBox(this);
+		snapshot_list_box.vexpand = true;
 		vbox_main.add(snapshot_list_box);
 
 		snapshot_list_box.delete_selected.connect(delete_selected);
@@ -222,6 +224,7 @@ class MainWindow : Gtk.Window{
 
 		// hbox_shield
 		var box = new Box (Orientation.HORIZONTAL, 6);
+		box.margin_top = 0;
         box.margin_bottom = 12;
         box.margin_left = 6;
         box.margin_right = 12;
@@ -231,23 +234,25 @@ class MainWindow : Gtk.Window{
         // img_shield
 		img_shield = new Gtk.Image();
 		img_shield.pixbuf = get_shared_icon("security-high", "security-high.svg", 48).pixbuf;
+		img_shield.margin_bottom = 6;
         statusbar.add(img_shield);
 
 		var vbox = new Box (Orientation.VERTICAL, 6);
-		vbox.margin_bottom = 0;
+		box.margin_top = 0;
+        box.margin_bottom = 0;
         statusbar.add (vbox);
         
 		//lbl_shield
 		lbl_shield = add_label(vbox, "");
-        lbl_shield.margin_bottom = 0;
         lbl_shield.yalign = (float) 0.5;
-        lbl_shield.hexpand = true;
 
         //lbl_shield_subnote
 		lbl_shield_subnote = add_label(vbox, "");
 		lbl_shield_subnote.yalign = (float) 0.5;
-		lbl_shield_subnote.hexpand = true;
-		
+
+		//vbox.set_child_packing(lbl_shield, true, true, 0, PackType.START);
+		//vbox.set_child_packing(lbl_shield_subnote, true, false, 0, PackType.START);
+
 		// snap_count
 		vbox = new Box (Orientation.VERTICAL, 6);
 		vbox.set_no_show_all(true);

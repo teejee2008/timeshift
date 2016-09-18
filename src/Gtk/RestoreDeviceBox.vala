@@ -262,6 +262,11 @@ class RestoreDeviceBox : Gtk.Box{
 			combo.get_active_iter (out iter_active);
 			combo.model.get(iter_active, 0, out current_dev, 1, out current_entry, -1);
 
+			if (current_entry.mount_point == "/"){
+				App.restore_target = current_dev;
+				cmb_boot_device_select_default();
+			}
+
 			current_entry.device = current_dev;
 		});
 
@@ -323,19 +328,37 @@ class RestoreDeviceBox : Gtk.Box{
 			}
 		});
 
+		cmb_boot_device.changed.connect(()=>{
+			App.grub_device = "";
+			if (App.reinstall_grub2){
+				Device entry;
+				TreeIter iter;
+				bool ok = cmb_boot_device.get_active_iter (out iter);
+				if (!ok) { return; } // not selected
+				TreeModel model = (TreeModel) cmb_boot_device.model;
+				model.get(iter, 0, out entry);
+				App.grub_device = entry.device;
+			}
+		});
+
 		string tt = "<b>" + _("** Advanced Users **") + "</b>\n\n"+ _("Skips bootloader (re)installation on target device.\nFiles in /boot directory on target partition will remain untouched.\n\nIf you are restoring a system that was bootable previously then it should boot successfully.\nOtherwise the system may fail to boot.");
 
 		//chk_skip_grub_install
-		chk_skip_grub_install = new CheckButton.with_label(
+		var chk = new CheckButton.with_label(
 			_("Skip bootloader installation (not recommended)"));
-		chk_skip_grub_install.active = false;
-		chk_skip_grub_install.set_tooltip_markup(tt);
-		chk_skip_grub_install.margin_bottom = 12;
-		add (chk_skip_grub_install);
-
-		chk_skip_grub_install.toggled.connect(()=>{
+		chk.active = false;
+		chk.set_tooltip_markup(tt);
+		chk.margin_bottom = 12;
+		add (chk);
+		chk_skip_grub_install = chk;
+		
+		chk.toggled.connect(()=>{
 			cmb_boot_device.sensitive = !chk_skip_grub_install.active;
+			App.reinstall_grub2 = !chk_skip_grub_install.active;
+			cmb_boot_device.changed();
 		});
+		
+		App.reinstall_grub2 = !chk_skip_grub_install.active;
 	}
 
 	private void refresh_cmb_boot_device(){

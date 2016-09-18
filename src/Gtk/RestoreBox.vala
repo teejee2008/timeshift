@@ -171,6 +171,8 @@ class RestoreBox : Gtk.Box{
 
 	public bool restore(){
 
+		log_debug("RestoreBox: restore()");
+		
 		if ((App.root_device != null) && (App.restore_target.uuid == App.root_device.uuid)){
 			parent_window.hide();
 		}
@@ -242,11 +244,15 @@ class RestoreBox : Gtk.Box{
 			//gtk_do_events();
 		}
 
+		log_debug("RestoreBox: restore(): exit");
+
 		return (App.task.exit_code == 0);
 	}
 	
 	private void restore_thread(){
+		log_debug("RestoreBox: restore_thread()");
 		App.restore_snapshot(parent_window);
 		thread_is_running = false;
+		log_debug("RestoreBox: restore_thread(): exit");
 	}
 }

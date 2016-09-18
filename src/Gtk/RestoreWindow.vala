@@ -369,7 +369,7 @@ class RestoreWindow : Gtk.Window{
 					break;
 				}
 			}
-			
+
 			// remove mount points which will remain on root fs
 			for(int i = App.mount_list.size-1; i >= 0; i--){
 				var entry = App.mount_list[i];
@@ -383,7 +383,6 @@ class RestoreWindow : Gtk.Window{
 			}
 
 			restore_device_box.check_and_mount_devices();
-			
 		}
 
 		return true;

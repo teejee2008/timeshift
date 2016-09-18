@@ -2715,7 +2715,8 @@ public class Main : GLib.Object{
 		string sh = "";
 		int ret_val = -1;
 		string temp_script;
-
+		string sh_grub = "";
+		
 		try{
 
 			string source_path = "";
@@ -2729,6 +2730,8 @@ public class Main : GLib.Object{
 					dir_create(source_path);
 				}
 			}
+
+			log_debug("source_path=%s".printf(source_path));
 
 			//set target path ----------------
 
@@ -2754,6 +2757,8 @@ public class Main : GLib.Object{
 				}
 			}
 
+			log_debug("target_path=%s".printf(target_path));
+
 			//save exclude list for restore --------------
 
 			save_exclude_list_for_restore(source_path);
@@ -2763,6 +2768,8 @@ public class Main : GLib.Object{
 			sh = "";
 			sh += "echo ''\n";
 			if (restore_current_system){
+				log_debug("restoring current system");
+				
 				sh += "echo '" + _("Please do not interrupt the restore process!") + "'\n";
 				sh += "echo '" + _("System will reboot after files are restored") + "'\n";
 			}
@@ -2792,9 +2799,18 @@ public class Main : GLib.Object{
 			//sync file system
 			sh += "sync \n";
 
+			log_debug("rsync script:");
+			log_debug(sh);
+			
 			//chroot and re-install grub2 --------
 
-			var sh_grub = "";
+			log_debug("reinstall_grub2=%s".printf(
+				reinstall_grub2.to_string()));
+				
+			log_debug("grub_device=%s".printf(
+				(grub_device == null) ? "null" : grub_device));
+			
+			sh_grub = "";
 			if (reinstall_grub2 && (grub_device != null) && (grub_device.length > 0)){
 				sh_grub += "sync \n";
 				sh_grub += "echo '' \n";
@@ -2815,6 +2831,9 @@ public class Main : GLib.Object{
 				sh_grub += "for i in /dev /proc /run /sys; do umount -f \"%s$i\"; done \n".printf(target_path);
 				sh_grub += "sync \n";
 
+				log_debug("GRUB2 install script:");
+				log_debug(sh_grub);
+			
 				sh += sh_grub;
 			}
 
@@ -2886,7 +2905,8 @@ public class Main : GLib.Object{
 					//App.progress_text = "Sync";
 
 					progress_text = _("Building file list...");
-
+					//log_msg(progress_text); // gui-only message
+					
 					task = new RsyncTask();
 
 					task.relative = false;
@@ -2925,11 +2945,16 @@ public class Main : GLib.Object{
 					}
 
 					App.progress_text = "Re-installing GRUB2 bootloader...";
+					log_msg(App.progress_text);
 
+					log_debug(sh_grub);
+					
 					string std_out, std_err;
 					ret_val = exec_script_sync(sh_grub, out std_out, out std_err);
 					log_to_file(std_out);
 					log_to_file(std_err);
+
+					log_debug("GRUB2 install completed");
 
 					ret_val = task.exit_code;
 				}

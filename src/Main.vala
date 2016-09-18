@@ -2714,6 +2714,7 @@ public class Main : GLib.Object{
 		int ret_val = -1;
 		string temp_script;
 		string sh_grub = "";
+		string sh_reboot = "";
 		
 		try{
 
@@ -2814,34 +2815,36 @@ public class Main : GLib.Object{
 				sh_grub += "echo '' \n";
 				sh_grub += "echo '" + _("Re-installing GRUB2 bootloader...") + "' \n";
 				sh_grub += "for i in /dev /proc /run /sys; do mount --bind \"$i\" \"%s$i\"; done \n".printf(target_path);
+				
 				//sh_grub += "chroot \"%s\" os-prober \n".printf(target_path);
 				sh_grub += "chroot \"%s\" grub-install --recheck %s \n".printf(
 					target_path, grub_device);
 				//sh_grub += "chroot \"%s\" grub-mkconfig -o /boot/grub/grub.cfg \n".printf(target_path);
 				sh_grub += "chroot \"%s\" update-grub \n".printf(target_path);
+				sh_grub += "update-initramfs -u -k all \n";
 				sh_grub += "echo '' \n";
+				
 				sh_grub += "echo '" + _("Synching file systems...") + "' \n";
 				sh_grub += "sync \n";
-
 				sh_grub += "echo '' \n";
+				
 				sh_grub += "echo '" + _("Cleaning up...") + "' \n";
-				sh_grub += "sync \n";
 				sh_grub += "for i in /dev /proc /run /sys; do umount -f \"%s$i\"; done \n".printf(target_path);
 				sh_grub += "sync \n";
 
 				log_debug("GRUB2 install script:");
 				log_debug(sh_grub);
 			
-				sh += sh_grub;
+				//sh += sh_grub;
 			}
 
 			//reboot if required --------
 
 			if (restore_current_system){
-				sh += "echo '' \n";
-				sh += "echo '" + _("Rebooting system...") + "' \n";
+				sh_reboot += "echo '' \n";
+				sh_reboot += "echo '" + _("Rebooting system...") + "' \n";
 				//sh += "reboot -f \n";
-				sh += "shutdown -r now \n";
+				sh_reboot += "shutdown -r now \n";
 			}
 
 			//check if current system is being restored and do some housekeeping ---------
@@ -2890,7 +2893,8 @@ public class Main : GLib.Object{
 				
 				if (restore_current_system){
 					//current system, gui, fullscreen
-					temp_script = save_bash_script_temp(sh);
+					temp_script = save_bash_script_temp(sh + sh_grub + sh_reboot);
+					// Note: sh_grub will be empty if reinstall_grub2 = false 
 
 					//restore or clone
 					var dlg = new TerminalWindow.with_parent(null);
@@ -2905,7 +2909,6 @@ public class Main : GLib.Object{
 					//log_msg(progress_text); // gui-only message
 					
 					task = new RsyncTask();
-
 					task.relative = false;
 					task.verbose = true;
 					task.delete_extra = true;
@@ -2926,9 +2929,7 @@ public class Main : GLib.Object{
 						path_combine(source_path, "exclude-restore.list");
 
 					task.rsync_log_file = log_path;
-					
-					task.prg_count_total = Main.first_snapshot_count;
-					
+					task.prg_count_total = Main.first_snapshot_count;	
 					task.execute();
 
 					while (task.status == AppStatus.RUNNING){
@@ -2972,7 +2973,11 @@ public class Main : GLib.Object{
 			else{
 
 				// console mode ----------
-				
+				var script = sh;
+				if (restore_current_system){
+					script += sh_grub + sh_reboot;
+				}
+
 				if (cmd_verbose){
 					//current/other system, console, verbose
 					ret_val = exec_script_sync(sh);
@@ -2986,28 +2991,29 @@ public class Main : GLib.Object{
 					log_to_file(std_err);
 				}
 
-				// fix fstab and crypttab -----------
-				
 				if (!restore_current_system){
+					
+					// fix fstab and crypttab files ------
+					
 					fix_fstab_file(target_path);
 					fix_crypttab_file(target_path);
-				}
 
-				// re-install grub ------------
+					// re-install grub ------------
 				
-				if (reinstall_grub2){
-					
-					if (cmd_verbose){
-						//current/other system, console, verbose
-						ret_val = exec_script_sync(sh);
-						log_msg("");
-					}
-					else{
-						//current/other system, console, quiet
-						string std_out, std_err;
-						ret_val = exec_script_sync(sh, out std_out, out std_err);
-						log_to_file(std_out);
-						log_to_file(std_err);
+					if (reinstall_grub2){
+						
+						if (cmd_verbose){
+							//current/other system, console, verbose
+							ret_val = exec_script_sync(sh_grub);
+							log_msg("");
+						}
+						else{
+							//current/other system, console, quiet
+							string std_out, std_err;
+							ret_val = exec_script_sync(sh_grub, out std_out, out std_err);
+							log_to_file(std_out);
+							log_to_file(std_err);
+						}
 					}
 				}
 			}

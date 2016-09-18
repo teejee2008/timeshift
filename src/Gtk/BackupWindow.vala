@@ -260,14 +260,15 @@ class BackupWindow : Gtk.Window{
 		switch(notebook.page){
 		case Tabs.ESTIMATE:
 			estimate_box.estimate_system_size();
-			go_next();
+			go_next(); // validate and go next
 			break;
 		case Tabs.BACKUP_DEVICE:
 			backup_dev_box.refresh();
+			go_next(); // validate and go next
 			break;
 		case Tabs.BACKUP:
 			backup_box.take_snapshot();
-			destroy();
+			destroy(); // close window
 			break;
 		}
 	}

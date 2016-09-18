@@ -351,6 +351,9 @@ class RestoreDeviceBox : Gtk.Box{
 		chk.margin_bottom = 12;
 		add (chk);
 		chk_skip_grub_install = chk;
+
+		// bootloader must be re-installed for cloning device 
+		chk.sensitive = !App.mirror_system;
 		
 		chk.toggled.connect(()=>{
 			cmb_boot_device.sensitive = !chk_skip_grub_install.active;

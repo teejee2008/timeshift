@@ -2895,7 +2895,6 @@ public class Main : GLib.Object{
 					//restore or clone
 					var dlg = new TerminalWindow.with_parent(null);
 					dlg.execute_script(temp_script, true);
-					
 				}
 				else{
 					// other system, gui ------------------------
@@ -2942,17 +2941,30 @@ public class Main : GLib.Object{
 						gtk_do_events();
 					}
 
-					App.progress_text = "Re-installing GRUB2 bootloader...";
-					log_msg(App.progress_text);
+					if (!restore_current_system){
+						App.progress_text = "Updating /etc/fstab and /etc/crypttab on target system...";
+						log_msg(App.progress_text);
+						
+						fix_fstab_file(target_path);
+						fix_crypttab_file(target_path);
+					}
 
-					log_debug(sh_grub);
-					
-					string std_out, std_err;
-					ret_val = exec_script_sync(sh_grub, out std_out, out std_err);
-					log_to_file(std_out);
-					log_to_file(std_err);
+					// re-install grub ------------
+				
+					if (reinstall_grub2){
 
-					log_debug("GRUB2 install completed");
+						App.progress_text = "Re-installing GRUB2 bootloader...";
+						log_msg(App.progress_text);
+
+						log_debug(sh_grub);
+						
+						string std_out, std_err;
+						ret_val = exec_script_sync(sh_grub, out std_out, out std_err);
+						log_to_file(std_out);
+						log_to_file(std_err);
+
+						log_debug("GRUB2 install completed");
+					}
 
 					ret_val = task.exit_code;
 				}
@@ -2973,6 +2985,31 @@ public class Main : GLib.Object{
 					log_to_file(std_out);
 					log_to_file(std_err);
 				}
+
+				// fix fstab and crypttab -----------
+				
+				if (!restore_current_system){
+					fix_fstab_file(target_path);
+					fix_crypttab_file(target_path);
+				}
+
+				// re-install grub ------------
+				
+				if (reinstall_grub2){
+					
+					if (cmd_verbose){
+						//current/other system, console, verbose
+						ret_val = exec_script_sync(sh);
+						log_msg("");
+					}
+					else{
+						//current/other system, console, quiet
+						string std_out, std_err;
+						ret_val = exec_script_sync(sh, out std_out, out std_err);
+						log_to_file(std_out);
+						log_to_file(std_err);
+					}
+				}
 			}
 
 			// check for errors ----------------------
@@ -2988,15 +3025,8 @@ public class Main : GLib.Object{
 				//thread_restore_running = false;
 			}
 
-			//update /etc/fstab when restoring to another device --------------------
-
-			if (!restore_current_system){
-				
-				fix_fstab_file(target_path);
-
-				fix_crypttab_file(target_path);
-			}
-
+			// unmount ----------
+			
 			unmount_target_device(false);
 		}
 		catch(Error e){
@@ -3086,8 +3116,8 @@ public class Main : GLib.Object{
 	}
 
 	public void fix_crypttab_file(string target_path){
-		string file_path = target_path + "etc/crypttab";
-		var crypttab_list = CryptTabEntry.read_file(file_path);
+		string crypttab_path = target_path + "etc/crypttab";
+		var crypttab_list = CryptTabEntry.read_file(crypttab_path);
 
 		// add option "nofail" to existing entries
 		
@@ -3118,7 +3148,9 @@ public class Main : GLib.Object{
 			}
 		}
 
-		CryptTabEntry.write_file(crypttab_list, file_path, false);
+		CryptTabEntry.write_file(crypttab_list, crypttab_path, false);
+
+		log_msg(_("Updated /etc/crypttab on target device") + ": %s".printf(crypttab_path));
 	}
 
 	public void save_exclude_list_for_restore(string file_path){

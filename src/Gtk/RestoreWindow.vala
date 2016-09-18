@@ -237,11 +237,11 @@ class RestoreWindow : Gtk.Window{
 		
 		switch(notebook.page){
 		case Tabs.TARGET_DEVICE:
-			notebook.page = Tabs.RESTORE_EXCLUDE;
-			break;
-		case Tabs.RESTORE_EXCLUDE:
 			notebook.page = Tabs.SUMMARY;
 			break;
+		//case Tabs.RESTORE_EXCLUDE:
+		//	notebook.page = Tabs.SUMMARY;
+		//	break;
 		case Tabs.SUMMARY:
 			notebook.page = Tabs.RESTORE;
 			break;

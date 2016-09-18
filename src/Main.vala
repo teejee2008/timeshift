@@ -2292,20 +2292,15 @@ public class Main : GLib.Object{
 
 			// skip mounting for non-system devices
 			
-			if (mnt.mount_point.has_prefix("/mnt") || mnt.mount_point.has_prefix("/mount")
-				|| mnt.mount_point.has_prefix("/sdcard") || mnt.mount_point.has_prefix("/cdrom")
-				|| mnt.mount_point.has_prefix("/media") || (mnt.mount_point == "none")
-				|| !mnt.mount_point.has_prefix("/")
-				|| (!mnt.device.has_prefix("/dev/") && !mnt.device.down().has_prefix("uuid="))){
-				
+			if (!mnt.is_for_system_directory()){
 				continue;
 			}
 
 			// find device by name or uuid
 			
 			Device mnt_dev = null;
-			if (mnt.get_uuid().length > 0){
-				mnt_dev = Device.get_device_by_uuid(mnt.get_uuid());
+			if (mnt.device_uuid.length > 0){
+				mnt_dev = Device.get_device_by_uuid(mnt.device_uuid);
 			}
 			else{
 				mnt_dev = Device.get_device_by_name(mnt.device);
@@ -2333,8 +2328,8 @@ public class Main : GLib.Object{
 
 				// try again - find device by name or uuid
 			
-				if (mnt.get_uuid().length > 0){
-					mnt_dev = Device.get_device_by_uuid(mnt.get_uuid());
+				if (mnt.device_uuid.length > 0){
+					mnt_dev = Device.get_device_by_uuid(mnt.device_uuid);
 				}
 				else{
 					mnt_dev = Device.get_device_by_name(mnt.device);
@@ -2642,7 +2637,10 @@ public class Main : GLib.Object{
 		foreach(var entry in App.mount_list){
 			if (entry.device == null){ continue; }
 			
-			if ((entry.device != null) && (entry.subvolume_name().length > 0)){
+			if ((entry.device != null)
+				&& (entry.device.fstype == "btrfs")
+				&& (entry.subvolume_name().length > 0)){
+					
 				// subvolumes are used - show subvolume column
 				show_subvolume = true;
 				break;
@@ -2993,126 +2991,10 @@ public class Main : GLib.Object{
 			//update /etc/fstab when restoring to another device --------------------
 
 			if (!restore_current_system){
-				string fstab_path = target_path + "etc/fstab";
-				var fstab_list = FsTabEntry.read_file(fstab_path);
+				
+				fix_fstab_file(target_path);
 
-				foreach(var mount_entry in mount_list){
-					bool found = false;
-					foreach(var fstab_entry in fstab_list){
-						if (fstab_entry.mount_point == mount_entry.mount_point){
-							found = true;
-							
-							//update fstab entry
-							fstab_entry.device = "UUID=%s".printf(mount_entry.device.uuid);
-							fstab_entry.type = mount_entry.device.fstype;
-
-							//fix mount options for / and /home
-							if (restore_target.fstype != "btrfs"){
-								
-								if ((fstab_entry.mount_point == "/")
-									&& fstab_entry.options.contains("subvol=@")){
-										
-									fstab_entry.options = fstab_entry.options.replace("subvol=@","").strip();
-									
-									if (fstab_entry.options.has_suffix(",")){
-										fstab_entry.options = fstab_entry.options[0:fstab_entry.options.length - 1];
-									}
-								}
-								else if ((fstab_entry.mount_point == "/home")
-									&& fstab_entry.options.contains("subvol=@home")){
-										
-									fstab_entry.options = fstab_entry.options.replace("subvol=@home","").strip();
-
-									if (fstab_entry.options.has_suffix(",")){
-										fstab_entry.options = fstab_entry.options[0:fstab_entry.options.length - 1];
-									}
-								}
-							}
-						}
-					}
-
-					if (!found){
-						//add new fstab entry
-						FsTabEntry fstab_entry = new FsTabEntry();
-						fstab_entry.device = "UUID=%s".printf(mount_entry.device.uuid);
-						fstab_entry.mount_point = mount_entry.mount_point;
-						fstab_entry.type = mount_entry.device.fstype;
-						fstab_list.add(fstab_entry);
-					}
-				}
-
-				/*
-				 * If user has not mounted /home, and /home is mounted on another device (according to the fstab file)
-				 * then remove the /home mount entry from the fstab.
-				 * This is required - otherwise when the user boots the restored system they will continue to see
-				 * the existing device as /home and instead of seeing the files restored to /home on the *root* device.
-				 * We will do this fix only for /home and leave all other mount points untouched.
-				 * */
-
-				bool found_home_in_fstab = false;
-				FsTabEntry fstab_home_entry = null;
-				foreach(var fstab_entry in fstab_list){
-					if (fstab_entry.mount_point == "/home"){
-						found_home_in_fstab = true;
-						fstab_home_entry = fstab_entry;
-						break;
-					}
-				}
-
-				bool found_home_in_mount_list = false;
-				foreach(MountEntry mount_entry in mount_list){
-					if (mount_entry.mount_point == "/home"){
-						found_home_in_mount_list = true;
-						break;
-					}
-				}
-
-				if (found_home_in_fstab && !found_home_in_mount_list){
-					//remove fstab entry for /home
-					fstab_list.remove(fstab_home_entry);
-				}
-
-				// sort the entries based on mount path
-				// this is critical to ensure that base paths are mounted before child paths
-
-				fstab_list.sort((a, b)=>{
-					return strcmp(a.mount_point, b.mount_point);
-				});
-
-				//write the updated file --------------
-
-				string text = "# <file system> <mount point> <type> <options> <dump> <pass>\n\n";
-				text += FsTabEntry.create_file_text(fstab_list.to_array(), false);
-				if (file_exists(fstab_path)){
-					file_delete(fstab_path);
-				}
-				file_write(fstab_path, text);
-
-				log_msg(_("Updated /etc/fstab on target device") + ": %s".printf(fstab_path));
-
-				//create folders for mount points in /etc/fstab to prevent mount errors during boot ---------
-
-				foreach(var fstab_entry in fstab_list){
-					if (fstab_entry.mount_point.length == 0){ continue; }
-					if (!fstab_entry.mount_point.has_prefix("/")){ continue; }
-					
-					string mount_path = target_path +
-						fstab_entry.mount_point[1:fstab_entry.mount_point.length];
-						
-					if (fstab_entry.is_comment || fstab_entry.is_empty_line
-					|| (mount_path.length == 0)){
-						
-						continue;
-					}
-
-					if (!dir_exists(mount_path)){
-						
-						log_msg("Created mount point on target device: %s".printf(
-							fstab_entry.mount_point));
-							
-						dir_create(mount_path);
-					}
-				}
+				fix_crypttab_file(target_path);
 			}
 
 			unmount_target_device(false);
@@ -3124,6 +3006,119 @@ public class Main : GLib.Object{
 		}
 
 		thread_restore_running = false;
+	}
+
+	public void fix_fstab_file(string target_path){
+		
+		string fstab_path = target_path + "etc/fstab";
+		var fstab_list = FsTabEntry.read_file(fstab_path);
+
+		foreach(var mnt in mount_list){
+			// find existing
+			var entry = FsTabEntry.find_entry_by_mount_point(fstab_list, mnt.mount_point);
+
+			// add if missing
+			if (entry == null){
+				entry = new FsTabEntry();
+				entry.mount_point = mnt.mount_point;
+				fstab_list.add(entry);
+			}
+
+			//update fstab entry
+			entry.device = "UUID=%s".printf(mnt.device.uuid);
+			entry.type = mnt.device.fstype;
+
+			// fix mount options for non-btrfs device
+			if (mnt.device.fstype != "btrfs"){
+				// remove subvol option
+				entry.remove_option("subvol=%s".printf(entry.subvolume_name()));
+			}
+		}
+
+		/*
+		 * Remove fstab entries for any system directories that
+		 * the user has not explicitly mapped before restore/clone
+		 * This ensures that the cloned/restored system does not mount
+		 * any devices to system paths that the user has not explicitly specified
+		 * */
+
+		for(int i = fstab_list.size - 1; i >= 0; i--){
+			var entry = fstab_list[i];
+			
+			if (!entry.is_for_system_directory()){ continue; }
+			
+			var mnt = MountEntry.find_entry_by_mount_point(mount_list, entry.mount_point);
+			if (mnt == null){
+				fstab_list.remove(entry);
+			}
+		}
+		
+		// write the updated file
+
+		FsTabEntry.write_file(fstab_list, fstab_path, false);
+
+		log_msg(_("Updated /etc/fstab on target device") + ": %s".printf(fstab_path));
+
+		// create directories on disk for mount points in /etc/fstab
+
+		foreach(var entry in fstab_list){
+			if (entry.mount_point.length == 0){ continue; }
+			if (!entry.mount_point.has_prefix("/")){ continue; }
+			
+			string mount_path = path_combine(
+				target_path, entry.mount_point);
+				
+			if (entry.is_comment
+				|| entry.is_empty_line
+				|| (mount_path.length == 0)){
+				
+				continue;
+			}
+
+			if (!dir_exists(mount_path)){
+				
+				log_msg("Created mount point on target device: %s".printf(
+					entry.mount_point));
+					
+				dir_create(mount_path);
+			}
+		}
+	}
+
+	public void fix_crypttab_file(string target_path){
+		string file_path = target_path + "etc/crypttab";
+		var crypttab_list = CryptTabEntry.read_file(file_path);
+
+		// add option "nofail" to existing entries
+		
+		foreach(var entry in crypttab_list){
+			entry.append_option("nofail");
+		}
+
+		// check and add entries for mapped devices which are encrypted
+		
+		foreach(var mnt in mount_list){
+			if ((mnt.device != null) && (mnt.device.is_on_encrypted_partition())){
+				
+				// find existing
+				var entry = CryptTabEntry.find_entry_by_uuid(
+					crypttab_list, mnt.device.parent.uuid);
+
+				// add if missing
+				if (entry == null){
+					entry = new CryptTabEntry();
+					crypttab_list.add(entry);
+				}
+				
+				// set custom values
+				entry.device_uuid = mnt.device.parent.uuid;
+				entry.mapped_name = "luks-%s".printf(mnt.device.parent.uuid);
+				entry.keyfile = "none";
+				entry.options = "luks,nofail";
+			}
+		}
+
+		CryptTabEntry.write_file(crypttab_list, file_path, false);
 	}
 
 	public void save_exclude_list_for_restore(string file_path){

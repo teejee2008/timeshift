@@ -11,11 +11,26 @@ public class CryptTabEntry : GLib.Object{
 	public bool is_comment = false;
 	public bool is_empty_line = false;
 
+	// fields
 	public string mapped_name = "";
 	public string device = "";
-	public string keyfile = "";
-	public string options = "";
+	public string keyfile = "none";
+	public string options = "luks,nofail";
 	public string line = "";
+
+	public string device_uuid {
+		owned get{
+			if (device.down().has_prefix("uuid=")){
+				return device.replace("\"","").replace("'","").split("=")[1];
+			}
+			else{
+				return "";
+			}
+		}
+		set {
+			device = "UUID=%s".printf(value);
+		}
+	}
 
 	public static Gee.ArrayList<CryptTabEntry> read_file(string file_path){
 		var list = new Gee.ArrayList<CryptTabEntry>();
@@ -65,8 +80,9 @@ public class CryptTabEntry : GLib.Object{
 		return list;
 	}
 
-	public static string create_file(
-		CryptTabEntry[] entries, bool keep_comments_and_empty_lines = true){
+	public static string write_file(
+		Gee.ArrayList<CryptTabEntry> entries, string file_path,
+		bool keep_comments_and_empty_lines = true){
 			
 		string text = "";
 		foreach(var entry in entries){
@@ -81,6 +97,53 @@ public class CryptTabEntry : GLib.Object{
 					entry.keyfile, entry.options);
 			}
 		}
+
+		if (file_exists(file_path)){
+			file_delete(file_path);
+		}
+		
+		file_write(file_path, text);
+		
 		return text;
+	}
+
+	public void append_option(string option){
+		
+		if (!options.contains(option)){
+			options += ",%s".printf(option);
+		}
+		
+		if(options.has_prefix(",")){
+			options = options[1:options.length];
+		}
+		
+		options = options.strip();
+	}
+
+	public void remove_option(string option){
+		
+		options = options.replace(option,"").strip();
+					
+		if(options.has_prefix(",")){
+			options = options[1:options.length];
+		}
+
+		if (options.has_suffix(",")){
+			options = options[0:options.length - 1];
+		}
+
+		options = options.strip();
+	}
+
+	public static CryptTabEntry? find_entry_by_uuid(
+		Gee.ArrayList<CryptTabEntry> entries, string uuid){
+			
+		foreach(var entry in entries){
+			if (entry.device_uuid == uuid){
+				return entry;
+			}
+		}
+		
+		return null;
 	}
 }

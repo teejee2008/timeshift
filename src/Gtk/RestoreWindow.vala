@@ -59,7 +59,7 @@ class RestoreWindow : Gtk.Window{
 
 		log_debug("RestoreWindow: RestoreWindow()");
 		
-		this.title = _("Restore");
+		this.title = App.mirror_system ? _("Clone System") : _("Restore Snapshot");
         this.window_position = WindowPosition.CENTER;
         this.modal = true;
         this.set_default_size (500, 500);

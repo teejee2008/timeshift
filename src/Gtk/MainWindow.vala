@@ -224,8 +224,8 @@ class MainWindow : Gtk.Window{
 
 		// hbox_shield
 		var box = new Box (Orientation.HORIZONTAL, 6);
-		box.margin_top = 0;
-        box.margin_bottom = 12;
+		//box.margin_top = 0;
+        //box.margin_bottom = 12;
         box.margin_left = 6;
         box.margin_right = 12;
         vbox_main.add (box);
@@ -238,18 +238,19 @@ class MainWindow : Gtk.Window{
         statusbar.add(img_shield);
 
 		var vbox = new Box (Orientation.VERTICAL, 6);
-		box.margin_top = 0;
-        box.margin_bottom = 0;
         statusbar.add (vbox);
         
 		//lbl_shield
 		lbl_shield = add_label(vbox, "");
         lbl_shield.yalign = (float) 0.5;
-
+		lbl_shield.hexpand = true;
+		
         //lbl_shield_subnote
 		lbl_shield_subnote = add_label(vbox, "");
 		lbl_shield_subnote.yalign = (float) 0.5;
-
+		lbl_shield_subnote.wrap = true;
+		lbl_shield_subnote.wrap_mode = Pango.WrapMode.WORD_CHAR;
+		lbl_shield_subnote.max_width_chars = 50;
 		//vbox.set_child_packing(lbl_shield, true, true, 0, PackType.START);
 		//vbox.set_child_packing(lbl_shield_subnote, true, false, 0, PackType.START);
 
@@ -910,7 +911,7 @@ class MainWindow : Gtk.Window{
 				
 				lbl_free_space.label = format_text_large(
 					"%s".printf(format_file_size(App.repo.device.free_bytes)))
-					+ "\n%s\n%s".printf(_("Free"), App.repo.device.device);
+					+ "\n%s".printf(_("Free"));
 					
 				break;
 			}

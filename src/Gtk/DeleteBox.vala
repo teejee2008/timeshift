@@ -98,8 +98,8 @@ class DeleteBox : Gtk.Box{
 		Gtk.SizeGroup size_group = null;
 		//var img = new Image.from_stock("gtk-cancel", Gtk.IconSize.BUTTON);
 		var btn_silent = add_button(bbox,
-			_("Move to background"),
-			_("Files will be deleted in background and you will be notified when complete"),
+			_("Hide"),
+			_("Files will be deleted in background"),
 			ref size_group, null);
 		
         btn_silent.clicked.connect(()=>{

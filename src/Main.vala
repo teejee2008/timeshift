@@ -423,7 +423,7 @@ public class Main : GLib.Object{
 			case "list-devices":
 				LOG_ENABLE = true;
 				log_msg(_("Devices with Linux file systems") + ":\n");
-				list_devices();
+				list_all_devices();
 				log_msg("");
 				return true;
 
@@ -876,7 +876,37 @@ public class Main : GLib.Object{
 		print_grid(grid, right_align);
 	}
 
-	private Gee.ArrayList<Device> list_devices(){
+	private void list_devices(Gee.ArrayList<Device> device_list){
+		string[,] grid = new string[device_list.size+1,6];
+		bool[] right_align = { false, false, false, true, true, false};
+
+		int row = 0;
+		int col = -1;
+		grid[row, ++col] = _("Num");
+		grid[row, ++col] = "";
+		grid[row, ++col] = _("Device");
+		//grid[row, ++col] = _("UUID");
+		grid[row, ++col] = _("Size");
+		grid[row, ++col] = _("Type");
+		grid[row, ++col] = _("Label");
+		row++;
+
+		foreach(var pi in device_list) {
+			col = -1;
+			grid[row, ++col] = "%d".printf(row - 1);
+			grid[row, ++col] = ">";
+			grid[row, ++col] = "%s".printf(pi.full_name_with_alias);
+			//grid[row, ++col] = "%s".printf(pi.uuid);
+			grid[row, ++col] = "%s".printf((pi.size_bytes > 0) ? "%s GB".printf(pi.size) : "?? GB");
+			grid[row, ++col] = "%s".printf(pi.fstype);
+			grid[row, ++col] = "%s".printf(pi.label);
+			row++;
+		}
+
+		print_grid(grid, right_align);
+	}
+
+	private Gee.ArrayList<Device> list_all_devices(){
 
 		//add devices
 		var device_list = new Gee.ArrayList<Device>();
@@ -916,6 +946,7 @@ public class Main : GLib.Object{
 
 		return device_list;
 	}
+
 
 	private Gee.ArrayList<Device> list_grub_devices(bool print_to_console = true){
 		//add devices
@@ -1079,7 +1110,6 @@ public class Main : GLib.Object{
 		if (int64.try_parse(index_string, out index)){
 			int i = -1;
 			foreach(Device pi in device_list) {
-				//if (!pi.has_linux_filesystem()) { continue; }
 				if (++i == index){
 					return pi;
 				}
@@ -1755,6 +1785,14 @@ public class Main : GLib.Object{
 	//restore
 
 	public void get_backup_device_from_cmd(bool prompt_if_empty, Gtk.Window? parent_win){
+
+		var list = new Gee.ArrayList<Device>();
+		foreach(var pi in partitions){
+			if (pi.has_linux_filesystem()){
+				list.add(pi);
+			}
+		}
+					
 		if (cmd_backup_device.length > 0){
 			//set backup device from command line argument
 			var cmd_dev = Device.get_device_by_name(cmd_backup_device);
@@ -1777,7 +1815,7 @@ public class Main : GLib.Object{
 				log_msg("");
 
 				log_msg(TERM_COLOR_YELLOW + _("Select backup device") + ":\n" + TERM_COLOR_RESET);
-				list_devices();
+				list_devices(list);
 				log_msg("");
 
 				Device dev = null;
@@ -1789,13 +1827,6 @@ public class Main : GLib.Object{
 						_("Enter device name or number (a=Abort)") + ": " + TERM_COLOR_RESET);
 					stdout.flush();
 
-					var list = new Gee.ArrayList<Device>();
-					foreach(var pi in partitions){
-						if (pi.has_linux_filesystem()){
-							list.add(pi);
-						}
-					}
-					
 					dev = read_stdin_device(list);
 				}
 
@@ -1912,8 +1943,14 @@ public class Main : GLib.Object{
 			}
 		}
 
-		//set target device -----------------------------------------------
+		// init mounts ---------------
+
+		if (app_mode != ""){
+			init_mount_list();
+		}
 		
+		//set target device -----------------------------------------------
+
 		if (app_mode != ""){ //command line mode
 
 			if (cmd_target_device.length > 0){
@@ -1950,11 +1987,25 @@ public class Main : GLib.Object{
 
 			//prompt user for target device
 			if (restore_target == null){
+
+				// create device list
+				
+				var device_list = new Gee.ArrayList<Device>();
+				foreach(var pi in partitions){
+					if (pi.has_linux_filesystem()){
+						device_list.add(pi);
+					}
+				}
+
+				// display list
+				
 				log_msg("");
 				log_msg(TERM_COLOR_YELLOW + _("Select target device") + " (/):\n" + TERM_COLOR_RESET);
-				list_devices();
+				list_devices(device_list);
 				log_msg("");
 
+				// get option from user
+				
 				int attempts = 0;
 				while (restore_target == null){
 					attempts++;
@@ -1962,13 +2013,6 @@ public class Main : GLib.Object{
 					stdout.printf(TERM_COLOR_YELLOW + _("Enter device name or number (a=Abort)") + ": " + TERM_COLOR_RESET);
 					stdout.flush();
 
-					var device_list = new Gee.ArrayList<Device>();
-					foreach(var pi in partitions){
-						if (pi.has_linux_filesystem()){
-							device_list.add(pi);
-						}
-					}
-					
 					restore_target = read_stdin_device(device_list);
 				}
 				log_msg("");
@@ -1983,16 +2027,11 @@ public class Main : GLib.Object{
 		}
 
 		if (restore_target != null){
-			string symlink = "";
-			foreach(string sym in restore_target.symlinks){
-				if (sym.has_prefix("/dev/mapper/")){
-					symlink = sym;
-				}
-			}
-
 			//print target device name
 			log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
 			log_msg(_("Target Device") + ": %s".printf(restore_target.full_name_with_alias), true);
+			//stdout.printf("UUID=%s".printf(restore_target.uuid));
+			//stdout.flush();
 			log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
 		}
 		else{
@@ -2006,8 +2045,9 @@ public class Main : GLib.Object{
 		log_debug("Selecting devices for mount points");
 		
 		if (app_mode != ""){ //command line mode
-			init_mount_list();
-
+			log_debug("restore_target.uuid=%s".printf(restore_target.uuid));
+			log_debug("root_device.uuid=%s".printf(root_device.uuid));
+			
 			// ask user to map devices if restoring to another system
 			if (restore_target.uuid !=  root_device.uuid){
 				
@@ -2016,7 +2056,13 @@ public class Main : GLib.Object{
 					Device dev = null;
 					string default_device = "";
 
-					if (mnt.mount_point == "/"){ continue; }
+					log_debug("selecting: %s".printf(mnt.mount_point));
+
+					if (mnt.mount_point == "/"){
+						mnt.device = restore_target;
+						dev = restore_target;
+						//continue;
+					}
 
 					if (mirror_system){
 						default_device = restore_target.device;
@@ -2033,8 +2079,9 @@ public class Main : GLib.Object{
 					//prompt user for device
 					if (dev == null){
 						log_msg("");
-						log_msg(TERM_COLOR_YELLOW + _("Select '%s' device (default = %s)").printf(mnt.mount_point, default_device) + ":\n" + TERM_COLOR_RESET);
-						var device_list = list_devices();
+						log_msg(TERM_COLOR_YELLOW + _("Select '%s' device (default = %s)").printf(
+							mnt.mount_point, default_device) + ":\n" + TERM_COLOR_RESET);
+						var device_list = list_all_devices();
 						log_msg("");
 
 						int attempts = 0;
@@ -2063,10 +2110,13 @@ public class Main : GLib.Object{
 					}
 
 					if (dev != null){
+
+						log_debug("selected: %s".printf(dev.uuid));
+						
 						mnt.device = dev;
-						if (dev.device == restore_target.device){
-							mount_list.remove_at(i);
-						}
+						//if (dev.device == restore_target.device){
+						//	mount_list.remove_at(i);
+						//}
 
 						log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
 						
@@ -2076,12 +2126,26 @@ public class Main : GLib.Object{
 						else{
 							log_msg(_("'%s' will be on '%s'").printf(
 								mnt.mount_point, mnt.device.short_name_with_alias), true);
+								
+							log_debug("UUID=%s".printf(restore_target.uuid));
 						}
 						log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
 					}
 				}
 			}
 		}
+
+		/*if (restore_target != null){
+			//print target device name
+			log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
+			log_msg(_("Target Device") + ": %s".printf(restore_target.full_name_with_alias), true);
+			log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
+		}
+		else{
+			//print error
+			log_error(_("Target device not specified!"));
+			return false;
+		}*/
 
 		//mount selected devices ---------------------------------------
 
@@ -2152,24 +2216,29 @@ public class Main : GLib.Object{
 					return false;
 				}
 			}
-
-			if ((cmd_skip_grub == false) && (reinstall_grub2 == false)){
-				log_msg("");
-
-				int attempts = 0;
-				while ((cmd_skip_grub == false) && (reinstall_grub2 == false)){
-					attempts++;
-					if (attempts > 3) { break; }
-					stdout.printf(TERM_COLOR_YELLOW + _("Re-install GRUB2 bootloader? (y/n)") + ": " + TERM_COLOR_RESET);
-					stdout.flush();
-					read_stdin_grub_install();
-				}
-
+			
+			if (mirror_system){
+				reinstall_grub2 = true;
+			}
+			else {
 				if ((cmd_skip_grub == false) && (reinstall_grub2 == false)){
-					log_error(_("Failed to get input from user in 3 attempts"));
-					log_msg(_("Aborted."));
-					exit_app();
-					exit(0);
+					log_msg("");
+
+					int attempts = 0;
+					while ((cmd_skip_grub == false) && (reinstall_grub2 == false)){
+						attempts++;
+						if (attempts > 3) { break; }
+						stdout.printf(TERM_COLOR_YELLOW + _("Re-install GRUB2 bootloader? (y/n)") + ": " + TERM_COLOR_RESET);
+						stdout.flush();
+						read_stdin_grub_install();
+					}
+
+					if ((cmd_skip_grub == false) && (reinstall_grub2 == false)){
+						log_error(_("Failed to get input from user in 3 attempts"));
+						log_msg(_("Aborted."));
+						exit_app();
+						exit(0);
+					}
 				}
 			}
 
@@ -2384,11 +2453,11 @@ public class Main : GLib.Object{
 		*/
 		
 		if (App.mirror_system){
+			restore_target = null;
 			foreach (var entry in mount_list){
 				// user should select another device
 				entry.device = null; 
 			}
-			
 		}
 
 		foreach(var mnt in mount_list){

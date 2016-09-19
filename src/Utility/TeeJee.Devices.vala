@@ -141,6 +141,18 @@ namespace TeeJee.Devices{
 			}
 		}
 
+		public string device_name_with_parent{
+			owned get{
+				string text = device;
+
+				if (has_parent() && (parent.type == "part")){
+					text += " (%s)".printf(pkname);
+				}
+				
+				return text;
+			}
+		}
+
 		public string description(){
 			return description_formatted().replace("<b>","").replace("</b>","");
 		}

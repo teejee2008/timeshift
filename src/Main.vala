@@ -466,7 +466,7 @@ public class Main : GLib.Object{
 		}
 	}
 
-	public bool check_btrfs_root_layout(){
+	public bool check_btrfs_root_layout(Gtk.Window? win = null){
 
 		log_debug("check_btrfs_root_layout()");
 		
@@ -478,9 +478,10 @@ public class Main : GLib.Object{
 				msg += _("Only ubuntu-type layouts with @ and @home subvolumes are currently supported.") + "\n\n";
 				msg += _("Application will exit.") + "\n\n";
 				string title = _("Not Supported");
-
+				
 				if (app_mode == ""){
-					gtk_messagebox(title, msg, null, true);
+					gtk_set_busy(false, win);
+					gtk_messagebox(title, msg, win, true);
 				}
 				else{
 					log_error(msg);
@@ -2664,7 +2665,7 @@ public class Main : GLib.Object{
 			if (entry.device == null){ continue; }
 			
 			txt += ("%%-%ds  %%-%ds".printf(max_dev, max_mount)).printf(
-				entry.device.short_name_with_parent, entry.mount_point);
+				entry.device.device_name_with_parent, entry.mount_point);
 
 			if (show_subvolume){
 				txt += "  %s".printf(entry.subvolume_name());

@@ -152,7 +152,7 @@ class MainWindow : Gtk.Window{
 		btn_browse_snapshot.is_important = true;
 		btn_browse_snapshot.label = _("Browse");
 		btn_browse_snapshot.set_tooltip_text (_("Browse selected snapshot"));
-        toolbar.add(btn_browse_snapshot);
+        //toolbar.add(btn_browse_snapshot);
 
         btn_browse_snapshot.clicked.connect (browse_selected);
 
@@ -402,6 +402,16 @@ class MainWindow : Gtk.Window{
 			App.task.stop();
 		}
 
+		// stop deletion task if running
+		if (App.thread_delete_running){
+			// clear queue
+			App.delete_list.clear();
+			// kill current task
+			if (App.delete_file_task != null){
+				App.delete_file_task.stop(AppStatus.CANCELLED);
+			}
+		}
+
 		// check backup device -------------------------------
 
 		if (!App.repo.available() || !App.repo.has_space()){
@@ -434,33 +444,15 @@ class MainWindow : Gtk.Window{
 	
 	public void create_snapshot(){
 
-		ui_sensitive(false);
-		
-		// check if deletions are running --------
-		
-		if (App.thread_delete_running){
-
-			ui_sensitive(true);
-			
-			gtk_messagebox(
-				_("Snapshot deletion in progress..."),
-				_("Please wait for snapshots to be deleted."), this, true);
-			
-			ui_sensitive(false);
-		
-			var win = new DeleteWindow();
-			win.set_transient_for(this);
-			win.destroy.connect(()=>{
-				refresh_all();
-				ui_sensitive(true);
-			});
-			
+		if (check_if_deletion_running()){
 			return;
 		}
 		
+		ui_sensitive(false);
+		
 		// check root device --------------
 
-		if (App.check_btrfs_root_layout() == false){
+		if (App.check_btrfs_root_layout(this) == false){
 			ui_sensitive(true);
 			return;
 		}
@@ -642,14 +634,50 @@ class MainWindow : Gtk.Window{
 	}
 
 	private void btn_restore_clicked(){
+
+		if (check_if_deletion_running()){
+			return;
+		}
+		
 		App.mirror_system = false;
 		restore();
 	}
 
 	private void btn_clone_clicked(){
+		
+		if (check_if_deletion_running()){
+			return;
+		}
+		
 		App.mirror_system = true;
 		restore();
 	}
+
+	private bool check_if_deletion_running(){
+
+		if (App.thread_delete_running){
+
+			ui_sensitive(true);
+			
+			gtk_messagebox(
+				_("Snapshot deletion in progress..."),
+				_("Please wait for snapshots to be deleted."), this, true);
+			
+			ui_sensitive(false);
+		
+			var win = new DeleteWindow();
+			win.set_transient_for(this);
+			win.destroy.connect(()=>{
+				refresh_all();
+				ui_sensitive(true);
+			});
+			
+			return true;
+		}
+
+		return false;
+	}
+
 
 	private void restore(){
 		TreeIter iter;

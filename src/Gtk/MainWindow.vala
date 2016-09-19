@@ -434,9 +434,34 @@ class MainWindow : Gtk.Window{
 	
 	public void create_snapshot(){
 
+		ui_sensitive(false);
+		
+		// check if deletions are running --------
+		
+		if (App.thread_delete_running){
+
+			ui_sensitive(true);
+			
+			gtk_messagebox(
+				_("Snapshot deletion in progress..."),
+				_("Please wait for snapshots to be deleted."), this, true);
+			
+			ui_sensitive(false);
+		
+			var win = new DeleteWindow();
+			win.set_transient_for(this);
+			win.destroy.connect(()=>{
+				refresh_all();
+				ui_sensitive(true);
+			});
+			
+			return;
+		}
+		
 		// check root device --------------
 
 		if (App.check_btrfs_root_layout() == false){
+			ui_sensitive(true);
 			return;
 		}
 
@@ -449,8 +474,6 @@ class MainWindow : Gtk.Window{
 
 		// run wizard window ------------------
 
-		ui_sensitive(false);
-		
 		var win = new BackupWindow();
 		win.set_transient_for(this);
 		win.destroy.connect(()=>{

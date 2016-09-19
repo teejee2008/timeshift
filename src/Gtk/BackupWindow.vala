@@ -50,16 +50,18 @@ class BackupWindow : Gtk.Window{
 	private Gtk.Button btn_close;
 
 	private uint tmr_init;
+	private int def_width = 450;
+	private int def_height = 500;
 
 	public BackupWindow() {
 		this.title = _("Create Snapshot");
         this.window_position = WindowPosition.CENTER;
         this.modal = true;
-        this.set_default_size (500, 500);
+        this.set_default_size (def_width, def_height);
 		this.icon = get_app_icon(16);
 
 		this.delete_event.connect(on_delete_event);
-		
+
 	    // vbox_main
         vbox_main = new Box (Orientation.VERTICAL, 6);
         vbox_main.margin = 12;
@@ -103,7 +105,7 @@ class BackupWindow : Gtk.Window{
 
 		return false;
 	}
-
+	
 	private bool on_delete_event(Gdk.EventAny event){
 
 		save_changes();
@@ -168,6 +170,15 @@ class BackupWindow : Gtk.Window{
 			
 			this.destroy(); // TODO: Show error page
 		});
+
+		action_buttons_set_no_show_all(true);
+	}
+
+	private void action_buttons_set_no_show_all(bool val){
+		btn_prev.no_show_all = val;
+		btn_next.no_show_all = val;
+		btn_close.no_show_all = val;
+		btn_cancel.no_show_all = val;
 	}
 	
 
@@ -234,6 +245,8 @@ class BackupWindow : Gtk.Window{
 
 		// show/hide actions -----------------------------------
 
+		action_buttons_set_no_show_all(false);
+		
 		switch(notebook.page){
 		case Tabs.ESTIMATE:
 		case Tabs.BACKUP:
@@ -254,7 +267,7 @@ class BackupWindow : Gtk.Window{
 			bbox_action.set_layout (Gtk.ButtonBoxStyle.EXPAND);
 			break;
 		}
-		
+
 		// actions
 
 		switch(notebook.page){

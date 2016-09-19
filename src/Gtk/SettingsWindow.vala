@@ -44,13 +44,15 @@ class SettingsWindow : Gtk.Window{
 	private FinishBox notes_box;
 
 	private uint tmr_init;
-
+	private int def_width = 450;
+	private int def_height = 500;
+	
 	public SettingsWindow () {
 
 		this.title = _("Settings");
         this.window_position = WindowPosition.CENTER;
         this.modal = true;
-        this.set_default_size (500, 500);
+        this.set_default_size (def_width, def_height);
 		this.icon = get_app_icon(16);
 
 		this.delete_event.connect(on_delete_event);

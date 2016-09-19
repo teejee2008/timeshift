@@ -1028,6 +1028,70 @@ public class Main : GLib.Object{
 
 	//prompt for input
 
+	public void get_backup_device_from_cmd(bool prompt_if_empty, Gtk.Window? parent_win){
+
+		var list = new Gee.ArrayList<Device>();
+		foreach(var pi in partitions){
+			if (pi.has_linux_filesystem()){
+				list.add(pi);
+			}
+		}
+					
+		if (cmd_backup_device.length > 0){
+			//set backup device from command line argument
+			var cmd_dev = Device.get_device_by_name(cmd_backup_device);
+			if (cmd_dev != null){
+				repo = new SnapshotRepo.from_device(cmd_dev, null);
+				if (!repo.available()){
+					exit_app();
+					exit(1);
+				}
+			}
+			else{
+				log_error(_("Could not find device") + ": '%s'".printf(cmd_backup_device));
+				exit_app();
+				exit(1);
+			}
+		}
+		else{
+			if ((repo.device == null) || (prompt_if_empty && (repo.snapshots.size == 0))){
+				//prompt user for backup device
+				log_msg("");
+
+				log_msg(TERM_COLOR_YELLOW + _("Select backup device") + ":\n" + TERM_COLOR_RESET);
+				list_devices(list);
+				log_msg("");
+
+				Device dev = null;
+				int attempts = 0;
+				while (dev == null){
+					attempts++;
+					if (attempts > 3) { break; }
+					stdout.printf(TERM_COLOR_YELLOW +
+						_("Enter device name or number (a=Abort)") + ": " + TERM_COLOR_RESET);
+					stdout.flush();
+
+					dev = read_stdin_device(list);
+				}
+
+				log_msg("");
+				
+				if (dev == null){
+					log_error(_("Failed to get input from user in 3 attempts"));
+					log_msg(_("Aborted."));
+					exit_app();
+					exit(0);
+				}
+
+				repo = new SnapshotRepo.from_device(dev, null);
+				if (!repo.available()){
+					exit_app();
+					exit(1);
+				}
+			}
+		}
+	}
+
 	private Device? read_stdin_device(Gee.ArrayList<Device> device_list){
 		var counter = new TimeoutCounter();
 		counter.exit_on_timeout();
@@ -1262,7 +1326,7 @@ public class Main : GLib.Object{
 		return (root_device == null);
 	}
 
-	//backup
+	// backup
 
 	public bool take_snapshot (
 		bool is_ondemand, string snapshot_comments, Gtk.Window? parent_win){
@@ -1782,70 +1846,285 @@ public class Main : GLib.Object{
 	    return (new Snapshot(snapshot_path));
 	}
 
-	//restore
+	// delete from terminal
 
-	public void get_backup_device_from_cmd(bool prompt_if_empty, Gtk.Window? parent_win){
+	public void delete_snapshot(Snapshot? snapshot = null){
 
-		var list = new Gee.ArrayList<Device>();
-		foreach(var pi in partitions){
-			if (pi.has_linux_filesystem()){
-				list.add(pi);
-			}
-		}
-					
-		if (cmd_backup_device.length > 0){
-			//set backup device from command line argument
-			var cmd_dev = Device.get_device_by_name(cmd_backup_device);
-			if (cmd_dev != null){
-				repo = new SnapshotRepo.from_device(cmd_dev, null);
-				if (!repo.available()){
-					exit_app();
-					exit(1);
+		bool found = false;
+		
+		// set snapshot -----------------------------------------------
+
+		if (app_mode != ""){ //command-line mode
+
+			if (cmd_snapshot.length > 0){
+
+				//check command line arguments
+				found = false;
+				foreach(var bak in repo.snapshots) {
+					if (bak.name == cmd_snapshot){
+						snapshot_to_delete = bak;
+						found = true;
+						break;
+					}
+				}
+
+				//check if found
+				if (!found){
+					log_error(_("Could not find snapshot") + ": '%s'".printf(cmd_snapshot));
+					return;
 				}
 			}
-			else{
-				log_error(_("Could not find device") + ": '%s'".printf(cmd_backup_device));
-				exit_app();
-				exit(1);
-			}
-		}
-		else{
-			if ((repo.device == null) || (prompt_if_empty && (repo.snapshots.size == 0))){
-				//prompt user for backup device
+
+			//prompt user for snapshot
+			if (snapshot_to_delete == null){
+
+				if (repo.snapshots.size == 0){
+					log_msg(_("No snapshots found on device") +
+						" '%s'".printf(repo.device.device));
+					return;
+				}
+
+				log_msg("");
+				log_msg(TERM_COLOR_YELLOW + _("Select snapshot to delete") + ":\n" + TERM_COLOR_RESET);
+				list_snapshots(true);
 				log_msg("");
 
-				log_msg(TERM_COLOR_YELLOW + _("Select backup device") + ":\n" + TERM_COLOR_RESET);
-				list_devices(list);
-				log_msg("");
-
-				Device dev = null;
 				int attempts = 0;
-				while (dev == null){
+				while (snapshot_to_delete == null){
 					attempts++;
 					if (attempts > 3) { break; }
-					stdout.printf(TERM_COLOR_YELLOW +
-						_("Enter device name or number (a=Abort)") + ": " + TERM_COLOR_RESET);
+					stdout.printf(TERM_COLOR_YELLOW + _("Enter snapshot number (a=Abort, p=Previous, n=Next)") + ": " + TERM_COLOR_RESET);
 					stdout.flush();
-
-					dev = read_stdin_device(list);
+					snapshot_to_delete = read_stdin_snapshot();
 				}
-
 				log_msg("");
-				
-				if (dev == null){
+
+				if (snapshot_to_delete == null){
 					log_error(_("Failed to get input from user in 3 attempts"));
 					log_msg(_("Aborted."));
 					exit_app();
 					exit(0);
 				}
-
-				repo = new SnapshotRepo.from_device(dev, null);
-				if (!repo.available()){
-					exit_app();
-					exit(1);
-				}
 			}
 		}
+
+		if (snapshot_to_delete == null){
+			//print error
+			log_error(_("Snapshot to delete not specified!"));
+			return;
+		}
+
+		snapshot_to_delete.remove(true);
+	}
+
+	public bool delete_all_snapshots(){
+		return repo.remove_all();
+	}
+
+	// gui delete
+
+	public void delete_begin(){
+
+		log_debug("delete_begin()");
+		
+		try {
+			thread_delete_running = true;
+			thread_delete_success = false;
+			Thread.create<void> (delete_thread, true);
+
+			//new Thread<bool> ("", delete_thread);
+
+			log_debug("delete_begin(): thread created");
+		}
+		catch (Error e) {
+			thread_delete_running = false;
+			thread_delete_success = false;
+			log_error (e.message);
+		}
+	}
+
+	public void delete_thread(){
+
+		log_debug("delete_thread()");
+
+		foreach(var bak in delete_list){
+			bak.mark_for_deletion();
+		}
+		
+		while (delete_list.size > 0){
+
+			var bak = delete_list[0];
+			bak.mark_for_deletion(); // mark for deletion again since initial list may have changed
+			
+			App.delete_file_task = bak.delete_file_task;
+			App.delete_file_task.prg_count_total = Main.first_snapshot_count;
+			
+			bak.remove(true); // wait till complete
+
+			if (App.delete_file_task.status != AppStatus.CANCELLED){
+				
+				var message = "%s '%s' (%s)".printf(
+					_("Removed"), bak.name, App.delete_file_task.stat_time_elapsed);
+					
+				log_msg(message);
+				
+				OSDNotify.notify_send("TimeShift", message, 10000, "low");
+
+				delete_list.remove(bak);
+			}
+		}
+
+		thread_delete_running = false;
+		thread_delete_success = false;
+
+		//return thread_delete_success;
+	}
+	
+	// restore
+
+	public void init_mount_list(){
+
+		log_debug("Main: init_mount_list()");
+		
+		mount_list.clear();
+
+		Gee.ArrayList<FsTabEntry> fstab_list = null;
+		Gee.ArrayList<CryptTabEntry> crypttab_list = null;
+		
+		if (mirror_system){
+			string fstab_path = "/etc/fstab";
+			fstab_list = FsTabEntry.read_file(fstab_path);
+			string cryttab_path = "/etc/crypttab";
+			crypttab_list = CryptTabEntry.read_file(cryttab_path);
+		}
+		else{
+			fstab_list = snapshot_to_restore.fstab_list;
+			crypttab_list = snapshot_to_restore.cryttab_list;
+		}
+
+		bool root_found = false;
+		bool boot_found = false;
+		bool home_found = false;
+		restore_target = null;
+		
+		foreach(var mnt in fstab_list){
+
+			// skip mounting for non-system devices
+			
+			if (!mnt.is_for_system_directory()){
+				continue;
+			}
+
+			// find device by name or uuid
+			
+			Device mnt_dev = null;
+			if (mnt.device_uuid.length > 0){
+				mnt_dev = Device.get_device_by_uuid(mnt.device_uuid);
+			}
+			else{
+				mnt_dev = Device.get_device_by_name(mnt.device);
+			}
+
+			// replace mapped name with parent device
+
+			if (mnt_dev == null){
+				
+				/*
+				Note: This is required since the mapped name may be different on running system.
+				Since we don't have the same mapped name, we cannot resolve the device without
+				identifying the parent partition
+				*/
+
+				if (mnt.device.has_prefix("/dev/mapper/")){
+					string mapped_name = mnt.device.replace("/dev/mapper/","");
+					foreach(var entry in crypttab_list){
+						if (entry.mapped_name == mapped_name){
+							mnt.device = entry.device;
+							break;
+						}
+					}
+				}
+
+				// try again - find device by name or uuid
+			
+				if (mnt.device_uuid.length > 0){
+					mnt_dev = Device.get_device_by_uuid(mnt.device_uuid);
+				}
+				else{
+					mnt_dev = Device.get_device_by_name(mnt.device);
+				}
+			}
+
+			if (mnt_dev != null){
+				
+				// add to mount list
+				
+				log_debug("added: dev: %s, path: %s, options: %s".printf(
+					mnt_dev.device, mnt.mount_point, mnt.options));
+					
+				mount_list.add(new MountEntry(mnt_dev, mnt.mount_point, mnt.options));
+				
+				if (mnt.mount_point == "/"){
+					root_found = true;
+					restore_target = mnt_dev;
+				}
+				if (mnt.mount_point == "/boot"){
+					boot_found = true;
+				}
+				if (mnt.mount_point == "/home"){
+					home_found = true;
+				}
+			}
+			else{
+				log_debug("missing: dev: %s, path: %s, options: %s".printf(
+					mnt.device, mnt.mount_point, mnt.options));
+
+				mount_list.add(new MountEntry(null, mnt.mount_point, mnt.options));
+			}
+		}
+
+		if (!root_found){
+			mount_list.add(new MountEntry(null, "/", "")); // add root entry
+		}
+
+		if (!boot_found){
+			mount_list.add(new MountEntry(null, "/boot", "")); // add boot entry
+		}
+
+		if (!home_found){
+			mount_list.add(new MountEntry(null, "/home", "")); // add home entry
+		}
+
+		/*
+		While cloning the system, /boot is the only mount point that
+		we will leave unchanged (to avoid encrypted systems from breaking).
+		All other mounts like /home will be defaulted to target device
+		(to prevent the "cloned" system from using the original device)
+		*/
+		
+		if (App.mirror_system){
+			restore_target = null;
+			foreach (var entry in mount_list){
+				// user should select another device
+				entry.device = null; 
+			}
+		}
+
+		foreach(var mnt in mount_list){
+			if (mnt.device != null){
+				log_debug("Entry: %s -> %s".printf(mnt.device.device, mnt.mount_point));
+			}
+			else{
+				log_debug("Entry: null -> %s".printf(mnt.mount_point));
+			}
+		}
+
+		// sort - parent mountpoints will be placed above children
+		mount_list.sort((a,b) => {
+			return strcmp(a.mount_point, b.mount_point);
+		});
+
+		log_debug("Main: init_mount_list(): exit");
 	}
 
 	public bool restore_snapshot(Gtk.Window? parent_win){
@@ -1948,11 +2227,10 @@ public class Main : GLib.Object{
 		if (app_mode != ""){
 			init_mount_list();
 		}
-		
-		//set target device -----------------------------------------------
 
 		if (app_mode != ""){ //command line mode
 
+			// set target device from cmd argument
 			if (cmd_target_device.length > 0){
 
 				//check command line arguments
@@ -1984,169 +2262,101 @@ public class Main : GLib.Object{
 					return false;
 				}
 			}
-
-			//prompt user for target device
-			if (restore_target == null){
-
-				// create device list
-				
-				var device_list = new Gee.ArrayList<Device>();
-				foreach(var pi in partitions){
-					if (pi.has_linux_filesystem()){
-						device_list.add(pi);
-					}
-				}
-
-				// display list
-				
-				log_msg("");
-				log_msg(TERM_COLOR_YELLOW + _("Select target device") + " (/):\n" + TERM_COLOR_RESET);
-				list_devices(device_list);
-				log_msg("");
-
-				// get option from user
-				
-				int attempts = 0;
-				while (restore_target == null){
-					attempts++;
-					if (attempts > 3) { break; }
-					stdout.printf(TERM_COLOR_YELLOW + _("Enter device name or number (a=Abort)") + ": " + TERM_COLOR_RESET);
-					stdout.flush();
-
-					restore_target = read_stdin_device(device_list);
-				}
-				log_msg("");
-
-				if (restore_target == null){
-					log_error(_("Failed to get input from user in 3 attempts"));
-					log_msg(_("Aborted."));
-					exit_app();
-					exit(0);
-				}
-			}
 		}
-
-		if (restore_target != null){
-			//print target device name
-			log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
-			log_msg(_("Target Device") + ": %s".printf(restore_target.full_name_with_alias), true);
-			//stdout.printf("UUID=%s".printf(restore_target.uuid));
-			//stdout.flush();
-			log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
-		}
-		else{
-			//print error
-			log_error(_("Target device not specified!"));
-			return false;
-		}
-
-		//select other devices in mount_list --------------------
+		
+		// select devices in mount_list --------------------
 
 		log_debug("Selecting devices for mount points");
 		
 		if (app_mode != ""){ //command line mode
-			log_debug("restore_target.uuid=%s".printf(restore_target.uuid));
-			log_debug("root_device.uuid=%s".printf(root_device.uuid));
-			
-			// ask user to map devices if restoring to another system
-			if (restore_target.uuid !=  root_device.uuid){
-				
-				for(int i = mount_list.size - 1; i >= 0; i--){
-					MountEntry mnt = mount_list[i];
-					Device dev = null;
-					string default_device = "";
 
-					log_debug("selecting: %s".printf(mnt.mount_point));
+			for(int i = 0; i < mount_list.size; i++){
+				MountEntry mnt = mount_list[i];
+				Device dev = null;
+				string default_device = "";
 
-					if (mnt.mount_point == "/"){
-						mnt.device = restore_target;
-						dev = restore_target;
-						//continue;
-					}
+				log_debug("selecting: %s".printf(mnt.mount_point));
 
-					if (mirror_system){
-						default_device = restore_target.device;
+				// no need to ask user to map remaining devices if restoring same system
+				if ((restore_target != null) && (restore_target.uuid == root_device.uuid)){
+					break;
+				}
+
+				if (mirror_system){
+					default_device = (restore_target != null) ? restore_target.device : "";
+				}
+				else{
+					if (mnt.device != null){
+						default_device = mnt.device.device;
 					}
 					else{
-						if (mnt.device != null){
-							default_device = mnt.device.device;
-						}
-						else{
-							default_device = restore_target.device;
-						}
-					}
-
-					//prompt user for device
-					if (dev == null){
-						log_msg("");
-						log_msg(TERM_COLOR_YELLOW + _("Select '%s' device (default = %s)").printf(
-							mnt.mount_point, default_device) + ":\n" + TERM_COLOR_RESET);
-						var device_list = list_all_devices();
-						log_msg("");
-
-						int attempts = 0;
-						while (dev == null){
-							attempts++;
-							if (attempts > 3) { break; }
-							
-							stdout.printf(TERM_COLOR_YELLOW +
-								_("[a = Abort, d = Default (%s), r = Root device]").printf(default_device) + "\n\n" + TERM_COLOR_RESET);
-								
-							stdout.printf(
-								TERM_COLOR_YELLOW + _("Enter device name or number")
-									+ ": " + TERM_COLOR_RESET);
-									
-							stdout.flush();
-							dev = read_stdin_device_mounts(device_list, mnt);
-						}
-						log_msg("");
-
-						if (dev == null){
-							log_error(_("Failed to get input from user in 3 attempts"));
-							log_msg(_("Aborted."));
-							exit_app();
-							exit(0);
-						}
-					}
-
-					if (dev != null){
-
-						log_debug("selected: %s".printf(dev.uuid));
-						
-						mnt.device = dev;
-						//if (dev.device == restore_target.device){
-						//	mount_list.remove_at(i);
-						//}
-
-						log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
-						
-						if (dev.device == restore_target.device){
-							log_msg(_("'%s' will be on root device").printf(mnt.mount_point), true);
-						}
-						else{
-							log_msg(_("'%s' will be on '%s'").printf(
-								mnt.mount_point, mnt.device.short_name_with_alias), true);
-								
-							log_debug("UUID=%s".printf(restore_target.uuid));
-						}
-						log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
+						default_device = (restore_target != null) ? restore_target.device : "";
 					}
 				}
+
+				//prompt user for device
+				if (dev == null){
+					log_msg("");
+					log_msg(TERM_COLOR_YELLOW + _("Select '%s' device (default = %s)").printf(
+						mnt.mount_point, default_device) + ":\n" + TERM_COLOR_RESET);
+					var device_list = list_all_devices();
+					log_msg("");
+
+					int attempts = 0;
+					while (dev == null){
+						attempts++;
+						if (attempts > 3) { break; }
+						
+						stdout.printf(TERM_COLOR_YELLOW +
+							_("[a = Abort, d = Default (%s), r = Root device]").printf(default_device) + "\n\n" + TERM_COLOR_RESET);
+							
+						stdout.printf(
+							TERM_COLOR_YELLOW + _("Enter device name or number")
+								+ ": " + TERM_COLOR_RESET);
+								
+						stdout.flush();
+						dev = read_stdin_device_mounts(device_list, mnt);
+					}
+					log_msg("");
+
+					if (dev == null){
+						log_error(_("Failed to get input from user in 3 attempts"));
+						log_msg(_("Aborted."));
+						exit_app();
+						exit(0);
+					}
+				}
+
+				if (dev != null){
+
+					log_debug("selected: %s".printf(dev.uuid));
+					
+					mnt.device = dev;
+
+					if (mnt.mount_point == "/"){
+						restore_target = dev;
+					}
+
+					log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
+					
+					if ((mnt.mount_point != "/")
+						&& (restore_target != null)
+						&& (dev.device == restore_target.device)){
+							
+						log_msg(_("'%s' will be on root device").printf(mnt.mount_point), true);
+					}
+					else{
+						log_msg(_("'%s' will be on '%s'").printf(
+							mnt.mount_point, mnt.device.short_name_with_alias), true);
+							
+						//log_debug("UUID=%s".printf(restore_target.uuid));
+					}
+					log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
+				}
+			
 			}
 		}
-
-		/*if (restore_target != null){
-			//print target device name
-			log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
-			log_msg(_("Target Device") + ": %s".printf(restore_target.full_name_with_alias), true);
-			log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
-		}
-		else{
-			//print error
-			log_error(_("Target device not specified!"));
-			return false;
-		}*/
-
+		
 		//mount selected devices ---------------------------------------
 
 		log_debug("Mounting selected devices");
@@ -2332,285 +2542,6 @@ public class Main : GLib.Object{
 		return thr_success;
 	}
 
-	public void init_mount_list(){
-
-		log_debug("Main: init_mount_list()");
-		
-		mount_list.clear();
-
-		Gee.ArrayList<FsTabEntry> fstab_list = null;
-		Gee.ArrayList<CryptTabEntry> crypttab_list = null;
-		
-		if (mirror_system){
-			string fstab_path = "/etc/fstab";
-			fstab_list = FsTabEntry.read_file(fstab_path);
-			string cryttab_path = "/etc/crypttab";
-			crypttab_list = CryptTabEntry.read_file(cryttab_path);
-		}
-		else{
-			fstab_list = snapshot_to_restore.fstab_list;
-			crypttab_list = snapshot_to_restore.cryttab_list;
-		}
-
-		bool root_found = false;
-		bool boot_found = false;
-		bool home_found = false;
-		restore_target = null;
-		
-		foreach(var mnt in fstab_list){
-
-			// skip mounting for non-system devices
-			
-			if (!mnt.is_for_system_directory()){
-				continue;
-			}
-
-			// find device by name or uuid
-			
-			Device mnt_dev = null;
-			if (mnt.device_uuid.length > 0){
-				mnt_dev = Device.get_device_by_uuid(mnt.device_uuid);
-			}
-			else{
-				mnt_dev = Device.get_device_by_name(mnt.device);
-			}
-
-			// replace mapped name with parent device
-
-			if (mnt_dev == null){
-				
-				/*
-				Note: This is required since the mapped name may be different on running system.
-				Since we don't have the same mapped name, we cannot resolve the device without
-				identifying the parent partition
-				*/
-
-				if (mnt.device.has_prefix("/dev/mapper/")){
-					string mapped_name = mnt.device.replace("/dev/mapper/","");
-					foreach(var entry in crypttab_list){
-						if (entry.mapped_name == mapped_name){
-							mnt.device = entry.device;
-							break;
-						}
-					}
-				}
-
-				// try again - find device by name or uuid
-			
-				if (mnt.device_uuid.length > 0){
-					mnt_dev = Device.get_device_by_uuid(mnt.device_uuid);
-				}
-				else{
-					mnt_dev = Device.get_device_by_name(mnt.device);
-				}
-			}
-
-			if (mnt_dev != null){
-				
-				// add to mount list
-				
-				log_debug("added: dev: %s, path: %s, options: %s".printf(
-					mnt_dev.device, mnt.mount_point, mnt.options));
-					
-				mount_list.add(new MountEntry(mnt_dev, mnt.mount_point, mnt.options));
-				
-				if (mnt.mount_point == "/"){
-					root_found = true;
-					restore_target = mnt_dev;
-				}
-				if (mnt.mount_point == "/boot"){
-					boot_found = true;
-				}
-				if (mnt.mount_point == "/home"){
-					home_found = true;
-				}
-			}
-			else{
-				log_debug("missing: dev: %s, path: %s, options: %s".printf(
-					mnt.device, mnt.mount_point, mnt.options));
-
-				mount_list.add(new MountEntry(null, mnt.mount_point, mnt.options));
-			}
-		}
-
-		if (!root_found){
-			mount_list.add(new MountEntry(null, "/", "")); // add root entry
-		}
-
-		if (!boot_found){
-			mount_list.add(new MountEntry(null, "/boot", "")); // add boot entry
-		}
-
-		if (!home_found){
-			mount_list.add(new MountEntry(null, "/home", "")); // add home entry
-		}
-
-		/*
-		While cloning the system, /boot is the only mount point that
-		we will leave unchanged (to avoid encrypted systems from breaking).
-		All other mounts like /home will be defaulted to target device
-		(to prevent the "cloned" system from using the original device)
-		*/
-		
-		if (App.mirror_system){
-			restore_target = null;
-			foreach (var entry in mount_list){
-				// user should select another device
-				entry.device = null; 
-			}
-		}
-
-		foreach(var mnt in mount_list){
-			if (mnt.device != null){
-				log_debug("Entry: %s -> %s".printf(mnt.device.device, mnt.mount_point));
-			}
-			else{
-				log_debug("Entry: null -> %s".printf(mnt.mount_point));
-			}
-		}
-
-		// sort - parent mountpoints will be placed above children
-		mount_list.sort((a,b) => {
-			return strcmp(a.mount_point, b.mount_point);
-		});
-
-		log_debug("Main: init_mount_list(): exit");
-	}
-
-	// delete from terminal
-
-	public void delete_snapshot(Snapshot? snapshot = null){
-
-		bool found = false;
-		
-		// set snapshot -----------------------------------------------
-
-		if (app_mode != ""){ //command-line mode
-
-			if (cmd_snapshot.length > 0){
-
-				//check command line arguments
-				found = false;
-				foreach(var bak in repo.snapshots) {
-					if (bak.name == cmd_snapshot){
-						snapshot_to_delete = bak;
-						found = true;
-						break;
-					}
-				}
-
-				//check if found
-				if (!found){
-					log_error(_("Could not find snapshot") + ": '%s'".printf(cmd_snapshot));
-					return;
-				}
-			}
-
-			//prompt user for snapshot
-			if (snapshot_to_delete == null){
-
-				if (repo.snapshots.size == 0){
-					log_msg(_("No snapshots found on device") +
-						" '%s'".printf(repo.device.device));
-					return;
-				}
-
-				log_msg("");
-				log_msg(TERM_COLOR_YELLOW + _("Select snapshot to delete") + ":\n" + TERM_COLOR_RESET);
-				list_snapshots(true);
-				log_msg("");
-
-				int attempts = 0;
-				while (snapshot_to_delete == null){
-					attempts++;
-					if (attempts > 3) { break; }
-					stdout.printf(TERM_COLOR_YELLOW + _("Enter snapshot number (a=Abort, p=Previous, n=Next)") + ": " + TERM_COLOR_RESET);
-					stdout.flush();
-					snapshot_to_delete = read_stdin_snapshot();
-				}
-				log_msg("");
-
-				if (snapshot_to_delete == null){
-					log_error(_("Failed to get input from user in 3 attempts"));
-					log_msg(_("Aborted."));
-					exit_app();
-					exit(0);
-				}
-			}
-		}
-
-		if (snapshot_to_delete == null){
-			//print error
-			log_error(_("Snapshot to delete not specified!"));
-			return;
-		}
-
-		snapshot_to_delete.remove(true);
-	}
-
-	public bool delete_all_snapshots(){
-		return repo.remove_all();
-	}
-
-	// gui delete
-
-	public void delete_begin(){
-
-		log_debug("delete_begin()");
-		
-		try {
-			thread_delete_running = true;
-			thread_delete_success = false;
-			Thread.create<void> (delete_thread, true);
-
-			//new Thread<bool> ("", delete_thread);
-
-			log_debug("delete_begin(): thread created");
-		}
-		catch (Error e) {
-			thread_delete_running = false;
-			thread_delete_success = false;
-			log_error (e.message);
-		}
-	}
-
-	public void delete_thread(){
-
-		log_debug("delete_thread()");
-
-		foreach(var bak in delete_list){
-			bak.mark_for_deletion();
-		}
-		
-		while (delete_list.size > 0){
-
-			var bak = delete_list[0];
-			bak.mark_for_deletion(); // mark for deletion again since initial list may have changed
-			
-			App.delete_file_task = bak.delete_file_task;
-			App.delete_file_task.prg_count_total = Main.first_snapshot_count;
-			
-			bak.remove(true); // wait till complete
-
-			if (App.delete_file_task.status != AppStatus.CANCELLED){
-				
-				var message = "%s '%s' (%s)".printf(
-					_("Removed"), bak.name, App.delete_file_task.stat_time_elapsed);
-					
-				log_msg(message);
-				
-				OSDNotify.notify_send("TimeShift", message, 10000, "low");
-
-				delete_list.remove(bak);
-			}
-		}
-
-		thread_delete_running = false;
-		thread_delete_success = false;
-
-		//return thread_delete_success;
-	}
-	
 	// todo: remove
 	public Device unlock_encrypted_device(Device luks_device, Gtk.Window? parent_win){
 		Device luks_unlocked = null;
@@ -3047,15 +2978,17 @@ public class Main : GLib.Object{
 					script += sh_grub + sh_reboot;
 				}
 
+				log_debug("verbose=%s".printf(cmd_verbose.to_string()));
+				
 				if (cmd_verbose){
 					//current/other system, console, verbose
-					ret_val = exec_script_sync(sh);
+					ret_val = exec_script_sync(script);
 					log_msg("");
 				}
 				else{
 					//current/other system, console, quiet
 					string std_out, std_err;
-					ret_val = exec_script_sync(sh, out std_out, out std_err);
+					ret_val = exec_script_sync(script, out std_out, out std_err);
 					log_to_file(std_out);
 					log_to_file(std_err);
 				}
@@ -3070,6 +3003,9 @@ public class Main : GLib.Object{
 					// re-install grub ------------
 				
 					if (reinstall_grub2){
+
+						App.progress_text = "Re-installing GRUB2 bootloader...";
+						log_msg(App.progress_text);
 						
 						if (cmd_verbose){
 							//current/other system, console, verbose

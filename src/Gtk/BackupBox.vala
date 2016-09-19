@@ -91,7 +91,7 @@ class BackupBox : Gtk.Box{
 		lbl_status = add_label(this, "");
 		lbl_status.ellipsize = Pango.EllipsizeMode.MIDDLE;
 		lbl_status.max_width_chars = 45;
-		lbl_status.margin_bottom = 12;
+		lbl_status.margin_bottom = 6;
 
 		// TODO: Add move to background button
 

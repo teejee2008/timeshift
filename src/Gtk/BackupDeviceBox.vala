@@ -94,6 +94,7 @@ class BackupDeviceBox : Gtk.Box{
 		tv_devices.headers_clickable = true;
 		tv_devices.rules_hint = true;
 		tv_devices.activate_on_single_click = true;
+		//tv_devices.headers_clickable  = true;
 		
 		// device name
 		
@@ -103,6 +104,8 @@ class BackupDeviceBox : Gtk.Box{
 		//var col = add_column_radio_and_text(tv_devices, _("Disk"), out cell_radio, out cell_text);
 		var col = add_column_icon_radio_text(tv_devices, _("Disk"),
 			out cell_pix, out cell_radio, out cell_text);
+
+		col.resizable = true;
 		
 		col.set_cell_data_func(cell_pix, (cell_layout, cell, model, iter)=>{
 			Gdk.Pixbuf pix = null;
@@ -184,7 +187,7 @@ class BackupDeviceBox : Gtk.Box{
 			model.get (iter, 0, out dev, -1);
 
 			(cell as Gtk.CellRendererText).text =
-					(dev.size_bytes > 0) ? format_file_size(dev.size_bytes) : "";
+					(dev.size_bytes > 0) ? format_file_size(dev.size_bytes, false, "", true, 0) : "";
 		});
 
 		// free
@@ -201,7 +204,7 @@ class BackupDeviceBox : Gtk.Box{
 			}
 			else{
 				(cell as Gtk.CellRendererText).text =
-					(dev.free_bytes > 0) ? format_file_size(dev.free_bytes) : "";
+					(dev.free_bytes > 0) ? format_file_size(dev.free_bytes, false, "", true, 0) : "";
 			}
 
 			(cell as Gtk.CellRendererText).sensitive = (dev.type != "disk");

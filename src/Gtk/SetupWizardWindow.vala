@@ -50,12 +50,14 @@ class SetupWizardWindow : Gtk.Window{
 	private Gtk.Button btn_close;
 
 	private uint tmr_init;
-
+	private int def_width = 450;
+	private int def_height = 500;
+	
 	public SetupWizardWindow() {
 		this.title = _("Setup Wizard");
         this.window_position = WindowPosition.CENTER;
         this.modal = true;
-        this.set_default_size (500, 500);
+        this.set_default_size (def_width, def_height);
 		this.icon = get_app_icon(16);
 
 		this.delete_event.connect(on_delete_event);
@@ -174,6 +176,15 @@ class SetupWizardWindow : Gtk.Window{
 			
 			this.destroy(); // TODO: Show error page
 		});
+		
+		action_buttons_set_no_show_all(true);
+	}
+
+	private void action_buttons_set_no_show_all(bool val){
+		btn_prev.no_show_all = val;
+		btn_next.no_show_all = val;
+		btn_close.no_show_all = val;
+		btn_cancel.no_show_all = val;
 	}
 	
 
@@ -251,6 +262,8 @@ class SetupWizardWindow : Gtk.Window{
 
 		// show/hide actions -----------------------------------
 
+		action_buttons_set_no_show_all(false);
+		
 		btn_cancel.hide(); // TODO: remove this
 
 		btn_prev.show();
@@ -279,7 +292,7 @@ class SetupWizardWindow : Gtk.Window{
 			btn_close.sensitive = true;
 			break;
 		}
-		
+
 		// actions
 
 		switch(notebook.page){

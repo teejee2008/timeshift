@@ -63,7 +63,7 @@ class DeleteBox : Gtk.Box{
 		lbl_msg = add_label(hbox_status, _("Preparing..."));
 		lbl_msg.hexpand = true;
 		lbl_msg.ellipsize = Pango.EllipsizeMode.END;
-		lbl_msg.max_width_chars = 50;
+		lbl_msg.max_width_chars = 45;
 
 		lbl_remaining = add_label(hbox_status, "");
 
@@ -75,36 +75,10 @@ class DeleteBox : Gtk.Box{
 		add (progressbar);
 
 		//lbl_status
-
 		lbl_status = add_label(this, "");
 		lbl_status.ellipsize = Pango.EllipsizeMode.MIDDLE;
 		lbl_status.max_width_chars = 45;
 		lbl_status.margin_bottom = 12;
-
-		//var label = add_label(this, "");
-		//label.vexpand = true;
-
-		// button
-
-		var bbox = new Gtk.ButtonBox (Gtk.Orientation.HORIZONTAL);
-		bbox.set_layout (Gtk.ButtonBoxStyle.CENTER);
-		//bbox.margin = 0;
-		//bbox.margin_left = 24;
-		//bbox.margin_right = 24;
-		bbox.margin_top = 30;
-		//bbox.margin_bottom = 24;
-        add(bbox);
-
-		Gtk.SizeGroup size_group = null;
-		//var img = new Image.from_stock("gtk-cancel", Gtk.IconSize.BUTTON);
-		var btn_silent = add_button(bbox,
-			_("Hide"),
-			_("Files will be deleted in background"),
-			ref size_group, null);
-		
-        btn_silent.clicked.connect(()=>{
-			parent_window.destroy();
-		});
     }
 
 	public void delete_snapshots(){

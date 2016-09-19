@@ -45,16 +45,19 @@ class DeleteWindow : Gtk.Window{
 	// actions
 	private Gtk.Button btn_prev;
 	private Gtk.Button btn_next;
+	private Gtk.Button btn_hide;
 	private Gtk.Button btn_cancel;
 	private Gtk.Button btn_close;
 
 	private uint tmr_init;
+	private int def_width = 450;
+	private int def_height = 500;
 
 	public DeleteWindow() {
 		this.title = _("Delete Snapshots");
         this.window_position = WindowPosition.CENTER;
         this.modal = true;
-        this.set_default_size (500, 500);
+        this.set_default_size (def_width, def_height);
 		this.icon = get_app_icon(16);
 
 		this.delete_event.connect(on_delete_event);
@@ -154,6 +157,15 @@ class DeleteWindow : Gtk.Window{
 			this.destroy();
 		});
 
+		// hide
+		
+		btn_hide = add_button(hbox, _("Hide"), "", ref size_group, null);
+		btn_hide.set_tooltip_text(_("Hide this window (files will be deleted in background)"));
+		
+        btn_hide.clicked.connect(()=>{
+			this.destroy();
+		});
+	
 		// cancel
 		
 		img = new Image.from_stock("gtk-cancel", Gtk.IconSize.BUTTON);
@@ -169,6 +181,16 @@ class DeleteWindow : Gtk.Window{
 			
 			this.destroy(); // TODO: Show error page
 		});
+
+		action_buttons_set_no_show_all(true);
+	}
+
+	private void action_buttons_set_no_show_all(bool val){
+		btn_prev.no_show_all = val;
+		btn_next.no_show_all = val;
+		btn_hide.no_show_all = val;
+		btn_close.no_show_all = val;
+		btn_cancel.no_show_all = val;
 	}
 	
 	// navigation
@@ -228,18 +250,22 @@ class DeleteWindow : Gtk.Window{
 
 		// show/hide actions -----------------------------------
 
+		action_buttons_set_no_show_all(false);
+		
 		switch(notebook.page){
 		case Tabs.DELETE:
 			btn_prev.hide();
 			btn_next.hide();
 			btn_close.hide();
+			btn_hide.show();
 			btn_cancel.show();
-			bbox_action.set_layout (Gtk.ButtonBoxStyle.CENTER);
+			bbox_action.set_layout (Gtk.ButtonBoxStyle.EXPAND);
 			break;
 		case Tabs.SNAPSHOT_LIST:
 			btn_prev.show();
 			btn_next.show();
 			btn_close.show();
+			btn_hide.hide();
 			btn_cancel.hide();
 			btn_prev.sensitive = false;
 			btn_next.sensitive = true;
@@ -247,7 +273,7 @@ class DeleteWindow : Gtk.Window{
 			bbox_action.set_layout (Gtk.ButtonBoxStyle.EXPAND);
 			break;
 		}
-		
+
 		// actions
 
 		switch(notebook.page){

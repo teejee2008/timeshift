@@ -238,7 +238,7 @@ class RestoreWindow : Gtk.Window{
 			notebook.page = Tabs.TARGET_DEVICE;
 			break;
 		case Tabs.SUMMARY:
-			notebook.page = Tabs.EXCLUDE_APPS;
+			notebook.page = Tabs.RESTORE_EXCLUDE; // go to parent (RESTORE_EXCLUDE)
 			break;
 		case Tabs.TARGET_DEVICE:
 		case Tabs.RESTORE:
@@ -262,7 +262,7 @@ class RestoreWindow : Gtk.Window{
 			notebook.page = Tabs.EXCLUDE_APPS;
 			break;
 		case Tabs.RESTORE_EXCLUDE:
-			notebook.page = Tabs.SUMMARY;
+			notebook.page = Tabs.EXCLUDE_APPS;
 			break;
 		case Tabs.EXCLUDE_APPS:
 			notebook.page = Tabs.SUMMARY;
@@ -416,12 +416,7 @@ class RestoreWindow : Gtk.Window{
 			restore_device_box.check_and_mount_devices();
 		}
 		else if (notebook.page == Tabs.EXCLUDE_APPS){
-			log_debug("exclude_list_apps:");
-			foreach(var entry in App.exclude_list_apps){
-				if (entry.enabled){
-					log_debug("app: %s".printf(entry.relpath));
-				}
-			}
+		    exclude_apps_box.save_changes();
 		}
 
 		return true;

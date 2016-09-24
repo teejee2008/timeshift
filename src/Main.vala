@@ -66,7 +66,8 @@ public class Main : GLib.Object{
 	public Gee.ArrayList<string> exclude_list_restore;
 	public Gee.ArrayList<AppExcludeEntry> exclude_list_apps;
 	public Gee.ArrayList<MountEntry> mount_list;
-
+	public Gee.ArrayList<string> exclude_app_names;
+	
 	public SnapshotRepo repo; 
 
 	//temp
@@ -335,7 +336,8 @@ public class Main : GLib.Object{
 
 		mount_list = new Gee.ArrayList<MountEntry>();
 		delete_list = new Gee.ArrayList<Snapshot>();
-		
+
+		exclude_app_names = new Gee.ArrayList<string>();
 		add_default_exclude_entries();
 		//add_app_exclude_entries();
 
@@ -556,7 +558,7 @@ public class Main : GLib.Object{
 	}
 
 	public void add_app_exclude_entries(){
-		exclude_list_apps.clear();
+		AppExcludeEntry.clear();
 
 		string home;
 		string user_name;
@@ -583,73 +585,16 @@ public class Main : GLib.Object{
 			home = mount_point_restore + home;
 		}
 
-		try
-		{
-			File f_home = File.new_for_path (home);
-	        FileEnumerator enumerator = f_home.enumerate_children ("standard::*", 0);
-	        FileInfo file;
-	        while ((file = enumerator.next_file ()) != null) {
-				string name = file.get_name();
-				string item = home + "/" + name;
-				if (!name.has_prefix(".")){ continue; }
-				if (name == ".config"){ continue; }
-				if (name == ".local"){ continue; }
-				if (name == ".gvfs"){ continue; }
-				if (name.has_suffix(".lock")){ continue; }
+		if ((root_device == null)
+			|| ((restore_target.device != root_device.device)
+				&& (restore_target.uuid != root_device.uuid))){
 
-				if (dir_exists(item)) {
-					var entry = new AppExcludeEntry("~/" + name, false);
-					exclude_list_apps.add(entry);
-				}
-				else{
-					var entry = new AppExcludeEntry("~/" + name, true);
-					exclude_list_apps.add(entry);
-				}
-	        }
+			home = mount_point_restore + home;
+		}
 
-	        File f_home_config = File.new_for_path (home + "/.config");
-	        enumerator = f_home_config.enumerate_children ("standard::*", 0);
-	        while ((file = enumerator.next_file ()) != null) {
-				string name = file.get_name();
-				string item = home + "/.config/" + name;
-				if (name.has_suffix(".lock")){ continue; }
+		AppExcludeEntry.add_app_exclude_entries_from_path(home);
 
-				if (dir_exists(item)) {
-					var entry = new AppExcludeEntry("~/.config/" + name, false);
-					exclude_list_apps.add(entry);
-				}
-				else{
-					var entry = new AppExcludeEntry("~/.config/" + name, true);
-					exclude_list_apps.add(entry);
-				}
-	        }
-
-	        File f_home_local = File.new_for_path (home + "/.local/share");
-	        enumerator = f_home_local.enumerate_children ("standard::*", 0);
-	        while ((file = enumerator.next_file ()) != null) {
-				string name = file.get_name();
-				string item = home + "/.local/share/" + name;
-				if (name.has_suffix(".lock")){ continue; }
-
-				if (dir_exists(item)) {
-					var entry = new AppExcludeEntry("~/.local/share/" + name, false);
-					exclude_list_apps.add(entry);
-				}
-				else{
-					var entry = new AppExcludeEntry("~/.local/share/" + name, true);
-					exclude_list_apps.add(entry);
-				}
-	        }
-        }
-        catch(Error e){
-	        log_error (e.message);
-	    }
-
-		//sort the list
-		GLib.CompareDataFunc<AppExcludeEntry> entry_compare = (a, b) => {
-			return strcmp(a.relpath,b.relpath);
-		};
-		exclude_list_apps.sort((owned) entry_compare);
+		exclude_list_apps = AppExcludeEntry.get_apps_list(exclude_app_names);
 	}
 
 	public Gee.ArrayList<string> create_exclude_list_for_backup(){
@@ -714,14 +659,10 @@ public class Main : GLib.Object{
 		//add app entries
 		foreach(var entry in exclude_list_apps){
 			if (entry.enabled){
-				var pattern = entry.pattern();
-				if (!exclude_list_restore.contains(pattern)){
-					exclude_list_restore.add(pattern);
-				}
-
-				pattern = entry.pattern(true);
-				if (!exclude_list_restore.contains(pattern)){
-					exclude_list_restore.add(pattern);
+				foreach(var pattern in entry.patterns){
+					if (!exclude_list_restore.contains(pattern)){
+						exclude_list_restore.add(pattern);
+					}
 				}
 			}
 		}
@@ -3316,14 +3257,20 @@ public class Main : GLib.Object{
 		config.set_string_member("count_hourly", count_hourly.to_string());
 		config.set_string_member("count_boot", count_boot.to_string());
 
-		config.set_string_member("first_snapshot_size", first_snapshot_size.to_string());
-		config.set_string_member("first_snapshot_count", first_snapshot_count.to_string());
+		config.set_string_member("snapshot_size", first_snapshot_size.to_string());
+		config.set_string_member("snapshot_count", first_snapshot_count.to_string());
 
 		Json.Array arr = new Json.Array();
 		foreach(string path in exclude_list_user){
 			arr.add_string_element(path);
 		}
 		config.set_array_member("exclude",arr);
+
+		arr = new Json.Array();
+		foreach(var name in exclude_app_names){
+			arr.add_string_element(name);
+		}
+		config.set_array_member("exclude-apps",arr);
 
 		var json = new Json.Generator();
 		json.pretty = true;
@@ -3424,13 +3371,13 @@ public class Main : GLib.Object{
 		this.count_hourly = json_get_int(config,"count_hourly",count_hourly);
 		this.count_boot = json_get_int(config,"count_boot",count_boot);
 
-		Main.first_snapshot_size = json_get_int64(config,"first_snapshot_size",
+		Main.first_snapshot_size = json_get_int64(config,"snapshot_size",
 			Main.first_snapshot_size);
 			
-		Main.first_snapshot_count = json_get_int64(config,"first_snapshot_count",
+		Main.first_snapshot_count = json_get_int64(config,"snapshot_count",
 			Main.first_snapshot_count);
 		
-		this.exclude_list_user.clear();
+		exclude_list_user.clear();
 		
 		if (config.has_member ("exclude")){
 			foreach (Json.Node jnode in config.get_array_member ("exclude").get_elements()) {
@@ -3441,7 +3388,21 @@ public class Main : GLib.Object{
 					&& !exclude_list_default.contains(path)
 					&& !exclude_list_home.contains(path)){
 						
-					this.exclude_list_user.add(path);
+					exclude_list_user.add(path);
+				}
+			}
+		}
+
+		exclude_app_names.clear();
+
+		if (config.has_member ("exclude-apps")){
+			var apps = config.get_array_member("exclude-apps");
+			foreach (Json.Node jnode in apps.get_elements()) {
+				
+				string name = jnode.get_string();
+				
+				if (!exclude_app_names.contains(name)){
+					exclude_app_names.add(name);
 				}
 			}
 		}

@@ -46,7 +46,7 @@ class ExcludeAppsBox : Gtk.Box{
 		var box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
 		add(box);
 		
-		add_label_header(box, _("Exclude App Settings"), true);
+		add_label_header(box, _("Exclude Application Settings"), true);
 
 		//add_label(this, _("Selected items will be excluded"));
 
@@ -70,6 +70,7 @@ class ExcludeAppsBox : Gtk.Box{
 		treeview.headers_visible = false;
 		treeview.rules_hint = true;
 		treeview.reorderable = true;
+		treeview.set_tooltip_column(2);
 		//treeview.row_activated.connect(treeview_row_activated);
 
 		// scrolled
@@ -121,7 +122,7 @@ class ExcludeAppsBox : Gtk.Box{
 		col.set_cell_data_func(cell_text, (cell_layout, cell, model, iter)=>{
 			AppExcludeEntry entry;
 			model.get (iter, 0, out entry, -1);
-			(cell as Gtk.CellRendererText).text = entry.relpath;
+			(cell as Gtk.CellRendererText).text = entry.name;
 		});
 	}
 
@@ -144,7 +145,7 @@ class ExcludeAppsBox : Gtk.Box{
 	}
 	
 	public void refresh_treeview(){
-		var model = new Gtk.ListStore(2, typeof(AppExcludeEntry), typeof(bool));
+		var model = new Gtk.ListStore(3, typeof(AppExcludeEntry), typeof(bool), typeof(string));
 		treeview.model = model;
 
 		foreach(var entry in App.exclude_list_apps){
@@ -152,6 +153,30 @@ class ExcludeAppsBox : Gtk.Box{
 			model.append(out iter);
 			model.set (iter, 0, entry, -1);
 			model.set (iter, 1, entry.enabled, -1);
+			model.set (iter, 2, entry.tooltip_text(), -1);
 		}
 	}
+
+	public void save_changes(){
+		// add new selected items
+		foreach(var entry in App.exclude_list_apps){
+			if (entry.enabled && !App.exclude_app_names.contains(entry.name)){
+				App.exclude_app_names.add(entry.name);
+				log_debug("add app name: %s".printf(entry.name));
+			}
+		}
+
+		// remove item only if present in current list and un-selected
+		foreach(var entry in App.exclude_list_apps){
+			if (!entry.enabled && App.exclude_app_names.contains(entry.name)){
+				App.exclude_app_names.remove(entry.name);
+				log_debug("remove app name: %s".printf(entry.name));
+			}
+		}
+
+		App.exclude_app_names.sort((a,b) => {
+			return Posix.strcmp(a,b);
+		});
+	}
+	
 }

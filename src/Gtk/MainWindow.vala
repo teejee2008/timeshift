@@ -289,15 +289,6 @@ class MainWindow : Gtk.Window{
 		menu_extra.reserve_toggle_size = false;
 
 		Gtk.MenuItem menu_item = null;
-				
-		if (!App.live_system()){
-			// clone
-			menu_item = create_menu_item(_("Clone"), "gtk-copy", "", 16,
-				_("Clone the current system on another device"));
-				
-			menu_extra.append(menu_item);
-			menu_item.activate.connect(btn_clone_clicked);
-		}
 
 		// refresh
 		menu_item = create_menu_item(_("Refresh Snapshot List"),"gtk-refresh","",16);

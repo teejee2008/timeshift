@@ -440,6 +440,12 @@ class MainWindow : Gtk.Window{
 		return false;
 	}
 
+	// TODO: Create new application icon
+
+	// TODO: Crash on opening rsync log
+
+	// TODO: icon sizes are too large in hamburger menu in toolbar
+
 	// context menu
 	
 	public void create_snapshot(){

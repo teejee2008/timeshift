@@ -1350,15 +1350,24 @@ public class Main : GLib.Object{
 			
 			log_debug("checking snapshot device...");
 			
-			// check backup device
-			string message, details;
-			int status_code = check_backup_location(out message, out details);
-			
 			// check space
-			if ((status_code != SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE)
-				&& (status_code != SnapshotLocationStatus.NO_SNAPSHOTS_HAS_SPACE)){
-					
-				return false;
+			if (!repo.has_space()){
+
+				log_error(repo.status_message);
+				log_error(repo.status_details + "\n");
+				
+				// remove invalid snapshots
+				if (app_mode.length != 0){
+					repo.auto_remove();
+				}
+
+				// check again ------------
+
+				if (!repo.has_space()){
+					log_error(repo.status_message);
+					log_error(repo.status_details + "\n");
+					return false;
+				}
 			}
 
 			string snapshot_dir = path_combine(repo.snapshot_location, "timeshift/snapshots");

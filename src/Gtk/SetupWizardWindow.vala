@@ -157,7 +157,7 @@ class SetupWizardWindow : Gtk.Window{
 		// close
 		
 		img = new Image.from_stock("gtk-close", Gtk.IconSize.BUTTON);
-		btn_close = add_button(hbox, _("Close"), "", ref size_group, img);
+		btn_close = add_button(hbox, _("Finish"), "", ref size_group, img);
 
         btn_close.clicked.connect(()=>{
 			save_changes();

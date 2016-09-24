@@ -567,8 +567,7 @@ class MainWindow : Gtk.Window{
 		App.repo.load_snapshots();
 
 		gtk_messagebox(_("Marked for deletion"), 
-			_("Snapshots will be removed during the next scheduled run") + ".\n\n"
-			+ _("To delete snapshots immediately, right-click and select 'Delete'."),
+			_("Snapshots will be removed during the next scheduled run"),
 			this, false);
 
 		snapshot_list_box.refresh();

@@ -680,6 +680,8 @@ namespace TeeJee.GtkHelper{
 		var label = new Gtk.Label(msg);
 		label.set_use_markup(true);
 		label.xalign = (float) 0.0;
+		label.wrap = true;
+		label.wrap_mode = Pango.WrapMode.WORD;
 		box.add(label);
 		return label;
 	}

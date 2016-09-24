@@ -118,7 +118,6 @@ class RestoreExcludeBox : Gtk.Box{
 		log_debug("RestoreExcludeBox: RestoreExcludeBox(): exit");
     }
 
-
     public void refresh(){
 
 	}

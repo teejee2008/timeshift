@@ -337,14 +337,7 @@ public class Main : GLib.Object{
 		//initialize lists -------------------------
 
 		repo = new SnapshotRepo();
-		
-		exclude_list_user = new Gee.ArrayList<string>();
-		exclude_list_default = new Gee.ArrayList<string>();
-		exclude_list_default_extra = new Gee.ArrayList<string>();
-		exclude_list_home = new Gee.ArrayList<string>();
-		exclude_list_restore = new Gee.ArrayList<string>();
-		exclude_list_apps = new Gee.ArrayList<AppExcludeEntry>();
-		partitions = new Gee.ArrayList<Device>();
+
 		mount_list = new Gee.ArrayList<MountEntry>();
 		delete_list = new Gee.ArrayList<Snapshot>();
 		
@@ -495,8 +488,14 @@ public class Main : GLib.Object{
 
 	public void add_default_exclude_entries(){
 
-		exclude_list_default.clear();
-		exclude_list_home.clear();
+		exclude_list_user = new Gee.ArrayList<string>();
+		exclude_list_default = new Gee.ArrayList<string>();
+		exclude_list_default_extra = new Gee.ArrayList<string>();
+		exclude_list_home = new Gee.ArrayList<string>();
+		exclude_list_restore = new Gee.ArrayList<string>();
+		exclude_list_apps = new Gee.ArrayList<AppExcludeEntry>();
+		
+		partitions = new Gee.ArrayList<Device>();
 
 		//default exclude entries -------------------
 
@@ -581,7 +580,10 @@ public class Main : GLib.Object{
 			home = "/home/%s".printf(user_name);
 		}
 
-		if ((root_device == null) || ((restore_target.device != root_device.device) && (restore_target.uuid != root_device.uuid))){
+		if ((root_device == null)
+			|| ((restore_target.device != root_device.device)
+				&& (restore_target.uuid != root_device.uuid))){
+
 			home = mount_point_restore + home;
 		}
 
@@ -600,11 +602,11 @@ public class Main : GLib.Object{
 				if (name.has_suffix(".lock")){ continue; }
 
 				if (dir_exists(item)) {
-					AppExcludeEntry entry = new AppExcludeEntry("~/" + name, false);
+					var entry = new AppExcludeEntry("~/" + name, false);
 					exclude_list_apps.add(entry);
 				}
 				else{
-					AppExcludeEntry entry = new AppExcludeEntry("~/" + name, true);
+					var entry = new AppExcludeEntry("~/" + name, true);
 					exclude_list_apps.add(entry);
 				}
 	        }
@@ -617,11 +619,11 @@ public class Main : GLib.Object{
 				if (name.has_suffix(".lock")){ continue; }
 
 				if (dir_exists(item)) {
-					AppExcludeEntry entry = new AppExcludeEntry("~/.config/" + name, false);
+					var entry = new AppExcludeEntry("~/.config/" + name, false);
 					exclude_list_apps.add(entry);
 				}
 				else{
-					AppExcludeEntry entry = new AppExcludeEntry("~/.config/" + name, true);
+					var entry = new AppExcludeEntry("~/.config/" + name, true);
 					exclude_list_apps.add(entry);
 				}
 	        }
@@ -634,11 +636,11 @@ public class Main : GLib.Object{
 				if (name.has_suffix(".lock")){ continue; }
 
 				if (dir_exists(item)) {
-					AppExcludeEntry entry = new AppExcludeEntry("~/.local/share/" + name, false);
+					var entry = new AppExcludeEntry("~/.local/share/" + name, false);
 					exclude_list_apps.add(entry);
 				}
 				else{
-					AppExcludeEntry entry = new AppExcludeEntry("~/.local/share/" + name, true);
+					var entry = new AppExcludeEntry("~/.local/share/" + name, true);
 					exclude_list_apps.add(entry);
 				}
 	        }
@@ -947,7 +949,6 @@ public class Main : GLib.Object{
 
 		return device_list;
 	}
-
 
 	private Gee.ArrayList<Device> list_grub_devices(bool print_to_console = true){
 		//add devices
@@ -2508,11 +2509,14 @@ public class Main : GLib.Object{
 		}
 
 		if ((app_mode != "")&&(cmd_confirm == false)){
-			string msg = disclaimer_pre_restore(false);
-			msg += "\n";
-			msg = msg.replace("<b>",TERM_COLOR_RED).replace("</b>",TERM_COLOR_RESET);
-			msg = msg.replace("<tt>","").replace("</tt>","");
-			log_msg(msg);
+
+			string msg_devices = "";
+			string msg_reboot = "";
+			string msg_disclaimer = "";
+
+			App.disclaimer_pre_restore(
+				false, out msg_devices, out msg_reboot,
+				out msg_disclaimer);
 
 			int attempts = 0;
 			while (cmd_confirm == false){
@@ -2608,17 +2612,22 @@ public class Main : GLib.Object{
 		return luks_unlocked;
 	}
 
-	public string disclaimer_pre_restore(bool formatted){
+	public void disclaimer_pre_restore(bool formatted,
+		out string msg_devices, out string msg_reboot,
+		out string msg_disclaimer){
+			
 		string msg = "";
-		string txt = "";
 
 		log_debug("Main: disclaimer_pre_restore()");
+
+		// msg_devices -----------------------------------------
 		
-		if (formatted){
-			msg += "<span size=\"x-large\" weight=\"bold\">%s</span>\n\n".printf(_("WARNING"));
-		}
-		else{
-			msg += "%s\n\n".printf(_("WARNING"));
+		if (!formatted){
+			msg += "\n%s\n%s\n%s\n".printf(
+				string.nfill(70,'='),
+				_("Warning").up(),
+				string.nfill(70,'=')
+			);
 		}
 		
 		msg += _("Data will be modified on following devices:") + "\n\n";
@@ -2657,7 +2666,7 @@ public class Main : GLib.Object{
 			}
 		}
 		
-		txt = ("%%-%ds  %%-%ds".printf(max_dev, max_mount))
+		var txt = ("%%-%ds  %%-%ds".printf(max_dev, max_mount))
 			.printf(_("Device"),_("Mount"));
 		if (show_subvolume){
 			txt += "  %s".printf(_("Subvol"));
@@ -2682,41 +2691,60 @@ public class Main : GLib.Object{
 
 			txt += "\n";
 		}
-		
+
 		if (formatted){
-			msg += "<span size=\"medium\"><tt>%s</tt></span>\n".printf(txt);
+			msg += "<span size=\"medium\"><tt>%s</tt></span>".printf(txt);
 		}
 		else{
 			msg += "%s\n".printf(txt);
 		}
 
-		//msg += _("Files will be overwritten on the target device!") + "\n";
-		msg += _("If restore fails and you are unable to boot the system, then boot from the Ubuntu Live CD, install Timeshift, and try to restore again.") + "\n";
+		msg_devices = msg;
 
+		//msg += _("Files will be overwritten on the target device!") + "\n";
+		//msg += _("If restore fails and you are unable to boot the system, then boot from the Ubuntu Live CD, install Timeshift, and try to restore again.") + "\n";
+
+		// msg_reboot -----------------------
+		
+		msg = "";
 		if ((root_device != null) &&
 			(restore_target != null) && (restore_target.device == root_device.device)){
 				
-			msg += "\n<b>" + _("Please save your work and close all applications.") + "\n";
-			msg += _("System will reboot to complete the restore process.") + "</b>\n";
+			msg += _("Please save your work and close all applications.") + "\n";
+			msg += _("System will reboot after files are restored.");
 		}
 
-		if (formatted){
-			msg += "\n<span size=\"x-large\" weight=\"bold\">%s</span>\n\n".printf(_("DISCLAIMER"));
-		}
-		else{
-			msg += "\n%s\n\n".printf(_("DISCLAIMER"));
-		}
+		msg_reboot = msg;
 
+		// msg_disclaimer --------------------------------------
+
+		msg = "";
+		if (!formatted){
+			msg += "\n%s\n%s\n%s\n".printf(
+				string.nfill(70,'='),
+				_("Disclaimer").up(),
+				string.nfill(70,'=')
+			);
+		}
+		
 		msg += _("This software comes without absolutely NO warranty and the author takes no responsibility for any damage arising from the use of this program.");
 		msg += " " + _("If these terms are not acceptable to you, please do not proceed beyond this point!");
 
-		if (formatted){
-			msg += "\n\n<span size=\"x-large\">%s</span>\n".printf(_("Click Next to continue"));
+		if (!formatted){
+			msg += "\n";
+		}
+		
+		msg_disclaimer = msg;
+
+		// display messages in console mode
+		
+		if (app_mode.length > 0){
+			log_msg(msg_devices);
+			log_msg(msg_reboot);
+			log_msg(msg_disclaimer);
 		}
 
 		log_debug("Main: disclaimer_pre_restore(): exit");
-		
-		return msg;
 	}
 
 	public void restore_snapshot_thread(){
@@ -3198,7 +3226,7 @@ public class Main : GLib.Object{
 				}
 
 				//add app entries
-				foreach(AppExcludeEntry entry in exclude_list_apps){
+				foreach(var entry in exclude_list_apps){
 					if (entry.enabled){
 						pattern = entry.pattern();
 						if (!exclude_list_restore.contains(pattern)){
@@ -3252,21 +3280,15 @@ public class Main : GLib.Object{
 				exclude_list_restore.add(timeshift_path);
 			}
 
-			//write file -----------
+			// write file -----------
 
-			string file_text = "";
+			string txt = "";
 			string list_file_restore = file_path + "/exclude-restore.list";
-
-			var f = File.new_for_path(list_file_restore);
-			if (f.query_exists()){
-				f.delete();
-			}
-
 			foreach(string path in exclude_list_restore){
-				file_text += path + "\n";
+				txt += path + "\n";
 			}
-
-			file_write(list_file_restore,file_text);
+			
+			file_write(list_file_restore, txt);
 		}
 		catch (Error e) {
 	        log_error (e.message);

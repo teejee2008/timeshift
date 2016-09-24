@@ -42,6 +42,7 @@ class RestoreWindow : Gtk.Window{
 	//private TargetSystemBox system_box;
 	private RestoreDeviceBox restore_device_box;
 	private RestoreExcludeBox restore_exclude_box;
+	private ExcludeAppsBox exclude_apps_box;
 	private RestoreSummaryBox summary_box;
 	private RestoreBox restore_box;
 	private RestoreFinishBox restore_finish_box;
@@ -88,6 +89,11 @@ class RestoreWindow : Gtk.Window{
 		restore_exclude_box = new RestoreExcludeBox(this);
 		restore_exclude_box.margin = 0;
 		notebook.append_page (restore_exclude_box, label);
+		
+		label = new Gtk.Label(_("Exclude Apps"));
+		exclude_apps_box = new ExcludeAppsBox(this);
+		exclude_apps_box.margin = 0;
+		notebook.append_page (exclude_apps_box, label);
 
 		label = new Gtk.Label(_("Summary"));
 		summary_box = new RestoreSummaryBox(this);
@@ -227,8 +233,12 @@ class RestoreWindow : Gtk.Window{
 		case Tabs.RESTORE_EXCLUDE:
 			notebook.page = Tabs.TARGET_DEVICE;
 			break;
+		case Tabs.EXCLUDE_APPS:
+			//notebook.page = Tabs.RESTORE_EXCLUDE;
+			notebook.page = Tabs.TARGET_DEVICE;
+			break;
 		case Tabs.SUMMARY:
-			notebook.page = Tabs.RESTORE_EXCLUDE;
+			notebook.page = Tabs.EXCLUDE_APPS;
 			break;
 		case Tabs.TARGET_DEVICE:
 		case Tabs.RESTORE:
@@ -248,11 +258,15 @@ class RestoreWindow : Gtk.Window{
 		
 		switch(notebook.page){
 		case Tabs.TARGET_DEVICE:
+			//notebook.page = Tabs.RESTORE_EXCLUDE;
+			notebook.page = Tabs.EXCLUDE_APPS;
+			break;
+		case Tabs.RESTORE_EXCLUDE:
 			notebook.page = Tabs.SUMMARY;
 			break;
-		//case Tabs.RESTORE_EXCLUDE:
-		//	notebook.page = Tabs.SUMMARY;
-		//	break;
+		case Tabs.EXCLUDE_APPS:
+			notebook.page = Tabs.SUMMARY;
+			break;
 		case Tabs.SUMMARY:
 			notebook.page = Tabs.RESTORE;
 			break;
@@ -290,12 +304,13 @@ class RestoreWindow : Gtk.Window{
 			break;
 		case Tabs.TARGET_DEVICE:
 		case Tabs.RESTORE_EXCLUDE:
+		case Tabs.EXCLUDE_APPS:
 		case Tabs.SUMMARY:
 			btn_prev.show();
 			btn_next.show();
 			btn_close.show();
 			btn_cancel.hide();
-			btn_prev.sensitive = false;
+			btn_prev.sensitive = true;
 			btn_next.sensitive = true;
 			btn_close.sensitive = true;
 			bbox_action.set_layout (Gtk.ButtonBoxStyle.EXPAND);
@@ -320,6 +335,9 @@ class RestoreWindow : Gtk.Window{
 			break;
 		case Tabs.RESTORE_EXCLUDE:
 			restore_exclude_box.refresh();
+			break;
+		case Tabs.EXCLUDE_APPS:
+			exclude_apps_box.refresh();
 			break;
 		case Tabs.SUMMARY:
 			summary_box.refresh();
@@ -397,6 +415,14 @@ class RestoreWindow : Gtk.Window{
 
 			restore_device_box.check_and_mount_devices();
 		}
+		else if (notebook.page == Tabs.EXCLUDE_APPS){
+			log_debug("exclude_list_apps:");
+			foreach(var entry in App.exclude_list_apps){
+				if (entry.enabled){
+					log_debug("app: %s".printf(entry.relpath));
+				}
+			}
+		}
 
 		return true;
 	}
@@ -404,9 +430,10 @@ class RestoreWindow : Gtk.Window{
 	public enum Tabs{
 		TARGET_DEVICE = 0,
 		RESTORE_EXCLUDE = 1,
-		SUMMARY = 2,
-		RESTORE = 3,
-		FINISH = 4
+		EXCLUDE_APPS = 2,
+		SUMMARY = 3,
+		RESTORE = 4,
+		FINISH = 5
 	}
 }
 

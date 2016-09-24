@@ -275,12 +275,9 @@ class RestoreDeviceBox : Gtk.Box{
 
 	private void add_bootloader_options(){
 
-		//var label = add_label(this, "");
-		//label.vexpand = true;
-		
 		//lbl_header_bootloader
 		var label = add_label_header(this, _("Select Boot Device"), true);
-		label.margin_top = 48;
+		label.margin_top = 12;
 		
 		add_label(this, _("Select device for installing GRUB2 bootloader:"));
 		
@@ -296,24 +293,9 @@ class RestoreDeviceBox : Gtk.Box{
 		cell_text.text = "";
 		cmb_boot_device.pack_start(cell_text, false);
 
-		//var cell_icon = new CellRendererPixbuf ();
-		//cell_icon.xpad = 4;
-		//cmb_boot_device.pack_start(cell_icon, false);
-
 		cell_text = new CellRendererText();
         cmb_boot_device.pack_start(cell_text, false);
 
-		/*cmb_boot_device.set_cell_data_func(cell_icon, (cell_layout, cell, model, iter)=>{
-			Device dev;
-			model.get (iter, 0, out dev, -1);
-
-			Gdk.Pixbuf pix = null;
-			model.get (iter, 1, out pix, -1);
-
-			//(cell as Gtk.CellRendererPixbuf).pixbuf = pix;
-			(cell as Gtk.CellRendererPixbuf).visible = (dev.type == "disk");
-		});*/
-		
         cmb_boot_device.set_cell_data_func(cell_text, (cell_layout, cell, model, iter)=>{
 			Device dev;
 			model.get (iter, 0, out dev, -1);
@@ -508,118 +490,6 @@ class RestoreDeviceBox : Gtk.Box{
 			gtk_messagebox(title, msg, parent_window, true);
 			return false;
 		}
-
-		
-
-
-		/*
-		TreeIter iter;
-		Gtk.ListStore store;
-		TreeSelection sel;
-			
-		//check if target device selected ---------------
-		
-		if (radio_sys.active){
-			//we are restoring the current system - no need to mount devices
-			App.restore_target = App.root_device;
-			return true;
-		}
-		else{
-			//we are restoring to another disk - mount selected devices
-
-			App.restore_target = null;
-			App.mount_list.clear();
-			bool no_mount_points_set_by_user = true;
-
-			//find the root mount point set by user
-			store = (Gtk.ListStore) tv_partitions.model;
-			for (bool next = store.get_iter_first (out iter); next; next = store.iter_next (ref iter)) {
-				Device pi;
-				string mount_point;
-				store.get(iter, 0, out pi);
-				store.get(iter, 1, out mount_point);
-
-				if ((mount_point != null) && (mount_point.length > 0)){
-					mount_point = mount_point.strip();
-					no_mount_points_set_by_user = false;
-
-					App.mount_list.add(new MountEntry(pi,mount_point,""));
-
-					if (mount_point == "/"){
-						App.restore_target = pi;
-					}
-				}
-			}
-
-			if (App.restore_target == null){
-				//no root mount point was set by user
-
-				if (no_mount_points_set_by_user){
-					//user has not set any mount points
-
-					//check if a device is selected in treeview
-					sel = tv_partitions.get_selection ();
-					if (sel.count_selected_rows() == 1){
-						//use selected device as the root mount point
-						for (bool next = store.get_iter_first (out iter); next; next = store.iter_next (ref iter)) {
-							if (sel.iter_is_selected (iter)){
-								Device pi;
-								store.get(iter, 0, out pi);
-								App.restore_target = pi;
-								App.mount_list.add(new MountEntry(pi,"/",""));
-								break;
-							}
-						}
-					}
-					else{
-						//no device selected and no mount points set by user
-						string title = _("Select Target Device");
-						string msg = _("Please select the target device from the list");
-						gtk_messagebox(title, msg, this, true);
-						return false;
-					}
-				}
-				else{
-					//user has set some mount points but not set the root mount point
-					string title = _("Select Root Device");
-					string msg = _("Please select the root device (/)");
-					gtk_messagebox(title, msg, this, true);
-					return false;
-				}
-			}
-
-			//check BTRFS subvolume layout --------------
-
-			if (App.restore_target.type == "btrfs"){
-				if (App.check_btrfs_volume(App.restore_target) == false){
-					string title = _("Unsupported Subvolume Layout");
-					string msg = _("The target partition has an unsupported subvolume layout.") + " ";
-					msg += _("Only ubuntu-type layouts with @ and @home subvolumes are currently supported.") + "\n\n";
-					gtk_messagebox(title, msg, this, true);
-					return false;
-				}
-			}
-
-			//mount target device -------------
-
-			bool status = App.mount_target_device(this);
-			if (status == false){
-				string title = _("Error");
-				string msg = _("Failed to mount device") + ": %s".printf(App.restore_target.device);
-				gtk_messagebox(title, msg, this, true);
-				return false;
-			}
-		}
-
-		//check if grub device selected ---------------
-
-		if (!chk_skip_grub_install.active && cmb_boot_device.active < 0){
-			string title =_("Boot device not selected");
-			string msg = _("Please select the boot device");
-			gtk_messagebox(title, msg, this, true);
-			return false;
-		}
-		* */
 
 		return true;
 	}

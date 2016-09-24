@@ -16,7 +16,7 @@ public class AppExcludeEntry : GLib.Object{
 	public Gee.ArrayList<string> patterns;
 
 	//static
-	public static Gee.HashMap<string, AppExcludeEntry> all_apps;
+	public static Gee.HashMap<string, AppExcludeEntry> app_map;
 
 	public AppExcludeEntry(string _name, bool _is_include = false){
 		name = _name;
@@ -40,11 +40,11 @@ public class AppExcludeEntry : GLib.Object{
 	// static
 	
 	public static void clear(){
-		if (all_apps == null){
-			all_apps = new Gee.HashMap<string, AppExcludeEntry>();
+		if (app_map == null){
+			app_map = new Gee.HashMap<string, AppExcludeEntry>();
 		}
 		else{
-			all_apps.clear();
+			app_map.clear();
 		}
 	}
 
@@ -67,8 +67,13 @@ public class AppExcludeEntry : GLib.Object{
 				if (name == ".gvfs"){ continue; }
 				if (name == ".thumbnails"){ continue; }
 				if (name == ".cache"){ continue; }
+				if (name == ".temp"){ continue; }
+				if (name == ".sudo_as_admin_successful"){ continue; }
 				if (name.has_suffix(".lock")){ continue; }
-
+				if (name.has_suffix(".log")){ continue; }
+				if (name.has_suffix(".old")){ continue; }
+				if (name.has_suffix("~")){ continue; }
+				
 				var relpath = "~/%s".printf(name);
 				add_item(relpath, !dir_exists(item), false);
 	        }
@@ -79,6 +84,8 @@ public class AppExcludeEntry : GLib.Object{
 				string name = file.get_name();
 				string item = home + "/.config/" + name;
 				if (name.has_suffix(".lock")){ continue; }
+				if (name.has_suffix(".log")){ continue; }
+				if (name.has_suffix(".old")){ continue; }
 				if (name.has_suffix("~")){ continue; }
 				
 				var relpath = "~/.config/%s".printf(name);
@@ -91,6 +98,8 @@ public class AppExcludeEntry : GLib.Object{
 				string name = file.get_name();
 				string item = home + "/.local/share/" + name;
 				if (name.has_suffix(".lock")){ continue; }
+				if (name.has_suffix(".log")){ continue; }
+				if (name.has_suffix(".old")){ continue; }
 				if (name.has_suffix("~")){ continue; }
 				if (name == "applications"){ continue; }
 				if (name == "Trash"){ continue; }
@@ -106,22 +115,78 @@ public class AppExcludeEntry : GLib.Object{
 
 	public static void add_item(string item_path, bool is_file, bool is_include){
 
-		if (all_apps == null){
-			all_apps = new Gee.HashMap<string, AppExcludeEntry>();
+		if (app_map == null){
+			app_map = new Gee.HashMap<string, AppExcludeEntry>();
 		}
 
 		var name = file_basename(item_path);
+		
+		if (name.has_suffix(".ini")){
+			name = name[0:name.length - ".ini".length];
+		}
+		else if (name.has_suffix(".sh")){
+			name = name[0:name.length - ".sh".length];
+		}
+		else if (name.has_suffix(".json")){
+			name = name[0:name.length - ".json".length];
+		}
+		else if (name.has_suffix(".conf")){
+			name = name[0:name.length - ".conf".length];
+		}
+		else if (name.has_suffix(".list")){
+			name = name[0:name.length - ".list".length];
+		}
+		else if (name.has_suffix(".xbel")){
+			name = name[0:name.length - ".xbel".length];
+		}
+		else if (name.has_suffix(".xbel.tbcache")){
+			name = name[0:name.length - ".xbel.tbcache".length];
+		}
+		else if (name.has_suffix(".bz2")){
+			name = name[0:name.length - ".bz2".length];
+		}
+		else if (name.has_suffix(".old")){
+			name = name[0:name.length - ".old".length];
+		}
+		else if (name.has_suffix(".dirs")){
+			name = name[0:name.length - ".dirs".length];
+		}
+		else if (name.has_suffix(".locale")){
+			name = name[0:name.length - ".locale".length];
+		}
+		else if (name.has_suffix(".dockitem")){
+			name = name[0:name.length - ".dockitem".length];
+		}
+		else if (name.has_suffix(".xml")){
+			name = name[0:name.length - ".xml".length];
+		}
+		else if (name.has_suffix(".log")){
+			name = name[0:name.length - ".log".length];
+		}
+		else if (name.has_suffix(".txt")){
+			name = name[0:name.length - ".txt".length];
+		}
+
 		if (name.has_prefix(".")){
 			name = name[1:name.length];
 		}
-		
+
+		name = name.strip();
+
+		if (name.length == 0){
+			return;
+		}
+
 		AppExcludeEntry entry = null;
-		if (all_apps.has_key(name)){
-			entry = all_apps[name];
+		if (app_map.has_key(name)){
+			entry = app_map[name];
+		}
+		else if (app_map.has_key(name.down())){
+			entry = app_map[name.down()];
 		}
 		else{
 			entry = new AppExcludeEntry(name, is_include);
-			all_apps[name] = entry;
+			app_map[name] = entry;
 		}
 		
 		entry.items.add(item_path);
@@ -139,18 +204,17 @@ public class AppExcludeEntry : GLib.Object{
 		Gee.ArrayList<string> selected_app_names){
 
 		foreach(var selected_name in selected_app_names){
-			if (all_apps.has_key(selected_name)){
-				all_apps[selected_name].enabled = true;
+			if (app_map.has_key(selected_name)){
+				app_map[selected_name].enabled = true;
 			}
 			else{
-				all_apps[selected_name].enabled = false;
+				app_map[selected_name].enabled = false;
 			}
 		}
 			
 		var list = new Gee.ArrayList<AppExcludeEntry>();
-
-		foreach(var key in all_apps.keys){
-			list.add(all_apps[key]);
+		foreach(var key in app_map.keys){
+			list.add(app_map[key]);
 		}
 
 		//sort the list
@@ -159,34 +223,9 @@ public class AppExcludeEntry : GLib.Object{
 		};
 		
 		list.sort((owned) entry_compare);
+
+		log_debug("apps: %d".printf(list.size));
 		
 		return list;
 	}
-	
-	/*public void patterns {
-		owned get {
-			
-			patterns = new Gee.ArrayList<string>();
-
-			foreach(string prefix in new string[] { "/.", "/.config/", "/.local/share/" }){
-				foreach(bool root_user in new bool[] { true, false } ){
-					string str = (is_include) ? "+ " : "";
-					str += (root_user) ? "/root" : "/home/*";
-					str += prefix + name;
-					str += (is_file) ? "" : "/**";
-					patterns.add(str);
-				}
-			}
-
-			return;
-		}
-	}*/
-
-	/*public string pattern(bool root_home = false){
-		string str = (is_include) ? "+ " : "";
-		str += (root_home) ? "/root" : "/home/*";
-		str += relpath[1:relpath.length];
-		str += (is_file) ? "" : "/**";
-		return str.strip();
-	}*/
 }

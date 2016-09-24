@@ -184,7 +184,11 @@ public class RsyncTask : AsyncTask{
 	public FileItem parse_log(string log_file_path){
 		var root = new FileItem.dummy_root();
 
-		//log_debug("parse rsync log: %s".printf(log_file_path));
+		log_debug("RsyncTask: parse_log()");
+		log_debug("log_file = %s".printf(log_file_path));
+
+		prg_count = 0;
+		prg_count_total = file_line_count(log_file_path);;
 		
 		try {
 			string line;
@@ -196,6 +200,9 @@ public class RsyncTask : AsyncTask{
 
 			var dis = new DataInputStream (file.read());
 			while ((line = dis.read_line (null)) != null) {
+
+				prg_count++;
+				
 				if (line.strip().length == 0) { continue; }
 
 				string item_path = "";
@@ -212,14 +219,14 @@ public class RsyncTask : AsyncTask{
 					if (match.fetch(2) == "d"){
 						item_type = FileType.DIRECTORY;
 					}
-					item_status = _("new");
+					item_status = "created";
 				}
 				else if (regex_list["log-deleted"].match(line, 0, out match)) {
 					
 					//log_debug("matched: deleted:%s".printf(line));
 					
 					item_path = match.fetch(1).split(" -> ")[0].strip();
-					item_status = _("deleted");
+					item_status = "deleted";
 				}
 				else if (regex_list["log-modified"].match(line, 0, out match)) {
 
@@ -254,10 +261,11 @@ public class RsyncTask : AsyncTask{
 					//log_debug("not-matched: %s".printf(line));
 				}
 				
-				if ((item_path.length > 0) && (item_path != "/./")){
+				if ((item_path.length > 0) && (item_path != "/./") && (item_path != "./")){
 					int64 item_size = 0;//int64.parse(size);
 					var item = root.add_descendant(item_path, item_type, item_size, 0);
 					item.file_status = item_status;
+
 					//log_debug("added: %s".printf(item_path));
 				}
 				
@@ -266,6 +274,8 @@ public class RsyncTask : AsyncTask{
 		catch (Error e) {
 			log_error (e.message);
 		}
+
+		log_debug("RsyncTask: parse_log(): exit");
 		
 		return root;
 	}

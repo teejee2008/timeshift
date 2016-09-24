@@ -39,7 +39,6 @@ class RestoreWindow : Gtk.Window{
 	private Gtk.ButtonBox bbox_action;
 
 	// tabs
-	//private TargetSystemBox system_box;
 	private RestoreDeviceBox restore_device_box;
 	private RestoreExcludeBox restore_exclude_box;
 	private ExcludeAppsBox exclude_apps_box;
@@ -234,8 +233,8 @@ class RestoreWindow : Gtk.Window{
 			notebook.page = Tabs.TARGET_DEVICE;
 			break;
 		case Tabs.EXCLUDE_APPS:
-			//notebook.page = Tabs.RESTORE_EXCLUDE;
-			notebook.page = Tabs.TARGET_DEVICE;
+			notebook.page = Tabs.RESTORE_EXCLUDE;
+			//notebook.page = Tabs.TARGET_DEVICE;
 			break;
 		case Tabs.SUMMARY:
 			notebook.page = Tabs.RESTORE_EXCLUDE; // go to parent (RESTORE_EXCLUDE)
@@ -258,11 +257,16 @@ class RestoreWindow : Gtk.Window{
 		
 		switch(notebook.page){
 		case Tabs.TARGET_DEVICE:
-			//notebook.page = Tabs.RESTORE_EXCLUDE;
-			notebook.page = Tabs.EXCLUDE_APPS;
+			notebook.page = Tabs.RESTORE_EXCLUDE;
+			//notebook.page = Tabs.EXCLUDE_APPS;
 			break;
 		case Tabs.RESTORE_EXCLUDE:
-			notebook.page = Tabs.EXCLUDE_APPS;
+			if (restore_exclude_box.show_all_apps()){
+				notebook.page = Tabs.EXCLUDE_APPS;
+			}
+			else{
+				notebook.page = Tabs.SUMMARY;
+			}	
 			break;
 		case Tabs.EXCLUDE_APPS:
 			notebook.page = Tabs.SUMMARY;
@@ -287,7 +291,6 @@ class RestoreWindow : Gtk.Window{
 			return;
 		}
 
-		log_msg("");
 		log_debug("page: %d".printf(notebook.page));
 
 		// show/hide actions -----------------------------------

@@ -37,19 +37,29 @@ using TeeJee.Misc;
 public class RsyncLogWindow : Window {
 
 	private Gtk.Box vbox_main;
+	private Gtk.Box vbox_progress;
+	private Gtk.Box vbox_list;
 
 	private Gtk.TreeView tv_files;
 	private Gtk.TreeModelFilter filter_files;
 	private Gtk.ComboBox cmb_filter;
 	private Gtk.Box hbox_filter;
+
+	public Gtk.Label lbl_header;
+	private Gtk.Spinner spinner;
+	public Gtk.Label lbl_msg;
+	public Gtk.Label lbl_status;
+	public Gtk.Label lbl_remaining;
+	public Gtk.ProgressBar progressbar;
 	
 	//window
-	private int def_width = 700;
-	private int def_height = 500;
+	private int def_width = 500;
+	private int def_height = 450;
 
 	//private uint tmr_task = 0;
 	private uint tmr_init = 0;
-
+	private bool thread_is_running = false;
+	
 	Gdk.Pixbuf pix_file = null;
 	Gdk.Pixbuf pix_folder = null;
 
@@ -57,27 +67,11 @@ public class RsyncLogWindow : Window {
 	private FileItem log_root;
 	private bool flat_view = true;
 
-	int count = 0;
-	
-
-	/*private bool view_state_all = true;
-	private bool view_created = false;
-	private bool view_modified = false;
-	private bool view_deleted = false;
-
-	private bool view_modified_all = true;
-	private bool view_checksum = false;
-	private bool view_size = false;
-	private bool view_timestamp = false;
-	private bool view_permissions = false;
-	private bool view_owner = false;
-	private bool view_group = false;*/
-
 	private string filter = "";
 	
 	public RsyncLogWindow(string _rsync_log_file) {
 		//title = "rsync log for snapshot " + "%s".printf(bak.date.format ("%Y-%m-%d %I:%M %p"));
-		title = "View RSYNC Log";
+		title = _("Log Viewer");
 		window_position = WindowPosition.CENTER;
 		set_default_size(def_width, def_height);
 		icon = get_app_icon(16);
@@ -91,14 +85,11 @@ public class RsyncLogWindow : Window {
 		vbox_main.margin = 12;
 		add (vbox_main);
 
-		add_label(vbox_main,
-			_("Following files have changed since previous snapshot:"), true);
+		create_progressbar();
 
-		init_toolbar();
-			
-		init_tv_files();
+		create_treeview();
 
-		init_actions();
+		create_toolbar();
 
 		cmb_filter.changed.connect(() => {
 			filter = gtk_combobox_get_value(cmb_filter, 0, "");
@@ -117,6 +108,32 @@ public class RsyncLogWindow : Window {
 		
 	}
 
+	private void create_progressbar(){
+		vbox_progress = new Gtk.Box(Orientation.VERTICAL, 6);
+		vbox_main.add(vbox_progress);
+		
+		lbl_header = add_label_header(vbox_progress, _("Parsing log file..."), true);
+		
+		var hbox_status = new Box (Orientation.HORIZONTAL, 6);
+		vbox_progress.add(hbox_status);
+		
+		spinner = new Gtk.Spinner();
+		spinner.active = true;
+		hbox_status.add(spinner);
+		
+		//lbl_msg
+		lbl_msg = add_label(hbox_status, _("Preparing..."));
+		lbl_msg.hexpand = true;
+		lbl_msg.ellipsize = Pango.EllipsizeMode.END;
+		lbl_msg.max_width_chars = 50;
+
+		//lbl_remaining = add_label(hbox_status, "");
+
+		//progressbar
+		progressbar = new Gtk.ProgressBar();
+		vbox_progress.add (progressbar);
+	}
+
 	public bool init_delayed(){
 
 		log_debug("init_delayed()");
@@ -128,7 +145,7 @@ public class RsyncLogWindow : Window {
 
 		gtk_set_busy(true, this);
 
-		log_root = (new RsyncTask()).parse_log(rsync_log_file);
+		parse_log_file();
 
 		tv_files_refresh();
 
@@ -139,31 +156,47 @@ public class RsyncLogWindow : Window {
 		return false;
 	}
 
-	private void init_actions(){
-		var hbox = new Gtk.ButtonBox (Gtk.Orientation.HORIZONTAL);
-		hbox.set_layout (Gtk.ButtonBoxStyle.CENTER);
-        vbox_main.add(hbox);
+	private void parse_log_file(){
 
-		Gtk.SizeGroup size_group = null;
+		try {
+			thread_is_running = true;
+			Thread.create<void> (parse_log_file_thread, true);
+		}
+		catch (Error e) {
+			log_error (e.message);
+		}
 
-		// close
-		
-		var img = new Image.from_stock("gtk-close", Gtk.IconSize.BUTTON);
-		var btn_close = add_button(hbox, _("Close"), "", ref size_group, img);
+		while (thread_is_running){
+			double fraction = (App.task.prg_count * 1.0) / App.task.prg_count_total;
+			if (fraction < 0.99){
+				progressbar.fraction = fraction;
+			}
+			lbl_msg.label = _("Read %'d of %'d lines...").printf(
+				App.task.prg_count, App.task.prg_count_total);
+			sleep(200);
+			gtk_do_events();
+		}
 
-        btn_close.clicked.connect(()=>{
-			this.destroy();
-		});
+		vbox_progress.hide();
+
+		vbox_list.no_show_all = false;
+		vbox_list.show_all();
 	}
-
-	private void init_toolbar(){
-		log_debug("init_toolbar()");
+	
+	private void parse_log_file_thread(){
+		App.task = new RsyncTask();
+		log_root = App.task.parse_log(rsync_log_file);
+		thread_is_running = false;
+	}
+	
+	private void create_toolbar(){
+		log_debug("create_toolbar()");
 		
 		var hbox = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
-        vbox_main.add(hbox);
+        vbox_list.add(hbox);
 		hbox_filter = hbox;
 		
-		var label = add_label(hbox, _("Filters:"));
+		var label = add_label(hbox, _("View:"));
 
 		int_combo_filter(hbox);
 
@@ -198,10 +231,28 @@ public class RsyncLogWindow : Window {
 			tv_files_refresh();
 		});
 
+		// close
+
+		size_group = null;
+		var img = new Image.from_stock("gtk-close", Gtk.IconSize.BUTTON);
+		var btn_close = add_button(hbox, _("Close"), "", ref size_group, img);
+
+        btn_close.clicked.connect(()=>{
+			this.destroy();
+		});
+
 		log_debug("init_toolbar(): finished");
 	}
 
-	private void init_tv_files() {
+	private void create_treeview() {
+
+		vbox_list = new Gtk.Box(Orientation.VERTICAL, 6);
+		vbox_list.no_show_all = true;
+		vbox_main.add(vbox_list);
+		
+		add_label(vbox_list,
+			_("Following files have changed since previous snapshot:"));
+
 		// tv_files
 		tv_files = new TreeView();
 		tv_files.get_selection().mode = SelectionMode.MULTIPLE;
@@ -215,7 +266,7 @@ public class RsyncLogWindow : Window {
 		sw_files.set_shadow_type (ShadowType.ETCHED_IN);
 		sw_files.add (tv_files);
 		sw_files.vexpand = true;
-		vbox_main.add(sw_files);
+		vbox_list.add(sw_files);
 		
 		// name ----------------------------------------------
 
@@ -226,9 +277,6 @@ public class RsyncLogWindow : Window {
 		col.resizable = true;
 		col.expand = true;
 		tv_files.append_column(col);
-
-		//col.sort_column_id = FileViewColumn.NAME;
-		//col.clicked.connect(()=>{ tv_files_sort(current_view, FileViewColumn.NAME); });
 
 		// cell icon
 		var cell_pix = new CellRendererPixbuf ();
@@ -242,56 +290,6 @@ public class RsyncLogWindow : Window {
 		col.pack_start (cell_text, false);
 		col.set_attributes(cell_text, "text", 2);
 		
-		// render icon
-		/*col.set_cell_data_func (cell_pix, (cell_layout, cell, model, iter) => {
-			FileItem item;
-			bool odd_row;
-			model.get (iter, 0, out item, 1, out odd_row, -1);
-			
-			var icon_theme = Gtk.IconTheme.get_default();
-			
-			try {
-
-				if (item.file_type == FileType.DIRECTORY){
-					var pix = icon_theme.load_icon ("gtk-directory", Gtk.IconSize.MENU, 0);
-					(cell as Gtk.CellRendererPixbuf).pixbuf = pix;
-				}
-				else{
-					var pix = icon_theme.load_icon ("gtk-file", Gtk.IconSize.MENU, 0);
-					(cell as Gtk.CellRendererPixbuf).pixbuf = pix;
-				}
-			}
-			catch (Error e) {
-				warning (e.message);
-			}
-
-			(cell as Gtk.CellRendererPixbuf).stock_size = Gtk.IconSize.MENU;
-		});
-
-		// render text
-		col.set_cell_data_func (cell_text, (cell_layout, cell, model, iter) => {
-			FileItem item;
-			bool odd_row;
-			model.get (iter, 0, out item, 1, out odd_row, -1);
-			
-			string s = item.file_name;
-			if (flat_view){
-				s = item.file_path;
-			}
-			
-			if (item.is_symlink){
-				//if (App.show_symlink_target){
-				//	s += " → " + item.symlink_target;
-				//}
-				//s = "<span foreground=\"#2471A3\">%s</span>".printf(s);
-				(cell as Gtk.CellRendererText).markup = s;
-			}
-			else{
-				(cell as Gtk.CellRendererText).text = s;
-			}
-		});*/
-
-
 		// status ------------------------------------------------
 
 		col = new TreeViewColumn();
@@ -366,7 +364,7 @@ public class RsyncLogWindow : Window {
 		model.append(out iter);
 		model.set (iter, 0, "deleted", 1, "Deleted");
 		model.append(out iter);
-		model.set (iter, 0, "modified", 1, "Changed");
+		model.set (iter, 0, "changed", 1, "Changed");
 		model.append(out iter);
 		model.set (iter, 0, "checksum", 1, "Changed - Checksum");
 		model.append(out iter);
@@ -480,6 +478,19 @@ public class RsyncLogWindow : Window {
 		if (filter.length == 0){
 			return true;
 		}
+		else if (filter == "changed"){
+			switch(item.file_status){
+			case "checksum":
+			case "size":
+			case "timestamp":
+			case "permissions":
+			case "owner":
+			case "group":
+				return true;
+			default:
+				return false;
+			}
+		}
 		else{
 			return (item.file_status == filter);
 		}
@@ -565,24 +576,6 @@ public class RsyncLogWindow : Window {
 		}
 		else{
 			return (item.file_status == filter);
-		}
-	}
-
-	private void remove_iter_children(ref TreeStore model, ref TreeIter iter0){
-		TreeIter iter1;
-		var list = new Gee.ArrayList<TreeIter?>();
-		bool iterExists = model.iter_children (out iter1, iter0);
-		while (iterExists) {
-			list.add(iter1);
-			iterExists = model.iter_next (ref iter1);
-		}
-
-		foreach(var iter in list){
-			FileItem item;
-			model.get (iter, 0, out item, -1);
-			//log_debug("remove:%s".printf(item.file_path));
-			
-			model.remove(ref iter);
 		}
 	}
 

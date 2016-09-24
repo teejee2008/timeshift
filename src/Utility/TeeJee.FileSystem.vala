@@ -124,6 +124,13 @@ namespace TeeJee.FileSystem{
 		return true;
 	}
 
+	public int64 file_line_count (string file_path){
+		/* Count number of lines in text file */
+		string cmd = "wc -l '%s'".printf(escape_single_quote(file_path));
+		string std_out, std_err;
+		exec_sync(cmd, out std_out, out std_err);
+		return long.parse(std_out.split("\t")[0]);
+	}
 
 	public string? file_read (string file_path){
 

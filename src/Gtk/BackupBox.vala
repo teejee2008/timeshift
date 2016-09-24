@@ -61,50 +61,18 @@ class BackupBox : Gtk.Box{
 		parent_window = _parent_window;
 		margin = 12;
 		
-		// header
 		add_label_header(this, _("Creating Snapshot..."), true);
 
-		var hbox_status = new Box (Orientation.HORIZONTAL, 6);
-		add (hbox_status);
-		
-		spinner = new Gtk.Spinner();
-		spinner.active = true;
-		hbox_status.add(spinner);
-		
-		//lbl_msg
-		lbl_msg = add_label(hbox_status, _("Preparing..."));
-		lbl_msg.hexpand = true;
-		lbl_msg.ellipsize = Pango.EllipsizeMode.END;
-		lbl_msg.max_width_chars = 50;
+		add_progress_area();
 
-		lbl_remaining = add_label(hbox_status, "");
-
-		//progressbar
-		progressbar = new Gtk.ProgressBar();
-		//progressbar.set_size_request(-1,25);
-		//progressbar.show_text = true;
-		//progressbar.pulse_step = 0.1;
-		add (progressbar);
-
-		//lbl_status
-
-		lbl_status = add_label(this, "");
-		lbl_status.ellipsize = Pango.EllipsizeMode.MIDDLE;
-		lbl_status.max_width_chars = 45;
-		lbl_status.margin_bottom = 6;
-
-		// TODO: Add move to background button
-
-		var label = add_label(this, "");
-		label.vexpand = true;
-		
 		// add count labels ---------------------------------
 		
 		Gtk.SizeGroup sg_label = null;
 		Gtk.SizeGroup sg_value = null;
 
-		label = add_label(this, _("File and directory counts:"), true);
+		var label = add_label(this, _("File and directory counts:"), true);
 		label.margin_bottom = 6;
+		label.margin_top = 12;
 		
 		lbl_unchanged = add_count_label(this, _("No Change"), ref sg_label, ref sg_value);
 		lbl_created = add_count_label(this, _("Created"), ref sg_label, ref sg_value);
@@ -122,6 +90,33 @@ class BackupBox : Gtk.Box{
 		lbl_group = add_count_label(this, _("Group"), ref sg_label, ref sg_value, 24);
     }
 
+	private void add_progress_area(){
+		var hbox_status = new Box (Orientation.HORIZONTAL, 6);
+		add (hbox_status);
+		
+		spinner = new Gtk.Spinner();
+		spinner.active = true;
+		hbox_status.add(spinner);
+		
+		//lbl_msg
+		lbl_msg = add_label(hbox_status, _("Preparing..."));
+		lbl_msg.hexpand = true;
+		lbl_msg.ellipsize = Pango.EllipsizeMode.END;
+		lbl_msg.max_width_chars = 50;
+
+		lbl_remaining = add_label(hbox_status, "");
+
+		//progressbar
+		progressbar = new Gtk.ProgressBar();
+		add (progressbar);
+
+		//lbl_status
+		lbl_status = add_label(this, "");
+		lbl_status.ellipsize = Pango.EllipsizeMode.MIDDLE;
+		lbl_status.max_width_chars = 45;
+		lbl_status.margin_bottom = 6;
+	}
+	
 	private Gtk.Label add_count_label(Gtk.Box box, string text,
 		ref Gtk.SizeGroup? sg_label, ref Gtk.SizeGroup? sg_value,
 		int add_margin_bottom = 0){

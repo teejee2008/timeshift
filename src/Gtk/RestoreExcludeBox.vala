@@ -35,7 +35,11 @@ using TeeJee.System;
 using TeeJee.Misc;
 
 class RestoreExcludeBox : Gtk.Box{
-
+	//private Gtk.CheckButton chk_web;
+	private Gtk.CheckButton chk_other;
+	private Gtk.CheckButton chk_web;
+	private Gtk.CheckButton chk_torrent;
+	
 	private Gtk.Window parent_window;
 
 	public RestoreExcludeBox (Gtk.Window _parent_window) {
@@ -73,43 +77,60 @@ class RestoreExcludeBox : Gtk.Box{
 		
 		// app settings header --------------------------------
 		
-		var label = add_label_header(this, _("Exclude App Settings"), true);
-		label.margin_top = 24;
+		var label = add_label_header(this, _("Exclude Application Settings"), true);
 
 		add_label(this, _("Select applications to exclude from restore"));
 
-		// all apps ----------------------------
-		
-		var chk = add_checkbox(this, _("All Applications"));
-		chk.margin_top = 12;
-
-		var tt = _("Keep configuration files for all applications. If un-checked, previous configuration files in home directory will be restored from snapshot.");
-		chk.set_tooltip_text(tt);
-		label.set_tooltip_text(tt);
-		
 		// web browsers --------------------------------
 
-		chk = add_checkbox(this, _("Web Browsers") + " (%s)".printf(_("Recommended")));
-		//chk.margin_top = 12;
+		var chk = add_checkbox(this, _("Web Browsers") + " (%s)".printf(_("Recommended")));
+		chk.active = true;
+		chk.margin_top = 12;
+		chk.margin_bottom = 0;
+		chk_web = chk;
 		
-		label = add_label(this, _("Firefox, Chrome, Chromium"), false, true);
-		label.margin_left = 24;
+		chk.toggled.connect(()=>{
+			foreach(var name in new string[]{
+				"chromium", "google-chrome", "mozilla", "midori", "epiphany",
+				"opera", "opera-stable", "opera-beta", "opera-developer" }){
+				if (AppExcludeEntry.app_map.has_key(name)){
+					AppExcludeEntry.app_map[name].enabled = chk_web.active;
+				}
+			}
+		});
+		
+		label = add_label(
+			this, _("Firefox, Chromium, Chrome, Opera, Epiphany, Midori"), false, true);
 		label.margin_top = 0;
+		label.margin_bottom = 6;
+		label.margin_left = 24;
 		label.wrap = true;
 		label.wrap_mode = Pango.WrapMode.WORD_CHAR;
 
-		tt = _("Keep configuration files for web browsers like Firefox and Chrome. If un-checked, previous configuration files will be restored from snapshot");
+		var tt = _("Keep configuration files for web browsers like Firefox and Chrome. If un-checked, previous configuration files will be restored from snapshot");
 		chk.set_tooltip_text(tt);
 		label.set_tooltip_text(tt);
 
 		// torrent clients ----------------------------
 		
 		chk = add_checkbox(this, _("Bittorrent Clients") + " (%s)".printf(_("Recommended")));
-		//chk.margin_top = 12;
+		chk.active = true;
+		chk.margin_bottom = 0;
+		chk_torrent = chk;
+		
+		chk.toggled.connect(()=>{
+			foreach(var name in new string[]{
+				"deluge", "transmission" }){
+				if (AppExcludeEntry.app_map.has_key(name)){
+					AppExcludeEntry.app_map[name].enabled = chk_torrent.active;
+				}
+			}
+		});
 		
 		label = add_label(this, _("Deluge, Transmission"), false, true);
-		label.margin_left = 24;
 		label.margin_top = 0;
+		label.margin_bottom = 6;
+		label.margin_left = 24;
 		label.wrap = true;
 		label.wrap_mode = Pango.WrapMode.WORD_CHAR;
 
@@ -117,25 +138,23 @@ class RestoreExcludeBox : Gtk.Box{
 		chk.set_tooltip_text(tt);
 		label.set_tooltip_text(tt);
 
-		
-		
-		//label.set_tooltip_text(_("Keep existing configuration files for all applications."));
-
-		//chk.set_tooltip_text(tt);
-		//label.set_tooltip_text(tt);
-		
 		// all apps ----------------------------
 		
 		chk = add_checkbox(this, _("Other applications (next page)"));
-		//chk.margin_top = 12;
-		
-		//chk.set_tooltip_text(tt);
-		//label.set_tooltip_text(tt);
+		chk_other = chk;
+
+		tt = _("Show more applications to exclude on the next page");
+		chk.set_tooltip_text(tt);
 
 		log_debug("RestoreExcludeBox: RestoreExcludeBox(): exit");
     }
 
     public void refresh(){
-
+		chk_web.toggled();
+		chk_torrent.toggled();
 	}
+
+	public bool show_all_apps(){
+		return chk_other.active;
+	}	
 }

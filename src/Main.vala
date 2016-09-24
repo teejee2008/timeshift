@@ -481,6 +481,8 @@ public class Main : GLib.Object{
 		return true;
 	}
 
+	// exclude lists
+	
 	public void add_default_exclude_entries(){
 
 		exclude_list_user = new Gee.ArrayList<string>();
@@ -536,7 +538,6 @@ public class Main : GLib.Object{
 
 		exclude_list_home.add("+ /root/.**");
 		exclude_list_home.add("/root/**");
-
 		exclude_list_home.add("+ /home/*/.**");
 		exclude_list_home.add("/home/*/**");
 
@@ -651,6 +652,144 @@ public class Main : GLib.Object{
 		exclude_list_apps.sort((owned) entry_compare);
 	}
 
+	public Gee.ArrayList<string> create_exclude_list_for_backup(){
+		var list = new Gee.ArrayList<string>();
+
+		//add default entries
+		foreach(string path in exclude_list_default){
+			if (!list.contains(path)){
+				list.add(path);
+			}
+		}
+
+		//add default extra entries
+		foreach(string path in exclude_list_default_extra){
+			if (!list.contains(path)){
+				list.add(path);
+			}
+		}
+
+		//add user entries from current settings
+		foreach(string path in exclude_list_user){
+			if (!list.contains(path)){
+				list.add(path);
+			}
+		}
+
+		//add home entries
+		foreach(string path in exclude_list_home){
+			if (!list.contains(path)){
+				list.add(path);
+			}
+		}
+
+		string timeshift_path = "/timeshift/*";
+		if (!list.contains(timeshift_path)){
+			list.add(timeshift_path);
+		}
+
+		return list;
+	}
+	
+	public Gee.ArrayList<string> create_exclude_list_for_restore(){
+
+		exclude_list_restore.clear();
+		
+		//add default entries
+		foreach(string path in exclude_list_default){
+			if (!exclude_list_restore.contains(path)){
+				exclude_list_restore.add(path);
+			}
+		}
+
+		if (!mirror_system){
+			//add default_extra entries
+			foreach(string path in exclude_list_default_extra){
+				if (!exclude_list_restore.contains(path)){
+					exclude_list_restore.add(path);
+				}
+			}
+		}
+
+		//add app entries
+		foreach(var entry in exclude_list_apps){
+			if (entry.enabled){
+				var pattern = entry.pattern();
+				if (!exclude_list_restore.contains(pattern)){
+					exclude_list_restore.add(pattern);
+				}
+
+				pattern = entry.pattern(true);
+				if (!exclude_list_restore.contains(pattern)){
+					exclude_list_restore.add(pattern);
+				}
+			}
+		}
+
+		//add user entries from current settings
+		foreach(string path in exclude_list_user){
+			if (!exclude_list_restore.contains(path) && !exclude_list_home.contains(path)){
+				exclude_list_restore.add(path);
+			}
+		}
+
+		//add user entries from snapshot exclude list
+		if (snapshot_to_restore != null){
+			string list_file = path_combine(snapshot_to_restore.path, "exclude.list");
+			if (file_exists(list_file)){
+				foreach(string path in file_read(list_file).split("\n")){
+					if (!exclude_list_restore.contains(path) && !exclude_list_home.contains(path)){
+						exclude_list_restore.add(path);
+					}
+				}
+			}
+		}
+
+		//add home entries
+		foreach(string path in exclude_list_home){
+			if (!exclude_list_restore.contains(path)){
+				exclude_list_restore.add(path);
+			}
+		}
+
+		string timeshift_path = "/timeshift/*";
+		if (!exclude_list_restore.contains(timeshift_path)){
+			exclude_list_restore.add(timeshift_path);
+		}
+	
+		return exclude_list_restore;
+	}
+
+	public bool save_exclude_list_for_backup(string output_path){
+
+		var list = create_exclude_list_for_backup();
+		
+		var txt = "";
+		foreach(var pattern in list){
+			if (pattern.strip().length > 0){
+				txt += "%s\n".printf(pattern);
+			}
+		}
+		
+		string list_file = path_combine(output_path, "exclude.list");
+		return file_write(list_file, txt);
+	}
+
+	public bool save_exclude_list_for_restore(string output_path){
+
+		var list = create_exclude_list_for_restore();
+		
+		var txt = "";
+		foreach(var pattern in list){
+			if (pattern.strip().length > 0){
+				txt += "%s\n".printf(pattern);
+			}
+		}
+		
+		string list_file = path_combine(output_path, "exclude-restore.list");
+		return file_write(list_file, txt);
+	}
+	
 	//console functions
 
 	public static string help_message (){
@@ -1677,9 +1816,11 @@ public class Main : GLib.Object{
 
 				// save exclude list ----------------
 
-				string exclude_from_file = save_exclude_list(snapshot_path);
+				bool ok = save_exclude_list_for_backup(snapshot_path);
+				
+				string exclude_from_file = path_combine(snapshot_path, "exclude.list");
 
-				if (exclude_from_file.length == 0){
+				if (!ok){
 					log_error(_("Failed to save exclude list"));
 					return false;
 				}
@@ -1754,70 +1895,6 @@ public class Main : GLib.Object{
 		return true;
 	}
 	
-	public string save_exclude_list(string snapshot_path){
-
-		try{
-
-			Gee.ArrayList<string> combined_list = new Gee.ArrayList<string>();
-
-			//add default entries
-			foreach(string path in exclude_list_default){
-				if (!combined_list.contains(path)){
-					combined_list.add(path);
-				}
-			}
-
-			//add default extra entries
-			foreach(string path in exclude_list_default_extra){
-				if (!combined_list.contains(path)){
-					combined_list.add(path);
-				}
-			}
-
-			//add user entries from current settings
-			foreach(string path in exclude_list_user){
-				if (!combined_list.contains(path)){
-					combined_list.add(path);
-				}
-			}
-
-			//add home entries
-			foreach(string path in exclude_list_home){
-				if (!combined_list.contains(path)){
-					combined_list.add(path);
-				}
-			}
-
-			string timeshift_path = "/timeshift/*";
-			if (!combined_list.contains(timeshift_path)){
-				combined_list.add(timeshift_path);
-			}
-
-			//write file -----------
-
-			string list_file = path_combine(snapshot_path, "exclude.list");
-			string file_text = "";
-
-			var f = File.new_for_path(list_file);
-			if (f.query_exists()){
-				f.delete();
-			}
-
-			foreach(string path in combined_list){
-				file_text += path + "\n";
-			}
-
-			file_write(list_file, file_text);
-
-			return list_file;
-		}
-		catch (Error e) {
-	        log_error (e.message);
-	    }
-
-	    return "";
-	}
-
 	public Snapshot write_snapshot_control_file(
 		string snapshot_path, DateTime dt_created, string tag){
 			
@@ -3198,99 +3275,6 @@ public class Main : GLib.Object{
 		log_msg(_("Updated /etc/crypttab on target device") + ": %s".printf(crypttab_path));
 	}
 
-	public void save_exclude_list_for_restore(string file_path){
-
-		try{
-			string pattern;
-
-			if (exclude_list_restore.size == 0){
-
-				//add default entries
-				foreach(string path in exclude_list_default){
-					if (!exclude_list_restore.contains(path)){
-						exclude_list_restore.add(path);
-					}
-				}
-
-				if (!mirror_system){
-					//add default_extra entries
-					foreach(string path in exclude_list_default_extra){
-						if (!exclude_list_restore.contains(path)){
-							exclude_list_restore.add(path);
-						}
-					}
-				}
-
-				//add app entries
-				foreach(var entry in exclude_list_apps){
-					if (entry.enabled){
-						pattern = entry.pattern();
-						if (!exclude_list_restore.contains(pattern)){
-							exclude_list_restore.add(pattern);
-						}
-
-						pattern = entry.pattern(true);
-						if (!exclude_list_restore.contains(pattern)){
-							exclude_list_restore.add(pattern);
-						}
-					}
-				}
-
-				//add user entries from current settings
-				foreach(string path in exclude_list_user){
-					if (!exclude_list_restore.contains(path) && !exclude_list_home.contains(path)){
-						exclude_list_restore.add(path);
-					}
-				}
-
-				//add user entries from snapshot exclude list
-				string list_file = file_path + "/exclude.list";
-				if (file_exists(list_file)){
-					foreach(string path in file_read(list_file).split("\n")){
-						if (!exclude_list_restore.contains(path) && !exclude_list_home.contains(path)){
-							exclude_list_restore.add(path);
-						}
-					}
-				}
-
-				//add home entries
-				foreach(string path in exclude_list_home){
-					if (!exclude_list_restore.contains(path)){
-						exclude_list_restore.add(path);
-					}
-				}
-
-				string timeshift_path = "/timeshift/*";
-				if (!exclude_list_restore.contains(timeshift_path)){
-					exclude_list_restore.add(timeshift_path);
-				}
-
-				log_msg(_("Using the default exclude-list"));
-			}
-			else{
-				log_msg(_("Using user-specified exclude-list"));
-			}
-
-			string timeshift_path = "/timeshift/*";
-			if (!exclude_list_restore.contains(timeshift_path)){
-				exclude_list_restore.add(timeshift_path);
-			}
-
-			// write file -----------
-
-			string txt = "";
-			string list_file_restore = file_path + "/exclude-restore.list";
-			foreach(string path in exclude_list_restore){
-				txt += path + "\n";
-			}
-			
-			file_write(list_file_restore, txt);
-		}
-		catch (Error e) {
-	        log_error (e.message);
-	    }
-	}
-
 	//app config
 
 	public void save_app_config(){
@@ -3778,7 +3762,7 @@ public class Main : GLib.Object{
 				dir_create(dir_empty);
 			}
 
-			save_exclude_list(TEMP_DIR);
+			save_exclude_list_for_backup(TEMP_DIR);
 			
 			cmd  = "LC_ALL=C ; rsync -ai --delete --numeric-ids --relative --stats --dry-run --delete-excluded --exclude-from='%s' /. '%s' &> '%s'".printf(file_exclude_list, dir_empty, file_log);
 

@@ -44,23 +44,37 @@ class ExcludeBox : Gtk.Box{
 		parent_window = _parent_window;
 		include = include_mode;
 		margin = 12;
+
+		var box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
+		add(box);
 		
 		if (include){
-			add_label_header(this, _("Include Files"), true);
+			add_label_header(box, _("Include Files"), true);
 		}
 		else{
-			add_label_header(this, _("Exclude Files"), true);
+			add_label_header(box, _("Exclude Files"), true);
 		}
 
-		if (include){
-			add_label(this, _("Include these items in snapshots:"));
-		}
-		else{
-			add_label(this, _("Exclude these items in snapshots:"));
-		}
+		//if (include){
+		//	add_label(box, _("Include these items in snapshots:"));
+		//}
+		//else{
+		//	add_label(box, _("Exclude these items in snapshots:"));
+		//}
 
-		// treeview -----------------------------------------------
+		var buffer = add_label(box, "");
+		buffer.hexpand = true;
 
+		init_exclude_summary_link(box);
+
+		init_treeview();
+
+		init_actions();
+		
+		refresh_treeview();
+    }
+
+    private void init_treeview(){
 		// treeview
 		treeview = new TreeView();
 		treeview.get_selection().mode = SelectionMode.MULTIPLE;
@@ -95,18 +109,21 @@ class ExcludeBox : Gtk.Box{
 		cell_text = new CellRendererText ();
 		col.pack_start (cell_text, false);
 		col.set_cell_data_func (cell_text, cell_exclude_text_render);
-		//cell_text.editable = true;
-		
-		//cell_text.edited.connect (cell_exclude_text_edited);
+	}
 
-		/* // link
-		var link = new LinkButton.with_label("",_("Some locations are excluded by default"));
+    private void init_exclude_summary_link(Gtk.Box box){
+		// link
+		var link = new LinkButton.with_label("",_("Summary"));
 		link.xalign = (float) 0.0;
-		link.activate_link.connect(lnk_default_list_activate);
 		box.add(link);
-		*
-		* */
 
+		link.activate_link.connect((uri)=>{
+			new ExcludeListSummaryWindow(false);
+			return true;
+		});
+	}
+
+	private void init_actions(){
 		// actions
 		
 		var hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
@@ -141,10 +158,8 @@ class ExcludeBox : Gtk.Box{
         button.clicked.connect(()=>{
 			remove_clicked();
 		});
-
-		refresh_treeview();
-    }
-
+	}
+	
 	// actions
 	
     private void remove_clicked(){

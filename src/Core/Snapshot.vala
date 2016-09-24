@@ -51,6 +51,20 @@ public class Snapshot : GLib.Object{
 		}
 	}
 
+	// properties
+
+	public string exclude_file_for_backup {
+		owned get {
+			return path_combine(path, "exclude.list");
+		}	
+	}
+
+	public string exclude_file_for_restore {
+		owned get {
+			return path_combine(path, "exclude-restore.list");
+		}	
+	}
+	
 	// manage tags
 	
 	public string taglist{

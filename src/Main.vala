@@ -145,11 +145,6 @@ public class Main : GLib.Object{
 	public string progress_text = "";
 	public int snapshot_list_start_index = 0;
 
-	public const string TERM_COLOR_YELLOW = "\033[" + "1;33" + "m";
-	public const string TERM_COLOR_GREEN = "\033[" + "1;32" + "m";
-	public const string TERM_COLOR_RED = "\033[" + "1;31" + "m";
-	public const string TERM_COLOR_RESET = "\033[" + "0" + "m";
-
 	public RsyncTask task;
 	public DeleteFileTask delete_file_task;
 	
@@ -1060,7 +1055,7 @@ public class Main : GLib.Object{
 				//prompt user for backup device
 				log_msg("");
 
-				log_msg(TERM_COLOR_YELLOW + _("Select backup device") + ":\n" + TERM_COLOR_RESET);
+				log_msg(_("Select backup device") + ":\n");
 				list_devices(list);
 				log_msg("");
 
@@ -1069,8 +1064,8 @@ public class Main : GLib.Object{
 				while (dev == null){
 					attempts++;
 					if (attempts > 3) { break; }
-					stdout.printf(TERM_COLOR_YELLOW +
-						_("Enter device name or number (a=Abort)") + ": " + TERM_COLOR_RESET);
+					stdout.printf("" +
+						_("Enter device name or number (a=Abort)") + ": ");
 					stdout.flush();
 
 					dev = read_stdin_device(list);
@@ -1896,7 +1891,7 @@ public class Main : GLib.Object{
 				}
 
 				log_msg("");
-				log_msg(TERM_COLOR_YELLOW + _("Select snapshot to delete") + ":\n" + TERM_COLOR_RESET);
+				log_msg(_("Select snapshot to delete") + ":\n");
 				list_snapshots(true);
 				log_msg("");
 
@@ -1904,7 +1899,7 @@ public class Main : GLib.Object{
 				while (snapshot_to_delete == null){
 					attempts++;
 					if (attempts > 3) { break; }
-					stdout.printf(TERM_COLOR_YELLOW + _("Enter snapshot number (a=Abort, p=Previous, n=Next)") + ": " + TERM_COLOR_RESET);
+					stdout.printf(_("Enter snapshot number (a=Abort, p=Previous, n=Next)") + ": ");
 					stdout.flush();
 					snapshot_to_delete = read_stdin_snapshot();
 				}
@@ -2146,9 +2141,9 @@ public class Main : GLib.Object{
 		if (!mirror_system){
 			if (repo.device != null){
 				//print snapshot_device name
-				log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
-				log_msg(_("Backup Device") + ": %s".printf(repo.device.device), true);
-				log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
+				log_msg(string.nfill(78, '*'));
+				log_msg(_("Backup Device") + ": %s".printf(repo.device.device));
+				log_msg(string.nfill(78, '*'));
 			}
 			else{
 				//print error
@@ -2191,7 +2186,7 @@ public class Main : GLib.Object{
 					}
 
 					log_msg("");
-					log_msg(TERM_COLOR_YELLOW + _("Select snapshot to restore") + ":\n" + TERM_COLOR_RESET);
+					log_msg(_("Select snapshot to restore") + ":\n");
 					list_snapshots(true);
 					log_msg("");
 
@@ -2199,7 +2194,7 @@ public class Main : GLib.Object{
 					while (snapshot_to_restore == null){
 						attempts++;
 						if (attempts > 3) { break; }
-						stdout.printf(TERM_COLOR_YELLOW + _("Enter snapshot number (a=Abort, p=Previous, n=Next)") + ": " + TERM_COLOR_RESET);
+						stdout.printf(_("Enter snapshot number (a=Abort, p=Previous, n=Next)") + ": ");
 						stdout.flush();
 						snapshot_to_restore = read_stdin_snapshot();
 					}
@@ -2222,9 +2217,10 @@ public class Main : GLib.Object{
 			
 			if (snapshot_to_restore != null){
 				//print snapshot name
-				log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
-				log_msg(_("Snapshot") + ": %s ~ %s".printf(snapshot_to_restore.name, snapshot_to_restore.description), true);
-				log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
+				log_msg(string.nfill(78, '*'));
+				log_msg(_("Snapshot") + ": %s ~ %s".printf(
+					snapshot_to_restore.name, snapshot_to_restore.description));
+				log_msg(string.nfill(78, '*'));
 			}
 			else{
 				//print error
@@ -2308,8 +2304,8 @@ public class Main : GLib.Object{
 				//prompt user for device
 				if (dev == null){
 					log_msg("");
-					log_msg(TERM_COLOR_YELLOW + _("Select '%s' device (default = %s)").printf(
-						mnt.mount_point, default_device) + ":\n" + TERM_COLOR_RESET);
+					log_msg(_("Select '%s' device (default = %s)").printf(
+						mnt.mount_point, default_device) + ":\n");
 					var device_list = list_all_devices();
 					log_msg("");
 
@@ -2318,12 +2314,12 @@ public class Main : GLib.Object{
 						attempts++;
 						if (attempts > 3) { break; }
 						
-						stdout.printf(TERM_COLOR_YELLOW +
-							_("[a = Abort, d = Default (%s), r = Root device]").printf(default_device) + "\n\n" + TERM_COLOR_RESET);
+						stdout.printf("" +
+							_("[a = Abort, d = Default (%s), r = Root device]").printf(default_device) + "\n\n");
 							
 						stdout.printf(
-							TERM_COLOR_YELLOW + _("Enter device name or number")
-								+ ": " + TERM_COLOR_RESET);
+							_("Enter device name or number")
+								+ ": ");
 								
 						stdout.flush();
 						dev = read_stdin_device_mounts(device_list, mnt);
@@ -2348,7 +2344,7 @@ public class Main : GLib.Object{
 						restore_target = dev;
 					}
 
-					log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
+					log_msg(string.nfill(78, '*'));
 					
 					if ((mnt.mount_point != "/")
 						&& (restore_target != null)
@@ -2362,7 +2358,7 @@ public class Main : GLib.Object{
 							
 						//log_debug("UUID=%s".printf(restore_target.uuid));
 					}
-					log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
+					log_msg(string.nfill(78, '*'));
 				}
 			
 			}
@@ -2449,7 +2445,7 @@ public class Main : GLib.Object{
 					while ((cmd_skip_grub == false) && (reinstall_grub2 == false)){
 						attempts++;
 						if (attempts > 3) { break; }
-						stdout.printf(TERM_COLOR_YELLOW + _("Re-install GRUB2 bootloader? (y/n)") + ": " + TERM_COLOR_RESET);
+						stdout.printf(_("Re-install GRUB2 bootloader? (y/n)") + ": ");
 						stdout.flush();
 						read_stdin_grub_install();
 					}
@@ -2465,7 +2461,7 @@ public class Main : GLib.Object{
 
 			if ((reinstall_grub2) && (grub_device.length == 0)){
 				log_msg("");
-				log_msg(TERM_COLOR_YELLOW + _("Select GRUB device") + ":\n" + TERM_COLOR_RESET);
+				log_msg(_("Select GRUB device") + ":\n");
 				var device_list = list_grub_devices();
 				log_msg("");
 
@@ -2473,7 +2469,7 @@ public class Main : GLib.Object{
 				while (grub_device.length == 0){
 					attempts++;
 					if (attempts > 3) { break; }
-					stdout.printf(TERM_COLOR_YELLOW + _("Enter device name or number (a=Abort)") + ": " + TERM_COLOR_RESET);
+					stdout.printf(_("Enter device name or number (a=Abort)") + ": ");
 					stdout.flush();
 
 					var list = new Gee.ArrayList<Device>();
@@ -2497,14 +2493,14 @@ public class Main : GLib.Object{
 			}
 
 			if ((reinstall_grub2) && (grub_device.length > 0)){
-				log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
-				log_msg(_("GRUB Device") + ": %s".printf(grub_device), true);
-				log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
+				log_msg(string.nfill(78, '*'));
+				log_msg(_("GRUB Device") + ": %s".printf(grub_device));
+				log_msg(string.nfill(78, '*'));
 			}
 			else{
-				log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
-				log_msg(_("GRUB will NOT be reinstalled"), true);
-				log_msg(TERM_COLOR_YELLOW + string.nfill(78, '*') + TERM_COLOR_RESET);
+				log_msg(string.nfill(78, '*'));
+				log_msg(_("GRUB will NOT be reinstalled"));
+				log_msg(string.nfill(78, '*'));
 			}
 		}
 
@@ -2522,7 +2518,7 @@ public class Main : GLib.Object{
 			while (cmd_confirm == false){
 				attempts++;
 				if (attempts > 3) { break; }
-				stdout.printf(TERM_COLOR_YELLOW + _("Continue with restore? (y/n): ") + TERM_COLOR_RESET);
+				stdout.printf(_("Continue with restore? (y/n): "));
 				stdout.flush();
 				read_stdin_restore_confirm();
 			}

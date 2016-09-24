@@ -62,12 +62,14 @@ class MainWindow : Gtk.Window{
 
 	//timers
 	private uint tmr_init;
+	private int def_width = 650;
+	private int def_height = 500;
 
 	public MainWindow () {
 		this.title = AppName + " v" + AppVersion;
         this.window_position = WindowPosition.CENTER;
         this.modal = true;
-        this.set_default_size (700, 500);
+        this.set_default_size (def_width, def_height);
 		this.delete_event.connect(on_delete_event);
 		this.icon = get_app_icon(16);
 
@@ -352,9 +354,9 @@ class MainWindow : Gtk.Window{
 		var box = new Gtk.Box (Orientation.HORIZONTAL, 3);
 		menu_item.add(box);
 
-		var icon = get_shared_icon(icon_name_stock, icon_name_custom, icon_size);
-		icon.set_tooltip_text(tooltip_text);
-		box.add(icon);
+		//var icon = get_shared_icon(icon_name_stock, icon_name_custom, icon_size);
+		//icon.set_tooltip_text(tooltip_text);
+		//box.add(icon);
 				
 		var label = new Gtk.Label(label_text);
 		label.xalign = (float) 0.0;

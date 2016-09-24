@@ -188,7 +188,7 @@ public class RsyncTask : AsyncTask{
 		log_debug("log_file = %s".printf(log_file_path));
 
 		prg_count = 0;
-		prg_count_total = file_line_count(log_file_path);;
+		prg_count_total = file_line_count(log_file_path);
 		
 		try {
 			string line;

@@ -2913,10 +2913,10 @@ public class Main : GLib.Object{
 				// update grub menu
 				sh_grub += "chroot \"%s\" update-grub \n".printf(target_path);
 
-				if (mirror_system){
+				//if (mirror_system){
 					// update initramfs
 					sh_grub += "update-initramfs -u -k all \n";
-				}
+				//}
 				
 				sh_grub += "echo '' \n";
 

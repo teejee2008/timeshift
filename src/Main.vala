@@ -2263,7 +2263,22 @@ public class Main : GLib.Object{
 		// init mounts ---------------
 
 		if (app_mode != ""){
+			
 			init_mount_list();
+
+			// remove mount points which will remain on root fs
+			for(int i = App.mount_list.size-1; i >= 0; i--){
+				
+				var entry = App.mount_list[i];
+				
+				if (entry.device == null){
+					App.mount_list.remove(entry);
+				}
+
+				if (entry.mount_point == "/"){
+					App.restore_target = entry.device;
+				}
+			}
 		}
 
 		if (app_mode != ""){ //command line mode
@@ -2316,7 +2331,9 @@ public class Main : GLib.Object{
 				log_debug("selecting: %s".printf(mnt.mount_point));
 
 				// no need to ask user to map remaining devices if restoring same system
-				if ((restore_target != null) && (restore_target.uuid == root_device.uuid)){
+				if ((restore_target != null) && (root_device != null)
+					&& (restore_target.uuid == root_device.uuid)){
+						
 					break;
 				}
 
@@ -2401,7 +2418,7 @@ public class Main : GLib.Object{
 		
 		if (restore_target != null){
 			if (app_mode != ""){ //commandline mode
-				if (restore_target.uuid !=  root_device.uuid){
+				if ((root_device == null) || (restore_target.uuid != root_device.uuid)){
 					//mount target device and other devices
 					bool status = mount_target_device(null);
 					if (status == false){
@@ -2734,8 +2751,8 @@ public class Main : GLib.Object{
 		// msg_reboot -----------------------
 		
 		msg = "";
-		if ((root_device != null) &&
-			(restore_target != null) && (restore_target.device == root_device.device)){
+		if ((root_device != null) && (restore_target != null)
+			&& (restore_target.device == root_device.device)){
 				
 			msg += _("Please save your work and close all applications.") + "\n";
 			msg += _("System will reboot after files are restored.");
@@ -2804,7 +2821,7 @@ public class Main : GLib.Object{
 
 			if ((root_device != null)
 				&& ((restore_target.device == root_device.device)
-				|| (restore_target.uuid == root_device.uuid))){
+					|| (restore_target.uuid == root_device.uuid))){
 					
 				restore_current_system = true;
 				target_path = "/";

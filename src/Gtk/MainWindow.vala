@@ -184,6 +184,8 @@ class MainWindow : Gtk.Window{
 		btn_clone.set_tooltip_text (_("Clone system to another disk"));
 		btn_clone.icon_widget = get_shared_icon("edit-copy","edit-copy.svg",24);
         toolbar.add(btn_clone);
+
+        btn_clone.visible = false;
         
 		btn_clone.clicked.connect (btn_clone_clicked);
 

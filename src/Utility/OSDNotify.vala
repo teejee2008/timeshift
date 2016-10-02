@@ -29,7 +29,7 @@ using TeeJee.ProcessHelper;
 // dep: notify-send
 public class OSDNotify : GLib.Object {
 	private static DateTime dt_last_notification = null;
-	public static const int NOTIFICATION_INTERVAL = 3;
+	public const int NOTIFICATION_INTERVAL = 3;
 	
 	public static int notify_send (
 		string title, string message, int durationMillis,

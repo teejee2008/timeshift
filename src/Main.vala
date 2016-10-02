@@ -118,8 +118,8 @@ public class Main : GLib.Object{
 	
 	public int64 snapshot_location_free_space = 0;
 
-	public static const int SHIELD_ICON_SIZE = 64;
-	public static const int64 MIN_FREE_SPACE = 1 * GB;
+	public const int SHIELD_ICON_SIZE = 64;
+	public const int64 MIN_FREE_SPACE = 1 * GB;
 	public static int64 first_snapshot_size = 0;
 	public static int64 first_snapshot_count = 0;
 	
@@ -360,6 +360,15 @@ public class Main : GLib.Object{
 		bool is_success = true;
 
 		log_debug("start_application()");
+
+		if (live_system()){
+			switch(app_mode){
+			case "backup":
+			case "ondemand":
+				log_error(_("Snapshots cannot be created in Live CD mode"));
+				return false;
+			}
+		}
 		
 		switch(app_mode){
 			case "backup":

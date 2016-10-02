@@ -719,11 +719,14 @@ public class Main : GLib.Object{
 	public bool save_exclude_list_for_restore(string output_path){
 
 		var list = create_exclude_list_for_restore();
+
+		log_debug("Exclude list -------------");
 		
 		var txt = "";
 		foreach(var pattern in list){
 			if (pattern.strip().length > 0){
 				txt += "%s\n".printf(pattern);
+				log_debug(pattern);
 			}
 		}
 		
@@ -2866,20 +2869,36 @@ public class Main : GLib.Object{
 				sh_grub += "sync \n";
 				sh_grub += "echo '' \n";
 				sh_grub += "echo '" + _("Re-installing GRUB2 bootloader...") + "' \n";
+
+				// bind system directories for chrooted system
 				sh_grub += "for i in /dev /proc /run /sys; do mount --bind \"$i\" \"%s$i\"; done \n".printf(target_path);
-				
+
+				// search for other operating systems
 				//sh_grub += "chroot \"%s\" os-prober \n".printf(target_path);
+				
+				// re-install grub
 				sh_grub += "chroot \"%s\" grub-install --recheck %s \n".printf(
 					target_path, grub_device);
+
+				// create new grub menu
 				//sh_grub += "chroot \"%s\" grub-mkconfig -o /boot/grub/grub.cfg \n".printf(target_path);
+
+				// update grub menu
 				sh_grub += "chroot \"%s\" update-grub \n".printf(target_path);
-				sh_grub += "update-initramfs -u -k all \n";
-				sh_grub += "echo '' \n";
+
+				if (mirror_system){
+					// update initramfs
+					sh_grub += "update-initramfs -u -k all \n";
+				}
 				
+				sh_grub += "echo '' \n";
+
+				// sync file systems
 				sh_grub += "echo '" + _("Synching file systems...") + "' \n";
 				sh_grub += "sync \n";
 				sh_grub += "echo '' \n";
-				
+
+				// unmount chrooted system
 				sh_grub += "echo '" + _("Cleaning up...") + "' \n";
 				sh_grub += "for i in /dev /proc /run /sys; do umount -f \"%s$i\"; done \n".printf(target_path);
 				sh_grub += "sync \n";

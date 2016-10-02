@@ -75,7 +75,7 @@ namespace TeeJee.ProcessHelper{
 	public int exec_script_sync (string script,
 		out string? std_out = null, out string? std_err = null,
 		bool supress_errors = false, bool run_as_admin = false,
-		bool cleanup_tmp = true){
+		bool cleanup_tmp = true, bool print_to_terminal = false){
 
 		/* Executes commands synchronously.
 		 * Pipes and multiple commands are fully supported.
@@ -107,10 +107,11 @@ namespace TeeJee.ProcessHelper{
 			}
 
 			string[] env = Environ.get();
-			
+
 			int exit_code;
 
-			if ((std_out == null) && (std_err == null)){
+			if (print_to_terminal){
+				
 				Process.spawn_sync (
 					TEMP_DIR, //working dir
 					argv, //argv
@@ -123,6 +124,7 @@ namespace TeeJee.ProcessHelper{
 					);
 			}
 			else{
+		
 				Process.spawn_sync (
 					TEMP_DIR, //working dir
 					argv, //argv

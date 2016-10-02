@@ -49,7 +49,7 @@ namespace TeeJee.Devices{
 		public string name = "";
 		public string mapped_name = "";
 		
-		public string type = ""; // disk, part, crypt, loop
+		public string type = ""; // disk, part, crypt, loop, rom, lvm
 		public string fstype = "";
 
 		public string label = "";
@@ -94,37 +94,20 @@ namespace TeeJee.Devices{
 
 		public string full_name_with_alias{
 			owned get{
-				string text = "";
-				string symlink = "";
-				foreach(string sym in symlinks){
-					if (sym.has_prefix("/dev/mapper/")){
-						symlink = sym;
-					}
+				string text = device;
+				if (mapped_name.length > 0){
+					text += " (%s)".printf(mapped_name);
 				}
-				text = device + ((symlink.length > 0) ? " → " + symlink + "" : ""); //→
-				if (type == "part"){
-					return text;
-				}
-				else{
-					return name;
-				}
+				return text;
 			}
 		}
 
 		public string short_name_with_alias{
 			owned get{
-				string text = "";
-				string symlink = "";
-				foreach(string sym in symlinks){
-					if (sym.has_prefix("/dev/mapper/")){
-						symlink = sym.replace("/dev/mapper/","").replace("/dev/","");
-					}
+				string text = kname;
+				if (mapped_name.length > 0){
+					text += " (%s)".printf(mapped_name);
 				}
-
-				if (symlink.length > 15){
-					symlink = symlink[0:14] + "...";
-				}
-				text = device.replace("/dev/mapper/","") + ((symlink.length > 0) ? " (" + symlink + ")" : ""); //→
 				return text;
 			}
 		}
@@ -340,6 +323,10 @@ namespace TeeJee.Devices{
 			return (type == "part") && fstype.down().contains("luks");
 		}
 
+		public bool is_lvm_partition(){
+			return (type == "part") && fstype.down().contains("lvm2_member");
+		}
+
 		public bool is_on_encrypted_partition(){
 			return (type == "crypt");
 		}
@@ -483,6 +470,7 @@ namespace TeeJee.Devices{
 			}
 				
 			ret_val = exec_sync(cmd, out std_out, out std_err);
+			
 			if (ret_val != 0){
 				var msg = "lsblk: " + _("Failed to get partition list");
 				msg += (device_file.length > 0) ? ": " + device_file : "";
@@ -744,7 +732,7 @@ namespace TeeJee.Devices{
 				log_debug(cmd);
 			}
 
-			ret_val = exec_script_sync(cmd, out std_out, out std_err);
+			ret_val = exec_sync(cmd, out std_out, out std_err);
 			//ret_val is not reliable, no need to check
 
 			/*

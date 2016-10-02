@@ -3083,7 +3083,7 @@ public class Main : GLib.Object{
 				
 				if (cmd_verbose){
 					//current/other system, console, verbose
-					ret_val = exec_script_sync(script);
+					ret_val = exec_script_sync(script, null, null, false, false, false, true);
 					log_msg("");
 				}
 				else{
@@ -3110,7 +3110,7 @@ public class Main : GLib.Object{
 						
 						if (cmd_verbose){
 							//current/other system, console, verbose
-							ret_val = exec_script_sync(sh_grub);
+							ret_val = exec_script_sync(sh_grub, null, null, false, false, false, true);
 							log_msg("");
 						}
 						else{

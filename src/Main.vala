@@ -2910,12 +2910,14 @@ public class Main : GLib.Object{
 				// create new grub menu
 				//sh_grub += "chroot \"%s\" grub-mkconfig -o /boot/grub/grub.cfg \n".printf(target_path);
 
+				// update initramfs
+				sh_grub += "chroot \"%s\" update-initramfs -u -k all \n".printf(target_path);
+					
 				// update grub menu
 				sh_grub += "chroot \"%s\" update-grub \n".printf(target_path);
 
 				//if (mirror_system){
-					// update initramfs
-					sh_grub += "update-initramfs -u -k all \n";
+					
 				//}
 				
 				sh_grub += "echo '' \n";
@@ -3057,11 +3059,12 @@ public class Main : GLib.Object{
 
 						log_debug(sh_grub);
 						
-						string std_out, std_err;
-						ret_val = exec_script_sync(sh_grub, out std_out, out std_err);
-						log_to_file(std_out);
-						log_to_file(std_err);
-
+						//string std_out, std_err;
+						ret_val = exec_script_sync(sh_grub, null, null);
+						//log_to_file(std_out);
+						//log_to_file(std_err);
+						//log_msg(std_out);
+						//log_msg(std_err);
 						log_debug("GRUB2 install completed");
 					}
 

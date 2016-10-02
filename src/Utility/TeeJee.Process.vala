@@ -110,16 +110,30 @@ namespace TeeJee.ProcessHelper{
 			
 			int exit_code;
 
-			Process.spawn_sync (
-			    TEMP_DIR, //working dir
-			    argv, //argv
-			    env, //environment
-			    SpawnFlags.SEARCH_PATH,
-			    null,   // child_setup
-			    out std_out,
-			    out std_err,
-			    out exit_code
-			    );
+			if ((std_out == null) && (std_err == null)){
+				Process.spawn_sync (
+					TEMP_DIR, //working dir
+					argv, //argv
+					env, //environment
+					SpawnFlags.SEARCH_PATH,
+					null,   // child_setup
+					null,
+					null,
+					out exit_code
+					);
+			}
+			else{
+				Process.spawn_sync (
+					TEMP_DIR, //working dir
+					argv, //argv
+					env, //environment
+					SpawnFlags.SEARCH_PATH,
+					null,   // child_setup
+					out std_out,
+					out std_err,
+					out exit_code
+					);
+			}
 
 			if (cleanup_tmp){
 				file_delete(sh_file);

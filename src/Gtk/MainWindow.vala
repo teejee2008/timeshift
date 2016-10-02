@@ -66,6 +66,9 @@ class MainWindow : Gtk.Window{
 	private int def_height = 500;
 
 	public MainWindow () {
+
+		log_debug("MainWindow()");
+		
 		this.title = AppName + " v" + AppVersion;
         this.window_position = WindowPosition.CENTER;
         this.modal = true;
@@ -90,6 +93,8 @@ class MainWindow : Gtk.Window{
 		}
 
 		tmr_init = Timeout.add(100, init_delayed);
+
+		log_debug("MainWindow(): exit");
     }
 
     private bool init_delayed(){
@@ -98,7 +103,9 @@ class MainWindow : Gtk.Window{
 			tmr_init = 0;
 		}
 
-		if (!App.repo.available()){
+		log_debug("MainWindow(): init_delayed()");
+
+		if ((App.repo == null) || !App.repo.available()){
 			if (App.backup_parent_uuid.length > 0){
 				log_debug("repo: creating from parent uuid");
 				App.repo = new SnapshotRepo.from_uuid(App.backup_parent_uuid, this);
@@ -111,6 +118,8 @@ class MainWindow : Gtk.Window{
 			btn_wizard_clicked();
 		}
 
+		log_debug("MainWindow(): init_delayed(): exit");
+		
 		return false;
 	}
 
@@ -176,18 +185,19 @@ class MainWindow : Gtk.Window{
         toolbar.add(btn_wizard);
 
         btn_wizard.clicked.connect (btn_wizard_clicked);
-	
-        //btn_clone
-		btn_clone = new Gtk.ToolButton.from_stock ("edit-copy");
-		btn_clone.is_important = true;
-		btn_clone.label = _("Clone");
-		btn_clone.set_tooltip_text (_("Clone system to another disk"));
-		btn_clone.icon_widget = get_shared_icon("edit-copy","edit-copy.svg",24);
-        toolbar.add(btn_clone);
 
-        btn_clone.visible = false;
-        
-		btn_clone.clicked.connect (btn_clone_clicked);
+		if (!App.live_system()){
+			
+			//btn_clone
+			btn_clone = new Gtk.ToolButton.from_stock ("edit-copy");
+			btn_clone.is_important = true;
+			btn_clone.label = _("Clone");
+			btn_clone.set_tooltip_text (_("Clone system to another disk"));
+			btn_clone.icon_widget = get_shared_icon("edit-copy","edit-copy.svg",24);
+			toolbar.add(btn_clone);
+
+			btn_clone.clicked.connect (btn_clone_clicked);
+		}
 
 		// TODO: replace gtk icon names with desktop-neutral names
 		
@@ -208,6 +218,7 @@ class MainWindow : Gtk.Window{
 		button.clicked.connect(()=>{
 			menu_extra_popup(null);
 		});
+
 	}
 
 	private void init_ui_snapshot_list(){
@@ -434,12 +445,6 @@ class MainWindow : Gtk.Window{
 
 		return false;
 	}
-
-	// TODO: Create new application icon
-
-	// TODO: Crash on opening rsync log
-
-	// TODO: icon sizes are too large in hamburger menu in toolbar
 
 	// context menu
 	
@@ -752,6 +757,9 @@ class MainWindow : Gtk.Window{
 	}
 
 	private void btn_wizard_clicked(){
+
+		log_debug("MainWindow: btn_wizard_clicked()");
+		
 		btn_wizard.sensitive = false;
 		
 		var win = new SetupWizardWindow();

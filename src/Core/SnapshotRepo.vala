@@ -87,6 +87,19 @@ public class SnapshotRepo : GLib.Object{
 		log_debug("SnapshotRepo: from_uuid(): exit");
 	}
 
+	public SnapshotRepo.from_null(Gtk.Window? parent_win){
+
+		log_debug("SnapshotRepo: from_null()");
+		log_debug("device not set");
+		
+		this.parent_window = parent_win;
+		
+		snapshots = new Gee.ArrayList<Snapshot>();
+		invalid_snapshots = new Gee.ArrayList<Snapshot>();
+
+		log_debug("SnapshotRepo: from_null(): exit");
+	}
+
 	private void init_from_device(){
 
 		log_debug("SnapshotRepo: init_from_device()");
@@ -390,8 +403,8 @@ public class SnapshotRepo : GLib.Object{
 			log_debug("checking selected path");
 			
 			if (snapshot_path_user.strip().length == 0){
-				status_message = _("Snapshot location not selected");
-				status_details = _("Select the location for saving snapshots");
+				status_message = _("Snapshot device not selected");
+				status_details = _("Select the snapshot device");
 				status_code = SnapshotLocationStatus.NOT_SELECTED;
 				return false;
 			}
@@ -442,14 +455,14 @@ public class SnapshotRepo : GLib.Object{
 			
 			if (device == null){
 				log_debug("device is null");
-				status_message = _("Snapshot location not selected");
-				status_details = _("Select the location for saving snapshots");
+				status_message = _("Snapshot device not selected");
+				status_details = _("Select the snapshot device");
 				status_code = SnapshotLocationStatus.NOT_SELECTED;
 				log_debug("is_available: false");
 				return false;
 			}
 			else if (device.device.length == 0){
-				status_message = _("Snapshot location not available");
+				status_message = _("Snapshot device not available");
 				status_details = _("Device not found") + ": UUID='%s'".printf(device.uuid);
 				status_code = SnapshotLocationStatus.NOT_AVAILABLE;
 				log_debug("is_available: false");

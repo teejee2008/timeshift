@@ -334,10 +334,15 @@ class SnapshotListBox : Gtk.Box{
 	
 	public void refresh(){
 
-		App.repo.load_snapshots();
-
 		var model = new Gtk.ListStore(1, typeof(Snapshot));
 
+		if ((App.repo == null) || !App.repo.available()){
+			treeview.set_model (model);
+			return;
+		}
+
+		App.repo.load_snapshots();
+		
 		var list = App.repo.snapshots;
 
 		if (treeview_sort_column_index == 0){

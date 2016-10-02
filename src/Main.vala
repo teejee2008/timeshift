@@ -418,6 +418,7 @@ public class Main : GLib.Object{
 				return true;
 
 			default:
+				log_debug("Creating MainWindow");
 				//Initialize main window
 				var window = new MainWindow ();
 				window.destroy.connect(Gtk.main_quit);
@@ -3317,7 +3318,7 @@ public class Main : GLib.Object{
 		if (!f.query_exists()) {
 			first_run = true;
 			log_debug("first run mode: config file not found");
-			repo = new SnapshotRepo.from_device(root_device, null);
+			initialize_repo();
 			return;
 		}
 
@@ -3335,48 +3336,7 @@ public class Main : GLib.Object{
 		backup_uuid = json_get_string(config,"backup_device_uuid", backup_uuid);
 		backup_parent_uuid = json_get_string(config,"parent_device_uuid", backup_parent_uuid);
 		
-		log_debug("backup_uuid=%s".printf(backup_uuid));
-		log_debug("backup_parent_uuid=%s".printf(backup_parent_uuid));
-		
-		if (backup_uuid.length > 0){
-			log_debug("repo: creating from uuid");
-			repo = new SnapshotRepo.from_uuid(backup_uuid, null);
-
-			if ((repo == null) || !repo.available()){
-				if (backup_parent_uuid.length > 0){
-					log_debug("repo: creating from parent uuid");
-					repo = new SnapshotRepo.from_uuid(backup_parent_uuid, null);
-				}
-			}
-		}
-		else{
-			log_debug("repo: uuid is empty, creating from root device");
-			repo = new SnapshotRepo.from_device(root_device, null);
-		}
-
-		// initialize repo using command line parameter
-		 
-		if (cmd_backup_device.length > 0){
-			var cmd_dev = Device.get_device_by_name(cmd_backup_device);
-			if (cmd_dev != null){
-				log_debug("repo: creating from command argument: %s".printf(cmd_backup_device));
-				repo = new SnapshotRepo.from_device(cmd_dev, null);
-				
-				// TODO: move this code to main window
-			}
-			else{
-				log_error(_("Could not find device") + ": '%s'".printf(cmd_backup_device));
-				exit_app();
-				exit(1);
-			}
-		}
-
-		/* Note: In command-line mode, user will be prompted for backup device */
-
-		/* The backup device specified in config file will be mounted at this point if:
-		 * 1) app is running in GUI mode, OR
-		 * 2) app is running command mode without backup device argument
-		 * */
+		initialize_repo();
 
         this.schedule_monthly = json_get_bool(config,"schedule_monthly",schedule_monthly);
 		this.schedule_weekly = json_get_bool(config,"schedule_weekly",schedule_weekly);
@@ -3431,6 +3391,58 @@ public class Main : GLib.Object{
 		}
 	}
 
+	public void initialize_repo(){
+
+		log_debug("backup_uuid=%s".printf(backup_uuid));
+		log_debug("backup_parent_uuid=%s".printf(backup_parent_uuid));
+		
+		if (backup_uuid.length > 0){
+			log_debug("repo: creating from uuid");
+			repo = new SnapshotRepo.from_uuid(backup_uuid, null);
+
+			if ((repo == null) || !repo.available()){
+				if (backup_parent_uuid.length > 0){
+					log_debug("repo: creating from parent uuid");
+					repo = new SnapshotRepo.from_uuid(backup_parent_uuid, null);
+				}
+			}
+		}
+		else{
+			if (root_device != null){
+				log_debug("repo: uuid is empty, creating from root device");
+				repo = new SnapshotRepo.from_device(root_device, null);
+			}
+			else{
+				log_debug("repo: root device is null");
+				repo = new SnapshotRepo.from_null(null);
+			}
+		}
+
+		// initialize repo using command line parameter
+		 
+		if (cmd_backup_device.length > 0){
+			var cmd_dev = Device.get_device_by_name(cmd_backup_device);
+			if (cmd_dev != null){
+				log_debug("repo: creating from command argument: %s".printf(cmd_backup_device));
+				repo = new SnapshotRepo.from_device(cmd_dev, null);
+				
+				// TODO: move this code to main window
+			}
+			else{
+				log_error(_("Could not find device") + ": '%s'".printf(cmd_backup_device));
+				exit_app();
+				exit(1);
+			}
+		}
+
+		/* Note: In command-line mode, user will be prompted for backup device */
+
+		/* The backup device specified in config file will be mounted at this point if:
+		 * 1) app is running in GUI mode, OR
+		 * 2) app is running command mode without backup device argument
+		 * */
+	}
+	
 	//core functions
 
 	public void update_partitions(){

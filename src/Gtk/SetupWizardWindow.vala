@@ -232,22 +232,28 @@ class SetupWizardWindow : Gtk.Window{
 		if (!validate_current_tab()){
 			return;
 		}
-		
-		switch(notebook.page){
-		case Tabs.ESTIMATE:
-			notebook.page = Tabs.BACKUP_DEVICE;
-			break;
-		case Tabs.BACKUP_DEVICE:
-			notebook.page = Tabs.SCHEDULE;
-			break;
-		case Tabs.SCHEDULE:
-			notebook.page = Tabs.FINISH;
-			break;
-		case Tabs.FINISH:
-			// btn_next is disabled for this page
-			break;
+
+		if (App.live_system()){
+			destroy();
 		}
-		
+		else{
+
+			switch(notebook.page){
+			case Tabs.ESTIMATE:
+				notebook.page = Tabs.BACKUP_DEVICE;
+				break;
+			case Tabs.BACKUP_DEVICE:
+				notebook.page = Tabs.SCHEDULE;
+				break;
+			case Tabs.SCHEDULE:
+				notebook.page = Tabs.FINISH;
+				break;
+			case Tabs.FINISH:
+				// btn_next is disabled for this page
+				break;
+			}
+		}
+
 		initialize_tab();
 	}
 
@@ -278,7 +284,7 @@ class SetupWizardWindow : Gtk.Window{
 			break;
 		case Tabs.BACKUP_DEVICE:
 			btn_prev.sensitive = false;
-			btn_next.sensitive = true;
+			btn_next.sensitive = !App.live_system();
 			btn_close.sensitive = true;
 			break;
 		case Tabs.SCHEDULE:

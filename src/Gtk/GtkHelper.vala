@@ -88,7 +88,7 @@ namespace TeeJee.GtkHelper{
 
 		//vbox_main
         Gtk.Box vbox_main = new Box (Orientation.VERTICAL, 0);
-        vbox_main.margin = 6;
+        vbox_main.margin = 0;
 
 		//lbl_input
 		Gtk.Label lbl_input = new Gtk.Label(title);
@@ -110,15 +110,19 @@ namespace TeeJee.GtkHelper{
 		}
 
 		//add widgets
-		Gtk.Box content = (Box) dlg.get_content_area ();
+		var content = (Box) dlg.get_content_area ();
 		vbox_main.pack_start (lbl_input, false, true, 0);
 		vbox_main.pack_start (txt_input, false, true, 0);
 		content.add(vbox_main);
-
+		content.margin = 6;
+		
 		//add buttons
+		var actions = (Box) dlg.get_action_area ();
 		dlg.add_button(_("OK"),Gtk.ResponseType.OK);
 		dlg.add_button(_("Cancel"),Gtk.ResponseType.CANCEL);
-
+		//actions.margin = 6;
+		actions.margin_top = 12;
+		
 		//keyboard shortcuts
 		txt_input.key_press_event.connect ((w, event) => {
 			if (event.keyval == 65293) {

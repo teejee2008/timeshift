@@ -2623,62 +2623,6 @@ public class Main : GLib.Object{
 		return thr_success;
 	}
 
-	// todo: remove
-	public Device unlock_encrypted_device(Device luks_device, Gtk.Window? parent_win){
-		Device luks_unlocked = null;
-
-		string mapped_name = "%s_unlocked".printf(luks_device.name);
-
-		// check if already unlocked
-		foreach(var part in partitions){
-			if (part.pkname == luks_device.kname){
-				log_msg(_("Unlocked device is mapped to '%s'").printf(part.device));
-				log_msg("");
-				return part;
-			}
-		}
-			
-		if ((parent_win == null) && (app_mode != "")){
-
-			var counter = new TimeoutCounter();
-			counter.kill_process_on_timeout("cryptsetup", 20, true);
-
-			// prompt user to unlock
-			string cmd = "cryptsetup luksOpen '%s' '%s'".printf(luks_device.device, mapped_name);
-			Posix.system(cmd);
-			counter.stop();
-			log_msg("");
-
-			update_partitions();
-
-			// check if unlocked
-			foreach(var part in partitions){
-				if (part.pkname == luks_device.kname){
-					log_msg(_("Unlocked device is mapped to '%s'").printf(part.name));
-					log_msg("");
-					return part;
-				}
-			}
-		}
-		else{
-			// prompt user for password
-			string passphrase = gtk_inputbox(
-				_("Encrypted Device"),
-				_("Enter passphrase to unlock '%s'").printf(luks_device.name),
-				parent_win, true);
-
-			string message, details;
-			luks_unlocked = Device.luks_unlock(luks_device, mapped_name, passphrase,
-				out message, out details);
-
-			bool is_error = (luks_unlocked == null);
-			
-			gtk_messagebox(message,details,null,is_error);
-		}
-
-		return luks_unlocked;
-	}
-
 	public void disclaimer_pre_restore(bool formatted,
 		out string msg_devices, out string msg_reboot,
 		out string msg_disclaimer){
@@ -3584,7 +3528,11 @@ public class Main : GLib.Object{
 
 			// unlock encrypted device
 			if (restore_target.is_encrypted_partition()){
-				restore_target = unlock_encrypted_device(restore_target, parent_win);
+				
+				string msg_out, msg_err;
+				
+				restore_target = Device.luks_unlock(
+					restore_target, "", "", parent_win, out msg_out, out msg_err);
 
 				//exit if not found
 				if (restore_target == null){
@@ -3644,7 +3592,11 @@ public class Main : GLib.Object{
 
 					// unlock encrypted device
 					if (mnt.device.is_encrypted_partition()){
-						mnt.device = unlock_encrypted_device(mnt.device, parent_win);
+
+						string msg_out, msg_err;
+				
+						mnt.device = Device.luks_unlock(
+							mnt.device, "", "", parent_win, out msg_out, out msg_err);
 
 						//exit if not found
 						if (mnt.device == null){

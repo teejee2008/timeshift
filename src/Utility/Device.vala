@@ -27,6 +27,7 @@
 using TeeJee.Logging;
 using TeeJee.FileSystem;
 using TeeJee.ProcessHelper;
+using TeeJee.GtkHelper;
 
 public class Device : GLib.Object{
 
@@ -1145,11 +1146,18 @@ public class Device : GLib.Object{
 	}
 
 	public static Device? luks_unlock(
-		Device luks_device, string mapped_name, string luks_pass,
+		Device luks_device, string mapped_name, string passphrase, Gtk.Window? parent_window, 
 		out string message, out string details){
-			
-		Device unlocked_device = null;
 
+		/* Unlocks a LUKS device using provided passphrase.
+		 * Prompts the user for passphrase if empty.
+		 * Displays a GTK prompt if parent_window is not null
+		 * Otherwise prompts user on terminal with a timeout of 20 secsonds
+		 * */
+		 
+		Device unlocked_device = null;
+		string std_out = "", std_err = "";
+		
 		// check if not encrypted
 		if (!luks_device.fstype.contains("luks") && !luks_device.fstype.contains("crypt")){
 			message = _("This device is not encrypted");
@@ -1167,23 +1175,91 @@ public class Device : GLib.Object{
 				return part; 
 			}
 		}
-	
 
-		var cmd = "echo -n -e '%s' | cryptsetup luksOpen --key-file - %s %s\n".printf(
-			luks_pass, luks_device.device, mapped_name);
-		
-		log_debug(cmd);
+		string luks_pass = passphrase;
+		string luks_name = mapped_name;
 
-		string std_out, std_err;
-		int status = exec_script_sync(cmd, out std_out, out std_err, false, true);
+		if ((luks_name == null) || (luks_name.length == 0)){
+			luks_name = "%s_crypt".printf(luks_device.kname);
+		}
 
-		switch (status){
-			case 512: // invalid passphrase
-				message = _("Wrong password");
-				details = _("Failed to unlock device");
-				log_error(message);
-				log_error(details);
-				break;
+		if (parent_window == null){
+
+			// console mode
+			
+			if ((luks_pass == null) || (luks_pass.length == 0)){
+
+				// prompt user on terminal and unlock, else timeout after 20 secs
+				
+				var counter = new TimeoutCounter();
+				counter.kill_process_on_timeout("cryptsetup", 20, true);
+				string cmd = "cryptsetup luksOpen '%s' '%s'".printf(luks_device.device, mapped_name);
+				Posix.system(cmd);
+				counter.stop();
+				log_msg("");
+				
+			}
+			else{
+
+				// use password to unlock
+
+				var cmd = "echo -n -e '%s' | cryptsetup luksOpen --key-file - '%s' '%s'\n".printf(
+					luks_pass, luks_device.device, mapped_name);
+
+				int status = exec_script_sync(cmd, out std_out, out std_err, false, true);
+
+				switch (status){
+				case 512: // invalid passphrase
+					message = _("Wrong password");
+					details = _("Failed to unlock device");
+					log_error(message);
+					log_error(details);
+					break;
+				}
+			}
+
+		}
+		else{
+
+			// gui mode
+
+			if ((luks_pass == null) || (luks_pass.length == 0)){
+
+				// show input prompt
+				
+				luks_pass = gtk_inputbox(
+						_("Encrypted Device"),
+						_("Enter passphrase to unlock '%s'").printf(luks_device.name),
+						parent_window, true);
+
+				if (luks_pass == null){
+					// cancelled by user
+					message = _("Failed to unlock device");
+					details = _("User cancelled the password prompt");
+					log_debug("User cancelled the password prompt");
+					return null;
+				}
+			}
+
+			if ((luks_pass != null) && (luks_pass.length > 0)){
+
+				// use password to unlock
+
+				var cmd = "echo -n -e '%s' | cryptsetup luksOpen --key-file - '%s' '%s'\n".printf(
+					luks_pass, luks_device.device, mapped_name);
+
+				int status = exec_script_sync(cmd, out std_out, out std_err, false, true);
+
+				switch (status){
+				case 512: // invalid passphrase
+					message = _("Wrong password");
+					details = _("Failed to unlock device");
+					log_error(message);
+					log_error(details);
+					break;
+				}
+			}
+			
 		}
 
 		// find unlocked device
@@ -1195,15 +1271,21 @@ public class Device : GLib.Object{
 			}
 		}
 
+		bool is_error = false;
 		if (unlocked_device == null){
 			message = _("Failed to unlock device") + " '%s'".printf(luks_device.device);
 			details = std_err;
+			is_error = true;
 		}
 		else{
 			message = _("Unlocked successfully");
 			details = _("Unlocked device is mapped to '%s'").printf(unlocked_device.mapped_name);
 		}
-		
+
+		if (parent_window != null){
+			gtk_messagebox(message, details, parent_window, is_error);
+		}
+
 		return unlocked_device;
 	}
 

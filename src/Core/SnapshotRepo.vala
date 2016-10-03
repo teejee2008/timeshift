@@ -221,53 +221,9 @@ public class SnapshotRepo : GLib.Object{
 			}
 		}
 			
-		if (parent_window == null){
-
-			var counter = new TimeoutCounter();
-			counter.kill_process_on_timeout("cryptsetup", 20, true);
-
-			// prompt user to unlock
-			string cmd = "cryptsetup luksOpen '%s' '%s'".printf(luks_device.device, mapped_name);
-			Posix.system(cmd);
-			counter.stop();
-			log_msg("");
-
-			partitions = Device.get_block_devices_using_lsblk();
-
-			// check if unlocked
-			foreach(var part in partitions){
-				if (part.pkname == luks_device.kname){
-					log_msg(_("Unlocked device is mapped to '%s'").printf(part.name));
-					log_msg("");
-					return part;
-				}
-			}
-		}
-		else{
-			// prompt user for password
-			string? passphrase = gtk_inputbox(
-				_("Encrypted Device"),
-				_("Enter passphrase to unlock '%s'").printf(luks_device.name),
-				parent_window, true);
-
-			if (passphrase == null){
-				// cancelled by user
-				log_debug("User cancelled the input prompt");
-				return null;
-			}
-
-			gtk_set_busy(true, parent_window);
-
-			string message, details;
-			luks_unlocked = Device.luks_unlock(luks_device, mapped_name, passphrase,
-				out message, out details);
-
-			bool is_error = (luks_unlocked == null);
-
-			gtk_set_busy(false, parent_window);
-
-			gtk_messagebox(message, details, null, is_error);
-		}
+		string msg_out, msg_err;
+		luks_unlocked = Device.luks_unlock(
+			luks_device, mapped_name, "", parent_window, out msg_out, out msg_err);
 
 		return luks_unlocked;
 	}

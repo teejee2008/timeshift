@@ -245,10 +245,16 @@ public class SnapshotRepo : GLib.Object{
 		}
 		else{
 			// prompt user for password
-			string passphrase = gtk_inputbox(
+			string? passphrase = gtk_inputbox(
 				_("Encrypted Device"),
 				_("Enter passphrase to unlock '%s'").printf(luks_device.name),
 				parent_window, true);
+
+			if (passphrase == null){
+				// cancelled by user
+				log_debug("User cancelled the input prompt");
+				return null;
+			}
 
 			gtk_set_busy(true, parent_window);
 
@@ -259,7 +265,7 @@ public class SnapshotRepo : GLib.Object{
 			bool is_error = (luks_unlocked == null);
 
 			gtk_set_busy(false, parent_window);
-			
+
 			gtk_messagebox(message, details, null, is_error);
 		}
 

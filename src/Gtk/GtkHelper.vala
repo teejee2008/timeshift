@@ -81,7 +81,7 @@ namespace TeeJee.GtkHelper{
 		dlg.destroy();
 	}
 
-	public string gtk_inputbox(
+	public string? gtk_inputbox(
 		string title, string message, Gtk.Window? parent_win, bool mask_password = false){
 
 		/* Shows a simple input prompt */
@@ -134,7 +134,7 @@ namespace TeeJee.GtkHelper{
 		dlg.destroy();
 
 		if (response == Gtk.ResponseType.CANCEL){
-			return "";
+			return null;
 		}
 		else{
 			return input_text;

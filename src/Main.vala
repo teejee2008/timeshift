@@ -230,12 +230,13 @@ public class Main : GLib.Object{
 		//init log ------------------
 
 		try {
-			DateTime now = new DateTime.now_local();
-			log_dir = "/var/log/timeshift";
-			log_file = log_dir + "/" + now.format("%Y-%m-%d_%H-%M-%S") + ".log";
-
 			string suffix = (app_mode.length == 0) ? "_gui" : "_" + app_mode;
 			
+			DateTime now = new DateTime.now_local();
+			log_dir = "/var/log/timeshift";
+			log_file = path_combine(log_dir,
+				"%s_%s.log".printf(now.format("%Y-%m-%d_%H-%M-%S"), suffix));
+
 			var file = File.new_for_path (log_dir);
 			if (!file.query_exists ()) {
 				file.make_directory_with_parents();

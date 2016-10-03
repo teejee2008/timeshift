@@ -194,7 +194,7 @@ public class AppExcludeEntry : GLib.Object{
 			string str = (is_include) ? "+ " : "";
 			str += (root_user) ? "/root" : "/home/*";
 			str += item_path[1:item_path.length];
-			str += (is_file) ? "" : "/**";
+			//str += (is_file) ? "" : "/**";
 			entry.patterns.add(str);
 		}
 	}

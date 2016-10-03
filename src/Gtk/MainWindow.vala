@@ -755,6 +755,7 @@ class MainWindow : Gtk.Window{
 		win.set_transient_for(this);
 		win.destroy.connect(()=>{
 			btn_settings.sensitive = true;
+			App.save_app_config();
 			refresh_all();
 		});
 	}
@@ -769,6 +770,7 @@ class MainWindow : Gtk.Window{
 		win.set_transient_for(this);
 		win.destroy.connect(()=>{
 			btn_wizard.sensitive = true;
+			App.save_app_config();
 			refresh_all();
 		});
 	}

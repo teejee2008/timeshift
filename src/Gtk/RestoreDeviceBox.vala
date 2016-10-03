@@ -130,8 +130,10 @@ class RestoreDeviceBox : Gtk.Box{
     }
 
     public void refresh(){
+		log_debug("RestoreDeviceBox: refresh()");
 		create_device_selection_options();
 		refresh_cmb_boot_device();
+		log_debug("RestoreDeviceBox: refresh(): exit");
 	}
 
 	private void create_device_selection_options(){
@@ -310,16 +312,7 @@ class RestoreDeviceBox : Gtk.Box{
 		});
 
 		cmb_boot_device.changed.connect(()=>{
-			App.grub_device = "";
-			if (App.reinstall_grub2){
-				Device entry;
-				TreeIter iter;
-				bool ok = cmb_boot_device.get_active_iter (out iter);
-				if (!ok) { return; } // not selected
-				TreeModel model = (TreeModel) cmb_boot_device.model;
-				model.get(iter, 0, out entry);
-				App.grub_device = entry.device;
-			}
+			save_grub_device_selection();
 		});
 
 		string tt = "<b>" + _("** Advanced Users **") + "</b>\n\n"+ _("Skips bootloader (re)installation on target device.\nFiles in /boot directory on target partition will remain untouched.\n\nIf you are restoring a system that was bootable previously then it should boot successfully. Otherwise the system may fail to boot.");
@@ -345,34 +338,64 @@ class RestoreDeviceBox : Gtk.Box{
 		App.reinstall_grub2 = !chk_skip_grub_install.active;
 	}
 
+	private void save_grub_device_selection(){
+		
+		App.grub_device = "";
+		
+		if (App.reinstall_grub2){
+			Device entry;
+			TreeIter iter;
+			bool ok = cmb_boot_device.get_active_iter (out iter);
+			if (!ok) { return; } // not selected
+			TreeModel model = (TreeModel) cmb_boot_device.model;
+			model.get(iter, 0, out entry);
+			App.grub_device = entry.device;
+		}
+	}
+
 	private void refresh_cmb_boot_device(){
 		var store = new Gtk.ListStore(2, typeof(Device), typeof(Gdk.Pixbuf));
 
 		Gdk.Pixbuf pix_device = get_shared_icon("drive-harddisk","disk.png",16).pixbuf;
-		
+
 		TreeIter iter;
 		foreach(Device dev in Device.get_block_devices_using_lsblk()) {
-			// select disk and normal partitions, skip others (loop and crypt)
+			
+			// select disk and normal partitions, skip others (loop crypt rom lvm)
 			if ((dev.type != "disk") && (dev.type != "part")){
 				continue;
 			}
 
-			// skip luks partitions
-			if (dev.fstype == "luks"){
+			// skip luks and lvm2 partitions
+			if ((dev.fstype == "luks")||(dev.fstype == "lvm2")){
 				continue;
 			}
-			
+
 			store.append(out iter);
 			store.set (iter, 0, dev);
 			store.set (iter, 1, pix_device);
 		}
 
-		cmb_boot_device.set_model (store);
+		cmb_boot_device.model = store;
+
 		cmb_boot_device_select_default();
 	}
 
 	private void cmb_boot_device_select_default(){
+
+		log_debug("RestoreDeviceBox: cmb_boot_device_select_default()");
+		
 		if (App.restore_target == null){
+			cmb_boot_device.active = -1;
+			return;
+		}
+
+		var grub_dev = App.restore_target;
+		while (grub_dev.has_parent()){
+			grub_dev = grub_dev.parent;
+		}
+
+		if ((grub_dev == null) || (grub_dev.type != "disk")){
 			cmb_boot_device.active = -1;
 			return;
 		}
@@ -380,37 +403,24 @@ class RestoreDeviceBox : Gtk.Box{
 		TreeIter iter;
 		var store = (Gtk.ListStore) cmb_boot_device.model;
 		int index = -1;
-
-		int first_mbr_device_index = -1;
+		int active = -1;
+		
 		for (bool next = store.get_iter_first (out iter); next; next = store.iter_next (ref iter)) {
-			Device dev;
-			store.get(iter, 0, out dev);
-
+			
+			Device dev_iter;
+			store.get(iter, 0, out dev_iter);
+			
 			index++;
-
-			// resolve grub device from target device name
-			if (dev.device == App.restore_target.device[0:8]){
-				cmb_boot_device.active = index;
+			
+			if (dev_iter.device == grub_dev.device){
+				active = index;
 				break;
-			}
-
-			// resolve grub device from parent of target device
-			if (App.restore_target.has_parent()
-				&& (dev.device == App.restore_target.parent.device[0:8])){
-					
-				cmb_boot_device.active = index;
-				break;
-			}
-
-			if ((first_mbr_device_index == -1) && (dev.device.length == "/dev/sdX".length)){
-				first_mbr_device_index = index;
 			}
 		}
 
-		//select first MBR device if not found
-		if (cmb_boot_device.active == -1){
-			cmb_boot_device.active = first_mbr_device_index;
-		}
+		cmb_boot_device.active = active;
+
+		log_debug("RestoreDeviceBox: cmb_boot_device_select_default(): exit");
 	}
 
 	private void create_infobar_location(){

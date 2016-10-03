@@ -2116,22 +2116,13 @@ public class Main : GLib.Object{
 
 			if (mnt_dev != null){
 				
-				// add to mount list
-				
 				log_debug("added: dev: %s, path: %s, options: %s".printf(
 					mnt_dev.device, mnt.mount_point, mnt.options));
 					
 				mount_list.add(new MountEntry(mnt_dev, mnt.mount_point, mnt.options));
 				
 				if (mnt.mount_point == "/"){
-					root_found = true;
 					restore_target = mnt_dev;
-				}
-				if (mnt.mount_point == "/boot"){
-					boot_found = true;
-				}
-				if (mnt.mount_point == "/home"){
-					home_found = true;
 				}
 			}
 			else{
@@ -2139,6 +2130,16 @@ public class Main : GLib.Object{
 					mnt.device, mnt.mount_point, mnt.options));
 
 				mount_list.add(new MountEntry(null, mnt.mount_point, mnt.options));
+			}
+
+			if (mnt.mount_point == "/"){
+				root_found = true;
+			}
+			if (mnt.mount_point == "/boot"){
+				boot_found = true;
+			}
+			if (mnt.mount_point == "/home"){
+				home_found = true;
 			}
 		}
 

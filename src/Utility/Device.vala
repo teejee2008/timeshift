@@ -150,7 +150,7 @@ public class Device : GLib.Object{
 				s += " " + model;
 			}
 			if (size_bytes > 0) {
-				s += " (%s)".printf(format_file_size(size_bytes));
+				s += " (%s)".printf(format_file_size(size_bytes, false, "", true, 0));
 			}
 		}
 		else{
@@ -158,7 +158,7 @@ public class Device : GLib.Object{
 			s += (label.length > 0) ? " (" + label + ")": "";
 			s += (fstype.length > 0) ? " ~ " + fstype : "";
 			if (size_bytes > 0) {
-				s += " (%s)".printf(format_file_size(size_bytes));
+				s += " (%s)".printf(format_file_size(size_bytes, false, "", true, 0));
 			}
 		}
 

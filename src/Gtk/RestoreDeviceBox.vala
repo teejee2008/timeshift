@@ -371,6 +371,11 @@ class RestoreDeviceBox : Gtk.Box{
 				continue;
 			}
 
+			// skip extended partitions
+			if (dev.size_bytes < 10 * KB){
+				continue;
+			}
+
 			store.append(out iter);
 			store.set (iter, 0, dev);
 			store.set (iter, 1, pix_device);

@@ -382,7 +382,7 @@ namespace TeeJee.System{
 
 		string path;
 		int status;
-		string cmd;
+		//string cmd;
 		
 		path = get_cmd_path ("exo-open");
 		if ((path != null)&&(path != "")){

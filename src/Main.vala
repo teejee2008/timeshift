@@ -3502,17 +3502,21 @@ public class Main : GLib.Object{
 		log_debug("update_partitions()");
 		
 		partitions.clear();
+		
 		partitions = Device.get_filesystems();
 
 		foreach(var pi in partitions){
-			//root_device and home_device will be detected by detect_system_devices()
+
+			// root_device and home_device will be detected by detect_system_devices()
 			if ((repo != null) && (repo.device != null) && (pi.uuid == repo.device.uuid)){
 				repo.device = pi;
 			}
+			
 			if (pi.is_mounted){
 				pi.dist_info = LinuxDistro.get_dist_info(pi.mount_points[0].mount_point).full_name();
 			}
 		}
+		
 		if (partitions.size == 0){
 			log_error("ts: " + _("Failed to get partition list."));
 		}

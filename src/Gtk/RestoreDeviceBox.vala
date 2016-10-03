@@ -257,11 +257,70 @@ class RestoreDeviceBox : Gtk.Box{
 		combo.active = active;
 
 		combo.changed.connect((path) => {
+
 			Device current_dev;
 			MountEntry current_entry;
+			
 			TreeIter iter_active;
-			combo.get_active_iter (out iter_active);
-			combo.model.get(iter_active, 0, out current_dev, 1, out current_entry, -1);
+			bool selected = combo.get_active_iter (out iter_active);
+			if (!selected){
+				return;
+			}
+
+			TreeIter iter_combo;
+			var store = (Gtk.ListStore) combo.model;
+			store.get(iter_active, 0, out current_dev, 1, out current_entry, -1);
+
+			if (current_dev.is_encrypted_partition()){
+
+				string msg_out, msg_err;
+				var luks_unlocked = Device.luks_unlock(
+					current_dev, "", "", parent_window, out msg_out, out msg_err);
+
+				if (luks_unlocked == null){
+					
+					// reset the selection
+					
+					if (current_entry.mount_point == "/"){
+
+						// reset to default device
+						
+						index = -1;
+						for (bool next = store.get_iter_first (out iter_combo); next;
+							next = store.iter_next (ref iter_combo)) {
+
+							Device dev_iter;
+							store.get(iter_combo, 0, out dev_iter, -1);
+							index++;
+							
+							if ((dev_iter != null) && (dev_iter.device == current_entry.device.device)){
+								combo.active = index;
+							}
+						}
+					}
+					else{
+						combo.active = 0; // keep on root device
+					}
+					
+					return;
+				}
+
+				index = -1;
+
+				for (bool next = store.get_iter_first (out iter_combo); next;
+					next = store.iter_next (ref iter_combo)) {
+
+					Device dev_iter;
+					store.get(iter_combo, 0, out dev_iter, -1);
+
+					index++;
+					
+					if ((dev_iter != null) && (dev_iter.device == luks_unlocked.device)){
+						combo.active = index;
+						return;
+					}
+				}
+			}
 
 			if (current_entry.mount_point == "/"){
 				App.restore_target = current_dev;

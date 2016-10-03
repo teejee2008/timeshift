@@ -116,7 +116,7 @@ public class Device : GLib.Object{
 			string text = kname;
 
 			if (has_parent() && (parent.type == "part")){
-				text += ", %s".printf(pkname);
+				text += " (%s)".printf(pkname);
 			}
 			
 			return text;
@@ -143,7 +143,7 @@ public class Device : GLib.Object{
 		string s = "";
 
 		if (type == "disk"){
-			s += "<b>" + kname + "</b> ~";
+			s += "<b>" + short_name_with_parent + "</b> ~";
 			if (vendor.length > 0){
 				s += " " + vendor;
 			}
@@ -155,7 +155,7 @@ public class Device : GLib.Object{
 			}
 		}
 		else{
-			s += "<b>" + kname + "</b>" ;
+			s += "<b>" + short_name_with_parent + "</b>" ;
 			s += (label.length > 0) ? " (" + label + ")": "";
 			s += (fstype.length > 0) ? " ~ " + fstype : "";
 			if (size_bytes > 0) {

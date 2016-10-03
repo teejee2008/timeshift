@@ -464,7 +464,7 @@ public class SnapshotRepo : GLib.Object{
 			
 			if (device.free_bytes < Main.MIN_FREE_SPACE){
 				status_message = _("Not enough disk space");
-				status_message += " (< %s)".printf(format_file_size(Main.MIN_FREE_SPACE));
+				status_message += " (< %s)".printf(format_file_size(Main.MIN_FREE_SPACE, false, "", true, 0));
 					
 				status_details = _("Select another device or free up some space");
 				

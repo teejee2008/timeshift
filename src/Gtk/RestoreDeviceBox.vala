@@ -77,12 +77,12 @@ class RestoreDeviceBox : Gtk.Box{
 
 		if (App.mirror_system){
 			add_label(this,
-				_("Select the target partitions where system will be cloned."));
+				_("Select the target devices where system will be cloned."));
 		}
 		else{
 			add_label(this,
-				_("Select the partitions where files will be restored.") + "\n" +
-				_("Partitions from which snapshot was created are pre-selected."));
+				_("Select the devices where files will be restored.") + "\n" +
+				_("Devices from which snapshot was created are pre-selected."));
 		}
 
 		show_subvolume = false;
@@ -322,7 +322,7 @@ class RestoreDeviceBox : Gtk.Box{
 			}
 		});
 
-		string tt = "<b>" + _("** Advanced Users **") + "</b>\n\n"+ _("Skips bootloader (re)installation on target device.\nFiles in /boot directory on target partition will remain untouched.\n\nIf you are restoring a system that was bootable previously then it should boot successfully.\nOtherwise the system may fail to boot.");
+		string tt = "<b>" + _("** Advanced Users **") + "</b>\n\n"+ _("Skips bootloader (re)installation on target device.\nFiles in /boot directory on target partition will remain untouched.\n\nIf you are restoring a system that was bootable previously then it should boot successfully. Otherwise the system may fail to boot.");
 
 		//chk_skip_grub_install
 		var chk = new CheckButton.with_label(

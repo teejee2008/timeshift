@@ -417,8 +417,11 @@ class RestoreWindow : Gtk.Window{
 
 			restore_device_box.check_and_mount_devices();
 		}
+		else if (notebook.page == Tabs.RESTORE_EXCLUDE){
+		    App.save_exclude_list_selections();
+		}
 		else if (notebook.page == Tabs.EXCLUDE_APPS){
-		    exclude_apps_box.save_changes();
+		    App.save_exclude_list_selections();
 		}
 
 		return true;

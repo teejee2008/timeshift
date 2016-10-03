@@ -151,27 +151,4 @@ class ExcludeAppsBox : Gtk.Box{
 			model.set (iter, 2, entry.tooltip_text(), -1);
 		}
 	}
-
-	public void save_changes(){
-		// add new selected items
-		foreach(var entry in App.exclude_list_apps){
-			if (entry.enabled && !App.exclude_app_names.contains(entry.name)){
-				App.exclude_app_names.add(entry.name);
-				log_debug("add app name: %s".printf(entry.name));
-			}
-		}
-
-		// remove item only if present in current list and un-selected
-		foreach(var entry in App.exclude_list_apps){
-			if (!entry.enabled && App.exclude_app_names.contains(entry.name)){
-				App.exclude_app_names.remove(entry.name);
-				log_debug("remove app name: %s".printf(entry.name));
-			}
-		}
-
-		App.exclude_app_names.sort((a,b) => {
-			return Posix.strcmp(a,b);
-		});
-	}
-	
 }

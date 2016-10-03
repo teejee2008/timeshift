@@ -125,8 +125,7 @@ class BackupDeviceBox : Gtk.Box{
 
 			(cell as Gtk.CellRendererToggle).active = selected;
 
-			(cell as Gtk.CellRendererToggle).visible =
-				(dev.type != "disk") && ((dev.fstype != "luks") || (dev.children.size == 0));
+			(cell as Gtk.CellRendererToggle).visible = (dev.children.size == 0);
 		});
 
 		//cell_radio.toggled.connect((path)=>{});

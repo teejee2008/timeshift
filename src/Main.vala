@@ -28,7 +28,6 @@ using Json;
 
 using TeeJee.Logging;
 using TeeJee.FileSystem;
-using TeeJee.Devices;
 using TeeJee.JsonHelper;
 using TeeJee.ProcessHelper;
 using TeeJee.GtkHelper;
@@ -988,7 +987,7 @@ public class Main : GLib.Object{
 			grid[row, ++col] = ">";
 			grid[row, ++col] = "%s".printf(pi.full_name_with_alias);
 			//grid[row, ++col] = "%s".printf(pi.uuid);
-			grid[row, ++col] = "%s".printf((pi.size_bytes > 0) ? "%s GB".printf(pi.size) : "?? GB");
+			grid[row, ++col] = "%s".printf((pi.size_bytes > 0) ? "%s".printf(pi.size) : "?? GB");
 			grid[row, ++col] = "%s".printf(pi.fstype);
 			grid[row, ++col] = "%s".printf(pi.label);
 			row++;

@@ -1,6 +1,5 @@
 using TeeJee.Logging;
 using TeeJee.FileSystem;
-using TeeJee.Devices;
 using TeeJee.JsonHelper;
 using TeeJee.ProcessHelper;
 using TeeJee.GtkHelper;
@@ -277,7 +276,7 @@ public class SnapshotRepo : GLib.Object{
 		string path = snapshot_location + "/timeshift/snapshots";
 
 		if (!dir_exists(path)){
-			log_error("Path not found: %s".printf(path));
+			//log_error("Path not found: %s".printf(path));
 			return false;
 		}
 

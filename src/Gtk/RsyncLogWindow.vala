@@ -30,7 +30,6 @@ using TeeJee.FileSystem;
 using TeeJee.JsonHelper;
 using TeeJee.ProcessHelper;
 using TeeJee.GtkHelper;
-using TeeJee.Devices;
 using TeeJee.System;
 using TeeJee.Misc;
 

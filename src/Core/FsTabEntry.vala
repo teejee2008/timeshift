@@ -1,6 +1,5 @@
 using TeeJee.Logging;
 using TeeJee.FileSystem;
-using TeeJee.Devices;
 using TeeJee.JsonHelper;
 using TeeJee.ProcessHelper;
 using TeeJee.GtkHelper;

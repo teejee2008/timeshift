@@ -26,7 +26,6 @@ using Gee;
 
 using TeeJee.Logging;
 using TeeJee.FileSystem;
-using TeeJee.Devices;
 using TeeJee.JsonHelper;
 using TeeJee.ProcessHelper;
 using TeeJee.GtkHelper;
@@ -186,6 +185,7 @@ class MainWindow : Gtk.Window{
 
         btn_wizard.clicked.connect (btn_wizard_clicked);
 
+		/*
 		if (!App.live_system()){
 			
 			//btn_clone
@@ -197,7 +197,7 @@ class MainWindow : Gtk.Window{
 			toolbar.add(btn_clone);
 
 			btn_clone.clicked.connect (btn_clone_clicked);
-		}
+		}*/
 
 		// TODO: replace gtk icon names with desktop-neutral names
 		
@@ -420,26 +420,29 @@ class MainWindow : Gtk.Window{
 
 		// check backup device -------------------------------
 
-		if (!App.repo.available() || !App.repo.has_space()){
+		if (!App.live_system()){
+			
+			if (!App.repo.available() || !App.repo.has_space()){
 
-			var title = App.repo.status_message;
-			
-			var msg = _("Select another device?");
-			
-			var type = Gtk.MessageType.ERROR;
-			var buttons_type = Gtk.ButtonsType.YES_NO;
-			
-			var dlg = new CustomMessageDialog(title, msg, type, this, buttons_type);
-			var response = dlg.run();
-			dlg.destroy();
-			
-			if (response == Gtk.ResponseType.YES){
-				this.delete_event.connect(on_delete_event); // reconnect this handler
-				btn_wizard_clicked(); // open wizard
-				return true; // keep window open
-			}
-			else{
-				return false; // close window
+				var title = App.repo.status_message;
+				
+				var msg = _("Select another device?");
+				
+				var type = Gtk.MessageType.ERROR;
+				var buttons_type = Gtk.ButtonsType.YES_NO;
+				
+				var dlg = new CustomMessageDialog(title, msg, type, this, buttons_type);
+				var response = dlg.run();
+				dlg.destroy();
+				
+				if (response == Gtk.ResponseType.YES){
+					this.delete_event.connect(on_delete_event); // reconnect this handler
+					btn_wizard_clicked(); // open wizard
+					return true; // keep window open
+				}
+				else{
+					return false; // close window
+				}
 			}
 		}
 

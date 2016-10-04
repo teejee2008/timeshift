@@ -52,7 +52,7 @@ public class RsyncLogWindow : Window {
 	public Gtk.ProgressBar progressbar;
 	
 	//window
-	private int def_width = 500;
+	private int def_width = 550;
 	private int def_height = 450;
 
 	//private uint tmr_task = 0;
@@ -64,7 +64,7 @@ public class RsyncLogWindow : Window {
 
 	private string rsync_log_file;
 	private FileItem log_root;
-	private bool flat_view = true;
+	private bool flat_view = false;
 
 	private string filter = "";
 	
@@ -81,7 +81,7 @@ public class RsyncLogWindow : Window {
 		
 		//vbox_main
 		vbox_main = new Box (Orientation.VERTICAL, 12);
-		vbox_main.margin = 12;
+		vbox_main.margin = 6;
 		add (vbox_main);
 
 		create_progressbar();
@@ -211,7 +211,7 @@ public class RsyncLogWindow : Window {
 		});
 
 		size_group = null;
-		var btn_exclude = add_button(hbox,
+		/*var btn_exclude = add_button(hbox,
 			_("Exclude Selected"),
 			_("Exclude selected items from future snapshots (careful!)"),
 			ref size_group, null);
@@ -228,7 +228,7 @@ public class RsyncLogWindow : Window {
 			}
 			
 			tv_files_refresh();
-		});
+		});*/
 
 		// close
 
@@ -308,7 +308,12 @@ public class RsyncLogWindow : Window {
 			bool odd_row;
 			model.get (iter, 0, out item, 1, out odd_row, -1);
 
-			(cell as Gtk.CellRendererText).text = item.file_status;
+			if (item.file_type == FileType.DIRECTORY){
+				(cell as Gtk.CellRendererText).text = "";
+			}
+			else{
+				(cell as Gtk.CellRendererText).text = item.file_status;
+			}
 		});
 		
 		// buffer ------------------------------------------------

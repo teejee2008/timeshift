@@ -184,17 +184,44 @@ public class RsyncTask : AsyncTask{
 	public FileItem parse_log(string log_file_path){
 		var root = new FileItem.dummy_root();
 
+		string log_file = log_file_path;
+		DataOutputStream dos_changes = null;
+		
+		if (!log_file.has_suffix("-changes")){
+			
+			string log_file_changes = log_file_path + "-changes";
+			
+			if (file_exists(log_file_changes)){
+				// use it
+				log_file = log_file_changes;
+			}
+			else{
+				// create one by initializing dos_changes
+				try {
+					var file = File.new_for_path(log_file_changes);
+					if (file.query_exists()){
+						file.delete();
+					}
+					var file_stream = file.create (FileCreateFlags.REPLACE_DESTINATION);
+					dos_changes = new DataOutputStream (file_stream);
+				}
+				catch (Error e) {
+					log_error (e.message);
+				}
+			}
+		}
+
 		log_debug("RsyncTask: parse_log()");
-		log_debug("log_file = %s".printf(log_file_path));
+		log_debug("log_file = %s".printf(log_file));
 
 		prg_count = 0;
-		prg_count_total = file_line_count(log_file_path);
-		
+		prg_count_total = file_line_count(log_file);
+
 		try {
 			string line;
-			var file = File.new_for_path(log_file_path);
+			var file = File.new_for_path(log_file);
 			if (!file.query_exists ()) {
-				log_error(_("File not found") + ": %s".printf(log_file_path));
+				log_error(_("File not found") + ": %s".printf(log_file));
 				return root;
 			}
 
@@ -212,6 +239,10 @@ public class RsyncTask : AsyncTask{
 				MatchInfo match;
 				if (regex_list["log-created"].match(line, 0, out match)) {
 
+					if (dos_changes != null){
+						dos_changes.put_string("%s\n".printf(line));
+					}
+		
 					//log_debug("matched: created:%s".printf(line));
 					
 					item_path = match.fetch(3).split(" -> ")[0].strip();
@@ -224,6 +255,10 @@ public class RsyncTask : AsyncTask{
 				else if (regex_list["log-deleted"].match(line, 0, out match)) {
 					
 					//log_debug("matched: deleted:%s".printf(line));
+
+					if (dos_changes != null){
+						dos_changes.put_string("%s\n".printf(line));
+					}
 					
 					item_path = match.fetch(1).split(" -> ")[0].strip();
 					item_status = "deleted";
@@ -231,6 +266,10 @@ public class RsyncTask : AsyncTask{
 				else if (regex_list["log-modified"].match(line, 0, out match)) {
 
 					//log_debug("matched: modified:%s".printf(line));
+
+					if (dos_changes != null){
+						dos_changes.put_string("%s\n".printf(line));
+					}
 					
 					item_path = match.fetch(12).split(" -> ")[0].strip();
 					

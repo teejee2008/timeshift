@@ -142,6 +142,7 @@ namespace TeeJee.Logging{
 			stdout.printf (e.message);
 		}
 	}
+
 	public void log_draw_line(){
 		log_msg(string.nfill(70,'='));
 	}

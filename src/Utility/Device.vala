@@ -143,7 +143,7 @@ public class Device : GLib.Object{
 		string s = "";
 
 		if (type == "disk"){
-			s += "<b>" + short_name_with_parent + "</b> ~";
+			s += "<b>" + kname + "</b> ~";
 			if (vendor.length > 0){
 				s += " " + vendor;
 			}
@@ -163,7 +163,38 @@ public class Device : GLib.Object{
 			}
 		}
 
-		return s;
+		return s.strip();
+	}
+	
+	public string description_simple(){
+		return description_simple_formatted().replace("<b>","").replace("</b>","");
+	}
+	
+	public string description_simple_formatted(){
+		
+		string s = "";
+
+		if (type == "disk"){
+			if (vendor.length > 0){
+				s += " " + vendor;
+			}
+			if (model.length > 0){
+				s += " " + model;
+			}
+			if (size_bytes > 0) {
+				s += " (%s)".printf(format_file_size(size_bytes, false, "", true, 0));
+			}
+		}
+		else{
+			s += "<b>" + short_name_with_parent + "</b>" ;
+			s += (label.length > 0) ? " (" + label + ")": "";
+			s += (fstype.length > 0) ? " ~ " + fstype : "";
+			if (size_bytes > 0) {
+				s += " (%s)".printf(format_file_size(size_bytes, false, "", true, 0));
+			}
+		}
+
+		return s.strip();
 	}
 
 	public string description_full_free(){

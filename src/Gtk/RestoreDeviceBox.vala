@@ -178,6 +178,27 @@ class RestoreDeviceBox : Gtk.Box{
 		var combo = new Gtk.ComboBox();
 		box.add(combo);
 
+		var cell_pix = new Gtk.CellRendererPixbuf();
+		combo.pack_start (cell_pix, false);
+
+		combo.set_cell_data_func (cell_pix, (cell_layout, cell, model, iter)=>{
+			Device dev;
+			//bool selected = combo.get_active_iter (out iter);
+			//if (!selected) { return; }
+			combo.model.get (iter, 0, out dev, -1);
+
+			if (dev != null){
+
+				if (dev.type == "disk"){
+					(cell as Gtk.CellRendererPixbuf).pixbuf =
+						get_shared_icon_pixbuf("drive-harddisk", "drive-harddisk", 16);
+				}
+			
+				(cell as Gtk.CellRendererPixbuf).sensitive = (dev.type != "disk");
+				(cell as Gtk.CellRendererPixbuf).visible = (dev.type == "disk");
+			}
+		});
+
 		var cell_text = new Gtk.CellRendererText();
 		cell_text.xalign = (float) 0.0;
 		combo.pack_start (cell_text, false);
@@ -186,13 +207,11 @@ class RestoreDeviceBox : Gtk.Box{
 		combo.query_tooltip.connect((x, y, keyboard_tooltip, tooltip) => {
 			Device dev;
 			TreeIter iter;
-			bool ok = combo.get_active_iter (out iter);
-
-			if (!ok) { return true; }
-			
+			bool selected = combo.get_active_iter (out iter);
+			if (!selected) { return true; }
 			combo.model.get (iter, 0, out dev, -1);
 			
-			//tooltip.set_icon(get_shared_icon_pixbuf("drive-harddisk", "drive-harddisk", 256));
+			tooltip.set_icon(get_shared_icon_pixbuf("drive-harddisk", "drive-harddisk", 128));
 			if (dev != null){
 				tooltip.set_markup(dev.tooltip_text());
 			}
@@ -208,7 +227,8 @@ class RestoreDeviceBox : Gtk.Box{
 			model.get (iter, 0, out dev, -1);
 
 			if (dev != null){
-				(cell as Gtk.CellRendererText).markup = dev.description_formatted();
+				(cell as Gtk.CellRendererText).markup = dev.description_simple_formatted();
+				(cell as Gtk.CellRendererText).sensitive = (dev.type != "disk");
 			}
 			else{
 				(cell as Gtk.CellRendererText).markup = _("Keep on Root Device");
@@ -232,20 +252,28 @@ class RestoreDeviceBox : Gtk.Box{
 		
 		foreach(var dev in App.partitions){
 			// skip disk and loop devices
-			if ((dev.type == "disk")||(dev.type == "loop")){
+			//if ((dev.type == "disk")||(dev.type == "loop")){
+			//	continue;
+			//}
+
+			if (dev.type == "loop"){
 				continue;
 			}
 
-			// display only linux filesystem for / and /home
-			if ((entry.mount_point == "/") || (entry.mount_point == "/home")){
-				if (!dev.has_linux_filesystem()){
-					continue;
+			if (dev.type != "disk"){
+
+				// display only linux filesystem for / and /home
+				if ((entry.mount_point == "/") || (entry.mount_point == "/home")){
+					if (!dev.has_linux_filesystem()){
+						continue;
+					}
+				}
+
+				if (dev.has_children()){
+					continue; // skip parent partitions of unlocked volumes (luks)
 				}
 			}
-
-			if (dev.has_children()){
-				continue; // skip parent partitions of unlocked volumes (luks)
-			}
+			
 
 			index++;
 			model.append(out iter);
@@ -262,10 +290,6 @@ class RestoreDeviceBox : Gtk.Box{
 		}
 		
 		combo.active = active;
-
-		// TODO: Remove luks device from dropdown after unlock
-
-		// TODO: Show a disabled header for the disk model
 
 		combo.changed.connect((path) => {
 

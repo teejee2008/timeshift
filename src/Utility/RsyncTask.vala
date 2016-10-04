@@ -261,6 +261,7 @@ public class RsyncTask : AsyncTask{
 					}
 					
 					item_path = match.fetch(1).split(" -> ")[0].strip();
+					item_type = item_path.has_suffix("/") ? FileType.DIRECTORY : FileType.REGULAR;
 					item_status = "deleted";
 				}
 				else if (regex_list["log-modified"].match(line, 0, out match)) {
@@ -300,7 +301,10 @@ public class RsyncTask : AsyncTask{
 					//log_debug("not-matched: %s".printf(line));
 				}
 				
-				if ((item_path.length > 0) && (item_path != "/./") && (item_path != "./")){
+				if ((item_path.length > 0) && (item_path != "/./") && (item_path != "./")
+					//&& ((item_type == FileType.REGULAR)||(item_status == "created"))
+					){
+						
 					int64 item_size = 0;//int64.parse(size);
 					var item = root.add_descendant(item_path, item_type, item_size, 0);
 					item.file_status = item_status;
@@ -312,6 +316,11 @@ public class RsyncTask : AsyncTask{
 		}
 		catch (Error e) {
 			log_error (e.message);
+		}
+
+		if (dos_changes != null){
+			// archive the raw log file
+			file_gzip(log_file_path);
 		}
 
 		log_debug("RsyncTask: parse_log(): exit");

@@ -211,7 +211,31 @@ namespace TeeJee.FileSystem{
 		}
 	}
 
-	
+	public bool file_gzip (string src_file){
+		
+		string dst_file = src_file + ".gz";
+		file_delete(dst_file);
+		
+		string cmd = "gzip '%s'".printf(escape_single_quote(src_file));
+		string std_out, std_err;
+		exec_sync(cmd, out std_out, out std_err);
+		
+		return file_exists(dst_file);
+	}
+
+	public bool file_gunzip (string src_file){
+		
+		string dst_file = src_file;
+		file_delete(dst_file);
+		
+		string cmd = "gunzip '%s'".printf(escape_single_quote(src_file));
+		string std_out, std_err;
+		exec_sync(cmd, out std_out, out std_err);
+		
+		return file_exists(dst_file);
+	}
+
+
 	// file info -----------------
 
 	public int64 file_get_size(string file_path){

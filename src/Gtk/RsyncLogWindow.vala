@@ -52,7 +52,7 @@ public class RsyncLogWindow : Window {
 	public Gtk.ProgressBar progressbar;
 	
 	//window
-	private int def_width = 550;
+	private int def_width = 600;
 	private int def_height = 450;
 
 	//private uint tmr_task = 0;
@@ -308,12 +308,12 @@ public class RsyncLogWindow : Window {
 			bool odd_row;
 			model.get (iter, 0, out item, 1, out odd_row, -1);
 
-			if (item.file_type == FileType.DIRECTORY){
-				(cell as Gtk.CellRendererText).text = "";
-			}
-			else{
+			//if (item.file_type == FileType.DIRECTORY){
+			//	(cell as Gtk.CellRendererText).text = "";
+			//}
+			//else{
 				(cell as Gtk.CellRendererText).text = item.file_status;
-			}
+			//}
 		});
 		
 		// buffer ------------------------------------------------

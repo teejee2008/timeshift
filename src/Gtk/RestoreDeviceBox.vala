@@ -129,15 +129,18 @@ class RestoreDeviceBox : Gtk.Box{
 		log_debug("RestoreDeviceBox: RestoreDeviceBox(): exit");
     }
 
-    public void refresh(){
+    public void refresh(bool reset_device_selections = true){
 		log_debug("RestoreDeviceBox: refresh()");
-		create_device_selection_options();
+		create_device_selection_options(reset_device_selections);
 		refresh_cmb_boot_device();
 		log_debug("RestoreDeviceBox: refresh(): exit");
 	}
 
-	private void create_device_selection_options(){
-		App.init_mount_list();
+	private void create_device_selection_options(bool reset_device_selections){
+
+		if (reset_device_selections){
+			App.init_mount_list();
+		}
 
 		foreach(var item in option_box.get_children()){
 			option_box.remove(item);
@@ -240,6 +243,10 @@ class RestoreDeviceBox : Gtk.Box{
 				}
 			}
 
+			if (dev.has_children()){
+				continue; // skip parent partitions of unlocked volumes (luks)
+			}
+
 			index++;
 			model.append(out iter);
 			model.set (iter, 0, dev);
@@ -268,6 +275,7 @@ class RestoreDeviceBox : Gtk.Box{
 			TreeIter iter_active;
 			bool selected = combo.get_active_iter (out iter_active);
 			if (!selected){
+				log_debug("device combo: active is -1");
 				return;
 			}
 
@@ -277,11 +285,15 @@ class RestoreDeviceBox : Gtk.Box{
 
 			if (current_dev.is_encrypted_partition()){
 
+				log_debug("add_device_combo().changed: unlocking encrypted device..");
+				
 				string msg_out, msg_err;
 				var luks_unlocked = Device.luks_unlock(
 					current_dev, "", "", parent_window, out msg_out, out msg_err);
 
 				if (luks_unlocked == null){
+
+					log_debug("add_device_combo().changed: failed to unlock");
 					
 					// reset the selection
 					
@@ -308,8 +320,27 @@ class RestoreDeviceBox : Gtk.Box{
 					
 					return;
 				}
+				else{
 
-				index = -1;
+					log_debug("add_device_combo().changed: unlocked");
+					
+					// update current entry
+					
+					if (current_entry.mount_point == "/"){
+						App.restore_target = luks_unlocked;
+						cmb_boot_device_select_default();
+					}
+
+					current_entry.device = luks_unlocked;
+
+					// refresh devices
+					
+					App.update_partitions();
+					refresh(false); // do not reset selections
+					return; // no need to continue
+				}
+
+				/*index = -1;
 
 				for (bool next = store.get_iter_first (out iter_combo); next;
 					next = store.iter_next (ref iter_combo)) {
@@ -323,7 +354,7 @@ class RestoreDeviceBox : Gtk.Box{
 						combo.active = index;
 						return;
 					}
-				}
+				}*/
 			}
 
 			if (current_entry.mount_point == "/"){
@@ -340,7 +371,7 @@ class RestoreDeviceBox : Gtk.Box{
 	private void add_bootloader_options(){
 
 		//lbl_header_bootloader
-		var label = add_label_header(this, _("Select Boot Device"), true);
+		var label = add_label_header(this, _("Select GRUB Device"), true);
 		label.margin_top = 12;
 		
 		add_label(this, _("Select device for installing GRUB2 bootloader:"));
@@ -501,7 +532,6 @@ class RestoreDeviceBox : Gtk.Box{
 		var label = add_label(content, "");
 		lbl_infobar_location = label;
 	}
-
 
 	public bool check_and_mount_devices(){
 

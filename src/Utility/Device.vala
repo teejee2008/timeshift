@@ -616,7 +616,7 @@ public class Device : GLib.Object{
 
 		device_list = list;
 
-		print_device_list(list);
+		//print_device_list(list);
 
 		return list;
 	}
@@ -1193,7 +1193,8 @@ public class Device : GLib.Object{
 				
 				var counter = new TimeoutCounter();
 				counter.kill_process_on_timeout("cryptsetup", 20, true);
-				string cmd = "cryptsetup luksOpen '%s' '%s'".printf(luks_device.device, mapped_name);
+				string cmd = "cryptsetup luksOpen '%s' '%s'".printf(luks_device.device, luks_name);
+				log_debug(cmd);
 				Posix.system(cmd);
 				counter.stop();
 				log_msg("");
@@ -1204,8 +1205,10 @@ public class Device : GLib.Object{
 				// use password to unlock
 
 				var cmd = "echo -n -e '%s' | cryptsetup luksOpen --key-file - '%s' '%s'\n".printf(
-					luks_pass, luks_device.device, mapped_name);
+					luks_pass, luks_device.device, luks_name);
 
+				log_debug(cmd.replace(luks_pass, "**PASSWORD**"));
+				
 				int status = exec_script_sync(cmd, out std_out, out std_err, false, true);
 
 				switch (status){
@@ -1226,6 +1229,8 @@ public class Device : GLib.Object{
 			if ((luks_pass == null) || (luks_pass.length == 0)){
 
 				// show input prompt
+
+				log_debug("Prompting user for passphrase..");
 				
 				luks_pass = gtk_inputbox(
 						_("Encrypted Device"),
@@ -1246,8 +1251,10 @@ public class Device : GLib.Object{
 				// use password to unlock
 
 				var cmd = "echo -n -e '%s' | cryptsetup luksOpen --key-file - '%s' '%s'\n".printf(
-					luks_pass, luks_device.device, mapped_name);
+					luks_pass, luks_device.device, luks_name);
 
+				log_debug(cmd.replace(luks_pass, "**PASSWORD**"));
+				
 				int status = exec_script_sync(cmd, out std_out, out std_err, false, true);
 
 				switch (status){

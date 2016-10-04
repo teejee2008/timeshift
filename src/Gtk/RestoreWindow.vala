@@ -385,7 +385,7 @@ class RestoreWindow : Gtk.Window{
 
 						gtk_messagebox(
 							_("Boot device not selected"),
-							_("You have selected an encrypted device for root file system (/). The boot directory (/boot) must be mounted on a non-encrypted device for the system to boot successfully. Either select a non-encrypted device for boot directory or select a non-encrypted device for root filesystem."),
+							_("An encrypted device is selected for root file system (/). The boot directory (/boot) must be mounted on a non-encrypted device for the system to boot successfully.\n\nEither select a non-encrypted device for boot directory or select a non-encrypted device for root filesystem."),
 							this, true);
 
 						return false;

@@ -124,7 +124,7 @@ public class CustomMessageDialog : Gtk.Dialog {
 		lbl_msg.xalign = (float) 0.0;
 		lbl_msg.max_width_chars = 70;
 		lbl_msg.wrap = true;
-		lbl_msg.wrap_mode = Pango.WrapMode.CHAR;
+		lbl_msg.wrap_mode = Pango.WrapMode.WORD_CHAR;
 		lbl_msg.use_markup = true;
 
 		//sw_msg

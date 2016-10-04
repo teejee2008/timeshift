@@ -88,12 +88,21 @@ namespace TeeJee.Misc {
 	
 	// timestamp ----------------
 	
-	public string timestamp (){
+	public string timestamp (bool show_millis = false){
 
 		/* Returns a formatted timestamp string */
 
-		Time t = Time.local (time_t ());
-		return t.format ("%H:%M:%S");
+		// NOTE: format() does not support milliseconds
+
+		DateTime now = new GLib.DateTime.now_local();
+		
+		if (show_millis){
+			var msec = now.get_microsecond () / 1000;
+			return "%s.%03d".printf(now.format("%H:%M:%S"), msec);
+		}
+		else{
+			return now.format ("%H:%M:%S");
+		}
 	}
 
 	public string timestamp_numeric (){

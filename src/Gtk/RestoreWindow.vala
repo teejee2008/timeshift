@@ -358,18 +358,38 @@ class RestoreWindow : Gtk.Window{
 		
 		if (notebook.page == Tabs.TARGET_DEVICE){
 
-			App.restore_target = null;
+			//App.restore_target = null; // do not reset
 
 			// check if target device is selected for /
 			foreach(var entry in App.mount_list){
-				if ((entry.mount_point == "/") && (entry.device == null)){
-					
-					gtk_messagebox(
-						_("Root device not selected"),
-						_("Select the device for root file system (/)"),
-						this, true);
+				if (entry.mount_point == "/"){
+					if (entry.device != null){
+						App.restore_target = entry.device;
+					}
+					else{
+						gtk_messagebox(
+							_("Root device not selected"),
+							_("Select the device for root file system (/)"),
+							this, true);
 						
-					return false;
+						return false;
+					}
+				}
+			}
+
+			// check if boot device is selected for luks partitions
+			foreach(var entry in App.mount_list){
+				if ((entry.mount_point == "/boot") && (entry.device == null)){
+
+					if ((App.restore_target != null) && (App.restore_target.is_on_encrypted_partition())){
+
+						gtk_messagebox(
+							_("Boot device not selected"),
+							_("You have selected an encrypted device for root file system (/). The boot directory (/boot) must be mounted on a non-encrypted device for the system to boot successfully. Either select a non-encrypted device for boot directory or select a non-encrypted device for root filesystem."),
+							this, true);
+
+						return false;
+					}
 				}
 			}
 

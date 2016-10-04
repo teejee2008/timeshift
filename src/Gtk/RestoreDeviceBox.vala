@@ -256,6 +256,10 @@ class RestoreDeviceBox : Gtk.Box{
 		
 		combo.active = active;
 
+		// TODO: Remove luks device from dropdown after unlock
+
+		// TODO: Show a disabled header for the disk model
+
 		combo.changed.connect((path) => {
 
 			Device current_dev;

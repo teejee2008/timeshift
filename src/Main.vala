@@ -2190,9 +2190,10 @@ public class Main : GLib.Object{
 	public bool restore_snapshot(Gtk.Window? parent_win){
 		bool found = false;
 
-		//set snapshot device -----------------------------------------------
+		// set snapshot device --------------------------------
 
 		if (!mirror_system){
+			
 			if (repo.device != null){
 				//print snapshot_device name
 				log_msg(string.nfill(78, '*'));
@@ -2206,7 +2207,7 @@ public class Main : GLib.Object{
 			}
 		}
 
-		//set snapshot -----------------------------------------------
+		// set snapshot ----------------------------------------
 
 		if (!mirror_system){
 
@@ -2435,7 +2436,7 @@ public class Main : GLib.Object{
 			}
 		}
 		
-		//mount selected devices ---------------------------------------
+		// mount selected devices ---------------------------------------
 
 		log_debug("Mounting selected devices");
 		
@@ -2459,7 +2460,7 @@ public class Main : GLib.Object{
 			return false;
 		}
 
-		//set grub device -----------------------------------------------
+		// set grub device -----------------------------------------------
 
 		log_debug("Setting grub device");
 		
@@ -2531,6 +2532,7 @@ public class Main : GLib.Object{
 			}
 
 			if ((reinstall_grub2) && (grub_device.length == 0)){
+				
 				log_msg("");
 				log_msg(_("Select GRUB device") + ":\n");
 				var device_list = list_grub_devices();
@@ -2538,10 +2540,14 @@ public class Main : GLib.Object{
 
 				int attempts = 0;
 				while (grub_device.length == 0){
+					
 					attempts++;
 					if (attempts > 3) { break; }
+					
 					stdout.printf(_("Enter device name or number (a=Abort)") + ": ");
 					stdout.flush();
+
+					// TODO: provide option for default boot device
 
 					var list = new Gee.ArrayList<Device>();
 					foreach(var pi in partitions){
@@ -2553,9 +2559,11 @@ public class Main : GLib.Object{
 					Device dev = read_stdin_device(device_list);
 					if (dev != null) { grub_device = dev.device; }
 				}
+				
 				log_msg("");
 
 				if (grub_device.length == 0){
+					
 					log_error(_("Failed to get input from user in 3 attempts"));
 					log_msg(_("Aborted."));
 					exit_app();
@@ -2564,6 +2572,7 @@ public class Main : GLib.Object{
 			}
 
 			if ((reinstall_grub2) && (grub_device.length > 0)){
+				
 				log_msg(string.nfill(78, '*'));
 				log_msg(_("GRUB Device") + ": %s".printf(grub_device));
 				log_msg(string.nfill(78, '*'));

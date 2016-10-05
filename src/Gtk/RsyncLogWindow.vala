@@ -147,8 +147,6 @@ public class RsyncLogWindow : Window {
 
 		parse_log_file();
 
-		tv_files_refresh();
-
 		gtk_set_busy(false, this);
 
 		log_debug("init_delayed(): finish");
@@ -177,7 +175,13 @@ public class RsyncLogWindow : Window {
 			gtk_do_events();
 		}
 
+		
+		lbl_msg.label = _("Populating list...");
+		gtk_do_events();
+		tv_files_refresh();
+
 		vbox_progress.hide();
+		gtk_do_events();
 
 		vbox_list.no_show_all = false;
 		vbox_list.show_all();
@@ -289,6 +293,23 @@ public class RsyncLogWindow : Window {
 		cell_text.ellipsize = Pango.EllipsizeMode.END;
 		col.pack_start (cell_text, false);
 		col.set_attributes(cell_text, "text", 2);
+
+		// name ----------------------------------------------
+
+		// column
+		col = new TreeViewColumn();
+		col.title = _("Size");
+		col.clickable = true;
+		col.resizable = true;
+		//col.expand = true;
+		tv_files.append_column(col);
+
+		// cell text
+		cell_text = new CellRendererText ();
+		//cell_text.ellipsize = Pango.EllipsizeMode.END;
+		cell_text.xalign = (float) 1.0;
+		col.pack_start (cell_text, false);
+		col.set_attributes(cell_text, "text", 4);
 		
 		// status ------------------------------------------------
 
@@ -394,11 +415,12 @@ public class RsyncLogWindow : Window {
 
 		tv_files.show_expanders = !flat_view;
 		
-		var model = new Gtk.TreeStore(4,
-			typeof(FileItem),
-			typeof(bool),
-			typeof(string),
-			typeof(Gdk.Pixbuf)
+		var model = new Gtk.TreeStore(5,
+			typeof(FileItem), // object
+			typeof(bool), // odd row
+			typeof(string), // file_name
+			typeof(Gdk.Pixbuf),
+			typeof(string) // size text
 		);
 
 		var icon_theme = Gtk.IconTheme.get_default();
@@ -443,6 +465,16 @@ public class RsyncLogWindow : Window {
 				}
 				else{
 					model.set (iter0, 3, pix_file);
+				}
+
+				if (item.size > 0){
+					model.set (iter0, 4, format_file_size(item.size));
+				}
+				else if (item.is_symlink){
+					model.set (iter0, 4, "link");
+				}
+				else{
+					model.set (iter0, 4, "");
 				}
 			}
 
@@ -537,6 +569,16 @@ public class RsyncLogWindow : Window {
 				}
 				else{
 					model.set (iter1, 3, pix_file);
+				}
+
+				if (item.size > 0){
+					model.set (iter1, 4, format_file_size(item.size));
+				}
+				else if (item.is_symlink){
+					model.set (iter1, 4, "link");
+				}
+				else{
+					model.set (iter1, 4, "");
 				}
 			}
 		}

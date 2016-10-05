@@ -68,8 +68,6 @@ public class FileItem : GLib.Object,Gee.Comparable<FileItem> {
 	public long file_count_total = 0;
 	public long dir_count_total = 0;
 
-
-
 	//public string icon_name = "gtk-file";
 	public GLib.Icon icon;
 

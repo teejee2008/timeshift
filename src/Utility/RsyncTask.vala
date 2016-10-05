@@ -235,6 +235,7 @@ public class RsyncTask : AsyncTask{
 				string item_path = "";
 				var item_type = FileType.REGULAR;
 				string item_status = "";
+				bool item_is_symlink = false;
 				
 				MatchInfo match;
 				if (regex_list["log-created"].match(line, 0, out match)) {
@@ -249,6 +250,9 @@ public class RsyncTask : AsyncTask{
 					item_type = FileType.REGULAR;
 					if (match.fetch(2) == "d"){
 						item_type = FileType.DIRECTORY;
+					}
+					else if (match.fetch(2) == "L"){
+						item_is_symlink = true;
 					}
 					item_status = "created";
 				}
@@ -276,6 +280,9 @@ public class RsyncTask : AsyncTask{
 					
 					if (match.fetch(2) == "d"){
 						item_type = FileType.DIRECTORY;
+					}
+					else if (match.fetch(2) == "L"){
+						item_is_symlink = true;
 					}
 					
 					if (match.fetch(3) == "c"){
@@ -306,9 +313,16 @@ public class RsyncTask : AsyncTask{
 					){
 						
 					int64 item_size = 0;//int64.parse(size);
+					string item_disk_path = path_combine(file_parent(log_file_path),"localhost");
+					item_disk_path = path_combine(item_disk_path, item_path);
+					item_size = file_get_size(item_disk_path);
+					if (item_size == -1){
+						item_size = 0;
+					}
+					
 					var item = root.add_descendant(item_path, item_type, item_size, 0);
 					item.file_status = item_status;
-
+					item.is_symlink = item_is_symlink;
 					//log_debug("added: %s".printf(item_path));
 				}
 				

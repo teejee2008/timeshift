@@ -145,6 +145,8 @@ class RestoreExcludeBox : Gtk.Box{
 		tt = _("Show more applications to exclude on the next page");
 		chk.set_tooltip_text(tt);
 
+		// TODO: medium: add more exclude options
+
 		log_debug("RestoreExcludeBox: RestoreExcludeBox(): exit");
     }
 

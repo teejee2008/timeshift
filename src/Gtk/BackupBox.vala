@@ -187,8 +187,6 @@ class BackupBox : Gtk.Box{
 				}
 			}
 
-			// TODO: show estimated time remaining and file counts
-
 			double fraction = App.task.progress;
 
 			// time remaining
@@ -204,7 +202,7 @@ class BackupBox : Gtk.Box{
 				progressbar.fraction = fraction;
 			}
 
-			lbl_msg.label = App.progress_text;
+			lbl_msg.label = escape_html(App.progress_text);
 
 			lbl_unchanged.label = "%'d".printf(App.task.count_unchanged);
 			lbl_created.label = "%'d".printf(App.task.count_created);
@@ -223,7 +221,7 @@ class BackupBox : Gtk.Box{
 			//gtk_do_events();
 		}
 
-		//TODO: check errors.
+		//TODO: low: check if snapshot was created successfully.
 	}
 	
 	private void take_snapshot_thread(){

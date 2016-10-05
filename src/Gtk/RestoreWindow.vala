@@ -207,7 +207,7 @@ class RestoreWindow : Gtk.Window{
 				App.task.stop(AppStatus.CANCELLED);
 			}
 			
-			this.destroy(); // TODO: Show error page
+			this.destroy(); // TODO: low: Show error page
 		});
 		
 		action_buttons_set_no_show_all(true);

@@ -96,7 +96,8 @@ public class RsyncLogWindow : Window {
 
 			hbox_filter.sensitive = false;
 			gtk_set_busy(true, this);
-			filter_files.refilter();
+			//filter_files.refilter();
+			tv_files_refresh();
 			hbox_filter.sensitive = true;
 			gtk_set_busy(false, this);
 		});
@@ -370,17 +371,17 @@ public class RsyncLogWindow : Window {
 		model.append(out iter);
 		model.set (iter, 0, "changed", 1, "Changed");
 		model.append(out iter);
-		model.set (iter, 0, "checksum", 1, "Changed - Checksum");
+		model.set (iter, 0, "checksum", 1, " └ Checksum");
 		model.append(out iter);
-		model.set (iter, 0, "size", 1, "Changed - Size");
+		model.set (iter, 0, "size", 1, " └ Size");
 		model.append(out iter);
-		model.set (iter, 0, "timestamp", 1, "Changed - Timestamp");
+		model.set (iter, 0, "timestamp", 1, " └ Timestamp");
 		model.append(out iter);
-		model.set (iter, 0, "permissions", 1, "Changed - Permissions");
+		model.set (iter, 0, "permissions", 1, " └ Permissions");
 		model.append(out iter);
-		model.set (iter, 0, "owner", 1, "Changed - Owner");
+		model.set (iter, 0, "owner", 1, " └ Owner");
 		model.append(out iter);
-		model.set (iter, 0, "group", 1, "Changed - Group");
+		model.set (iter, 0, "group", 1, " └ Group");
 
 		cmb_filter.active = 0;
 	}
@@ -475,8 +476,17 @@ public class RsyncLogWindow : Window {
 		FileItem item;
 		model.get (iter, 0, out item, -1);
 
-		if (item.file_type == FileType.DIRECTORY){
-			return !flat_view;
+		if (flat_view){
+			if (item.file_type == FileType.DIRECTORY){
+				return false; // do not show directories
+			}
+		}
+		else{
+			if (item.file_type == FileType.DIRECTORY){
+				return true; // show directories
+			}
+
+			// TODO: medium: hard: find a way to hide empty directories after filter
 		}
 		
 		if (filter.length == 0){
@@ -590,7 +600,7 @@ public class RsyncLogWindow : Window {
 		}
 		App.exclude_list_user.clear();
 
-		// TODO: Not working
+		// TODO: medium: exclude selected items: not working
 		
 		// add include list
 		TreeIter iter;

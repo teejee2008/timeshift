@@ -62,7 +62,7 @@ public class DeleteFileTask : AsyncTask{
 		var cmd = "";
 
 		if (io_nice){
-			cmd += "ionice -c2 -n7 ";
+			//cmd += "ionice -c2 -n7 ";
 		}
 
 		if (use_rsync){

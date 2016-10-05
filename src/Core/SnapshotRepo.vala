@@ -255,7 +255,6 @@ public class SnapshotRepo : GLib.Object{
 							snapshots.add(bak);
 						}
 						else{
-							// TODO: delete invalid snapshots on every run along with marked snapshots
 							invalid_snapshots.add(bak);
 						}
 					}

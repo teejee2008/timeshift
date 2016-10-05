@@ -1846,6 +1846,8 @@ public class Main : GLib.Object{
 				write_snapshot_control_file(snapshot_path, dt_created, tag);
 
 				// parse log file
+				progress_text = _("Parsing log file...");
+				log_msg(progress_text);
 				var task = new RsyncTask();
 				task.parse_log(log_file);
 

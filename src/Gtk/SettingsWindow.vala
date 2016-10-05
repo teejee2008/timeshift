@@ -83,8 +83,6 @@ class SettingsWindow : Gtk.Window{
 		notes_box = new FinishBox(this, true);
 		notebook.append_page (notes_box, label);
 
-		// TODO: Add a tab for excluding browser cache and other items
-
 		create_actions();
 
 		//log_debug("ui created");

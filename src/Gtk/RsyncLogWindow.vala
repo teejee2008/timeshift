@@ -419,19 +419,9 @@ public class RsyncLogWindow : Window {
 		model.append(out iter0, null);
 		model.clear();
 		
-		var list = new ArrayList<FileItem>();
-		foreach(string key in log_root.children.keys) {
-			var item = log_root.children[key];
-			list.add(item);
-		}
-
-		list.sort((a,b)=> {
-			return strcmp(a.file_path, b.file_path);
-		});
-		
 		bool odd_row = false;
 		int row_index = -1;
-		foreach(FileItem item in list) {
+		foreach(FileItem item in log_root.get_children_sorted()) {
 			row_index++;
 			odd_row = !odd_row;
 
@@ -551,27 +541,9 @@ public class RsyncLogWindow : Window {
 			}
 		}
 
-		var list = new ArrayList<FileItem>();
-		foreach(string key in item.children.keys) {
-			var child = item.children[key];
-			list.add(child);
-		}
-
-		list.sort((a, b) => {
-			if ((a.file_type == FileType.DIRECTORY) && (b.file_type != FileType.DIRECTORY)){
-				return -1;
-			}
-			else if ((a.file_type != FileType.DIRECTORY) && (b.file_type == FileType.DIRECTORY)){
-				return 1;
-			}
-			else{
-				return strcmp(a.file_name.down(), b.file_name.down());
-			}
-		});
-
 		// add new child iters -------------------------
 		
-		foreach(var child in list) {
+		foreach(var child in item.get_children_sorted()) {
 			odd_row = !odd_row;
 			tv_append_to_iter(ref model, ref iter1, child, odd_row);
 		}

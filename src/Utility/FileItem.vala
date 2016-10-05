@@ -602,6 +602,28 @@ public class FileItem : GLib.Object,Gee.Comparable<FileItem> {
 		}
 	}
 
+	public Gee.ArrayList<FileItem> get_children_sorted(){
+		var list = new Gee.ArrayList<FileItem>();
+		
+		foreach(string key in children.keys) {
+			var item = children[key];
+			list.add(item);
+		}
+
+		list.sort((a, b) => {
+			if ((a.file_type == FileType.DIRECTORY) && (b.file_type != FileType.DIRECTORY)){
+				return -1;
+			}
+			else if ((a.file_type != FileType.DIRECTORY) && (b.file_type == FileType.DIRECTORY)){
+				return 1;
+			}
+			else{
+				return strcmp(a.file_name.down(), b.file_name.down());
+			}
+		});
+		
+		return list;
+	}
 	/*public Gtk.Image get_icon_image(){
 
 		log_debug("FileItem.get_icon_image()");

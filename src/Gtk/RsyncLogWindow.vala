@@ -77,6 +77,8 @@ public class RsyncLogWindow : Window {
 		resizable = true;
 		modal = true;
 
+		this.delete_event.connect(on_delete_event);
+		
 		rsync_log_file = _rsync_log_file;
 		
 		//vbox_main
@@ -323,20 +325,7 @@ public class RsyncLogWindow : Window {
 		// cell text
 		cell_text = new CellRendererText ();
 		col.pack_start (cell_text, false);
-
-		//render text
-		col.set_cell_data_func (cell_text, (cell_layout, cell, model, iter) => {
-			FileItem item;
-			bool odd_row;
-			model.get (iter, 0, out item, 1, out odd_row, -1);
-
-			//if (item.file_type == FileType.DIRECTORY){
-			//	(cell as Gtk.CellRendererText).text = "";
-			//}
-			//else{
-				(cell as Gtk.CellRendererText).text = item.file_status;
-			//}
-		});
+		col.set_attributes(cell_text, "text", 5);
 		
 		// buffer ------------------------------------------------
 
@@ -351,15 +340,6 @@ public class RsyncLogWindow : Window {
 		// cell text
 		cell_text = new CellRendererText ();
 		col.pack_start (cell_text, false);
-
-		//render text
-		col.set_cell_data_func (cell_text, (cell_layout, cell, model, iter) => {
-			FileItem item;
-			bool odd_row;
-			model.get (iter, 0, out item, 1, out odd_row, -1);
-
-			(cell as Gtk.CellRendererText).text = "";
-		});
 	}
 
 	private void int_combo_filter(Gtk.Box hbox){
@@ -415,12 +395,13 @@ public class RsyncLogWindow : Window {
 
 		tv_files.show_expanders = !flat_view;
 		
-		var model = new Gtk.TreeStore(5,
+		var model = new Gtk.TreeStore(6,
 			typeof(FileItem), // object
 			typeof(bool), // odd row
 			typeof(string), // file_name
 			typeof(Gdk.Pixbuf),
-			typeof(string) // size text
+			typeof(string), // size text
+			typeof(string) // file_status
 		);
 
 		var icon_theme = Gtk.IconTheme.get_default();
@@ -447,7 +428,8 @@ public class RsyncLogWindow : Window {
 			row_index++;
 			odd_row = !odd_row;
 
-			if (check_visibility(item)){
+			if ((!flat_view) || (item.file_type != FileType.DIRECTORY)){
+
 				// add row
 				model.append(out iter0, null);
 				model.set (iter0, 0, item);
@@ -467,15 +449,17 @@ public class RsyncLogWindow : Window {
 					model.set (iter0, 3, pix_file);
 				}
 
-				if (item.size > 0){
-					model.set (iter0, 4, format_file_size(item.size));
-				}
-				else if (item.is_symlink){
+				if (item.is_symlink){
 					model.set (iter0, 4, "link");
+				}
+				else if (item.size >= 0){
+					model.set (iter0, 4, format_file_size(item.size));
 				}
 				else{
 					model.set (iter0, 4, "");
 				}
+
+				model.set (iter0, 5, item.file_status);
 			}
 
 			if (item.file_type == FileType.DIRECTORY){
@@ -498,19 +482,11 @@ public class RsyncLogWindow : Window {
 		FileItem item;
 		model.get (iter, 0, out item, -1);
 
-		if (flat_view){
-			if (item.file_type == FileType.DIRECTORY){
-				return false; // do not show directories
-			}
+		if (item.file_type == FileType.DIRECTORY){
+			return !flat_view; // show directories
 		}
-		else{
-			if (item.file_type == FileType.DIRECTORY){
-				return true; // show directories
-			}
+		// TODO: medium: hard: find a way to hide empty directories after filter
 
-			// TODO: medium: hard: find a way to hide empty directories after filter
-		}
-		
 		if (filter.length == 0){
 			return true;
 		}
@@ -571,15 +547,18 @@ public class RsyncLogWindow : Window {
 					model.set (iter1, 3, pix_file);
 				}
 
-				if (item.size > 0){
-					model.set (iter1, 4, format_file_size(item.size));
-				}
-				else if (item.is_symlink){
+				
+				if (item.is_symlink){
 					model.set (iter1, 4, "link");
+				}
+				else if (item.size >= 0){
+					model.set (iter1, 4, format_file_size(item.size));
 				}
 				else{
 					model.set (iter1, 4, "");
 				}
+
+				model.set (iter1, 5, item.file_status);
 			}
 		}
 
@@ -648,6 +627,16 @@ public class RsyncLogWindow : Window {
 		log_debug("exclude_selected_items()");
 		foreach(var item in App.exclude_list_user){
 			log_debug(item);
+		}
+	}
+
+	private bool on_delete_event(Gdk.EventAny event){
+		if (thread_is_running){
+			return true; // keep window open
+		}
+		else{
+			this.delete_event.disconnect(on_delete_event); //disconnect this handler
+			return false; // close window
 		}
 	}
 

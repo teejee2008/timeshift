@@ -222,25 +222,25 @@ class SnapshotListBox : Gtk.Box{
 
 		// mi_remove
 		mi_remove = new ImageMenuItem.with_label(_("Delete"));
-		mi_remove.image = get_shared_icon("gtk-delete","",16);
+		mi_remove.image = get_shared_icon("edit-delete","",16);
 		mi_remove.activate.connect(()=> { delete_selected(); });
 		menu_snapshots.append(mi_remove);
 
 		// mi_mark
 		mi_mark = new ImageMenuItem.with_label(_("Mark for Deletion"));
-		mi_mark.image = get_shared_icon("gtk-delete","",16);
+		mi_mark.image = get_shared_icon("edit-delete","",16);
 		mi_mark.activate.connect(()=> { mark_selected(); });
 		menu_snapshots.append(mi_mark);
 
 		// mi_mark
 		mi_mark = new ImageMenuItem.with_label(_("Browse Files"));
-		mi_mark.image = get_shared_icon("gtk-directory","",16);
+		mi_mark.image = get_shared_icon("folder","",16);
 		mi_mark.activate.connect(()=> { browse_selected(); });
 		menu_snapshots.append(mi_mark);
 
 		// mi_mark
 		mi_view_log = new ImageMenuItem.with_label(_("View Log"));
-		mi_view_log.image = get_shared_icon("gtk-file","",16);
+		mi_view_log.image = get_shared_icon("gtk-file","gtk-file.png",16);
 		mi_view_log.activate.connect(()=> { view_snapshot_log(); });
 		menu_snapshots.append(mi_view_log);
 

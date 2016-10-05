@@ -2885,23 +2885,55 @@ public class Main : GLib.Object{
 				// search for other operating systems
 				//sh_grub += "chroot \"%s\" os-prober \n".printf(target_path);
 				
-				// re-install grub
-				sh_grub += "chroot \"%s\" grub-install --recheck %s \n".printf(
-					target_path, grub_device);
+				// re-install grub ---------------
+
+				var target_distro = LinuxDistro.get_dist_info(target_path);
+				
+				if (target_distro.dist_id == "fedora"){
+
+					// this will run only on clone mode
+					
+					sh_grub += "chroot \"%s\" grub2-install --recheck %s \n".printf(
+						target_path, grub_device);
+
+					/* NOTE:
+					 * grub2-install should NOT be run on Fedora EFI systems 
+					 * https://fedoraproject.org/wiki/GRUB_2
+					 * Instead following packages should be reinstalled:
+					 * dnf reinstall grub2-efi grub2-efi-modules shim
+					 *
+					 * Bootloader installation will be skipped while restoring in GUI mode.
+					 * Fedora seems to boot correctly even after installing new
+					 * kernels and restoring a snapshot with an older kernel.
+					*/
+				}
+				else{
+					sh_grub += "chroot \"%s\" grub-install --recheck %s \n".printf(
+						target_path, grub_device);
+				}
 
 				// create new grub menu
 				//sh_grub += "chroot \"%s\" grub-mkconfig -o /boot/grub/grub.cfg \n".printf(target_path);
 
-				// update initramfs
-				sh_grub += "chroot \"%s\" update-initramfs -u -k all \n".printf(target_path);
-					
-				// update grub menu
-				sh_grub += "chroot \"%s\" update-grub \n".printf(target_path);
+				// update initramfs --------------
 
-				//if (mirror_system){
+				if (target_distro.dist_id == "fedora"){
+
+					sh_grub += "chroot \"%s\" dracut -f -v \n".printf(target_path);
+				}
+				else{
+					sh_grub += "chroot \"%s\" update-initramfs -u -k all \n".printf(target_path);
+				}
 					
-				//}
-				
+				// update grub menu --------------
+
+				if (target_distro.dist_id == "fedora"){
+					sh_grub += "chroot \"%s\" grub-mkconfig -o /boot/grub2/grub.cfg \n".printf(target_path);
+				}
+				else{
+					sh_grub += "chroot \"%s\" update-grub \n".printf(target_path);
+				}
+
 				sh_grub += "echo '' \n";
 
 				// sync file systems

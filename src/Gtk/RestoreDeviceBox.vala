@@ -437,15 +437,27 @@ class RestoreDeviceBox : Gtk.Box{
 
 		//chk_skip_grub_install
 		var chk = new CheckButton.with_label(
-			_("Skip bootloader installation (not recommended)"));
+			_("Skip bootloader installation"));
 		chk.active = false;
 		chk.set_tooltip_markup(tt);
 		chk.margin_bottom = 12;
 		add (chk);
 		chk_skip_grub_install = chk;
 
-		// bootloader must be re-installed for cloning device 
-		chk.sensitive = !App.mirror_system;
+		if (App.mirror_system){
+			// bootloader must be re-installed
+			chk_skip_grub_install.active = false;
+			chk.sensitive = false;
+		}
+		else{
+			if (App.snapshot_to_restore.distro.dist_id == "fedora"){
+				chk_skip_grub_install.active = true;
+				chk.sensitive = false;
+			}
+			else{
+				chk_skip_grub_install.active = false;
+			}
+		}
 		
 		chk.toggled.connect(()=>{
 			cmb_boot_device.sensitive = !chk_skip_grub_install.active;

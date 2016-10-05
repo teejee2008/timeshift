@@ -21,7 +21,8 @@ public class Snapshot : GLib.Object{
 	public Gee.ArrayList<CryptTabEntry> cryttab_list;
 	public bool valid = true;
 	public bool marked_for_deletion = false;
-
+	public LinuxDistro distro;
+	
 	public DeleteFileTask delete_file_task;
 
 	public Snapshot(string dir_path){
@@ -152,6 +153,8 @@ public class Snapshot : GLib.Object{
 			description = json_get_string(config,"comments","");
 			app_version = json_get_string(config,"app-version","");
 
+			distro = LinuxDistro.get_dist_info(path_combine(path, "localhost"));
+			
 			string delete_trigger_file = path + "/delete";
 			if (file_exists(delete_trigger_file)){
 				marked_for_deletion = true;
@@ -306,4 +309,5 @@ public class Snapshot : GLib.Object{
 		var task = new RsyncTask();
 		task.parse_log(rsync_log_file);
 	}
+
 }

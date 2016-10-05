@@ -149,7 +149,7 @@ class MainWindow : Gtk.Window{
 		btn_restore.clicked.connect (btn_restore_clicked);
 
 		//btn_delete_snapshot
-		btn_delete_snapshot = new Gtk.ToolButton.from_stock ("gtk-delete");
+		btn_delete_snapshot = new Gtk.ToolButton.from_stock ("edit-delete");
 		btn_delete_snapshot.is_important = true;
 		btn_delete_snapshot.label = _("Delete");
 		btn_delete_snapshot.set_tooltip_text (_("Delete selected snapshot"));
@@ -304,7 +304,7 @@ class MainWindow : Gtk.Window{
 		Gtk.MenuItem menu_item = null;
 
 		// refresh
-		menu_item = create_menu_item(_("Refresh Snapshot List"),"gtk-refresh","",16);
+		menu_item = create_menu_item(_("Refresh Snapshot List"),"","",16);
 		menu_extra.append(menu_item);
 		menu_item.activate.connect(() => {
 			App.repo.load_snapshots();
@@ -312,13 +312,13 @@ class MainWindow : Gtk.Window{
 		});
 		
 		// snapshot logs
-		menu_item = create_menu_item(_("View rsync log for selected snapshot"), "gtk-file", "", 16);
+		menu_item = create_menu_item(_("View rsync log for selected snapshot"), "", "", 16);
 		menu_extra.append(menu_item);
 		menu_item.activate.connect(view_snapshot_log);
 
 		if (!App.live_system()){
 			// app logs
-			menu_item = create_menu_item(_("View TimeShift Logs"), "gtk-file", "", 16);
+			menu_item = create_menu_item(_("View TimeShift Logs"), "", "", 16);
 			menu_extra.append(menu_item);
 			menu_item.activate.connect(btn_view_app_logs_clicked);
 		}
@@ -328,12 +328,12 @@ class MainWindow : Gtk.Window{
 		menu_extra.append(menu_item);
 		
 		// donate
-		menu_item = create_menu_item(_("Donate"), "donate", "donate.svg", 16);
+		menu_item = create_menu_item(_("Donate"), "", "", 16);
 		menu_extra.append(menu_item);
 		menu_item.activate.connect(btn_donate_clicked);
 
 		// about
-		menu_item = create_menu_item(_("About"), "help-info", "help-info.svg", 16);
+		menu_item = create_menu_item(_("About"), "", "", 16);
 		menu_extra.append(menu_item);
 		menu_item.activate.connect(btn_about_clicked);
 		

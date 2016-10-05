@@ -405,6 +405,14 @@ namespace TeeJee.System{
 		return false;
 	}
 
+	public bool using_efi_boot(){
+		
+		/* Returns true if the system was booted in EFI mode
+		 * and false for BIOS mode */
+		 
+		return dir_exists("/sys/firmware/efi");
+	}
+
 	public void open_terminal_window(
 		string terminal_emulator,
 		string working_dir,

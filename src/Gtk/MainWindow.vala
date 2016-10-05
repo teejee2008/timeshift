@@ -158,7 +158,7 @@ class MainWindow : Gtk.Window{
         btn_delete_snapshot.clicked.connect (delete_selected);
         
 	    //btn_browse_snapshot
-		btn_browse_snapshot = new Gtk.ToolButton.from_stock ("gtk-directory");
+		btn_browse_snapshot = new Gtk.ToolButton.from_stock ("folder");
 		btn_browse_snapshot.is_important = true;
 		btn_browse_snapshot.label = _("Browse");
 		btn_browse_snapshot.set_tooltip_text (_("Browse selected snapshot"));

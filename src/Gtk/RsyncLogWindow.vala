@@ -408,9 +408,8 @@ public class RsyncLogWindow : Window {
 		
 		try {
 			pix_folder = icon_theme.load_icon_for_scale (
-				"gtk-directory", Gtk.IconSize.MENU, 16, Gtk.IconLookupFlags.FORCE_SIZE);
-			pix_file = icon_theme.load_icon_for_scale (
-				"gtk-file", Gtk.IconSize.MENU, 16, Gtk.IconLookupFlags.FORCE_SIZE);
+				"folder", Gtk.IconSize.MENU, 16, Gtk.IconLookupFlags.FORCE_SIZE);
+			pix_file = get_shared_icon_pixbuf("gtk-file", "gtk-file.png", 16);
 		}
 		catch (Error e) {
 			warning (e.message);

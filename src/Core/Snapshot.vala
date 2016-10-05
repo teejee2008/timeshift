@@ -52,6 +52,12 @@ public class Snapshot : GLib.Object{
 
 	// properties
 
+	public string rsync_log_file{
+		owned get {
+			return path_combine(path, "rsync-log");
+		}	
+	}
+	
 	public string exclude_file_for_backup {
 		owned get {
 			return path_combine(path, "exclude.list");
@@ -293,5 +299,11 @@ public class Snapshot : GLib.Object{
 		string delete_trigger_file = path + "/delete";
 		file_write(delete_trigger_file, "");
 		marked_for_deletion = true;
+	}
+
+	public void parse_log_file(){
+		/* Parses and archives rsync-log file, creates rsync-log-changes */
+		var task = new RsyncTask();
+		task.parse_log(rsync_log_file);
 	}
 }

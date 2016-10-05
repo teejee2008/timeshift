@@ -1845,6 +1845,10 @@ public class Main : GLib.Object{
 				// write control file
 				write_snapshot_control_file(snapshot_path, dt_created, tag);
 
+				// parse log file
+				var task = new RsyncTask();
+				task.parse_log(log_file);
+
 				// finish ------------------------------
 				
 				var dt_end = new DateTime.now_local();

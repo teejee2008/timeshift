@@ -187,6 +187,22 @@ class RestoreWindow : Gtk.Window{
 		btn_cancel = add_button(hbox, _("Cancel"), "", ref size_group, img);
 
         btn_cancel.clicked.connect(()=>{
+
+			var title = _("Cancel restore?");
+				
+			var msg = _("Cancelling the restore process will leave the target system in an inconsistent state. The system may fail to boot or you may run into various issues. After cancelling, you need to restore another snapshot, to bring the system to a consistent state. Click Yes to confirm.");
+			
+			var type = Gtk.MessageType.ERROR;
+			var buttons_type = Gtk.ButtonsType.YES_NO;
+			
+			var dlg = new CustomMessageDialog(title, msg, type, this, buttons_type);
+			var response = dlg.run();
+			dlg.destroy();
+			
+			if (response != Gtk.ResponseType.YES){
+				return;
+			}
+			
 			if (App.task != null){
 				App.task.stop(AppStatus.CANCELLED);
 			}

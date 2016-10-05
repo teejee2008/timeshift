@@ -924,15 +924,9 @@ class MainWindow : Gtk.Window{
 						// no snaps
 						img_shield.pixbuf =
 							get_shared_icon("", "security-high.svg", Main.SHIELD_ICON_SIZE).pixbuf;
-						//set_shield_label(_("No snapshots available"));
-						//set_shield_subnote(_("Create a snapshot to start using Timeshift"));
 						set_shield_label(_("Timeshift is active"));
 						set_shield_subnote(_("Snapshots will be created at selected intervals"));
-						//set_shield_subnote(_("Snapshots will be created at scheduled intervals"));
-						//TODO: enable scheduled snaps without first snap
 					}
-
-					//TODO: show more info, count and free space
 				}
 				else {
 					// not scheduled

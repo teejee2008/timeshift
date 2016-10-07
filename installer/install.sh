@@ -6,7 +6,7 @@ app_fullname='Timeshift'
 generic_depends=(rsync libgee json-glib)
 debian_depends=(rsync libgee2 libjson-glib-1.0-0)
 redhat_depends=(rsync libgee json-glib)
-arch_depends=(rsync libgee06 json-glib)
+arch_depends=(rsync libgee json-glib)
 
 generic_recommends=()
 debian_recommends=()

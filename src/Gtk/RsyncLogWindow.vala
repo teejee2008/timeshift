@@ -462,6 +462,7 @@ public class RsyncLogWindow : Window {
 			}
 
 			if (item.file_type == FileType.DIRECTORY){
+				log_debug("Appending: %s".printf(item.file_path));
 				tv_append_to_iter(ref model, ref iter0, item, odd_row, false);
 			}
 		}

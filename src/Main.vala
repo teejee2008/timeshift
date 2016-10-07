@@ -263,6 +263,7 @@ public class Main : GLib.Object{
 
 		this.current_distro = LinuxDistro.get_dist_info("/");
 		log_msg(_("Distribution") + ": " + current_distro.full_name());
+		log_msg("DIST_ID" + ": " + current_distro.dist_id);
 
 		//check dependencies ---------------------
 
@@ -2872,13 +2873,27 @@ public class Main : GLib.Object{
 				
 			log_debug("grub_device=%s".printf(
 				(grub_device == null) ? "null" : grub_device));
+
+			var target_distro = LinuxDistro.get_dist_info(target_path);
 			
 			sh_grub = "";
+			
 			if (reinstall_grub2 && (grub_device != null) && (grub_device.length > 0)){
+				
 				sh_grub += "sync \n";
 				sh_grub += "echo '' \n";
 				sh_grub += "echo '" + _("Re-installing GRUB2 bootloader...") + "' \n";
 
+				string chroot = "";
+				if (!restore_current_system){
+					if (target_distro.dist_id.down().contains("manjaro")){
+						chroot += "arch-chroot \"%s\"".printf(target_path);
+					}
+					else{
+						chroot += "chroot \"%s\"".printf(target_path);
+					}
+				}
+				
 				// bind system directories for chrooted system
 				sh_grub += "for i in /dev /proc /run /sys; do mount --bind \"$i\" \"%s$i\"; done \n".printf(target_path);
 
@@ -2887,14 +2902,11 @@ public class Main : GLib.Object{
 				
 				// re-install grub ---------------
 
-				var target_distro = LinuxDistro.get_dist_info(target_path);
-				
 				if (target_distro.dist_id == "fedora"){
 
-					// this will run only on clone mode
+					// this will run only in clone mode
 					
-					sh_grub += "chroot \"%s\" grub2-install --recheck %s \n".printf(
-						target_path, grub_device);
+					sh_grub += "%s grub2-install --recheck %s \n".printf(chroot, grub_device);
 
 					/* NOTE:
 					 * grub2-install should NOT be run on Fedora EFI systems 
@@ -2907,9 +2919,8 @@ public class Main : GLib.Object{
 					 * kernels and restoring a snapshot with an older kernel.
 					*/
 				}
-				else{
-					sh_grub += "chroot \"%s\" grub-install --recheck %s \n".printf(
-						target_path, grub_device);
+				else {
+					sh_grub += "%s grub-install --recheck %s \n".printf(chroot, grub_device);
 				}
 
 				// create new grub menu
@@ -2918,20 +2929,25 @@ public class Main : GLib.Object{
 				// update initramfs --------------
 
 				if (target_distro.dist_id == "fedora"){
-
-					sh_grub += "chroot \"%s\" dracut -f -v \n".printf(target_path);
+					sh_grub += "%s dracut -f -v \n".printf(chroot);
+				}
+				else if (target_distro.dist_id.down().contains("manjaro")){
+					sh_grub += "%s mkinitcpio -p /etc/mkinitcpio.d/*.preset\n".printf(chroot);
 				}
 				else{
-					sh_grub += "chroot \"%s\" update-initramfs -u -k all \n".printf(target_path);
+					sh_grub += "%s update-initramfs -u -k all \n".printf(chroot);
 				}
 					
 				// update grub menu --------------
 
 				if (target_distro.dist_id == "fedora"){
-					sh_grub += "chroot \"%s\" grub-mkconfig -o /boot/grub2/grub.cfg \n".printf(target_path);
+					sh_grub += "%s grub-mkconfig -o /boot/grub2/grub.cfg \n".printf(chroot);
+				}
+				else if (target_distro.dist_id.down().contains("manjaro")){
+					sh_grub += "%s update-grub \n".printf(chroot);
 				}
 				else{
-					sh_grub += "chroot \"%s\" update-grub \n".printf(target_path);
+					sh_grub += "%s update-grub \n".printf(chroot);
 				}
 
 				sh_grub += "echo '' \n";
@@ -2951,14 +2967,18 @@ public class Main : GLib.Object{
 			
 				//sh += sh_grub;
 			}
+			else{
+				log_debug("skipping sh_grub: reinstall_grub2=%s, grub_device=%s".printf(
+					reinstall_grub2.to_string(), (grub_device == null) ? "null" : grub_device));
+			}
 
 			//reboot if required --------
 
 			if (restore_current_system){
 				sh_reboot += "echo '' \n";
 				sh_reboot += "echo '" + _("Rebooting system...") + "' \n";
-				//sh += "reboot -f \n";
-				sh_reboot += "shutdown -r now \n";
+				sh += "reboot -f \n";
+				//sh_reboot += "shutdown -r now \n";
 			}
 
 			//check if current system is being restored and do some housekeeping ---------

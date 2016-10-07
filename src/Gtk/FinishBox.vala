@@ -82,9 +82,9 @@ class FinishBox : Gtk.Box{
 
 		msg += _("◈ Avoid storing snapshots on your system partition. Using another partition will allow you to format and re-install the OS on your system partition without losing the snapshots stored on it. You can even install another Linux distribution and later roll-back the previous distribution by restoring the snapshot.") + "\n\n";
 
-		msg += _("◈ The first snapshot creates a copy of all files on your system. Subsequent snapshots only store files which have changed. You can reduce the size of snapshots by adding filters to exclude files which are not required. For example, you can exclude your web browser cache as these files change constantly and are not very important.") + "\n\n";
+		msg += _("◈ The first snapshot creates a copy of all files on your system. Subsequent snapshots only store files which have changed. You can reduce the size of snapshots by adding filters to exclude files which are not required. For example, you can exclude your web browser cache as these files change constantly and are not important.") + "\n\n";
 
-		msg += _("◈ Common files are hard-linked between snapshots. Copying the files manually to another location will duplicate the files and break hard-links between them. Snapshots must be moved carefully by running 'rsync' from a terminal and the file system at destination path must support hard-links.") + "\n\n";
+		msg += _("◈ Common files are hard-linked between snapshots. Copying the files manually to another location will duplicate the files and break hard-links between them. Snapshots must be moved carefully by running 'rsync' from a terminal. The file system at destination path must support hard-links.") + "\n\n";
 		
 		lbl_message.label = msg;
 	}

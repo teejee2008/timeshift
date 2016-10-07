@@ -243,6 +243,7 @@ namespace TeeJee.GtkHelper{
 			
 			pix_icon = icon_theme.load_icon_for_scale (
 				icon_name, Gtk.IconSize.MENU, icon_size, Gtk.IconLookupFlags.FORCE_SIZE);
+				
 		} catch (Error e) {
 			//log_error (e.message);
 		}

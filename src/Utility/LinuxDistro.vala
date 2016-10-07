@@ -194,6 +194,25 @@ public class LinuxDistro : GLib.Object{
 		return "Unknown";
 	}
 
+	public string dist_type {
+		
+		owned get{
+			
+			if (dist_id == "fedora"){
+				return "redhat";
+			}
+			else if (dist_id.down().contains("manjaro") || dist_id.down().contains("arch")){
+				return "arch";
+			}
+			else if (dist_id.down().contains("ubuntu") || dist_id.down().contains("debian")){
+				return "debian";
+			}
+			else{
+				return "";
+			}
+
+		}
+	}
 }
 
 

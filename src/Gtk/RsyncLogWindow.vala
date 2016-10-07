@@ -210,12 +210,12 @@ public class RsyncLogWindow : Window {
 		label.hexpand = true;
 		
 		Gtk.SizeGroup size_group = null;
-		var btn_flat = add_toggle_button(hbox, _("Flat View"), "", ref size_group, null);
+		/*var btn_flat = add_toggle_button(hbox, _("Flat View"), "", ref size_group, null);
 		btn_flat.active = flat_view;
         btn_flat.toggled.connect(()=>{
 			flat_view = btn_flat.active;
 			tv_files_refresh();
-		});
+		});*/
 
 		size_group = null;
 		/*var btn_exclude = add_button(hbox,

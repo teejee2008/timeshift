@@ -2886,7 +2886,7 @@ public class Main : GLib.Object{
 
 				string chroot = "";
 				if (!restore_current_system){
-					if (target_distro.dist_id.down().contains("manjaro")){
+					if (target_distro.dist_type == "arch"){
 						chroot += "arch-chroot \"%s\"".printf(target_path);
 					}
 					else{
@@ -2902,7 +2902,7 @@ public class Main : GLib.Object{
 				
 				// re-install grub ---------------
 
-				if (target_distro.dist_id == "fedora"){
+				if (target_distro.dist_type == "redhat"){
 
 					// this will run only in clone mode
 					
@@ -2928,10 +2928,10 @@ public class Main : GLib.Object{
 
 				// update initramfs --------------
 
-				if (target_distro.dist_id == "fedora"){
+				if (target_distro.dist_type == "redhat"){
 					sh_grub += "%s dracut -f -v \n".printf(chroot);
 				}
-				else if (target_distro.dist_id.down().contains("manjaro")){
+				else if (target_distro.dist_type == "arch"){
 					sh_grub += "%s mkinitcpio -p /etc/mkinitcpio.d/*.preset\n".printf(chroot);
 				}
 				else{
@@ -2940,11 +2940,8 @@ public class Main : GLib.Object{
 					
 				// update grub menu --------------
 
-				if (target_distro.dist_id == "fedora"){
+				if ((target_distro.dist_type == "redhat") || (target_distro.dist_type == "arch")){
 					sh_grub += "%s grub-mkconfig -o /boot/grub2/grub.cfg \n".printf(chroot);
-				}
-				else if (target_distro.dist_id.down().contains("manjaro")){
-					sh_grub += "%s update-grub \n".printf(chroot);
 				}
 				else{
 					sh_grub += "%s update-grub \n".printf(chroot);

@@ -1750,6 +1750,11 @@ public class Main : GLib.Object{
 				
 				// take new backup ---------------------------------
 
+				if (repo.snapshot_location.length == 0){
+					log_error("Backup location not mounted");
+					exit_app();
+				}
+
 				string time_stamp = dt_created.format("%Y-%m-%d_%H-%M-%S");
 				string snapshot_dir = path_combine(repo.snapshot_location, "timeshift/snapshots");
 				string snapshot_name = time_stamp;

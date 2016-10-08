@@ -1036,7 +1036,7 @@ public class Device : GLib.Object{
 		Gee.ArrayList<Device> list,
 		string dev_device,
 		string dev_uuid){
-		
+
 		foreach(var dev in list){
 			if ((dev.device == dev_device) && (dev.uuid == dev_uuid)){
 				return dev;
@@ -1165,6 +1165,12 @@ public class Device : GLib.Object{
 	// mounting ---------------------------------
 	
 	public static bool automount_udisks(string device_name_or_uuid, Gtk.Window? parent_window){
+		
+		if (device_name_or_uuid.length == 0){
+			log_error(_("Device name is empty!"));
+			return false;
+		}
+		
 		var cmd = "udisksctl mount -b '%s'".printf(device_name_or_uuid);
 		log_debug(cmd);
 		int status = Posix.system(cmd);
@@ -1182,7 +1188,13 @@ public class Device : GLib.Object{
 	public static bool automount_udisks_iso(string iso_file_path, out string loop_device, Gtk.Window? parent_window){
 
 		loop_device = "";
-		
+
+		if (!file_exists(iso_file_path)){
+			string msg = "%s: %s".printf(_("Could not find file"), iso_file_path);
+			log_error(msg);
+			return false;
+		}
+
 		var cmd = "udisksctl loop-setup -r -f '%s'".printf(
 			escape_single_quote(iso_file_path));
 			
@@ -1215,6 +1227,12 @@ public class Device : GLib.Object{
 	}
 
 	public static bool unmount_udisks(string device_name_or_uuid, Gtk.Window? parent_window){
+
+		if (device_name_or_uuid.length == 0){
+			log_error(_("Device name is empty!"));
+			return false;
+		}
+		
 		var cmd = "udisksctl unmount -b '%s'".printf(device_name_or_uuid);
 		log_debug(cmd);
 		int status = Posix.system(cmd);

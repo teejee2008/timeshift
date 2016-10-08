@@ -274,8 +274,9 @@ class SnapshotListBox : Gtk.Box{
 			
 		Snapshot bak;
 		model.get (iter, 0, out bak, -1);
-		(cell as Gtk.CellRendererText).text = bak.date.format ("%Y-%m-%d %I:%M %p");
+		(cell as Gtk.CellRendererText).text = bak.date.format ("%Y-%m-%d %H:%M");
 		(cell as Gtk.CellRendererText).sensitive = !bak.marked_for_deletion;
+		// Note: Avoid AM/PM as it may be hidden due to locale settings
 	}
 
 	private void cell_tags_render(

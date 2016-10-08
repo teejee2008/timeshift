@@ -177,7 +177,7 @@ public class SnapshotRepo : GLib.Object{
 				snapshot_path_mount = mps[0].mount_point;
 			}
 			else{
-				Device.automount_udisks(device.device);
+				Device.automount_udisks(device.device, parent_window);
 
 				mps = Device.get_device_mount_points(device.uuid);
 				if (mps.size > 0){

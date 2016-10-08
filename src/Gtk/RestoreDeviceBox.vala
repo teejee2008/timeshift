@@ -38,6 +38,7 @@ class RestoreDeviceBox : Gtk.Box{
 	private Gtk.InfoBar infobar_location;
 	private Gtk.Label lbl_infobar_location;
 	private Gtk.Box option_box;
+	private Gtk.Label lbl_header_subvol;
 	private Gtk.ComboBox cmb_boot_device;
 	private Gtk.CheckButton chk_skip_grub_install;
 	private bool show_subvolume = false;
@@ -85,34 +86,25 @@ class RestoreDeviceBox : Gtk.Box{
 				_("Devices from which snapshot was created are pre-selected."));
 		}
 
-		show_subvolume = false;
-		foreach(var entry in App.mount_list){
-			if ((entry.device != null) && (entry.subvolume_name().length > 0)){
-				// subvolumes are used - show the mount options column
-				show_subvolume = true;
-				break;
-			}
-		}
-		
 		// headings
 		
 		hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
 		hbox.margin_top = 12;
 		add(hbox);
 
-		label = add_label(hbox, _("Mount Path") + " ", true, true);
+		label = add_label(hbox, _("Mount Path") + "  ", true, true);
 		label.xalign = (float) 0.0;
 		sg_mount_point.add_widget(label);
 		
-		label = add_label(hbox, _("Device"), true, true);
+		label = add_label(hbox, _("Device") + "  ", true, true);
 		label.xalign = (float) 0.0;
 		sg_device.add_widget(label);
 
-		if (show_subvolume){
-			label = add_label(hbox, _("Subvolume"), true, true);
-			label.xalign = (float) 0.5;
-		}
-		
+		label = add_label(hbox, _("Subvolume"), true, true);
+		label.xalign = (float) 0.5;
+		label.set_no_show_all(true);
+		lbl_header_subvol = label;
+
 		// options
 		
 		option_box = new Gtk.Box(Gtk.Orientation.VERTICAL, 6);
@@ -141,6 +133,20 @@ class RestoreDeviceBox : Gtk.Box{
 		if (reset_device_selections){
 			App.init_mount_list();
 		}
+
+		show_subvolume = false;
+		foreach(var entry in App.mount_list){
+			if ((entry.device != null) && (entry.subvolume_name().length > 0)){
+				// subvolumes are used - show the mount options column
+				show_subvolume = true;
+				break;
+			}
+		}
+
+		if (show_subvolume){
+			lbl_header_subvol.set_no_show_all(false);
+		}
+		lbl_header_subvol.visible = show_subvolume;
 
 		foreach(var item in option_box.get_children()){
 			option_box.remove(item);
@@ -396,7 +402,7 @@ class RestoreDeviceBox : Gtk.Box{
 
 		//lbl_header_bootloader
 		var label = add_label_header(this, _("Select GRUB Device"), true);
-		label.margin_top = 12;
+		label.margin_top = 24;
 		
 		add_label(this, _("Select device for installing GRUB2 bootloader:"));
 		

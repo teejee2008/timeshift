@@ -912,9 +912,9 @@ class MainWindow : Gtk.Window{
 						set_shield_label(_("Timeshift is active"));
 						set_shield_subnote(
 							_("Latest snapshot:")
-							+ last_snapshot_date.format (" %B %d, %Y %I:%M %p") + "\n" +
+							+ last_snapshot_date.format (" %B %d, %Y %H:%M") + "\n" +
 							_("Oldest snapshot:")
-							+ oldest_snapshot_date.format (" %B %d, %Y %I:%M %p")
+							+ oldest_snapshot_date.format (" %B %d, %Y %H:%M")
 							//_("Latest snapshot:") + format_date(last_snapshot_date) + "\n" +
 							//_("Oldest snapshot:") + format_date(oldest_snapshot_date)
 							);

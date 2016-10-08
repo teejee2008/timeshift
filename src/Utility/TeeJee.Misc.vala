@@ -123,7 +123,7 @@ namespace TeeJee.Misc {
 	// string formatting -------------------------------------------------
 
 	public string format_date(DateTime date){
-		return date.format ("%Y-%m-%d %I:%M %p");
+		return date.format ("%Y-%m-%d %H:%M");
 	}
 	
 	public string format_duration (long millis){

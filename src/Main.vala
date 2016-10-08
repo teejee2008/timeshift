@@ -1447,6 +1447,8 @@ public class Main : GLib.Object{
 		bool status;
 		bool update_symlinks = false;
 
+		string sys_uuid = (root_device == null) ? "" : root_device.uuid;
+		
 		try
 		{
 			log_debug("checking btrfs volumes on root device...");
@@ -1502,11 +1504,11 @@ public class Main : GLib.Object{
 				}
 			}
 			else if (scheduled){
-				Snapshot last_snapshot_boot = repo.get_latest_snapshot("boot");
-				Snapshot last_snapshot_hourly = repo.get_latest_snapshot("hourly");
-				Snapshot last_snapshot_daily = repo.get_latest_snapshot("daily");
-				Snapshot last_snapshot_weekly = repo.get_latest_snapshot("weekly");
-				Snapshot last_snapshot_monthly = repo.get_latest_snapshot("monthly");
+				Snapshot last_snapshot_boot = repo.get_latest_snapshot("boot", sys_uuid);
+				Snapshot last_snapshot_hourly = repo.get_latest_snapshot("hourly", sys_uuid);
+				Snapshot last_snapshot_daily = repo.get_latest_snapshot("daily", sys_uuid);
+				Snapshot last_snapshot_weekly = repo.get_latest_snapshot("weekly", sys_uuid);
+				Snapshot last_snapshot_monthly = repo.get_latest_snapshot("monthly", sys_uuid);
 
 				DateTime dt_sys_boot = now.add_seconds((-1) * get_system_uptime_seconds());
 				bool take_new = false;
@@ -1694,6 +1696,8 @@ public class Main : GLib.Object{
 		// save start time
 		var dt_begin = new DateTime.now_local();
 
+		string sys_uuid = (root_device == null) ? "" : root_device.uuid;
+		
 		try{
 			// get system boot time
 			DateTime now = new DateTime.now_local();
@@ -1701,10 +1705,9 @@ public class Main : GLib.Object{
 
 			// check if we can rotate an existing backup -------------
 
-			var latest = repo.get_latest_snapshot();
 			DateTime dt_filter = null;
 
-			if ((tag != "ondemand") && (latest != null)){
+			if (tag != "ondemand"){
 				switch(tag){
 					case "boot":
 						dt_filter = dt_sys_boot;
@@ -1760,6 +1763,7 @@ public class Main : GLib.Object{
 				
 				string ctl_path = path_combine(snapshot_dir, ".sync-restore");
 				f = File.new_for_path(ctl_path);
+				
 				if (f.query_exists()){
 
 					// read snapshot name from file
@@ -1768,21 +1772,20 @@ public class Main : GLib.Object{
 					
 					// find the snapshot that was restored
 					foreach(var bak in repo.snapshots){
-						if (bak.name == snap_name){
+						if ((bak.name == snap_name) && (bak.sys_uuid == sys_uuid)){
 							// use for linking
-							snapshot_to_link = bak; 
+							snapshot_to_link = bak;
+							// delete the restore-control-file
+							f.delete();
 							break;
 						}
 					}
-
-					// delete the restore-control-file
-					f.delete();
 				}
 
 				// get latest snapshot to link if not set -------
 
 				if (snapshot_to_link == null){
-					snapshot_to_link = repo.get_latest_snapshot();
+					snapshot_to_link = repo.get_latest_snapshot("", sys_uuid);
 				}
 
 				string link_from_path = "";

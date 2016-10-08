@@ -850,9 +850,10 @@ class MainWindow : Gtk.Window{
 		DateTime oldest_snapshot_date = null;
 
 		if (App.repo.has_snapshots()){
-			var last_snapshot = App.repo.get_latest_snapshot();
+			string sys_uuid = (App.root_device == null) ? "" : App.root_device.uuid;
+			var last_snapshot = App.repo.get_latest_snapshot("", sys_uuid);
 			last_snapshot_date = (last_snapshot == null) ? null : last_snapshot.date;
-			var oldest_snapshot = App.repo.get_oldest_snapshot();
+			var oldest_snapshot = App.repo.get_oldest_snapshot("", sys_uuid);
 			oldest_snapshot_date = (oldest_snapshot == null) ? null : oldest_snapshot.date;
 		}
 

@@ -295,22 +295,30 @@ public class SnapshotRepo : GLib.Object{
 		return list;
 	}
 
-	public Snapshot? get_latest_snapshot(string tag = ""){
+	public Snapshot? get_latest_snapshot(string tag, string sys_uuid){
 		var list = get_snapshots_by_tag(tag);
+		
+		for(int i = list.size - 1; i >= 0; i--){
+			var bak = list[i];
+			if (bak.sys_uuid == sys_uuid){
+				return bak;
+			}
+		}
 
-		if (list.size > 0)
-			return list[list.size - 1];
-		else
-			return null;
+		return null;
 	}
 
-	public Snapshot? get_oldest_snapshot(string tag = ""){
+	public Snapshot? get_oldest_snapshot(string tag, string sys_uuid){
 		var list = get_snapshots_by_tag(tag);
 
-		if (list.size > 0)
-			return list[0];
-		else
-			return null;
+		for(int i = 0; i < list.size; i++){
+			var bak = list[i];
+			if (bak.sys_uuid == sys_uuid){
+				return bak;
+			}
+		}
+		
+		return null;
 	}
 
 	// status check

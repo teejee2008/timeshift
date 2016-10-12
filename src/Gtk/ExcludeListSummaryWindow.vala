@@ -71,9 +71,7 @@ class ExcludeListSummaryWindow : Gtk.Window{
     
 	private void create_actions(){
 		
-		var hbox = new Gtk.ButtonBox (Gtk.Orientation.HORIZONTAL);
-		hbox.set_layout (Gtk.ButtonBoxStyle.CENTER);
-		//hbox.margin_bottom = 12;
+		var hbox = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
         vbox_main.add(hbox);
 		Gtk.SizeGroup size_group = null;
 		

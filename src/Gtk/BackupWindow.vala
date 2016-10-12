@@ -118,12 +118,10 @@ class BackupWindow : Gtk.Window{
 	
 	private void create_actions(){
 		var hbox = new Gtk.ButtonBox (Gtk.Orientation.HORIZONTAL);
-		hbox.set_layout (Gtk.ButtonBoxStyle.EXPAND);
 		hbox.margin = 0;
 		hbox.margin_left = 24;
 		hbox.margin_right = 24;
 		hbox.margin_top = 6;
-		//hbox.margin_bottom = 12;
         vbox_main.add(hbox);
         bbox_action = hbox;
 
@@ -253,7 +251,6 @@ class BackupWindow : Gtk.Window{
 			btn_next.hide();
 			btn_close.hide();
 			btn_cancel.show();
-			bbox_action.set_layout (Gtk.ButtonBoxStyle.CENTER);
 			break;
 		case Tabs.BACKUP_DEVICE:
 			btn_prev.show();
@@ -263,7 +260,6 @@ class BackupWindow : Gtk.Window{
 			btn_prev.sensitive = false;
 			btn_next.sensitive = true;
 			btn_close.sensitive = true;
-			bbox_action.set_layout (Gtk.ButtonBoxStyle.EXPAND);
 			break;
 		}
 

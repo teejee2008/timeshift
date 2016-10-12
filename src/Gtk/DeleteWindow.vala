@@ -35,7 +35,7 @@ using TeeJee.Misc;
 class DeleteWindow : Gtk.Window{
 	private Gtk.Box vbox_main;
 	private Gtk.Notebook notebook;
-	private Gtk.ButtonBox bbox_action;
+	private Gtk.Box bbox_action;
 
 	// tabs
 	private SnapshotListBox snapshot_list_box;
@@ -117,13 +117,11 @@ class DeleteWindow : Gtk.Window{
 	}
 	
 	private void create_actions(){
-		var hbox = new Gtk.ButtonBox (Gtk.Orientation.HORIZONTAL);
-		hbox.set_layout (Gtk.ButtonBoxStyle.EXPAND);
+		var hbox = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
 		hbox.margin = 0;
 		hbox.margin_left = 24;
 		hbox.margin_right = 24;
 		hbox.margin_top = 6;
-		//hbox.margin_bottom = 12;
         vbox_main.add(hbox);
         bbox_action = hbox;
 
@@ -180,6 +178,8 @@ class DeleteWindow : Gtk.Window{
 			
 			this.destroy(); // TODO: Show error page
 		});
+
+		btn_prev.hexpand = btn_next.hexpand = btn_cancel.hexpand = btn_close.hexpand = btn_hide.hexpand = true;
 
 		action_buttons_set_no_show_all(true);
 	}
@@ -258,7 +258,6 @@ class DeleteWindow : Gtk.Window{
 			btn_close.hide();
 			btn_hide.show();
 			btn_cancel.show();
-			bbox_action.set_layout (Gtk.ButtonBoxStyle.EXPAND);
 			break;
 		case Tabs.SNAPSHOT_LIST:
 			btn_prev.show();
@@ -269,7 +268,6 @@ class DeleteWindow : Gtk.Window{
 			btn_prev.sensitive = false;
 			btn_next.sensitive = true;
 			btn_close.sensitive = true;
-			bbox_action.set_layout (Gtk.ButtonBoxStyle.EXPAND);
 			break;
 		}
 

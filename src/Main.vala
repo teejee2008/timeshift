@@ -74,6 +74,7 @@ public class Main : GLib.Object{
 
 	public Device root_device;
 	public Device boot_device;
+	public Device boot_efi_device;
 	public Device home_device;
 
 	public string mount_point_restore = "";
@@ -767,6 +768,7 @@ public class Main : GLib.Object{
 			return Posix.strcmp(a,b);
 		});
 	}
+
 	//console functions
 
 	public static string help_message (){
@@ -3549,14 +3551,28 @@ public class Main : GLib.Object{
 				if (mp.mount_point == "/"){
 					root_device = pi;
 					if ((app_mode == "")||(LOG_DEBUG)){
-						log_msg(_("/ is mapped to device: %s, UUID=%s").printf(pi.device,pi.uuid));
+						log_msg(_("/ is mapped to device") + ": %s, UUID=%s".printf(pi.device,pi.uuid));
 					}
 				}
 
 				if (mp.mount_point == "/home"){
 					home_device = pi;
 					if ((app_mode == "")||(LOG_DEBUG)){
-						log_msg(_("/home is mapped to device: %s, UUID=%s").printf(pi.device,pi.uuid));
+						log_msg(_("/home is mapped to device") + ": %s, UUID=%s".printf(pi.device,pi.uuid));
+					}
+				}
+
+				if (mp.mount_point == "/boot"){
+					boot_device = pi;
+					if ((app_mode == "")||(LOG_DEBUG)){
+						log_msg(_("/boot is mapped to device") + ": %s, UUID=%s".printf(pi.device,pi.uuid));
+					}
+				}
+
+				if (mp.mount_point == "/boot/efi"){
+					boot_efi_device = pi;
+					if ((app_mode == "")||(LOG_DEBUG)){
+						log_msg(_("/boot/efi is mapped to device") + ": %s, UUID=%s".printf(pi.device,pi.uuid));
 					}
 				}
 			}

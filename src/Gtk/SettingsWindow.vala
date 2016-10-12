@@ -118,8 +118,8 @@ class SettingsWindow : Gtk.Window{
 	}
 
 	private void create_actions(){
+		
 		var hbox = new Gtk.ButtonBox (Gtk.Orientation.HORIZONTAL);
-		hbox.set_layout (Gtk.ButtonBoxStyle.CENTER);
 		hbox.margin = 0;
 		hbox.margin_top = 6;
         vbox_main.add(hbox);
@@ -130,7 +130,8 @@ class SettingsWindow : Gtk.Window{
 		
 		var img = new Image.from_stock("gtk-close", Gtk.IconSize.BUTTON);
 		var btn_close = add_button(hbox, _("Close"), "", ref size_group, img);
-
+		//hbox.set_child_packing(btn_close, false, true, 6, Gtk.PackType.END);
+		
         btn_close.clicked.connect(()=>{
 			save_changes();
 			this.destroy();

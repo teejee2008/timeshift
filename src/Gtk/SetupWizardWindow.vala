@@ -124,13 +124,11 @@ class SetupWizardWindow : Gtk.Window{
 	}
 	
 	private void create_actions(){
-		var hbox = new Gtk.ButtonBox (Gtk.Orientation.HORIZONTAL);
-		hbox.set_layout (Gtk.ButtonBoxStyle.EXPAND);
+		var hbox = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
 		hbox.margin = 0;
 		hbox.margin_left = 24;
 		hbox.margin_right = 24;
 		hbox.margin_top = 6;
-		//hbox.margin_bottom = 12;
         vbox_main.add(hbox);
 
 		Gtk.SizeGroup size_group = null;
@@ -175,6 +173,9 @@ class SetupWizardWindow : Gtk.Window{
 			
 			this.destroy(); // TODO: Show error page
 		});
+
+		btn_prev.hexpand = btn_next.hexpand = btn_close.hexpand = true;
+		btn_cancel.hexpand = true;
 		
 		action_buttons_set_no_show_all(true);
 	}

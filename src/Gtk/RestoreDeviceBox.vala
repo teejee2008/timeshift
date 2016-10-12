@@ -39,7 +39,7 @@ class RestoreDeviceBox : Gtk.Box{
 	private Gtk.Label lbl_infobar_location;
 	private Gtk.Box option_box;
 	private Gtk.Label lbl_header_subvol;
-	private Gtk.ComboBox cmb_boot_device;
+	private Gtk.ComboBox cmb_grub_dev;
 	private Gtk.CheckButton chk_skip_grub_install;
 	private bool show_subvolume = false;
 	
@@ -124,7 +124,7 @@ class RestoreDeviceBox : Gtk.Box{
     public void refresh(bool reset_device_selections = true){
 		log_debug("RestoreDeviceBox: refresh()");
 		create_device_selection_options(reset_device_selections);
-		refresh_cmb_boot_device();
+		refresh_cmb_grub_dev();
 		log_debug("RestoreDeviceBox: refresh(): exit");
 	}
 
@@ -358,7 +358,7 @@ class RestoreDeviceBox : Gtk.Box{
 					
 					if (current_entry.mount_point == "/"){
 						App.restore_target = luks_unlocked;
-						cmb_boot_device_select_default();
+						cmb_grub_dev_select_default();
 					}
 
 					current_entry.device = luks_unlocked;
@@ -389,7 +389,7 @@ class RestoreDeviceBox : Gtk.Box{
 
 			if (current_entry.mount_point == "/"){
 				App.restore_target = current_dev;
-				cmb_boot_device_select_default();
+				cmb_grub_dev_select_default();
 			}
 
 			current_entry.device = current_dev;
@@ -409,19 +409,19 @@ class RestoreDeviceBox : Gtk.Box{
 		var hbox_grub = new Box (Orientation.HORIZONTAL, 6);
         add (hbox_grub);
 
-		//cmb_boot_device
-		cmb_boot_device = new ComboBox ();
-		cmb_boot_device.hexpand = true;
-		hbox_grub.add(cmb_boot_device);
+		//cmb_grub_dev
+		cmb_grub_dev = new ComboBox ();
+		cmb_grub_dev.hexpand = true;
+		hbox_grub.add(cmb_grub_dev);
 
 		var cell_text = new CellRendererText ();
 		cell_text.text = "";
-		cmb_boot_device.pack_start(cell_text, false);
+		cmb_grub_dev.pack_start(cell_text, false);
 
 		cell_text = new CellRendererText();
-        cmb_boot_device.pack_start(cell_text, false);
+        cmb_grub_dev.pack_start(cell_text, false);
 
-        cmb_boot_device.set_cell_data_func(cell_text, (cell_layout, cell, model, iter)=>{
+        cmb_grub_dev.set_cell_data_func(cell_text, (cell_layout, cell, model, iter)=>{
 			Device dev;
 			model.get (iter, 0, out dev, -1);
 
@@ -435,7 +435,7 @@ class RestoreDeviceBox : Gtk.Box{
 			}
 		});
 
-		cmb_boot_device.changed.connect(()=>{
+		cmb_grub_dev.changed.connect(()=>{
 			save_grub_device_selection();
 		});
 
@@ -466,9 +466,9 @@ class RestoreDeviceBox : Gtk.Box{
 		}
 		
 		chk.toggled.connect(()=>{
-			cmb_boot_device.sensitive = !chk_skip_grub_install.active;
+			cmb_grub_dev.sensitive = !chk_skip_grub_install.active;
 			App.reinstall_grub2 = !chk_skip_grub_install.active;
-			cmb_boot_device.changed();
+			cmb_grub_dev.changed();
 		});
 		
 		App.reinstall_grub2 = !chk_skip_grub_install.active;
@@ -481,15 +481,15 @@ class RestoreDeviceBox : Gtk.Box{
 		if (App.reinstall_grub2){
 			Device entry;
 			TreeIter iter;
-			bool ok = cmb_boot_device.get_active_iter (out iter);
+			bool ok = cmb_grub_dev.get_active_iter (out iter);
 			if (!ok) { return; } // not selected
-			TreeModel model = (TreeModel) cmb_boot_device.model;
+			TreeModel model = (TreeModel) cmb_grub_dev.model;
 			model.get(iter, 0, out entry);
 			App.grub_device = entry.device;
 		}
 	}
 
-	private void refresh_cmb_boot_device(){
+	private void refresh_cmb_grub_dev(){
 		var store = new Gtk.ListStore(2, typeof(Device), typeof(Gdk.Pixbuf));
 
 		Gdk.Pixbuf pix_device = get_shared_icon("drive-harddisk","disk.png",16).pixbuf;
@@ -517,17 +517,17 @@ class RestoreDeviceBox : Gtk.Box{
 			store.set (iter, 1, pix_device);
 		}
 
-		cmb_boot_device.model = store;
+		cmb_grub_dev.model = store;
 
-		cmb_boot_device_select_default();
+		cmb_grub_dev_select_default();
 	}
 
-	private void cmb_boot_device_select_default(){
+	private void cmb_grub_dev_select_default(){
 
-		log_debug("RestoreDeviceBox: cmb_boot_device_select_default()");
+		log_debug("RestoreDeviceBox: cmb_grub_dev_select_default()");
 		
 		if (App.restore_target == null){
-			cmb_boot_device.active = -1;
+			cmb_grub_dev.active = -1;
 			return;
 		}
 
@@ -537,12 +537,12 @@ class RestoreDeviceBox : Gtk.Box{
 		}
 
 		if ((grub_dev == null) || (grub_dev.type != "disk")){
-			cmb_boot_device.active = -1;
+			cmb_grub_dev.active = -1;
 			return;
 		}
 
 		TreeIter iter;
-		var store = (Gtk.ListStore) cmb_boot_device.model;
+		var store = (Gtk.ListStore) cmb_grub_dev.model;
 		int index = -1;
 		int active = -1;
 		
@@ -559,9 +559,9 @@ class RestoreDeviceBox : Gtk.Box{
 			}
 		}
 
-		cmb_boot_device.active = active;
+		cmb_grub_dev.active = active;
 
-		log_debug("RestoreDeviceBox: cmb_boot_device_select_default(): exit");
+		log_debug("RestoreDeviceBox: cmb_grub_dev_select_default(): exit");
 	}
 
 	private void create_infobar_location(){
@@ -593,7 +593,7 @@ class RestoreDeviceBox : Gtk.Box{
 
 		//check if grub device selected ---------------
 
-		if (!chk_skip_grub_install.active && cmb_boot_device.active < 0){
+		if (!chk_skip_grub_install.active && cmb_grub_dev.active < 0){
 			string title =_("Boot device not selected");
 			string msg = _("Please select the boot device");
 			gtk_messagebox(title, msg, parent_window, true);
@@ -603,31 +603,33 @@ class RestoreDeviceBox : Gtk.Box{
 		// get root partition
 		
 		App.restore_target = null;
-		
+		Device target_home = null;
 		foreach(var entry in App.mount_list){
 			if (entry.mount_point == "/"){
 				App.restore_target = entry.device;
-				break;
+			}
+			if (entry.mount_point == "/home"){
+				target_home = entry.device;
 			}
 		}
 
 		// check if we are restoring the current system
 		
-		if (App.restore_target == App.root_device){
+		if (App.restore_target == App.sys_root){
 			return true; // all required devices are already mounted
 		}
 
 		// check BTRFS subvolume layout --------------
 
-		if (App.restore_target.type == "btrfs"){
-			if (App.check_btrfs_volume(App.restore_target) == false){
-				var title = _("Unsupported Subvolume Layout")
-					+ " (%s)".printf(App.restore_target.device);
-				var msg = _("Partition has an unsupported subvolume layout.") + " ";
-				msg += _("Only ubuntu-type layouts with @ and @home subvolumes are currently supported.") + "\n\n";
-				gtk_messagebox(title, msg, parent_window, true);
-				return false;
-			}
+		bool supported = App.check_btrfs_layout(App.restore_target, target_home);
+		
+		if (!supported){
+			var title = _("Unsupported Subvolume Layout")
+				+ " (%s)".printf(App.restore_target.device);
+			var msg = _("Partition has an unsupported subvolume layout.") + " ";
+			msg += _("Only ubuntu-type layouts with @ and @home subvolumes are currently supported.") + "\n\n";
+			gtk_messagebox(title, msg, parent_window, true);
+			return false;
 		}
 
 		// mount target device -------------

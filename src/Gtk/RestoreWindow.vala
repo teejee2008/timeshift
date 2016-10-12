@@ -408,16 +408,16 @@ class RestoreWindow : Gtk.Window{
 
 			if (App.mirror_system){
 
-				// check if target_device != root_device
+				// check if target_device != sys_root
 				foreach(var entry in App.mount_list){
 					if (entry.mount_point != "/"){ continue; }
 
 					bool same = false;
-					if (entry.device.uuid == App.root_device.uuid){
+					if (entry.device.uuid == App.sys_root.uuid){
 						same = true;
 					}
-					else if (entry.device.has_parent() && App.root_device.has_parent()){
-						if (entry.device.uuid == App.root_device.parent.uuid){
+					else if (entry.device.has_parent() && App.sys_root.has_parent()){
+						if (entry.device.uuid == App.sys_root.parent.uuid){
 							same = true;
 						}
 					}

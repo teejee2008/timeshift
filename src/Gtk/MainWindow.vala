@@ -461,7 +461,7 @@ class MainWindow : Gtk.Window{
 		
 		// check root device --------------
 
-		if (App.check_btrfs_root_layout(this) == false){
+		if (App.check_btrfs_layout_system(this) == false){
 			ui_sensitive(true);
 			return;
 		}
@@ -734,7 +734,7 @@ class MainWindow : Gtk.Window{
 			}
 
 			App.snapshot_to_restore = snapshot_to_restore;
-			App.restore_target = App.root_device;
+			App.restore_target = App.sys_root;
 		}
 		else{
 			App.snapshot_to_restore = null;
@@ -850,7 +850,7 @@ class MainWindow : Gtk.Window{
 		DateTime oldest_snapshot_date = null;
 
 		if (App.repo.has_snapshots()){
-			string sys_uuid = (App.root_device == null) ? "" : App.root_device.uuid;
+			string sys_uuid = (App.sys_root == null) ? "" : App.sys_root.uuid;
 			var last_snapshot = App.repo.get_latest_snapshot("", sys_uuid);
 			last_snapshot_date = (last_snapshot == null) ? null : last_snapshot.date;
 			var oldest_snapshot = App.repo.get_oldest_snapshot("", sys_uuid);

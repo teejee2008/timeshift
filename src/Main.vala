@@ -72,10 +72,10 @@ public class Main : GLib.Object{
 	//temp
 	//private Gee.ArrayList<Device> grub_device_list;
 
-	public Device root_device;
-	public Device boot_device;
-	public Device boot_efi_device;
-	public Device home_device;
+	public Device sys_root;
+	public Device sys_boot;
+	public Device sys_efi;
+	public Device sys_home;
 
 	public string mount_point_restore = "";
 	public string mount_point_app = "/mnt/timeshift";
@@ -148,7 +148,7 @@ public class Main : GLib.Object{
 
 	public RsyncTask task;
 	public DeleteFileTask delete_file_task;
-	
+
 	//initialization
 
 	public static int main (string[] args) {
@@ -306,7 +306,7 @@ public class Main : GLib.Object{
 		this.app_path = (File.new_for_path (args[0])).get_parent().get_path ();
 		this.share_folder = "/usr/share";
 		this.app_conf_path = "/etc/timeshift.json";
-		//root_device and home_device will be initalized by update_partition_list()
+		//sys_root and sys_home will be initalized by update_partition_list()
 
 		//check if running locally -------------
 
@@ -468,31 +468,46 @@ public class Main : GLib.Object{
 		}
 	}
 
-	public bool check_btrfs_root_layout(Gtk.Window? win = null){
+	public bool check_btrfs_layout_system(Gtk.Window? win = null){
 
-		log_debug("check_btrfs_root_layout()");
-		
-		//check if root device is a BTRFS volume
-		if ((root_device != null) && (root_device.fstype == "btrfs")){
-			//check subvolume layout
-			if (check_btrfs_volume(root_device) == false){
-				string msg = _("The system partition has an unsupported subvolume layout.") + " ";
-				msg += _("Only ubuntu-type layouts with @ and @home subvolumes are currently supported.") + "\n\n";
-				msg += _("Application will exit.") + "\n\n";
-				string title = _("Not Supported");
-				
-				if (app_mode == ""){
-					gtk_set_busy(false, win);
-					gtk_messagebox(title, msg, win, true);
-				}
-				else{
-					log_error(msg);
-				}
-				return false;
+		log_debug("check_btrfs_layout_system()");
+
+		bool supported = check_btrfs_layout(sys_root, sys_home);
+
+		if (!supported){
+			string msg = _("The system partition has an unsupported subvolume layout.") + " ";
+			msg += _("Only ubuntu-type layouts with @ and @home subvolumes are currently supported.") + "\n\n";
+			msg += _("Application will exit.") + "\n\n";
+			string title = _("Not Supported");
+			
+			if (app_mode == ""){
+				gtk_set_busy(false, win);
+				gtk_messagebox(title, msg, win, true);
+			}
+			else{
+				log_error(msg);
 			}
 		}
 
-		return true;
+		return supported;
+	}
+
+	public bool check_btrfs_layout(Device? dev_root, Device? dev_home){
+		
+		bool supported = true; // keep true for non-btrfs systems
+
+		if ((dev_root != null) && (dev_root.fstype == "btrfs")){
+			
+			if ((dev_home != null) && (dev_home.fstype == "btrfs")){
+				supported = supported && check_btrfs_volume(dev_root, "@");
+				supported = supported && check_btrfs_volume(dev_home, "@home");
+			}
+			else{
+				supported = supported && check_btrfs_volume(dev_root, "@,@home");
+			}
+		}
+
+		return supported;
 	}
 
 	// exclude lists
@@ -590,16 +605,16 @@ public class Main : GLib.Object{
 			home = "/home/%s".printf(user_name);
 		}
 
-		if ((root_device == null)
-			|| ((restore_target.device != root_device.device)
-				&& (restore_target.uuid != root_device.uuid))){
+		if ((sys_root == null)
+			|| ((restore_target.device != sys_root.device)
+				&& (restore_target.uuid != sys_root.uuid))){
 
 			home = mount_point_restore + home;
 		}
 
-		if ((root_device == null)
-			|| ((restore_target.device != root_device.device)
-				&& (restore_target.uuid != root_device.uuid))){
+		if ((sys_root == null)
+			|| ((restore_target.device != sys_root.device)
+				&& (restore_target.uuid != sys_root.uuid))){
 
 			home = mount_point_restore + home;
 		}
@@ -1438,7 +1453,7 @@ public class Main : GLib.Object{
 
 	public bool live_system(){
 		//return true;
-		return (root_device == null);
+		return (sys_root == null);
 	}
 
 	// backup
@@ -1449,13 +1464,13 @@ public class Main : GLib.Object{
 		bool status;
 		bool update_symlinks = false;
 
-		string sys_uuid = (root_device == null) ? "" : root_device.uuid;
+		string sys_uuid = (sys_root == null) ? "" : sys_root.uuid;
 		
 		try
 		{
 			log_debug("checking btrfs volumes on root device...");
 			
-			if (App.check_btrfs_root_layout() == false){
+			if (App.check_btrfs_layout_system() == false){
 				return false;
 			}
 		
@@ -1698,7 +1713,7 @@ public class Main : GLib.Object{
 		// save start time
 		var dt_begin = new DateTime.now_local();
 
-		string sys_uuid = (root_device == null) ? "" : root_device.uuid;
+		string sys_uuid = (sys_root == null) ? "" : sys_root.uuid;
 		
 		try{
 			// get system boot time
@@ -1895,7 +1910,7 @@ public class Main : GLib.Object{
 		var config = new Json.Object();
 
 		config.set_string_member("created", dt_created.to_utc().to_unix().to_string());
-		config.set_string_member("sys-uuid", root_device.uuid);
+		config.set_string_member("sys-uuid", sys_root.uuid);
 		config.set_string_member("sys-distro", current_distro.full_name());
 		config.set_string_member("app-version", AppVersion);
 		config.set_string_member("tags", tag);
@@ -2372,8 +2387,8 @@ public class Main : GLib.Object{
 				log_debug("selecting: %s".printf(mnt.mount_point));
 
 				// no need to ask user to map remaining devices if restoring same system
-				if ((restore_target != null) && (root_device != null)
-					&& (restore_target.uuid == root_device.uuid)){
+				if ((restore_target != null) && (sys_root != null)
+					&& (restore_target.uuid == sys_root.uuid)){
 						
 					break;
 				}
@@ -2459,7 +2474,7 @@ public class Main : GLib.Object{
 		
 		if (restore_target != null){
 			if (app_mode != ""){ //commandline mode
-				if ((root_device == null) || (restore_target.uuid != root_device.uuid)){
+				if ((sys_root == null) || (restore_target.uuid != sys_root.uuid)){
 					//mount target device and other devices
 					bool status = mount_target_device(null);
 					if (status == false){
@@ -2744,8 +2759,8 @@ public class Main : GLib.Object{
 		// msg_reboot -----------------------
 		
 		msg = "";
-		if ((root_device != null) && (restore_target != null)
-			&& (restore_target.device == root_device.device)){
+		if ((sys_root != null) && (restore_target != null)
+			&& (restore_target.device == sys_root.device)){
 				
 			msg += _("Please save your work and close all applications.") + "\n";
 			msg += _("System will reboot after files are restored.");
@@ -2812,9 +2827,9 @@ public class Main : GLib.Object{
 			bool restore_current_system;
 			string target_path;
 
-			if ((root_device != null)
-				&& ((restore_target.device == root_device.device)
-					|| (restore_target.uuid == root_device.uuid))){
+			if ((sys_root != null)
+				&& ((restore_target.device == sys_root.device)
+					|| (restore_target.uuid == sys_root.uuid))){
 					
 				restore_current_system = true;
 				target_path = "/";
@@ -3306,6 +3321,50 @@ public class Main : GLib.Object{
 		log_msg(_("Updated /etc/crypttab on target device") + ": %s".printf(crypttab_path));
 	}
 
+	public Device? dst_root{
+		get {
+			foreach(var mnt in mount_list){
+				if (mnt.mount_point == "/"){
+					return mnt.device;
+				}
+			}
+			return null;
+		}
+	}
+
+	public Device? dst_boot{
+		get {
+			foreach(var mnt in mount_list){
+				if (mnt.mount_point == "/boot"){
+					return mnt.device;
+				}
+			}
+			return null;
+		}
+	}
+
+	public Device? dst_efi{
+		get {
+			foreach(var mnt in mount_list){
+				if (mnt.mount_point == "/boot/efi"){
+					return mnt.device;
+				}
+			}
+			return null;
+		}
+	}
+
+	public Device? dst_home{
+		get {
+			foreach(var mnt in mount_list){
+				if (mnt.mount_point == "/home"){
+					return mnt.device;
+				}
+			}
+			return null;
+		}
+	}
+	
 	//app config
 
 	public void save_app_config(){
@@ -3478,9 +3537,9 @@ public class Main : GLib.Object{
 			}
 		}
 		else{
-			if (root_device != null){
+			if (sys_root != null){
 				log_debug("repo: uuid is empty, creating from root device");
-				repo = new SnapshotRepo.from_device(root_device, null);
+				repo = new SnapshotRepo.from_device(sys_root, null);
 			}
 			else{
 				log_debug("repo: root device is null");
@@ -3525,7 +3584,7 @@ public class Main : GLib.Object{
 
 		foreach(var pi in partitions){
 
-			// root_device and home_device will be detected by detect_system_devices()
+			// sys_root and sys_home will be detected by detect_system_devices()
 			if ((repo != null) && (repo.device != null) && (pi.uuid == repo.device.uuid)){
 				repo.device = pi;
 			}
@@ -3545,32 +3604,37 @@ public class Main : GLib.Object{
 	public void detect_system_devices(){
 
 		log_debug("detect_system_devices()");
+
+		sys_root = null;
+		sys_boot = null;
+		sys_efi = null;
+		sys_home = null;
 		
 		foreach(Device pi in partitions){
 			foreach(var mp in pi.mount_points){
 				if (mp.mount_point == "/"){
-					root_device = pi;
+					sys_root = pi;
 					if ((app_mode == "")||(LOG_DEBUG)){
 						log_msg(_("/ is mapped to device") + ": %s, UUID=%s".printf(pi.device,pi.uuid));
 					}
 				}
 
 				if (mp.mount_point == "/home"){
-					home_device = pi;
+					sys_home = pi;
 					if ((app_mode == "")||(LOG_DEBUG)){
 						log_msg(_("/home is mapped to device") + ": %s, UUID=%s".printf(pi.device,pi.uuid));
 					}
 				}
 
 				if (mp.mount_point == "/boot"){
-					boot_device = pi;
+					sys_boot = pi;
 					if ((app_mode == "")||(LOG_DEBUG)){
 						log_msg(_("/boot is mapped to device") + ": %s, UUID=%s".printf(pi.device,pi.uuid));
 					}
 				}
 
 				if (mp.mount_point == "/boot/efi"){
-					boot_efi_device = pi;
+					sys_efi = pi;
 					if ((app_mode == "")||(LOG_DEBUG)){
 						log_msg(_("/boot/efi is mapped to device") + ": %s, UUID=%s".printf(pi.device,pi.uuid));
 					}
@@ -3641,7 +3705,10 @@ public class Main : GLib.Object{
 			if (restore_target.fstype == "btrfs"){
 
 				//check subvolume layout
-				if (!check_btrfs_volume(restore_target) && snapshot_to_restore.has_subvolumes()){
+
+				bool supported = check_btrfs_layout(dst_root, dst_home);
+				
+				if (!supported && snapshot_to_restore.has_subvolumes()){
 					string msg = _("The target partition has an unsupported subvolume layout.") + "\n";
 					msg += _("Only ubuntu-type layouts with @ and @home subvolumes are currently supported.");
 
@@ -3739,9 +3806,9 @@ public class Main : GLib.Object{
 		return repo.status_code;
 	}
 
-	public bool check_btrfs_volume(Device dev){
+	public bool check_btrfs_volume(Device dev, string subvol_names){
 
-		log_debug("check_btrfs_volume()");
+		log_debug("check_btrfs_volume():%s".printf(subvol_names));
 		
 		string mnt_btrfs = mount_point_app + "/btrfs";
 		dir_create(mnt_btrfs);
@@ -3749,16 +3816,20 @@ public class Main : GLib.Object{
 		Device.unmount(mnt_btrfs);
 		Device.mount(dev.uuid, mnt_btrfs);
 
-		bool is_supported = dir_exists(mnt_btrfs + "/@") && dir_exists(mnt_btrfs + "/@home");
+		bool supported = true;
+
+		foreach(string subvol_name in subvol_names.split(",")){
+			supported = supported && dir_exists(path_combine(mnt_btrfs,subvol_name));
+		}
 
 		if (Device.unmount(mnt_btrfs)){
 			if (dir_exists(mnt_btrfs) && (dir_count(mnt_btrfs) == 0)){
-				file_delete(mnt_btrfs);
+				dir_delete(mnt_btrfs);
 				log_debug(_("Removed mount directory: '%s'").printf(mnt_btrfs));
 			}
 		}
 
-		return is_supported;
+		return supported;
 	}
 
 	public bool backup_device_online(){
@@ -3889,8 +3960,8 @@ public class Main : GLib.Object{
 			thr_success = false;
 		}
 
-		if ((required_space == 0) && (root_device != null)){
-			required_space = root_device.used_bytes;
+		if ((required_space == 0) && (sys_root != null)){
+			required_space = sys_root.used_bytes;
 		}
 
 		Main.first_snapshot_size = required_space;

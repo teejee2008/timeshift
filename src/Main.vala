@@ -969,6 +969,7 @@ public class Main : GLib.Object{
 		}
 
 		Gtk.init(ref args);
+		X.init_threads();
 	}
 
 	private void list_snapshots(bool paginate){
@@ -3654,115 +3655,122 @@ public class Main : GLib.Object{
 		if (restore_target == null){
 			return false;
 		}
-		else{
+	
+		//check and create restore mount point for restore
+		mount_point_restore = mount_point_app + "/restore";
+		dir_create(mount_point_restore);
 
-			//check and create restore mount point for restore
-			mount_point_restore = mount_point_app + "/restore";
-			dir_create(mount_point_restore);
+		/*var already_mounted = false;
+		var dev_mounted = Device.get_device_by_path(mount_point_restore);
+		if ((dev_mounted != null)
+			&& (dev_mounted.uuid == restore_target.uuid)){
 
-			/*var already_mounted = false;
-			var dev_mounted = Device.get_device_by_path(mount_point_restore);
-			if ((dev_mounted != null)
-				&& (dev_mounted.uuid == restore_target.uuid)){
-
-				foreach(var mp in dev_mounted.mount_points){
-					if ((mp.mount_point == mount_point_restore)
-						&& (mp.mount_options == "subvol=@")){
-							
-						 = true;
-						return; //already_mounted
-					}
+			foreach(var mp in dev_mounted.mount_points){
+				if ((mp.mount_point == mount_point_restore)
+					&& (mp.mount_options == "subvol=@")){
+						
+					 = true;
+					return; //already_mounted
 				}
-			}*/
-			
-			// unmount
-			unmount_target_device();
+			}
+		}*/
+		
+		// unmount
+		unmount_target_device();
 
+		// unlock encrypted device
+		if (restore_target.is_encrypted_partition()){
+			
+			string msg_out, msg_err;
+			
+			restore_target = Device.luks_unlock(
+				restore_target, "", "", parent_win, out msg_out, out msg_err);
+
+			//exit if not found
+			if (restore_target == null){
+				log_error(_("Target device not specified!"));
+				return false;
+			}
+
+			//update mount entry
+			foreach (MountEntry mnt in mount_list) {
+				if (mnt.mount_point == "/"){
+					mnt.device = restore_target;
+					break;
+				}
+			}
+		}
+
+		// mount root device
+		if (restore_target.fstype == "btrfs"){
+
+			//check subvolume layout
+
+			bool supported = check_btrfs_layout(dst_root, dst_home);
+			
+			if (!supported && snapshot_to_restore.has_subvolumes()){
+				string msg = _("The target partition has an unsupported subvolume layout.") + "\n";
+				msg += _("Only ubuntu-type layouts with @ and @home subvolumes are currently supported.");
+
+				if (app_mode == ""){
+					string title = _("Unsupported Subvolume Layout");
+					gtk_messagebox(title, msg, null, true);
+				}
+				else{
+					log_error("\n" + msg);
+				}
+
+				return false;
+			}
+		}
+
+			/*//mount @
+			if (!Device.mount(restore_target.uuid, mount_point_restore, "subvol=@")){
+				log_error(_("Failed to mount BTRFS subvolume") + ": @");
+				return false;
+			}
+
+			//mount @home
+			if (!Device.mount(restore_target.uuid, mount_point_restore + "/home", "subvol=@home")){
+				log_error(_("Failed to mount BTRFS subvolume") + ": @home");
+				return false;
+			}*/
+		//}
+		/*else{
+			if (!Device.mount(restore_target.uuid, mount_point_restore, "")){
+				return false;
+			}
+		}*/
+
+		// mount all devices
+		foreach (var mnt in mount_list) {
+			
 			// unlock encrypted device
-			if (restore_target.is_encrypted_partition()){
-				
+			if (mnt.device.is_encrypted_partition()){
+
 				string msg_out, msg_err;
-				
-				restore_target = Device.luks_unlock(
-					restore_target, "", "", parent_win, out msg_out, out msg_err);
+		
+				mnt.device = Device.luks_unlock(
+					mnt.device, "", "", parent_win, out msg_out, out msg_err);
 
 				//exit if not found
-				if (restore_target == null){
-					log_error(_("Target device not specified!"));
-					return false;
-				}
-
-				//update mount entry
-				foreach (MountEntry mnt in mount_list) {
-					if (mnt.mount_point == "/"){
-						mnt.device = restore_target;
-						break;
-					}
-				}
-			}
-
-			// mount root device
-			if (restore_target.fstype == "btrfs"){
-
-				//check subvolume layout
-
-				bool supported = check_btrfs_layout(dst_root, dst_home);
-				
-				if (!supported && snapshot_to_restore.has_subvolumes()){
-					string msg = _("The target partition has an unsupported subvolume layout.") + "\n";
-					msg += _("Only ubuntu-type layouts with @ and @home subvolumes are currently supported.");
-
-					if (app_mode == ""){
-						string title = _("Unsupported Subvolume Layout");
-						gtk_messagebox(title, msg, null, true);
-					}
-					else{
-						log_error("\n" + msg);
-					}
-
-					return false;
-				}
-
-				//mount @
-				if (!Device.mount(restore_target.uuid, mount_point_restore, "subvol=@")){
-					log_error(_("Failed to mount BTRFS subvolume") + ": @");
-					return false;
-				}
-
-				//mount @home
-				if (!Device.mount(restore_target.uuid, mount_point_restore + "/home", "subvol=@home")){
-					log_error(_("Failed to mount BTRFS subvolume") + ": @home");
-					return false;
-				}
-			}
-			else{
-				if (!Device.mount(restore_target.uuid, mount_point_restore, "")){
+				if (mnt.device == null){
 					return false;
 				}
 			}
 
-			// mount remaining devices
-			foreach (var mnt in mount_list) {
-				if (mnt.mount_point != "/"){
-
-					// unlock encrypted device
-					if (mnt.device.is_encrypted_partition()){
-
-						string msg_out, msg_err;
-				
-						mnt.device = Device.luks_unlock(
-							mnt.device, "", "", parent_win, out msg_out, out msg_err);
-
-						//exit if not found
-						if (mnt.device == null){
-							return false;
-						}
-					}
-
-					if (!Device.mount(mnt.device.uuid, mount_point_restore + mnt.mount_point)){
-						return false;
-					}
+			string mount_options = "";
+			if (mnt.device.fstype == "btrfs"){
+				if (mnt.mount_point == "/"){
+					mount_options = "subvol=@";
 				}
+				else if (mnt.mount_point == "/home"){
+					mount_options = "subvol=@home";
+				}
+			}
+
+			if (!Device.mount(mnt.device.uuid, mount_point_restore + mnt.mount_point, mount_options)){
+				return false;
 			}
 		}
 

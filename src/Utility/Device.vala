@@ -75,6 +75,9 @@ public class Device : GLib.Object{
 	public Device parent = null;
 	public Gee.ArrayList<Device> children = null;
 
+	private static string lsblk_version = "";
+	private static bool lsblk_is_ancient = false;
+	
 	private static Gee.ArrayList<Device> device_list;
 
 	public static Bash bash_admin_shell = null;
@@ -84,8 +87,28 @@ public class Device : GLib.Object{
 		//mount_options = new Gee.ArrayList<string>();
 		symlinks = new Gee.ArrayList<string>();
 		children = new Gee.ArrayList<Device>();
+
+		test_lsblk_version();
 	}
 
+	public static void test_lsblk_version(){
+
+		if ((lsblk_version != null) && (lsblk_version.length > 0)){
+			return;
+		}
+		
+		string std_out, std_err;
+		int status = exec_sync("lsblk --version", out std_out, out std_err);
+		if (status == 0){
+			lsblk_version = std_out;
+			lsblk_is_ancient = false;
+		}
+		else{
+			lsblk_version = "ancient";
+			lsblk_is_ancient = true;
+		}
+	}
+	
 	/* Returns:
 	 * 'sda3' for '/dev/sda3'
 	 * 'luks' for '/dev/mapper/luks'
@@ -395,78 +418,6 @@ public class Device : GLib.Object{
 		return (parent != null);
 	}
 
-	// methods ---------------------------
-
-	public void copy_fields_from(Device dev2){
-		
-		this.device = dev2.device;
-		this.name = dev2.name;
-		this.kname = dev2.kname;
-		this.pkname = dev2.pkname;
-		this.label = dev2.label;
-		this.uuid = dev2.uuid;
-		this.mapped_name = dev2.mapped_name;
-		
-		this.type = dev2.type;
-		this.fstype = dev2.fstype;
-
-		this.size_bytes = dev2.size_bytes;
-		this.used_bytes = dev2.used_bytes;
-		this.available_bytes = dev2.available_bytes;
-		
-		this.mount_points = dev2.mount_points;
-		this.symlinks = dev2.symlinks;
-		this.parent = dev2.parent;
-		this.children = dev2.children;
-
-		this.vendor = dev2.vendor;
-		this.model = dev2.model;
-		this.serial = dev2.serial;
-		this.revision = dev2.revision;
-
-		this.removable = dev2.removable;
-		this.read_only = dev2.read_only;
-	}
-
-	public Device? query_changes(){
-		
-		Device dev_new = null;
-		
-		foreach (var dev in get_block_devices_using_lsblk()){
-			if (uuid.length > 0){
-				if (dev.uuid == uuid){
-					dev_new = dev;
-					break;
-				}
-			}
-			else{
-				if (dev.device == device){
-					dev_new = dev;
-					break;
-				}
-			}
-		}
-		
-		return dev_new;
-	}
-	
-	public void query_disk_space(){
-
-		/* Updates disk space info and returns the given Device object */
-
-		var list_df = get_disk_space_using_df(device);
-		
-		var dev_df = find_device_in_list(list_df, device, uuid);
-		
-		if (dev_df != null){
-			// update dev fields
-			size_bytes = dev_df.size_bytes;
-			used_bytes = dev_df.used_bytes;
-			available_bytes = dev_df.available_bytes;
-			used_percent = dev_df.used_percent;
-		}
-	}
-
 	// static --------------------------------
 	
 	public static Gee.ArrayList<Device> get_filesystems(
@@ -506,15 +457,29 @@ public class Device : GLib.Object{
 		//print_device_list(list);
 
 		//print_device_mounts(list);
+
+		log_debug("Device: get_filesystems(): %d".printf(list.size));
 		
 		return list;
 	}
 
 	private static void find_child_devices(Gee.ArrayList<Device> list, Device parent){
-		foreach (var part in list){
-			if (part.pkname == parent.kname){
-				parent.children.add(part);
-				part.parent = parent;
+		if (lsblk_is_ancient){
+			foreach (var part in list){
+				if ((part.kname != parent.kname) && part.kname.has_prefix(parent.kname)){
+					parent.children.add(part);
+					part.parent = parent;
+					part.pkname = parent.kname;
+					log_debug("%s -> %s".printf(parent.kname, part.kname));
+				}
+			}
+		}
+		else{
+			foreach (var part in list){
+				if (part.pkname == parent.kname){
+					parent.children.add(part);
+					part.parent = parent;
+				}
 			}
 		}
 	}
@@ -525,6 +490,8 @@ public class Device : GLib.Object{
 		/* Returns list of mounted partitions using 'lsblk' command
 		   Populates device, type, uuid, label */
 
+		test_lsblk_version();
+		
 		var list = new Gee.ArrayList<Device>();
 
 		string std_out;
@@ -534,8 +501,16 @@ public class Device : GLib.Object{
 		Regex rex;
 		MatchInfo match;
 
-		cmd = "lsblk --bytes --pairs --output NAME,KNAME,PKNAME,LABEL,UUID,TYPE,FSTYPE,SIZE,MOUNTPOINT,HOTPLUG,RO,VENDOR,MODEL,SERIAL,REV %s".printf(
-			(device_file.length > 0) ? device_file : "");
+		if (lsblk_is_ancient){
+			cmd = "lsblk --bytes --pairs --output NAME,KNAME,LABEL,UUID,TYPE,FSTYPE,SIZE,MOUNTPOINT,MODEL,RO,RM";
+		}
+		else{
+			cmd = "lsblk --bytes --pairs --output NAME,KNAME,LABEL,UUID,TYPE,FSTYPE,SIZE,MOUNTPOINT,MODEL,RO,HOTPLUG,PKNAME,VENDOR,SERIAL,REV";
+		}
+
+		if (device_file.length > 0){
+			cmd += " %s".printf(device_file);
+		}
 
 		if (LOG_DEBUG){
 			log_debug("");
@@ -544,12 +519,12 @@ public class Device : GLib.Object{
 			
 		ret_val = exec_sync(cmd, out std_out, out std_err);
 		
-		if (ret_val != 0){
-			var msg = "lsblk: " + _("Failed to get partition list");
-			msg += (device_file.length > 0) ? ": " + device_file : "";
-			log_error (msg);
-			return list; //return empty map
-		}
+		//if (ret_val != 0){
+		//	var msg = "lsblk: " + _("Failed to get partition list");
+		//	msg += (device_file.length > 0) ? ": " + device_file : "";
+		//	log_error (msg);
+		//	return list; //return empty map
+		//}
 
 		/*
 		sample output
@@ -576,34 +551,45 @@ public class Device : GLib.Object{
 			if (line.strip().length == 0) { continue; }
 
 			try{
-				rex = new Regex("""NAME="(.*)" KNAME="(.*)" PKNAME="(.*)" LABEL="(.*)" UUID="(.*)" TYPE="(.*)" FSTYPE="(.*)" SIZE="(.*)" MOUNTPOINT="(.*)" HOTPLUG="([0-9]+)" RO="([0-9]+)" VENDOR="(.*)" MODEL="(.*)" SERIAL="(.*)" REV="(.*)"""");
+				if (lsblk_is_ancient){
+					rex = new Regex("""NAME="(.*)" KNAME="(.*)" LABEL="(.*)" UUID="(.*)" TYPE="(.*)" FSTYPE="(.*)" SIZE="(.*)" MOUNTPOINT="(.*)" MODEL="(.*)" RO="([0-9]+)" RM="([0-9]+)"""");
+				}
+				else{
+					rex = new Regex("""NAME="(.*)" KNAME="(.*)" LABEL="(.*)" UUID="(.*)" TYPE="(.*)" FSTYPE="(.*)" SIZE="(.*)" MOUNTPOINT="(.*)" MODEL="(.*)" RO="([0-9]+)" HOTPLUG="([0-9]+)" PKNAME="(.*)" VENDOR="(.*)" SERIAL="(.*)" REV="(.*)"""");
+				}
+				
 				if (rex.match (line, 0, out match)){
 
 					Device pi = new Device();
 					pi.name = match.fetch(1).strip();
 					pi.kname = match.fetch(2).strip();
-					pi.pkname = match.fetch(3).strip();
-					pi.label = match.fetch(4).strip();
-					pi.uuid = match.fetch(5).strip();
-					pi.type = match.fetch(6).strip().down();
-					pi.fstype = match.fetch(7).strip().down();
-					pi.size_bytes = int64.parse(match.fetch(8).strip());
-
+					pi.label = match.fetch(3).strip();
+					pi.uuid = match.fetch(4).strip();
+					pi.type = match.fetch(5).strip().down();
+					
+					pi.fstype = match.fetch(6).strip().down();
 					pi.fstype = (pi.fstype == "crypto_luks") ? "luks" : pi.fstype;
 					pi.fstype = (pi.fstype == "lvm2_member") ? "lvm2" : pi.fstype;
 					
-					var mp = match.fetch(9).strip();
+					pi.size_bytes = int64.parse(match.fetch(7).strip());
+
+					var mp = match.fetch(8).strip();
 					if (mp.length > 0){
 						pi.mount_points.add(new MountEntry(pi,mp,""));
 					}
-					
-					pi.removable = (match.fetch(10).strip() == "1");
-					pi.read_only = (match.fetch(11).strip() == "1");
 
-					pi.vendor = match.fetch(12).strip();
-					pi.model = match.fetch(13).strip();
-					pi.serial = match.fetch(14).strip();
-					pi.revision = match.fetch(15).strip();
+					pi.model = match.fetch(9).strip();
+
+					pi.read_only = (match.fetch(10).strip() == "1");
+
+					pi.removable = (match.fetch(11).strip() == "1");
+
+					if (!lsblk_is_ancient){
+						pi.pkname = match.fetch(12).strip();
+						pi.vendor = match.fetch(13).strip();
+						pi.serial = match.fetch(14).strip();
+						pi.revision = match.fetch(15).strip();
+					}
 					
 					pi.order = ++index;
 					pi.device = "/dev/%s".printf(pi.kname);
@@ -615,6 +601,9 @@ public class Device : GLib.Object{
 					//if ((pi.uuid.length > 0) && (pi.pkname.length > 0)){
 						list.add(pi);
 					//}
+				}
+				else{
+					log_debug("no-match: %s".printf(line));
 				}
 			}
 			catch(Error e){
@@ -684,6 +673,8 @@ public class Device : GLib.Object{
 		
 		//print_device_list(list);
 
+		log_debug("Device: get_block_devices_using_lsblk(): %d".printf(list.size));
+		
 		return list;
 	}
 
@@ -782,6 +773,8 @@ public class Device : GLib.Object{
 			}
 		}
 
+		log_debug("Device: get_block_devices_using_blkid(): %d".printf(list.size));
+		
 		return list;
 	}
 
@@ -891,6 +884,8 @@ public class Device : GLib.Object{
 				list.add(pi);
 			}
 		}
+		
+		log_debug("Device: get_disk_space_using_df(): %d".printf(list.size));
 
 		return list;
 	}
@@ -1024,6 +1019,8 @@ public class Device : GLib.Object{
 			}
 		}
 
+		log_debug("Device: get_mounted_filesystems_using_mtab(): %d".printf(list.size));
+		
 		return list;
 	}
 
@@ -1159,7 +1156,77 @@ public class Device : GLib.Object{
 
 		return resolved;
 	}
+
+	public void copy_fields_from(Device dev2){
+		
+		this.device = dev2.device;
+		this.name = dev2.name;
+		this.kname = dev2.kname;
+		this.pkname = dev2.pkname;
+		this.label = dev2.label;
+		this.uuid = dev2.uuid;
+		this.mapped_name = dev2.mapped_name;
+		
+		this.type = dev2.type;
+		this.fstype = dev2.fstype;
+
+		this.size_bytes = dev2.size_bytes;
+		this.used_bytes = dev2.used_bytes;
+		this.available_bytes = dev2.available_bytes;
+		
+		this.mount_points = dev2.mount_points;
+		this.symlinks = dev2.symlinks;
+		this.parent = dev2.parent;
+		this.children = dev2.children;
+
+		this.vendor = dev2.vendor;
+		this.model = dev2.model;
+		this.serial = dev2.serial;
+		this.revision = dev2.revision;
+
+		this.removable = dev2.removable;
+		this.read_only = dev2.read_only;
+	}
+
+	public Device? query_changes(){
+		
+		Device dev_new = null;
+		
+		foreach (var dev in get_block_devices_using_lsblk()){
+			if (uuid.length > 0){
+				if (dev.uuid == uuid){
+					dev_new = dev;
+					break;
+				}
+			}
+			else{
+				if (dev.device == device){
+					dev_new = dev;
+					break;
+				}
+			}
+		}
+		
+		return dev_new;
+	}
 	
+	public void query_disk_space(){
+
+		/* Updates disk space info and returns the given Device object */
+
+		var list_df = get_disk_space_using_df(device);
+		
+		var dev_df = find_device_in_list(list_df, device, uuid);
+		
+		if (dev_df != null){
+			// update dev fields
+			size_bytes = dev_df.size_bytes;
+			used_bytes = dev_df.used_bytes;
+			available_bytes = dev_df.available_bytes;
+			used_percent = dev_df.used_percent;
+		}
+	}
+
 	// mounting ---------------------------------
 	
 	public static bool automount_udisks(string device_name_or_uuid, Gtk.Window? parent_window){

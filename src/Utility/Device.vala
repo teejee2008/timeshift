@@ -2,7 +2,7 @@
 /*
  * Device.vala
  *
- * Copyright 2016 Tony George <teejee2008@gmail.com>
+ * Copyright 2016 Tony George <teejeetech@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -502,8 +502,6 @@ public class Device : GLib.Object{
 				}
 			}
 		}
-
-		
 
 		//print_device_list(list);
 

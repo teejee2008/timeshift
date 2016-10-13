@@ -1,7 +1,7 @@
 /*
  * Main.vala
  *
- * Copyright 2012 Tony George <teejee2008@gmail.com>
+ * Copyright 2016 Tony George <teejeetech@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ public const string AppName = "Timeshift RSYNC";
 public const string AppShortName = "timeshift";
 public const string AppVersion = "16.10.3";
 public const string AppAuthor = "Tony George";
-public const string AppAuthorEmail = "teejee2008@gmail.com";
+public const string AppAuthorEmail = "teejeetech@gmail.com";
 
 const string GETTEXT_PACKAGE = "";
 const string LOCALE_DIR = "/usr/share/locale";
@@ -787,7 +787,7 @@ public class Main : GLib.Object{
 	//console functions
 
 	public static string help_message (){
-		string msg = "\n" + AppName + " v" + AppVersion + " by Tony George (teejee2008@gmail.com)" + "\n";
+		string msg = "\n" + AppName + " v" + AppVersion + " by Tony George (teejeetech@gmail.com)" + "\n";
 		msg += "\n";
 		msg += "Syntax:\n";
 		msg += "\n";

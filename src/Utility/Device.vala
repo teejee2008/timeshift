@@ -484,6 +484,64 @@ public class Device : GLib.Object{
 		}
 	}
 
+	private static void find_child_devices_using_dmsetup(Gee.ArrayList<Device> list){
+		
+		string std_out, std_err;
+		exec_sync("dmsetup deps -o blkdevname", out std_out, out std_err);
+		
+		/*
+		sdb3_crypt: 1 dependencies	: (sdb3)
+		sda5_crypt: 1 dependencies	: (sda5)
+		mmcblk0_crypt: 1 dependencies	: (mmcblk0)
+		*/
+
+		Regex rex;
+		MatchInfo match;
+
+		foreach(string line in std_out.split("\n")){
+			if (line.strip().length == 0) { continue; }
+
+			try{
+	
+				rex = new Regex("""([^:]*)\:.*\((.*)\)""");
+
+				if (rex.match (line, 0, out match)){
+	
+					string child_name = match.fetch(1).strip();
+					string parent_kname = match.fetch(2).strip();
+
+					Device parent = null;
+					foreach(var dev in list){
+						if ((dev.kname == parent_kname)){
+							parent = dev;
+							break;
+						}
+					}
+
+					Device child = null;
+					foreach(var dev in list){
+						if ((dev.mapped_name == child_name)){
+							child = dev;
+							break;
+						}
+					}
+					
+					if ((parent != null) && (child != null)){
+						child.pkname = parent.kname;
+						log_debug("%s -> %s".printf(parent.kname, child.kname));
+					}
+					
+				}
+				else{
+					log_debug("no-match: %s".printf(line));
+				}
+			}
+			catch(Error e){
+				log_error (e.message);
+			}
+		}
+	}
+
 	public static Gee.ArrayList<Device> get_block_devices_using_lsblk(
 		string device_file = ""){
 
@@ -594,9 +652,9 @@ public class Device : GLib.Object{
 					pi.order = ++index;
 					pi.device = "/dev/%s".printf(pi.kname);
 
-					if ((pi.type == "crypt") && (pi.pkname.length > 0)){
-						pi.name = "%s (unlocked)".printf(pi.pkname);
-					}
+					//if ((pi.type == "crypt") && (pi.pkname.length > 0)){
+					//	pi.name = "%s (unlocked)".printf(pi.pkname);
+					//}
 
 					//if ((pi.uuid.length > 0) && (pi.pkname.length > 0)){
 						list.add(pi);
@@ -670,8 +728,12 @@ public class Device : GLib.Object{
 		foreach (var part in list){
 			find_child_devices(list, part);
 		}
+
+		if (lsblk_is_ancient){
+			find_child_devices_using_dmsetup(list);
+		}
 		
-		//print_device_list(list);
+		print_device_list(list);
 
 		log_debug("Device: get_block_devices_using_lsblk(): %d".printf(list.size));
 		

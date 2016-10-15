@@ -969,7 +969,7 @@ public class Main : GLib.Object{
 		}
 
 		Gtk.init(ref args);
-		X.init_threads();
+		//X.init_threads();
 	}
 
 	private void list_snapshots(bool paginate){
@@ -3723,24 +3723,6 @@ public class Main : GLib.Object{
 				return false;
 			}
 		}
-
-			/*//mount @
-			if (!Device.mount(restore_target.uuid, mount_point_restore, "subvol=@")){
-				log_error(_("Failed to mount BTRFS subvolume") + ": @");
-				return false;
-			}
-
-			//mount @home
-			if (!Device.mount(restore_target.uuid, mount_point_restore + "/home", "subvol=@home")){
-				log_error(_("Failed to mount BTRFS subvolume") + ": @home");
-				return false;
-			}*/
-		//}
-		/*else{
-			if (!Device.mount(restore_target.uuid, mount_point_restore, "")){
-				return false;
-			}
-		}*/
 
 		// mount all devices
 		foreach (var mnt in mount_list) {

@@ -594,8 +594,8 @@ class RestoreDeviceBox : Gtk.Box{
 		//check if grub device selected ---------------
 
 		if (!chk_skip_grub_install.active && cmb_grub_dev.active < 0){
-			string title =_("Boot device not selected");
-			string msg = _("Please select the boot device");
+			string title =_("GRUB device not selected");
+			string msg = _("Please select the GRUB device");
 			gtk_messagebox(title, msg, parent_window, true);
 			return false;
 		}

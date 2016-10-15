@@ -464,7 +464,7 @@ public class Device : GLib.Object{
 	}
 
 	private static void find_child_devices(Gee.ArrayList<Device> list, Device parent){
-		if (lsblk_is_ancient){
+		if (lsblk_is_ancient && (parent.type == "disk")){
 			foreach (var part in list){
 				if ((part.kname != parent.kname) && part.kname.has_prefix(parent.kname)){
 					parent.children.add(part);
@@ -1806,6 +1806,7 @@ public class Device : GLib.Object{
 
 		log_debug("");
 		
+		/*
 		log_debug("%-20s %-20s %s %s %s %s".printf(
 			"device",
 			"label",
@@ -1828,6 +1829,7 @@ public class Device : GLib.Object{
 		}
 
 		log_debug("");
+		*/
 		
 		log_debug("%-20s %-10s %-15s %-3s %-3s %15s %15s".printf(
 			"device",

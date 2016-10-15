@@ -35,7 +35,7 @@ using TeeJee.Misc;
 class RestoreWindow : Gtk.Window{
 	private Gtk.Box vbox_main;
 	private Gtk.Notebook notebook;
-	private Gtk.Box bbox_action;
+	private Gtk.ButtonBox bbox_action;
 
 	// tabs
 	private RestoreDeviceBox restore_device_box;
@@ -141,7 +141,7 @@ class RestoreWindow : Gtk.Window{
 	}
 	
 	private void create_actions(){
-		var hbox = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
+		var hbox = new Gtk.ButtonBox (Gtk.Orientation.HORIZONTAL);
 		hbox.margin = 0;
 		hbox.margin_left = 24;
 		hbox.margin_right = 24;

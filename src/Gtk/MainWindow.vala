@@ -819,7 +819,46 @@ class MainWindow : Gtk.Window{
 
 		dialog.documenters = null;
 		dialog.artists = null;
-		dialog.donations = null;
+
+		dialog.donations = {
+			"Alexandru Repede",
+			"Angelo Argano",
+			"Arnold Lindquist",
+			"Art Doyle",
+			"Carl Andersen",
+			"Charming Critters Art & More",
+			"Christopher Nascone",
+			"Christopher Wolfe",
+			"Christopher Wolfe",
+			"Colin Mills",
+			"Didier Lima",
+			"Diego Ariel Capeletti",
+			"ertugrulharman.com",
+			"Frank Henke",
+			"Gary Harris",
+			"Gunter Beckmann",
+			"Hubert Banas",
+			"Jamie Brittain",
+			"Jan Espen Pedersen",
+			"Jessie Spencer",
+			"Joan Brians Cendra",
+			"Jonathan Barton",
+			"Kovalskiy Sergey",
+			"Loeper Matthias",
+			"Michael Abboud",
+			"Michael Young",
+			"Mirko Anderlini",
+			"Nicola Jelmorini",
+			"Nikolaos D. Kakias & SIA E.E.",
+			"Palmer Glunt",
+			"Paul Niklas Krauth",
+			"Robert E Hallstrom",
+			"Silvia Götze",
+			"Steve Jackson",
+			"Terrance Harris",
+			"Thierry Guignard",
+			"XCELLENCE Software Solutions"
+		};
 
 		dialog.program_name = AppName;
 		dialog.comments = _("System Restore Utility for Linux");

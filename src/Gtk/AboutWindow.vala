@@ -321,7 +321,7 @@ public class AboutWindow : Dialog {
 		lbl_copyright.label = "<span>%s</span>".printf(copyright);
 
 		if (authors.length > 0){
-			add_line("<b>%s</b>\n".printf(_("Authors")));
+			add_header("<b>%s</b>\n".printf(_("Authors")));
 			foreach(string name in authors){
 				add_line("%s\n".printf(name));
 			}
@@ -329,7 +329,7 @@ public class AboutWindow : Dialog {
 		}
 
 		if (contributors.length > 0){
-			add_line("<b>%s</b>\n".printf(_("Contributions")));
+			add_header("<b>%s</b>\n".printf(_("Contributions")));
 			foreach(string name in contributors){
 				add_line("%s\n".printf(name));
 			}
@@ -337,7 +337,7 @@ public class AboutWindow : Dialog {
 		}
 		
 		if (third_party.length > 0){
-			add_line("<b>%s</b>\n".printf(_("Third Party Tools")));
+			add_header("<b>%s</b>\n".printf(_("Third Party Tools")));
 			foreach(string name in third_party){
 				add_line("%s\n".printf(name));
 			}
@@ -345,7 +345,7 @@ public class AboutWindow : Dialog {
 		}
 
 		if (artists.length > 0){
-			add_line("<b>%s</b>\n".printf(_("Artists")));
+			add_header("<b>%s</b>\n".printf(_("Artists")));
 			foreach(string name in artists){
 				add_line("%s\n".printf(name));
 			}
@@ -353,7 +353,7 @@ public class AboutWindow : Dialog {
 		}
 
 		if (translators.length > 0){
-			add_line("<b>%s</b>\n".printf(_("Translators")));
+			add_header("<b>%s</b>\n".printf(_("Translators")));
 			foreach(string name in translators){
 				add_line("%s\n".printf(name));
 			}
@@ -361,7 +361,7 @@ public class AboutWindow : Dialog {
 		}
 
 		if (documenters.length > 0){
-			add_line("<b>%s</b>\n".printf(_("Documenters")));
+			add_header("<b>%s</b>\n".printf(_("Documenters")));
 			foreach(string name in documenters){
 				add_line("%s\n".printf(name));
 			}
@@ -369,7 +369,7 @@ public class AboutWindow : Dialog {
 		}
 
 		if (donations.length > 0){
-			add_line("<b>%s</b>\n".printf(_("Donations")));
+			add_header("<b>%s</b>\n".printf(_("Donations")));
 			foreach(string name in donations){
 				add_line("%s\n".printf(name));
 			}
@@ -381,9 +381,10 @@ public class AboutWindow : Dialog {
 		}
 	}
 
-	public void add_line(string text){
+	public void add_line(string text, bool escape_html_chars = true){
+		
 		if (text.split(":").length >= 2){
-			var link = new LinkButton(text.split(":")[0]);
+			var link = new LinkButton(escape_html(text.split(":")[0]));
 			vbox_lines.add(link);
 
 			string val = text[text.index_of(":") + 1:text.length];
@@ -407,12 +408,21 @@ public class AboutWindow : Dialog {
 			});
 		}
 		else{
-			var lbl = new Label(text);
+			var txt = text;
+			if (escape_html_chars){
+				txt = escape_html(text);
+			}
+
+			var lbl = new Label(txt);
 			lbl.set_use_markup(true);
 			lbl.valign = Align.START;
 			lbl.wrap = true;
 			lbl.wrap_mode = Pango.WrapMode.WORD;
 			vbox_lines.add(lbl);
 		}
+	}
+
+	public void add_header(string text){
+		add_line(text, false);
 	}
 }

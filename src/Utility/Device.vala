@@ -80,11 +80,8 @@ public class Device : GLib.Object{
 	
 	private static Gee.ArrayList<Device> device_list;
 
-	public static Bash bash_admin_shell = null;
-	
 	public Device(){
 		mount_points = new Gee.ArrayList<MountEntry>();
-		//mount_options = new Gee.ArrayList<string>();
 		symlinks = new Gee.ArrayList<string>();
 		children = new Gee.ArrayList<Device>();
 

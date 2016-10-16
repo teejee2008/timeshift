@@ -31,6 +31,7 @@ public class CronTab : GLib.Object {
 	}
 
 	public static bool add_job(string entry){
+		
 		// read crontab file
 		string tab = crontab_read_all();
 		var lines = new Gee.ArrayList<string>();
@@ -74,12 +75,24 @@ public class CronTab : GLib.Object {
 		}
 	}
 
-	public static bool remove_job(string entry){
+	public static bool remove_job(string entry, bool use_regex = false){
+		
 		// read crontab file
 		string tab = crontab_read_all();
 		var lines = new Gee.ArrayList<string>();
 		foreach(string line in tab.split("\n")){
 			lines.add(line);
+		}
+		
+		Regex regex = null;
+
+		if (use_regex){
+			try {
+				regex = new Regex(entry);
+			}
+			catch (Error e) {
+				log_error (e.message);
+			}
 		}
 
 		// check if entry exists
@@ -89,9 +102,20 @@ public class CronTab : GLib.Object {
 			if (line != null){
 				line = line.strip();
 			}
-			if (line == entry){
-				lines.remove(line);
-				found = true;
+
+			if (use_regex && (regex != null)){
+				
+				MatchInfo match;
+				if (regex.match(line, 0, out match)) {
+					lines.remove(line);
+					found = true;
+				}
+			}
+			else{
+				if (line == entry){
+					lines.remove(line);
+					found = true;
+				}
 			}
 		}
 		if (!found){

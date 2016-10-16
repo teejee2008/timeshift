@@ -3969,254 +3969,42 @@ public class Main : GLib.Object{
 
 		if (live_system()) { return; }
 
-		string current_entry = "";
-		string new_entry = "";
-		bool new_entry_exists = false;
-		string search_string = "";
+		// check and remove crontab entries created by previous versions of timeshift
 
-		//scheduled job ----------------------------------
+		string entry = "*/30 * * * * timeshift --backup";
+		CronTab.remove_job(entry, true);
 
-		new_entry = get_crontab_entry_scheduled();
-		new_entry_exists = false;
-
-		//check and remove crontab entries created by previous versions of timeshift
-
-		search_string = "*/30 * * * * timeshift --backup";
-		current_entry = crontab_read_entry(search_string);
-		if (current_entry.length > 0) {
-			//remove entry
-			crontab_remove_job(current_entry);
+		foreach(string interval in new string[] {"@monthly","@weekly","@daily"}){
+			entry = "%s timeshift --backup".printf(interval);
+			CronTab.remove_job(entry, true);
 		}
 
-		//check for regular entries
-		foreach(string interval in new string[] {"@monthly","@weekly","@daily","@hourly"}){
+		entry = "*/30 * * * * timeshift --backup";
+		CronTab.remove_job(entry);
 
-			search_string = "%s timeshift --backup".printf(interval);
+		entry = "^@(daily|weekly|monthly|hourly) timeshift --backup$";
+		CronTab.remove_job(entry, true);
 
-			//read
-			current_entry = crontab_read_entry(search_string);
+		entry = "^@reboot sleep [0-9]*m && timeshift --backup$";
+		CronTab.remove_job(entry, true);
 
-			if (current_entry.length == 0) { continue; } //not found
+		// update crontab entries
 
-			//check
-			if (current_entry == new_entry){
-				//keep entry
-				new_entry_exists = true;
-			}
-			else{
-				//remove current entry
-				crontab_remove_job(current_entry);
-			}
-		}
-
-		//add new entry if missing
-		if (!new_entry_exists && new_entry.length > 0){
-			crontab_add_job(new_entry);
-		}
-
-		//boot job ----------------------------------
-
-		search_string = """@reboot sleep [0-9]*m && timeshift --backup""";
-
-		new_entry = get_crontab_entry_boot();
-		new_entry_exists = false;
-
-		//read
-		current_entry = crontab_read_entry(search_string, true);
-
-		if (current_entry.length > 0) {
-			//check
-			if (current_entry == new_entry){
-				//keep entry
-				new_entry_exists = true;
-			}
-			else{
-				//remove current entry
-				crontab_remove_job(current_entry);
-			}
-		}
-
-		//add new entry if missing
-		if (!new_entry_exists && new_entry.length > 0){
-			crontab_add_job(new_entry);
-		}
-	}
-
-	private string get_crontab_entry_scheduled(){
+		string entry_hourly = "@reboot sleep %dm && env DISPLAY=:0.0 timeshift --backup".printf(startup_delay_interval_mins);
+		entry_hourly += " #timeshift-16.10-hourly";
+		
+		string entry_boot = "@hourly env DISPLAY=:0.0 timeshift --backup";
+		entry_boot += " #timeshift-16.10-boot";
+		
 		if (scheduled){
-			// run once every hour
-			return "@hourly timeshift --backup";
-
-			/*
-			if (schedule_hourly){
-				
-			}
-			else if (schedule_daily){
-				return "@daily timeshift --backup";
-			}
-			else if (schedule_weekly){
-				return "@weekly timeshift --backup";
-			}
-			else if (schedule_monthly){
-				return "@monthly timeshift --backup";
-			}*/
-		}
-
-		return "";
-	}
-
-	private string get_crontab_entry_boot(){
-		if (scheduled){
-			return "@reboot sleep %dm && timeshift --backup".printf(startup_delay_interval_mins);
-		}
-
-		return "";
-	}
-
-	private bool crontab_add_job(string entry){
-		if (live_system()) { return false; }
-
-		if (crontab_add(entry)){
-			log_msg(_("Cron job added") + ": %s".printf(entry));
-			return true;
-		}
-		else {
-			log_error(_("Failed to add cron job"));
-			return false;
-		}
-	}
-
-	private bool crontab_remove_job(string search_string){
-		if (live_system()) { return false; }
-
-		if (crontab_remove(search_string)){
-			log_msg(_("Cron job removed") + ": %s".printf(search_string));
-			return true;
+			CronTab.add_job(entry_hourly);
+			CronTab.add_job(entry_boot);
 		}
 		else{
-			log_error(_("Failed to remove cron job"));
-			return false;
+			CronTab.remove_job(entry_hourly, true);
+			CronTab.remove_job(entry_boot, true);
 		}
 	}
-
-	public bool crontab_remove(string line){
-		string cmd = "";
-		string std_out;
-		string std_err;
-		int ret_val;
-
-		cmd = "crontab -l | sed '/%s/d' | crontab -".printf(line);
-		ret_val = exec_script_sync(cmd, out std_out, out std_err);
-
-		if (ret_val != 0){
-			log_error(std_err);
-			return false;
-		}
-		else{
-			return true;
-		}
-	}
-
-	public bool crontab_add(string entry){
-		string cmd = "";
-		string std_out;
-		string std_err;
-		int ret_val;
-
-		try{
-			string crontab = crontab_read_all();
-			crontab += crontab.has_suffix("\n") ? "" : "\n";
-			crontab += entry + "\n";
-
-			//remove empty lines
-			crontab = crontab.replace("\n\n","\n"); //remove empty lines in middle
-			crontab = crontab.has_prefix("\n") ? crontab[1:crontab.length] : crontab; //remove empty lines in beginning
-
-			string temp_file = get_temp_file_path();
-			file_write(temp_file, crontab);
-
-			cmd = "crontab \"%s\"".printf(temp_file);
-			Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-
-			if (ret_val != 0){
-				log_error(std_err);
-				return false;
-			}
-			else{
-				return true;
-			}
-		}
-		catch(Error e){
-			log_error (e.message);
-			return false;
-		}
-	}
-
-	public string crontab_read_all(){
-		string cmd = "";
-		string std_out;
-		string std_err;
-		int ret_val;
-
-		try {
-			cmd = "crontab -l";
-			Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-			if (ret_val != 0){
-				log_debug(_("Crontab is empty"));
-				return "";
-			}
-			else{
-				return std_out;
-			}
-		}
-		catch (Error e){
-			log_error (e.message);
-			return "";
-		}
-	}
-
-	public string crontab_read_entry(string search_string, bool use_regex_matching = false){
-		string cmd = "";
-		string std_out;
-		string std_err;
-		int ret_val;
-
-		try{
-			Regex rex = null;
-			MatchInfo match;
-			if (use_regex_matching){
-				rex = new Regex(search_string);
-			}
-
-			cmd = "crontab -l";
-			Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-			if (ret_val != 0){
-				log_debug(_("Crontab is empty"));
-			}
-			else{
-				foreach(string line in std_out.split("\n")){
-					if (use_regex_matching && (rex != null)){
-						if (rex.match (line, 0, out match)){
-							return line.strip();
-						}
-					}
-					else {
-						if (line.contains(search_string)){
-							return line.strip();
-						}
-					}
-				}
-			}
-
-			return "";
-		}
-		catch(Error e){
-			log_error (e.message);
-			return "";
-		}
-	}
-
-	// TODO: Use the new CronTab class
 
 	//cleanup
 

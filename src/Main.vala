@@ -37,7 +37,7 @@ using TeeJee.Misc;
 public Main App;
 public const string AppName = "Timeshift RSYNC";
 public const string AppShortName = "timeshift";
-public const string AppVersion = "16.10.5";
+public const string AppVersion = "16.10.6";
 public const string AppAuthor = "Tony George";
 public const string AppAuthorEmail = "teejeetech@gmail.com";
 
@@ -966,9 +966,9 @@ public class Main : GLib.Object{
 		if (app_mode == ""){
 			//Initialize GTK
 			LOG_TIMESTAMP = true;
+			Gtk.init(ref args);
 		}
 
-		Gtk.init(ref args);
 		//X.init_threads();
 	}
 
@@ -3972,38 +3972,44 @@ public class Main : GLib.Object{
 		// check and remove crontab entries created by previous versions of timeshift
 
 		string entry = "*/30 * * * * timeshift --backup";
-		CronTab.remove_job(entry, true);
+		CronTab.remove_job(entry);
 
 		foreach(string interval in new string[] {"@monthly","@weekly","@daily"}){
 			entry = "%s timeshift --backup".printf(interval);
-			CronTab.remove_job(entry, true);
+			CronTab.remove_job(entry);
 		}
 
-		entry = "*/30 * * * * timeshift --backup";
-		CronTab.remove_job(entry);
+		//entry = "^@(daily|weekly|monthly|hourly) timeshift --backup$";
+		//CronTab.remove_job(entry, true);
 
-		entry = "^@(daily|weekly|monthly|hourly) timeshift --backup$";
-		CronTab.remove_job(entry, true);
-
-		entry = "^@reboot sleep [0-9]*m && timeshift --backup$";
-		CronTab.remove_job(entry, true);
+		//entry = "^@reboot sleep [0-9]*m && timeshift --backup$";
+		//CronTab.remove_job(entry, true);
 
 		// update crontab entries
 
-		string entry_hourly = "@reboot sleep %dm && env DISPLAY=:0.0 timeshift --backup".printf(startup_delay_interval_mins);
-		entry_hourly += " #timeshift-16.10-hourly";
+		string entry_boot = "@reboot sleep %dm && timeshift --backup".printf(startup_delay_interval_mins);
+		//entry_boot += " #timeshift-16.10-hourly";
 		
-		string entry_boot = "@hourly env DISPLAY=:0.0 timeshift --backup";
-		entry_boot += " #timeshift-16.10-boot";
+		string entry_hourly = "@hourly timeshift --backup";
+		//entry_hourly += " #timeshift-16.10-boot";
 		
 		if (scheduled){
-			CronTab.add_job(entry_hourly);
 			CronTab.add_job(entry_boot);
+			CronTab.add_job(entry_hourly);
 		}
 		else{
-			CronTab.remove_job(entry_hourly, true);
-			CronTab.remove_job(entry_boot, true);
+			CronTab.remove_job(entry_boot);
+			CronTab.remove_job(entry_hourly);
 		}
+
+		/*string cmd = "timeshift --backup";
+		
+		if (scheduled){
+			CronTab.add_script_hourly("timeshift-backup", cmd);
+		}
+		else{
+			CronTab.remove_script_hourly("timeshift-backup");
+		}*/
 	}
 
 	//cleanup

@@ -357,7 +357,7 @@ class RestoreDeviceBox : Gtk.Box{
 					// update current entry
 					
 					if (current_entry.mount_point == "/"){
-						App.restore_target = luks_unlocked;
+						App.dst_root = luks_unlocked;
 						cmb_grub_dev_select_default();
 					}
 
@@ -388,7 +388,7 @@ class RestoreDeviceBox : Gtk.Box{
 			}
 
 			if (current_entry.mount_point == "/"){
-				App.restore_target = current_dev;
+				App.dst_root = current_dev;
 				cmb_grub_dev_select_default();
 			}
 
@@ -526,12 +526,12 @@ class RestoreDeviceBox : Gtk.Box{
 
 		log_debug("RestoreDeviceBox: cmb_grub_dev_select_default()");
 		
-		if (App.restore_target == null){
+		if (App.dst_root == null){
 			cmb_grub_dev.active = -1;
 			return;
 		}
 
-		var grub_dev = App.restore_target;
+		var grub_dev = App.dst_root;
 		while (grub_dev.has_parent()){
 			grub_dev = grub_dev.parent;
 		}
@@ -600,32 +600,19 @@ class RestoreDeviceBox : Gtk.Box{
 			return false;
 		}
 
-		// get root partition
-		
-		App.restore_target = null;
-		Device target_home = null;
-		foreach(var entry in App.mount_list){
-			if (entry.mount_point == "/"){
-				App.restore_target = entry.device;
-			}
-			if (entry.mount_point == "/home"){
-				target_home = entry.device;
-			}
-		}
-
 		// check if we are restoring the current system
 		
-		if (App.restore_target == App.sys_root){
+		if (App.dst_root == App.sys_root){
 			return true; // all required devices are already mounted
 		}
 
 		// check BTRFS subvolume layout --------------
 
-		bool supported = App.check_btrfs_layout(App.restore_target, target_home);
+		bool supported = App.check_btrfs_layout(App.dst_root, App.dst_home);
 		
 		if (!supported){
 			var title = _("Unsupported Subvolume Layout")
-				+ " (%s)".printf(App.restore_target.device);
+				+ " (%s)".printf(App.dst_root.device);
 			var msg = _("Partition has an unsupported subvolume layout.") + " ";
 			msg += _("Only ubuntu-type layouts with @ and @home subvolumes are currently supported.") + "\n\n";
 			gtk_messagebox(title, msg, parent_window, true);
@@ -637,7 +624,7 @@ class RestoreDeviceBox : Gtk.Box{
 		bool status = App.mount_target_device(parent_window);
 		if (status == false){
 			string title = _("Error");
-			string msg = _("Failed to mount device") + ": %s".printf(App.restore_target.device);
+			string msg = _("Failed to mount device") + ": %s".printf(App.dst_root.device);
 			gtk_messagebox(title, msg, parent_window, true);
 			return false;
 		}

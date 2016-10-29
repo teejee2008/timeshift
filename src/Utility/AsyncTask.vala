@@ -41,7 +41,7 @@ public abstract class AsyncTask : GLib.Object{
 	public int64 prg_count_total = 0;
 	public int64 prg_bytes = 0;
 	public int64 prg_bytes_total = 0;
-	public bool is_running = false;
+	//public bool is_running = false;
 	
 	// signals
 	public signal void stdout_line_read(string line);
@@ -57,6 +57,9 @@ public abstract class AsyncTask : GLib.Object{
 	}
 	
 	public bool begin(){
+
+		status = AppStatus.RUNNING;
+		
 		bool has_started = true;
 		is_terminated = false;
 		
@@ -74,9 +77,6 @@ public abstract class AsyncTask : GLib.Object{
 			timer = new GLib.Timer();
 			timer.start();
 
-			is_running = true;
-			status = AppStatus.RUNNING;
-			
 			// execute script file
 			Process.spawn_async_with_pipes(
 			    working_dir, // working dir
@@ -132,7 +132,6 @@ public abstract class AsyncTask : GLib.Object{
 		catch (Error e) {
 			log_error ("AsyncTask.begin()");
 			log_error(e.message);
-			is_running = false;
 			has_started = false;
 			//status = AppStatus.FINISHED;
 		}
@@ -236,8 +235,9 @@ public abstract class AsyncTask : GLib.Object{
 			dos_in.close();
 		}
 		catch(Error e){
-			log_error ("AsyncTask.finish(): dos_in.close()");
-			log_error (e.message);
+			// ignore
+			//log_error ("AsyncTask.finish(): dos_in.close()");
+			//log_error (e.message);
 		}
 		
 		dos_in = null;
@@ -261,7 +261,6 @@ public abstract class AsyncTask : GLib.Object{
 
 		read_exit_code();
 		
-		is_running = false;
 		status_line = "";
 		err_line = "";
 		out_line = "";

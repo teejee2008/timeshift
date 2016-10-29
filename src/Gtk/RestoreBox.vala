@@ -172,7 +172,7 @@ class RestoreBox : Gtk.Box{
 
 		log_debug("RestoreBox: restore()");
 		
-		if ((App.sys_root != null) && (App.restore_target.uuid == App.sys_root.uuid)){
+		if ((App.sys_root != null) && (App.dst_root.uuid == App.sys_root.uuid)){
 			parent_window.hide();
 		}
 		

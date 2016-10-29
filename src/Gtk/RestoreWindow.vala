@@ -371,13 +371,11 @@ class RestoreWindow : Gtk.Window{
 		
 		if (notebook.page == Tabs.TARGET_DEVICE){
 
-			//App.restore_target = null; // do not reset
-
 			// check if target device is selected for /
 			foreach(var entry in App.mount_list){
 				if (entry.mount_point == "/"){
 					if (entry.device != null){
-						App.restore_target = entry.device;
+						App.dst_root = entry.device;
 					}
 					else{
 						gtk_messagebox(
@@ -394,7 +392,7 @@ class RestoreWindow : Gtk.Window{
 			foreach(var entry in App.mount_list){
 				if ((entry.mount_point == "/boot") && (entry.device == null)){
 
-					if ((App.restore_target != null) && (App.restore_target.is_on_encrypted_partition())){
+					if ((App.dst_root != null) && (App.dst_root.is_on_encrypted_partition())){
 
 						gtk_messagebox(
 							_("Boot device not selected"),
@@ -441,10 +439,6 @@ class RestoreWindow : Gtk.Window{
 				var entry = App.mount_list[i];
 				if (entry.device == null){
 					App.mount_list.remove(entry);
-				}
-
-				if (entry.mount_point == "/"){
-					App.restore_target = entry.device;
 				}
 			}
 

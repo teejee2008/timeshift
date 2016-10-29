@@ -108,6 +108,9 @@ public class DeleteFileTask : AsyncTask{
 	// execution ----------------------------
 
 	public void execute() {
+
+		status = AppStatus.RUNNING;
+		
 		log_debug("RsyncTask:execute()");
 		
 		prepare();

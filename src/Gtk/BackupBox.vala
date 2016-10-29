@@ -225,7 +225,7 @@ class BackupBox : Gtk.Box{
 	}
 	
 	private void take_snapshot_thread(){
-		App.take_snapshot(true,"",parent_window);
+		App.create_snapshot(true,parent_window);
 		thread_is_running = false;
 	}
 }

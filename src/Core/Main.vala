@@ -119,7 +119,7 @@ public class Main : GLib.Object{
 	
 	public Snapshot snapshot_to_delete;
 	public Snapshot snapshot_to_restore;
-	public Device restore_target;
+	//public Device restore_target;
 	public bool reinstall_grub2 = false;
 	public string grub_device = "";
 
@@ -130,10 +130,12 @@ public class Main : GLib.Object{
 	public string cmd_snapshot = "";
 	public bool cmd_confirm = false;
 	public bool cmd_verbose = true;
+	public string cmd_comments = "";
 
 	public string progress_text = "";
-	
 
+	public Gtk.Window parent_window = null;
+	
 	public RsyncTask task;
 	public DeleteFileTask delete_file_task;
 
@@ -142,12 +144,16 @@ public class Main : GLib.Object{
 		if (gui_mode){
 			app_mode = "";
 		}
-		
+
+		parse_arguments_debug_mode(args);
+
 		log_debug("Main()");
 
-		log_debug("");
-		log_debug(_("Running") + " %s v%s".printf(AppName, AppVersion));
-		log_debug("");
+		if (LOG_DEBUG || (app_mode == "")){
+			log_debug("");
+			log_debug(_("Running") + " %s v%s".printf(AppName, AppVersion));
+			log_debug("");
+		}
 
 		//init log ------------------
 
@@ -182,10 +188,11 @@ public class Main : GLib.Object{
 		
 		this.current_distro = LinuxDistro.get_dist_info("/");
 
-		log_debug(_("Distribution") + ": " + current_distro.full_name());
-		log_debug("DIST_ID" + ": " + current_distro.dist_id);
-		//log_msg("");
-		
+		if (LOG_DEBUG || (app_mode == "")){
+			log_debug(_("Distribution") + ": " + current_distro.full_name());
+			log_debug("DIST_ID" + ": " + current_distro.dist_id);
+		}
+
 		//check dependencies ---------------------
 
 		string message;
@@ -347,6 +354,19 @@ public class Main : GLib.Object{
 		return supported;
 	}
 
+	private void parse_arguments_debug_mode(string[] args){
+		
+		for (int k = 1; k < args.length; k++) // Oth arg is app path
+		{
+			switch (args[k].down()){
+				case "--debug":
+					LOG_COMMANDS = true;
+					LOG_DEBUG = true;
+					break;
+			}
+		}
+	}
+	
 	// exclude lists
 	
 	public void add_default_exclude_entries(){
@@ -443,15 +463,15 @@ public class Main : GLib.Object{
 		}
 
 		if ((sys_root == null)
-			|| ((restore_target.device != sys_root.device)
-				&& (restore_target.uuid != sys_root.uuid))){
+			|| ((dst_root.device != sys_root.device)
+				&& (dst_root.uuid != sys_root.uuid))){
 
 			home = mount_point_restore + home;
 		}
 
 		if ((sys_root == null)
-			|| ((restore_target.device != sys_root.device)
-				&& (restore_target.uuid != sys_root.uuid))){
+			|| ((dst_root.device != sys_root.device)
+				&& (dst_root.uuid != sys_root.uuid))){
 
 			home = mount_point_restore + home;
 		}
@@ -594,8 +614,7 @@ public class Main : GLib.Object{
 			}
 		}
 		
-		string list_file = path_combine(output_path, "exclude-restore.list");
-		return file_write(list_file, txt);
+		return file_write(restore_exclude_file, txt);
 	}
 
 	public void save_exclude_list_selections(){
@@ -638,8 +657,7 @@ public class Main : GLib.Object{
 
 	// backup
 
-	public bool take_snapshot (
-		bool is_ondemand, string snapshot_comments, Gtk.Window? parent_win){
+	public bool create_snapshot (bool is_ondemand, Gtk.Window? parent_win){
 
 		bool status;
 		bool update_symlinks = false;
@@ -884,7 +902,7 @@ public class Main : GLib.Object{
 		return true;
 	}
 
-	public bool backup_and_rotate(string tag, DateTime dt_created){
+	private bool backup_and_rotate(string tag, DateTime dt_created){
 		//string msg;
 		File f;
 
@@ -1040,8 +1058,14 @@ public class Main : GLib.Object{
 				while (task.status == AppStatus.RUNNING){
 					sleep(1000);
 					gtk_do_events();
+
+					stdout.printf("%6.2f%% %s (%s %s)\r".printf(task.progress * 100.0, _("complete"), task.stat_time_remaining, _("remaining")));
+					stdout.flush();
 				}
 
+				stdout.printf(string.nfill(80, ' ') + "\r");
+				stdout.flush();
+				
 				if (task.total_size == 0){
 					log_error(_("rsync returned an error"));
 					log_error(_("Failed to create new snapshot"));
@@ -1083,8 +1107,7 @@ public class Main : GLib.Object{
 		return true;
 	}
 	
-	public Snapshot write_snapshot_control_file(
-		string snapshot_path, DateTime dt_created, string tag){
+	private Snapshot write_snapshot_control_file(string snapshot_path, DateTime dt_created, string tag){
 			
 		var ctl_path = snapshot_path + "/info.json";
 		var config = new Json.Object();
@@ -1094,8 +1117,10 @@ public class Main : GLib.Object{
 		config.set_string_member("sys-distro", current_distro.full_name());
 		config.set_string_member("app-version", AppVersion);
 		config.set_string_member("tags", tag);
-		config.set_string_member("comments", "");
+		config.set_string_member("comments", cmd_comments);
 
+		cmd_comments = "";
+		
 		var json = new Json.Generator();
 		json.pretty = true;
 		json.indent = 2;
@@ -1158,12 +1183,8 @@ public class Main : GLib.Object{
 			bak.remove(true); // wait till complete
 
 			if (App.delete_file_task.status != AppStatus.CANCELLED){
-				
-				var message = "%s '%s' (%s)".printf(
-					_("Removed"), bak.name, App.delete_file_task.stat_time_elapsed);
-					
-				log_msg(message);
-				
+
+				var message = "%s '%s' (%s)".printf(_("Removed"), bak.name, delete_file_task.stat_time_elapsed);
 				OSDNotify.notify_send("TimeShift", message, 10000, "low");
 
 				delete_list.remove(bak);
@@ -1176,8 +1197,136 @@ public class Main : GLib.Object{
 		//return thread_delete_success;
 	}
 	
-	// restore
+	// restore  - properties
 
+	public Device? dst_root{
+		get {
+			foreach(var mnt in mount_list){
+				if (mnt.mount_point == "/"){
+					return mnt.device;
+				}
+			}
+			return null;
+		}
+		set{
+			foreach(var mnt in mount_list){
+				if (mnt.mount_point == "/"){
+					mnt.device = value;
+					break;
+				}
+			}
+		}
+	}
+
+	public Device? dst_boot{
+		get {
+			foreach(var mnt in mount_list){
+				if (mnt.mount_point == "/boot"){
+					return mnt.device;
+				}
+			}
+			return null;
+		}
+		set{
+			foreach(var mnt in mount_list){
+				if (mnt.mount_point == "/boot"){
+					mnt.device = value;
+					break;
+				}
+			}
+		}
+	}
+
+	public Device? dst_efi{
+		get {
+			foreach(var mnt in mount_list){
+				if (mnt.mount_point == "/boot/efi"){
+					return mnt.device;
+				}
+			}
+			return null;
+		}
+		set{
+			foreach(var mnt in mount_list){
+				if (mnt.mount_point == "/boot/efi"){
+					mnt.device = value;
+					break;
+				}
+			}
+		}
+	}
+
+	public Device? dst_home{
+		get {
+			foreach(var mnt in mount_list){
+				if (mnt.mount_point == "/home"){
+					return mnt.device;
+				}
+			}
+			return null;
+		}
+		set{
+			foreach(var mnt in mount_list){
+				if (mnt.mount_point == "/home"){
+					mnt.device = value;
+					break;
+				}
+			}
+		}
+	}
+	
+	public bool restore_current_system{
+		get {
+			if ((sys_root != null) &&
+				((dst_root.device == sys_root.device) || (dst_root.uuid == sys_root.uuid))){
+					
+				return true;
+			}
+			else{
+				return false;
+			}
+		}
+	}
+
+	public string restore_source_path{
+		owned get {
+			if (mirror_system){
+				string source_path = "/tmp/timeshift";
+				dir_create(source_path);
+				return source_path;
+			}
+			else{
+				return snapshot_to_restore.path;
+			}
+		}
+	}
+	
+	public string restore_target_path{
+		owned get {
+			if (restore_current_system){
+				return "/";
+			}
+			else{
+				return mount_point_restore + "/";
+			}
+		}
+	}
+
+	public string restore_log_file{
+		owned get {
+			return restore_source_path + "/rsync-log-restore";
+		}
+	}
+
+	public string restore_exclude_file{
+		owned get {
+			return restore_source_path + "/exclude-restore.list";
+		}
+	}
+
+
+	// restore
+	 
 	public void init_mount_list(){
 
 		log_debug("Main: init_mount_list()");
@@ -1201,7 +1350,7 @@ public class Main : GLib.Object{
 		bool root_found = false;
 		bool boot_found = false;
 		bool home_found = false;
-		restore_target = null;
+		dst_root = null;
 		
 		foreach(var mnt in fstab_list){
 
@@ -1259,7 +1408,7 @@ public class Main : GLib.Object{
 				mount_list.add(new MountEntry(mnt_dev, mnt.mount_point, mnt.options));
 				
 				if (mnt.mount_point == "/"){
-					restore_target = mnt_dev;
+					dst_root = mnt_dev;
 				}
 			}
 			else{
@@ -1300,7 +1449,7 @@ public class Main : GLib.Object{
 		*/
 		
 		if (App.mirror_system){
-			restore_target = null;
+			dst_root = null;
 			foreach (var entry in mount_list){
 				// user should select another device
 				entry.device = null; 
@@ -1325,8 +1474,11 @@ public class Main : GLib.Object{
 	}
 
 	public bool restore_snapshot(Gtk.Window? parent_win){
-		bool found = false;
 
+		parent_window = parent_win;
+		
+		// check if we have all required inputs and abort on error
+		
 		if (!mirror_system){
 			
 			if (repo.device == null){
@@ -1355,35 +1507,24 @@ public class Main : GLib.Object{
 			}
 		}
 		
+		// final check - check if target root device is mounted
 
-		
-		// mount selected devices ---------------------------------------
-
-		log_debug("Mounting selected devices");
-		
-		if (restore_target != null){
-			if (app_mode != ""){ //commandline mode
-				if ((sys_root == null) || (restore_target.uuid != sys_root.uuid)){
-					
-				}
-			}
-			else{
-				//mounting is already done
-			}
-		}
-		else{
-			//print error
+		if (dst_root == null){
 			log_error(_("Target device not specified!"));
 			return false;
 		}
 
-
-		
+		if (!restore_current_system){
+			if (mount_point_restore.strip().length == 0){
+				log_error(_("Target device is not mounted"));
+				return false;
+			}
+		}
 
 		try {
 			thread_restore_running = true;
 			thr_success = false;
-			Thread.create<void> (restore_snapshot_thread, true);
+			Thread.create<void> (restore_execute, true);
 		}
 		catch (ThreadError e) {
 			thread_restore_running = false;
@@ -1410,9 +1551,8 @@ public class Main : GLib.Object{
 		}
 	}
 
-	public void disclaimer_pre_restore(bool formatted,
-		out string msg_devices, out string msg_reboot,
-		out string msg_disclaimer){
+	public void get_restore_messages(bool formatted,
+		out string msg_devices, out string msg_reboot, out string msg_disclaimer){
 			
 		string msg = "";
 
@@ -1505,8 +1645,8 @@ public class Main : GLib.Object{
 		// msg_reboot -----------------------
 		
 		msg = "";
-		if ((sys_root != null) && (restore_target != null)
-			&& (restore_target.device == sys_root.device)){
+		if ((sys_root != null) && (dst_root != null)
+			&& (dst_root.device == sys_root.device)){
 				
 			msg += _("Please save your work and close all applications.") + "\n";
 			msg += _("System will reboot after files are restored.");
@@ -1545,231 +1685,22 @@ public class Main : GLib.Object{
 		log_debug("Main: disclaimer_pre_restore(): exit");
 	}
 
-	public void restore_snapshot_thread(){
-		string sh = "";
-		int ret_val = -1;
-		string temp_script;
-		string sh_grub = "";
-		string sh_reboot = "";
+	public void restore_execute(){
 		
 		try{
 
-			string source_path = "";
-
-			if (snapshot_to_restore != null){
-				source_path = snapshot_to_restore.path;
-			}
-			else{
-				source_path = "/tmp/timeshift";
-				if (!dir_exists(source_path)){
-					dir_create(source_path);
-				}
-			}
-
-			log_debug("source_path=%s".printf(source_path));
-
-			//set target path ----------------
-
-			bool restore_current_system;
-			string target_path;
-
-			if ((sys_root != null)
-				&& ((restore_target.device == sys_root.device)
-					|| (restore_target.uuid == sys_root.uuid))){
-					
-				restore_current_system = true;
-				target_path = "/";
-			}
-			else{
-				restore_current_system = false;
-				target_path = mount_point_restore + "/";
-
-				if (mount_point_restore.strip().length == 0){
-					log_error(_("Target device is not mounted"));
-					thr_success = false;
-					thread_restore_running = false;
-					return;
-				}
-			}
-
-			log_debug("target_path=%s".printf(target_path));
-
-			//save exclude list for restore --------------
-
-			save_exclude_list_for_restore(source_path);
-
-			//create script -------------
-
-			sh = "";
-			sh += "echo ''\n";
+			log_debug("source_path=%s".printf(restore_source_path));
+			log_debug("target_path=%s".printf(restore_target_path));
+			
+			string sh_sync, sh_finish;
+			create_restore_scripts(out sh_sync, out sh_finish);
+			
+			save_exclude_list_for_restore(restore_source_path);
+			
 			if (restore_current_system){
-				log_debug("restoring current system");
-				
-				sh += "echo '" + _("Please do not interrupt the restore process!") + "'\n";
-				sh += "echo '" + _("System will reboot after files are restored") + "'\n";
-			}
-			sh += "echo ''\n";
-			sh += "sleep 3s\n";
+				string control_file_path = path_combine(snapshot_to_restore.path,".sync-restore");
 
-			//log file
-			var log_path = source_path + "/rsync-log-restore";
-			var f = File.new_for_path(log_path);
-			if (f.query_exists()){
-				f.delete();
-			}
-
-			//run rsync ----------
-
-			sh += "rsync -avir --force --delete-after";
-			sh += " --log-file=\"%s\"".printf(log_path);
-			sh += " --exclude-from=\"%s\"".printf(source_path + "/exclude-restore.list");
-
-			if (mirror_system){
-				sh += " \"%s\" \"%s\" \n".printf("/", target_path);
-			}
-			else{
-				sh += " \"%s\" \"%s\" \n".printf(source_path + "/localhost/", target_path);
-			}
-
-			//sync file system
-			sh += "sync \n";
-
-			log_debug("rsync script:");
-			log_debug(sh);
-			
-			//chroot and re-install grub2 --------
-
-			log_debug("reinstall_grub2=%s".printf(
-				reinstall_grub2.to_string()));
-				
-			log_debug("grub_device=%s".printf(
-				(grub_device == null) ? "null" : grub_device));
-
-			var target_distro = LinuxDistro.get_dist_info(target_path);
-			
-			sh_grub = "";
-			
-			if (reinstall_grub2 && (grub_device != null) && (grub_device.length > 0)){
-				
-				sh_grub += "sync \n";
-				sh_grub += "echo '' \n";
-				sh_grub += "echo '" + _("Re-installing GRUB2 bootloader...") + "' \n";
-
-				string chroot = "";
-				if (!restore_current_system){
-					if (target_distro.dist_type == "arch"){
-						chroot += "arch-chroot \"%s\"".printf(target_path);
-					}
-					else{
-						chroot += "chroot \"%s\"".printf(target_path);
-					}
-				}
-				
-				// bind system directories for chrooted system
-				sh_grub += "for i in /dev /proc /run /sys; do mount --bind \"$i\" \"%s$i\"; done \n".printf(target_path);
-
-				// search for other operating systems
-				//sh_grub += "chroot \"%s\" os-prober \n".printf(target_path);
-				
-				// re-install grub ---------------
-
-				if (target_distro.dist_type == "redhat"){
-
-					// this will run only in clone mode
-					
-					sh_grub += "%s grub2-install --recheck %s \n".printf(chroot, grub_device);
-
-					/* NOTE:
-					 * grub2-install should NOT be run on Fedora EFI systems 
-					 * https://fedoraproject.org/wiki/GRUB_2
-					 * Instead following packages should be reinstalled:
-					 * dnf reinstall grub2-efi grub2-efi-modules shim
-					 *
-					 * Bootloader installation will be skipped while restoring in GUI mode.
-					 * Fedora seems to boot correctly even after installing new
-					 * kernels and restoring a snapshot with an older kernel.
-					*/
-				}
-				else {
-					sh_grub += "%s grub-install --recheck %s \n".printf(chroot, grub_device);
-				}
-
-				// create new grub menu
-				//sh_grub += "chroot \"%s\" grub-mkconfig -o /boot/grub/grub.cfg \n".printf(target_path);
-
-				// update initramfs --------------
-
-				if (target_distro.dist_type == "redhat"){
-					sh_grub += "%s dracut -f -v \n".printf(chroot);
-				}
-				else if (target_distro.dist_type == "arch"){
-					sh_grub += "%s mkinitcpio -p /etc/mkinitcpio.d/*.preset\n".printf(chroot);
-				}
-				else{
-					sh_grub += "%s update-initramfs -u -k all \n".printf(chroot);
-				}
-					
-				// update grub menu --------------
-
-				if ((target_distro.dist_type == "redhat") || (target_distro.dist_type == "arch")){
-					sh_grub += "%s grub-mkconfig -o /boot/grub2/grub.cfg \n".printf(chroot);
-				}
-				else{
-					sh_grub += "%s update-grub \n".printf(chroot);
-				}
-
-				sh_grub += "echo '' \n";
-
-				// sync file systems
-				sh_grub += "echo '" + _("Synching file systems...") + "' \n";
-				sh_grub += "sync \n";
-				sh_grub += "echo '' \n";
-
-				// unmount chrooted system
-				sh_grub += "echo '" + _("Cleaning up...") + "' \n";
-				sh_grub += "for i in /dev /proc /run /sys; do umount -f \"%s$i\"; done \n".printf(target_path);
-				sh_grub += "sync \n";
-
-				log_debug("GRUB2 install script:");
-				log_debug(sh_grub);
-			
-				//sh += sh_grub;
-			}
-			else{
-				log_debug("skipping sh_grub: reinstall_grub2=%s, grub_device=%s".printf(
-					reinstall_grub2.to_string(), (grub_device == null) ? "null" : grub_device));
-			}
-
-			//reboot if required --------
-
-			if (restore_current_system){
-				sh_reboot += "echo '' \n";
-				sh_reboot += "echo '" + _("Rebooting system...") + "' \n";
-				sh += "reboot -f \n";
-				//sh_reboot += "shutdown -r now \n";
-			}
-
-			//check if current system is being restored and do some housekeeping ---------
-
-			if (restore_current_system){
-
-				//invalidate the .sync snapshot  -------
-
-				string sync_name = ".sync";
-				string snapshot_dir = path_combine(repo.snapshot_location, "timeshift/snapshots");
-				string sync_path = snapshot_dir + "/" + sync_name;
-				string control_file_path = sync_path + "/info.json";
-
-				f = File.new_for_path(control_file_path);
-				if(f.query_exists()){
-					f.delete(); //delete the control file
-				}
-
-				//save a control file for updating the .sync snapshot -----
-
-				control_file_path = snapshot_dir + "/.sync-restore";
-
-				f = File.new_for_path(control_file_path);
+				var f = File.new_for_path(control_file_path);
 				if(f.query_exists()){
 					f.delete(); //delete existing file
 				}
@@ -1777,7 +1708,7 @@ public class Main : GLib.Object{
 				file_write(control_file_path, snapshot_to_restore.path); //save snapshot name
 			}
 
-			//run the script --------------------
+			// run the scripts --------------------
 		
 			if (snapshot_to_restore != null){
 				log_msg(_("Restoring snapshot..."));
@@ -1789,154 +1720,32 @@ public class Main : GLib.Object{
 			progress_text = _("Synching files with rsync...");
 			log_msg(progress_text);
 
-			if (app_mode == ""){
-
-				// gui mode --------------
-				
+			bool ok = true;
+			
+			if (app_mode == ""){ // GUI
 				if (restore_current_system){
-					//current system, gui, fullscreen
-					temp_script = save_bash_script_temp(sh + sh_grub + sh_reboot);
-					// Note: sh_grub will be empty if reinstall_grub2 = false 
-
-					//restore or clone
-					//var dlg = new TerminalWindow.with_parent(null);
-					//dlg.execute_script(temp_script, true);
+					ok = restore_current_gui(sh_sync, sh_finish);
 				}
 				else{
-					// other system, gui ------------------------
-
-					//App.progress_text = "Sync";
-
-					progress_text = _("Building file list...");
-					//log_msg(progress_text); // gui-only message
-					
-					task = new RsyncTask();
-					task.relative = false;
-					task.verbose = true;
-					task.delete_extra = true;
-					task.delete_excluded = false;
-					task.delete_after = true;
-					
-					if (mirror_system){
-						task.source_path = "/";
-					}
-					else{
-						task.source_path =
-							path_combine(source_path, "localhost");
-					}
-
-					task.dest_path = target_path;
-					
-					task.exclude_from_file =
-						path_combine(source_path, "exclude-restore.list");
-
-					task.rsync_log_file = log_path;
-					task.prg_count_total = Main.first_snapshot_count;	
-					task.execute();
-
-					while (task.status == AppStatus.RUNNING){
-						sleep(1000);
-
-						if (task.status_line.length > 0){
-							progress_text = _("Synching files with rsync...");
-						}
-						
-						gtk_do_events();
-					}
-
-					if (!restore_current_system){
-						progress_text = "Updating /etc/fstab and /etc/crypttab on target system...";
-						log_msg(progress_text);
-						
-						fix_fstab_file(target_path);
-						fix_crypttab_file(target_path);
-					}
-
-					// re-install grub ------------
-				
-					if (reinstall_grub2){
-
-						progress_text = "Re-installing GRUB2 bootloader...";
-						log_msg(progress_text);
-
-						log_debug(sh_grub);
-						
-						//string std_out, std_err;
-						ret_val = exec_script_sync(sh_grub, null, null);
-						//log_to_file(std_out);
-						//log_to_file(std_err);
-						//log_msg(std_out);
-						//log_msg(std_err);
-						log_debug("GRUB2 install completed");
-					}
-
-					ret_val = task.exit_code;
+					ok = restore_other_gui(sh_sync, sh_finish);
 				}
 			}
 			else{
-
-				// console mode ----------
-				var script = sh;
 				if (restore_current_system){
-					script += sh_grub + sh_reboot;
-				}
-
-				log_debug("verbose=%s".printf(cmd_verbose.to_string()));
-				
-				if (cmd_verbose){
-					//current/other system, console, verbose
-					ret_val = exec_script_sync(script, null, null, false, false, false, true);
-					log_msg("");
+					ok = restore_current_console(sh_sync, sh_finish);
 				}
 				else{
-					//current/other system, console, quiet
-					string std_out, std_err;
-					ret_val = exec_script_sync(script, out std_out, out std_err);
-					log_to_file(std_out);
-					log_to_file(std_err);
-				}
-
-				if (!restore_current_system){
-					
-					// fix fstab and crypttab files ------
-					
-					fix_fstab_file(target_path);
-					fix_crypttab_file(target_path);
-
-					// re-install grub ------------
-				
-					if (reinstall_grub2){
-
-						progress_text = "Re-installing GRUB2 bootloader...";
-						log_msg(progress_text);
-						
-						if (cmd_verbose){
-							//current/other system, console, verbose
-							ret_val = exec_script_sync(sh_grub, null, null, false, false, false, true);
-							log_msg("");
-						}
-						else{
-							//current/other system, console, quiet
-							string std_out, std_err;
-							ret_val = exec_script_sync(sh_grub, out std_out, out std_err);
-							log_to_file(std_out);
-							log_to_file(std_err);
-						}
-					}
+					ok = restore_other_console(sh_sync, sh_finish);
 				}
 			}
 
-			// check for errors ----------------------
-
-			if (ret_val != 0){
-				log_error(_("Restore failed with exit code") + ": %d".printf(ret_val));
+			if (ok){
+				log_msg(_("Restore completed"));
+				thr_success = true;
+			}
+			else{
+				log_error(_("Restore completed with errors"));
 				thr_success = false;
-				thread_restore_running = false;
-			}
-			else{
-				log_msg(_("Restore completed without errors"));
-				//thr_success = true;
-				//thread_restore_running = false;
 			}
 
 			// unmount ----------
@@ -1952,7 +1761,279 @@ public class Main : GLib.Object{
 		thread_restore_running = false;
 	}
 
-	public void fix_fstab_file(string target_path){
+	private void create_restore_scripts(out string sh_sync, out string sh_finish){
+		
+		string sh = "";
+
+		// create scripts --------------------------------------
+
+		sh = "";
+		sh += "echo ''\n";
+		if (restore_current_system){
+			log_debug("restoring current system");
+			
+			sh += "echo '" + _("Please do not interrupt the restore process!") + "'\n";
+			sh += "echo '" + _("System will reboot after files are restored") + "'\n";
+		}
+		sh += "echo ''\n";
+		sh += "sleep 3s\n";
+
+		// run rsync ---------------------------------------
+
+		sh += "rsync -avir --force --delete-after";
+		sh += " --log-file=\"%s\"".printf(restore_log_file);
+		sh += " --exclude-from=\"%s\"".printf(restore_exclude_file);
+
+		if (mirror_system){
+			sh += " \"%s\" \"%s\" \n".printf("/", restore_target_path);
+		}
+		else{
+			sh += " \"%s\" \"%s\" \n".printf(restore_source_path + "/localhost/", restore_target_path);
+		}
+
+		sh += "sync \n"; // sync file system
+
+		log_debug("rsync script:");
+		log_debug(sh);
+
+		sh_sync = sh;
+		
+		// chroot and re-install grub2 ---------------------
+
+		log_debug("reinstall_grub2=%s".printf(reinstall_grub2.to_string()));
+		log_debug("grub_device=%s".printf((grub_device == null) ? "null" : grub_device));
+
+		var target_distro = LinuxDistro.get_dist_info(restore_target_path);
+		
+		sh = "";
+		
+		if (reinstall_grub2 && (grub_device != null) && (grub_device.length > 0)){
+			
+			sh += "sync \n";
+			sh += "echo '' \n";
+			sh += "echo '" + _("Re-installing GRUB2 bootloader...") + "' \n";
+
+			string chroot = "";
+			if (!restore_current_system){
+				if (target_distro.dist_type == "arch"){
+					chroot += "arch-chroot \"%s\"".printf(restore_target_path);
+				}
+				else{
+					chroot += "chroot \"%s\"".printf(restore_target_path);
+				}
+			}
+			
+			// bind system directories for chrooted system
+			sh += "for i in /dev /proc /run /sys; do mount --bind \"$i\" \"%s$i\"; done \n".printf(restore_target_path);
+
+			// search for other operating systems
+			//sh += "chroot \"%s\" os-prober \n".printf(restore_target_path);
+			
+			// re-install grub ---------------
+
+			if (target_distro.dist_type == "redhat"){
+
+				// this will run only in clone mode
+				
+				sh += "%s grub2-install --recheck %s \n".printf(chroot, grub_device);
+
+				/* NOTE:
+				 * grub2-install should NOT be run on Fedora EFI systems 
+				 * https://fedoraproject.org/wiki/GRUB_2
+				 * Instead following packages should be reinstalled:
+				 * dnf reinstall grub2-efi grub2-efi-modules shim
+				 *
+				 * Bootloader installation will be skipped while restoring in GUI mode.
+				 * Fedora seems to boot correctly even after installing new
+				 * kernels and restoring a snapshot with an older kernel.
+				*/
+			}
+			else {
+				sh += "%s grub-install --recheck %s \n".printf(chroot, grub_device);
+			}
+
+			// create new grub menu
+			//sh += "chroot \"%s\" grub-mkconfig -o /boot/grub/grub.cfg \n".printf(restore_target_path);
+
+			// update initramfs --------------
+
+			if (target_distro.dist_type == "redhat"){
+				sh += "%s dracut -f -v \n".printf(chroot);
+			}
+			else if (target_distro.dist_type == "arch"){
+				sh += "%s mkinitcpio -p /etc/mkinitcpio.d/*.preset\n".printf(chroot);
+			}
+			else{
+				sh += "%s update-initramfs -u -k all \n".printf(chroot);
+			}
+				
+			// update grub menu --------------
+
+			if ((target_distro.dist_type == "redhat") || (target_distro.dist_type == "arch")){
+				sh += "%s grub-mkconfig -o /boot/grub2/grub.cfg \n".printf(chroot);
+			}
+			else{
+				sh += "%s update-grub \n".printf(chroot);
+			}
+
+			sh += "echo '' \n";
+
+			// sync file systems
+			sh += "echo '" + _("Synching file systems...") + "' \n";
+			sh += "sync \n";
+			sh += "echo '' \n";
+
+			// unmount chrooted system
+			sh += "echo '" + _("Cleaning up...") + "' \n";
+			sh += "for i in /dev /proc /run /sys; do umount -f \"%s$i\"; done \n".printf(restore_target_path);
+			sh += "sync \n";
+
+			log_debug("GRUB2 install script:");
+			log_debug(sh);
+		}
+		else{
+			log_debug("skipping sh_grub: reinstall_grub2=%s, grub_device=%s".printf(
+				reinstall_grub2.to_string(), (grub_device == null) ? "null" : grub_device));
+		}
+
+		// reboot if required -----------------------------------
+
+		if (restore_current_system){
+			sh += "echo '' \n";
+			sh += "echo '" + _("Rebooting system...") + "' \n";
+			sh += "reboot -f \n";
+			//sh_reboot += "shutdown -r now \n";
+		}
+
+		sh_finish = sh;
+	}
+
+	private bool restore_current_console(string sh_sync, string sh_finish){
+
+		string script = sh_sync + sh_finish;
+		int ret_val = -1;
+		
+		if (cmd_verbose){
+			//current/other system, console, verbose
+			ret_val = exec_script_sync(script, null, null, false, false, false, true);
+			log_msg("");
+		}
+		else{
+			//current/other system, console, quiet
+			string std_out, std_err;
+			ret_val = exec_script_sync(script, out std_out, out std_err);
+			log_to_file(std_out);
+			log_to_file(std_err);
+		}
+
+		return (ret_val == 0);
+	}
+
+	private bool restore_current_gui(string sh_sync, string sh_finish){
+
+		string script = sh_sync + sh_finish;
+		string temp_script = save_bash_script_temp(script);
+
+		var dlg = new TerminalWindow.with_parent(parent_window);
+		dlg.execute_script(temp_script, true);
+
+		return true;
+	}
+
+	private bool restore_other_console(string sh_sync, string sh_finish){
+
+		// execute sh_sync --------------------
+		
+		string script = sh_sync;
+		int ret_val = -1;
+		
+		if (cmd_verbose){
+			ret_val = exec_script_sync(script, null, null, false, false, false, true);
+			log_msg("");
+		}
+		else{
+			string std_out, std_err;
+			ret_val = exec_script_sync(script, out std_out, out std_err);
+			log_to_file(std_out);
+			log_to_file(std_err);
+		}
+
+		// update files -------------------
+		
+		fix_fstab_file(restore_target_path);
+		fix_crypttab_file(restore_target_path);
+
+		// execute sh_finish --------------------
+		
+		script = sh_finish;
+
+		if (cmd_verbose){
+			ret_val = exec_script_sync(script, null, null, false, false, false, true);
+			log_msg("");
+		}
+		else{
+			string std_out, std_err;
+			ret_val = exec_script_sync(script, out std_out, out std_err);
+			log_to_file(std_out);
+			log_to_file(std_err);
+		}
+
+		return (ret_val == 0);
+	}
+
+	private bool restore_other_gui(string sh_sync, string sh_finish){
+		
+		progress_text = _("Building file list...");
+
+		task = new RsyncTask();
+		task.relative = false;
+		task.verbose = true;
+		task.delete_extra = true;
+		task.delete_excluded = false;
+		task.delete_after = true;
+		
+		if (mirror_system){
+			task.source_path = "/";
+		}
+		else{
+			task.source_path = path_combine(snapshot_to_restore.path, "localhost");
+		}
+
+		task.dest_path = restore_target_path;
+		
+		task.exclude_from_file = restore_exclude_file;
+
+		task.rsync_log_file = restore_log_file;
+		task.prg_count_total = Main.first_snapshot_count;	
+		task.execute();
+
+		while (task.status == AppStatus.RUNNING){
+			sleep(1000);
+
+			if (task.status_line.length > 0){
+				progress_text = _("Synching files with rsync...");
+			}
+			
+			gtk_do_events();
+		}
+
+		// update files after sync --------------------
+
+		fix_fstab_file(restore_target_path);
+		fix_crypttab_file(restore_target_path);
+
+		// execute sh_finish ------------
+
+		if (reinstall_grub2){
+			progress_text = _("Re-installing GRUB2 bootloader...");
+		}
+	
+		int ret_val = exec_script_sync(sh_finish, null, null, false, false, false, true);
+
+		return (ret_val == 0);
+	}
+
+	private void fix_fstab_file(string target_path){
 		
 		string fstab_path = target_path + "etc/fstab";
 		var fstab_list = FsTabEntry.read_file(fstab_path);
@@ -2029,7 +2110,7 @@ public class Main : GLib.Object{
 		}
 	}
 
-	public void fix_crypttab_file(string target_path){
+	private void fix_crypttab_file(string target_path){
 		string crypttab_path = target_path + "etc/crypttab";
 		var crypttab_list = CryptTabEntry.read_file(crypttab_path);
 
@@ -2067,50 +2148,6 @@ public class Main : GLib.Object{
 		log_msg(_("Updated /etc/crypttab on target device") + ": %s".printf(crypttab_path));
 	}
 
-	public Device? dst_root{
-		get {
-			foreach(var mnt in mount_list){
-				if (mnt.mount_point == "/"){
-					return mnt.device;
-				}
-			}
-			return null;
-		}
-	}
-
-	public Device? dst_boot{
-		get {
-			foreach(var mnt in mount_list){
-				if (mnt.mount_point == "/boot"){
-					return mnt.device;
-				}
-			}
-			return null;
-		}
-	}
-
-	public Device? dst_efi{
-		get {
-			foreach(var mnt in mount_list){
-				if (mnt.mount_point == "/boot/efi"){
-					return mnt.device;
-				}
-			}
-			return null;
-		}
-	}
-
-	public Device? dst_home{
-		get {
-			foreach(var mnt in mount_list){
-				if (mnt.mount_point == "/home"){
-					return mnt.device;
-				}
-			}
-			return null;
-		}
-	}
-	
 	//app config
 
 	public void save_app_config(){
@@ -2414,7 +2451,7 @@ public class Main : GLib.Object{
 
 		log_debug("mount_target_device()");
 		
-		if (restore_target == null){
+		if (dst_root == null){
 			return false;
 		}
 	
@@ -2425,7 +2462,7 @@ public class Main : GLib.Object{
 		/*var already_mounted = false;
 		var dev_mounted = Device.get_device_by_path(mount_point_restore);
 		if ((dev_mounted != null)
-			&& (dev_mounted.uuid == restore_target.uuid)){
+			&& (dev_mounted.uuid == dst_root.uuid)){
 
 			foreach(var mp in dev_mounted.mount_points){
 				if ((mp.mount_point == mount_point_restore)
@@ -2440,31 +2477,8 @@ public class Main : GLib.Object{
 		// unmount
 		unmount_target_device();
 
-		// unlock encrypted device
-		if (restore_target.is_encrypted_partition()){
-			
-			string msg_out, msg_err;
-			
-			restore_target = Device.luks_unlock(
-				restore_target, "", "", parent_win, out msg_out, out msg_err);
-
-			//exit if not found
-			if (restore_target == null){
-				log_error(_("Target device not specified!"));
-				return false;
-			}
-
-			//update mount entry
-			foreach (MountEntry mnt in mount_list) {
-				if (mnt.mount_point == "/"){
-					mnt.device = restore_target;
-					break;
-				}
-			}
-		}
-
 		// mount root device
-		if (restore_target.fstype == "btrfs"){
+		if (dst_root.fstype == "btrfs"){
 
 			//check subvolume layout
 
@@ -2504,6 +2518,7 @@ public class Main : GLib.Object{
 			}
 
 			string mount_options = "";
+			
 			if (mnt.device.fstype == "btrfs"){
 				if (mnt.mount_point == "/"){
 					mount_options = "subvol=@";
@@ -2522,13 +2537,14 @@ public class Main : GLib.Object{
 	}
 
 	public void unmount_target_device(bool exit_on_error = true){
+		
 		if (mount_point_restore == null) { return; }
 
 		log_debug("unmount_target_device()");
 		
 		//unmount the target device only if it was mounted by application
 		if (mount_point_restore.has_prefix(mount_point_app)){   //always true
-			unmount_device(mount_point_restore,exit_on_error);
+			unmount_device(mount_point_restore, exit_on_error);
 		}
 		else{
 			//don't unmount
@@ -2565,7 +2581,7 @@ public class Main : GLib.Object{
 		dir_create(mnt_btrfs);
 
 		Device.unmount(mnt_btrfs);
-		Device.mount(dev.uuid, mnt_btrfs);
+		Device.mount(dev.uuid, mnt_btrfs, "", true);
 
 		bool supported = true;
 
@@ -2841,8 +2857,6 @@ public class Main : GLib.Object{
 		//Gtk.main_quit ();
 	}
 }
-
-
 
 
 

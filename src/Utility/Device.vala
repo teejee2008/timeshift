@@ -1561,7 +1561,7 @@ public class Device : GLib.Object{
 	}
 
 	public static bool mount(
-		string device_or_uuid, string mount_point, string mount_options = ""){
+		string device_or_uuid, string mount_point, string mount_options = "", bool silent = false){
 
 		/*
 		 * Mounts specified device at specified mount point.
@@ -1594,7 +1594,9 @@ public class Device : GLib.Object{
 		var mps = Device.get_device_mount_points(device_or_uuid);
 		foreach(var mp in mps){
 			if (mp.mount_point.contains(mount_point)){
-				log_msg("Device '%s' is mounted at '%s'".printf(device_or_uuid, mount_point));
+				if (!silent){
+					log_msg("Device '%s' is mounted at '%s'".printf(device_or_uuid, mount_point));
+				}
 				return true;
 			}
 		}
@@ -1625,7 +1627,10 @@ public class Device : GLib.Object{
 				return false;
 			}
 			else{
-				log_msg ("Mounted device '%s' at mount point '%s'".printf(device, mount_point));
+				if (!silent){
+					Device dev = get_device_by_name(device);
+					log_msg ("Device '%s' mounted at '%s'".printf((dev == null) ? device : dev.device_name_with_parent, mount_point));
+				}
 				return true;
 			}
 		}

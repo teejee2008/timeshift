@@ -103,7 +103,7 @@ public class SnapshotRepo : GLib.Object{
 
 		log_debug("SnapshotRepo: init_from_device()");
 		
-		if ((device != null) && (device.uuid.length > 0)){
+		if ((device != null) && (device.uuid.length > 0) && (Device.get_device_by_uuid(device.uuid) != null)){
 			log_debug("");
 			unlock_and_mount_device();
 
@@ -661,7 +661,7 @@ public class SnapshotRepo : GLib.Object{
 			if (bak.tags.size == 0){
 
 				if (show_msg){
-					log_msg(_("Removing snapshots") + " > " + _("un-tagged") + "...");
+					log_msg(_("Removing snapshots") + " : " + _("un-tagged") + "...");
 					show_msg = false;
 				}
 
@@ -673,9 +673,17 @@ public class SnapshotRepo : GLib.Object{
 	}
 
 	public void remove_marked_for_deletion(){
-		log_msg(_("Removing snapshots") + " > " + _("marked for deletion") + "...");
+
+		bool show_msg = true;
+		
 		foreach(var bak in snapshots){
 			if (bak.marked_for_deletion){
+				
+				if (show_msg){
+					log_msg(_("Removing snapshots") + " : " + _("marked for deletion") + "...");
+					show_msg = false;
+				}
+				
 				bak.remove(true);
 			}
 		}
@@ -684,8 +692,16 @@ public class SnapshotRepo : GLib.Object{
 	}
 	
 	public void remove_invalid(){
-		log_msg(_("Removing snapshots") + " > " + _("invalid") + "...");
+
+		bool show_msg = true;
+
 		foreach(var bak in invalid_snapshots){
+
+			if (show_msg){
+				log_msg(_("Removing snapshots") + " : " + _("invalid") + "...");
+				show_msg = false;
+			}
+				
 			bak.remove(true);
 		}
 		
@@ -743,7 +759,7 @@ public class SnapshotRepo : GLib.Object{
 		
 		return true;
 	}
-	
+
 	// private
 	
 	private bool delete_directory(string dir_path){

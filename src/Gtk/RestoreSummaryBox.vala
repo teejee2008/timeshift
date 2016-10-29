@@ -82,7 +82,7 @@ class RestoreSummaryBox : Gtk.Box{
 		string msg_reboot = "";
 		string msg_disclaimer = "";
 
-		App.disclaimer_pre_restore(
+		App.get_restore_messages(
 			true, out msg_devices, out msg_reboot,
 			out msg_disclaimer);
 

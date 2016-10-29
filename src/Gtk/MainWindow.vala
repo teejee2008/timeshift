@@ -734,11 +734,9 @@ class MainWindow : Gtk.Window{
 			}
 
 			App.snapshot_to_restore = snapshot_to_restore;
-			App.restore_target = App.sys_root;
 		}
 		else{
 			App.snapshot_to_restore = null;
-			App.restore_target = null;
 		}
 
 		//show restore window -----------------

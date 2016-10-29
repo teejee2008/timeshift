@@ -149,6 +149,11 @@ public class AppConsole : GLib.Object {
 					App.app_mode = "ondemand";
 					break;
 
+				case "--comment":
+				case "--comments":
+					App.cmd_comments = args[++k];
+					break; 
+
 				case "--skip-grub":
 					App.cmd_skip_grub = true;
 					break;
@@ -313,6 +318,7 @@ public class AppConsole : GLib.Object {
 		msg += _("Backup") + ":\n";
 		msg += "  --backup                   " + _("Take scheduled backup") + "\n";
 		msg += "  --backup-now               " + _("Take on-demand backup") + "\n";
+		msg += "  --comments                  " + _("Snapshot description") + "\n";
 		msg += "\n";
 		msg += _("Restore") + ":\n";
 		msg += "  --restore                  " + _("Restore snapshot") + "\n";
@@ -546,7 +552,7 @@ public class AppConsole : GLib.Object {
 
 	private bool create_snapshot(bool ondemand){
 		select_snapshot_device(false);
-		return App.take_snapshot(ondemand,"",null);
+		return App.create_snapshot(ondemand, null);
 	}
 	
 	// restore
@@ -723,10 +729,6 @@ public class AppConsole : GLib.Object {
 			if (entry.device == null){
 				App.mount_list.remove(entry);
 			}
-
-			if (entry.mount_point == "/"){
-				App.restore_target = entry.device;
-			}
 		}
 	}
 
@@ -743,14 +745,14 @@ public class AppConsole : GLib.Object {
 				if (!pi.has_linux_filesystem()) { continue; }
 				
 				if ((pi.device == App.cmd_target_device)||((pi.uuid == App.cmd_target_device))){
-					App.restore_target = pi;
+					App.dst_root = pi;
 					found = true;
 					break;
 				}
 				else {
 					foreach(string symlink in pi.symlinks){
 						if (symlink == App.cmd_target_device){
-							App.restore_target = pi;
+							App.dst_root = pi;
 							found = true;
 							break;
 						}
@@ -776,21 +778,21 @@ public class AppConsole : GLib.Object {
 			log_debug("selecting: %s".printf(mnt.mount_point));
 
 			// no need to ask user to map remaining devices if restoring same system
-			if ((App.restore_target != null) && (App.sys_root != null)
-				&& (App.restore_target.uuid == App.sys_root.uuid)){
+			if ((App.dst_root != null) && (App.sys_root != null)
+				&& (App.dst_root.uuid == App.sys_root.uuid)){
 					
 				break;
 			}
 
 			if (App.mirror_system){
-				default_device = (App.restore_target != null) ? App.restore_target.device : "";
+				default_device = (App.dst_root != null) ? App.dst_root.device : "";
 			}
 			else{
 				if (mnt.device != null){
 					default_device = mnt.device.device;
 				}
 				else{
-					default_device = (App.restore_target != null) ? App.restore_target.device : "";
+					default_device = (App.dst_root != null) ? App.dst_root.device : "";
 				}
 			}
 
@@ -832,15 +834,11 @@ public class AppConsole : GLib.Object {
 				
 				mnt.device = dev;
 
-				if (mnt.mount_point == "/"){
-					App.restore_target = dev;
-				}
-
 				log_msg(string.nfill(78, '*'));
 				
 				if ((mnt.mount_point != "/")
-					&& (App.restore_target != null)
-					&& (dev.device == App.restore_target.device)){
+					&& (App.dst_root != null)
+					&& (dev.device == App.dst_root.device)){
 						
 					log_msg(_("'%s' will be on root device").printf(mnt.mount_point), true);
 				}
@@ -848,7 +846,7 @@ public class AppConsole : GLib.Object {
 					log_msg(_("'%s' will be on '%s'").printf(
 						mnt.mount_point, mnt.device.short_name_with_alias), true);
 						
-					//log_debug("UUID=%s".printf(restore_target.uuid));
+					//log_debug("UUID=%s".printf(dst_root.uuid));
 				}
 				log_msg(string.nfill(78, '*'));
 			}
@@ -981,7 +979,7 @@ public class AppConsole : GLib.Object {
 			string msg_reboot = "";
 			string msg_disclaimer = "";
 
-			App.disclaimer_pre_restore(
+			App.get_restore_messages(
 				false, out msg_devices, out msg_reboot,
 				out msg_disclaimer);
 
@@ -1048,7 +1046,7 @@ public class AppConsole : GLib.Object {
 		if ((line == null)||(line.length == 0)||(line.down() == "c")||(line.down() == "d")){
 			//set default
 			if (App.mirror_system){
-				return App.restore_target; //root device
+				return App.dst_root; //root device
 			}
 			else{
 				return mnt.device; //keep current
@@ -1059,7 +1057,7 @@ public class AppConsole : GLib.Object {
 			App.exit_app(0);
 		}
 		else if ((line.down() == "n")||(line.down() == "r")){
-			return App.restore_target; //root device
+			return App.dst_root; //root device
 		}
 		else if (line.contains("/")){
 			selected_device = Device.get_device_by_name(line);
@@ -1235,7 +1233,13 @@ public class AppConsole : GLib.Object {
 		
 		select_snapshot_device(true);
 		
-		return App.repo.remove_all();
+		//return App.repo.remove_all();
+		
+		foreach(var snap in App.repo.snapshots){
+			snap.remove(true);
+		}
+
+		return true;
 	}
 
 }

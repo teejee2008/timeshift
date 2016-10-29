@@ -288,13 +288,28 @@ public class Snapshot : GLib.Object{
 
 		delete_file_task.dest_path = "%s/".printf(path);
 		delete_file_task.status_message = message;
+		delete_file_task.prg_count_total = Main.first_snapshot_count;
 		delete_file_task.execute();
 
 		if (wait){
-			while (delete_file_task.is_running){
-				gtk_do_events ();
+			
+			while (delete_file_task.status == AppStatus.RUNNING){
+
 				sleep(1000);
+				gtk_do_events ();
+
+				stdout.printf("%6.2f%% %s (%s %s)\r".printf(
+					delete_file_task.progress * 100.0, _("complete"),
+					delete_file_task.stat_time_remaining, _("remaining")));
+				
+				stdout.flush();
 			}
+
+			stdout.printf(string.nfill(80, ' ') + "\r");
+			stdout.flush();
+
+			message = "%s '%s' (%s)".printf(_("Removed"), name, delete_file_task.stat_time_elapsed);	
+			log_msg(message);
 		}
 	}
 	

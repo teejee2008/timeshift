@@ -121,6 +121,12 @@ public class Device : GLib.Object{
 		}
 	}
 
+	public string full_name_with_parent{
+		owned get{
+			return device_name_with_parent;
+		}
+	}
+
 	public string short_name_with_alias{
 		owned get{
 			string text = kname;

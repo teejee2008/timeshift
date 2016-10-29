@@ -34,18 +34,6 @@ using TeeJee.GtkHelper;
 using TeeJee.System;
 using TeeJee.Misc;
 
-public Main App;
-public const string AppName = "Timeshift RSYNC";
-public const string AppShortName = "timeshift";
-public const string AppVersion = "16.10.6";
-public const string AppAuthor = "Tony George";
-public const string AppAuthorEmail = "teejeetech@gmail.com";
-
-const string GETTEXT_PACKAGE = "";
-const string LOCALE_DIR = "/usr/share/locale";
-
-extern void exit(int exit_code);
-
 public class Main : GLib.Object{
 	public string app_path = "";
 	public string share_folder = "";
@@ -144,94 +132,27 @@ public class Main : GLib.Object{
 	public bool cmd_verbose = true;
 
 	public string progress_text = "";
-	public int snapshot_list_start_index = 0;
+	
 
 	public RsyncTask task;
 	public DeleteFileTask delete_file_task;
 
-	//initialization
+	public Main(string[] args, bool gui_mode){
 
-	public static int main (string[] args) {
-		set_locale();
-
-		LOG_TIMESTAMP = false;
+		if (gui_mode){
+			app_mode = "";
+		}
 		
-		//show help and exit
-		if (args.length > 1) {
-			switch (args[1].down()) {
-				case "--help":
-				case "-h":
-					stdout.printf (Main.help_message ());
-					return 0;
-			}
-		}
-
-		//init TMP
-		LOG_ENABLE = false;
-		init_tmp(AppShortName);
-		LOG_ENABLE = true;
-
-		/*
-		 * Note:
-		 * init_tmp() will fail if timeshift is run as normal user
-		 * logging will be disabled temporarily so that the error is not displayed to user
-		 */
-
-		/*
-		var map = Device.get_mounted_filesystems_using_mtab();
-		foreach(Device pi in map.values){
-			log_msg(pi.description_full());
-		}
-		exit(0);
-		*/
-
-		App = new Main(args);
-
-		bool success = App.start_application(args);
-		App.exit_app();
-
-		return (success) ? 0 : 1;
-	}
-
-	private static void set_locale(){
-		log_debug("setting locale...");
-		Intl.setlocale(GLib.LocaleCategory.MESSAGES, "timeshift");
-		Intl.textdomain(GETTEXT_PACKAGE);
-		Intl.bind_textdomain_codeset(GETTEXT_PACKAGE, "utf-8");
-		Intl.bindtextdomain(GETTEXT_PACKAGE, LOCALE_DIR);
-	}
-
-	public Main(string[] args){
-
 		log_debug("Main()");
-		
-		string msg = "";
 
-		//parse arguments (initial) ------------
-
-		parse_arguments(args);
-
-		//check for admin access before logging is initialized
-		//since writing to log directory requires admin access
-
-		if (!user_is_admin()){
-			msg = _("TimeShift needs admin access to backup and restore system files.") + "\n";
-			msg += _("Please run the application as admin (using 'sudo' or 'su')");
-
-			log_error(msg);
-
-			if (app_mode == ""){
-				string title = _("Admin Access Required");
-				gtk_messagebox(title, msg, null, true);
-			}
-
-			exit(0);
-		}
+		log_debug("");
+		log_debug(_("Running") + " %s v%s".printf(AppName, AppVersion));
+		log_debug("");
 
 		//init log ------------------
 
 		try {
-			string suffix = (app_mode.length == 0) ? "_gui" : "_" + app_mode;
+			string suffix = (app_mode.length == 0) ? "gui" : app_mode;
 			
 			DateTime now = new DateTime.now_local();
 			log_dir = "/var/log/timeshift";
@@ -250,22 +171,21 @@ public class Main : GLib.Object{
 
 			dos_log = new DataOutputStream (file.create(FileCreateFlags.REPLACE_DESTINATION));
 			if ((app_mode == "")||(LOG_DEBUG)){
-				log_msg(_("Session log file") + ": %s".printf(log_file));
+				log_debug(_("Session log file") + ": %s".printf(log_file));
 			}
 		}
 		catch (Error e) {
 			log_error (e.message);
 		}
-
-		log_msg("");
-		log_msg(_("Running") + " %s v%s".printf(AppName, AppVersion));
 		
 		//get Linux distribution info -----------------------
-
+		
 		this.current_distro = LinuxDistro.get_dist_info("/");
-		log_msg(_("Distribution") + ": " + current_distro.full_name());
-		log_msg("DIST_ID" + ": " + current_distro.dist_id);
 
+		log_debug(_("Distribution") + ": " + current_distro.full_name());
+		log_debug("DIST_ID" + ": " + current_distro.dist_id);
+		//log_msg("");
+		
 		//check dependencies ---------------------
 
 		string message;
@@ -274,7 +194,7 @@ public class Main : GLib.Object{
 				string title = _("Missing Dependencies");
 				gtk_messagebox(title, message, null, true);
 			}
-			exit(0);
+			exit_app(1);
 		}
 
 		//check and create lock ------------------
@@ -283,6 +203,7 @@ public class Main : GLib.Object{
 		
 		if (!app_lock.create("timeshift", app_mode)){
 			if (app_mode == ""){
+				string msg = "";
 				if (app_lock.lock_message == "backup"){
 					msg = _("Another instance of Timeshift is creating a snapshot.") + "\n";
 					msg += _("Please wait a few minutes and try again.");
@@ -298,7 +219,7 @@ public class Main : GLib.Object{
 			else{
 				//already logged - do nothing
 			}
-			exit(0);
+			exit_app(1);
 		}
 
 		//initialize variables ------------------
@@ -356,90 +277,6 @@ public class Main : GLib.Object{
 		delete_file_task = new DeleteFileTask();
 
 		log_debug("Main(): ok");
-	}
-
-	public bool start_application(string[] args){
-		bool is_success = true;
-
-		log_debug("start_application()");
-
-		if (live_system()){
-			switch(app_mode){
-			case "backup":
-			case "ondemand":
-				log_error(_("Snapshots cannot be created in Live CD mode"));
-				return false;
-			}
-		}
-		
-		switch(app_mode){
-			case "backup":
-			case "ondemand":
-			case "restore":
-			case "delete":
-			case "delete-all":
-			case "list-snapshots":
-				//set backup device from commandline argument if available or prompt user if device is null
-				if (!mirror_system){
-					get_backup_device_from_cmd(false, null);
-				}
-				break;
-		}
-
-		switch(app_mode){
-			case "backup":
-				is_success = take_snapshot(false, "", null);
-				return is_success;
-
-			case "restore":
-				is_success = restore_snapshot(null);
-				return is_success;
-
-			case "delete":
-				delete_snapshot();
-				return true;
-
-			case "delete-all":
-				is_success = delete_all_snapshots();
-				return is_success;
-
-			case "ondemand":
-				is_success = take_snapshot(true,"",null);
-				return is_success;
-
-			case "list-snapshots":
-				LOG_ENABLE = true;
-				if (App.repo.has_snapshots()){
-					log_msg(_("Snapshots on device %s").printf(
-						repo.device.full_name_with_alias) + ":\n");
-					list_snapshots(false);
-					log_msg("");
-					return true;
-				}
-				else{
-					log_msg(_("No snapshots found on device") + " '%s'".printf(repo.device.device));
-					return false;
-				}
-
-			case "list-devices":
-				LOG_ENABLE = true;
-				log_msg(_("Devices with Linux file systems") + ":\n");
-				list_all_devices();
-				log_msg("");
-				return true;
-
-			default:
-				log_debug("Creating MainWindow");
-				//Initialize main window
-				var window = new MainWindow ();
-				window.destroy.connect(Gtk.main_quit);
-				window.show_all();
-
-				//start event loop
-				Gtk.main();
-
-				return true;
-		}
 	}
 
 	public bool check_dependencies(out string msg){
@@ -782,664 +619,6 @@ public class Main : GLib.Object{
 		App.exclude_app_names.sort((a,b) => {
 			return Posix.strcmp(a,b);
 		});
-	}
-
-	//console functions
-
-	public static string help_message (){
-		string msg = "\n" + AppName + " v" + AppVersion + " by Tony George (teejeetech@gmail.com)" + "\n";
-		msg += "\n";
-		msg += "Syntax:\n";
-		msg += "\n";
-		msg += "  timeshift --list-{snapshots|devices} [OPTIONS]\n";
-		msg += "  timeshift --backup[-now] [OPTIONS]\n";
-		msg += "  timeshift --restore [OPTIONS]\n";
-		msg += "  timeshift --delete-[all] [OPTIONS]\n";
-		msg += "\n";
-		msg += _("Options") + ":\n";
-		msg += "\n";
-		msg += _("List") + ":\n";
-		msg += "  --list[-snapshots]         " + _("List snapshots") + "\n";
-		msg += "  --list-devices             " + _("List devices") + "\n";
-		msg += "\n";
-		msg += _("Backup") + ":\n";
-		msg += "  --backup                   " + _("Take scheduled backup") + "\n";
-		msg += "  --backup-now               " + _("Take on-demand backup") + "\n";
-		msg += "\n";
-		msg += _("Restore") + ":\n";
-		msg += "  --restore                  " + _("Restore snapshot") + "\n";
-		msg += "  --clone                    " + _("Clone current system") + "\n";
-		msg += "  --snapshot <name>          " + _("Specify snapshot to restore") + "\n";
-		msg += "  --target[-device] <device> " + _("Specify target device") + "\n";
-		msg += "  --grub[-device] <device>   " + _("Specify device for installing GRUB2 bootloader") + "\n";
-		msg += "  --skip-grub                " + _("Skip GRUB2 reinstall") + "\n";
-		msg += "\n";
-		msg += _("Delete") + ":\n";
-		msg += "  --delete                   " + _("Delete snapshot") + "\n";
-		msg += "  --delete-all               " + _("Delete all snapshots") + "\n";
-		msg += "\n";
-		msg += _("Global") + ":\n";
-		msg += "  --backup-device <device>   " + _("Specify backup device") + "\n";
-		msg += "  --yes                      " + _("Answer YES to all confirmation prompts") + "\n";
-		msg += "  --debug                    " + _("Show additional debug messages") + "\n";
-		msg += "  --verbose                  " + _("Show rsync output (default)") + "\n";
-		msg += "  --quiet                    " + _("Hide rsync output") + "\n";
-		msg += "  --help                     " + _("Show all options") + "\n";
-		msg += "\n";
-
-		msg += _("Examples") + ":\n";
-		msg += "\n";
-		msg += "timeshift --list\n";
-		msg += "timeshift --list --backup-device /dev/sda1\n";
-		msg += "timeshift --backup-now \n";
-		msg += "timeshift --restore \n";
-		msg += "timeshift --restore --snapshot '2014-10-12_16-29-08' --target /dev/sda1 --skip-grub\n";
-		msg += "timeshift --delete  --snapshot '2014-10-12_16-29-08'\n";
-		msg += "timeshift --delete-all \n";
-		msg += "\n";
-
-		msg += _("Notes") + ":\n";
-		msg += "\n";
-		msg += "  1) --backup will take a snapshot only if a scheduled snapshot is due\n";
-		msg += "  2) --backup-now will take an immediate (forced) snapshot\n";
-		msg += "  3) --backup will not take snapshots till first snapshot is taken with --backup-now\n";
-		msg += "  4) Use --restore without other options to select options interactively\n";
-		msg += "  5) UUID can be specified instead of device name\n";
-		msg += "\n";
-		return msg;
-	}
-
-	private void parse_arguments(string[] args){
-
-		log_debug("parse_arguments()");
-		
-		for (int k = 1; k < args.length; k++) // Oth arg is app path
-		{
-			switch (args[k].down()){
-				case "--backup":
-					LOG_TIMESTAMP = false;
-					LOG_DEBUG = false;
-					app_mode = "backup";
-					break;
-
-				case "--delete":
-					LOG_TIMESTAMP = false;
-					LOG_DEBUG = false;
-					app_mode = "delete";
-					break;
-
-				case "--delete-all":
-					LOG_TIMESTAMP = false;
-					LOG_DEBUG = false;
-					app_mode = "delete-all";
-					break;
-
-				case "--restore":
-					LOG_TIMESTAMP = false;
-					LOG_DEBUG = false;
-					mirror_system = false;
-					app_mode = "restore";
-					break;
-
-				case "--clone":
-					LOG_TIMESTAMP = false;
-					LOG_DEBUG = false;
-					mirror_system = true;
-					app_mode = "restore";
-					break;
-
-				case "--backup-now":
-					LOG_TIMESTAMP = false;
-					LOG_DEBUG = false;
-					app_mode = "ondemand";
-					break;
-
-				case "--skip-grub":
-					cmd_skip_grub = true;
-					break;
-
-				case "--verbose":
-					cmd_verbose = true;
-					break;
-
-				case "--quiet":
-					cmd_verbose = false;
-					break;
-
-				case "--yes":
-					cmd_confirm = true;
-					break;
-
-				case "--grub":
-				case "--grub-device":
-					reinstall_grub2 = true;
-					cmd_grub_device = args[++k];
-					break;
-
-				case "--target":
-				case "--target-device":
-					cmd_target_device = args[++k];
-					break;
-
-				case "--backup-device":
-					cmd_backup_device = args[++k];
-					break;
-
-				case "--snapshot":
-				case "--snapshot-name":
-					cmd_snapshot = args[++k];
-					break;
-
-				case "--debug":
-					LOG_COMMANDS = true;
-					LOG_DEBUG = true;
-					break;
-
-				case "--list":
-				case "--list-snapshots":
-					app_mode = "list-snapshots";
-					LOG_TIMESTAMP = false;
-					LOG_DEBUG = false;
-					break;
-
-				case "--list-devices":
-					app_mode = "list-devices";
-					LOG_TIMESTAMP = false;
-					LOG_DEBUG = false;
-					break;
-
-				default:
-					LOG_TIMESTAMP = false;
-					log_error(_("Invalid command line arguments") + ": %s".printf(args[k]), true);
-					log_msg(Main.help_message());
-					exit(1);
-					break;
-			}
-		}
-
-		/* LOG_ENABLE = false; 		disables all console output
-		 * LOG_TIMESTAMP = false;	disables the timestamp prepended to every line in terminal output
-		 * LOG_DEBUG = false;		disables additional console messages
-		 * LOG_COMMANDS = true;		enables printing of all commands on terminal
-		 * */
-
-		if (app_mode == ""){
-			//Initialize GTK
-			LOG_TIMESTAMP = true;
-			Gtk.init(ref args);
-		}
-
-		//X.init_threads();
-	}
-
-	private void list_snapshots(bool paginate){
-		int count = 0;
-		for(int index = 0; index < repo.snapshots.size; index++){
-			if (!paginate || ((index >= snapshot_list_start_index) && (index < snapshot_list_start_index + 10))){
-				count++;
-			}
-		}
-
-		string[,] grid = new string[count+1,5];
-		bool[] right_align = { false, false, false, false, false};
-
-		int row = 0;
-		int col = -1;
-		grid[row, ++col] = _("Num");
-		grid[row, ++col] = "";
-		grid[row, ++col] = _("Name");
-		grid[row, ++col] = _("Tags");
-		grid[row, ++col] = _("Description");
-		row++;
-
-		for(int index = 0; index < repo.snapshots.size; index++){
-			Snapshot bak = repo.snapshots[index];
-			if (!paginate || ((index >= snapshot_list_start_index) && (index < snapshot_list_start_index + 10))){
-				col = -1;
-				grid[row, ++col] = "%d".printf(index);
-				grid[row, ++col] = ">";
-				grid[row, ++col] = "%s".printf(bak.name);
-				grid[row, ++col] = "%s".printf(bak.taglist_short);
-				grid[row, ++col] = "%s".printf(bak.description);
-				row++;
-			}
-		}
-
-		print_grid(grid, right_align);
-	}
-
-	private void list_devices(Gee.ArrayList<Device> device_list){
-		string[,] grid = new string[device_list.size+1,6];
-		bool[] right_align = { false, false, false, true, true, false};
-
-		int row = 0;
-		int col = -1;
-		grid[row, ++col] = _("Num");
-		grid[row, ++col] = "";
-		grid[row, ++col] = _("Device");
-		//grid[row, ++col] = _("UUID");
-		grid[row, ++col] = _("Size");
-		grid[row, ++col] = _("Type");
-		grid[row, ++col] = _("Label");
-		row++;
-
-		foreach(var pi in device_list) {
-			col = -1;
-			grid[row, ++col] = "%d".printf(row - 1);
-			grid[row, ++col] = ">";
-			grid[row, ++col] = "%s".printf(pi.full_name_with_alias);
-			//grid[row, ++col] = "%s".printf(pi.uuid);
-			grid[row, ++col] = "%s".printf((pi.size_bytes > 0) ? "%s".printf(pi.size) : "?? GB");
-			grid[row, ++col] = "%s".printf(pi.fstype);
-			grid[row, ++col] = "%s".printf(pi.label);
-			row++;
-		}
-
-		print_grid(grid, right_align);
-	}
-
-	private Gee.ArrayList<Device> list_all_devices(){
-
-		//add devices
-		var device_list = new Gee.ArrayList<Device>();
-		foreach(var dev in Device.get_block_devices_using_lsblk()) {
-			if (dev.has_linux_filesystem()){
-				device_list.add(dev);
-			}
-		}
-
-		string[,] grid = new string[device_list.size+1,6];
-		bool[] right_align = { false, false, false, true, true, false};
-
-		int row = 0;
-		int col = -1;
-		grid[row, ++col] = _("Num");
-		grid[row, ++col] = "";
-		grid[row, ++col] = _("Device");
-		//grid[row, ++col] = _("UUID");
-		grid[row, ++col] = _("Size");
-		grid[row, ++col] = _("Type");
-		grid[row, ++col] = _("Label");
-		row++;
-
-		foreach(var pi in device_list) {
-			col = -1;
-			grid[row, ++col] = "%d".printf(row - 1);
-			grid[row, ++col] = ">";
-			grid[row, ++col] = "%s".printf(pi.full_name_with_alias);
-			//grid[row, ++col] = "%s".printf(pi.uuid);
-			grid[row, ++col] = "%s".printf((pi.size_bytes > 0) ? "%s GB".printf(pi.size) : "?? GB");
-			grid[row, ++col] = "%s".printf(pi.fstype);
-			grid[row, ++col] = "%s".printf(pi.label);
-			row++;
-		}
-
-		print_grid(grid, right_align);
-
-		return device_list;
-	}
-
-	private Gee.ArrayList<Device> list_grub_devices(bool print_to_console = true){
-		//add devices
-		var grub_device_list = new Gee.ArrayList<Device>();
-		foreach(var dev in Device.get_block_devices_using_lsblk()) {
-			if (dev.type == "disk"){
-				grub_device_list.add(dev);
-			}
-			else if (dev.type == "part"){ 
-				if (dev.has_linux_filesystem()){
-					grub_device_list.add(dev);
-				}
-			}
-			// skip crypt/loop
-		}
-
-		/*Note: Lists are already sorted. No need to sort again */
-
-		string[,] grid = new string[grub_device_list.size+1,4];
-		bool[] right_align = { false, false, false, false };
-
-		int row = 0;
-		int col = -1;
-		grid[row, ++col] = _("Num");
-		grid[row, ++col] = "";
-		grid[row, ++col] = _("Device");
-		grid[row, ++col] = _("Description");
-		row++;
-
-		string desc = "";
-		foreach(Device pi in grub_device_list) {
-			col = -1;
-			grid[row, ++col] = "%d".printf(row - 1);
-			grid[row, ++col] = ">";
-			grid[row, ++col] = "%s".printf(pi.short_name_with_alias);
-
-			if (pi.type == "disk"){
-				desc = "%s".printf(((pi.vendor.length > 0)||(pi.model.length > 0)) ? (pi.vendor + " " + pi.model  + " [MBR]") : "");
-			}
-			else{
-				desc = "%5s, ".printf(pi.fstype);
-				desc += "%10s".printf((pi.size_bytes > 0) ? "%s GB".printf(pi.size) : "?? GB");
-				desc += "%s".printf((pi.label.length > 0) ? ", " + pi.label : "");
-			}
-			grid[row, ++col] = "%s".printf(desc);
-			row++;
-		}
-
-		print_grid(grid, right_align);
-
-		return grub_device_list;
-	}
-
-	private void print_grid(string[,] grid, bool[] right_align, bool has_header = true){
-		int[] col_width = new int[grid.length[1]];
-
-		for(int col=0; col<grid.length[1]; col++){
-			for(int row=0; row<grid.length[0]; row++){
-				if (grid[row,col].length > col_width[col]){
-					col_width[col] = grid[row,col].length;
-				}
-			}
-		}
-
-		for(int row=0; row<grid.length[0]; row++){
-			for(int col=0; col<grid.length[1]; col++){
-				string fmt = "%" + (right_align[col] ? "+" : "-") + col_width[col].to_string() + "s  ";
-				stdout.printf(fmt.printf(grid[row,col]));
-			}
-			stdout.printf("\n");
-
-			if (has_header && (row == 0)){
-				stdout.printf(string.nfill(78, '-'));
-				stdout.printf("\n");
-			}
-		}
-	}
-
-
-	//prompt for input
-
-	public void get_backup_device_from_cmd(bool prompt_if_empty, Gtk.Window? parent_win){
-
-		var list = new Gee.ArrayList<Device>();
-		foreach(var pi in partitions){
-			if (pi.has_linux_filesystem()){
-				list.add(pi);
-			}
-		}
-					
-		if (cmd_backup_device.length > 0){
-			//set backup device from command line argument
-			var cmd_dev = Device.get_device_by_name(cmd_backup_device);
-			if (cmd_dev != null){
-				repo = new SnapshotRepo.from_device(cmd_dev, null);
-				if (!repo.available()){
-					exit_app();
-					exit(1);
-				}
-			}
-			else{
-				log_error(_("Could not find device") + ": '%s'".printf(cmd_backup_device));
-				exit_app();
-				exit(1);
-			}
-		}
-		else{
-			if ((repo.device == null) || (prompt_if_empty && (repo.snapshots.size == 0))){
-				//prompt user for backup device
-				log_msg("");
-
-				log_msg(_("Select backup device") + ":\n");
-				list_devices(list);
-				log_msg("");
-
-				Device dev = null;
-				int attempts = 0;
-				while (dev == null){
-					attempts++;
-					if (attempts > 3) { break; }
-					stdout.printf("" +
-						_("Enter device name or number (a=Abort)") + ": ");
-					stdout.flush();
-
-					dev = read_stdin_device(list);
-				}
-
-				log_msg("");
-				
-				if (dev == null){
-					log_error(_("Failed to get input from user in 3 attempts"));
-					log_msg(_("Aborted."));
-					exit_app();
-					exit(0);
-				}
-
-				repo = new SnapshotRepo.from_device(dev, null);
-				if (!repo.available()){
-					exit_app();
-					exit(1);
-				}
-			}
-		}
-	}
-
-	private Device? read_stdin_device(Gee.ArrayList<Device> device_list){
-		var counter = new TimeoutCounter();
-		counter.exit_on_timeout();
-		string? line = stdin.read_line();
-		counter.stop();
-
-		line = (line != null) ? line.strip() : "";
-
-		Device selected_device = null;
-
-		if (line.down() == "a"){
-			log_msg(_("Aborted."));
-			exit_app();
-			exit(0);
-		}
-		else if ((line == null)||(line.length == 0)){
-			log_error("Invalid input");
-		}
-		else if (line.contains("/")){
-			selected_device = Device.get_device_by_name(line);
-			if (selected_device == null){
-				log_error("Invalid input");
-			}
-		}
-		else{
-			selected_device = get_device_from_index(device_list, line);
-			if (selected_device == null){
-				log_error("Invalid input");
-			}
-		}
-
-		return selected_device;
-	}
-
-	private Device? read_stdin_device_mounts(Gee.ArrayList<Device> device_list, MountEntry mnt){
-		var counter = new TimeoutCounter();
-		counter.exit_on_timeout();
-		string? line = stdin.read_line();
-		counter.stop();
-
-		line = (line != null) ? line.strip() : "";
-
-		Device selected_device = null;
-
-		if ((line == null)||(line.length == 0)||(line.down() == "c")||(line.down() == "d")){
-			//set default
-			if (mirror_system){
-				return restore_target; //root device
-			}
-			else{
-				return mnt.device; //keep current
-			}
-		}
-		else if (line.down() == "a"){
-			log_msg("Aborted.");
-			exit_app();
-			exit(0);
-		}
-		else if ((line.down() == "n")||(line.down() == "r")){
-			return restore_target; //root device
-		}
-		else if (line.contains("/")){
-			selected_device = Device.get_device_by_name(line);
-			if (selected_device == null){
-				log_error("Invalid input");
-			}
-		}
-		else{
-			selected_device = get_device_from_index(device_list, line);
-			if (selected_device == null){
-				log_error("Invalid input");
-			}
-		}
-
-		return selected_device;
-	}
-
-	private Device? get_device_from_index(Gee.ArrayList<Device> device_list, string index_string){
-		int64 index;
-		if (int64.try_parse(index_string, out index)){
-			int i = -1;
-			foreach(Device pi in device_list) {
-				if (++i == index){
-					return pi;
-				}
-			}
-		}
-
-		return null;
-	}
-
-	private Snapshot read_stdin_snapshot(){
-		var counter = new TimeoutCounter();
-		counter.exit_on_timeout();
-		string? line = stdin.read_line();
-		counter.stop();
-
-		line = (line != null) ? line.strip() : "";
-
-		Snapshot selected_snapshot = null;
-
-		if (line.down() == "a"){
-			log_msg("Aborted.");
-			exit_app();
-			exit(0);
-		}
-		else if (line.down() == "p"){
-			snapshot_list_start_index -= 10;
-			if (snapshot_list_start_index < 0){
-				snapshot_list_start_index = 0;
-			}
-			log_msg("");
-			list_snapshots(true);
-			log_msg("");
-		}
-		else if (line.down() == "n"){
-			if ((snapshot_list_start_index + 10) < repo.snapshots.size){
-				snapshot_list_start_index += 10;
-			}
-			log_msg("");
-			list_snapshots(true);
-			log_msg("");
-		}
-		else if (line.contains("_")||line.contains("-")){
-			//TODO: read name
-			log_error("Invalid input");
-		}
-		else if ((line == null)||(line.length == 0)){
-			log_error("Invalid input");
-		}
-		else{
-			int64 index;
-			if (int64.try_parse(line, out index)){
-				if (index < repo.snapshots.size){
-					selected_snapshot = repo.snapshots[(int) index];
-				}
-				else{
-					log_error("Invalid input");
-				}
-			}
-			else{
-				log_error("Invalid input");
-			}
-		}
-
-		return selected_snapshot;
-	}
-
-	private bool read_stdin_grub_install(){
-		var counter = new TimeoutCounter();
-		counter.exit_on_timeout();
-		string? line = stdin.read_line();
-		counter.stop();
-
-		line = (line != null) ? line.strip() : line;
-
-		if ((line == null)||(line.length == 0)){
-			log_error("Invalid input");
-			return false;
-		}
-		else if (line.down() == "a"){
-			log_msg("Aborted.");
-			exit_app();
-			exit(0);
-			return true;
-		}
-		else if (line.down() == "y"){
-			cmd_skip_grub = false;
-			reinstall_grub2 = true;
-			return true;
-		}
-		else if (line.down() == "n"){
-			cmd_skip_grub = true;
-			reinstall_grub2 = false;
-			return true;
-		}
-		else if ((line == null)||(line.length == 0)){
-			log_error("Invalid input");
-			return false;
-		}
-		else{
-			log_error("Invalid input");
-			return false;
-		}
-	}
-
-	private bool read_stdin_restore_confirm(){
-		var counter = new TimeoutCounter();
-		counter.exit_on_timeout();
-		
-		string? line = stdin.read_line();
-		counter.stop();
-
-		line = (line != null) ? line.strip() : "";
-
-		if ((line.down() == "a")||(line.down() == "n")){
-			log_msg("Aborted.");
-			exit_app();
-			exit(0);
-			return true;
-		}
-		else if ((line == null)||(line.length == 0)){
-			log_error("Invalid input");
-			return false;
-		}
-		else if (line.down() == "y"){
-			cmd_confirm = true;
-			return true;
-		}
-		else if ((line == null)||(line.length == 0)){
-			log_error("Invalid input");
-			return false;
-		}
-		else{
-			log_error("Invalid input");
-			return false;
-		}
 	}
 
 	//properties
@@ -1938,81 +1117,6 @@ public class Main : GLib.Object{
 	    return (new Snapshot(snapshot_path));
 	}
 
-	// delete from terminal
-
-	public void delete_snapshot(Snapshot? snapshot = null){
-
-		bool found = false;
-		
-		// set snapshot -----------------------------------------------
-
-		if (app_mode != ""){ //command-line mode
-
-			if (cmd_snapshot.length > 0){
-
-				//check command line arguments
-				found = false;
-				foreach(var bak in repo.snapshots) {
-					if (bak.name == cmd_snapshot){
-						snapshot_to_delete = bak;
-						found = true;
-						break;
-					}
-				}
-
-				//check if found
-				if (!found){
-					log_error(_("Could not find snapshot") + ": '%s'".printf(cmd_snapshot));
-					return;
-				}
-			}
-
-			//prompt user for snapshot
-			if (snapshot_to_delete == null){
-
-				if (repo.snapshots.size == 0){
-					log_msg(_("No snapshots found on device") +
-						" '%s'".printf(repo.device.device));
-					return;
-				}
-
-				log_msg("");
-				log_msg(_("Select snapshot to delete") + ":\n");
-				list_snapshots(true);
-				log_msg("");
-
-				int attempts = 0;
-				while (snapshot_to_delete == null){
-					attempts++;
-					if (attempts > 3) { break; }
-					stdout.printf(_("Enter snapshot number (a=Abort, p=Previous, n=Next)") + ": ");
-					stdout.flush();
-					snapshot_to_delete = read_stdin_snapshot();
-				}
-				log_msg("");
-
-				if (snapshot_to_delete == null){
-					log_error(_("Failed to get input from user in 3 attempts"));
-					log_msg(_("Aborted."));
-					exit_app();
-					exit(0);
-				}
-			}
-		}
-
-		if (snapshot_to_delete == null){
-			//print error
-			log_error(_("Snapshot to delete not specified!"));
-			return;
-		}
-
-		snapshot_to_delete.remove(true);
-	}
-
-	public bool delete_all_snapshots(){
-		return repo.remove_all();
-	}
-
 	// gui delete
 
 	public void delete_begin(){
@@ -2223,251 +1327,35 @@ public class Main : GLib.Object{
 	public bool restore_snapshot(Gtk.Window? parent_win){
 		bool found = false;
 
-		// set snapshot device --------------------------------
-
 		if (!mirror_system){
 			
-			if (repo.device != null){
-				//print snapshot_device name
+			if (repo.device == null){
+				log_error(_("Backup device not specified!"));
+				return false;
+			}
+			else{
 				log_msg(string.nfill(78, '*'));
 				log_msg(_("Backup Device") + ": %s".printf(repo.device.device));
 				log_msg(string.nfill(78, '*'));
 			}
-			else{
-				//print error
-				log_error(_("Backup device not specified!"));
+			
+			if (snapshot_to_restore == null){
+				log_error(_("Snapshot to restore not specified!"));
 				return false;
 			}
-		}
-
-		// set snapshot ----------------------------------------
-
-		if (!mirror_system){
-
-			if (app_mode != ""){ //command-line mode
-
-				if (cmd_snapshot.length > 0){
-
-					//check command line arguments
-					found = false;
-					foreach(var bak in repo.snapshots) {
-						if (bak.name == cmd_snapshot){
-							snapshot_to_restore = bak;
-							found = true;
-							break;
-						}
-					}
-
-					//check if found
-					if (!found){
-						log_error(_("Could not find snapshot") + ": '%s'".printf(cmd_snapshot));
-						return false;
-					}
-				}
-
-				//prompt user for snapshot
-				if (snapshot_to_restore == null){
-
-					if (!repo.has_snapshots()){
-						log_error(_("No snapshots found on device") + ": '%s'".printf(repo.device.device));
-						return false;
-					}
-
-					log_msg("");
-					log_msg(_("Select snapshot to restore") + ":\n");
-					list_snapshots(true);
-					log_msg("");
-
-					int attempts = 0;
-					while (snapshot_to_restore == null){
-						attempts++;
-						if (attempts > 3) { break; }
-						stdout.printf(_("Enter snapshot number (a=Abort, p=Previous, n=Next)") + ": ");
-						stdout.flush();
-						snapshot_to_restore = read_stdin_snapshot();
-					}
-					log_msg("");
-
-					if (snapshot_to_restore == null){
-						log_error(_("Failed to get input from user in 3 attempts"));
-						log_msg(_("Aborted."));
-						exit_app();
-						exit(0);
-					}
-				}
-			}
-
-			if ((snapshot_to_restore != null) && (snapshot_to_restore.marked_for_deletion)){
+			else if ((snapshot_to_restore != null) && (snapshot_to_restore.marked_for_deletion)){
 				log_error(_("Invalid Snapshot"));
 				log_error(_("Selected snapshot is marked for deletion"));
 				return false;
 			}
-			
-			if (snapshot_to_restore != null){
-				//print snapshot name
+			else {
 				log_msg(string.nfill(78, '*'));
-				log_msg(_("Snapshot") + ": %s ~ %s".printf(
-					snapshot_to_restore.name, snapshot_to_restore.description));
+				log_msg("%s: %s ~ %s".printf(_("Snapshot"), snapshot_to_restore.name, snapshot_to_restore.description));
 				log_msg(string.nfill(78, '*'));
-			}
-			else{
-				//print error
-				log_error(_("Snapshot to restore not specified!"));
-				return false;
-			}
-		}
-
-		// init mounts ---------------
-
-		if (app_mode != ""){
-			
-			init_mount_list();
-
-			// remove mount points which will remain on root fs
-			for(int i = App.mount_list.size-1; i >= 0; i--){
-				
-				var entry = App.mount_list[i];
-				
-				if (entry.device == null){
-					App.mount_list.remove(entry);
-				}
-
-				if (entry.mount_point == "/"){
-					App.restore_target = entry.device;
-				}
-			}
-		}
-
-		if (app_mode != ""){ //command line mode
-
-			// set target device from cmd argument
-			if (cmd_target_device.length > 0){
-
-				//check command line arguments
-				found = false;
-				foreach(Device pi in partitions) {
-					if (!pi.has_linux_filesystem()) { continue; }
-					if ((pi.device == cmd_target_device)||((pi.uuid == cmd_target_device))){
-						restore_target = pi;
-						found = true;
-						break;
-					}
-					else {
-						foreach(string symlink in pi.symlinks){
-							if (symlink == cmd_target_device){
-								restore_target = pi;
-								found = true;
-								break;
-							}
-						}
-						if (found){ break; }
-					}
-				}
-
-				//check if found
-				if (!found){
-					log_error(_("Could not find device") + ": '%s'".printf(cmd_target_device));
-					exit_app();
-					exit(1);
-					return false;
-				}
 			}
 		}
 		
-		// select devices in mount_list --------------------
 
-		log_debug("Selecting devices for mount points");
-		
-		if (app_mode != ""){ //command line mode
-
-			for(int i = 0; i < mount_list.size; i++){
-				MountEntry mnt = mount_list[i];
-				Device dev = null;
-				string default_device = "";
-
-				log_debug("selecting: %s".printf(mnt.mount_point));
-
-				// no need to ask user to map remaining devices if restoring same system
-				if ((restore_target != null) && (sys_root != null)
-					&& (restore_target.uuid == sys_root.uuid)){
-						
-					break;
-				}
-
-				if (mirror_system){
-					default_device = (restore_target != null) ? restore_target.device : "";
-				}
-				else{
-					if (mnt.device != null){
-						default_device = mnt.device.device;
-					}
-					else{
-						default_device = (restore_target != null) ? restore_target.device : "";
-					}
-				}
-
-				//prompt user for device
-				if (dev == null){
-					log_msg("");
-					log_msg(_("Select '%s' device (default = %s)").printf(
-						mnt.mount_point, default_device) + ":\n");
-					var device_list = list_all_devices();
-					log_msg("");
-
-					int attempts = 0;
-					while (dev == null){
-						attempts++;
-						if (attempts > 3) { break; }
-						
-						stdout.printf("" +
-							_("[a = Abort, d = Default (%s), r = Root device]").printf(default_device) + "\n\n");
-							
-						stdout.printf(
-							_("Enter device name or number")
-								+ ": ");
-								
-						stdout.flush();
-						dev = read_stdin_device_mounts(device_list, mnt);
-					}
-					log_msg("");
-
-					if (dev == null){
-						log_error(_("Failed to get input from user in 3 attempts"));
-						log_msg(_("Aborted."));
-						exit_app();
-						exit(0);
-					}
-				}
-
-				if (dev != null){
-
-					log_debug("selected: %s".printf(dev.uuid));
-					
-					mnt.device = dev;
-
-					if (mnt.mount_point == "/"){
-						restore_target = dev;
-					}
-
-					log_msg(string.nfill(78, '*'));
-					
-					if ((mnt.mount_point != "/")
-						&& (restore_target != null)
-						&& (dev.device == restore_target.device)){
-							
-						log_msg(_("'%s' will be on root device").printf(mnt.mount_point), true);
-					}
-					else{
-						log_msg(_("'%s' will be on '%s'").printf(
-							mnt.mount_point, mnt.device.short_name_with_alias), true);
-							
-						//log_debug("UUID=%s".printf(restore_target.uuid));
-					}
-					log_msg(string.nfill(78, '*'));
-				}
-			
-			}
-		}
 		
 		// mount selected devices ---------------------------------------
 
@@ -2476,11 +1364,7 @@ public class Main : GLib.Object{
 		if (restore_target != null){
 			if (app_mode != ""){ //commandline mode
 				if ((sys_root == null) || (restore_target.uuid != sys_root.uuid)){
-					//mount target device and other devices
-					bool status = mount_target_device(null);
-					if (status == false){
-						return false;
-					}
+					
 				}
 			}
 			else{
@@ -2493,156 +1377,8 @@ public class Main : GLib.Object{
 			return false;
 		}
 
-		// set grub device -----------------------------------------------
 
-		log_debug("Setting grub device");
 		
-		if (app_mode != ""){ //command line mode
-
-			if (cmd_grub_device.length > 0){
-
-				log_debug("Grub device is specified as command argument");
-				
-				//check command line arguments
-				found = false;
-				var device_list = list_grub_devices(false);
-				
-				foreach(Device dev in device_list) {
-					
-					if ((dev.device == cmd_grub_device)
-						||((dev.uuid.length > 0) && (dev.uuid == cmd_grub_device))){
-
-						grub_device = dev.device;
-						found = true;
-						break;
-					}
-					else {
-						if (dev.type == "part"){
-							foreach(string symlink in dev.symlinks){
-								if (symlink == cmd_grub_device){
-									grub_device = dev.device;
-									found = true;
-									break;
-								}
-							}
-							if (found){ break; }
-						}
-					}
-				}
-
-				//check if found
-				if (!found){
-					log_error(_("Could not find device") + ": '%s'".printf(cmd_grub_device));
-					exit_app();
-					exit(1);
-					return false;
-				}
-			}
-			
-			if (mirror_system){
-				reinstall_grub2 = true;
-			}
-			else {
-				if ((cmd_skip_grub == false) && (reinstall_grub2 == false)){
-					log_msg("");
-
-					int attempts = 0;
-					while ((cmd_skip_grub == false) && (reinstall_grub2 == false)){
-						attempts++;
-						if (attempts > 3) { break; }
-						stdout.printf(_("Re-install GRUB2 bootloader? (y/n)") + ": ");
-						stdout.flush();
-						read_stdin_grub_install();
-					}
-
-					if ((cmd_skip_grub == false) && (reinstall_grub2 == false)){
-						log_error(_("Failed to get input from user in 3 attempts"));
-						log_msg(_("Aborted."));
-						exit_app();
-						exit(0);
-					}
-				}
-			}
-
-			if ((reinstall_grub2) && (grub_device.length == 0)){
-				
-				log_msg("");
-				log_msg(_("Select GRUB device") + ":\n");
-				var device_list = list_grub_devices();
-				log_msg("");
-
-				int attempts = 0;
-				while (grub_device.length == 0){
-					
-					attempts++;
-					if (attempts > 3) { break; }
-					
-					stdout.printf(_("Enter device name or number (a=Abort)") + ": ");
-					stdout.flush();
-
-					// TODO: provide option for default boot device
-
-					var list = new Gee.ArrayList<Device>();
-					foreach(var pi in partitions){
-						if (pi.has_linux_filesystem()){
-							list.add(pi);
-						}
-					}
-					
-					Device dev = read_stdin_device(device_list);
-					if (dev != null) { grub_device = dev.device; }
-				}
-				
-				log_msg("");
-
-				if (grub_device.length == 0){
-					
-					log_error(_("Failed to get input from user in 3 attempts"));
-					log_msg(_("Aborted."));
-					exit_app();
-					exit(0);
-				}
-			}
-
-			if ((reinstall_grub2) && (grub_device.length > 0)){
-				
-				log_msg(string.nfill(78, '*'));
-				log_msg(_("GRUB Device") + ": %s".printf(grub_device));
-				log_msg(string.nfill(78, '*'));
-			}
-			else{
-				log_msg(string.nfill(78, '*'));
-				log_msg(_("GRUB will NOT be reinstalled"));
-				log_msg(string.nfill(78, '*'));
-			}
-		}
-
-		if ((app_mode != "")&&(cmd_confirm == false)){
-
-			string msg_devices = "";
-			string msg_reboot = "";
-			string msg_disclaimer = "";
-
-			App.disclaimer_pre_restore(
-				false, out msg_devices, out msg_reboot,
-				out msg_disclaimer);
-
-			int attempts = 0;
-			while (cmd_confirm == false){
-				attempts++;
-				if (attempts > 3) { break; }
-				stdout.printf(_("Continue with restore? (y/n): "));
-				stdout.flush();
-				read_stdin_restore_confirm();
-			}
-
-			if (cmd_confirm == false){
-				log_error(_("Failed to get input from user in 3 attempts"));
-				log_msg(_("Aborted."));
-				exit_app();
-				exit(0);
-			}
-		}
 
 		try {
 			thread_restore_running = true;
@@ -2663,6 +1399,15 @@ public class Main : GLib.Object{
 		snapshot_to_restore = null;
 
 		return thr_success;
+	}
+
+	public void mount_target_devices(){
+		
+		//mount target device and other devices
+		bool status = mount_target_device(null);
+		if (status == false){
+			return;
+		}
 	}
 
 	public void disclaimer_pre_restore(bool formatted,
@@ -2706,7 +1451,7 @@ public class Main : GLib.Object{
 		}
 
 		bool show_subvolume = false;
-		foreach(var entry in App.mount_list){
+		foreach(var entry in mount_list){
 			if (entry.device == null){ continue; }
 			
 			if ((entry.device != null)
@@ -2732,7 +1477,7 @@ public class Main : GLib.Object{
 		}
 		txt += "\n";
 		
-		foreach(var entry in App.mount_list){
+		foreach(var entry in mount_list){
 			if (entry.device == null){ continue; }
 			
 			txt += ("%%-%ds  %%-%ds".printf(max_dev, max_mount)).printf(
@@ -3054,8 +1799,8 @@ public class Main : GLib.Object{
 					// Note: sh_grub will be empty if reinstall_grub2 = false 
 
 					//restore or clone
-					var dlg = new TerminalWindow.with_parent(null);
-					dlg.execute_script(temp_script, true);
+					//var dlg = new TerminalWindow.with_parent(null);
+					//dlg.execute_script(temp_script, true);
 				}
 				else{
 					// other system, gui ------------------------
@@ -3092,7 +1837,7 @@ public class Main : GLib.Object{
 					while (task.status == AppStatus.RUNNING){
 						sleep(1000);
 
-						if (App.task.status_line.length > 0){
+						if (task.status_line.length > 0){
 							progress_text = _("Synching files with rsync...");
 						}
 						
@@ -3100,8 +1845,8 @@ public class Main : GLib.Object{
 					}
 
 					if (!restore_current_system){
-						App.progress_text = "Updating /etc/fstab and /etc/crypttab on target system...";
-						log_msg(App.progress_text);
+						progress_text = "Updating /etc/fstab and /etc/crypttab on target system...";
+						log_msg(progress_text);
 						
 						fix_fstab_file(target_path);
 						fix_crypttab_file(target_path);
@@ -3111,8 +1856,8 @@ public class Main : GLib.Object{
 				
 					if (reinstall_grub2){
 
-						App.progress_text = "Re-installing GRUB2 bootloader...";
-						log_msg(App.progress_text);
+						progress_text = "Re-installing GRUB2 bootloader...";
+						log_msg(progress_text);
 
 						log_debug(sh_grub);
 						
@@ -3162,8 +1907,8 @@ public class Main : GLib.Object{
 				
 					if (reinstall_grub2){
 
-						App.progress_text = "Re-installing GRUB2 bootloader...";
-						log_msg(App.progress_text);
+						progress_text = "Re-installing GRUB2 bootloader...";
+						log_msg(progress_text);
 						
 						if (cmd_verbose){
 							//current/other system, console, verbose
@@ -3517,7 +2262,7 @@ public class Main : GLib.Object{
 		}
 
 		if ((app_mode == "")||(LOG_DEBUG)){
-			log_msg(_("App config loaded") + ": '%s'".printf(this.app_conf_path));
+			log_debug(_("App config loaded") + ": '%s'".printf(this.app_conf_path));
 		}
 	}
 
@@ -3560,8 +2305,7 @@ public class Main : GLib.Object{
 			}
 			else{
 				log_error(_("Could not find device") + ": '%s'".printf(cmd_backup_device));
-				exit_app();
-				exit(1);
+				exit_app(1);
 			}
 		}
 
@@ -3616,32 +2360,50 @@ public class Main : GLib.Object{
 				if (mp.mount_point == "/"){
 					sys_root = pi;
 					if ((app_mode == "")||(LOG_DEBUG)){
-						log_msg(_("/ is mapped to device") + ": %s, UUID=%s".printf(pi.device,pi.uuid));
+						string txt = _("/ is mapped to device") + ": %s, UUID=%s".printf(pi.device,pi.uuid);
+						if (mp.subvolume_name().length > 0){
+							txt += ", subvol=%s".printf(mp.subvolume_name());
+						}
+						log_debug(txt);
 					}
 				}
 
 				if (mp.mount_point == "/home"){
 					sys_home = pi;
 					if ((app_mode == "")||(LOG_DEBUG)){
-						log_msg(_("/home is mapped to device") + ": %s, UUID=%s".printf(pi.device,pi.uuid));
+						string txt = _("/home is mapped to device") + ": %s, UUID=%s".printf(pi.device,pi.uuid);
+						if (mp.subvolume_name().length > 0){
+							txt += ", subvol=%s".printf(mp.subvolume_name());
+						}
+						log_debug(txt);
 					}
 				}
 
 				if (mp.mount_point == "/boot"){
 					sys_boot = pi;
 					if ((app_mode == "")||(LOG_DEBUG)){
-						log_msg(_("/boot is mapped to device") + ": %s, UUID=%s".printf(pi.device,pi.uuid));
+						string txt = _("/boot is mapped to device") + ": %s, UUID=%s".printf(pi.device,pi.uuid);
+						if (mp.subvolume_name().length > 0){
+							txt += ", subvol=%s".printf(mp.subvolume_name());
+						}
+						log_debug(txt);
 					}
 				}
 
 				if (mp.mount_point == "/boot/efi"){
 					sys_efi = pi;
 					if ((app_mode == "")||(LOG_DEBUG)){
-						log_msg(_("/boot/efi is mapped to device") + ": %s, UUID=%s".printf(pi.device,pi.uuid));
+						string txt = _("/boot/efi is mapped to device") + ": %s, UUID=%s".printf(pi.device,pi.uuid);
+						if (mp.subvolume_name().length > 0){
+							txt += ", subvol=%s".printf(mp.subvolume_name());
+						}
+						log_debug(txt);
 					}
 				}
 			}
 		}
+
+		//log_msg("");
 	}
 
 	public bool mount_target_device(Gtk.Window? parent_win){
@@ -3782,8 +2544,7 @@ public class Main : GLib.Object{
 					string msg = _("Failed to unmount device!") + "\n" + _("Application will exit");
 					gtk_messagebox(title, msg, null, true);
 				}
-				exit_app();
-				exit(0);
+				exit_app(1);
 			}
 		}
 		return is_unmounted;
@@ -3831,7 +2592,7 @@ public class Main : GLib.Object{
 		}*/
 
 		string message, details;
-		var status = App.check_backup_location(out message, out details);
+		var status = check_backup_location(out message, out details);
 
 		switch(status){
 		case SnapshotLocationStatus.NO_SNAPSHOTS_HAS_SPACE:
@@ -4058,7 +2819,7 @@ public class Main : GLib.Object{
 		}
 	}
 
-	public void exit_app (){
+	public void exit_app (int exit_code = 0){
 
 		log_debug("exit_app()");
 		
@@ -4074,6 +2835,8 @@ public class Main : GLib.Object{
 		clean_logs();
 
 		app_lock.remove();
+
+		exit(exit_code);
 
 		//Gtk.main_quit ();
 	}

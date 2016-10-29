@@ -37,14 +37,14 @@ public class SnapshotRepo : GLib.Object{
 		snapshots = new Gee.ArrayList<Snapshot>();
 		invalid_snapshots = new Gee.ArrayList<Snapshot>();
 
-		log_msg(_("Selected snapshot path") + ": %s".printf(path));
+		log_debug(_("Selected snapshot path") + ": %s".printf(path));
 		
 		var list = Device.get_disk_space_using_df(path);
 		if (list.size > 0){
 			device = list[0];
 			
-			log_msg(_("Device") + ": %s".printf(device.device));
-			log_msg(_("Free space") + ": %s".printf(format_file_size(device.free_bytes)));
+			log_debug(_("Device") + ": %s".printf(device.device));
+			log_debug(_("Free space") + ": %s".printf(format_file_size(device.free_bytes)));
 		}
 		
 		check_status();
@@ -104,12 +104,12 @@ public class SnapshotRepo : GLib.Object{
 		log_debug("SnapshotRepo: init_from_device()");
 		
 		if ((device != null) && (device.uuid.length > 0)){
-			log_msg("");
+			log_debug("");
 			unlock_and_mount_device();
 
 			if ((device != null) && (device.device.length > 0)){
-				log_msg(_("Selected snapshot device") + ": %s".printf(device.device));
-				log_msg(_("Free space") + ": %s".printf(format_file_size(device.free_bytes)));
+				log_debug(_("Selected snapshot device") + ": %s".printf(device.device));
+				log_debug(_("Free space") + ": %s".printf(format_file_size(device.free_bytes)));
 			}
 		}
 
@@ -215,8 +215,8 @@ public class SnapshotRepo : GLib.Object{
 		// check if already unlocked
 		foreach(var part in partitions){
 			if (part.pkname == luks_device.kname){
-				log_msg(_("Unlocked device is mapped to '%s'").printf(part.device));
-				log_msg("");
+				log_debug(_("Unlocked device is mapped to '%s'").printf(part.device));
+				log_debug("");
 				return part;
 			}
 		}
@@ -331,7 +331,7 @@ public class SnapshotRepo : GLib.Object{
 		status_message = "";
 		status_details = "";
 
-		log_msg("");
+		//log_msg("");
 		//log_msg("Config: Free space limit is %s".printf(
 		//	format_file_size(Main.MIN_FREE_SPACE)));
 
@@ -342,21 +342,21 @@ public class SnapshotRepo : GLib.Object{
 
 		if ((App != null) && (App.app_mode.length == 0)){
 			
-			log_msg("%s: '%s'".printf(
+			log_debug("%s: '%s'".printf(
 				_("Snapshot device"),
 				(device == null) ? " UNKNOWN" : device.device));
 				
-			log_msg("%s: %s".printf(
+			log_debug("%s: %s".printf(
 				_("Snapshot location"), snapshot_location));
 
-			log_msg(status_message);
-			log_msg(status_details);
+			log_debug(status_message);
+			log_debug(status_details);
 			
-			log_msg("%s: %s".printf(
+			log_debug("%s: %s".printf(
 				_("Status"),
 				status_code.to_string().replace("SNAPSHOT_LOCATION_STATUS_","")));
 
-			log_msg("");
+			log_debug("");
 		}
 
 		log_debug("SnapshotRepo: check_status(): exit");
@@ -517,6 +517,16 @@ public class SnapshotRepo : GLib.Object{
 		}
 	}
 
+	public void print_status(){
+		log_msg("");
+		log_msg("%-6s : %s".printf(_("Device"), (device == null) ? " UNKNOWN" : device.device_name_with_parent));
+		log_msg("%-6s : %s".printf("UUID", (device == null) ? " UNKNOWN" : device.uuid));
+		log_msg("%-6s : %s".printf(_("Path"), snapshot_location));
+		log_msg(status_message);
+		log_msg(status_details);
+		log_msg("");
+	}
+	
 	// actions
 
 	public void auto_remove(){

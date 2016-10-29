@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timeshift 1.6\n"
 "Report-Msgid-Bugs-To: teejee2008@gmail.com\n"
-"POT-Creation-Date: 2016-10-17 23:19+0530\n"
+"POT-Creation-Date: 2016-10-16 22:04+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -48,8 +48,16 @@ msgstr ""
 msgid "Aborted."
 msgstr ""
 
+#: AptikConsole.vala:582
+msgid "Adding PPA"
+msgstr ""
+
 #: Main.vala:224
 msgid "Admin Access Required"
+msgstr ""
+
+#: AptikConsole.vala:150
+msgid "All Items"
 msgstr ""
 
 #: Main.vala:287
@@ -80,16 +88,72 @@ msgstr ""
 msgid "Application will exit."
 msgstr ""
 
-#: Main.vala:805
+#: AptikConsole.vala:57
+msgid "Aptik needs admin access to backup and restore packages."
+msgstr ""
+
+#: AptikConsole.vala:93
+msgid "Assume Yes for all prompts"
+msgstr ""
+
+#: AptikConsole.vala:1064 AptikConsole.vala:1099 Main.vala:805
 msgid "Backup"
+msgstr ""
+
+#: AptikConsole.vala:137
+msgid "Backup /etc/fstab and /etc/crypttab entries"
 msgstr ""
 
 #: Main.vala:2233
 msgid "Backup Device"
 msgstr ""
 
+#: AptikConsole.vala:152
+msgid "Backup all items"
+msgstr ""
+
+#: AptikConsole.vala:125
+msgid "Backup config files from /home/<user>"
+msgstr ""
+
 #: Main.vala:2238
 msgid "Backup device not specified!"
+msgstr ""
+
+#: AptikConsole.vala:89
+msgid "Backup directory (defaults to current directory)"
+msgstr ""
+
+#: AptikConsole.vala:182
+msgid "Backup directory not found"
+msgstr ""
+
+#: AptikConsole.vala:104
+msgid "Backup downloaded packages from APT cache"
+msgstr ""
+
+#: AptikConsole.vala:99
+msgid "Backup list of PPAs"
+msgstr ""
+
+#: AptikConsole.vala:114
+msgid "Backup list of manual and installed packages"
+msgstr ""
+
+#: AptikConsole.vala:132
+msgid "Backup themes from /usr/share/themes"
+msgstr ""
+
+#: AptikConsole.vala:147
+msgid "Backup user's scheduled tasks (crontab)"
+msgstr ""
+
+#: AptikConsole.vala:142
+msgid "Backup user-created data in user's home directory"
+msgstr ""
+
+#: AptikConsole.vala:119
+msgid "Backup users and groups"
 msgstr ""
 
 #: Main.vala:1555
@@ -118,6 +182,10 @@ msgstr ""
 
 #: Main.vala:461
 msgid "Commands listed below are not available on this system"
+msgstr ""
+
+#: AptikConsole.vala:87
+msgid "Common"
 msgstr ""
 
 #: Main.vala:2634
@@ -197,6 +265,10 @@ msgstr ""
 msgid "Enter snapshot number (a=Abort, p=Previous, n=Next)"
 msgstr ""
 
+#: AptikConsole.vala:573 AptikConsole.vala:649
+msgid "Error"
+msgstr ""
+
 #: Main.vala:830
 msgid "Examples"
 msgstr ""
@@ -224,6 +296,14 @@ msgstr ""
 
 #: Main.vala:3782
 msgid "Failed to unmount device!"
+msgstr ""
+
+#: AptikConsole.vala:657
+msgid "Following packages are not available"
+msgstr ""
+
+#: AptikConsole.vala:665 AptikConsole.vala:685
+msgid "Following packages will be installed"
 msgstr ""
 
 #: Main.vala:2610
@@ -342,12 +422,44 @@ msgstr ""
 msgid "List"
 msgstr ""
 
+#: AptikConsole.vala:98
+msgid "List PPAs"
+msgstr ""
+
+#: AptikConsole.vala:111
+msgid "List auto-installed packages"
+msgstr ""
+
+#: AptikConsole.vala:109
+msgid "List available packages"
+msgstr ""
+
+#: AptikConsole.vala:124
+msgid "List config dirs in /home/<user>"
+msgstr ""
+
+#: AptikConsole.vala:113
+msgid "List default packages for linux distribution"
+msgstr ""
+
 #: Main.vala:803
 msgid "List devices"
 msgstr ""
 
+#: AptikConsole.vala:112
+msgid "List extra packages installed by user"
+msgstr ""
+
+#: AptikConsole.vala:110
+msgid "List installed packages"
+msgstr ""
+
 #: Main.vala:802
 msgid "List snapshots"
+msgstr ""
+
+#: AptikConsole.vala:131
+msgid "List themes in /usr/share/themes"
 msgstr ""
 
 #: Main.vala:274
@@ -390,7 +502,7 @@ msgstr ""
 msgid "Num"
 msgstr ""
 
-#: Main.vala:4053
+#: Main.vala:4049
 msgid "Older log files removed"
 msgstr ""
 
@@ -399,7 +511,7 @@ msgid ""
 "Only ubuntu-type layouts with @ and @home subvolumes are currently supported."
 msgstr ""
 
-#: Main.vala:799
+#: AptikConsole.vala:85 Main.vala:799
 msgid "Options"
 msgstr ""
 
@@ -419,7 +531,7 @@ msgstr ""
 msgid "Please install required packages and try running TimeShift again"
 msgstr ""
 
-#: Main.vala:219
+#: AptikConsole.vala:58 Main.vala:219
 msgid "Please run the application as admin (using 'sudo' or 'su')"
 msgstr ""
 
@@ -454,20 +566,60 @@ msgstr ""
 msgid "Removed mount directory: '%s'"
 msgstr ""
 
-#: Main.vala:809
+#: AptikConsole.vala:1064 AptikConsole.vala:1099 Main.vala:809
 msgid "Restore"
+msgstr ""
+
+#: AptikConsole.vala:138
+msgid "Restore /etc/fstab and /etc/crypttab entries"
+msgstr ""
+
+#: AptikConsole.vala:100
+msgid "Restore PPAs from file 'ppa.list'"
+msgstr ""
+
+#: AptikConsole.vala:153
+msgid "Restore all items"
 msgstr ""
 
 #: Main.vala:3192
 msgid "Restore completed without errors"
 msgstr ""
 
+#: AptikConsole.vala:126
+msgid "Restore config files to /home/<user>"
+msgstr ""
+
+#: AptikConsole.vala:105
+msgid "Restore downloaded packages to APT cache"
+msgstr ""
+
 #: Main.vala:3187
 msgid "Restore failed with exit code"
 msgstr ""
 
+#: AptikConsole.vala:115
+msgid "Restore packages from file 'packages.list'"
+msgstr ""
+
 #: Main.vala:810
 msgid "Restore snapshot"
+msgstr ""
+
+#: AptikConsole.vala:133
+msgid "Restore themes to /usr/share/themes"
+msgstr ""
+
+#: AptikConsole.vala:148
+msgid "Restore user's scheduled tasks (crontab)"
+msgstr ""
+
+#: AptikConsole.vala:143
+msgid "Restore user-created data in user's home directory"
+msgstr ""
+
+#: AptikConsole.vala:120
+msgid "Restore users and groups"
 msgstr ""
 
 #: Main.vala:3038
@@ -507,6 +659,14 @@ msgstr ""
 msgid "Select snapshot to restore"
 msgstr ""
 
+#: AptikConsole.vala:90
+msgid "Select username for listing config files"
+msgstr ""
+
+#: AptikConsole.vala:661
+msgid "Selected packages are already installed"
+msgstr ""
+
 #: Main.vala:2302
 msgid "Selected snapshot is marked for deletion"
 msgstr ""
@@ -519,8 +679,12 @@ msgstr ""
 msgid "Show additional debug messages"
 msgstr ""
 
-#: Main.vala:827
+#: AptikConsole.vala:94 Main.vala:827
 msgid "Show all options"
+msgstr ""
+
+#: AptikConsole.vala:92
+msgid "Show package description if available"
 msgstr ""
 
 #: Main.vala:825
@@ -533,6 +697,10 @@ msgstr ""
 
 #: Main.vala:815
 msgid "Skip GRUB2 reinstall"
+msgstr ""
+
+#: AptikConsole.vala:127
+msgid "Skip config dirs larger than specified size"
 msgstr ""
 
 #: Main.vala:1760 Main.vala:1893 Main.vala:2309
@@ -570,6 +738,10 @@ msgstr ""
 msgid "Specify device for installing GRUB2 bootloader"
 msgstr ""
 
+#: AptikConsole.vala:91
+msgid "Specify password for encrypting and decrypting backups"
+msgstr ""
+
 #: Main.vala:812
 msgid "Specify snapshot to restore"
 msgstr ""
@@ -589,6 +761,10 @@ msgstr ""
 
 #: Main.vala:1833 Main.vala:3044 Main.vala:3096
 msgid "Synching files with rsync..."
+msgstr ""
+
+#: AptikConsole.vala:83
+msgid "Syntax"
 msgstr ""
 
 #: Main.vala:2864
@@ -641,6 +817,10 @@ msgstr ""
 msgid "Type"
 msgstr ""
 
+#: AptikConsole.vala:422
+msgid "Unknown option"
+msgstr ""
+
 #: Main.vala:1740
 msgid "Unknown snapshot type"
 msgstr ""
@@ -655,6 +835,10 @@ msgstr ""
 
 #: Main.vala:3259
 msgid "Updated /etc/fstab on target device"
+msgstr ""
+
+#: AptikConsole.vala:593
+msgid "Updating Package Information..."
 msgstr ""
 
 #: Main.vala:2681

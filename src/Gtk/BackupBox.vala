@@ -55,6 +55,9 @@ class BackupBox : Gtk.Box{
 	private bool thread_is_running = false;
 
 	public BackupBox (Gtk.Window _parent_window) {
+
+		log_debug("BackupBox: BackupBox()");
+		
 		//base(Gtk.Orientation.VERTICAL, 6); // issue with vala
 		Object(orientation: Gtk.Orientation.VERTICAL, spacing: 6); // work-around
 		parent_window = _parent_window;
@@ -87,6 +90,8 @@ class BackupBox : Gtk.Box{
 		lbl_permissions = add_count_label(this, _("Permissions"), ref sg_label, ref sg_value);
 		lbl_owner = add_count_label(this, _("Owner"), ref sg_label, ref sg_value);
 		lbl_group = add_count_label(this, _("Group"), ref sg_label, ref sg_value, 24);
+
+		log_debug("BackupBox: BackupBox(): exit");
     }
 
 	private void add_progress_area(){

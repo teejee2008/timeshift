@@ -31,11 +31,12 @@ public class TimeoutCounter : GLib.Object {
 
 	public bool active = false;
 	public string process_to_kill = "";
+	public const int DEFAULT_SECONDS_TO_WAIT = 60;
 	public int seconds_to_wait = 60;
 	public bool exit_app = false;
 	
 	public void kill_process_on_timeout(
-		string process_to_kill, int seconds_to_wait = 60, bool exit_app = false){
+		string process_to_kill, int seconds_to_wait = DEFAULT_SECONDS_TO_WAIT, bool exit_app = false){
 
 		this.process_to_kill = process_to_kill;
 		this.seconds_to_wait = seconds_to_wait;
@@ -50,7 +51,7 @@ public class TimeoutCounter : GLib.Object {
 		}
 	}
 
-	public void exit_on_timeout(int seconds_to_wait = 20){
+	public void exit_on_timeout(int seconds_to_wait = DEFAULT_SECONDS_TO_WAIT){
 		this.process_to_kill = "";
 		this.seconds_to_wait = seconds_to_wait;
 		this.exit_app = true;

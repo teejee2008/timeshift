@@ -43,6 +43,9 @@ class DeleteBox : Gtk.Box{
 	private Gtk.Window parent_window;
 
 	public DeleteBox (Gtk.Window _parent_window) {
+
+		log_debug("DeleteBox: DeleteBox()");
+		
 		//base(Gtk.Orientation.VERTICAL, 6); // issue with vala
 		Object(orientation: Gtk.Orientation.VERTICAL, spacing: 6); // work-around
 		parent_window = _parent_window;
@@ -78,6 +81,8 @@ class DeleteBox : Gtk.Box{
 		lbl_status.ellipsize = Pango.EllipsizeMode.MIDDLE;
 		lbl_status.max_width_chars = 45;
 		lbl_status.margin_bottom = 12;
+
+		log_debug("DeleteBox: DeleteBox(): exit");
     }
 
 	public void delete_snapshots(){

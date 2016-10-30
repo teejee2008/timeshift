@@ -39,6 +39,9 @@ class EstimateBox : Gtk.Box{
 	private bool thread_is_running = false;
 
 	public EstimateBox (Gtk.Window _parent_window) {
+
+		log_debug("EstimateBox: EstimateBox()");
+		
 		//base(Gtk.Orientation.VERTICAL, 6); // issue with vala
 		Object(orientation: Gtk.Orientation.VERTICAL, spacing: 6); // work-around
 		parent_window = _parent_window;
@@ -65,6 +68,8 @@ class EstimateBox : Gtk.Box{
 		//progressbar.set_size_request(-1,25);
 		//progressbar.pulse_step = 0.1;
 		add (progressbar);
+
+		log_debug("EstimateBox: EstimateBox(): exit");
     }
 
 	public void estimate_system_size(){

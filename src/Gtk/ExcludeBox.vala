@@ -38,6 +38,9 @@ class ExcludeBox : Gtk.Box{
 	public bool include = false;
 	
 	public ExcludeBox (Gtk.Window _parent_window, bool include_mode) {
+
+		log_debug("ExcludeBox: ExcludeBox()");
+		
 		//base(Gtk.Orientation.VERTICAL, 6); // issue with vala
 		Object(orientation: Gtk.Orientation.VERTICAL, spacing: 6); // work-around
 		parent_window = _parent_window;
@@ -71,6 +74,8 @@ class ExcludeBox : Gtk.Box{
 		init_actions();
 		
 		refresh_treeview();
+
+		log_debug("ExcludeBox: ExcludeBox(): exit");
     }
 
     private void init_treeview(){
@@ -395,7 +400,7 @@ class ExcludeBox : Gtk.Box{
 			
 		string old_pattern;
 		string new_pattern;
-
+log_debug("ExcludeAppsBox: ExcludeAppsBox()");
 		TreeIter iter;
 		var model = (Gtk.ListStore) treeview.model;
 		model.get_iter_from_string (out iter, path);

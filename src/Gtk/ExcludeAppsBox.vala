@@ -37,6 +37,9 @@ class ExcludeAppsBox : Gtk.Box{
 	private Gtk.Window parent_window;
 
 	public ExcludeAppsBox (Gtk.Window _parent_window) {
+
+		log_debug("ExcludeAppsBox: ExcludeAppsBox()");
+		
 		//base(Gtk.Orientation.VERTICAL, 6); // issue with vala
 		Object(orientation: Gtk.Orientation.VERTICAL, spacing: 6); // work-around
 		parent_window = _parent_window;
@@ -59,6 +62,8 @@ class ExcludeAppsBox : Gtk.Box{
 		init_treeview();
 
 		refresh_treeview();
+
+		log_debug("ExcludeAppsBox: ExcludeAppsBox(): exit");
     }
 
 	private void init_treeview(){

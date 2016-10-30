@@ -42,6 +42,9 @@ class BackupDeviceBox : Gtk.Box{
 	private Gtk.Window parent_window;
 
 	public BackupDeviceBox (Gtk.Window _parent_window) {
+
+		log_debug("BackupDeviceBox: BackupDeviceBox()");
+		
 		//base(Gtk.Orientation.VERTICAL, 6); // issue with vala
 		Object(orientation: Gtk.Orientation.VERTICAL, spacing: 6); // work-around
 		parent_window = _parent_window;
@@ -79,6 +82,8 @@ class BackupDeviceBox : Gtk.Box{
 
 		// infobar
 		create_infobar_location();
+
+		log_debug("BackupDeviceBox: BackupDeviceBox(): exit");
     }
 
     public void refresh(){

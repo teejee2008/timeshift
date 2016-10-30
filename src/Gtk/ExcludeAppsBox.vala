@@ -57,8 +57,6 @@ class ExcludeAppsBox : Gtk.Box{
 
 		init_exclude_summary_link(box);
 
-		App.add_app_exclude_entries();
-		
 		init_treeview();
 
 		refresh_treeview();
@@ -141,6 +139,7 @@ class ExcludeAppsBox : Gtk.Box{
 	// helpers
 
 	public void refresh(){
+		App.add_app_exclude_entries();
 		refresh_treeview();
 	}
 	

@@ -39,6 +39,9 @@ public class AppExcludeEntry : GLib.Object{
 	// static
 	
 	public static void clear(){
+
+		log_debug("AppExcludeEntry: clear()");
+		
 		if (app_map == null){
 			app_map = new Gee.HashMap<string, AppExcludeEntry>();
 		}
@@ -47,9 +50,10 @@ public class AppExcludeEntry : GLib.Object{
 		}
 	}
 
-	public static void add_app_exclude_entries_from_path(string home){
+	public static void add_app_exclude_entries_from_home(string home){
 
-		clear();
+		log_debug("AppExcludeEntry: add_app_exclude_entries_from_home()");
+		log_debug("path=%s".printf(home));
 		
 		try
 		{
@@ -63,6 +67,36 @@ public class AppExcludeEntry : GLib.Object{
 	        while ((file = enumerator.next_file ()) != null) {
 				string name = file.get_name();
 				string item = home + "/" + name;
+				if (name.has_suffix(".lock")){ continue; }
+				if (name.has_suffix(".log")){ continue; }
+				if (name.has_suffix(".old")){ continue; }
+				if (name.has_suffix("~")){ continue; }
+				
+				add_app_exclude_entries_from_path(item);
+	        }
+        }
+        catch(Error e){
+	        log_error (e.message);
+	    }
+	}
+	
+	public static void add_app_exclude_entries_from_path(string user_home){
+
+		log_debug("AppExcludeEntry: add_app_exclude_entries_from_path()");
+		log_debug("path=%s".printf(user_home));
+		
+		try
+		{
+			File f_home = File.new_for_path (user_home);
+			if (!f_home.query_exists()){
+				return;
+			}
+			
+	        FileEnumerator enumerator = f_home.enumerate_children ("standard::*", 0);
+	        FileInfo file;
+	        while ((file = enumerator.next_file ()) != null) {
+				string name = file.get_name();
+				string item = user_home + "/" + name;
 				if (!name.has_prefix(".")){ continue; }
 				if (name.has_suffix("~")){ continue; }
 				if (name == ".config"){ continue; }
@@ -81,11 +115,11 @@ public class AppExcludeEntry : GLib.Object{
 				add_item(relpath, !dir_exists(item), false);
 	        }
 
-	        File f_home_config = File.new_for_path (home + "/.config");
+	        File f_home_config = File.new_for_path (user_home + "/.config");
 	        enumerator = f_home_config.enumerate_children ("standard::*", 0);
 	        while ((file = enumerator.next_file ()) != null) {
 				string name = file.get_name();
-				string item = home + "/.config/" + name;
+				string item = user_home + "/.config/" + name;
 				if (name.has_suffix(".lock")){ continue; }
 				if (name.has_suffix(".log")){ continue; }
 				if (name.has_suffix(".old")){ continue; }
@@ -95,11 +129,11 @@ public class AppExcludeEntry : GLib.Object{
 				add_item(relpath, !dir_exists(item), false);
 	        }
 
-	        File f_home_local = File.new_for_path (home + "/.local/share");
+	        File f_home_local = File.new_for_path (user_home + "/.local/share");
 	        enumerator = f_home_local.enumerate_children ("standard::*", 0);
 	        while ((file = enumerator.next_file ()) != null) {
 				string name = file.get_name();
-				string item = home + "/.local/share/" + name;
+				string item = user_home + "/.local/share/" + name;
 				if (name.has_suffix(".lock")){ continue; }
 				if (name.has_suffix(".log")){ continue; }
 				if (name.has_suffix(".old")){ continue; }
@@ -191,9 +225,11 @@ public class AppExcludeEntry : GLib.Object{
 			entry = new AppExcludeEntry(name, is_include);
 			app_map[name] = entry;
 		}
-		
-		entry.items.add(item_path);
-		
+
+		if (!entry.items.contains(item_path)){
+			entry.items.add(item_path);
+		}
+
 		foreach(bool root_user in new bool[] { true, false } ){
 			string str = (is_include) ? "+ " : "";
 			str += (root_user) ? "/root" : "/home/*";
@@ -206,6 +242,10 @@ public class AppExcludeEntry : GLib.Object{
 	public static Gee.ArrayList<AppExcludeEntry> get_apps_list(
 		Gee.ArrayList<string> selected_app_names){
 
+		if (app_map == null){
+			app_map = new Gee.HashMap<string, AppExcludeEntry>();
+		}
+		
 		foreach(var selected_name in selected_app_names){
 			if (app_map.has_key(selected_name)){
 				app_map[selected_name].enabled = true;

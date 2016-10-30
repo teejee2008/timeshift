@@ -139,7 +139,6 @@ class ExcludeAppsBox : Gtk.Box{
 	// helpers
 
 	public void refresh(){
-		App.add_app_exclude_entries();
 		refresh_treeview();
 	}
 	

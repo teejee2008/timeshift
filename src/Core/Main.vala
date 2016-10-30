@@ -450,38 +450,30 @@ public class Main : GLib.Object{
 		log_debug("Main: add_app_exclude_entries()");
 		
 		AppExcludeEntry.clear();
-
-		string home;
-		string user_name;
-
-		string cmd = "echo ${SUDO_USER:-$(whoami)}";
-		string std_out;
-		string std_err;
-		int ret_val;
-		ret_val = exec_script_sync(cmd, out std_out, out std_err);
-
-		if ((std_out == null) || (std_out.length == 0)){
-			user_name = "root";
-			home = "/root";
-		}
-		else{
-			user_name = std_out.strip();
-			home = "/home/%s".printf(user_name);
+		
+		if (snapshot_to_restore != null){
+			add_app_exclude_entries_for_prefix(path_combine(snapshot_to_restore.path, "localhost"));
 		}
 
-		if ((sys_root == null)
-			|| ((dst_root.device != sys_root.device)
-				&& (dst_root.uuid != sys_root.uuid))){
-
-			home = mount_point_restore + home;
+		if (!restore_current_system){
+			add_app_exclude_entries_for_prefix(mount_point_restore);
 		}
-
-		AppExcludeEntry.add_app_exclude_entries_from_path(home);
 
 		exclude_list_apps = AppExcludeEntry.get_apps_list(exclude_app_names);
 
 		log_debug("Main: add_app_exclude_entries(): exit");
 	}
+
+	private void add_app_exclude_entries_for_prefix(string path_prefix){
+		string path = "";
+
+		path = path_combine(path_prefix, "root");
+		AppExcludeEntry.add_app_exclude_entries_from_path(path);
+
+		path = path_combine(path_prefix, "home");
+		AppExcludeEntry.add_app_exclude_entries_from_home(path);
+	}
+	
 
 	public Gee.ArrayList<string> create_exclude_list_for_backup(){
 

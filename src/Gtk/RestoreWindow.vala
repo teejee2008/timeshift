@@ -442,7 +442,13 @@ class RestoreWindow : Gtk.Window{
 				}
 			}
 
-			return restore_device_box.check_and_mount_devices();
+			bool ok = restore_device_box.check_and_mount_devices();
+
+			if (ok){
+				App.add_app_exclude_entries();
+			}
+
+			return ok;
 		}
 		else if (notebook.page == Tabs.RESTORE_EXCLUDE){
 		    App.save_exclude_list_selections();

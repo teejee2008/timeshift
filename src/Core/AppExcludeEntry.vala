@@ -116,34 +116,38 @@ public class AppExcludeEntry : GLib.Object{
 	        }
 
 	        File f_home_config = File.new_for_path (user_home + "/.config");
-	        enumerator = f_home_config.enumerate_children ("standard::*", 0);
-	        while ((file = enumerator.next_file ()) != null) {
-				string name = file.get_name();
-				string item = user_home + "/.config/" + name;
-				if (name.has_suffix(".lock")){ continue; }
-				if (name.has_suffix(".log")){ continue; }
-				if (name.has_suffix(".old")){ continue; }
-				if (name.has_suffix("~")){ continue; }
-				
-				var relpath = "~/.config/%s".printf(name);
-				add_item(relpath, !dir_exists(item), false);
-	        }
+	        if (f_home_config.query_exists()){
+				enumerator = f_home_config.enumerate_children ("standard::*", 0);
+				while ((file = enumerator.next_file ()) != null) {
+					string name = file.get_name();
+					string item = user_home + "/.config/" + name;
+					if (name.has_suffix(".lock")){ continue; }
+					if (name.has_suffix(".log")){ continue; }
+					if (name.has_suffix(".old")){ continue; }
+					if (name.has_suffix("~")){ continue; }
+					
+					var relpath = "~/.config/%s".printf(name);
+					add_item(relpath, !dir_exists(item), false);
+				}
+			}
 
 	        File f_home_local = File.new_for_path (user_home + "/.local/share");
-	        enumerator = f_home_local.enumerate_children ("standard::*", 0);
-	        while ((file = enumerator.next_file ()) != null) {
-				string name = file.get_name();
-				string item = user_home + "/.local/share/" + name;
-				if (name.has_suffix(".lock")){ continue; }
-				if (name.has_suffix(".log")){ continue; }
-				if (name.has_suffix(".old")){ continue; }
-				if (name.has_suffix("~")){ continue; }
-				if (name == "applications"){ continue; }
-				if (name == "Trash"){ continue; }
-				
-				var relpath = "~/.local/share/%s".printf(name);
-				add_item(relpath, !dir_exists(item), false);
-	        }
+	        if (f_home_local.query_exists()){
+				enumerator = f_home_local.enumerate_children ("standard::*", 0);
+				while ((file = enumerator.next_file ()) != null) {
+					string name = file.get_name();
+					string item = user_home + "/.local/share/" + name;
+					if (name.has_suffix(".lock")){ continue; }
+					if (name.has_suffix(".log")){ continue; }
+					if (name.has_suffix(".old")){ continue; }
+					if (name.has_suffix("~")){ continue; }
+					if (name == "applications"){ continue; }
+					if (name == "Trash"){ continue; }
+					
+					var relpath = "~/.local/share/%s".printf(name);
+					add_item(relpath, !dir_exists(item), false);
+				}
+			}
         }
         catch(Error e){
 	        log_error (e.message);

@@ -73,7 +73,7 @@ class RestoreSummaryBox : Gtk.Box{
 		
 		// refresh
 		
-		refresh();
+		//refresh();
 
 		log_debug("RestoreSummaryBox: RestoreSummaryBox(): exit");
     }

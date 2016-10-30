@@ -1634,7 +1634,10 @@ public class Device : GLib.Object{
 			else{
 				if (!silent){
 					Device dev = get_device_by_name(device);
-					log_msg ("Device '%s' mounted at '%s'".printf((dev == null) ? device : dev.device_name_with_parent, mount_point));
+					log_msg ("Mounted '%s'%s at '%s'".printf(
+						(dev == null) ? device : dev.device_name_with_parent,
+						(mount_options.length > 0) ? " (%s)".printf(mount_options) : "",
+						mount_point));
 				}
 				return true;
 			}

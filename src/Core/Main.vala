@@ -1587,12 +1587,14 @@ public class Main : GLib.Object{
 
 		int max_mount = _("Mount").length;
 		int max_dev = _("Device").length;
-		int max_vol = _("Subvol").length;
 
 		foreach(var entry in mount_list){
 			if (entry.device == null){ continue; }
 
-			string dev_name = entry.device.short_name_with_alias;
+			string dev_name = entry.device.short_name_with_parent;
+			if (entry.subvolume_name().length > 0){
+				dev_name = dev_name + " (%s)".printf(entry.subvolume_name());
+			}
 			
 			if (dev_name.length > max_dev){
 				max_dev = dev_name.length;
@@ -1600,47 +1602,25 @@ public class Main : GLib.Object{
 			if (entry.mount_point.length > max_mount){
 				max_mount = entry.mount_point.length;
 			}
-			if (entry.subvolume_name().length > max_vol){
-				max_vol = entry.subvolume_name().length;
-			}
 		}
 
-		bool show_subvolume = false;
-		foreach(var entry in mount_list){
-			if (entry.device == null){ continue; }
-			
-			if ((entry.device != null)
-				&& (entry.device.fstype == "btrfs")
-				&& (entry.subvolume_name().length > 0)){
-					
-				// subvolumes are used - show subvolume column
-				show_subvolume = true;
-				break;
-			}
-		}
-		
 		var txt = ("%%-%ds  %%-%ds".printf(max_dev, max_mount))
 			.printf(_("Device"),_("Mount"));
-		if (show_subvolume){
-			txt += "  %s".printf(_("Subvol"));
-		}
 		txt += "\n";
 
 		txt += string.nfill(max_dev, '-') + "  " + string.nfill(max_mount, '-');
-		if (show_subvolume){
-			txt += "  " + string.nfill(max_vol, '-');
-		}
 		txt += "\n";
 		
 		foreach(var entry in mount_list){
 			if (entry.device == null){ continue; }
+
+			string dev_name = entry.device.short_name_with_parent;
+			if (entry.subvolume_name().length > 0){
+				dev_name = dev_name + " (%s)".printf(entry.subvolume_name());
+			}
 			
 			txt += ("%%-%ds  %%-%ds".printf(max_dev, max_mount)).printf(
-				entry.device.device_name_with_parent, entry.mount_point);
-
-			if (show_subvolume){
-				txt += "  %s".printf(entry.subvolume_name());
-			}
+				dev_name, entry.mount_point);
 
 			txt += "\n";
 		}
@@ -1660,9 +1640,7 @@ public class Main : GLib.Object{
 		// msg_reboot -----------------------
 		
 		msg = "";
-		if ((sys_root != null) && (dst_root != null)
-			&& (dst_root.device == sys_root.device)){
-				
+		if (restore_current_system){	
 			msg += _("Please save your work and close all applications.") + "\n";
 			msg += _("System will reboot after files are restored.");
 		}

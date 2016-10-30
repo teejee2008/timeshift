@@ -154,7 +154,7 @@ public class Device : GLib.Object{
 			string text = device;
 
 			if (has_parent() && (parent.type == "part")){
-				text += " (%s)".printf(pkname);
+				text += " (%s)".printf(parent.kname);
 			}
 			
 			return text;
@@ -1595,7 +1595,12 @@ public class Device : GLib.Object{
 		foreach(var mp in mps){
 			if (mp.mount_point.contains(mount_point)){
 				if (!silent){
-					log_msg("Device '%s' is mounted at '%s'".printf(device_or_uuid, mount_point));
+					string msg = "";
+					msg += "%s: %s %s".printf(_("Mounted"), _("device"), device_or_uuid);
+					if (mp.mount_options.length > 0){
+						msg += ", %s".printf(mp.mount_options);
+					}
+					msg += " at '%s'".printf(mount_point);
 				}
 				return true;
 			}

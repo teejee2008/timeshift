@@ -134,7 +134,7 @@ public class Main : GLib.Object{
 
 	public string progress_text = "";
 
-	public Gtk.Window parent_window = null;
+	public Gtk.Window? parent_window = null;
 	
 	public RsyncTask task;
 	public DeleteFileTask delete_file_task;
@@ -143,6 +143,7 @@ public class Main : GLib.Object{
 
 		if (gui_mode){
 			app_mode = "";
+			parent_window = new Gtk.Window(); // dummy
 		}
 
 		parse_arguments_debug_mode(args);
@@ -1063,7 +1064,10 @@ public class Main : GLib.Object{
 					stdout.flush();
 				}
 
-				stdout.printf(string.nfill(80, ' ') + "\r");
+				stdout.printf(string.nfill(80, ' '));
+				stdout.flush();
+
+				stdout.printf("\r");
 				stdout.flush();
 				
 				if (task.total_size == 0){
@@ -1324,7 +1328,6 @@ public class Main : GLib.Object{
 		}
 	}
 
-
 	// restore
 	 
 	public void init_mount_list(){
@@ -1540,15 +1543,6 @@ public class Main : GLib.Object{
 		snapshot_to_restore = null;
 
 		return thr_success;
-	}
-
-	public void mount_target_devices(){
-		
-		//mount target device and other devices
-		bool status = mount_target_device(null);
-		if (status == false){
-			return;
-		}
 	}
 
 	public void get_restore_messages(bool formatted,
@@ -1910,6 +1904,8 @@ public class Main : GLib.Object{
 
 	private bool restore_current_console(string sh_sync, string sh_finish){
 
+		log_debug("Main: restore_current_console()");
+		
 		string script = sh_sync + sh_finish;
 		int ret_val = -1;
 		
@@ -1931,6 +1927,8 @@ public class Main : GLib.Object{
 
 	private bool restore_current_gui(string sh_sync, string sh_finish){
 
+		log_debug("Main: restore_current_gui()");
+		
 		string script = sh_sync + sh_finish;
 		string temp_script = save_bash_script_temp(script);
 
@@ -1942,6 +1940,8 @@ public class Main : GLib.Object{
 
 	private bool restore_other_console(string sh_sync, string sh_finish){
 
+		log_debug("Main: restore_other_console()");
+		
 		// execute sh_sync --------------------
 		
 		string script = sh_sync;
@@ -1964,6 +1964,9 @@ public class Main : GLib.Object{
 		fix_crypttab_file(restore_target_path);
 
 		// execute sh_finish --------------------
+
+		log_debug("executing sh_finish: ");
+		log_debug(sh_finish);
 		
 		script = sh_finish;
 
@@ -1982,6 +1985,8 @@ public class Main : GLib.Object{
 	}
 
 	private bool restore_other_gui(string sh_sync, string sh_finish){
+
+		log_debug("Main: restore_other_gui()");
 		
 		progress_text = _("Building file list...");
 
@@ -2034,10 +2039,20 @@ public class Main : GLib.Object{
 	}
 
 	private void fix_fstab_file(string target_path){
+
+		log_debug("Main: fix_fstab_file()");
 		
-		string fstab_path = target_path + "etc/fstab";
+		string fstab_path = path_combine(target_path, "etc/fstab");
+
+		if (!file_exists(fstab_path)){
+			log_debug("File not found: %s".printf(fstab_path));
+			return;
+		}
+		
 		var fstab_list = FsTabEntry.read_file(fstab_path);
 
+		log_debug("updating entries (1/2)...");
+		
 		foreach(var mnt in mount_list){
 			// find existing
 			var entry = FsTabEntry.find_entry_by_mount_point(fstab_list, mnt.mount_point);
@@ -2067,6 +2082,8 @@ public class Main : GLib.Object{
 		 * any devices to system paths that the user has not explicitly specified
 		 * */
 
+		log_debug("updating entries(2/2)...");
+		
 		for(int i = fstab_list.size - 1; i >= 0; i--){
 			var entry = fstab_list[i];
 			
@@ -2079,6 +2096,8 @@ public class Main : GLib.Object{
 		}
 		
 		// write the updated file
+
+		log_debug("writing updated file...");
 
 		FsTabEntry.write_file(fstab_list, fstab_path, false);
 
@@ -2108,22 +2127,37 @@ public class Main : GLib.Object{
 				dir_create(mount_path);
 			}
 		}
+
+		log_debug("Main: fix_fstab_file(): exit");
 	}
 
 	private void fix_crypttab_file(string target_path){
-		string crypttab_path = target_path + "etc/crypttab";
-		var crypttab_list = CryptTabEntry.read_file(crypttab_path);
 
+		log_debug("Main: fix_crypttab_file()");
+		
+		string crypttab_path = path_combine(target_path, "etc/crypttab");
+
+		if (!file_exists(crypttab_path)){
+			log_debug("File not found: %s".printf(crypttab_path));
+			return;
+		}
+
+		var crypttab_list = CryptTabEntry.read_file(crypttab_path);
+		
 		// add option "nofail" to existing entries
+
+		log_debug("checking for 'nofail' option...");
 		
 		foreach(var entry in crypttab_list){
 			entry.append_option("nofail");
 		}
 
+		log_debug("updating entries...");
+
 		// check and add entries for mapped devices which are encrypted
 		
 		foreach(var mnt in mount_list){
-			if ((mnt.device != null) && (mnt.device.is_on_encrypted_partition())){
+			if ((mnt.device != null) && (mnt.device.parent != null) && (mnt.device.is_on_encrypted_partition())){
 				
 				// find existing
 				var entry = CryptTabEntry.find_entry_by_uuid(
@@ -2143,9 +2177,13 @@ public class Main : GLib.Object{
 			}
 		}
 
+		log_debug("writing updated file...");
+
 		CryptTabEntry.write_file(crypttab_list, crypttab_path, false);
 
 		log_msg(_("Updated /etc/crypttab on target device") + ": %s".printf(crypttab_path));
+
+		log_debug("Main: fix_crypttab_file(): exit");
 	}
 
 	//app config
@@ -2310,23 +2348,23 @@ public class Main : GLib.Object{
 		
 		if (backup_uuid.length > 0){
 			log_debug("repo: creating from uuid");
-			repo = new SnapshotRepo.from_uuid(backup_uuid, null);
+			repo = new SnapshotRepo.from_uuid(backup_uuid, parent_window);
 
 			if ((repo == null) || !repo.available()){
 				if (backup_parent_uuid.length > 0){
 					log_debug("repo: creating from parent uuid");
-					repo = new SnapshotRepo.from_uuid(backup_parent_uuid, null);
+					repo = new SnapshotRepo.from_uuid(backup_parent_uuid, parent_window);
 				}
 			}
 		}
 		else{
 			if (sys_root != null){
 				log_debug("repo: uuid is empty, creating from root device");
-				repo = new SnapshotRepo.from_device(sys_root, null);
+				repo = new SnapshotRepo.from_device(sys_root, parent_window);
 			}
 			else{
 				log_debug("repo: root device is null");
-				repo = new SnapshotRepo.from_null(null);
+				repo = new SnapshotRepo.from_null(parent_window);
 			}
 		}
 
@@ -2336,7 +2374,7 @@ public class Main : GLib.Object{
 			var cmd_dev = Device.get_device_by_name(cmd_backup_device);
 			if (cmd_dev != null){
 				log_debug("repo: creating from command argument: %s".printf(cmd_backup_device));
-				repo = new SnapshotRepo.from_device(cmd_dev, null);
+				repo = new SnapshotRepo.from_device(cmd_dev, parent_window);
 				
 				// TODO: move this code to main window
 			}
@@ -2443,7 +2481,7 @@ public class Main : GLib.Object{
 		//log_msg("");
 	}
 
-	public bool mount_target_device(Gtk.Window? parent_win){
+	public bool mount_target_devices(Gtk.Window? parent_win = null){
 		/* Note:
 		 * Target device will be mounted explicitly to /mnt/timeshift/restore
 		 * Existing mount points are not used since we need to mount other devices in sub-directories

@@ -621,10 +621,10 @@ class RestoreDeviceBox : Gtk.Box{
 
 		// mount target device -------------
 
-		bool status = App.mount_target_device(parent_window);
+		bool status = App.mount_target_devices(parent_window);
 		if (status == false){
 			string title = _("Error");
-			string msg = _("Failed to mount device") + ": %s".printf(App.dst_root.device);
+			string msg = _("Failed to mount devices");
 			gtk_messagebox(title, msg, parent_window, true);
 			return false;
 		}

@@ -571,6 +571,11 @@ public class AppConsole : GLib.Object {
 
 		confirm_restore();
 
+		bool ok = App.mount_target_devices();
+		if (!ok){
+			return false;
+		}
+
 		return App.restore_snapshot(null);
 	}
 

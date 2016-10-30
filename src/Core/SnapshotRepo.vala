@@ -518,12 +518,22 @@ public class SnapshotRepo : GLib.Object{
 	}
 
 	public void print_status(){
-		log_msg("");
-		log_msg("%-6s : %s".printf(_("Device"), (device == null) ? " UNKNOWN" : device.device_name_with_parent));
-		log_msg("%-6s : %s".printf("UUID", (device == null) ? " UNKNOWN" : device.uuid));
-		log_msg("%-6s : %s".printf(_("Path"), snapshot_location));
-		log_msg(status_message);
-		log_msg(status_details);
+		
+		check_status();
+		
+		//log_msg("");
+		
+		if (device == null){
+			log_msg("%-6s : %s".printf(_("Device"), _("Not Selected")));
+		}
+		else{
+			log_msg("%-6s : %s".printf(_("Device"), device.device_name_with_parent));
+			log_msg("%-6s : %s".printf("UUID", device.uuid));
+			log_msg("%-6s : %s".printf(_("Path"), snapshot_location));
+			log_msg(status_message);
+			log_msg(status_details);
+		}
+
 		log_msg("");
 	}
 	

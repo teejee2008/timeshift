@@ -308,7 +308,7 @@ public class Snapshot : GLib.Object{
 			stdout.printf(string.nfill(80, ' ') + "\r");
 			stdout.flush();
 
-			message = "%s '%s' (%s)".printf(_("Removed"), name, delete_file_task.stat_time_elapsed);	
+			message = "%s '%s'".printf(_("Removed"), name);	
 			log_msg(message);
 		}
 	}

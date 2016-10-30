@@ -56,6 +56,9 @@ class SnapshotListBox : Gtk.Box{
 	public signal void view_snapshot_log();
 
 	public SnapshotListBox (Gtk.Window _parent_window) {
+
+		log_debug("SnapshotListBox: SnapshotListBox()");
+		
 		//base(Gtk.Orientation.VERTICAL, 6); // issue with vala
 		Object(orientation: Gtk.Orientation.VERTICAL, spacing: 6); // work-around
 		parent_window = _parent_window;
@@ -64,6 +67,8 @@ class SnapshotListBox : Gtk.Box{
 		init_treeview();
 		
 		init_list_view_context_menu();
+
+		log_debug("SnapshotListBox: SnapshotListBox(): exit");
     }
 
     private void init_treeview(){

@@ -38,12 +38,14 @@ class RestoreFinishBox : Gtk.Box{
 	private Gtk.Window parent_window;
 
 	public RestoreFinishBox (Gtk.Window _parent_window) {
+		
+		log_debug("RestoreFinishBox: RestoreFinishBox()");
+		
 		//base(Gtk.Orientation.VERTICAL, 6); // issue with vala
 		Object(orientation: Gtk.Orientation.VERTICAL, spacing: 6); // work-around
 		parent_window = _parent_window;
 		margin = 12;
 
-		log_debug("RestoreFinishBox: RestoreFinishBox()");
 
 		lbl_header = add_label_header(this, _("Completed"), true);
 		lbl_message = add_label_scrolled(this, "", false, true, 0);

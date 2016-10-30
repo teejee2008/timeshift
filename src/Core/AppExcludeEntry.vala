@@ -54,6 +54,10 @@ public class AppExcludeEntry : GLib.Object{
 		try
 		{
 			File f_home = File.new_for_path (home);
+			if (!f_home.query_exists()){
+				return;
+			}
+			
 	        FileEnumerator enumerator = f_home.enumerate_children ("standard::*", 0);
 	        FileInfo file;
 	        while ((file = enumerator.next_file ()) != null) {

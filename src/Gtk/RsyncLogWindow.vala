@@ -69,6 +69,9 @@ public class RsyncLogWindow : Window {
 	private string filter = "";
 	
 	public RsyncLogWindow(string _rsync_log_file) {
+
+		log_debug("RsyncLogWindow: RsyncLogWindow()");
+		
 		//title = "rsync log for snapshot " + "%s".printf(bak.date.format ("%Y-%m-%d %I:%M %p"));
 		title = _("Log Viewer");
 		window_position = WindowPosition.CENTER;
@@ -107,6 +110,8 @@ public class RsyncLogWindow : Window {
 		show_all();
 
 		tmr_init = Timeout.add(100, init_delayed);
+
+		log_debug("RsyncLogWindow: RsyncLogWindow(): exit");
 		
 	}
 

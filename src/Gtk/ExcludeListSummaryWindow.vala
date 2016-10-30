@@ -42,6 +42,8 @@ class ExcludeListSummaryWindow : Gtk.Window{
 	private int def_height = 450;
 
 	public ExcludeListSummaryWindow(bool _for_restore) {
+
+		log_debug("ExcludeListSummaryWindow: ExcludeListSummaryWindow()");
 		
 		this.title = _("Exclude List Summary");
         this.window_position = WindowPosition.CENTER;
@@ -67,6 +69,8 @@ class ExcludeListSummaryWindow : Gtk.Window{
 		refresh();
 		
 		show_all();
+
+		log_debug("ExcludeListSummaryWindow: ExcludeListSummaryWindow(): exit");
     }
     
 	private void create_actions(){

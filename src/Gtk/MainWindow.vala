@@ -66,7 +66,7 @@ class MainWindow : Gtk.Window{
 
 	public MainWindow () {
 
-		log_debug("MainWindow()");
+		log_debug("MainWindow: MainWindow()");
 		
 		this.title = AppName + " v" + AppVersion;
         this.window_position = WindowPosition.CENTER;
@@ -93,7 +93,7 @@ class MainWindow : Gtk.Window{
 
 		tmr_init = Timeout.add(100, init_delayed);
 
-		log_debug("MainWindow(): exit");
+		log_debug("MainWindow: MainWindow(): exit");
     }
 
     private bool init_delayed(){

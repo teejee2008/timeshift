@@ -55,13 +55,14 @@ class RestoreBox : Gtk.Box{
 	private bool thread_is_running = false;
 
 	public RestoreBox (Gtk.Window _parent_window) {
+
+		log_debug("RestoreBox: RestoreBox()");
+		
 		//base(Gtk.Orientation.VERTICAL, 6); // issue with vala
 		Object(orientation: Gtk.Orientation.VERTICAL, spacing: 6); // work-around
 		parent_window = _parent_window;
 		margin = 12;
 
-		log_debug("RestoreBox: RestoreBox()");
-		
 		// header
 		if (App.mirror_system){
 			add_label_header(this, _("Cloning System..."), true);

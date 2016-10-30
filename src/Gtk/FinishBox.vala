@@ -40,6 +40,9 @@ class FinishBox : Gtk.Box{
 	private bool show_notes = true;
 
 	public FinishBox (Gtk.Window _parent_window, bool _show_notes) {
+
+		log_debug("FinishBox: FinishBox()");
+		
 		//base(Gtk.Orientation.VERTICAL, 6); // issue with vala
 		Object(orientation: Gtk.Orientation.VERTICAL, spacing: 6); // work-around
 		parent_window = _parent_window;
@@ -57,6 +60,8 @@ class FinishBox : Gtk.Box{
 		lbl_message = add_label_scrolled(this, "", false, true, 0);
 
 		update_message();
+
+		log_debug("FinishBox: FinishBox(): exit");
     }
 
 	public void update_message(){

@@ -40,6 +40,9 @@ class ScheduleBox : Gtk.Box{
 	private Gtk.Window parent_window;
 	
 	public ScheduleBox (Gtk.Window _parent_window) {
+
+		log_debug("ScheduleBox: ScheduleBox()");
+		
 		//base(Gtk.Orientation.VERTICAL, 6); // issue with vala
 		Object(orientation: Gtk.Orientation.VERTICAL, spacing: 6); // work-around
 		parent_window = _parent_window;
@@ -172,6 +175,8 @@ class ScheduleBox : Gtk.Box{
 		lbl_shield_subnote.wrap_mode = Pango.WrapMode.WORD;
 
 		update_statusbar();
+
+		log_debug("ScheduleBox: ScheduleBox(): exit");
     }
 
     private void set_shield_label(

@@ -42,12 +42,13 @@ class RestoreExcludeBox : Gtk.Box{
 	private Gtk.Window parent_window;
 
 	public RestoreExcludeBox (Gtk.Window _parent_window) {
+
+		log_debug("RestoreExcludeBox: RestoreExcludeBox()");
+		
 		//base(Gtk.Orientation.VERTICAL, 6); // issue with vala
 		Object(orientation: Gtk.Orientation.VERTICAL, spacing: 6); // work-around
 		parent_window = _parent_window;
 		margin = 12;
-
-		log_debug("RestoreExcludeBox: RestoreExcludeBox()");
 
 		// header ---------------
 		

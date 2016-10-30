@@ -53,6 +53,9 @@ class BackupWindow : Gtk.Window{
 	private int def_height = 500;
 
 	public BackupWindow() {
+
+		log_debug("BackupWindow: BackupWindow()");
+		
 		this.title = _("Create Snapshot");
         this.window_position = WindowPosition.CENTER;
         this.modal = true;
@@ -91,6 +94,8 @@ class BackupWindow : Gtk.Window{
 		show_all();
 
 		tmr_init = Timeout.add(100, init_delayed);
+
+		log_debug("BackupWindow: BackupWindow(): exit");
     }
     
 	private bool init_delayed(){

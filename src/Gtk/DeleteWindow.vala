@@ -53,6 +53,9 @@ class DeleteWindow : Gtk.Window{
 	private int def_height = 500;
 
 	public DeleteWindow() {
+
+		log_debug("DeleteWindow: DeleteWindow()");
+		
 		this.title = _("Delete Snapshots");
         this.window_position = WindowPosition.CENTER;
         this.modal = true;
@@ -97,6 +100,8 @@ class DeleteWindow : Gtk.Window{
 		show_all();
 
 		tmr_init = Timeout.add(100, init_delayed);
+
+		log_debug("DeleteWindow: DeleteWindow(): exit");
     }
     
 	private bool init_delayed(){

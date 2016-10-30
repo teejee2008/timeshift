@@ -53,6 +53,9 @@ class SetupWizardWindow : Gtk.Window{
 	private int def_height = 500;
 	
 	public SetupWizardWindow() {
+
+		log_debug("SetupWizardWindow: SetupWizardWindow()");
+		
 		this.title = _("Setup Wizard");
         this.window_position = WindowPosition.CENTER;
         this.modal = true;
@@ -98,6 +101,8 @@ class SetupWizardWindow : Gtk.Window{
 		show_all();
 
 		tmr_init = Timeout.add(100, init_delayed);
+
+		log_debug("SetupWizardWindow: SetupWizardWindow(): exit");
     }
     
 	private bool init_delayed(){

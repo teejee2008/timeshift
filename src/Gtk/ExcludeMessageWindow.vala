@@ -49,6 +49,9 @@ public class ExcludeMessageWindow : Gtk.Dialog{
 	private Button btn_ok;
 
 	public ExcludeMessageWindow () {
+
+		log_debug("ExcludeMessageWindow: ExcludeMessageWindow()");
+		
 		this.title = _("Excluded Directories");
         this.window_position = WindowPosition.CENTER_ON_PARENT;
         this.set_destroy_with_parent (true);
@@ -152,6 +155,8 @@ public class ExcludeMessageWindow : Gtk.Dialog{
 		foreach(string path in App.exclude_list_default){
 			tv_exclude_add_item(path);
 		}
+
+		log_debug("ExcludeMessageWindow: ExcludeMessageWindow(): exit");
 	}
 
 	private void cell_exclude_text_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){

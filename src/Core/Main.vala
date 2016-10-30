@@ -290,7 +290,7 @@ public class Main : GLib.Object{
 	public bool check_dependencies(out string msg){
 		msg = "";
 
-		log_debug("check_dependencies()");
+		log_debug("Main: check_dependencies()");
 		
 		string[] dependencies = { "rsync","/sbin/blkid","df","mount","umount","fuser","crontab","cp","rm","touch","ln","sync"}; //"shutdown","chroot",
 
@@ -372,6 +372,8 @@ public class Main : GLib.Object{
 	
 	public void add_default_exclude_entries(){
 
+		log_debug("Main: add_default_exclude_entries()");
+		
 		exclude_list_user = new Gee.ArrayList<string>();
 		exclude_list_default = new Gee.ArrayList<string>();
 		exclude_list_default_extra = new Gee.ArrayList<string>();
@@ -440,9 +442,13 @@ public class Main : GLib.Object{
 		/var/tmp/kdecache-$USER/http	-- Rekonq
 		*/
 
+		log_debug("Main: add_default_exclude_entries(): exit");
 	}
 
 	public void add_app_exclude_entries(){
+
+		log_debug("Main: add_app_exclude_entries()");
+		
 		AppExcludeEntry.clear();
 
 		string home;
@@ -470,19 +476,17 @@ public class Main : GLib.Object{
 			home = mount_point_restore + home;
 		}
 
-		if ((sys_root == null)
-			|| ((dst_root.device != sys_root.device)
-				&& (dst_root.uuid != sys_root.uuid))){
-
-			home = mount_point_restore + home;
-		}
-
 		AppExcludeEntry.add_app_exclude_entries_from_path(home);
 
 		exclude_list_apps = AppExcludeEntry.get_apps_list(exclude_app_names);
+
+		log_debug("Main: add_app_exclude_entries(): exit");
 	}
 
 	public Gee.ArrayList<string> create_exclude_list_for_backup(){
+
+		log_debug("Main: create_exclude_list_for_backup()");
+		
 		var list = new Gee.ArrayList<string>();
 
 		//add default entries
@@ -518,11 +522,15 @@ public class Main : GLib.Object{
 			list.add(timeshift_path);
 		}
 
+		log_debug("Main: create_exclude_list_for_backup(): exit");
+		
 		return list;
 	}
 	
 	public Gee.ArrayList<string> create_exclude_list_for_restore(){
 
+		log_debug("Main: create_exclude_list_for_restore()");
+		
 		exclude_list_restore.clear();
 		
 		//add default entries
@@ -582,12 +590,16 @@ public class Main : GLib.Object{
 		if (!exclude_list_restore.contains(timeshift_path)){
 			exclude_list_restore.add(timeshift_path);
 		}
-	
+
+		log_debug("Main: create_exclude_list_for_restore(): exit");
+		
 		return exclude_list_restore;
 	}
 
 	public bool save_exclude_list_for_backup(string output_path){
 
+		log_debug("Main: save_exclude_list_for_backup()");
+		
 		var list = create_exclude_list_for_backup();
 		
 		var txt = "";
@@ -603,6 +615,8 @@ public class Main : GLib.Object{
 
 	public bool save_exclude_list_for_restore(string output_path){
 
+		log_debug("Main: save_exclude_list_for_restore()");
+		
 		var list = create_exclude_list_for_restore();
 
 		log_debug("Exclude list -------------");
@@ -619,6 +633,8 @@ public class Main : GLib.Object{
 	}
 
 	public void save_exclude_list_selections(){
+
+		log_debug("Main: save_exclude_list_selections()");
 		
 		// add new selected items
 		foreach(var entry in App.exclude_list_apps){
@@ -660,6 +676,8 @@ public class Main : GLib.Object{
 
 	public bool create_snapshot (bool is_ondemand, Gtk.Window? parent_win){
 
+		log_debug("Main: create_snapshot()");
+		
 		bool status;
 		bool update_symlinks = false;
 
@@ -904,6 +922,9 @@ public class Main : GLib.Object{
 	}
 
 	private bool backup_and_rotate(string tag, DateTime dt_created){
+
+		log_debug("Main: backup_and_rotate()");
+		
 		//string msg;
 		File f;
 
@@ -1112,7 +1133,9 @@ public class Main : GLib.Object{
 	}
 	
 	private Snapshot write_snapshot_control_file(string snapshot_path, DateTime dt_created, string tag){
-			
+
+		log_debug("Main: write_snapshot_control_file()");
+		
 		var ctl_path = snapshot_path + "/info.json";
 		var config = new Json.Object();
 
@@ -1150,7 +1173,7 @@ public class Main : GLib.Object{
 
 	public void delete_begin(){
 
-		log_debug("delete_begin()");
+		log_debug("Main: delete_begin()");
 		
 		try {
 			thread_delete_running = true;
@@ -1166,6 +1189,8 @@ public class Main : GLib.Object{
 			thread_delete_success = false;
 			log_error (e.message);
 		}
+
+		log_debug("Main: delete_begin(): exit");
 	}
 
 	public void delete_thread(){
@@ -1478,6 +1503,8 @@ public class Main : GLib.Object{
 
 	public bool restore_snapshot(Gtk.Window? parent_win){
 
+		log_debug("Main: restore_snapshot()");
+		
 		parent_window = parent_win;
 		
 		// check if we have all required inputs and abort on error
@@ -1542,6 +1569,8 @@ public class Main : GLib.Object{
 
 		snapshot_to_restore = null;
 
+		log_debug("Main: restore_snapshot(): exit");
+		
 		return thr_success;
 	}
 
@@ -1550,7 +1579,7 @@ public class Main : GLib.Object{
 			
 		string msg = "";
 
-		log_debug("Main: disclaimer_pre_restore()");
+		log_debug("Main: get_restore_messages()");
 
 		// msg_devices -----------------------------------------
 		
@@ -1676,10 +1705,12 @@ public class Main : GLib.Object{
 			log_msg(msg_disclaimer);
 		}
 
-		log_debug("Main: disclaimer_pre_restore(): exit");
+		log_debug("Main: get_restore_messages(): exit");
 	}
 
 	public void restore_execute(){
+
+		log_debug("Main: restore_execute()");
 		
 		try{
 
@@ -1756,6 +1787,8 @@ public class Main : GLib.Object{
 	}
 
 	private void create_restore_scripts(out string sh_sync, out string sh_finish){
+
+		log_debug("Main: create_restore_scripts()");
 		
 		string sh = "";
 
@@ -2190,7 +2223,7 @@ public class Main : GLib.Object{
 
 	public void save_app_config(){
 
-		log_debug("load_app_config()");
+		log_debug("Main: save_app_config()");
 		
 		var config = new Json.Object();
 
@@ -2262,7 +2295,7 @@ public class Main : GLib.Object{
 
 	public void load_app_config(){
 
-		log_debug("load_app_config()");
+		log_debug("Main: load_app_config()");
 		
 		var f = File.new_for_path(this.app_conf_path);
 		if (!f.query_exists()) {
@@ -2343,6 +2376,8 @@ public class Main : GLib.Object{
 
 	public void initialize_repo(){
 
+		log_debug("Main: initialize_repo()");
+		
 		log_debug("backup_uuid=%s".printf(backup_uuid));
 		log_debug("backup_parent_uuid=%s".printf(backup_parent_uuid));
 		
@@ -2390,6 +2425,8 @@ public class Main : GLib.Object{
 		 * 1) app is running in GUI mode, OR
 		 * 2) app is running command mode without backup device argument
 		 * */
+
+		 log_debug("Main: initialize_repo(): exit");
 	}
 	
 	//core functions

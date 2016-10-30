@@ -48,6 +48,8 @@ class SettingsWindow : Gtk.Window{
 	
 	public SettingsWindow () {
 
+		log_debug("SettingsWindow: SettingsWindow()");
+
 		this.title = _("Settings");
         this.window_position = WindowPosition.CENTER;
         this.modal = true;
@@ -90,6 +92,8 @@ class SettingsWindow : Gtk.Window{
 		show_all();
 
 		tmr_init = Timeout.add(100, init_delayed);
+
+		log_debug("SettingsWindow: SettingsWindow(): exit");
     }
 
     private bool init_delayed(){

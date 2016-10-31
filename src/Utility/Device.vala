@@ -106,226 +106,9 @@ public class Device : GLib.Object{
 		}
 	}
 	
-	/* Returns:
-	 * 'sda3' for '/dev/sda3'
-	 * 'luks' for '/dev/mapper/luks'
-	 * */
-
-	public string full_name_with_alias{
-		owned get{
-			string text = device;
-			if (mapped_name.length > 0){
-				text += " (%s)".printf(mapped_name);
-			}
-			return text;
-		}
-	}
-
-	public string full_name_with_parent{
-		owned get{
-			return device_name_with_parent;
-		}
-	}
-
-	public string short_name_with_alias{
-		owned get{
-			string text = kname;
-			if (mapped_name.length > 0){
-				text += " (%s)".printf(mapped_name);
-			}
-			return text;
-		}
-	}
-
-	public string short_name_with_parent{
-		owned get{
-			string text = kname;
-
-			if (has_parent() && (parent.type == "part")){
-				text += " (%s)".printf(pkname);
-			}
-			
-			return text;
-		}
-	}
-
-	public string device_name_with_parent{
-		owned get{
-			string text = device;
-
-			if (has_parent() && (parent.type == "part")){
-				text += " (%s)".printf(parent.kname);
-			}
-			
-			return text;
-		}
-	}
-
-	public string description(){
-		return description_formatted().replace("<b>","").replace("</b>","");
-	}
-
-	public string description_formatted(){
-		string s = "";
-
-		if (type == "disk"){
-			s += "<b>" + kname + "</b> ~";
-			if (vendor.length > 0){
-				s += " " + vendor;
-			}
-			if (model.length > 0){
-				s += " " + model;
-			}
-			if (size_bytes > 0) {
-				s += " (%s)".printf(format_file_size(size_bytes, false, "", true, 0));
-			}
-		}
-		else{
-			s += "<b>" + short_name_with_parent + "</b>" ;
-			s += (label.length > 0) ? " (" + label + ")": "";
-			s += (fstype.length > 0) ? " ~ " + fstype : "";
-			if (size_bytes > 0) {
-				s += " (%s)".printf(format_file_size(size_bytes, false, "", true, 0));
-			}
-		}
-
-		return s.strip();
-	}
-	
-	public string description_simple(){
-		return description_simple_formatted().replace("<b>","").replace("</b>","");
-	}
-	
-	public string description_simple_formatted(){
-		
-		string s = "";
-
-		if (type == "disk"){
-			if (vendor.length > 0){
-				s += " " + vendor;
-			}
-			if (model.length > 0){
-				s += " " + model;
-			}
-			if (size_bytes > 0) {
-				if (s.strip().length == 0){
-					s += "%s Device".printf(format_file_size(size_bytes, false, "", true, 0));
-				}
-				else{
-					s += " (%s)".printf(format_file_size(size_bytes, false, "", true, 0));
-				}
-			}
-		}
-		else{
-			s += "<b>" + short_name_with_parent + "</b>" ;
-			s += (label.length > 0) ? " (" + label + ")": "";
-			s += (fstype.length > 0) ? " ~ " + fstype : "";
-			if (size_bytes > 0) {
-				s += " (%s)".printf(format_file_size(size_bytes, false, "", true, 0));
-			}
-		}
-
-		return s.strip();
-	}
-
-	public string description_full_free(){
-		string s = "";
-
-		if (type == "disk"){
-			s += "%s %s".printf(model, vendor).strip();
-			if (s.length == 0){
-				s = "%s Disk".printf(format_file_size(size_bytes));
-			}
-			else{
-				s += " (%s Disk)".printf(format_file_size(size_bytes));
-			}
-		}
-		else{
-			s += kname;
-			if (label.length > 0){
-				s += " (%s)".printf(label);
-			}
-			if (fstype.length > 0){
-				s += " ~ %s".printf(fstype);
-			}
-			if (free_bytes > 0){
-				s += " ~ %s".printf(description_free());
-			}
-		}
-
-		return s;
-	}
-
-	public string description_full(){
-		string s = "";
-		s += device;
-		s += (label.length > 0) ? " (" + label + ")": "";
-		s += (uuid.length > 0) ? " ~ " + uuid : "";
-		s += (fstype.length > 0) ? " ~ " + fstype : "";
-		s += (used.length > 0) ? " ~ " + used + " / " + size + " GB used (" + used_percent + ")" : "";
-		
-		return s;
-	}
-
-	public string description_usage(){
-		if (used.length > 0){
-			return used + " / " + size + " used (" + used_percent + ")";
-		}
-		else{
-			return "";
-		}
-	}
-
-	public string description_free(){
-		if (used.length > 0){
-			return format_file_size(free_bytes, false, "g", false)
-				+ " / " + format_file_size(size_bytes, false, "g", true) + " free";
-		}
-		else{
-			return "";
-		}
-	}
-
-	public string tooltip_text(){
-		string tt = "";
-
-		if (type == "disk"){
-			tt += "%-15s: %s\n".printf(_("Device"), device);
-			tt += "%-15s: %s\n".printf(_("Vendor"), vendor);
-			tt += "%-15s: %s\n".printf(_("Model"), model);
-			tt += "%-15s: %s\n".printf(_("Serial"), serial);
-			tt += "%-15s: %s\n".printf(_("Revision"), revision);
-
-			tt += "%-15s: %s\n".printf( _("Size"),
-				(size_bytes > 0) ? format_file_size(size_bytes) : "N/A");
-		}
-		else{
-			tt += "%-15s: %s\n".printf(_("Device"),
-				(mapped_name.length > 0) ? "%s → %s".printf(device, mapped_name) : device);
-				
-			if (has_parent()){
-				tt += "%-15s: %s\n".printf(_("Parent Device"), parent.device);
-			}
-			tt += "%-15s: %s\n".printf(_("UUID"),uuid);
-			tt += "%-15s: %s\n".printf(_("Type"),type);
-			tt += "%-15s: %s\n".printf(_("Filesystem"),fstype);
-			tt += "%-15s: %s\n".printf(_("Label"),label);
-			
-			tt += "%-15s: %s\n".printf(_("Size"),
-				(size_bytes > 0) ? format_file_size(size_bytes) : "N/A");
-				
-			tt += "%-15s: %s\n".printf(_("Used"),
-				(used_bytes > 0) ? format_file_size(used_bytes) : "N/A");
-
-			tt += "%-15s: %s\n".printf(_("System"),dist_info);
-		}
-
-		return "<tt>%s</tt>".printf(tt);
-	}
-
 	public int64 free_bytes{
 		get{
-			return (size_bytes - used_bytes);
+			return (used_bytes == 0) ? 0 : (size_bytes - used_bytes);
 		}
 	}
 
@@ -356,14 +139,12 @@ public class Device : GLib.Object{
 	}
 
 	public bool is_mounted{
-		
 		get{
 			return (mount_points.size > 0);
 		}
 	}
 
 	public bool has_linux_filesystem(){
-		
 		switch (fstype){
 			case "ext2":
 			case "ext3":
@@ -386,22 +167,18 @@ public class Device : GLib.Object{
 	}
 
 	public bool is_encrypted_partition(){
-		
 		return (type == "part") && fstype.down().contains("luks");
 	}
 
-	public bool is_lvm_partition(){
-		
-		return (type == "part") && fstype.down().contains("lvm2_member");
-	}
-
 	public bool is_on_encrypted_partition(){
-		
 		return (type == "crypt");
 	}
 
+	public bool is_lvm_partition(){
+		return (type == "part") && fstype.down().contains("lvm2_member");
+	}
+
 	public bool has_children(){
-		
 		return (children.size > 0);
 	}
 
@@ -417,7 +194,6 @@ public class Device : GLib.Object{
 	}
 
 	public bool has_parent(){
-		
 		return (parent != null);
 	}
 
@@ -436,7 +212,7 @@ public class Device : GLib.Object{
 			//get used space for mounted filesystems
 			var list_df = get_disk_space_using_df();
 			foreach(var dev_df in list_df){
-				var dev = find_device_in_list(list, dev_df.device, dev_df.uuid);
+				var dev = find_device_in_list_by_uuid(list, dev_df.uuid);
 				if (dev != null){
 					dev.size_bytes = dev_df.size_bytes;
 					dev.used_bytes = dev_df.used_bytes;
@@ -450,7 +226,7 @@ public class Device : GLib.Object{
 			//get mount points
 			var list_mtab = get_mounted_filesystems_using_mtab();
 			foreach(var dev_mtab in list_mtab){
-				var dev = find_device_in_list(list, dev_mtab.device, dev_mtab.uuid);
+				var dev = find_device_in_list_by_uuid(list, dev_mtab.uuid);
 				if (dev != null){
 					dev.mount_points = dev_mtab.mount_points;
 				}
@@ -1071,7 +847,7 @@ public class Device : GLib.Object{
 			// add to map -------------------------
 
 			if (pi.uuid.length > 0){
-				var dev = find_device_in_list(list, pi.device, pi.uuid);
+				var dev = find_device_in_list_by_uuid(list, pi.uuid);
 				if (dev == null){
 					list.add(pi);
 				}
@@ -1089,19 +865,27 @@ public class Device : GLib.Object{
 		return list;
 	}
 
-
 	// helpers ----------------------------------
 
-	public static Device? find_device_in_list(
-		Gee.ArrayList<Device> list,
-		string dev_device,
-		string dev_uuid){
+	public static Device? find_device_in_list_by_name(Gee.ArrayList<Device> list, string dev_name){
 
 		foreach(var dev in list){
-			if ((dev.device == dev_device) && (dev.uuid == dev_uuid)){
+			if (dev.device == dev_name){
 				return dev;
 			}
 		}
+		
+		return null;
+	}
+
+	public static Device? find_device_in_list_by_uuid(Gee.ArrayList<Device> list, string dev_uuid){
+
+		foreach(var dev in list){
+			if (dev.uuid == dev_uuid){
+				return dev;
+			}
+		}
+		
 		return null;
 	}
 
@@ -1164,7 +948,7 @@ public class Device : GLib.Object{
 
 		var list_mtab = get_mounted_filesystems_using_mtab();
 		
-		var dev = find_device_in_list(list_mtab, device, uuid);
+		var dev = find_device_in_list_by_uuid(list_mtab, uuid);
 
 		if (dev != null){
 			return dev.mount_points;
@@ -1281,7 +1065,7 @@ public class Device : GLib.Object{
 
 		var list_df = get_disk_space_using_df(device);
 		
-		var dev_df = find_device_in_list(list_df, device, uuid);
+		var dev_df = find_device_in_list_by_uuid(list_df, uuid);
 		
 		if (dev_df != null){
 			// update dev fields
@@ -1683,7 +1467,7 @@ public class Device : GLib.Object{
 		// check if already mounted and return mount point -------------
 
 		var list = Device.get_block_devices_using_lsblk();
-		var dev = find_device_in_list(list, device, uuid);
+		var dev = find_device_in_list_by_uuid(list, uuid);
 		if (dev != null){
 			return dev.mount_points[0].mount_point;
 		}
@@ -1761,6 +1545,220 @@ public class Device : GLib.Object{
 		else{
 			return false;
 		}
+	}
+
+	// description helpers
+
+	public string full_name_with_alias{
+		owned get{
+			string text = device;
+			if (mapped_name.length > 0){
+				text += " (%s)".printf(mapped_name);
+			}
+			return text;
+		}
+	}
+
+	public string full_name_with_parent{
+		owned get{
+			return device_name_with_parent;
+		}
+	}
+
+	public string short_name_with_alias{
+		owned get{
+			string text = kname;
+			if (mapped_name.length > 0){
+				text += " (%s)".printf(mapped_name);
+			}
+			return text;
+		}
+	}
+
+	public string short_name_with_parent{
+		owned get{
+			string text = kname;
+
+			if (has_parent() && (parent.type == "part")){
+				text += " (%s)".printf(pkname);
+			}
+			
+			return text;
+		}
+	}
+
+	public string device_name_with_parent{
+		owned get{
+			string text = device;
+
+			if (has_parent() && (parent.type == "part")){
+				text += " (%s)".printf(parent.kname);
+			}
+			
+			return text;
+		}
+	}
+
+	public string description(){
+		return description_formatted().replace("<b>","").replace("</b>","");
+	}
+
+	public string description_formatted(){
+		string s = "";
+
+		if (type == "disk"){
+			s += "<b>" + kname + "</b> ~";
+			if (vendor.length > 0){
+				s += " " + vendor;
+			}
+			if (model.length > 0){
+				s += " " + model;
+			}
+			if (size_bytes > 0) {
+				s += " (%s)".printf(format_file_size(size_bytes, false, "", true, 0));
+			}
+		}
+		else{
+			s += "<b>" + short_name_with_parent + "</b>" ;
+			s += (label.length > 0) ? " (" + label + ")": "";
+			s += (fstype.length > 0) ? " ~ " + fstype : "";
+			if (size_bytes > 0) {
+				s += " (%s)".printf(format_file_size(size_bytes, false, "", true, 0));
+			}
+		}
+
+		return s.strip();
+	}
+	
+	public string description_simple(){
+		return description_simple_formatted().replace("<b>","").replace("</b>","");
+	}
+	
+	public string description_simple_formatted(){
+		
+		string s = "";
+
+		if (type == "disk"){
+			if (vendor.length > 0){
+				s += " " + vendor;
+			}
+			if (model.length > 0){
+				s += " " + model;
+			}
+			if (size_bytes > 0) {
+				if (s.strip().length == 0){
+					s += "%s Device".printf(format_file_size(size_bytes, false, "", true, 0));
+				}
+				else{
+					s += " (%s)".printf(format_file_size(size_bytes, false, "", true, 0));
+				}
+			}
+		}
+		else{
+			s += "<b>" + short_name_with_parent + "</b>" ;
+			s += (label.length > 0) ? " (" + label + ")": "";
+			s += (fstype.length > 0) ? " ~ " + fstype : "";
+			if (size_bytes > 0) {
+				s += " (%s)".printf(format_file_size(size_bytes, false, "", true, 0));
+			}
+		}
+
+		return s.strip();
+	}
+
+	public string description_full_free(){
+		string s = "";
+
+		if (type == "disk"){
+			s += "%s %s".printf(model, vendor).strip();
+			if (s.length == 0){
+				s = "%s Disk".printf(format_file_size(size_bytes));
+			}
+			else{
+				s += " (%s Disk)".printf(format_file_size(size_bytes));
+			}
+		}
+		else{
+			s += kname;
+			if (label.length > 0){
+				s += " (%s)".printf(label);
+			}
+			if (fstype.length > 0){
+				s += " ~ %s".printf(fstype);
+			}
+			if (free_bytes > 0){
+				s += " ~ %s".printf(description_free());
+			}
+		}
+
+		return s;
+	}
+
+	public string description_full(){
+		string s = "";
+		s += device;
+		s += (label.length > 0) ? " (" + label + ")": "";
+		s += (uuid.length > 0) ? " ~ " + uuid : "";
+		s += (fstype.length > 0) ? " ~ " + fstype : "";
+		s += (used.length > 0) ? " ~ " + used + " / " + size + " GB used (" + used_percent + ")" : "";
+		
+		return s;
+	}
+
+	public string description_usage(){
+		if (used.length > 0){
+			return used + " / " + size + " used (" + used_percent + ")";
+		}
+		else{
+			return "";
+		}
+	}
+
+	public string description_free(){
+		if (used.length > 0){
+			return format_file_size(free_bytes, false, "g", false)
+				+ " / " + format_file_size(size_bytes, false, "g", true) + " free";
+		}
+		else{
+			return "";
+		}
+	}
+
+	public string tooltip_text(){
+		string tt = "";
+
+		if (type == "disk"){
+			tt += "%-15s: %s\n".printf(_("Device"), device);
+			tt += "%-15s: %s\n".printf(_("Vendor"), vendor);
+			tt += "%-15s: %s\n".printf(_("Model"), model);
+			tt += "%-15s: %s\n".printf(_("Serial"), serial);
+			tt += "%-15s: %s\n".printf(_("Revision"), revision);
+
+			tt += "%-15s: %s\n".printf( _("Size"),
+				(size_bytes > 0) ? format_file_size(size_bytes) : "N/A");
+		}
+		else{
+			tt += "%-15s: %s\n".printf(_("Device"),
+				(mapped_name.length > 0) ? "%s → %s".printf(device, mapped_name) : device);
+				
+			if (has_parent()){
+				tt += "%-15s: %s\n".printf(_("Parent Device"), parent.device);
+			}
+			tt += "%-15s: %s\n".printf(_("UUID"),uuid);
+			tt += "%-15s: %s\n".printf(_("Type"),type);
+			tt += "%-15s: %s\n".printf(_("Filesystem"),fstype);
+			tt += "%-15s: %s\n".printf(_("Label"),label);
+			
+			tt += "%-15s: %s\n".printf(_("Size"),
+				(size_bytes > 0) ? format_file_size(size_bytes) : "N/A");
+				
+			tt += "%-15s: %s\n".printf(_("Used"),
+				(used_bytes > 0) ? format_file_size(used_bytes) : "N/A");
+
+			tt += "%-15s: %s\n".printf(_("System"),dist_info);
+		}
+
+		return "<tt>%s</tt>".printf(tt);
 	}
 
 	// testing -----------------------------------

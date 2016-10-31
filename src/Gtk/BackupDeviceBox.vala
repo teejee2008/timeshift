@@ -331,7 +331,7 @@ class BackupDeviceBox : Gtk.Box{
 		if (pi.fstype == "luks"){
 			App.update_partitions();
 
-			var dev = Device.find_device_in_list(App.partitions, pi.device, pi.uuid);
+			var dev = Device.find_device_in_list_by_uuid(App.partitions, pi.uuid);
 			
 			if (dev.has_children()){
 				

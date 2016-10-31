@@ -386,7 +386,7 @@ class RestoreDeviceBox : Gtk.Box{
 			}
 
 			if (current_entry.mount_point == "/"){
-				App.dst_root = current_dev;
+				//App.dst_root = current_dev;
 				cmb_grub_dev_select_default();
 			}
 
@@ -524,6 +524,10 @@ class RestoreDeviceBox : Gtk.Box{
 
 	private void cmb_grub_dev_select_default(){
 
+		if ((cmb_grub_dev == null) || (cmb_grub_dev.model == null)){
+			return;
+		}
+		
 		log_debug("RestoreDeviceBox: cmb_grub_dev_select_default()");
 		
 		if (App.dst_root == null){

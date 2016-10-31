@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timeshift 1.6\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2016-10-31 11:35+0530\n"
+"POT-Creation-Date: 2016-10-31 12:13+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,7 +32,7 @@ msgstr ""
 msgid "'%s' will be on root device"
 msgstr ""
 
-#: Gtk/RestoreDeviceBox.vala:443
+#: Gtk/RestoreDeviceBox.vala:442
 msgid "** Advanced Users **"
 msgstr ""
 
@@ -326,7 +326,7 @@ msgstr ""
 msgid "Could not find device"
 msgstr ""
 
-#: Utility/Device.vala:1323
+#: Utility/Device.vala:1107
 #, c-format
 msgid "Could not find file"
 msgstr ""
@@ -451,19 +451,19 @@ msgid "Description"
 msgstr ""
 
 #: Console/AppConsole.vala:411 Console/AppConsole.vala:450
-#: Console/AppConsole.vala:498 Utility/Device.vala:293 Utility/Device.vala:303
-#: Gtk/RestoreDeviceBox.vala:100 Core/Main.vala:1589 Core/Main.vala:1608
-#: Core/SnapshotRepo.vala:46 Core/SnapshotRepo.vala:527
+#: Console/AppConsole.vala:498 Utility/Device.vala:1731
+#: Utility/Device.vala:1741 Gtk/RestoreDeviceBox.vala:100 Core/Main.vala:1589
+#: Core/Main.vala:1608 Core/SnapshotRepo.vala:46 Core/SnapshotRepo.vala:527
 #: Core/SnapshotRepo.vala:530
 #, c-format
 msgid "Device"
 msgstr ""
 
-#: Utility/Device.vala:1405
+#: Utility/Device.vala:1189
 msgid "Device is unlocked"
 msgstr ""
 
-#: Utility/Device.vala:1300 Utility/Device.vala:1362
+#: Utility/Device.vala:1084 Utility/Device.vala:1146
 msgid "Device name is empty!"
 msgstr ""
 
@@ -546,7 +546,7 @@ msgstr ""
 msgid "Enable scheduled snapshots to protect your system"
 msgstr ""
 
-#: Utility/Device.vala:1469
+#: Utility/Device.vala:1253
 msgid "Encrypted Device"
 msgstr ""
 
@@ -560,7 +560,7 @@ msgstr ""
 msgid "Enter device name or number (a=Abort)"
 msgstr ""
 
-#: Utility/Device.vala:1470
+#: Utility/Device.vala:1254
 #, c-format
 msgid "Enter passphrase to unlock '%s'"
 msgstr ""
@@ -574,7 +574,7 @@ msgstr ""
 msgid "Enter snapshot number (a=Abort, p=Previous, n=Next)"
 msgstr ""
 
-#: Utility/GtkHelper.vala:18 Gtk/RestoreDeviceBox.vala:627
+#: Utility/GtkHelper.vala:18 Gtk/RestoreDeviceBox.vala:630
 msgid "Error"
 msgstr ""
 
@@ -660,7 +660,7 @@ msgstr ""
 msgid "Failed to get input from user in 3 attempts"
 msgstr ""
 
-#: Utility/Device.vala:770
+#: Utility/Device.vala:546
 msgid "Failed to get partition list"
 msgstr ""
 
@@ -672,7 +672,7 @@ msgstr ""
 msgid "Failed to install crontab file"
 msgstr ""
 
-#: Gtk/RestoreDeviceBox.vala:628
+#: Gtk/RestoreDeviceBox.vala:631
 msgid "Failed to mount devices"
 msgstr ""
 
@@ -700,12 +700,12 @@ msgstr ""
 msgid "Failed to save exclude list"
 msgstr ""
 
-#: Utility/Device.vala:1396 Utility/Device.vala:1450 Utility/Device.vala:1475
-#: Utility/Device.vala:1496 Utility/Device.vala:1516
+#: Utility/Device.vala:1180 Utility/Device.vala:1234 Utility/Device.vala:1259
+#: Utility/Device.vala:1280 Utility/Device.vala:1300
 msgid "Failed to unlock device"
 msgstr ""
 
-#: Utility/Device.vala:1748
+#: Utility/Device.vala:1532
 msgid "Failed to unmount"
 msgstr ""
 
@@ -756,7 +756,7 @@ msgstr ""
 msgid "Files matching the following patterns will be excluded"
 msgstr ""
 
-#: Utility/Device.vala:311
+#: Utility/Device.vala:1749
 #, c-format
 msgid "Filesystem"
 msgstr ""
@@ -799,7 +799,7 @@ msgstr ""
 msgid "GRUB Device"
 msgstr ""
 
-#: Gtk/RestoreDeviceBox.vala:598
+#: Gtk/RestoreDeviceBox.vala:601
 msgid "GRUB device not selected"
 msgstr ""
 
@@ -902,7 +902,7 @@ msgid "Keep this mount path on the root filesystem"
 msgstr ""
 
 #: Console/AppConsole.vala:415 Console/AppConsole.vala:454
-#: Utility/Device.vala:312
+#: Utility/Device.vala:1750
 #, c-format
 msgid "Label"
 msgstr ""
@@ -1034,7 +1034,7 @@ msgstr ""
 msgid "Missing Icon"
 msgstr ""
 
-#: Utility/Device.vala:295
+#: Utility/Device.vala:1733
 #, c-format
 msgid "Model"
 msgstr ""
@@ -1059,7 +1059,7 @@ msgstr ""
 msgid "Mount Path"
 msgstr ""
 
-#: Utility/Device.vala:1599
+#: Utility/Device.vala:1383
 #, c-format
 msgid "Mounted"
 msgstr ""
@@ -1154,7 +1154,7 @@ msgstr ""
 msgid "Oldest snapshot:"
 msgstr ""
 
-#: Gtk/RestoreDeviceBox.vala:618 Core/Main.vala:324 Core/Main.vala:2534
+#: Gtk/RestoreDeviceBox.vala:621 Core/Main.vala:324 Core/Main.vala:2534
 msgid ""
 "Only ubuntu-type layouts with @ and @home subvolumes are currently supported."
 msgstr ""
@@ -1175,7 +1175,7 @@ msgstr ""
 msgid "Owner"
 msgstr ""
 
-#: Utility/Device.vala:307
+#: Utility/Device.vala:1745
 #, c-format
 msgid "Parent Device"
 msgstr ""
@@ -1184,11 +1184,11 @@ msgstr ""
 msgid "Parsing log file..."
 msgstr ""
 
-#: Gtk/RestoreDeviceBox.vala:585
+#: Gtk/RestoreDeviceBox.vala:588
 msgid "Partition Not Selected"
 msgstr ""
 
-#: Gtk/RestoreDeviceBox.vala:617
+#: Gtk/RestoreDeviceBox.vala:620
 msgid "Partition has an unsupported subvolume layout."
 msgstr ""
 
@@ -1233,7 +1233,7 @@ msgstr ""
 msgid "Please select a snapshot to view the log!"
 msgstr ""
 
-#: Gtk/RestoreDeviceBox.vala:599
+#: Gtk/RestoreDeviceBox.vala:602
 msgid "Please select the GRUB device"
 msgstr ""
 
@@ -1358,7 +1358,7 @@ msgstr ""
 msgid "Restoring snapshot..."
 msgstr ""
 
-#: Utility/Device.vala:297
+#: Utility/Device.vala:1735
 #, c-format
 msgid "Revision"
 msgstr ""
@@ -1397,7 +1397,7 @@ msgstr ""
 msgid "Select '%s' device (default = %s)"
 msgstr ""
 
-#: Gtk/RestoreDeviceBox.vala:405
+#: Gtk/RestoreDeviceBox.vala:404
 msgid "Select GRUB Device"
 msgstr ""
 
@@ -1466,7 +1466,7 @@ msgstr ""
 msgid "Select backup device"
 msgstr ""
 
-#: Gtk/RestoreDeviceBox.vala:408
+#: Gtk/RestoreDeviceBox.vala:407
 msgid "Select device for installing GRUB2 bootloader:"
 msgstr ""
 
@@ -1498,7 +1498,7 @@ msgstr ""
 msgid "Select the intervals for creating snapshots"
 msgstr ""
 
-#: Gtk/RestoreDeviceBox.vala:586
+#: Gtk/RestoreDeviceBox.vala:589
 msgid "Select the partition for mount path"
 msgstr ""
 
@@ -1547,7 +1547,7 @@ msgstr ""
 msgid "Send Email"
 msgstr ""
 
-#: Utility/Device.vala:296
+#: Utility/Device.vala:1734
 #, c-format
 msgid "Serial"
 msgstr ""
@@ -1589,8 +1589,9 @@ msgid "Show rsync output (default)"
 msgstr ""
 
 #: Console/AppConsole.vala:413 Console/AppConsole.vala:452
-#: Utility/Device.vala:299 Utility/Device.vala:314 Gtk/BackupDeviceBox.vala:186
-#: Gtk/RsyncLogWindow.vala:308 Gtk/BackupBox.vala:88 Gtk/RestoreBox.vala:125
+#: Utility/Device.vala:1737 Utility/Device.vala:1752
+#: Gtk/BackupDeviceBox.vala:186 Gtk/RsyncLogWindow.vala:308
+#: Gtk/BackupBox.vala:88 Gtk/RestoreBox.vala:125
 #, c-format
 msgid "Size"
 msgstr ""
@@ -1599,11 +1600,11 @@ msgstr ""
 msgid "Skip GRUB2 reinstall"
 msgstr ""
 
-#: Gtk/RestoreDeviceBox.vala:447
+#: Gtk/RestoreDeviceBox.vala:446
 msgid "Skip bootloader installation"
 msgstr ""
 
-#: Gtk/RestoreDeviceBox.vala:443
+#: Gtk/RestoreDeviceBox.vala:442
 msgid ""
 "Skips bootloader (re)installation on target device.\n"
 "Files in /boot directory on target partition will remain untouched.\n"
@@ -1734,7 +1735,7 @@ msgstr ""
 msgid "Syntax"
 msgstr ""
 
-#: Utility/Device.vala:320 Gtk/SnapshotListBox.vala:122
+#: Utility/Device.vala:1758 Gtk/SnapshotListBox.vala:122
 #, c-format
 msgid "System"
 msgstr ""
@@ -1793,7 +1794,7 @@ msgstr ""
 msgid "Third Party Tools"
 msgstr ""
 
-#: Utility/Device.vala:1395
+#: Utility/Device.vala:1179
 msgid "This device is not encrypted"
 msgstr ""
 
@@ -1817,12 +1818,12 @@ msgid "Translators"
 msgstr ""
 
 #: Console/AppConsole.vala:414 Console/AppConsole.vala:453
-#: Utility/Device.vala:310 Gtk/BackupDeviceBox.vala:174
+#: Utility/Device.vala:1748 Gtk/BackupDeviceBox.vala:174
 #, c-format
 msgid "Type"
 msgstr ""
 
-#: Utility/Device.vala:309
+#: Utility/Device.vala:1747
 #, c-format
 msgid "UUID"
 msgstr ""
@@ -1835,20 +1836,20 @@ msgstr ""
 msgid "Unknown snapshot type"
 msgstr ""
 
-#: Utility/Device.vala:1406 Utility/Device.vala:1522 Core/SnapshotRepo.vala:218
+#: Utility/Device.vala:1190 Utility/Device.vala:1306 Core/SnapshotRepo.vala:218
 #, c-format
 msgid "Unlocked device is mapped to '%s'"
 msgstr ""
 
-#: Utility/Device.vala:1521
+#: Utility/Device.vala:1305
 msgid "Unlocked successfully"
 msgstr ""
 
-#: Utility/Device.vala:1737
+#: Utility/Device.vala:1521
 msgid "Unmounting from"
 msgstr ""
 
-#: Gtk/RestoreDeviceBox.vala:615 Core/Main.vala:2537
+#: Gtk/RestoreDeviceBox.vala:618 Core/Main.vala:2537
 msgid "Unsupported Subvolume Layout"
 msgstr ""
 
@@ -1860,16 +1861,16 @@ msgstr ""
 msgid "Updated /etc/fstab on target device"
 msgstr ""
 
-#: Utility/Device.vala:317
+#: Utility/Device.vala:1755
 #, c-format
 msgid "Used"
 msgstr ""
 
-#: Utility/Device.vala:1476
+#: Utility/Device.vala:1260
 msgid "User cancelled the password prompt"
 msgstr ""
 
-#: Utility/Device.vala:294
+#: Utility/Device.vala:1732
 #, c-format
 msgid "Vendor"
 msgstr ""
@@ -1922,7 +1923,7 @@ msgstr ""
 msgid "Wizard"
 msgstr ""
 
-#: Utility/Device.vala:1449 Utility/Device.vala:1495
+#: Utility/Device.vala:1233 Utility/Device.vala:1279
 msgid "Wrong password"
 msgstr ""
 
@@ -1951,7 +1952,7 @@ msgstr ""
 msgid "crontab file installed"
 msgstr ""
 
-#: Utility/Device.vala:1599
+#: Utility/Device.vala:1383
 msgid "device"
 msgstr ""
 

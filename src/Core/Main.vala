@@ -1591,9 +1591,9 @@ public class Main : GLib.Object{
 		foreach(var entry in mount_list){
 			if (entry.device == null){ continue; }
 
-			string dev_name = entry.device.short_name_with_parent;
+			string dev_name = entry.device.full_name_with_parent;
 			if (entry.subvolume_name().length > 0){
-				dev_name = dev_name + " (%s)".printf(entry.subvolume_name());
+				dev_name = dev_name + "(subvol=%s)".printf(entry.subvolume_name());
 			}
 			
 			if (dev_name.length > max_dev){
@@ -1614,9 +1614,9 @@ public class Main : GLib.Object{
 		foreach(var entry in mount_list){
 			if (entry.device == null){ continue; }
 
-			string dev_name = entry.device.short_name_with_parent;
+			string dev_name = entry.device.full_name_with_parent;
 			if (entry.subvolume_name().length > 0){
-				dev_name = dev_name + " (%s)".printf(entry.subvolume_name());
+				dev_name = dev_name + "(subvol=%s)".printf(entry.subvolume_name());
 			}
 			
 			txt += ("%%-%ds  %%-%ds".printf(max_dev, max_mount)).printf(

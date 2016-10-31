@@ -263,7 +263,7 @@ class RestoreDeviceBox : Gtk.Box{
 			//	continue;
 			//}
 
-			if (dev.type == "loop"){
+			if ((dev.type == "loop") || (dev.fstype == "iso9660")){
 				continue;
 			}
 
@@ -281,7 +281,6 @@ class RestoreDeviceBox : Gtk.Box{
 				}
 			}
 			
-
 			index++;
 			model.append(out iter);
 			model.set (iter, 0, dev);
@@ -296,8 +295,6 @@ class RestoreDeviceBox : Gtk.Box{
 			active = 0; // keep on root device
 		}
 		
-		combo.active = active;
-
 		combo.changed.connect((path) => {
 
 			Device current_dev;
@@ -395,6 +392,8 @@ class RestoreDeviceBox : Gtk.Box{
 
 			current_entry.device = current_dev;
 		});
+
+		combo.active = active;
 
 		return combo;
 	}

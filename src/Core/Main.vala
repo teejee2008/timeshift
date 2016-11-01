@@ -1372,92 +1372,118 @@ public class Main : GLib.Object{
 		bool home_found = false;
 		dst_root = null;
 		
-		foreach(var mnt in fstab_list){
+		foreach(var fs_entry in fstab_list){
 
 			// skip mounting for non-system devices
 			
-			if (!mnt.is_for_system_directory()){
+			if (!fs_entry.is_for_system_directory()){
 				continue;
 			}
 
 			// find device by name or uuid
 			
-			Device mnt_dev = null;
-			if (mnt.device_uuid.length > 0){
-				mnt_dev = Device.get_device_by_uuid(mnt.device_uuid);
+			Device dev_fstab = null;
+			if (fs_entry.device_uuid.length > 0){
+				dev_fstab = Device.get_device_by_uuid(fs_entry.device_uuid);
 			}
 			else{
-				mnt_dev = Device.get_device_by_name(mnt.device);
+				dev_fstab = Device.get_device_by_name(fs_entry.device_string);
 			}
 
-			// replace mapped name with parent device
+			if (dev_fstab == null){
 
-			if (mnt_dev == null){
-				
 				/*
-				Note: This is required since the mapped name may be different on running system.
-				Since we don't have the same mapped name, we cannot resolve the device without
-				identifying the parent partition
+				Check if the device mentioned in fstab entry is a mapped device.
+				If it is, then try finding the parent device which may be available on the current system.
+				Prompt user to unlock it if found.
+				
+				Note:
+				Mapped name may be different on running system, or it may be same.
+				Since it is not reliable, we will try to identify the parent intead of the mapped device.
 				*/
+				
+				if (fs_entry.device_string.has_prefix("/dev/mapper/")){
+					
+					string mapped_name = fs_entry.device_string.replace("/dev/mapper/","");
+					
+					foreach(var crypt_entry in crypttab_list){
+						
+						if (crypt_entry.mapped_name == mapped_name){
 
-				if (mnt.device.has_prefix("/dev/mapper/")){
-					string mapped_name = mnt.device.replace("/dev/mapper/","");
-					foreach(var entry in crypttab_list){
-						if (entry.mapped_name == mapped_name){
-							mnt.device = entry.device;
+							// we found the entry for the mapped device
+							fs_entry.device_string = crypt_entry.device_string;
+
+							if (fs_entry.device_uuid.length > 0){
+								
+								// we have the parent's uuid. get the luks device and prompt user to unlock it.
+								var dev_luks = Device.get_device_by_uuid(fs_entry.device_uuid);
+								
+								if (dev_luks != null){
+									
+									string msg_out, msg_err;
+									var dev_unlocked = Device.luks_unlock(
+										dev_luks, "", "", parent_window, out msg_out, out msg_err);
+
+									if (dev_unlocked != null){
+										dev_fstab = dev_unlocked;
+										update_partitions();
+									}
+									else{
+										dev_fstab = dev_luks; // map to parent
+									}
+								}
+							}
+							else{
+								// nothing to do: we don't have the parent's uuid
+							}
+
 							break;
 						}
 					}
 				}
-
-				// try again - find device by name or uuid
-			
-				if (mnt.device_uuid.length > 0){
-					mnt_dev = Device.get_device_by_uuid(mnt.device_uuid);
-				}
-				else{
-					mnt_dev = Device.get_device_by_name(mnt.device);
-				}
 			}
 
-			if (mnt_dev != null){
+			if (dev_fstab != null){
 				
 				log_debug("added: dev: %s, path: %s, options: %s".printf(
-					mnt_dev.device, mnt.mount_point, mnt.options));
+					dev_fstab.device, fs_entry.mount_point, fs_entry.options));
 					
-				mount_list.add(new MountEntry(mnt_dev, mnt.mount_point, mnt.options));
+				mount_list.add(new MountEntry(dev_fstab, fs_entry.mount_point, fs_entry.options));
 				
-				if (mnt.mount_point == "/"){
-					dst_root = mnt_dev;
+				if (fs_entry.mount_point == "/"){
+					dst_root = dev_fstab;
 				}
 			}
 			else{
 				log_debug("missing: dev: %s, path: %s, options: %s".printf(
-					mnt.device, mnt.mount_point, mnt.options));
+					fs_entry.device_string, fs_entry.mount_point, fs_entry.options));
 
-				mount_list.add(new MountEntry(null, mnt.mount_point, mnt.options));
+				mount_list.add(new MountEntry(null, fs_entry.mount_point, fs_entry.options));
 			}
 
-			if (mnt.mount_point == "/"){
+			if (fs_entry.mount_point == "/"){
 				root_found = true;
 			}
-			if (mnt.mount_point == "/boot"){
+			if (fs_entry.mount_point == "/boot"){
 				boot_found = true;
 			}
-			if (mnt.mount_point == "/home"){
+			if (fs_entry.mount_point == "/home"){
 				home_found = true;
 			}
 		}
 
 		if (!root_found){
+			log_debug("added null entry: /");
 			mount_list.add(new MountEntry(null, "/", "")); // add root entry
 		}
 
 		if (!boot_found){
+			log_debug("added null entry: /boot");
 			mount_list.add(new MountEntry(null, "/boot", "")); // add boot entry
 		}
 
 		if (!home_found){
+			log_debug("added null entry: /home");
 			mount_list.add(new MountEntry(null, "/home", "")); // add home entry
 		}
 
@@ -2068,7 +2094,7 @@ public class Main : GLib.Object{
 			}
 
 			//update fstab entry
-			entry.device = "UUID=%s".printf(mnt.device.uuid);
+			entry.device_string = "UUID=%s".printf(mnt.device.uuid);
 			entry.type = mnt.device.fstype;
 
 			// fix mount options for non-btrfs device
@@ -2551,14 +2577,24 @@ public class Main : GLib.Object{
 			// unlock encrypted device
 			if (mnt.device.is_encrypted_partition()){
 
-				string msg_out, msg_err;
-		
-				mnt.device = Device.luks_unlock(
-					mnt.device, "", "", parent_win, out msg_out, out msg_err);
+				// check if unlocked
+				if (mnt.device.has_children()){
+					mnt.device = mnt.device.children[0];
+				}
+				else{
+					// prompt user
+					string msg_out, msg_err;
+			
+					var dev_unlocked = Device.luks_unlock(
+						mnt.device, "", "", parent_win, out msg_out, out msg_err);
 
-				//exit if not found
-				if (mnt.device == null){
-					return false;
+					//exit if not found
+					if (dev_unlocked == null){
+						return false;
+					}
+					else{
+						mnt.device = dev_unlocked;
+					}
 				}
 			}
 

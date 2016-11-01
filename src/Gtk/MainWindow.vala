@@ -739,6 +739,8 @@ class MainWindow : Gtk.Window{
 			App.snapshot_to_restore = null;
 		}
 
+		App.init_mount_list();
+		
 		//show restore window -----------------
 
 		var window = new RestoreWindow();

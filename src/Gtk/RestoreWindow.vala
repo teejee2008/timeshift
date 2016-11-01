@@ -346,7 +346,7 @@ class RestoreWindow : Gtk.Window{
 
 		switch(notebook.page){
 		case Tabs.TARGET_DEVICE:
-			restore_device_box.refresh();
+			restore_device_box.refresh(false); // false: App.init_mount_list() will be called before this window is shown
 			break;
 		case Tabs.RESTORE_EXCLUDE:
 			restore_exclude_box.refresh();

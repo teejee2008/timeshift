@@ -10,7 +10,7 @@ public class FsTabEntry : GLib.Object{
 	public bool is_comment = false;
 	public bool is_empty_line = false;
 	
-	public string device = "";
+	public string device_string = "";
 	public string mount_point = "";
 	public string type = "";
 	public string options = "defaults";
@@ -20,15 +20,15 @@ public class FsTabEntry : GLib.Object{
 
 	public string device_uuid {
 		owned get{
-			if (device.down().has_prefix("uuid=")){
-				return device.replace("\"","").replace("'","").split("=")[1];
+			if (device_string.down().has_prefix("uuid=")){
+				return device_string.replace("\"","").replace("'","").split("=")[1];
 			}
 			else{
 				return "";
 			}
 		}
 		set {
-			device = "UUID=%s".printf(value);
+			device_string = "UUID=%s".printf(value);
 		}
 	}
 
@@ -61,7 +61,7 @@ public class FsTabEntry : GLib.Object{
 					if (part.strip().length == 0) { continue; }
 					switch (++part_num){
 						case 0:
-							entry.device = part.strip();
+							entry.device_string = part.strip();
 							break;
 						case 1:
 							entry.mount_point = part.strip();
@@ -104,7 +104,7 @@ public class FsTabEntry : GLib.Object{
 			}
 			else {
 				text += "%s\t%s\t%s\t%s\t%s\t%s\n".printf(
-					entry.device, entry.mount_point, entry.type,
+					entry.device_string, entry.mount_point, entry.type,
 					entry.options, entry.dump, entry.pass);
 			}
 		}
@@ -143,7 +143,7 @@ public class FsTabEntry : GLib.Object{
 			|| mount_point.has_prefix("/media")
 			|| (mount_point == "none")
 			|| !mount_point.has_prefix("/")
-			|| (!device.has_prefix("/dev/") && !device.down().has_prefix("uuid="))){
+			|| (!device_string.has_prefix("/dev/") && !device_string.down().has_prefix("uuid="))){
 			
 			return false;
 		}

@@ -12,22 +12,22 @@ public class CryptTabEntry : GLib.Object{
 
 	// fields
 	public string mapped_name = "";
-	public string device = "";
+	public string device_string = "";
 	public string keyfile = "none";
 	public string options = "luks,nofail";
 	public string line = "";
 
 	public string device_uuid {
 		owned get{
-			if (device.down().has_prefix("uuid=")){
-				return device.replace("\"","").replace("'","").split("=")[1];
+			if (device_string.down().has_prefix("uuid=")){
+				return device_string.replace("\"","").replace("'","").split("=")[1];
 			}
 			else{
 				return "";
 			}
 		}
 		set {
-			device = "UUID=%s".printf(value);
+			device_string = "UUID=%s".printf(value);
 		}
 	}
 
@@ -63,7 +63,7 @@ public class CryptTabEntry : GLib.Object{
 							entry.mapped_name = part.strip();
 							break;
 						case 1:
-							entry.device = part.strip();
+							entry.device_string = part.strip();
 							break;
 						case 2:
 							entry.keyfile = part.strip();
@@ -92,7 +92,7 @@ public class CryptTabEntry : GLib.Object{
 			}
 			else {
 				text += "%s\t%s\t%s\t%s\n".printf(
-					entry.mapped_name, entry.device,
+					entry.mapped_name, entry.device_string,
 					entry.keyfile, entry.options);
 			}
 		}

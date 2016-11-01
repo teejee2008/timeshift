@@ -124,13 +124,14 @@ class RestoreDeviceBox : Gtk.Box{
 
     public void refresh(bool reset_device_selections = true){
 		log_debug("RestoreDeviceBox: refresh()");
+		App.update_partitions();
 		create_device_selection_options(reset_device_selections);
 		refresh_cmb_grub_dev();
 		log_debug("RestoreDeviceBox: refresh(): exit");
 	}
 
 	private void create_device_selection_options(bool reset_device_selections){
-
+		
 		if (reset_device_selections){
 			App.init_mount_list();
 		}
@@ -285,15 +286,26 @@ class RestoreDeviceBox : Gtk.Box{
 			model.append(out iter);
 			model.set (iter, 0, dev);
 			model.set (iter, 1, entry);
-
-			if ((entry.device != null) && (dev.uuid == entry.device.uuid)){
-				active = index;
+		
+			if (entry.device != null){
+				if (dev.uuid == entry.device.uuid){
+					active = index;
+				}
+				else if (dev.has_parent() && (dev.parent.uuid == entry.device.uuid)){
+					active = index;
+				}
+				else if (dev.has_children() && (dev.children[0].uuid == entry.device.uuid)){
+					// this will not occur since we are skipping parent devices in this loop
+					active = index;
+				}
 			}
 		}
 
 		if ((active == -1) && (entry.mount_point != "/")){
 			active = 0; // keep on root device
 		}
+
+		combo.active = active;
 		
 		combo.changed.connect((path) => {
 
@@ -362,8 +374,7 @@ class RestoreDeviceBox : Gtk.Box{
 					current_entry.device = luks_unlocked;
 
 					// refresh devices
-					
-					App.update_partitions();
+
 					refresh(false); // do not reset selections
 					return; // no need to continue
 				}
@@ -392,8 +403,6 @@ class RestoreDeviceBox : Gtk.Box{
 
 			current_entry.device = current_dev;
 		});
-
-		combo.active = active;
 
 		return combo;
 	}

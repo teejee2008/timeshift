@@ -40,7 +40,11 @@ class RestoreDeviceBox : Gtk.Box{
 	private Gtk.Box option_box;
 	private Gtk.Label lbl_header_subvol;
 	private Gtk.ComboBox cmb_grub_dev;
-	private Gtk.CheckButton chk_skip_grub_install;
+
+	private Gtk.CheckButton chk_reinstall_grub;
+	private Gtk.CheckButton chk_update_initramfs;
+	private Gtk.CheckButton chk_update_grub;
+	
 	private bool show_subvolume = false;
 	
 	private Gtk.SizeGroup sg_mount_point = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
@@ -410,19 +414,21 @@ class RestoreDeviceBox : Gtk.Box{
 	private void add_bootloader_options(){
 
 		//lbl_header_bootloader
-		var label = add_label_header(this, _("Select GRUB Device"), true);
+		var label = add_label_header(this, _("Bootloader Options"), true);
 		label.margin_top = 24;
 		
-		add_label(this, _("Select device for installing GRUB2 bootloader:"));
+		//add_label(this, _("Select device for installing GRUB2 bootloader:"));
+
+		add_chk_reinstall_grub();
 		
-		var hbox_grub = new Box (Orientation.HORIZONTAL, 6);
-        add (hbox_grub);
+		var hbox = new Box (Orientation.HORIZONTAL, 6);
+        add (hbox);
 
 		//cmb_grub_dev
 		cmb_grub_dev = new ComboBox ();
 		cmb_grub_dev.hexpand = true;
-		hbox_grub.add(cmb_grub_dev);
-
+		hbox.add(cmb_grub_dev);
+		
 		var cell_text = new CellRendererText ();
 		cell_text.text = "";
 		cmb_grub_dev.pack_start(cell_text, false);
@@ -448,39 +454,103 @@ class RestoreDeviceBox : Gtk.Box{
 			save_grub_device_selection();
 		});
 
-		string tt = "<b>" + _("** Advanced Users **") + "</b>\n\n"+ _("Skips bootloader (re)installation on target device.\nFiles in /boot directory on target partition will remain untouched.\n\nIf you are restoring a system that was bootable previously then it should boot successfully. Otherwise the system may fail to boot.");
+		/*string tt = "<b>" + _("** Advanced Users **") + "</b>\n\n"+ _("Skips bootloader (re)installation on target device.\nFiles in /boot directory on target partition will remain untouched.\n\nIf you are restoring a system that was bootable previously then it should boot successfully. Otherwise the system may fail to boot.");*/
 
-		//chk_skip_grub_install
-		var chk = new CheckButton.with_label(
-			_("Skip bootloader installation"));
+		hbox = new Gtk.Box (Orientation.HORIZONTAL, 6);
+        add (hbox);
+        
+		add_chk_update_initramfs(hbox);
+
+		add_chk_update_grub(hbox);
+	}
+
+	private void add_chk_reinstall_grub(){
+		
+		//chk_reinstall_grub
+		var chk = new CheckButton.with_label(_("(Re)install GRUB2 on:"));
 		chk.active = false;
-		chk.set_tooltip_markup(tt);
-		chk.margin_bottom = 12;
+		chk.set_tooltip_markup(_("Re-installs the GRUB2 bootloader on the selected device. This is generally not needed. Select this if the restored system fails to boot."));
+		//chk.margin_bottom = 12;
 		add (chk);
-		chk_skip_grub_install = chk;
+		chk_reinstall_grub = chk;
 
 		if (App.mirror_system){
 			// bootloader must be re-installed
-			chk_skip_grub_install.active = false;
+			chk_reinstall_grub.active = true;
 			chk.sensitive = false;
 		}
 		else{
 			if (App.snapshot_to_restore.distro.dist_id == "fedora"){
-				chk_skip_grub_install.active = true;
+				// grub2-install should never be run on EFI fedora systems
+				chk_reinstall_grub.active = false;
 				chk.sensitive = false;
 			}
 			else{
-				chk_skip_grub_install.active = false;
+				chk_reinstall_grub.active = true;
 			}
 		}
 		
 		chk.toggled.connect(()=>{
-			cmb_grub_dev.sensitive = !chk_skip_grub_install.active;
-			App.reinstall_grub2 = !chk_skip_grub_install.active;
+			cmb_grub_dev.sensitive = chk_reinstall_grub.active;
+			App.reinstall_grub2 = chk_reinstall_grub.active;
 			cmb_grub_dev.changed();
 		});
 		
-		App.reinstall_grub2 = !chk_skip_grub_install.active;
+		App.reinstall_grub2 = chk_reinstall_grub.active;
+	}
+
+	private void add_chk_update_initramfs(Gtk.Box hbox){
+		
+		//chk_update_initramfs
+		var chk = new CheckButton.with_label(_("Update initramfs"));
+		chk.active = false;
+		chk.set_tooltip_markup(_("Updates or regenerates initramfs files. This is generally not needed and should not be run. Select this only if the restored system fails to boot."));
+		//chk.margin_bottom = 12;
+		hbox.add (chk);
+		chk_update_initramfs = chk;
+
+		if (App.mirror_system){
+			// initramfs must be re-generated
+			chk_update_initramfs.active = true;
+			chk.sensitive = false;
+		}
+		else{
+			chk_update_initramfs.active = false;
+			chk.sensitive = true;
+		}
+		
+		chk.toggled.connect(()=>{
+			App.update_initramfs = chk_update_initramfs.active;
+		});
+		
+		App.update_initramfs = chk_update_initramfs.active;
+	}
+
+	private void add_chk_update_grub(Gtk.Box hbox){
+		
+		//chk_update_grub
+		var chk = new CheckButton.with_label(_("Update GRUB menu"));
+		chk.active = false;
+		chk.set_tooltip_markup(_("Updates the GRUB menu entries (recommended). This is safe to run and should be left selected."));
+		//chk.margin_bottom = 12;
+		hbox.add (chk);
+		chk_update_grub = chk;
+
+		if (App.mirror_system){
+			// GRUB menu must be updated
+			chk_update_grub.active = true;
+			chk.sensitive = false;
+		}
+		else{
+			chk_update_grub.active = true;
+			chk.sensitive = true;
+		}
+		
+		chk.toggled.connect(()=>{
+			App.update_grub = chk_update_grub.active;
+		});
+		
+		App.update_grub = chk_update_grub.active;
 	}
 
 	private void save_grub_device_selection(){
@@ -606,7 +676,7 @@ class RestoreDeviceBox : Gtk.Box{
 
 		//check if grub device selected ---------------
 
-		if (!chk_skip_grub_install.active && cmb_grub_dev.active < 0){
+		if (chk_reinstall_grub.active && (cmb_grub_dev.active < 0)){
 			string title =_("GRUB device not selected");
 			string msg = _("Please select the GRUB device");
 			gtk_messagebox(title, msg, parent_window, true);

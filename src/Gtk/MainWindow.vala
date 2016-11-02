@@ -314,7 +314,7 @@ class MainWindow : Gtk.Window{
 		// snapshot logs
 		menu_item = create_menu_item(_("View rsync log for selected snapshot"), "", "", 16);
 		menu_extra.append(menu_item);
-		menu_item.activate.connect(view_snapshot_log);
+		menu_item.activate.connect(()=>{ view_snapshot_log(false); });
 
 		if (!App.live_system()){
 			// app logs
@@ -606,7 +606,7 @@ class MainWindow : Gtk.Window{
 		}
 	}
 
-	public void view_snapshot_log(){
+	public void view_snapshot_log(bool view_restore_log){
 		var sel = snapshot_list_box.treeview.get_selection ();
 		if (sel.count_selected_rows() == 0){
 			gtk_messagebox(
@@ -627,13 +627,23 @@ class MainWindow : Gtk.Window{
 
 				//exo_open_textfile(bak.path + "/rsync-log");
 
-				this.hide();
 				
-				var win = new RsyncLogWindow(bak.path + "/rsync-log");
-				win.set_transient_for(this);
-				win.destroy.connect(()=>{
-					this.show();
-				});
+
+				string log_file_name = bak.rsync_log_file;
+				if (view_restore_log){
+					log_file_name = bak.rsync_restore_log_file;;
+				}
+
+				if (file_exists(log_file_name) || file_exists(log_file_name + "-changes")){
+
+					this.hide();
+					
+					var win = new RsyncLogWindow(log_file_name);
+					win.set_transient_for(this);
+					win.destroy.connect(()=>{
+						this.show();
+					});
+				}
 
 				return;
 			}
@@ -885,8 +895,8 @@ class MainWindow : Gtk.Window{
 		string message, details;
 		int status_code = App.check_backup_location(out message, out details);
 		
-		DateTime last_snapshot_date = null;
-		DateTime oldest_snapshot_date = null;
+		DateTime? last_snapshot_date = null;
+		DateTime? oldest_snapshot_date = null;
 
 		if (App.repo.has_snapshots()){
 			string sys_uuid = (App.sys_root == null) ? "" : App.sys_root.uuid;
@@ -950,15 +960,12 @@ class MainWindow : Gtk.Window{
 							get_shared_icon("", "security-high.svg", Main.SHIELD_ICON_SIZE).pixbuf;
 						//set_shield_label(_("System is protected"));
 						set_shield_label(_("Timeshift is active"));
-						set_shield_subnote(
-							_("Latest snapshot:")
-							+ last_snapshot_date.format (" %B %d, %Y %H:%M") + "\n" +
-							_("Oldest snapshot:")
-							+ oldest_snapshot_date.format (" %B %d, %Y %H:%M")
-							//_("Latest snapshot:") + format_date(last_snapshot_date) + "\n" +
-							//_("Oldest snapshot:") + format_date(oldest_snapshot_date)
-							);
-
+						set_shield_subnote("%s: %s\n%s: %s".printf(
+							_("Latest snapshot"),
+							(last_snapshot_date == null) ? _("None") : last_snapshot_date.format ("%B %d, %Y %H:%M"),
+							_("Oldest snapshot"),
+							(oldest_snapshot_date == null) ? _("None") : oldest_snapshot_date.format ("%B %d, %Y %H:%M")
+							));
 					}
 					else{
 						// no snaps

@@ -65,10 +65,10 @@ class RestoreFinishBox : Gtk.Box{
 		}
 		
 		if (success){
-			txt += " " + _("Finished");
+			txt += " " + _("Completed");
 		}
 		else{
-			txt += " " + _("Finished With Errors");
+			txt += " " + _("Completed With Errors");
 		}
 
 		lbl_header.label = format_text(txt, true, false, true);

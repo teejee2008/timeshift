@@ -35,7 +35,7 @@ namespace TeeJee.JsonHelper{
 			return jobj.get_string_member(member);
 		}
 		else{
-			log_error ("Member not found in JSON object: " + member, false, true);
+			log_debug ("Member not found in JSON object: " + member);
 			return def_value;
 		}
 	}
@@ -56,7 +56,7 @@ namespace TeeJee.JsonHelper{
 			return bool.parse(jobj.get_string_member(member));
 		}
 		else{
-			log_error ("Member not found in JSON object: " + member, false, true);
+			log_debug ("Member not found in JSON object: " + member);
 			return def_value;
 		}
 	}
@@ -66,7 +66,7 @@ namespace TeeJee.JsonHelper{
 			return int.parse(jobj.get_string_member(member));
 		}
 		else{
-			log_error ("Member not found in JSON object: " + member, false, true);
+			log_debug ("Member not found in JSON object: " + member);
 			return def_value;
 		}
 	}
@@ -76,7 +76,7 @@ namespace TeeJee.JsonHelper{
 			return int64.parse(jobj.get_string_member(member));
 		}
 		else{
-			log_error ("Member not found in JSON object: " + member, false, true);
+			log_debug ("Member not found in JSON object: " + member);
 			return def_value;
 		}
 	}
@@ -95,7 +95,7 @@ namespace TeeJee.JsonHelper{
 			return list;
 		}
 		else{
-			log_error ("Member not found in JSON object: " + member, false, true);
+			log_debug ("Member not found in JSON object: " + member);
 			return def_value;
 		}
 	}

@@ -53,7 +53,7 @@ class SnapshotListBox : Gtk.Box{
 	public signal void delete_selected();
 	public signal void mark_selected();
 	public signal void browse_selected();
-	public signal void view_snapshot_log();
+	public signal void view_snapshot_log(bool show_restore_log);
 
 	public SnapshotListBox (Gtk.Window _parent_window) {
 
@@ -244,9 +244,15 @@ class SnapshotListBox : Gtk.Box{
 		menu_snapshots.append(mi_mark);
 
 		// mi_mark
-		mi_view_log = new ImageMenuItem.with_label(_("View Log"));
+		mi_view_log = new ImageMenuItem.with_label(_("View Log for Create"));
 		mi_view_log.image = get_shared_icon("gtk-file","gtk-file.png",16);
-		mi_view_log.activate.connect(()=> { view_snapshot_log(); });
+		mi_view_log.activate.connect(()=> { view_snapshot_log(false); });
+		menu_snapshots.append(mi_view_log);
+
+		// mi_mark
+		mi_view_log = new ImageMenuItem.with_label(_("View Log for Restore"));
+		mi_view_log.image = get_shared_icon("gtk-file","gtk-file.png",16);
+		mi_view_log.activate.connect(()=> { view_snapshot_log(true); });
 		menu_snapshots.append(mi_view_log);
 
 		menu_snapshots.show_all();

@@ -15,6 +15,7 @@ public class Snapshot : GLib.Object{
 	public string sys_distro = "";
 	public string app_version = "";
 	public string description = "";
+	public int64 file_count = 0;
 	public Gee.ArrayList<string> tags;
 	public Gee.ArrayList<string> exclude_list;
 	public Gee.ArrayList<FsTabEntry> fstab_list;
@@ -56,6 +57,12 @@ public class Snapshot : GLib.Object{
 	public string rsync_log_file{
 		owned get {
 			return path_combine(path, "rsync-log");
+		}	
+	}
+
+	public string rsync_restore_log_file{
+		owned get {
+			return path_combine(path, "rsync-log-restore");
 		}	
 	}
 	
@@ -152,7 +159,8 @@ public class Snapshot : GLib.Object{
 			taglist = json_get_string(config,"tags","");
 			description = json_get_string(config,"comments","");
 			app_version = json_get_string(config,"app-version","");
-
+			file_count = json_get_int64(config,"file_count",file_count);
+			
 			distro = LinuxDistro.get_dist_info(path_combine(path, "localhost"));
 			
 			string delete_trigger_file = path + "/delete";
@@ -235,7 +243,7 @@ public class Snapshot : GLib.Object{
 	
 	public static Snapshot write_control_file(
 		string snapshot_path, DateTime dt_created,
-		string tag, string root_uuid, string distro_full_name){
+		string tag, string root_uuid, string distro_full_name, int item_count){
 			
 		var ctl_path = snapshot_path + "/info.json";
 		var config = new Json.Object();
@@ -244,6 +252,7 @@ public class Snapshot : GLib.Object{
 		config.set_string_member("sys-uuid", root_uuid);
 		config.set_string_member("sys-distro", distro_full_name);
 		config.set_string_member("app-version", AppVersion);
+		config.set_string_member("file_count", item_count.to_string());
 		config.set_string_member("tags", tag);
 		config.set_string_member("comments", "");
 

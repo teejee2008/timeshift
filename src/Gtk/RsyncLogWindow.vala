@@ -261,8 +261,8 @@ public class RsyncLogWindow : Window {
 		vbox_list.no_show_all = true;
 		vbox_main.add(vbox_list);
 		
-		add_label(vbox_list,
-			_("Following files have changed since previous snapshot:"));
+		//add_label(vbox_list,
+		//	_("Following files have changed since previous snapshot:"));
 
 		// tv_files
 		tv_files = new TreeView();

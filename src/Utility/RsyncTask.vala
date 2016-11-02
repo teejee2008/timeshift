@@ -140,7 +140,9 @@ public class RsyncTask : AsyncTask{
 
 		cmd += " --force"; // allow deletion of non-empty directories
 
-		cmd += " --numeric-ids --stats";
+		//cmd += " --numeric-ids";
+
+		cmd += " --stats";
 
 		//if (relative){
 		//	cmd += " --relative";

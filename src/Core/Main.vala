@@ -120,7 +120,9 @@ public class Main : GLib.Object{
 	public Snapshot snapshot_to_delete;
 	public Snapshot snapshot_to_restore;
 	//public Device restore_target;
-	public bool reinstall_grub2 = false;
+	public bool reinstall_grub2 = true;
+	public bool update_initramfs = false;
+	public bool update_grub = true;
 	public string grub_device = "";
 
 	public bool cmd_skip_grub = false;
@@ -227,7 +229,7 @@ public class Main : GLib.Object{
 			else{
 				//already logged - do nothing
 			}
-			exit_app(1);
+			exit(1);
 		}
 
 		//initialize variables ------------------
@@ -1090,13 +1092,16 @@ public class Main : GLib.Object{
 				}
 
 				// write control file
-				write_snapshot_control_file(snapshot_path, dt_created, tag);
+				write_snapshot_control_file(snapshot_path, dt_created, tag, 0);
 
 				// parse log file
 				progress_text = _("Parsing log file...");
 				log_msg(progress_text);
 				var task = new RsyncTask();
 				task.parse_log(log_file);
+
+				// write control file
+				write_snapshot_control_file(snapshot_path, dt_created, tag, task.prg_count_total);
 
 				// finish ------------------------------
 				
@@ -1124,7 +1129,7 @@ public class Main : GLib.Object{
 		return true;
 	}
 	
-	private Snapshot write_snapshot_control_file(string snapshot_path, DateTime dt_created, string tag){
+	private Snapshot write_snapshot_control_file(string snapshot_path, DateTime dt_created, string tag, int64 file_count){
 
 		log_debug("Main: write_snapshot_control_file()");
 		
@@ -1135,6 +1140,7 @@ public class Main : GLib.Object{
 		config.set_string_member("sys-uuid", sys_root.uuid);
 		config.set_string_member("sys-distro", current_distro.full_name());
 		config.set_string_member("app-version", AppVersion);
+		config.set_string_member("file_count", file_count.to_string());
 		config.set_string_member("tags", tag);
 		config.set_string_member("comments", cmd_comments);
 
@@ -1717,6 +1723,10 @@ public class Main : GLib.Object{
 			create_restore_scripts(out sh_sync, out sh_finish);
 			
 			save_exclude_list_for_restore(restore_source_path);
+
+			file_delete(restore_log_file);
+			file_delete(restore_log_file + "-changes");
+			file_delete(restore_log_file + ".gz");
 			
 			if (restore_current_system){
 				string control_file_path = path_combine(snapshot_to_restore.path,".sync-restore");
@@ -1803,7 +1813,7 @@ public class Main : GLib.Object{
 
 		// run rsync ---------------------------------------
 
-		sh += "rsync -avir --force --delete-after";
+		sh += "rsync -avir --force --delete --delete-after";
 		sh += " --log-file=\"%s\"".printf(restore_log_file);
 		sh += " --exclude-from=\"%s\"".printf(restore_exclude_file);
 
@@ -1829,26 +1839,27 @@ public class Main : GLib.Object{
 		var target_distro = LinuxDistro.get_dist_info(restore_target_path);
 		
 		sh = "";
-		
+
+		string chroot = "";
+		if (!restore_current_system){
+			if (target_distro.dist_type == "arch"){
+				chroot += "arch-chroot \"%s\"".printf(restore_target_path);
+			}
+			else{
+				chroot += "chroot \"%s\"".printf(restore_target_path);
+			}
+
+			// bind system directories for chrooted system
+			sh += "for i in dev proc run sys; do mount --bind \"/$i\" \"%s$i\"; done \n".printf(restore_target_path);
+		}
+
 		if (reinstall_grub2 && (grub_device != null) && (grub_device.length > 0)){
 			
 			sh += "sync \n";
 			sh += "echo '' \n";
 			sh += "echo '" + _("Re-installing GRUB2 bootloader...") + "' \n";
 
-			string chroot = "";
-			if (!restore_current_system){
-				if (target_distro.dist_type == "arch"){
-					chroot += "arch-chroot \"%s\"".printf(restore_target_path);
-				}
-				else{
-					chroot += "chroot \"%s\"".printf(restore_target_path);
-				}
-			}
 			
-			// bind system directories for chrooted system
-			sh += "for i in /dev /proc /run /sys; do mount --bind \"$i\" \"%s$i\"; done \n".printf(restore_target_path);
-
 			// search for other operating systems
 			//sh += "chroot \"%s\" os-prober \n".printf(restore_target_path);
 			
@@ -1877,9 +1888,18 @@ public class Main : GLib.Object{
 
 			// create new grub menu
 			//sh += "chroot \"%s\" grub-mkconfig -o /boot/grub/grub.cfg \n".printf(restore_target_path);
+		}
+		else{
+			log_debug("skipping sh_grub: reinstall_grub2=%s, grub_device=%s".printf(
+				reinstall_grub2.to_string(), (grub_device == null) ? "null" : grub_device));
+		}
 
-			// update initramfs --------------
+		// update initramfs --------------
 
+		if (update_initramfs){
+
+			sh += "echo '" + _("Generating initramfs...") + "' \n";
+			
 			if (target_distro.dist_type == "redhat"){
 				sh += "%s dracut -f -v \n".printf(chroot);
 			}
@@ -1889,9 +1909,13 @@ public class Main : GLib.Object{
 			else{
 				sh += "%s update-initramfs -u -k all \n".printf(chroot);
 			}
-				
-			// update grub menu --------------
+		}
+		// update grub menu --------------
 
+		if (update_grub){
+
+			sh += "echo '" + _("Updating GRUB menu...") + "' \n";
+			
 			if ((target_distro.dist_type == "redhat") || (target_distro.dist_type == "arch")){
 				sh += "%s grub-mkconfig -o /boot/grub2/grub.cfg \n".printf(chroot);
 			}
@@ -1900,24 +1924,24 @@ public class Main : GLib.Object{
 			}
 
 			sh += "echo '' \n";
-
-			// sync file systems
-			sh += "echo '" + _("Synching file systems...") + "' \n";
-			sh += "sync \n";
-			sh += "echo '' \n";
-
-			// unmount chrooted system
-			sh += "echo '" + _("Cleaning up...") + "' \n";
-			sh += "for i in /dev /proc /run /sys; do umount -f \"%s$i\"; done \n".printf(restore_target_path);
-			sh += "sync \n";
-
-			log_debug("GRUB2 install script:");
-			log_debug(sh);
 		}
-		else{
-			log_debug("skipping sh_grub: reinstall_grub2=%s, grub_device=%s".printf(
-				reinstall_grub2.to_string(), (grub_device == null) ? "null" : grub_device));
+		
+		// sync file systems
+		sh += "echo '" + _("Synching file systems...") + "' \n";
+		sh += "sync \n";
+		sh += "echo '' \n";
+
+		// unmount chrooted system
+		sh += "echo '" + _("Cleaning up...") + "' \n";
+
+		if (!restore_current_system){
+			sh += "for i in dev proc run sys; do umount -f \"%s$i\"; done \n".printf(restore_target_path);
 		}
+		
+		sh += "sync \n";
+
+		log_debug("GRUB2 install script:");
+		log_debug(sh);
 
 		// reboot if required -----------------------------------
 
@@ -1992,6 +2016,11 @@ public class Main : GLib.Object{
 		fix_fstab_file(restore_target_path);
 		fix_crypttab_file(restore_target_path);
 
+		progress_text = _("Parsing log file...");
+		log_msg(progress_text);
+		var task = new RsyncTask();
+		task.parse_log(restore_log_file);
+
 		// execute sh_finish --------------------
 
 		log_debug("executing sh_finish: ");
@@ -2038,7 +2067,17 @@ public class Main : GLib.Object{
 		task.exclude_from_file = restore_exclude_file;
 
 		task.rsync_log_file = restore_log_file;
-		task.prg_count_total = Main.first_snapshot_count;	
+
+		if ((snapshot_to_restore != null) && (snapshot_to_restore.file_count > 0)){
+			task.prg_count_total = snapshot_to_restore.file_count;
+		}
+		else if (Main.first_snapshot_count > 0){
+			task.prg_count_total = Main.first_snapshot_count;
+		}
+		else{
+			task.prg_count_total = 500000;
+		}
+
 		task.execute();
 
 		while (task.status == AppStatus.RUNNING){
@@ -2056,12 +2095,20 @@ public class Main : GLib.Object{
 		fix_fstab_file(restore_target_path);
 		fix_crypttab_file(restore_target_path);
 
+		progress_text = _("Parsing log file...");
+		log_msg(progress_text);
+		var task = new RsyncTask();
+		task.parse_log(restore_log_file);
+
 		// execute sh_finish ------------
 
-		if (reinstall_grub2){
-			progress_text = _("Re-installing GRUB2 bootloader...");
+		if (reinstall_grub2 || update_initramfs || update_grub){
+			progress_text = _("Updating bootloader configuration...");
 		}
-	
+
+		log_debug("executing sh_finish: ");
+		log_debug(sh_finish);
+		
 		int ret_val = exec_script_sync(sh_finish, null, null, false, false, false, true);
 
 		return (ret_val == 0);

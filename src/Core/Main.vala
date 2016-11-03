@@ -1942,7 +1942,7 @@ public class Main : GLib.Object{
 		sh += "echo '" + _("Cleaning up...") + "' \n";
 
 		if (!restore_current_system){
-			sh += "for i in dev dev/pts proc run sys; do umount -f \"%s$i\"; done \n".printf(restore_target_path);
+			sh += "for i in dev/pts dev proc run sys; do umount -f \"%s$i\"; done \n".printf(restore_target_path);
 		}
 		
 		sh += "sync \n";

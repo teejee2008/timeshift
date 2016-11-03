@@ -487,6 +487,7 @@ class RestoreDeviceBox : Gtk.Box{
 			}
 			else{
 				chk_reinstall_grub.active = true;
+				chk.sensitive = true;
 			}
 		}
 		
@@ -504,7 +505,7 @@ class RestoreDeviceBox : Gtk.Box{
 		//chk_update_initramfs
 		var chk = new CheckButton.with_label(_("Update initramfs"));
 		chk.active = false;
-		chk.set_tooltip_markup(_("Updates or regenerates initramfs files. This is generally not needed and should not be run. Select this only if the restored system fails to boot."));
+		chk.set_tooltip_markup(_("Re-generates initramfs for all installed kernels. This is generally not needed. Select this only if the restored system fails to boot."));
 		//chk.margin_bottom = 12;
 		hbox.add (chk);
 		chk_update_initramfs = chk;

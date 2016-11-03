@@ -2513,6 +2513,12 @@ public class Main : GLib.Object{
 		
 		foreach(Device pi in partitions){
 			foreach(var mp in pi.mount_points){
+				if (pi.type == "loop"){
+					continue;
+				}
+				if (pi.has_parent() && (pi.parent.type == "loop")){
+					continue;
+				}
 				if (mp.mount_point == "/"){
 					sys_root = pi;
 					if ((app_mode == "")||(LOG_DEBUG)){

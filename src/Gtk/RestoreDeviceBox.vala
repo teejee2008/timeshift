@@ -45,7 +45,7 @@ class RestoreDeviceBox : Gtk.Box{
 	private Gtk.CheckButton chk_update_initramfs;
 	private Gtk.CheckButton chk_update_grub;
 	
-	private bool show_subvolume = false;
+	private bool show_volume_name = false;
 	
 	private Gtk.SizeGroup sg_mount_point = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
 	private Gtk.SizeGroup sg_device = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
@@ -140,19 +140,19 @@ class RestoreDeviceBox : Gtk.Box{
 			App.init_mount_list();
 		}
 
-		show_subvolume = false;
+		show_volume_name = false;
 		foreach(var entry in App.mount_list){
-			if ((entry.device != null) && (entry.subvolume_name().length > 0)){
+			if ((entry.device != null) && ((entry.subvolume_name().length > 0) || (entry.lvm_name().length > 0))){
 				// subvolumes are used - show the mount options column
-				show_subvolume = true;
+				show_volume_name = true;
 				break;
 			}
 		}
 
-		if (show_subvolume){
+		if (show_volume_name){
 			lbl_header_subvol.set_no_show_all(false);
 		}
-		lbl_header_subvol.visible = show_subvolume;
+		lbl_header_subvol.visible = show_volume_name;
 
 		foreach(var item in option_box.get_children()){
 			option_box.remove(item);
@@ -175,10 +175,13 @@ class RestoreDeviceBox : Gtk.Box{
 		var combo = add_device_combo(box, entry);
 		sg_device.add_widget(combo);
 
-		if (show_subvolume){
+		if (show_volume_name){
 			string txt = "";
 			if (entry.subvolume_name().length > 0){
 				txt = "%s".printf(entry.subvolume_name());
+			}
+			else {
+				txt = "%s".printf(entry.lvm_name());
 			}
 			label = add_label(box, txt, false);
 			sg_mount_options.add_widget(label);

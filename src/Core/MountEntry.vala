@@ -27,6 +27,15 @@ public class MountEntry : GLib.Object{
 		}
 	}
 
+	public string lvm_name(){
+		if ((device != null) && (device.type == "lvm") && (device.mapped_name.length > 0)){
+			return device.mapped_name.strip();
+		}
+		else{
+			return "";
+		}
+	}
+
 	public static MountEntry? find_entry_by_mount_point(
 		Gee.ArrayList<MountEntry> entries, string mount_path){
 			

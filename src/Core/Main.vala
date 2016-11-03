@@ -1625,7 +1625,10 @@ public class Main : GLib.Object{
 
 			string dev_name = entry.device.full_name_with_parent;
 			if (entry.subvolume_name().length > 0){
-				dev_name = dev_name + "(subvol=%s)".printf(entry.subvolume_name());
+				dev_name = dev_name + "(%s)".printf(entry.subvolume_name());
+			}
+			else if (entry.lvm_name().length > 0){
+				dev_name = dev_name + "(%s)".printf(entry.lvm_name());
 			}
 			
 			if (dev_name.length > max_dev){
@@ -1648,7 +1651,10 @@ public class Main : GLib.Object{
 
 			string dev_name = entry.device.full_name_with_parent;
 			if (entry.subvolume_name().length > 0){
-				dev_name = dev_name + "(subvol=%s)".printf(entry.subvolume_name());
+				dev_name = dev_name + "(%s)".printf(entry.subvolume_name());
+			}
+			else if (entry.lvm_name().length > 0){
+				dev_name = dev_name + "(%s)".printf(entry.lvm_name());
 			}
 			
 			txt += ("%%-%ds  %%-%ds".printf(max_dev, max_mount)).printf(
@@ -1918,7 +1924,7 @@ public class Main : GLib.Object{
 			sh += "echo '" + _("Updating GRUB menu...") + "' \n";
 			
 			if ((target_distro.dist_type == "redhat") || (target_distro.dist_type == "arch")){
-				sh += "%s grub-mkconfig -o /boot/grub2/grub.cfg \n".printf(chroot);
+				sh += "%s grub2-mkconfig -o /boot/grub2/grub.cfg \n".printf(chroot);
 			}
 			else{
 				sh += "%s update-grub \n".printf(chroot);
@@ -2513,10 +2519,8 @@ public class Main : GLib.Object{
 		
 		foreach(Device pi in partitions){
 			foreach(var mp in pi.mount_points){
-				if (pi.type == "loop"){
-					continue;
-				}
-				if (pi.has_parent() && (pi.parent.type == "loop")){
+				// skip loop devices - Fedora Live uses loop devices containing ext4-formatted lvm volumes
+				if ((pi.type == "loop") || (pi.has_parent() && (pi.parent.type == "loop"))){
 					continue;
 				}
 				if (mp.mount_point == "/"){

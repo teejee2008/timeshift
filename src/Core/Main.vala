@@ -1850,7 +1850,7 @@ public class Main : GLib.Object{
 			}
 
 			// bind system directories for chrooted system
-			sh += "for i in dev proc run sys; do mount --bind \"/$i\" \"%s$i\"; done \n".printf(restore_target_path);
+			sh += "for i in dev dev/pts proc run sys; do mount --bind \"/$i\" \"%s$i\"; done \n".printf(restore_target_path);
 		}
 
 		if (reinstall_grub2 && (grub_device != null) && (grub_device.length > 0)){
@@ -1868,7 +1868,7 @@ public class Main : GLib.Object{
 			if (target_distro.dist_type == "redhat"){
 
 				// this will run only in clone mode
-				
+				sh += "%s grub2-install %s \n".printf(chroot, grub_device);
 				sh += "%s grub2-install --recheck %s \n".printf(chroot, grub_device);
 
 				/* NOTE:
@@ -1883,6 +1883,7 @@ public class Main : GLib.Object{
 				*/
 			}
 			else {
+				sh += "%s grub-install %s \n".printf(chroot, grub_device);
 				sh += "%s grub-install --recheck %s \n".printf(chroot, grub_device);
 			}
 
@@ -1935,7 +1936,7 @@ public class Main : GLib.Object{
 		sh += "echo '" + _("Cleaning up...") + "' \n";
 
 		if (!restore_current_system){
-			sh += "for i in dev proc run sys; do umount -f \"%s$i\"; done \n".printf(restore_target_path);
+			sh += "for i in dev dev/pts proc run sys; do umount -f \"%s$i\"; done \n".printf(restore_target_path);
 		}
 		
 		sh += "sync \n";

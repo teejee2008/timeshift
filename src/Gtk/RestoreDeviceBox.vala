@@ -97,7 +97,7 @@ class RestoreDeviceBox : Gtk.Box{
 		hbox.margin_top = 12;
 		add(hbox);
 
-		label = add_label(hbox, _("Mount Path") + "  ", true, true);
+		label = add_label(hbox, _("Path") + "  ", true, true);
 		label.xalign = (float) 0.0;
 		sg_mount_point.add_widget(label);
 		
@@ -105,7 +105,7 @@ class RestoreDeviceBox : Gtk.Box{
 		label.xalign = (float) 0.0;
 		sg_device.add_widget(label);
 
-		label = add_label(hbox, _("Subvolume"), true, true);
+		label = add_label(hbox, _("Volume"), true, true);
 		label.xalign = (float) 0.5;
 		label.set_no_show_all(true);
 		lbl_header_subvol = label;
@@ -417,7 +417,7 @@ class RestoreDeviceBox : Gtk.Box{
 	private void add_bootloader_options(){
 
 		//lbl_header_bootloader
-		var label = add_label_header(this, _("Bootloader Options"), true);
+		var label = add_label_header(this, _("Select Bootloader Options"), true);
 		label.margin_top = 24;
 		
 		//add_label(this, _("Select device for installing GRUB2 bootloader:"));
@@ -425,6 +425,7 @@ class RestoreDeviceBox : Gtk.Box{
 		add_chk_reinstall_grub();
 		
 		var hbox = new Box (Orientation.HORIZONTAL, 6);
+		hbox.margin_left = 12;
         add (hbox);
 
 		//cmb_grub_dev
@@ -510,7 +511,7 @@ class RestoreDeviceBox : Gtk.Box{
 		chk.active = false;
 		chk.set_tooltip_markup(_("Re-generates initramfs for all installed kernels. This is generally not needed. Select this only if the restored system fails to boot."));
 		//chk.margin_bottom = 12;
-		hbox.add (chk);
+		add (chk);
 		chk_update_initramfs = chk;
 
 		if (App.mirror_system){
@@ -537,7 +538,7 @@ class RestoreDeviceBox : Gtk.Box{
 		chk.active = false;
 		chk.set_tooltip_markup(_("Updates the GRUB menu entries (recommended). This is safe to run and should be left selected."));
 		//chk.margin_bottom = 12;
-		hbox.add (chk);
+		add (chk);
 		chk_update_grub = chk;
 
 		if (App.mirror_system){

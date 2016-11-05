@@ -396,6 +396,7 @@ public class Main : GLib.Object{
 		exclude_list_default.add("/run/*");
 		exclude_list_default.add("/var/run/*");
 		exclude_list_default.add("/var/lock/*");
+		exclude_list_default.add("/var/spool/*");
 		exclude_list_default.add("/lost+found");
 		exclude_list_default.add("/timeshift/*");
 		exclude_list_default.add("/data/*");
@@ -403,11 +404,13 @@ public class Main : GLib.Object{
 
 		exclude_list_default.add("/root/.thumbnails");
 		exclude_list_default.add("/root/.cache");
+		exclude_list_default.add("/root/.dbus");
 		exclude_list_default.add("/root/.gvfs");
 		exclude_list_default.add("/root/.local/share/Trash");
 
 		exclude_list_default.add("/home/*/.thumbnails");
 		exclude_list_default.add("/home/*/.cache");
+		exclude_list_default.add("/home/*/.dbus");
 		exclude_list_default.add("/home/*/.gvfs");
 		exclude_list_default.add("/home/*/.local/share/Trash");
 

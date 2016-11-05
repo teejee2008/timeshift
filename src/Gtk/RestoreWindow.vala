@@ -52,7 +52,7 @@ class RestoreWindow : Gtk.Window{
 	private Gtk.Button btn_close;
 
 	private uint tmr_init;
-	private int def_width = 550;
+	private int def_width = 500;
 	private int def_height = 500;
 	private bool success = false;
 	

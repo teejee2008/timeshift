@@ -1,4 +1,48 @@
 
+timeshift (16.11) trusty; urgency=medium
+
+  * Moved console and Gtk code to separate utilities:
+  'timeshift' and 'timeshift-gtk'
+
+  * Console: Display progress in terminal while creating and
+  deleting snapshots; Added --comments option for setting the comment
+  when new snapshot is created; Changed input timeout interval to
+  60 seconds;
+
+  * RestoreWindow: Removed loop devices from target device dropdowns;
+  Fixed some issues in device selection logic; Comboboxes would remain
+  unselected in some scenarios; User will be prompted to unlock
+  default devices before the restore window is displayed; LVM volume
+  names will be displayed on the target device selection tab;
+
+  * RestoreWindow: Added new options to reinstall GRUB,
+  update initramfs and update GRUB menu; Fixed: Progress will be
+  displayed when restoring another system in GUI mode; Added
+  right-click menu option to view restore log file;
+
+  * RestoreWindow: Exclude Apps: Populate items from destination home
+  directories as well as snapshot's home directories.
+
+  * Restore: Bind /dev/pts when chrooting the restored system;
+
+  * UI: Added borders around statusbar; 
+
+  * OS Support: Fedora/RedHat: Fixed detection of Live USB mode;
+  Fixed an issue with grub update;
+
+  * Create: Exclude /var/spool and ~/.dbus while creating snapshots;
+  File count will be saved when snapshots are created; 
+
+  * Fixed the handling of leading and trailing spaces in device
+  labels and mount paths;
+
+  * SettingsWindow: Replaced Include and Exclude tabs with a single
+  tab for Filters; Resized the window size to match Main Window; Main
+  Window will be hidden when the Settings Window is displayed;
+
+ -- Tony George <tony.george.kol@gmail.com>  Sun, 06 Nov 2016 10:00:00 +0530
+
+
 timeshift (16.10.6) trusty; urgency=medium
 
   * Fixed scheduled backups; Initialize display for the scheduled cron task;

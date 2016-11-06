@@ -396,7 +396,7 @@ public class Device : GLib.Object{
 					Device pi = new Device();
 					pi.name = match.fetch(1).strip();
 					pi.kname = match.fetch(2).strip();
-					pi.label = match.fetch(3).strip();
+					pi.label = match.fetch(3); // do not strip - labels can have leading or trailing spaces
 					pi.uuid = match.fetch(4).strip();
 					pi.type = match.fetch(5).strip().down();
 					
@@ -585,7 +585,7 @@ public class Device : GLib.Object{
 			try{
 				rex = new Regex("""LABEL=\"([^\"]*)\"""");
 				if (rex.match (line, 0, out match)){
-					pi.label = match.fetch(1).strip();
+					pi.label = match.fetch(1); // do not strip - labels can have leading or trailing spaces
 				}
 
 				rex = new Regex("""UUID=\"([^\"]*)\"""");
@@ -812,7 +812,7 @@ public class Device : GLib.Object{
 						pi.device = val.strip();
 						break;
 					case 2: //mountpoint
-						mp.mount_point = val.strip();
+						mp.mount_point = val.strip().replace("\040"," "); // replace space. TODO: other chars?
 						if (!mount_list.contains(mp.mount_point)){
 							mount_list.add(mp.mount_point);
 							pi.mount_points.add(mp);

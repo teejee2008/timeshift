@@ -50,7 +50,7 @@ class MainWindow : Gtk.Window{
 	private SnapshotListBox snapshot_list_box;
 	
 	//statusbar
-	private Gtk.Box statusbar;
+	private Gtk.ScrolledWindow statusbar;
 	private Gtk.Image img_shield;
 	private Gtk.Label lbl_shield;
 	private Gtk.Label lbl_shield_subnote;
@@ -236,24 +236,30 @@ class MainWindow : Gtk.Window{
     }
 
 	private void init_ui_statusbar(){
-
+		// scrolled
+		var scrolled = new ScrolledWindow(null, null);
+		scrolled.set_shadow_type (ShadowType.ETCHED_IN);
+		scrolled.margin = 6;
+		scrolled.margin_top = 0;
+		scrolled.hscrollbar_policy = Gtk.PolicyType.NEVER;
+		scrolled.vscrollbar_policy = Gtk.PolicyType.NEVER;
+		vbox_main.add(scrolled);
+		statusbar = scrolled;
+		
 		// hbox_shield
 		var box = new Box (Orientation.HORIZONTAL, 6);
-		//box.margin_top = 0;
-        //box.margin_bottom = 12;
-        box.margin_left = 6;
+		box.margin = 6;
         box.margin_right = 12;
-        vbox_main.add (box);
-		statusbar = box;
-		
+		scrolled.add (box);
+
         // img_shield
 		img_shield = new Gtk.Image();
 		img_shield.pixbuf = get_shared_icon("security-high", "security-high.svg", 48).pixbuf;
 		img_shield.margin_bottom = 6;
-        statusbar.add(img_shield);
+        box.add(img_shield);
 
 		var vbox = new Box (Orientation.VERTICAL, 6);
-        statusbar.add (vbox);
+        box.add (vbox);
         
 		//lbl_shield
 		lbl_shield = add_label(vbox, "");
@@ -272,7 +278,7 @@ class MainWindow : Gtk.Window{
 		// snap_count
 		vbox = new Box (Orientation.VERTICAL, 6);
 		vbox.set_no_show_all(true);
-        statusbar.add (vbox);
+        box.add (vbox);
         vbox_snap_count = vbox;
 
 		lbl_snap_count = new Label("<b>" + _("0.0%") + "</b>");
@@ -283,7 +289,7 @@ class MainWindow : Gtk.Window{
 		// free space
 		vbox = new Box (Orientation.VERTICAL, 6);
 		vbox.set_no_show_all(true);
-        statusbar.add(vbox);
+        box.add(vbox);
         vbox_free_space = vbox;
 
 		lbl_free_space = new Label("<b>" + _("0.0%") + "</b>");

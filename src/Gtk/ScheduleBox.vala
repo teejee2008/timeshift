@@ -143,26 +143,33 @@ class ScheduleBox : Gtk.Box{
 		label.vexpand = true;
 		add(label);
 
-		// shield
+		// scrolled
+		var scrolled = new ScrolledWindow(null, null);
+		scrolled.set_shadow_type (ShadowType.ETCHED_IN);
+		//scrolled.margin = 6;
+		//scrolled.margin_top = 0;
+		scrolled.hscrollbar_policy = Gtk.PolicyType.NEVER;
+		scrolled.vscrollbar_policy = Gtk.PolicyType.NEVER;
+		add(scrolled);
+		
+		// hbox
 		var hbox = new Gtk.Box (Orientation.HORIZONTAL, 6);
-        hbox.margin_bottom = 24;
-        hbox.margin_left = 6;
-        hbox.margin_right = 6;
-        add (hbox);
+		hbox.margin = 6;
+		hbox.margin_bottom = 12;
+		scrolled.add (hbox);
 
         // img_shield
 		img_shield = new Gtk.Image();
 		img_shield.pixbuf = get_shared_icon("security-high", "security-high.svg", 48).pixbuf;
+		img_shield.margin_bottom = 6;
         hbox.add(img_shield);
 
 		var vbox = new Box (Orientation.VERTICAL, 6);
-		vbox.margin_bottom = 0;
-		vbox.margin_top = 6;
         hbox.add (vbox);
         
 		// lbl_shield
 		lbl_shield = add_label(vbox, "");
-        lbl_shield.margin_bottom = 0;
+        //lbl_shield.margin_bottom = 0;
         lbl_shield.yalign = (float) 0.5;
         lbl_shield.hexpand = true;
 
@@ -170,7 +177,8 @@ class ScheduleBox : Gtk.Box{
 		lbl_shield_subnote = add_label(vbox, "");
 		lbl_shield_subnote.yalign = (float) 0.5;
 		lbl_shield_subnote.hexpand = true;
-
+		//lbl_shield_subnote.margin_bottom = 6;
+		
 		lbl_shield_subnote.wrap = true;
 		lbl_shield_subnote.wrap_mode = Pango.WrapMode.WORD;
 

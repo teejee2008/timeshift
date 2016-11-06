@@ -407,13 +407,13 @@ public class Main : GLib.Object{
 		exclude_list_default.add("/root/.cache");
 		exclude_list_default.add("/root/.dbus");
 		exclude_list_default.add("/root/.gvfs");
-		exclude_list_default.add("/root/.local/share/Trash");
+		exclude_list_default.add("/root/.local/share/[Tt]rash");
 
 		exclude_list_default.add("/home/*/.thumbnails");
 		exclude_list_default.add("/home/*/.cache");
 		exclude_list_default.add("/home/*/.dbus");
 		exclude_list_default.add("/home/*/.gvfs");
-		exclude_list_default.add("/home/*/.local/share/Trash");
+		exclude_list_default.add("/home/*/.local/share/[Tt]rash");
 
 		//default extra ------------------
 
@@ -2326,12 +2326,6 @@ public class Main : GLib.Object{
 			config.set_string_member("backup_device_uuid", backup_uuid);
 			config.set_string_member("parent_device_uuid", backup_parent_uuid); 
 		}
-
-		config.set_string_member("use_snapshot_path_user",
-			repo.use_snapshot_path_custom.to_string());
-			
-		config.set_string_member("snapshot_path_user",
-			repo.snapshot_path_user.to_string());
 
 		config.set_string_member("schedule_monthly", schedule_monthly.to_string());
 		config.set_string_member("schedule_weekly", schedule_weekly.to_string());

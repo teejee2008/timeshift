@@ -98,7 +98,7 @@ namespace TeeJee.GtkHelper{
 		//txt_input
 		Gtk.Entry txt_input = new Gtk.Entry();
 		txt_input.margin_top = 3;
-		txt_input.set_visibility(false);
+		txt_input.set_visibility(!mask_password);
 
 		//create dialog
 		var dlg = new Gtk.Dialog.with_buttons(title, parent_win, DialogFlags.MODAL);

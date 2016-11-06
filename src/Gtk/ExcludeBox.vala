@@ -215,7 +215,22 @@ class ExcludeBox : Gtk.Box{
 		add(hbox);
 
 		Gtk.SizeGroup size_group = null;
-		var button = add_button(hbox, _("Add Files"),
+		var button = add_button(hbox, _("Add"),
+			_("Add custom pattern"), ref size_group, null);
+        button.clicked.connect(()=>{
+
+			string pattern = gtk_inputbox(
+						_("Exclude Pattern"),
+						_("Enter the pattern to exclude (Ex: *.mp3, *.bak)"),
+						parent_window, false);
+
+			if ((pattern != null) && (pattern.strip().length > 0)){
+				treeview_add_item(treeview, pattern); // don't strip
+			}
+		});
+		
+		size_group = null;
+		button = add_button(hbox, _("Add Files"),
 			_("Add files"), ref size_group, null);
         button.clicked.connect(()=>{
 			add_files_clicked();
@@ -229,12 +244,12 @@ class ExcludeBox : Gtk.Box{
 		});
 
 		// for exclude only - Including contents without including directory is not logical
-		size_group = null;
+		/*size_group = null;
 		button = add_button(hbox, _("Add Contents"),
 			_("Add directory contents"), ref size_group, null);
 		button.clicked.connect(()=>{
 			add_folder_contents_clicked();
-		});
+		});*/
 
 		size_group = null;
 		button = add_button(hbox, _("Remove"), "", ref size_group, null);
@@ -256,6 +271,13 @@ class ExcludeBox : Gtk.Box{
     private void remove_clicked(){
 		var sel = treeview.get_selection();
 		var store = (Gtk.ListStore) treeview.model;
+
+		if (sel.count_selected_rows() == 0){
+			string title = _("Items Not Selected");
+			string message = _("Select the items to be removed from the list");
+			gtk_messagebox(title, message, parent_window, true);
+			return;
+		}
 		
 		TreeIter iter;
 		var iter_list = new Gee.ArrayList<TreeIter?>();

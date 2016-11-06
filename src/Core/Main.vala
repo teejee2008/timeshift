@@ -1525,9 +1525,42 @@ public class Main : GLib.Object{
 			return strcmp(a.mount_point, b.mount_point);
 		});
 
+		init_boot_options(); // boot options depend on the mount list
+		
 		log_debug("Main: init_mount_list(): exit");
 	}
 
+	private void init_boot_options(){
+
+		var grub_dev = dst_root;
+		grub_device = grub_dev.device;
+		
+		while ((grub_dev != null) && grub_dev.has_parent()){
+			grub_dev = grub_dev.parent;
+			grub_device = grub_dev.device;
+		}
+
+		if (mirror_system){
+			// bootloader must be re-installed
+			reinstall_grub2 = true;
+			update_initramfs = true;
+			update_grub = true;
+		}
+		else{
+			if (App.snapshot_to_restore.distro.dist_id == "fedora"){
+				// grub2-install should never be run on EFI fedora systems
+				reinstall_grub2 = false;
+				update_initramfs = false;
+				update_grub = true;
+			}
+			else{
+				reinstall_grub2 = true;
+				update_initramfs = false;
+				update_grub = true;
+			}
+		}
+	}
+	
 	public bool restore_snapshot(Gtk.Window? parent_win){
 
 		log_debug("Main: restore_snapshot()");

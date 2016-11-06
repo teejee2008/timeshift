@@ -116,8 +116,8 @@ class RestoreDeviceBox : Gtk.Box{
 		add(option_box);
 
 		// bootloader
-
-		add_bootloader_options();
+		
+		add_boot_options();
 
 		// infobar
 		
@@ -414,60 +414,37 @@ class RestoreDeviceBox : Gtk.Box{
 		return combo;
 	}
 
-	private void add_bootloader_options(){
+	private void add_boot_options(){
 
-		//lbl_header_bootloader
-		var label = add_label_header(this, _("Select Bootloader Options"), true);
-		label.margin_top = 24;
+		// buffer
+		var label = new Gtk.Label("");
+		label.vexpand = true;
+		add(label);
 		
-		//add_label(this, _("Select device for installing GRUB2 bootloader:"));
+		var hbox = new Gtk.ButtonBox (Gtk.Orientation.HORIZONTAL);
+		hbox.margin_bottom = 24;
+        add(hbox);
 
-		add_chk_reinstall_grub();
+		Gtk.SizeGroup size_group = null;
 		
-		var hbox = new Box (Orientation.HORIZONTAL, 6);
-		hbox.margin_left = 12;
-        add (hbox);
-
-		//cmb_grub_dev
-		cmb_grub_dev = new ComboBox ();
-		cmb_grub_dev.hexpand = true;
-		hbox.add(cmb_grub_dev);
+		// close
 		
-		var cell_text = new CellRendererText ();
-		cell_text.text = "";
-		cmb_grub_dev.pack_start(cell_text, false);
-
-		cell_text = new CellRendererText();
-        cmb_grub_dev.pack_start(cell_text, false);
-
-        cmb_grub_dev.set_cell_data_func(cell_text, (cell_layout, cell, model, iter)=>{
-			Device dev;
-			model.get (iter, 0, out dev, -1);
-
-			if (dev.type == "disk"){
-				//log_msg("desc:" + dev.description());
-				(cell as Gtk.CellRendererText).markup =
-					"<b>%s (MBR)</b>".printf(dev.description_formatted());
-			}
-			else{
-				(cell as Gtk.CellRendererText).text = dev.description();
-			}
+		//var img = new Image.from_stock("gtk-dialog-warning", Gtk.IconSize.BUTTON);
+		var button = add_button(hbox, _("Bootloader Options (Advanced)"), "", ref size_group, null);
+		button.set_size_request(300, 40);
+		button.set_tooltip_text(_("[Advanced Users Only] Change these settings only if the restored system fails to boot."));
+		var btn_boot_options = button;
+		//hbox.set_child_packing(btn_boot_options, false, true, 6, Gtk.PackType.END);
+		
+        btn_boot_options.clicked.connect(()=>{
+			var win = new BootOptionsWindow();
+			win.set_transient_for(parent_window);
+			//win.destroy.connect(()=>{
+				
+			//});;
 		});
-
-		cmb_grub_dev.changed.connect(()=>{
-			save_grub_device_selection();
-		});
-
-		/*string tt = "<b>" + _("** Advanced Users **") + "</b>\n\n"+ _("Skips bootloader (re)installation on target device.\nFiles in /boot directory on target partition will remain untouched.\n\nIf you are restoring a system that was bootable previously then it should boot successfully. Otherwise the system may fail to boot.");*/
-
-		hbox = new Gtk.Box (Orientation.HORIZONTAL, 6);
-        add (hbox);
-        
-		add_chk_update_initramfs(hbox);
-
-		add_chk_update_grub(hbox);
 	}
-
+	
 	private void add_chk_reinstall_grub(){
 		
 		//chk_reinstall_grub

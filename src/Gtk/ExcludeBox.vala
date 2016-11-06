@@ -72,6 +72,7 @@ class ExcludeBox : Gtk.Box{
 		treeview.headers_visible = true;
 		treeview.rules_hint = true;
 		treeview.reorderable = true;
+		treeview.set_tooltip_text(_("Click to edit. Drag and drop to re-order."));
 		//treeview.row_activated.connect(treeview_row_activated);
 
 		// scrolled
@@ -173,6 +174,30 @@ class ExcludeBox : Gtk.Box{
 				pattern.has_prefix("+ ") ? pattern[2:pattern.length] : pattern;
 		});
 
+		cell_text.editable = true;
+		cell_text.edited.connect ((path, new_text)=>{
+			TreeIter iter;
+			var model = (Gtk.ListStore) treeview.model;
+			model.get_iter_from_string (out iter, path);
+
+			bool include;
+			model.get (iter, 2, out include, -1);
+
+			string pattern = new_text;
+
+			if (include){
+				if (!pattern.has_prefix("+ ")){
+					pattern = "+ %s".printf(pattern);
+				}
+			}
+			else{
+				if (pattern.has_prefix("+ ")){
+					pattern = pattern[2:pattern.length];
+				}
+			}
+			
+			model.set (iter, 0, pattern, -1);
+		});
 	}
 
     private void init_exclude_summary_link(Gtk.Box box){
@@ -218,10 +243,10 @@ class ExcludeBox : Gtk.Box{
 		});
 
 		size_group = null;
-		button = add_button(hbox, _("Reorder"), "", ref size_group, null);
+		button = add_button(hbox, _("Info"), "", ref size_group, null);
         button.clicked.connect(()=>{
-			string title = _("");
-			string msg = _("Drag and drop the items to re-arrange");
+			string title = _("Editing and Re-Ordering");
+			string msg = _("Click an item to edit the pattern.\nDrag and drop items with mouse to re-order.");
 			gtk_messagebox(title, msg, parent_window, false);
 		});
 	}

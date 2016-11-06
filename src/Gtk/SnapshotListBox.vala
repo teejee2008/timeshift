@@ -175,9 +175,17 @@ class SnapshotListBox : Gtk.Box{
 		col_desc.pack_start (cell_desc, false);
 		col_desc.set_cell_data_func (cell_desc, cell_desc_render);
 		treeview.append_column(col_desc);
+		
 		cell_desc.editable = true;
-
-		cell_desc.edited.connect (cell_desc_edited);
+		cell_desc.edited.connect ((path, new_text)=>{
+			Snapshot bak;
+			TreeIter iter;
+			var model = (Gtk.ListStore) treeview.model;
+			model.get_iter_from_string (out iter, path);
+			model.get (iter, 0, out bak, -1);
+			bak.description = new_text;
+			bak.update_control_file();
+		});
 
 		var col_buffer = new TreeViewColumn();
 		var cell_text = new CellRendererText();
@@ -312,17 +320,6 @@ class SnapshotListBox : Gtk.Box{
 		model.get (iter, 0, out bak, -1);
 		(cell as Gtk.CellRendererText).text = bak.description;
 		(cell as Gtk.CellRendererText).sensitive = !bak.marked_for_deletion;
-	}
-
-	private void cell_desc_edited (string path, string new_text) {
-		Snapshot bak;
-
-		TreeIter iter;
-		var model = (Gtk.ListStore) treeview.model;
-		model.get_iter_from_string (out iter, path);
-		model.get (iter, 0, out bak, -1);
-		bak.description = new_text;
-		bak.update_control_file();
 	}
 
 	private bool menu_snapshots_popup (Gtk.Menu popup, Gdk.EventButton? event) {

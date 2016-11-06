@@ -8,6 +8,8 @@ using TeeJee.ProcessHelper;
 using TeeJee.Misc;
 
 public class CronTab : GLib.Object {
+
+	public static string crontab_text = null;
 	
 	public static string crontab_read_all(string user_name = ""){
 		string std_out, std_err;
@@ -30,10 +32,18 @@ public class CronTab : GLib.Object {
 		}
 	}
 
-	public static bool add_job(string entry){
+	public static bool add_job(string entry, bool use_cached_text){
 		
 		// read crontab file
-		string tab = crontab_read_all();
+		string tab = "";
+		if (use_cached_text && (crontab_text != null)){
+			tab = crontab_text;
+		}
+		else{
+			crontab_text = crontab_read_all();
+			tab = crontab_text;
+		}
+		
 		var lines = new Gee.ArrayList<string>();
 		foreach(string line in tab.split("\n")){
 			lines.add(line);
@@ -75,10 +85,18 @@ public class CronTab : GLib.Object {
 		}
 	}
 
-	public static bool remove_job(string entry, bool use_regex = false){
+	public static bool remove_job(string entry, bool use_regex, bool use_cached_text){
 		
 		// read crontab file
-		string tab = crontab_read_all();
+		string tab = "";
+		if (use_cached_text && (crontab_text != null)){
+			tab = crontab_text;
+		}
+		else{
+			crontab_text = crontab_read_all();
+			tab = crontab_text;
+		}
+		
 		var lines = new Gee.ArrayList<string>();
 		foreach(string line in tab.split("\n")){
 			lines.add(line);

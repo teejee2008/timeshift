@@ -2917,11 +2917,11 @@ public class Main : GLib.Object{
 		// check and remove crontab entries created by previous versions of timeshift
 
 		string entry = "*/30 * * * * timeshift --backup";
-		CronTab.remove_job(entry);
+		CronTab.remove_job(entry, false, true);
 
 		foreach(string interval in new string[] {"@monthly","@weekly","@daily"}){
 			entry = "%s timeshift --backup".printf(interval);
-			CronTab.remove_job(entry);
+			CronTab.remove_job(entry, false, true);
 		}
 
 		//entry = "^@(daily|weekly|monthly|hourly) timeshift --backup$";
@@ -2939,12 +2939,12 @@ public class Main : GLib.Object{
 		//entry_hourly += " #timeshift-16.10-boot";
 		
 		if (scheduled){
-			CronTab.add_job(entry_boot);
-			CronTab.add_job(entry_hourly);
+			CronTab.add_job(entry_boot, true);
+			CronTab.add_job(entry_hourly, true);
 		}
 		else{
-			CronTab.remove_job(entry_boot);
-			CronTab.remove_job(entry_hourly);
+			CronTab.remove_job(entry_boot, false, true);
+			CronTab.remove_job(entry_hourly, false, true);
 		}
 
 		/*string cmd = "timeshift --backup";

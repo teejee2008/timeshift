@@ -149,7 +149,7 @@ class MainWindow : Gtk.Window{
 		btn_restore.clicked.connect (btn_restore_clicked);
 
 		//btn_delete_snapshot
-		btn_delete_snapshot = new Gtk.ToolButton.from_stock ("edit-delete");
+		btn_delete_snapshot = new Gtk.ToolButton.from_stock ("gtk-delete");
 		btn_delete_snapshot.is_important = true;
 		btn_delete_snapshot.label = _("Delete");
 		btn_delete_snapshot.set_tooltip_text (_("Delete selected snapshot"));
@@ -158,11 +158,11 @@ class MainWindow : Gtk.Window{
         btn_delete_snapshot.clicked.connect (delete_selected);
         
 	    //btn_browse_snapshot
-		btn_browse_snapshot = new Gtk.ToolButton.from_stock ("folder");
+		btn_browse_snapshot = new Gtk.ToolButton.from_stock ("gtk-directory");
 		btn_browse_snapshot.is_important = true;
 		btn_browse_snapshot.label = _("Browse");
 		btn_browse_snapshot.set_tooltip_text (_("Browse selected snapshot"));
-        //toolbar.add(btn_browse_snapshot);
+        toolbar.add(btn_browse_snapshot);
 
         btn_browse_snapshot.clicked.connect (browse_selected);
 
@@ -760,6 +760,8 @@ class MainWindow : Gtk.Window{
 
 	private void btn_settings_clicked(){
 		btn_settings.sensitive = false;
+
+		this.hide();
 		
 		var win = new SettingsWindow();
 		win.set_transient_for(this);
@@ -767,6 +769,7 @@ class MainWindow : Gtk.Window{
 			btn_settings.sensitive = true;
 			App.save_app_config();
 			refresh_all();
+			this.show();
 		});
 	}
 

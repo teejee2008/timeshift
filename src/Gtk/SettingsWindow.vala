@@ -38,12 +38,11 @@ class SettingsWindow : Gtk.Window{
 
 	private BackupDeviceBox backup_dev_box;
 	private ScheduleBox schedule_box;
-	private IncludeBox include_box;
 	private ExcludeBox exclude_box;
 	private FinishBox notes_box;
 
 	private uint tmr_init;
-	private int def_width = 450;
+	private int def_width = 650;
 	private int def_height = 500;
 	
 	public SettingsWindow () {
@@ -73,11 +72,7 @@ class SettingsWindow : Gtk.Window{
 		schedule_box = new ScheduleBox(this);
 		notebook.append_page (schedule_box, label);
 
-		label = new Gtk.Label(_("Include"));
-		include_box = new IncludeBox(this);
-		notebook.append_page (include_box, label);
-
-		label = new Gtk.Label(_("Exclude"));
+		label = new Gtk.Label(_("Filters"));
 		exclude_box = new ExcludeBox(this, false);
 		notebook.append_page (exclude_box, label);
 
@@ -116,7 +111,6 @@ class SettingsWindow : Gtk.Window{
 	}
 	
 	private void save_changes(){
-		include_box.save_changes();
 		exclude_box.save_changes();
 		App.cron_job_update();
 	}
@@ -145,9 +139,8 @@ class SettingsWindow : Gtk.Window{
 	public enum Tabs{
 		BACKUP_DEVICE = 0,
 		SCHEDULE = 1,
-		INCLUDE = 2,
-		EXCLUDE = 3,
-		NOTES = 4
+		EXCLUDE = 2,
+		NOTES = 3
 	}
 }
 

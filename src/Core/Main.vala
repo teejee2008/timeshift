@@ -1147,8 +1147,6 @@ public class Main : GLib.Object{
 		config.set_string_member("tags", tag);
 		config.set_string_member("comments", cmd_comments);
 
-		cmd_comments = "";
-		
 		var json = new Json.Generator();
 		json.pretty = true;
 		json.indent = 2;

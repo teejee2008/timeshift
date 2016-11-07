@@ -10,6 +10,10 @@ using TeeJee.Misc;
 public class CronTab : GLib.Object {
 
 	public static string crontab_text = null;
+
+	public static void clear_cached_text(){
+		crontab_text = null;
+	}
 	
 	public static string crontab_read_all(string user_name = ""){
 		string std_out, std_err;

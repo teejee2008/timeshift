@@ -1529,11 +1529,13 @@ public class Main : GLib.Object{
 		log_debug("Main: init_mount_list(): exit");
 	}
 
-	private void init_boot_options(){
+	public void init_boot_options(){
 
 		var grub_dev = dst_root;
-		grub_device = grub_dev.device;
-		
+		if(grub_dev != null){
+			grub_device = grub_dev.device;
+		}
+
 		while ((grub_dev != null) && grub_dev.has_parent()){
 			grub_dev = grub_dev.parent;
 			grub_device = grub_dev.device;
@@ -1565,7 +1567,16 @@ public class Main : GLib.Object{
 		log_debug("Main: restore_snapshot()");
 		
 		parent_window = parent_win;
+
+		// remove mount points which will remain on root fs
 		
+		for(int i = App.mount_list.size-1; i >= 0; i--){
+			var entry = App.mount_list[i];
+			if (entry.device == null){
+				App.mount_list.remove(entry);
+			}
+		}
+			
 		// check if we have all required inputs and abort on error
 		
 		if (!mirror_system){
@@ -1883,12 +1894,12 @@ public class Main : GLib.Object{
 
 		string chroot = "";
 		if (!restore_current_system){
-			if (target_distro.dist_type == "arch"){
-				chroot += "arch-chroot \"%s\"".printf(restore_target_path);
-			}
-			else{
+			//if ((current_distro.dist_type == "arch") && cmd_exists("arch-chroot")){
+				//chroot += "arch-chroot \"%s\"".printf(restore_target_path);
+			//}
+			//else{
 				chroot += "chroot \"%s\"".printf(restore_target_path);
-			}
+			//}
 
 			// bind system directories for chrooted system
 			sh += "for i in dev dev/pts proc run sys; do mount --bind \"/$i\" \"%s$i\"; done \n".printf(restore_target_path);
@@ -1958,8 +1969,11 @@ public class Main : GLib.Object{
 
 			sh += "echo '" + _("Updating GRUB menu...") + "' \n";
 			
-			if ((target_distro.dist_type == "redhat") || (target_distro.dist_type == "arch")){
+			if (target_distro.dist_type == "redhat"){
 				sh += "%s grub2-mkconfig -o /boot/grub2/grub.cfg \n".printf(chroot);
+			}
+			if (target_distro.dist_type == "arch"){
+				sh += "%s grub-mkconfig -o /boot/grub/grub.cfg \n".printf(chroot);
 			}
 			else{
 				sh += "%s update-grub \n".printf(chroot);
@@ -2449,7 +2463,7 @@ public class Main : GLib.Object{
 		}
 
 		if ((app_mode == "")||(LOG_DEBUG)){
-			log_debug(_("App config loaded") + ": '%s'".printf(this.app_conf_path));
+			log_msg(_("App config loaded") + ": '%s'".printf(this.app_conf_path));
 		}
 	}
 
@@ -2660,6 +2674,10 @@ public class Main : GLib.Object{
 
 		// mount all devices
 		foreach (var mnt in mount_list) {
+
+			if (mnt.device == null){
+				continue;
+			}
 			
 			// unlock encrypted device
 			if (mnt.device.is_encrypted_partition()){
@@ -2916,6 +2934,8 @@ public class Main : GLib.Object{
 
 		// check and remove crontab entries created by previous versions of timeshift
 
+		CronTab.clear_cached_text();
+		
 		string entry = "*/30 * * * * timeshift --backup";
 		CronTab.remove_job(entry, false, true);
 

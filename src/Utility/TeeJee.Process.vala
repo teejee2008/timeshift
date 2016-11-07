@@ -247,20 +247,30 @@ namespace TeeJee.ProcessHelper{
 	// find process -------------------------------
 	
 	// dep: which
-	public string get_cmd_path (string cmd){
+	public string get_cmd_path (string cmd_tool){
 
 		/* Returns the full path to a command */
 
 		try {
 			int exitCode;
 			string stdout, stderr;
-			Process.spawn_command_line_sync("which " + cmd, out stdout, out stderr, out exitCode);
+			Process.spawn_command_line_sync("which " + cmd_tool, out stdout, out stderr, out exitCode);
 	        return stdout;
 		}
 		catch (Error e){
 	        log_error (e.message);
 	        return "";
 	    }
+	}
+
+	public bool cmd_exists(string cmd_tool){
+		string path = get_cmd_path (cmd_tool);
+		if ((path == null) || (path.length == 0)){
+			return false;
+		}
+		else{
+			return true;
+		}
 	}
 
 	// dep: pidof, TODO: Rewrite using /proc

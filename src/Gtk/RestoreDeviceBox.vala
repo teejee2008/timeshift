@@ -39,12 +39,6 @@ class RestoreDeviceBox : Gtk.Box{
 	private Gtk.Label lbl_infobar_location;
 	private Gtk.Box option_box;
 	private Gtk.Label lbl_header_subvol;
-	private Gtk.ComboBox cmb_grub_dev;
-
-	private Gtk.CheckButton chk_reinstall_grub;
-	private Gtk.CheckButton chk_update_initramfs;
-	private Gtk.CheckButton chk_update_grub;
-	
 	private bool show_volume_name = false;
 	
 	private Gtk.SizeGroup sg_mount_point = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
@@ -130,7 +124,7 @@ class RestoreDeviceBox : Gtk.Box{
 		log_debug("RestoreDeviceBox: refresh()");
 		App.update_partitions();
 		create_device_selection_options(reset_device_selections);
-		refresh_cmb_grub_dev();
+		App.init_boot_options();
 		log_debug("RestoreDeviceBox: refresh(): exit");
 	}
 
@@ -375,7 +369,7 @@ class RestoreDeviceBox : Gtk.Box{
 					
 					if (current_entry.mount_point == "/"){
 						App.dst_root = luks_unlocked;
-						cmb_grub_dev_select_default();
+						App.init_boot_options();
 					}
 
 					current_entry.device = luks_unlocked;
@@ -385,30 +379,13 @@ class RestoreDeviceBox : Gtk.Box{
 					refresh(false); // do not reset selections
 					return; // no need to continue
 				}
-
-				/*index = -1;
-
-				for (bool next = store.get_iter_first (out iter_combo); next;
-					next = store.iter_next (ref iter_combo)) {
-
-					Device dev_iter;
-					store.get(iter_combo, 0, out dev_iter, -1);
-
-					index++;
-					
-					if ((dev_iter != null) && (dev_iter.device == luks_unlocked.device)){
-						combo.active = index;
-						return;
-					}
-				}*/
-			}
-
-			if (current_entry.mount_point == "/"){
-				//App.dst_root = current_dev;
-				cmb_grub_dev_select_default();
 			}
 
 			current_entry.device = current_dev;
+			
+			if (current_entry.mount_point == "/"){
+				App.init_boot_options();
+			}
 		});
 
 		return combo;
@@ -444,190 +421,6 @@ class RestoreDeviceBox : Gtk.Box{
 			//});;
 		});
 	}
-	
-	private void add_chk_reinstall_grub(){
-		
-		//chk_reinstall_grub
-		var chk = new CheckButton.with_label(_("(Re)install GRUB2 on:"));
-		chk.active = false;
-		chk.set_tooltip_markup(_("Re-installs the GRUB2 bootloader on the selected device. This is generally not needed. Select this if the restored system fails to boot."));
-		//chk.margin_bottom = 12;
-		add (chk);
-		chk_reinstall_grub = chk;
-
-		if (App.mirror_system){
-			// bootloader must be re-installed
-			chk_reinstall_grub.active = true;
-			chk.sensitive = false;
-		}
-		else{
-			if (App.snapshot_to_restore.distro.dist_id == "fedora"){
-				// grub2-install should never be run on EFI fedora systems
-				chk_reinstall_grub.active = false;
-				chk.sensitive = false;
-			}
-			else{
-				chk_reinstall_grub.active = true;
-				chk.sensitive = true;
-			}
-		}
-		
-		chk.toggled.connect(()=>{
-			cmb_grub_dev.sensitive = chk_reinstall_grub.active;
-			App.reinstall_grub2 = chk_reinstall_grub.active;
-			cmb_grub_dev.changed();
-		});
-		
-		App.reinstall_grub2 = chk_reinstall_grub.active;
-	}
-
-	private void add_chk_update_initramfs(Gtk.Box hbox){
-		
-		//chk_update_initramfs
-		var chk = new CheckButton.with_label(_("Update initramfs"));
-		chk.active = false;
-		chk.set_tooltip_markup(_("Re-generates initramfs for all installed kernels. This is generally not needed. Select this only if the restored system fails to boot."));
-		//chk.margin_bottom = 12;
-		add (chk);
-		chk_update_initramfs = chk;
-
-		if (App.mirror_system){
-			// initramfs must be re-generated
-			chk_update_initramfs.active = true;
-			chk.sensitive = false;
-		}
-		else{
-			chk_update_initramfs.active = false;
-			chk.sensitive = true;
-		}
-		
-		chk.toggled.connect(()=>{
-			App.update_initramfs = chk_update_initramfs.active;
-		});
-		
-		App.update_initramfs = chk_update_initramfs.active;
-	}
-
-	private void add_chk_update_grub(Gtk.Box hbox){
-		
-		//chk_update_grub
-		var chk = new CheckButton.with_label(_("Update GRUB menu"));
-		chk.active = false;
-		chk.set_tooltip_markup(_("Updates the GRUB menu entries (recommended). This is safe to run and should be left selected."));
-		//chk.margin_bottom = 12;
-		add (chk);
-		chk_update_grub = chk;
-
-		if (App.mirror_system){
-			// GRUB menu must be updated
-			chk_update_grub.active = true;
-			chk.sensitive = false;
-		}
-		else{
-			chk_update_grub.active = true;
-			chk.sensitive = true;
-		}
-		
-		chk.toggled.connect(()=>{
-			App.update_grub = chk_update_grub.active;
-		});
-		
-		App.update_grub = chk_update_grub.active;
-	}
-
-	private void save_grub_device_selection(){
-		
-		App.grub_device = "";
-		
-		if (App.reinstall_grub2){
-			Device entry;
-			TreeIter iter;
-			bool ok = cmb_grub_dev.get_active_iter (out iter);
-			if (!ok) { return; } // not selected
-			TreeModel model = (TreeModel) cmb_grub_dev.model;
-			model.get(iter, 0, out entry);
-			App.grub_device = entry.device;
-		}
-	}
-
-	private void refresh_cmb_grub_dev(){
-		var store = new Gtk.ListStore(2, typeof(Device), typeof(Gdk.Pixbuf));
-
-		Gdk.Pixbuf pix_device = get_shared_icon("drive-harddisk","disk.png",16).pixbuf;
-
-		TreeIter iter;
-		foreach(Device dev in Device.get_block_devices_using_lsblk()) {
-			
-			// select disk and normal partitions, skip others (loop crypt rom lvm)
-			if ((dev.type != "disk") && (dev.type != "part")){
-				continue;
-			}
-
-			// skip luks and lvm2 partitions
-			if ((dev.fstype == "luks")||(dev.fstype == "lvm2")){
-				continue;
-			}
-
-			// skip extended partitions
-			if (dev.size_bytes < 10 * KB){
-				continue;
-			}
-
-			store.append(out iter);
-			store.set (iter, 0, dev);
-			store.set (iter, 1, pix_device);
-		}
-
-		cmb_grub_dev.model = store;
-
-		cmb_grub_dev_select_default();
-	}
-
-	private void cmb_grub_dev_select_default(){
-
-		if ((cmb_grub_dev == null) || (cmb_grub_dev.model == null)){
-			return;
-		}
-		
-		log_debug("RestoreDeviceBox: cmb_grub_dev_select_default()");
-		
-		if (App.dst_root == null){
-			cmb_grub_dev.active = -1;
-			return;
-		}
-
-		var grub_dev = App.dst_root;
-		while (grub_dev.has_parent()){
-			grub_dev = grub_dev.parent;
-		}
-
-		if ((grub_dev == null) || (grub_dev.type != "disk")){
-			cmb_grub_dev.active = -1;
-			return;
-		}
-
-		TreeIter iter;
-		var store = (Gtk.ListStore) cmb_grub_dev.model;
-		int index = -1;
-		int active = -1;
-		
-		for (bool next = store.get_iter_first (out iter); next; next = store.iter_next (ref iter)) {
-			
-			Device dev_iter;
-			store.get(iter, 0, out dev_iter);
-			
-			index++;
-			
-			if (dev_iter.device == grub_dev.device){
-				active = index;
-				break;
-			}
-		}
-
-		cmb_grub_dev.active = active;
-
-		log_debug("RestoreDeviceBox: cmb_grub_dev_select_default(): exit");
-	}
 
 	private void create_infobar_location(){
 		var infobar = new Gtk.InfoBar();
@@ -642,33 +435,83 @@ class RestoreDeviceBox : Gtk.Box{
 
 	public bool check_and_mount_devices(){
 
-		// check if all partitions are selected
-		
-		foreach(var entry in App.mount_list){
-			if (entry.device == null){
-				string title = _("Partition Not Selected");
-				string msg = _("Select the partition for mount path")
-					+ " '%s'".printf(entry.mount_point);
-				gtk_messagebox(title, msg, parent_window, true);
-				return false;
-			}
-		}
-
-		// TODO: check on next
-
-		//check if grub device selected ---------------
-
-		if (chk_reinstall_grub.active && (cmb_grub_dev.active < 0)){
-			string title =_("GRUB device not selected");
-			string msg = _("Please select the GRUB device");
-			gtk_messagebox(title, msg, parent_window, true);
-			return false;
-		}
-
 		// check if we are restoring the current system
 		
 		if (App.dst_root == App.sys_root){
 			return true; // all required devices are already mounted
+		}
+		
+		// check if target device is selected for /
+		
+		foreach(var entry in App.mount_list){
+			if ((entry.mount_point == "/") && (entry.device == null)){
+				
+				gtk_messagebox(
+					_("Root device not selected"),
+					_("Select the device for root file system (/)"),
+					parent_window, true);
+				
+				return false;
+			}
+		}
+
+		// verify that target device for / is not same as system in clone mode
+		
+		if (App.mirror_system){
+
+			foreach(var entry in App.mount_list){
+				if (entry.mount_point != "/"){ continue; }
+
+				bool same = false;
+				if (entry.device.uuid == App.sys_root.uuid){
+					same = true;
+				}
+				else if (entry.device.has_parent() && App.sys_root.has_parent()){
+					if (entry.device.uuid == App.sys_root.parent.uuid){
+						same = true;
+					}
+				}
+				
+				if (same){
+					
+					gtk_messagebox(
+						_("Target device is same as system device"),
+						_("Select another device for root file system (/)"),
+						parent_window, true);
+						
+					return false;
+				}
+
+				break;
+			}
+		}
+
+		// check if /boot device is selected for luks partitions
+		
+		foreach(var entry in App.mount_list){
+			if ((entry.mount_point == "/boot") && (entry.device == null)){
+
+				if ((App.dst_root != null) && (App.dst_root.is_on_encrypted_partition())){
+
+					gtk_messagebox(
+						_("Boot device not selected"),
+						_("An encrypted device is selected for root file system (/). The boot directory (/boot) must be mounted on a non-encrypted device for the system to boot successfully.\n\nEither select a non-encrypted device for boot directory or select a non-encrypted device for root filesystem."),
+						parent_window, true);
+
+					return false;
+				}
+			}
+		}
+
+		
+		
+		//check if grub device selected ---------------
+
+		if (App.reinstall_grub2 && (App.grub_device.length == 0)){
+			string title =_("GRUB device not selected");
+			string msg = _("Please select the GRUB device");
+			gtk_messagebox(title, msg, parent_window, true);
+			return false;
 		}
 
 		// check BTRFS subvolume layout --------------

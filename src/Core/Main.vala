@@ -143,12 +143,12 @@ public class Main : GLib.Object{
 
 	public Main(string[] args, bool gui_mode){
 
+		parse_arguments_debug_mode(args);
+
 		if (gui_mode){
 			app_mode = "";
 			parent_window = new Gtk.Window(); // dummy
 		}
-
-		parse_arguments_debug_mode(args);
 
 		log_debug("Main()");
 
@@ -365,6 +365,39 @@ public class Main : GLib.Object{
 				case "--debug":
 					LOG_COMMANDS = true;
 					LOG_DEBUG = true;
+					break;
+					
+				case "--backup":
+					app_mode = "backup";
+					break;
+
+				case "--delete":
+					app_mode = "delete";
+					break;
+
+				case "--delete-all":
+					app_mode = "delete-all";
+					break;
+
+				case "--restore":
+					app_mode = "restore";
+					break;
+
+				case "--clone":
+					app_mode = "restore";
+					break;
+
+				case "--backup-now":
+					app_mode = "ondemand";
+					break;
+
+				case "--list":
+				case "--list-snapshots":
+					app_mode = "list-snapshots";
+					break;
+
+				case "--list-devices":
+					app_mode = "list-devices";
 					break;
 			}
 		}
@@ -1822,14 +1855,16 @@ public class Main : GLib.Object{
 				}
 			}
 
-			if (ok){
-				log_msg(_("Restore completed"));
-				thr_success = true;
+			log_msg(_("Restore completed"));
+			thr_success = true;
+				
+			/*if (ok){
+				
 			}
 			else{
 				log_error(_("Restore completed with errors"));
 				thr_success = false;
-			}
+			}*/
 
 			// unmount ----------
 			
@@ -2166,6 +2201,8 @@ public class Main : GLib.Object{
 		log_debug(sh_finish);
 		
 		int ret_val = exec_script_sync(sh_finish, null, null, false, false, false, true);
+
+		log_debug("script exit code: %d".printf(ret_val));
 
 		return (ret_val == 0);
 	}

@@ -671,7 +671,7 @@ public class SnapshotRepo : GLib.Object{
 			if (bak.tags.size == 0){
 
 				if (show_msg){
-					log_msg(_("Removing snapshots") + " : " + _("un-tagged") + "...");
+					log_msg("%s (%s):".printf(_("Removing snapshots"), _("un-tagged")));
 					show_msg = false;
 				}
 
@@ -690,7 +690,7 @@ public class SnapshotRepo : GLib.Object{
 			if (bak.marked_for_deletion){
 				
 				if (show_msg){
-					log_msg(_("Removing snapshots") + " : " + _("marked for deletion") + "...");
+					log_msg("%s (%s):".printf(_("Removing snapshots"), _("marked for deletion")));
 					show_msg = false;
 				}
 				
@@ -708,7 +708,7 @@ public class SnapshotRepo : GLib.Object{
 		foreach(var bak in invalid_snapshots){
 
 			if (show_msg){
-				log_msg(_("Removing snapshots") + " : " + _("invalid") + "...");
+				log_msg("%s (%s):".printf(_("Removing snapshots"), _("incomplete")));
 				show_msg = false;
 			}
 				

@@ -624,7 +624,7 @@ public class AppConsole : GLib.Object {
 						_("Enter device name or number (a=Abort)") + ": ");
 					stdout.flush();
 
-					dev = read_stdin_device(list);
+					dev = read_stdin_device(list, "");
 				}
 
 				log_msg("");
@@ -815,7 +815,7 @@ public class AppConsole : GLib.Object {
 					if (attempts > 3) { break; }
 					
 					stdout.printf("" +
-						_("[a = Abort, d = Default (%s), r = Root device]").printf(default_device) + "\n\n");
+						_("[ENTER = Default (%s), r = Root device, a = Abort]").printf(default_device) + "\n\n");
 						
 					stdout.printf(
 						_("Enter device name or number")
@@ -861,6 +861,10 @@ public class AppConsole : GLib.Object {
 
 	private void select_grub_device(){
 
+		var grub_device_default = App.grub_device;
+		App.reinstall_grub2 = false;
+		App.grub_device = "";
+		
 		if (App.cmd_grub_device.length > 0){
 
 			log_debug("Grub device is specified as command argument");
@@ -911,7 +915,7 @@ public class AppConsole : GLib.Object {
 				while ((App.cmd_skip_grub == false) && (App.reinstall_grub2 == false)){
 					attempts++;
 					if (attempts > 3) { break; }
-					stdout.printf(_("Re-install GRUB2 bootloader? (y/n)") + ": ");
+					stdout.printf(_("Re-install GRUB2 bootloader (recommended) ? (y/n)") + ": ");
 					stdout.flush();
 					read_stdin_grub_install();
 				}
@@ -936,7 +940,12 @@ public class AppConsole : GLib.Object {
 				
 				attempts++;
 				if (attempts > 3) { break; }
-				
+
+				if (grub_device_default.length > 0){
+					stdout.printf("" +
+						_("[ENTER = Default (%s), a = Abort]").printf(grub_device_default) + "\n\n");
+				}
+
 				stdout.printf(_("Enter device name or number (a=Abort)") + ": ");
 				stdout.flush();
 
@@ -949,7 +958,7 @@ public class AppConsole : GLib.Object {
 					}
 				}
 				
-				Device dev = read_stdin_device(device_list);
+				Device dev = read_stdin_device(device_list, grub_device_default);
 				if (dev != null) { App.grub_device = dev.device; }
 			}
 			
@@ -1005,7 +1014,7 @@ public class AppConsole : GLib.Object {
 		}
 	}
 	
-	private Device? read_stdin_device(Gee.ArrayList<Device> device_list){
+	private Device? read_stdin_device(Gee.ArrayList<Device> device_list, string device_default){
 		var counter = new TimeoutCounter();
 		counter.exit_on_timeout();
 		string? line = stdin.read_line();
@@ -1019,8 +1028,13 @@ public class AppConsole : GLib.Object {
 			log_msg(_("Aborted."));
 			App.exit_app(0);
 		}
-		else if ((line == null)||(line.length == 0)){
-			log_error("Invalid input");
+		else if ((line == null)||(line.length == 0)||(line.down() == "c")||(line.down() == "d")){
+			if (device_default.length > 0){
+				selected_device = Device.get_device_by_name(device_default);
+			}
+			else{
+				log_error("Invalid input");
+			}
 		}
 		else if (line.contains("/")){
 			selected_device = Device.get_device_by_name(line);

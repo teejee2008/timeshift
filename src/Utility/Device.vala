@@ -812,7 +812,7 @@ public class Device : GLib.Object{
 						pi.device = val.strip();
 						break;
 					case 2: //mountpoint
-						mp.mount_point = val.strip().replace("\040"," "); // replace space. TODO: other chars?
+						mp.mount_point = val.strip().replace("""\040"""," "); // replace space. TODO: other chars?
 						if (!mount_list.contains(mp.mount_point)){
 							mount_list.add(mp.mount_point);
 							pi.mount_points.add(mp);

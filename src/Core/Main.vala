@@ -1985,7 +1985,7 @@ public class Main : GLib.Object{
 		// update initramfs --------------
 
 		if (update_initramfs){
-
+			sh += "echo '' \n";
 			sh += "echo '" + _("Generating initramfs...") + "' \n";
 			
 			if (target_distro.dist_type == "redhat"){
@@ -2001,7 +2001,7 @@ public class Main : GLib.Object{
 		// update grub menu --------------
 
 		if (update_grub){
-
+			sh += "echo '' \n";
 			sh += "echo '" + _("Updating GRUB menu...") + "' \n";
 			
 			if (target_distro.dist_type == "redhat"){
@@ -2014,22 +2014,21 @@ public class Main : GLib.Object{
 				sh += "%s update-grub \n".printf(chroot);
 			}
 
+			sh += "sync \n";
 			sh += "echo '' \n";
 		}
 		
 		// sync file systems
 		sh += "echo '" + _("Synching file systems...") + "' \n";
-		sh += "sync \n";
+		sh += "sync ; sleep 10s; \n";
 		sh += "echo '' \n";
 
-		// unmount chrooted system
-		sh += "echo '" + _("Cleaning up...") + "' \n";
-
 		if (!restore_current_system){
+			// unmount chrooted system
+			sh += "echo '" + _("Cleaning up...") + "' \n";
 			sh += "for i in dev/pts dev proc run sys; do umount -f \"%s$i\"; done \n".printf(restore_target_path);
+			sh += "sync \n";
 		}
-		
-		sh += "sync \n";
 
 		log_debug("GRUB2 install script:");
 		log_debug(sh);
@@ -2981,6 +2980,8 @@ public class Main : GLib.Object{
 			CronTab.remove_job(entry, false, true);
 		}
 
+		CronTab.clear_cached_text();
+		
 		//entry = "^@(daily|weekly|monthly|hourly) timeshift --backup$";
 		//CronTab.remove_job(entry, true);
 

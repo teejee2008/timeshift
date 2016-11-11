@@ -562,6 +562,14 @@ public class AppConsole : GLib.Object {
 		select_snapshot_device(true);
 
 		select_snapshot_for_restore();
+		
+		stdout.printf(_("\n\n"));
+		log_msg(string.nfill(78, '*'));
+		stdout.printf(_("To restore with default options, press the ENTER key for all prompts!") + "\n");
+		log_msg(string.nfill(78, '*'));
+		stdout.printf(_("\nPress ENTER to continue..."));
+		stdout.flush();
+		stdin.read_line();
 
 		init_mounts();
 
@@ -861,7 +869,8 @@ public class AppConsole : GLib.Object {
 
 	private void select_grub_device(){
 
-		var grub_device_default = App.grub_device;
+		string grub_device_default = App.grub_device;
+		bool grub_reinstall_default = App.reinstall_grub2;
 		App.reinstall_grub2 = false;
 		App.grub_device = "";
 		
@@ -915,9 +924,9 @@ public class AppConsole : GLib.Object {
 				while ((App.cmd_skip_grub == false) && (App.reinstall_grub2 == false)){
 					attempts++;
 					if (attempts > 3) { break; }
-					stdout.printf(_("Re-install GRUB2 bootloader (recommended) ? (y/n)") + ": ");
+					stdout.printf(_("Re-install GRUB2 bootloader?") + (grub_reinstall_default ? " (recommended)" : "") + " (y/n): ");
 					stdout.flush();
-					read_stdin_grub_install();
+					read_stdin_grub_install(grub_reinstall_default);
 				}
 
 				if ((App.cmd_skip_grub == false) && (App.reinstall_grub2 == false)){
@@ -1164,7 +1173,7 @@ public class AppConsole : GLib.Object {
 		return selected_snapshot;
 	}
 
-	private bool read_stdin_grub_install(){
+	private bool read_stdin_grub_install(bool reinstall_default){
 		var counter = new TimeoutCounter();
 		counter.exit_on_timeout();
 		string? line = stdin.read_line();
@@ -1173,8 +1182,9 @@ public class AppConsole : GLib.Object {
 		line = (line != null) ? line.strip() : line;
 
 		if ((line == null)||(line.length == 0)){
-			log_error("Invalid input");
-			return false;
+			App.reinstall_grub2 = reinstall_default;
+			App.cmd_skip_grub = !reinstall_default;
+			return true;
 		}
 		else if (line.down() == "a"){
 			log_msg("Aborted.");

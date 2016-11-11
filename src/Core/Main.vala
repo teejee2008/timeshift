@@ -1869,6 +1869,19 @@ public class Main : GLib.Object{
 			// unmount ----------
 			
 			unmount_target_device(false);
+
+			// check and repair file system errors
+			
+			if (!restore_current_system){
+				string sh_fsck = "echo '" + _("Checking file systems for errors...") + "' \n";
+				foreach(var mnt in mount_list){
+					if (mnt.device != null) {
+						sh_fsck += "fsck -y %s \n".printf(mnt.device.device);
+					}
+				}
+				sh_fsck += "echo '' \n";
+				int ret_val = exec_script_sync(sh_fsck, null, null, false, false, false, true);
+			}
 		}
 		catch(Error e){
 			log_error (e.message);
@@ -2022,7 +2035,7 @@ public class Main : GLib.Object{
 		sh += "echo '" + _("Synching file systems...") + "' \n";
 		sh += "sync ; sleep 10s; \n";
 		sh += "echo '' \n";
-
+		
 		if (!restore_current_system){
 			// unmount chrooted system
 			sh += "echo '" + _("Cleaning up...") + "' \n";

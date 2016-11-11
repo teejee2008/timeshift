@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timeshift 1.6\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2016-11-11 21:40+0530\n"
+"POT-Creation-Date: 2016-11-11 22:04+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,17 +17,31 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: Console/AppConsole.vala:562
+#, c-format
+msgid ""
+"\n"
+"\n"
+msgstr ""
+
+#: Console/AppConsole.vala:566
+#, c-format
+msgid ""
+"\n"
+"Press ENTER to continue..."
+msgstr ""
+
 #: Core/SnapshotRepo.vala:485
 #, c-format
 msgid "%d snapshots, %s free"
 msgstr ""
 
-#: Console/AppConsole.vala:851
+#: Console/AppConsole.vala:859
 #, c-format
 msgid "'%s' will be on '%s'"
 msgstr ""
 
-#: Console/AppConsole.vala:848
+#: Console/AppConsole.vala:856
 #, c-format
 msgid "'%s' will be on root device"
 msgstr ""
@@ -80,10 +94,10 @@ msgstr ""
 msgid "<b>System:</b> Installed Linux distribution"
 msgstr ""
 
-#: Console/AppConsole.vala:634 Console/AppConsole.vala:699
-#: Console/AppConsole.vala:831 Console/AppConsole.vala:925
-#: Console/AppConsole.vala:970 Console/AppConsole.vala:1011
-#: Console/AppConsole.vala:1028
+#: Console/AppConsole.vala:642 Console/AppConsole.vala:707
+#: Console/AppConsole.vala:839 Console/AppConsole.vala:934
+#: Console/AppConsole.vala:979 Console/AppConsole.vala:1020
+#: Console/AppConsole.vala:1037
 msgid "Aborted."
 msgstr ""
 
@@ -334,7 +348,7 @@ msgstr ""
 msgid "Completed With Errors"
 msgstr ""
 
-#: Console/AppConsole.vala:1004
+#: Console/AppConsole.vala:1013
 #, c-format
 msgid "Continue with restore? (y/n): "
 msgstr ""
@@ -344,8 +358,8 @@ msgstr ""
 msgid "Contributions"
 msgstr ""
 
-#: Console/AppConsole.vala:605 Console/AppConsole.vala:771
-#: Console/AppConsole.vala:901 Core/Main.vala:2546
+#: Console/AppConsole.vala:613 Console/AppConsole.vala:779
+#: Console/AppConsole.vala:910 Core/Main.vala:2546
 msgid "Could not find device"
 msgstr ""
 
@@ -354,7 +368,7 @@ msgstr ""
 msgid "Could not find file"
 msgstr ""
 
-#: Console/AppConsole.vala:668
+#: Console/AppConsole.vala:676
 msgid "Could not find snapshot"
 msgstr ""
 
@@ -577,12 +591,12 @@ msgstr ""
 msgid "Encrypted Device"
 msgstr ""
 
-#: Console/AppConsole.vala:821
+#: Console/AppConsole.vala:829
 #, c-format
 msgid "Enter device name or number"
 msgstr ""
 
-#: Console/AppConsole.vala:624 Console/AppConsole.vala:949
+#: Console/AppConsole.vala:632 Console/AppConsole.vala:958
 #, c-format
 msgid "Enter device name or number (a=Abort)"
 msgstr ""
@@ -596,7 +610,7 @@ msgstr ""
 msgid "Enter path or browse for directory"
 msgstr ""
 
-#: Console/AppConsole.vala:691
+#: Console/AppConsole.vala:699
 #, c-format
 msgid "Enter snapshot number (a=Abort, p=Previous, n=Next)"
 msgstr ""
@@ -681,9 +695,9 @@ msgstr ""
 msgid "Failed to export crontab file"
 msgstr ""
 
-#: Console/AppConsole.vala:633 Console/AppConsole.vala:698
-#: Console/AppConsole.vala:830 Console/AppConsole.vala:924
-#: Console/AppConsole.vala:969 Console/AppConsole.vala:1010
+#: Console/AppConsole.vala:641 Console/AppConsole.vala:706
+#: Console/AppConsole.vala:838 Console/AppConsole.vala:933
+#: Console/AppConsole.vala:978 Console/AppConsole.vala:1019
 msgid "Failed to get input from user in 3 attempts"
 msgstr ""
 
@@ -817,7 +831,7 @@ msgstr ""
 msgid "Free space"
 msgstr ""
 
-#: Console/AppConsole.vala:978
+#: Console/AppConsole.vala:987
 msgid "GRUB Device"
 msgstr ""
 
@@ -825,7 +839,7 @@ msgstr ""
 msgid "GRUB device not selected"
 msgstr ""
 
-#: Console/AppConsole.vala:983
+#: Console/AppConsole.vala:992
 msgid "GRUB will NOT be reinstalled"
 msgstr ""
 
@@ -1121,7 +1135,7 @@ msgstr ""
 msgid "No snapshots found"
 msgstr ""
 
-#: Console/AppConsole.vala:677
+#: Console/AppConsole.vala:685
 msgid "No snapshots found on device"
 msgstr ""
 
@@ -1301,9 +1315,9 @@ msgid ""
 "needed. Select this only if the restored system fails to boot."
 msgstr ""
 
-#: Console/AppConsole.vala:918
+#: Console/AppConsole.vala:927
 #, c-format
-msgid "Re-install GRUB2 bootloader (recommended) ? (y/n)"
+msgid "Re-install GRUB2 bootloader?"
 msgstr ""
 
 #: Core/Main.vala:1947
@@ -1431,12 +1445,12 @@ msgstr ""
 msgid "Scheduled snapshots are enabled"
 msgstr ""
 
-#: Console/AppConsole.vala:807
+#: Console/AppConsole.vala:815
 #, c-format
 msgid "Select '%s' device (default = %s)"
 msgstr ""
 
-#: Console/AppConsole.vala:934
+#: Console/AppConsole.vala:943
 msgid "Select GRUB device"
 msgstr ""
 
@@ -1497,7 +1511,7 @@ msgstr ""
 msgid "Select applications to exclude from restore"
 msgstr ""
 
-#: Console/AppConsole.vala:614
+#: Console/AppConsole.vala:622
 msgid "Select backup device"
 msgstr ""
 
@@ -1509,7 +1523,7 @@ msgstr ""
 msgid "Select file(s)"
 msgstr ""
 
-#: Console/AppConsole.vala:683
+#: Console/AppConsole.vala:691
 msgid "Select snapshot"
 msgstr ""
 
@@ -1827,6 +1841,12 @@ msgstr ""
 msgid "Timestamp"
 msgstr ""
 
+#: Console/AppConsole.vala:564
+#, c-format
+msgid ""
+"To restore with default options, keep pressing the ENTER key for all prompts!"
+msgstr ""
+
 #: Utility/Gtk/AboutWindow.vala:356
 #, c-format
 msgid "Translators"
@@ -1978,12 +1998,12 @@ msgid ""
 "fails to boot."
 msgstr ""
 
-#: Console/AppConsole.vala:946
+#: Console/AppConsole.vala:955
 #, c-format
 msgid "[ENTER = Default (%s), a = Abort]"
 msgstr ""
 
-#: Console/AppConsole.vala:818
+#: Console/AppConsole.vala:826
 #, c-format
 msgid "[ENTER = Default (%s), r = Root device, a = Abort]"
 msgstr ""

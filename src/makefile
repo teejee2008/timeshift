@@ -78,6 +78,7 @@ uninstall:
 
 	#binary
 	rm -f "$(DESTDIR)$(bindir)/${app_name}"
+	rm -f "$(DESTDIR)$(bindir)/${app_name}-gtk"
 	rm -f "$(DESTDIR)$(bindir)/${app_name}-uninstall"
 	rm -f "$(DESTDIR)$(bindir)/${app_name}-launcher"
 

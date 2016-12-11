@@ -55,10 +55,12 @@ class MainWindow : Gtk.Window{
 	private Gtk.Label lbl_shield;
 	private Gtk.Label lbl_shield_subnote;
 	private Gtk.Label lbl_snap_count;
+	private Gtk.Label lbl_snap_count_subnote;
 	private Gtk.Label lbl_free_space;
-	private Gtk.Box vbox_snap_count;
-	private Gtk.Box vbox_free_space;
-
+	private Gtk.Label lbl_free_space_subnote;
+	private Gtk.ScrolledWindow scrolled_snap_count;
+	private Gtk.ScrolledWindow scrolled_free_space;
+	
 	//timers
 	private uint tmr_init;
 	private int def_width = 650;
@@ -259,10 +261,12 @@ class MainWindow : Gtk.Window{
         box.add(img_shield);
 
 		var vbox = new Box (Orientation.VERTICAL, 6);
+		vbox.margin_right = 6;
         box.add (vbox);
         
 		//lbl_shield
 		lbl_shield = add_label(vbox, "");
+		lbl_shield.margin_top = 6;
         lbl_shield.yalign = (float) 0.5;
 		lbl_shield.hexpand = true;
 		
@@ -276,27 +280,73 @@ class MainWindow : Gtk.Window{
 		//vbox.set_child_packing(lbl_shield_subnote, true, false, 0, PackType.START);
 
 		// snap_count
+		//vbox = new Box (Orientation.VERTICAL, 6);
+		//vbox.set_no_show_all(true);
+        //box.add (vbox);
+        //vbox_snap_count = vbox;
+
+        scrolled = new ScrolledWindow(null, null);
+		scrolled.set_shadow_type (ShadowType.ETCHED_IN);
+		scrolled.hscrollbar_policy = Gtk.PolicyType.NEVER;
+		scrolled.vscrollbar_policy = Gtk.PolicyType.NEVER;
+		scrolled.set_no_show_all(true);
+		box.add (scrolled);
+		
 		vbox = new Box (Orientation.VERTICAL, 6);
-		vbox.set_no_show_all(true);
-        box.add (vbox);
-        vbox_snap_count = vbox;
+		vbox.margin = 6;
+        scrolled.add(vbox);
+        scrolled_snap_count = scrolled;
 
-		lbl_snap_count = new Label("<b>" + _("0.0%") + "</b>");
-		lbl_snap_count.set_use_markup(true);
-		lbl_snap_count.justify = Gtk.Justification.CENTER;
-		vbox.add(lbl_snap_count);
+        var label = new Label("<b>" + _("0.0%") + "</b>");
+		label.set_use_markup(true);
+		label.justify = Gtk.Justification.CENTER;
+		vbox.pack_start(label, true, true, 0);
+		lbl_snap_count = label;
+		
+		label = new Label(_("Snaps"));
+		label.justify = Gtk.Justification.CENTER;
+		vbox.pack_start(label, false, false, 0);
 
+		label = new Label("");
+		label.set_use_markup(true);
+		label.justify = Gtk.Justification.CENTER;
+		vbox.pack_start(label, false, false, 0);
+		lbl_snap_count_subnote = label;
+		
 		// free space
+		//vbox = new Box (Orientation.VERTICAL, 6);
+		//vbox.set_no_show_all(true);
+        //box.add(vbox);
+        //vbox_free_space = vbox;
+
+        scrolled = new ScrolledWindow(null, null);
+		scrolled.set_shadow_type (ShadowType.ETCHED_IN);
+		scrolled.hscrollbar_policy = Gtk.PolicyType.NEVER;
+		scrolled.vscrollbar_policy = Gtk.PolicyType.NEVER;
+		scrolled.set_no_show_all(true);
+		box.add (scrolled);
+		
 		vbox = new Box (Orientation.VERTICAL, 6);
-		vbox.set_no_show_all(true);
-        box.add(vbox);
-        vbox_free_space = vbox;
+		vbox.margin = 6;
+        scrolled.add(vbox);
+        scrolled_free_space = scrolled;
 
-		lbl_free_space = new Label("<b>" + _("0.0%") + "</b>");
-		lbl_free_space.set_use_markup(true);
-		lbl_free_space.justify = Gtk.Justification.CENTER;
-		vbox.add(lbl_free_space);
+		label = new Label("<b>" + _("0.0%") + "</b>");
+		label.set_use_markup(true);
+		label.justify = Gtk.Justification.CENTER;
+		vbox.pack_start(label, true, true, 0);
+		lbl_free_space = label;
+		
+		label = new Label(_("Available"));
+		label.justify = Gtk.Justification.CENTER;
+		vbox.pack_start(label, false, false, 0);
 
+		label = new Label("");
+		label.set_use_markup(true);
+		label.justify = Gtk.Justification.CENTER;
+		vbox.pack_start(label, false, false, 0);
+		lbl_free_space_subnote = label;
+		
 		// TODO: medium: add a refresh button for device when device is offline
 
 		// TODO: low: refresh device list automatically when a device is plugged in
@@ -1023,28 +1073,31 @@ class MainWindow : Gtk.Window{
 				break;
 			}
 
-			vbox_snap_count.hide();
-			vbox_free_space.hide();
+			scrolled_snap_count.hide();
+			scrolled_free_space.hide();
 			
 			switch (status_code){
 			case SnapshotLocationStatus.NO_SNAPSHOTS_NO_SPACE:
 			case SnapshotLocationStatus.NO_SNAPSHOTS_HAS_SPACE:
 			case SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE:
 			case SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE:
-				vbox_snap_count.no_show_all = false;
-				vbox_snap_count.show_all();
+				scrolled_snap_count.no_show_all = false;
+				scrolled_snap_count.show_all();
 				
-				lbl_snap_count.label = format_text_large(
-					"%0d".printf(App.repo.snapshots.size))
-					+ "\n%s".printf(_("Snapshots"));
+				lbl_snap_count.label = format_text_large("%0d".printf(App.repo.snapshots.size));
+				string mode = App.btrfs_mode ? "btrfs" : "rsync";
+				lbl_snap_count_subnote.label = format_text(mode, false, true, false);
+				
+				scrolled_free_space.no_show_all = false;
+				scrolled_free_space.show_all();
+				
+				lbl_free_space.label = format_text_large("%s".printf(format_file_size(App.repo.device.free_bytes)));
 
-				vbox_free_space.no_show_all = false;
-				vbox_free_space.show_all();
-				
-				lbl_free_space.label = format_text_large(
-					"%s".printf(format_file_size(App.repo.device.free_bytes)))
-					+ "\n%s".printf(_("Free"));
-					
+				string devname = "(??)";
+				if ((App.repo != null) && (App.repo.device != null)){
+					devname = "%s".printf(App.repo.device.device);
+				}
+				lbl_free_space_subnote.label = format_text(devname, false, true, false);
 				break;
 			}
 		}

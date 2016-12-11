@@ -163,6 +163,72 @@ public class FsTabEntry : GLib.Object{
 		return null;
 	}
 
+	
+	public Device? resolve_device(Gee.ArrayList<CryptTabEntry> crypttab, Gtk.Window parent_window){
+		Device dev_fstab = null;
+		if (device_uuid.length > 0){
+			dev_fstab = Device.get_device_by_uuid(device_uuid);
+		}
+		else{
+			dev_fstab = Device.get_device_by_name(device_string);
+		}
+
+		if (dev_fstab == null){
+
+			/*
+			Check if the device mentioned in fstab entry is a mapped device.
+			If it is, then try finding the parent device which may be available on the current system.
+			Prompt user to unlock it if found.
+			
+			Note:
+			Mapped name may be different on running system, or it may be same.
+			Since it is not reliable, we will try to identify the parent intead of the mapped device.
+			*/
+			
+			if (device_string.has_prefix("/dev/mapper/")){
+				
+				string mapped_name = device_string.replace("/dev/mapper/","");
+				
+				foreach(var item in crypttab){
+					
+					if (item.mapped_name == mapped_name){
+
+						// we found the entry for the mapped device
+						device_string = item.device_string;
+
+						if (device_uuid.length > 0){
+							
+							// we have the parent's uuid. get the luks device and prompt user to unlock it.
+							var dev_luks = Device.get_device_by_uuid(device_uuid);
+							
+							if (dev_luks != null){
+								
+								string msg_out, msg_err;
+								var dev_unlocked = Device.luks_unlock(
+									dev_luks, "", "", parent_window, out msg_out, out msg_err);
+
+								if (dev_unlocked != null){
+									dev_fstab = dev_unlocked;
+								}
+								else{
+									dev_fstab = dev_luks; // map to parent
+								}
+							}
+						}
+						else{
+							// nothing to do: we don't have the parent's uuid
+						}
+
+						break;
+					}
+				}
+			}
+		}
+
+		return dev_fstab;
+	}
+
+
 	public void append_option(string option){
 		
 		if (!options.contains(option)){

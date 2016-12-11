@@ -107,7 +107,7 @@ class MainWindow : Gtk.Window{
 		if ((App.repo == null) || !App.repo.available()){
 			if (App.backup_parent_uuid.length > 0){
 				log_debug("repo: creating from parent uuid");
-				App.repo = new SnapshotRepo.from_uuid(App.backup_parent_uuid, this);
+				App.repo = new SnapshotRepo.from_uuid(App.backup_parent_uuid, this, App.btrfs_mode);
 			}
 		}
 
@@ -585,13 +585,12 @@ class MainWindow : Gtk.Window{
 	public void browse_selected(){
 		var sel = snapshot_list_box.treeview.get_selection ();
 		if (sel.count_selected_rows() == 0){
-			string snapshot_dir = path_combine(App.repo.snapshot_location, "timeshift/snapshots");
-			var f = File.new_for_path(snapshot_dir);
+			var f = File.new_for_path(App.repo.snapshots_path);
 			if (f.query_exists()){
-				exo_open_folder(snapshot_dir);
+				exo_open_folder(App.repo.snapshots_path);
 			}
 			else{
-				exo_open_folder(App.repo.snapshot_location);
+				exo_open_folder(App.repo.mount_path);
 			}
 			return;
 		}
@@ -605,7 +604,12 @@ class MainWindow : Gtk.Window{
 				Snapshot bak;
 				store.get (iter, 0, out bak);
 
-				exo_open_folder(bak.path + "/localhost");
+				if (App.btrfs_mode){
+					exo_open_folder(bak.path);
+				}
+				else{
+					exo_open_folder(bak.path + "/localhost");
+				}
 				return;
 			}
 			iterExists = store.iter_next (ref iter);
@@ -774,6 +778,7 @@ class MainWindow : Gtk.Window{
 		win.destroy.connect(()=>{
 			btn_settings.sensitive = true;
 			App.save_app_config();
+			App.repo.load_snapshots();
 			refresh_all();
 			this.show();
 		});
@@ -784,12 +789,25 @@ class MainWindow : Gtk.Window{
 		log_debug("MainWindow: btn_wizard_clicked()");
 		
 		btn_wizard.sensitive = false;
+
+		bool btrfs_mode_prev = App.btrfs_mode;
 		
 		var win = new SetupWizardWindow();
 		win.set_transient_for(this);
 		win.destroy.connect(()=>{
 			btn_wizard.sensitive = true;
+
+			if (btrfs_mode_prev != App.btrfs_mode){
+				if ((App.repo != null) && (App.repo.device.uuid.length > 0)){
+					App.repo = new SnapshotRepo.from_uuid(App.repo.device.uuid, this, App.btrfs_mode);
+				}
+				else{
+					App.repo = new SnapshotRepo.from_null();
+				}
+			}
+
 			App.save_app_config();
+			App.repo.load_snapshots();
 			refresh_all();
 		});
 	}

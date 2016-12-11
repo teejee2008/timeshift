@@ -36,11 +36,12 @@ class BackupWindow : Gtk.Window{
 	private Gtk.Box vbox_main;
 	private Gtk.Notebook notebook;
 	private Gtk.ButtonBox bbox_action;
-
+	
 	// tabs
 	private EstimateBox estimate_box;
 	private BackupDeviceBox backup_dev_box;
 	private BackupBox backup_box;
+	private BackupFinishBox backup_finish_box;
 
 	// actions
 	private Gtk.Button btn_prev;
@@ -51,6 +52,7 @@ class BackupWindow : Gtk.Window{
 	private uint tmr_init;
 	private int def_width = 450;
 	private int def_height = 500;
+	private bool success = false;
 
 	public BackupWindow() {
 
@@ -88,6 +90,11 @@ class BackupWindow : Gtk.Window{
 		backup_box = new BackupBox(this);
 		backup_box.margin = 0;
 		notebook.append_page (backup_box, label);
+
+		label = new Gtk.Label(_("Finish"));
+		backup_finish_box = new BackupFinishBox(this);
+		backup_finish_box.margin = 0;
+		notebook.append_page (backup_finish_box, label);
 
 		create_actions();
 
@@ -189,15 +196,20 @@ class BackupWindow : Gtk.Window{
 	private void go_first(){
 		
 		// set initial tab
-		
-		if (Main.first_snapshot_size == 0){
-			notebook.page = Tabs.ESTIMATE;
-		}
-		else if (!App.repo.available() || !App.repo.has_space()){
-			notebook.page = Tabs.BACKUP_DEVICE;
+
+		if (App.btrfs_mode){
+			notebook.page = Tabs.BACKUP;
 		}
 		else{
-			notebook.page = Tabs.BACKUP;
+			if (Main.first_snapshot_size == 0){
+				notebook.page = Tabs.ESTIMATE;
+			}
+			else if (!App.repo.available() || !App.repo.has_space()){
+				notebook.page = Tabs.BACKUP_DEVICE;
+			}
+			else{
+				notebook.page = Tabs.BACKUP;
+			}
 		}
 
 		initialize_tab();
@@ -229,6 +241,9 @@ class BackupWindow : Gtk.Window{
 			notebook.page = Tabs.BACKUP;
 			break;
 		case Tabs.BACKUP:
+			notebook.page = Tabs.BACKUP_FINISH;
+			break;
+		case Tabs.BACKUP_FINISH:
 			destroy();
 			break;
 		}
@@ -266,6 +281,13 @@ class BackupWindow : Gtk.Window{
 			btn_next.sensitive = true;
 			btn_close.sensitive = true;
 			break;
+		case Tabs.BACKUP_FINISH:
+			btn_prev.hide();
+			btn_next.hide();
+			btn_close.show();
+			btn_close.sensitive = true;
+			btn_cancel.hide();
+			break;
 		}
 
 		// actions
@@ -280,8 +302,11 @@ class BackupWindow : Gtk.Window{
 			go_next(); // validate and go next
 			break;
 		case Tabs.BACKUP:
-			backup_box.take_snapshot();
-			destroy(); // close window
+			success = backup_box.take_snapshot();
+			go_next(); // close window
+			break;
+		case Tabs.BACKUP_FINISH:
+			backup_finish_box.update_message(success);
 			break;
 		}
 	}
@@ -304,7 +329,8 @@ class BackupWindow : Gtk.Window{
 	public enum Tabs{
 		ESTIMATE = 0,
 		BACKUP_DEVICE = 1,
-		BACKUP = 2
+		BACKUP = 2,
+		BACKUP_FINISH = 3
 	}
 }
 

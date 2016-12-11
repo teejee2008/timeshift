@@ -85,7 +85,7 @@ class DeleteBox : Gtk.Box{
 		log_debug("DeleteBox: DeleteBox(): exit");
     }
 
-	public void delete_snapshots(){
+	public bool delete_snapshots(){
 
 		log_debug("DeleteBox: delete_snapshots()");
 
@@ -93,52 +93,63 @@ class DeleteBox : Gtk.Box{
 			App.delete_begin();
 		}
 
-		int wait_interval_millis = 100;
-		int status_line_counter = 0;
-		int status_line_counter_default = 1000 / wait_interval_millis;
-		string status_line = "";
-		string last_status_line = "";
-		int remaining_counter = 10;
-		
-		while (App.thread_delete_running){
-
-			status_line = escape_html(App.delete_file_task.status_line);
-
-			if (status_line != last_status_line){
-				lbl_status.label = status_line;
-				last_status_line = status_line;
-				status_line_counter = status_line_counter_default;
+		if (App.btrfs_mode){
+			while (App.thread_delete_running){
+				gtk_do_events();
+				sleep(200);
 			}
-			else{
-				status_line_counter--;
-				if (status_line_counter < 0){
-					status_line_counter = status_line_counter_default;
-					lbl_status.label = "";
-				}
-			}
-
-			double fraction = App.delete_file_task.progress;
-
-			// time remaining
-			remaining_counter--;
-			if (remaining_counter == 0){
-				lbl_remaining.label =
-					App.delete_file_task.stat_time_remaining + " remaining";
-
-				remaining_counter = 10;
-			}
-				
-			if (fraction < 0.99){
-				progressbar.fraction = fraction;
-			}
-
-			lbl_msg.label = App.delete_file_task.status_message;
-
-			gtk_do_events();
-
-			sleep(100);
 		}
+		else{
+			
+			int wait_interval_millis = 100;
+			int status_line_counter = 0;
+			int status_line_counter_default = 1000 / wait_interval_millis;
+			string status_line = "";
+			string last_status_line = "";
+			int remaining_counter = 10;
+			
+			while (App.thread_delete_running){
 
-		parent_window.destroy();
+				status_line = escape_html(App.delete_file_task.status_line);
+
+				if (status_line != last_status_line){
+					lbl_status.label = status_line;
+					last_status_line = status_line;
+					status_line_counter = status_line_counter_default;
+				}
+				else{
+					status_line_counter--;
+					if (status_line_counter < 0){
+						status_line_counter = status_line_counter_default;
+						lbl_status.label = "";
+					}
+				}
+
+				double fraction = App.delete_file_task.progress;
+
+				// time remaining
+				remaining_counter--;
+				if (remaining_counter == 0){
+					lbl_remaining.label =
+						App.delete_file_task.stat_time_remaining + " remaining";
+
+					remaining_counter = 10;
+				}
+					
+				if (fraction < 0.99){
+					progressbar.fraction = fraction;
+				}
+
+				lbl_msg.label = App.delete_file_task.status_message;
+
+				gtk_do_events();
+
+				sleep(100);
+			}
+		}
+		
+		//parent_window.destroy();
+
+		return App.thread_delete_success;
 	}
 }

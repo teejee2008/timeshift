@@ -323,10 +323,10 @@ class BackupDeviceBox : Gtk.Box{
 		gtk_set_busy(true, parent_window);
 
 		log_debug("\n");
-		log_debug("selected device: %s".printf(pi.device));
+		log_msg("selected device: %s".printf(pi.device));
 		log_debug("fstype: %s".printf(pi.fstype));
 
-		App.repo = new SnapshotRepo.from_device(pi, parent_window);
+		App.repo = new SnapshotRepo.from_device(pi, parent_window, App.btrfs_mode);
 
 		if (pi.fstype == "luks"){
 			App.update_partitions();
@@ -340,10 +340,9 @@ class BackupDeviceBox : Gtk.Box{
 				if (dev.children[0].has_linux_filesystem()){
 					
 					log_debug("has linux filesystem: %s".printf(dev.children[0].fstype));
-					log_debug("selecting child '%s' of parent '%s'".printf(
-						dev.children[0].device, dev.device));
+					log_msg("selecting child device: %s".printf(dev.children[0].device));
 						
-					App.repo = new SnapshotRepo.from_device(dev.children[0], parent_window);
+					App.repo = new SnapshotRepo.from_device(dev.children[0], parent_window, App.btrfs_mode);
 					tv_devices_refresh();
 				}
 				else{
@@ -493,6 +492,21 @@ class BackupDeviceBox : Gtk.Box{
 		foreach(var part in App.partitions) {
 
 			if (!part.has_linux_filesystem()){ continue; }
+
+			if (App.btrfs_mode){
+				if (part.is_encrypted_partition() && (!part.has_children() || (part.children[0].fstype == "btrfs"))){
+					//ok
+				}
+				else if (part.is_lvm_partition() && (!part.has_children() || (part.children[0].fstype == "btrfs"))){
+					//ok
+				}
+				else if (part.fstype == "btrfs"){
+					//ok
+				}
+				else{
+					continue;
+				}
+			}
 			
 			if (part.pkname == parent.kname) {
 				TreeIter iter1;

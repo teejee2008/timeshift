@@ -37,6 +37,7 @@ class SetupWizardWindow : Gtk.Window{
 	private Gtk.Notebook notebook;
 
 	// tabs
+	private SnapshotBackendBox backend_box;
 	private EstimateBox estimate_box;
 	private BackupDeviceBox backup_dev_box;
 	private FinishBox finish_box;
@@ -73,6 +74,11 @@ class SetupWizardWindow : Gtk.Window{
 		notebook = add_notebook(vbox_main, false, false);
 
 		Gtk.Label label;
+
+		label = new Gtk.Label(_("Backend"));
+		backend_box = new SnapshotBackendBox(this);
+		backend_box.margin = 0;
+		notebook.append_page (backend_box, label);
 		
 		label = new Gtk.Label(_("Estimate"));
 		estimate_box = new EstimateBox(this);
@@ -198,10 +204,12 @@ class SetupWizardWindow : Gtk.Window{
 	private void go_first(){
 		
 		// set initial tab
+
+		notebook.page = Tabs.SNAPSHOT_BACKEND;
 		
-		if (App.live_system()){
+		/*if (App.live_system()){
 			// skip estimate_box and go to backup_dev_box
-			notebook.page = Tabs.BACKUP_DEVICE;
+			notebook.page = Tabs.SNAPSHOT_BACKEND;
 		}
 		else{
 			if (Main.first_snapshot_size == 0){
@@ -210,16 +218,19 @@ class SetupWizardWindow : Gtk.Window{
 			else{
 				notebook.page = Tabs.BACKUP_DEVICE;
 			}
-		}
+		}*/
 
 		initialize_tab();
 	}
 	
 	private void go_prev(){
 		switch(notebook.page){
+		case Tabs.SNAPSHOT_BACKEND:
 		case Tabs.ESTIMATE:
-		case Tabs.BACKUP_DEVICE:
 			// btn_previous is disabled for this page
+			break;
+		case Tabs.BACKUP_DEVICE:
+			notebook.page = Tabs.SNAPSHOT_BACKEND;
 			break;
 		case Tabs.SCHEDULE:
 			notebook.page = Tabs.BACKUP_DEVICE;
@@ -242,8 +253,15 @@ class SetupWizardWindow : Gtk.Window{
 			destroy();
 		}
 		else{
-
 			switch(notebook.page){
+			case Tabs.SNAPSHOT_BACKEND:
+				if (App.btrfs_mode){
+					notebook.page = Tabs.BACKUP_DEVICE;
+				}
+				else{
+					notebook.page = Tabs.ESTIMATE; // rsync mode only
+				}
+				break;
 			case Tabs.ESTIMATE:
 				notebook.page = Tabs.BACKUP_DEVICE;
 				break;
@@ -282,13 +300,18 @@ class SetupWizardWindow : Gtk.Window{
 		btn_close.show();
 			
 		switch(notebook.page){
+		case Tabs.SNAPSHOT_BACKEND:
+			btn_prev.sensitive = false;
+			btn_next.sensitive = true;
+			btn_close.sensitive = true;
+			break;
 		case Tabs.ESTIMATE:
 			btn_prev.sensitive = false;
 			btn_next.sensitive = false;
 			btn_close.sensitive = false;
 			break;
 		case Tabs.BACKUP_DEVICE:
-			btn_prev.sensitive = false;
+			btn_prev.sensitive = true;
 			btn_next.sensitive = !App.live_system();
 			btn_close.sensitive = true;
 			break;
@@ -307,9 +330,17 @@ class SetupWizardWindow : Gtk.Window{
 		// actions
 
 		switch(notebook.page){
+		case Tabs.SNAPSHOT_BACKEND:
+			backend_box.refresh();
+			break;
 		case Tabs.ESTIMATE:
-			estimate_box.estimate_system_size();
-			go_next();
+			if (App.btrfs_mode){
+				go_next();
+			}
+			else{
+				estimate_box.estimate_system_size();
+				go_next();
+			}
 			break;
 		case Tabs.BACKUP_DEVICE:
 			backup_dev_box.refresh();
@@ -324,8 +355,11 @@ class SetupWizardWindow : Gtk.Window{
 	}
 
 	private bool validate_current_tab(){
-		
-		if (notebook.page == Tabs.BACKUP_DEVICE){
+
+		if (notebook.page == Tabs.SNAPSHOT_BACKEND){
+			backend_box.init_backend();
+		}
+		else if (notebook.page == Tabs.BACKUP_DEVICE){
 			if (!App.repo.available() || !App.repo.has_space()){
 				
 				gtk_messagebox(App.repo.status_message,
@@ -339,10 +373,11 @@ class SetupWizardWindow : Gtk.Window{
 	}
 
 	public enum Tabs{
-		ESTIMATE = 0,
-		BACKUP_DEVICE = 1,
-		SCHEDULE = 2,
-		FINISH = 3
+		SNAPSHOT_BACKEND = 0,
+		ESTIMATE = 1,
+		BACKUP_DEVICE = 2,
+		SCHEDULE = 3,
+		FINISH = 4
 	}
 }
 

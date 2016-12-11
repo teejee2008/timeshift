@@ -604,7 +604,7 @@ public class AppConsole : GLib.Object {
 			//set backup device from command line argument
 			var cmd_dev = Device.get_device_by_name(App.cmd_backup_device);
 			if (cmd_dev != null){
-				App.repo = new SnapshotRepo.from_device(cmd_dev, null);
+				App.repo = new SnapshotRepo.from_device(cmd_dev, null, App.btrfs_mode);
 				if (!App.repo.available()){
 					App.exit_app(1);
 				}
@@ -643,7 +643,7 @@ public class AppConsole : GLib.Object {
 					App.exit_app(1);
 				}
 
-				App.repo = new SnapshotRepo.from_device(dev, null);
+				App.repo = new SnapshotRepo.from_device(dev, null, App.btrfs_mode);
 				if (!App.repo.available()){
 					App.exit_app(1);
 				}

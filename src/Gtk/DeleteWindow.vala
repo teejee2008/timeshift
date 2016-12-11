@@ -40,6 +40,7 @@ class DeleteWindow : Gtk.Window{
 	// tabs
 	private SnapshotListBox snapshot_list_box;
 	private DeleteBox delete_box;
+	private DeleteFinishBox delete_finish_box;
 
 	// actions
 	private Gtk.Button btn_prev;
@@ -51,7 +52,8 @@ class DeleteWindow : Gtk.Window{
 	private uint tmr_init;
 	private int def_width = 450;
 	private int def_height = 500;
-
+	private bool success = false;
+	
 	public DeleteWindow() {
 
 		log_debug("DeleteWindow: DeleteWindow()");
@@ -94,6 +96,11 @@ class DeleteWindow : Gtk.Window{
 		delete_box = new DeleteBox(this);
 		delete_box.margin = 0;
 		notebook.append_page (delete_box, label);
+
+		label = new Gtk.Label(_("Finish"));
+		delete_finish_box = new DeleteFinishBox(this);
+		delete_finish_box.margin = 0;
+		notebook.append_page (delete_finish_box, label);
 
 		create_actions();
 
@@ -236,6 +243,9 @@ class DeleteWindow : Gtk.Window{
 			notebook.page = Tabs.DELETE;
 			break;
 		case Tabs.DELETE:
+			notebook.page = Tabs.DELETE_FINISH;
+			break;
+		case Tabs.DELETE_FINISH:
 			destroy();
 			break;
 		}
@@ -274,6 +284,13 @@ class DeleteWindow : Gtk.Window{
 			btn_next.sensitive = true;
 			btn_close.sensitive = true;
 			break;
+		case Tabs.DELETE_FINISH:
+			btn_prev.hide();
+			btn_next.hide();
+			btn_close.show();
+			btn_hide.hide();
+			btn_cancel.hide();
+			break;
 		}
 
 		// actions
@@ -283,8 +300,11 @@ class DeleteWindow : Gtk.Window{
 			snapshot_list_box.refresh();
 			break;
 		case Tabs.DELETE:
-			delete_box.delete_snapshots();
-			//destroy();
+			success = delete_box.delete_snapshots();
+			go_next();
+			break;
+		case Tabs.DELETE_FINISH:
+			delete_finish_box.update_message(success);
 			break;
 		}
 	}
@@ -311,7 +331,8 @@ class DeleteWindow : Gtk.Window{
 
 	public enum Tabs{
 		SNAPSHOT_LIST = 0,
-		DELETE = 1
+		DELETE = 1,
+		DELETE_FINISH = 2
 	}
 }
 

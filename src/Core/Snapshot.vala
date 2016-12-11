@@ -18,15 +18,18 @@ public class Snapshot : GLib.Object{
 	public int64 file_count = 0;
 	public Gee.ArrayList<string> tags;
 	public Gee.ArrayList<string> exclude_list;
+	public Gee.HashMap<string,Subvolume> subvolumes;
 	public Gee.ArrayList<FsTabEntry> fstab_list;
 	public Gee.ArrayList<CryptTabEntry> cryttab_list;
 	public bool valid = true;
+	public bool live = false;
 	public bool marked_for_deletion = false;
 	public LinuxDistro distro;
+	public bool btrfs_mode = false;
 	
 	public DeleteFileTask delete_file_task;
 
-	public Snapshot(string dir_path){
+	public Snapshot(string dir_path, bool btrfs_snapshot){
 
 		try{
 			var f = File.new_for_path(dir_path);
@@ -35,13 +38,15 @@ public class Snapshot : GLib.Object{
 			path = dir_path;
 			name = info.get_name();
 			description = "";
-
+			btrfs_mode = btrfs_snapshot;
+			
 			date = new DateTime.from_unix_utc(0);
 			tags = new Gee.ArrayList<string>();
 			exclude_list = new Gee.ArrayList<string>();
 			fstab_list = new Gee.ArrayList<FsTabEntry>();
 			delete_file_task = new DeleteFileTask();
-			
+			subvolumes = new Gee.HashMap<string,Subvolume>();
+
 			read_control_file();
 			read_exclude_list();
 			read_fstab_file();
@@ -142,7 +147,6 @@ public class Snapshot : GLib.Object{
 			var node = parser.get_root();
 			var config = node.get_object();
 
-
 			if ((node == null)||(config == null)){
 				valid = false;
 				return;
@@ -160,8 +164,44 @@ public class Snapshot : GLib.Object{
 			description = json_get_string(config,"comments","");
 			app_version = json_get_string(config,"app-version","");
 			file_count = json_get_int64(config,"file_count",file_count);
+			live = json_get_bool(config,"live",false);
 			
 			distro = LinuxDistro.get_dist_info(path_combine(path, "localhost"));
+
+			if (config.has_member("subvolumes")){
+				
+				var subvols = (Json.Object) config.get_object_member("subvolumes");
+				
+				foreach(string subvol_name in subvols.get_members()){
+					var subvol_path = path_combine(path, subvol_name);
+					var subvolume = new Subvolume(subvol_name, subvol_path, ""); //subvolumes.get(subvol_name);
+					subvolumes.set(subvol_name, subvolume);
+					
+					int index = -1;
+					
+					foreach(Json.Node jnode in subvols.get_array_member(subvol_name).get_elements()) {
+						
+						string item = jnode.get_string();
+						switch (++index){
+							case 0:
+								subvolume.name = item;
+								break;
+							case 1:
+								subvolume.id = long.parse(item);
+								break;
+							case 2:
+								subvolume.total_bytes = int64.parse(item);
+								break;
+							case 3:
+								subvolume.unshared_bytes = int64.parse(item);
+								break;
+							case 4:
+								subvolume.dev_uuid = item.strip();
+								break;
+						}
+					}
+				}
+			}
 			
 			string delete_trigger_file = path + "/delete";
 			if (file_exists(delete_trigger_file)){
@@ -188,17 +228,25 @@ public class Snapshot : GLib.Object{
 			}
 		}
 		else{
-			valid = false;
+			if (!btrfs_mode){
+				valid = false;
+			}
 		}
 	}
 
 	public void read_fstab_file(){
-		string fstab_path = path + "/localhost/etc/fstab";
+		string fstab_path = path_combine(path, "/localhost/etc/fstab");
+		if (btrfs_mode){
+			fstab_path = path_combine(path, "/@/etc/fstab");
+		}
 		fstab_list = FsTabEntry.read_file(fstab_path);
 	}
 
 	public void read_crypttab_file(){
-		string crypttab_path = path + "/localhost/etc/crypttab";
+		string crypttab_path = path_combine(path, "/localhost/etc/crypttab");
+		if (btrfs_mode){
+			crypttab_path = path_combine(path, "/@/etc/crypttab");
+		}
 		cryttab_list = CryptTabEntry.read_file(crypttab_path);
 	}
 
@@ -222,7 +270,22 @@ public class Snapshot : GLib.Object{
 
 				config.set_string_member("tags", taglist);
 				config.set_string_member("comments", description);
+				config.set_string_member("live", live.to_string());
 
+				if (btrfs_mode){
+					var subvols = new Json.Object();
+					config.set_object_member("subvolumes",subvols);
+					foreach(Subvolume subvol in subvolumes.values){
+						Json.Array arr = new Json.Array();
+						arr.add_string_element(subvol.name);
+						arr.add_string_element(subvol.id.to_string());
+						arr.add_string_element(subvol.total_bytes.to_string());
+						arr.add_string_element(subvol.unshared_bytes.to_string());
+						arr.add_string_element(subvol.dev_uuid);
+						subvols.set_array_member(subvol.name,arr);
+					}
+				}
+				
 				var json = new Json.Generator();
 				json.pretty = true;
 				json.indent = 2;
@@ -242,8 +305,8 @@ public class Snapshot : GLib.Object{
 	}
 	
 	public static Snapshot write_control_file(
-		string snapshot_path, DateTime dt_created,
-		string tag, string root_uuid, string distro_full_name, int item_count){
+		string snapshot_path, DateTime dt_created, string root_uuid, string distro_full_name, 
+		string tag, string comments, int64 item_count, bool is_btrfs, bool is_live){
 			
 		var ctl_path = snapshot_path + "/info.json";
 		var config = new Json.Object();
@@ -255,6 +318,8 @@ public class Snapshot : GLib.Object{
 		config.set_string_member("file_count", item_count.to_string());
 		config.set_string_member("tags", tag);
 		config.set_string_member("comments", "");
+		config.set_string_member("live", is_live.to_string());
+		config.set_string_member("type", (is_btrfs ? "btrfs" : "rsync"));
 
 		var json = new Json.Generator();
 		json.pretty = true;
@@ -274,7 +339,7 @@ public class Snapshot : GLib.Object{
 	        log_error (e.message);
 	    }
 
-	    return (new Snapshot(snapshot_path));
+	    return (new Snapshot(snapshot_path, is_btrfs));
 	}
 
 	// check
@@ -290,11 +355,29 @@ public class Snapshot : GLib.Object{
 
 	// actions
 
-	public void remove(bool wait){
+	public bool remove(bool wait){
+
+		if (!dir_exists(path)){
+			return true;
+		}
+
+		bool status = true;
+		
+		if (btrfs_mode){
+			status = remove_btrfs();
+		}
+		else{
+			status = remove_rsync(wait);
+		}
+
+		return status;
+	}
+	
+	public bool remove_rsync(bool wait){
 
 		var message = _("Removing") + " '%s'...".printf(name);
 		log_msg(message);
-
+		
 		delete_file_task.dest_path = "%s/".printf(path);
 		delete_file_task.status_message = message;
 		delete_file_task.prg_count_total = Main.first_snapshot_count;
@@ -319,6 +402,37 @@ public class Snapshot : GLib.Object{
 
 			message = "%s '%s'".printf(_("Removed"), name);	
 			log_msg(message);
+		}
+
+		return true;
+	}
+
+	public bool remove_btrfs(){
+
+		var message = _("Removing") + " '%s'...".printf(name);
+		log_msg(message);
+		
+		// delete subvolumes
+		
+		foreach(Subvolume subvolume in subvolumes.values){
+			bool ok = subvolume.remove();
+			if (!ok) { return false; }
+		}
+
+		// delete snapshot directory
+		
+		string cmd = "rm -rf '%s'".printf(path);
+		if (LOG_COMMANDS) { log_debug(cmd); }
+
+		string std_out, std_err;
+		int ret_val = exec_sync(cmd, out std_out, out std_err);
+		if (ret_val != 0){
+			log_error(_("Failed to delete snapshot directory") + ": '%s'".printf(name));
+			return false;
+		}
+		else{
+			log_msg(_("Snapshot deleted") + ": '%s'".printf(name));
+			return true;
 		}
 	}
 	

@@ -53,6 +53,7 @@ class BackupBox : Gtk.Box{
 	private Gtk.Window parent_window;
 
 	private bool thread_is_running = false;
+	private bool thread_status_success = false;
 
 	public BackupBox (Gtk.Window _parent_window) {
 
@@ -159,7 +160,7 @@ class BackupBox : Gtk.Box{
 		return label;
 	}
 
-	public void take_snapshot(){
+	public bool take_snapshot(){
 
 		try {
 			thread_is_running = true;
@@ -167,70 +168,83 @@ class BackupBox : Gtk.Box{
 		}
 		catch (Error e) {
 			log_error (e.message);
+			return false;
 		}
 
-		//string last_message = "";
-		int wait_interval_millis = 100;
-		int status_line_counter = 0;
-		int status_line_counter_default = 1000 / wait_interval_millis;
-		string status_line = "";
-		string last_status_line = "";
-		int remaining_counter = 10;
-		while (thread_is_running){
-
-			status_line = escape_html(App.task.status_line);
-			if (status_line != last_status_line){
-				lbl_status.label = status_line;
-				last_status_line = status_line;
-				status_line_counter = status_line_counter_default;
+		if (App.btrfs_mode){
+			while (thread_is_running){
+				gtk_do_events();
+				sleep(200);
 			}
-			else{
-				status_line_counter--;
-				if (status_line_counter < 0){
-					status_line_counter = status_line_counter_default;
-					lbl_status.label = "";
-				}
-			}
-
-			double fraction = App.task.progress;
-
-			// time remaining
-			remaining_counter--;
-			if (remaining_counter == 0){
-				lbl_remaining.label =
-					App.task.stat_time_remaining + " remaining";
-
-				remaining_counter = 10;
-			}	
+		}
+		else{
 			
-			if (fraction < 0.99){
-				progressbar.fraction = fraction;
+			//string last_message = "";
+			int wait_interval_millis = 100;
+			int status_line_counter = 0;
+			int status_line_counter_default = 1000 / wait_interval_millis;
+			string status_line = "";
+			string last_status_line = "";
+			int remaining_counter = 10;
+			
+			while (thread_is_running){
+
+				status_line = escape_html(App.task.status_line);
+				if (status_line != last_status_line){
+					lbl_status.label = status_line;
+					last_status_line = status_line;
+					status_line_counter = status_line_counter_default;
+				}
+				else{
+					status_line_counter--;
+					if (status_line_counter < 0){
+						status_line_counter = status_line_counter_default;
+						lbl_status.label = "";
+					}
+				}
+
+				double fraction = App.task.progress;
+
+				// time remaining
+				remaining_counter--;
+				if (remaining_counter == 0){
+					lbl_remaining.label =
+						App.task.stat_time_remaining + " remaining";
+
+					remaining_counter = 10;
+				}	
+				
+				if (fraction < 0.99){
+					progressbar.fraction = fraction;
+				}
+
+				lbl_msg.label = escape_html(App.progress_text);
+
+				lbl_unchanged.label = "%'d".printf(App.task.count_unchanged);
+				lbl_created.label = "%'d".printf(App.task.count_created);
+				lbl_deleted.label = "%'d".printf(App.task.count_deleted);
+				lbl_modified.label = "%'d".printf(App.task.count_modified);
+				lbl_checksum.label = "%'d".printf(App.task.count_checksum);
+				lbl_size.label = "%'d".printf(App.task.count_size);
+				lbl_timestamp.label = "%'d".printf(App.task.count_timestamp);
+				lbl_permissions.label = "%'d".printf(App.task.count_permissions);
+				lbl_owner.label = "%'d".printf(App.task.count_owner);
+				lbl_group.label = "%'d".printf(App.task.count_group);
+
+				gtk_do_events();
+
+				sleep(100);
+				//gtk_do_events();
 			}
-
-			lbl_msg.label = escape_html(App.progress_text);
-
-			lbl_unchanged.label = "%'d".printf(App.task.count_unchanged);
-			lbl_created.label = "%'d".printf(App.task.count_created);
-			lbl_deleted.label = "%'d".printf(App.task.count_deleted);
-			lbl_modified.label = "%'d".printf(App.task.count_modified);
-			lbl_checksum.label = "%'d".printf(App.task.count_checksum);
-			lbl_size.label = "%'d".printf(App.task.count_size);
-			lbl_timestamp.label = "%'d".printf(App.task.count_timestamp);
-			lbl_permissions.label = "%'d".printf(App.task.count_permissions);
-			lbl_owner.label = "%'d".printf(App.task.count_owner);
-			lbl_group.label = "%'d".printf(App.task.count_group);
-
-			gtk_do_events();
-
-			sleep(100);
-			//gtk_do_events();
 		}
+
+		return thread_status_success;
 
 		//TODO: low: check if snapshot was created successfully.
 	}
 	
 	private void take_snapshot_thread(){
-		App.create_snapshot(true,parent_window);
+		thread_status_success = App.create_snapshot(true,parent_window);
 		thread_is_running = false;
 	}
 }

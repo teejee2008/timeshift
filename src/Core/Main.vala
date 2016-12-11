@@ -43,7 +43,8 @@ public class Main : GLib.Object{
 
 	public string backup_uuid = "";
 	public string backup_parent_uuid = "";
-	
+
+	public bool btrfs_mode = true;
 	public Gee.ArrayList<Device> partitions;
 
 	public Gee.ArrayList<string> exclude_list_user;
@@ -64,6 +65,7 @@ public class Main : GLib.Object{
 	public Device sys_boot;
 	public Device sys_efi;
 	public Device sys_home;
+	public Gee.HashMap<string, Subvolume> sys_subvolumes;
 
 	public string mount_point_restore = "";
 	public string mount_point_app = "/mnt/timeshift";
@@ -269,6 +271,7 @@ public class Main : GLib.Object{
 
 		mount_list = new Gee.ArrayList<MountEntry>();
 		delete_list = new Gee.ArrayList<Snapshot>();
+		sys_subvolumes = new Gee.HashMap<string, Subvolume>();
 
 		exclude_app_names = new Gee.ArrayList<string>();
 		add_default_exclude_entries();
@@ -319,7 +322,7 @@ public class Main : GLib.Object{
 
 		log_debug("check_btrfs_layout_system()");
 
-		bool supported = check_btrfs_layout(sys_root, sys_home);
+		bool supported = sys_subvolumes.has_key("@") && sys_subvolumes.has_key("@home");
 
 		if (!supported){
 			string msg = _("The system partition has an unsupported subvolume layout.") + " ";
@@ -668,22 +671,22 @@ public class Main : GLib.Object{
 		log_debug("Main: save_exclude_list_selections()");
 		
 		// add new selected items
-		foreach(var entry in App.exclude_list_apps){
-			if (entry.enabled && !App.exclude_app_names.contains(entry.name)){
-				App.exclude_app_names.add(entry.name);
+		foreach(var entry in exclude_list_apps){
+			if (entry.enabled && !exclude_app_names.contains(entry.name)){
+				exclude_app_names.add(entry.name);
 				log_debug("add app name: %s".printf(entry.name));
 			}
 		}
 
 		// remove item only if present in current list and un-selected
-		foreach(var entry in App.exclude_list_apps){
-			if (!entry.enabled && App.exclude_app_names.contains(entry.name)){
-				App.exclude_app_names.remove(entry.name);
+		foreach(var entry in exclude_list_apps){
+			if (!entry.enabled && exclude_app_names.contains(entry.name)){
+				exclude_app_names.remove(entry.name);
 				log_debug("remove app name: %s".printf(entry.name));
 			}
 		}
 
-		App.exclude_app_names.sort((a,b) => {
+		exclude_app_names.sort((a,b) => {
 			return Posix.strcmp(a,b);
 		});
 	}
@@ -709,26 +712,20 @@ public class Main : GLib.Object{
 
 		log_debug("Main: create_snapshot()");
 		
-		bool status;
+		bool status = true;
 		bool update_symlinks = false;
 
 		string sys_uuid = (sys_root == null) ? "" : sys_root.uuid;
 		
 		try
 		{
-			log_debug("checking btrfs volumes on root device...");
-			
-			if (App.check_btrfs_layout_system() == false){
+			if (check_btrfs_layout_system() == false){
 				return false;
 			}
 		
 			// create a timestamp
 			DateTime now = new DateTime.now_local();
 
-			log_debug("checking if snapshot device is mounted...");
-			
-			log_debug("checking snapshot device...");
-			
 			// check space
 			if (!repo.has_space()){
 
@@ -749,18 +746,16 @@ public class Main : GLib.Object{
 				}
 			}
 
-			string snapshot_dir = path_combine(repo.snapshot_location, "timeshift/snapshots");
-			
 			// create snapshot root if missing
-			var f = File.new_for_path(snapshot_dir);
+			var f = File.new_for_path(repo.snapshots_path);
 			if (!f.query_exists()){
-				log_debug("mkdir: %s".printf(snapshot_dir));
+				log_debug("mkdir: %s".printf(repo.snapshots_path));
 				f.make_directory_with_parents();
 			}
 
 			// ondemand
 			if (is_ondemand){
-				bool ok = backup_and_rotate ("ondemand",now);
+				bool ok = create_snapshot_for_tag ("ondemand",now);
 				if(!ok){
 					return false;
 				}
@@ -797,7 +792,7 @@ public class Main : GLib.Object{
 					}
 
 					if (take_new){
-						status = backup_and_rotate ("boot",now);
+						status = create_snapshot_for_tag ("boot",now);
 						if(!status){
 							log_error(_("Boot snapshot failed!"));
 							return false;
@@ -827,7 +822,7 @@ public class Main : GLib.Object{
 					}
 
 					if (take_new){
-						status = backup_and_rotate ("hourly",now);
+						status = create_snapshot_for_tag ("hourly",now);
 						if(!status){
 							log_error(_("Hourly snapshot failed!"));
 							return false;
@@ -857,7 +852,7 @@ public class Main : GLib.Object{
 					}
 
 					if (take_new){
-						status = backup_and_rotate ("daily",now);
+						status = create_snapshot_for_tag ("daily",now);
 						if(!status){
 							log_error(_("Daily snapshot failed!"));
 							return false;
@@ -887,7 +882,7 @@ public class Main : GLib.Object{
 					}
 
 					if (take_new){
-						status = backup_and_rotate ("weekly",now);
+						status = create_snapshot_for_tag ("weekly",now);
 						if(!status){
 							log_error(_("Weekly snapshot failed!"));
 							return false;
@@ -917,7 +912,7 @@ public class Main : GLib.Object{
 					}
 
 					if (take_new){
-						status = backup_and_rotate ("monthly",now);
+						status = create_snapshot_for_tag ("monthly",now);
 						if(!status){
 							log_error(_("Monthly snapshot failed!"));
 							return false;
@@ -949,22 +944,16 @@ public class Main : GLib.Object{
 			return false;
 		}
 
-		return true;
+		return status;
 	}
 
-	private bool backup_and_rotate(string tag, DateTime dt_created){
+	private bool create_snapshot_for_tag(string tag, DateTime dt_created){
 
 		log_debug("Main: backup_and_rotate()");
 		
-		//string msg;
-		File f;
-
-		bool backup_taken = false;
-
 		// save start time
 		var dt_begin = new DateTime.now_local();
-
-		string sys_uuid = (sys_root == null) ? "" : sys_root.uuid;
+		bool status = true;
 		
 		try{
 			// get system boot time
@@ -1004,202 +993,269 @@ public class Main : GLib.Object{
 					
 					// tag the backup
 					backup_to_rotate.add_tag(tag);
-					
-					backup_taken = true;
+	
 					var message = "%s '%s' %s '%s'".printf(
 						_("Snapshot"), backup_to_rotate.name, _("tagged"), tag);
 					log_msg(message);
+
+					return true;
 				}
 			}
 
-			if (!backup_taken){
+			// create new snapshot -----------------------
 
-				log_msg("Creating new backup...");
-				
-				// take new backup ---------------------------------
-
-				if (repo.snapshot_location.length == 0){
-					log_error("Backup location not mounted");
-					exit_app();
-				}
-
-				string time_stamp = dt_created.format("%Y-%m-%d_%H-%M-%S");
-				string snapshot_dir = path_combine(repo.snapshot_location, "timeshift/snapshots");
-				string snapshot_name = time_stamp;
-				string snapshot_path = path_combine(snapshot_dir, snapshot_name);
-
-				Snapshot snapshot_to_link = null;
-
-				dir_create(path_combine(snapshot_path, "/localhost"));
-
-				// check if a snapshot was restored recently and use it for linking ---------
-				
-				string ctl_path = path_combine(snapshot_dir, ".sync-restore");
-				f = File.new_for_path(ctl_path);
-				
-				if (f.query_exists()){
-
-					// read snapshot name from file
-					string snap_path = file_read(ctl_path);
-					string snap_name = file_basename(snap_path);
-					
-					// find the snapshot that was restored
-					foreach(var bak in repo.snapshots){
-						if ((bak.name == snap_name) && (bak.sys_uuid == sys_uuid)){
-							// use for linking
-							snapshot_to_link = bak;
-							// delete the restore-control-file
-							f.delete();
-							break;
-						}
-					}
-				}
-
-				// get latest snapshot to link if not set -------
-
-				if (snapshot_to_link == null){
-					snapshot_to_link = repo.get_latest_snapshot("", sys_uuid);
-				}
-
-				string link_from_path = "";
-				if (snapshot_to_link != null){
-					log_msg("%s: %s".printf(_("Linking from snapshot"), snapshot_to_link.name));
-					link_from_path = "%s/localhost/".printf(snapshot_to_link.path);
-				}
-
-				// save exclude list ----------------
-
-				bool ok = save_exclude_list_for_backup(snapshot_path);
-				
-				string exclude_from_file = path_combine(snapshot_path, "exclude.list");
-
-				if (!ok){
-					log_error(_("Failed to save exclude list"));
-					return false;
-				}
-				
-				// rsync file system -------------------
-				
-				progress_text = _("Synching files with rsync...");
-				log_msg(progress_text);
-
-				var log_file = snapshot_path + "/rsync-log";
-				file_delete(log_file);
-
-				task = new RsyncTask();
-
-				task.source_path = "";
-				task.dest_path = snapshot_path + "/localhost/";
-				task.link_from_path = link_from_path;
-				task.exclude_from_file = exclude_from_file;
-				task.rsync_log_file = log_file;
-				task.prg_count_total = Main.first_snapshot_count;
-
-				task.relative = true;
-				task.verbose = true;
-				task.delete_extra = true;
-				task.delete_excluded = true;
-				task.delete_after = false;
-					
-				if (app_mode.length > 0){
-					// console mode
-					task.io_nice = true;
-				}
-
-				task.execute();
-
-				while (task.status == AppStatus.RUNNING){
-					sleep(1000);
-					gtk_do_events();
-
-					stdout.printf("%6.2f%% %s (%s %s)\r".printf(task.progress * 100.0, _("complete"), task.stat_time_remaining, _("remaining")));
-					stdout.flush();
-				}
-
-				stdout.printf(string.nfill(80, ' '));
-				stdout.flush();
-
-				stdout.printf("\r");
-				stdout.flush();
-				
-				if (task.total_size == 0){
-					log_error(_("rsync returned an error"));
-					log_error(_("Failed to create new snapshot"));
-					return false;
-				}
-
-				// write control file
-				write_snapshot_control_file(snapshot_path, dt_created, tag, 0);
-
-				// parse log file
-				progress_text = _("Parsing log file...");
-				log_msg(progress_text);
-				var task = new RsyncTask();
-				task.parse_log(log_file);
-
-				// write control file
-				write_snapshot_control_file(snapshot_path, dt_created, tag, task.prg_count_total);
-
-				// finish ------------------------------
-				
-				var dt_end = new DateTime.now_local();
-				TimeSpan elapsed = dt_end.difference(dt_begin);
-				long seconds = (long)(elapsed * 1.0 / TimeSpan.SECOND);
-				
-				var message = "%s (%lds)".printf(_("Snapshot saved successfully"), seconds);
-				log_msg(message);
-				
-				OSDNotify.notify_send("TimeShift", message, 10000, "low");
-
-				message = "%s '%s' %s '%s'".printf(
-						_("Snapshot"), snapshot_name, _("tagged"), tag);
-				log_msg(message);
-	
-				repo.load_snapshots();
+			Snapshot new_snapshot = null;
+			if (btrfs_mode){
+				new_snapshot = create_snapshot_with_btrfs(tag, dt_created);
 			}
+			else{
+				new_snapshot = create_snapshot_with_rsync(tag, dt_created);
+			}
+			
+			// finish ------------------------------
+		
+			var dt_end = new DateTime.now_local();
+			TimeSpan elapsed = dt_end.difference(dt_begin);
+			long seconds = (long)(elapsed * 1.0 / TimeSpan.SECOND);
+			
+			var message = "";
+			if (new_snapshot != null){
+				message = "%s %s (%lds)".printf((btrfs_mode ? "BTRFS" : "RSYNC"), _("Snapshot saved successfully"), seconds);
+			}
+			else{
+				message = _("Failed to create snapshot");
+			}
+
+			log_msg(message);
+			OSDNotify.notify_send("TimeShift", message, 10000, "low");
+
+			if (new_snapshot != null){
+				message = "%s '%s' %s '%s'".printf(_("Snapshot"), new_snapshot.name, _("tagged"), tag);
+				log_msg(message);
+			}
+
+			repo.load_snapshots();
+			
 		}
 		catch(Error e){
 			log_error (e.message);
 			return false;
 		}
 
-		return true;
+		return status;
 	}
-	
-	private Snapshot write_snapshot_control_file(string snapshot_path, DateTime dt_created, string tag, int64 file_count){
 
-		log_debug("Main: write_snapshot_control_file()");
+	private Snapshot? create_snapshot_with_rsync(string tag, DateTime dt_created){
 		
-		var ctl_path = snapshot_path + "/info.json";
-		var config = new Json.Object();
+		log_msg(_("Creating new backup...") + "(RSYNC)");
+		
+		// take new backup ---------------------------------
 
-		config.set_string_member("created", dt_created.to_utc().to_unix().to_string());
-		config.set_string_member("sys-uuid", sys_root.uuid);
-		config.set_string_member("sys-distro", current_distro.full_name());
-		config.set_string_member("app-version", AppVersion);
-		config.set_string_member("file_count", file_count.to_string());
-		config.set_string_member("tags", tag);
-		config.set_string_member("comments", cmd_comments);
+		if (repo.mount_path.length == 0){
+			log_error("Backup location not mounted");
+			exit_app();
+		}
 
-		var json = new Json.Generator();
-		json.pretty = true;
-		json.indent = 2;
-		var node = new Json.Node(NodeType.OBJECT);
-		node.set_object(config);
-		json.set_root(node);
+		string time_stamp = dt_created.format("%Y-%m-%d_%H-%M-%S");
+		string snapshot_dir = repo.snapshots_path;
+		string snapshot_name = time_stamp;
+		string snapshot_path = path_combine(snapshot_dir, snapshot_name);
+		dir_create(snapshot_path);
+		string localhost_path = path_combine(snapshot_path, "localhost");
+		dir_create(localhost_path);
+		
+		string sys_uuid = (sys_root == null) ? "" : sys_root.uuid;
+
+		Snapshot snapshot_to_link = null;
+
+		// check if a snapshot was restored recently and use it for linking ---------
 
 		try{
+			
+			string ctl_path = path_combine(snapshot_dir, ".sync-restore");
 			var f = File.new_for_path(ctl_path);
+			
 			if (f.query_exists()){
-				f.delete();
+
+				// read snapshot name from file
+				string snap_path = file_read(ctl_path);
+				string snap_name = file_basename(snap_path);
+				
+				// find the snapshot that was restored
+				foreach(var bak in repo.snapshots){
+					if ((bak.name == snap_name) && (bak.sys_uuid == sys_uuid)){
+						// use for linking
+						snapshot_to_link = bak;
+						// delete the restore-control-file
+						f.delete();
+						break;
+					}
+				}
+			}
+		}
+		catch(Error e){
+			log_error (e.message);
+			return null;
+		}
+
+		// get latest snapshot to link if not set -------
+
+		if (snapshot_to_link == null){
+			snapshot_to_link = repo.get_latest_snapshot("", sys_uuid);
+		}
+
+		string link_from_path = "";
+		if (snapshot_to_link != null){
+			log_msg("%s: %s".printf(_("Linking from snapshot"), snapshot_to_link.name));
+			link_from_path = "%s/localhost/".printf(snapshot_to_link.path);
+		}
+
+		// save exclude list ----------------
+
+		bool ok = save_exclude_list_for_backup(snapshot_path);
+		
+		string exclude_from_file = path_combine(snapshot_path, "exclude.list");
+
+		if (!ok){
+			log_error(_("Failed to save exclude list"));
+			return null;
+		}
+		
+		// rsync file system -------------------
+		
+		progress_text = _("Synching files with rsync...");
+		log_msg(progress_text);
+
+		var log_file = snapshot_path + "/rsync-log";
+		file_delete(log_file);
+
+		task = new RsyncTask();
+
+		task.source_path = "";
+		task.dest_path = snapshot_path + "/localhost/";
+		task.link_from_path = link_from_path;
+		task.exclude_from_file = exclude_from_file;
+		task.rsync_log_file = log_file;
+		task.prg_count_total = Main.first_snapshot_count;
+
+		task.relative = true;
+		task.verbose = true;
+		task.delete_extra = true;
+		task.delete_excluded = true;
+		task.delete_after = false;
+			
+		if (app_mode.length > 0){
+			// console mode
+			task.io_nice = true;
+		}
+
+		task.execute();
+
+		while (task.status == AppStatus.RUNNING){
+			sleep(1000);
+			gtk_do_events();
+
+			stdout.printf("%6.2f%% %s (%s %s)\r".printf(task.progress * 100.0, _("complete"), task.stat_time_remaining, _("remaining")));
+			stdout.flush();
+		}
+
+		stdout.printf(string.nfill(80, ' '));
+		stdout.flush();
+
+		stdout.printf("\r");
+		stdout.flush();
+		
+		if (task.total_size == 0){
+			log_error(_("rsync returned an error"));
+			log_error(_("Failed to create new snapshot"));
+			return null;
+		}
+
+		// write control file
+		Snapshot.write_control_file(
+			snapshot_path, dt_created, sys_uuid, current_distro.full_name(),
+			tag, cmd_comments, 0, false, false);
+
+		// parse log file
+		progress_text = _("Parsing log file...");
+		log_msg(progress_text);
+		var task = new RsyncTask();
+		task.parse_log(log_file);
+
+		// write control file
+		var snapshot = Snapshot.write_control_file(
+			snapshot_path, dt_created, sys_uuid, current_distro.full_name(),
+			tag, cmd_comments, task.prg_count_total, false, false);
+
+		return snapshot;
+	}
+
+	private Snapshot? create_snapshot_with_btrfs(string tag, DateTime dt_created){
+		
+		log_msg(_("Creating new backup...") + "(BTRFS)");
+		
+		// take new backup ---------------------------------
+
+		if (repo.mount_path.length == 0){
+			log_error("Snapshot device not mounted");
+			exit_app();
+		}
+
+		string time_stamp = dt_created.format("%Y-%m-%d_%H-%M-%S");
+		string snapshot_dir = repo.snapshots_path;
+		string snapshot_name = time_stamp;
+		string snapshot_path = path_combine(snapshot_dir, snapshot_name);
+		dir_create(snapshot_path);
+		
+		string sys_uuid = (sys_root == null) ? "" : sys_root.uuid;
+		Snapshot snapshot_to_link = null;
+
+		// create subvolume snapshots
+		
+		foreach(var subvol in sys_subvolumes.values){
+
+			string mount_path = repo.mount_path;
+			
+			if ((subvol.name == "@home") && (subvol.dev_uuid != repo.device.uuid)){
+				
+				Device.automount_udisks(subvol.dev_uuid, parent_window);
+
+				var mps = Device.get_device_mount_points(subvol.dev_uuid);
+				if (mps.size > 0){
+					mount_path = mps[0].mount_point;
+				}
+				else{
+					mount_path = "";
+				}
 			}
 
-			json.to_file(ctl_path);
-		} catch (Error e) {
-	        log_error (e.message);
-	    }
+			string cmd = "btrfs subvolume snapshot '%s/%s' '%s/%s' \n".printf(mount_path, subvol.name, snapshot_path, subvol.name);
+			if (LOG_COMMANDS) { log_debug(cmd); }
 
-	    return (new Snapshot(snapshot_path));
+			string std_out, std_err;
+			int ret_val = exec_sync(cmd, out std_out, out std_err);
+			if (ret_val != 0){
+				log_error (std_err);
+				log_error(_("btrfs returned an error") + ": %d".printf(ret_val));
+				log_error(_("Failed to create subvolume snapshot") + ": %s".printf(subvol.name));
+				return null;
+			}
+		}
+
+		log_msg(_("Writing control file..."));
+		
+		// write control file
+		var snapshot = Snapshot.write_control_file(
+			snapshot_path, dt_created, sys_uuid, current_distro.full_name(),
+			tag, cmd_comments, 0, true, false);
+
+		// write subvolume info
+		foreach(var subvol in sys_subvolumes.values){
+			snapshot.subvolumes.set(subvol.name, subvol);
+		}
+		snapshot.update_control_file(); // save subvolume info
+		
+		return snapshot;
 	}
 
 	// gui delete
@@ -1230,6 +1286,8 @@ public class Main : GLib.Object{
 
 		log_debug("delete_thread()");
 
+		bool status = true;
+
 		foreach(var bak in delete_list){
 			bak.mark_for_deletion();
 		}
@@ -1238,25 +1296,31 @@ public class Main : GLib.Object{
 
 			var bak = delete_list[0];
 			bak.mark_for_deletion(); // mark for deletion again since initial list may have changed
-			
-			App.delete_file_task = bak.delete_file_task;
-			App.delete_file_task.prg_count_total = Main.first_snapshot_count;
-			
-			bak.remove(true); // wait till complete
 
-			if (App.delete_file_task.status != AppStatus.CANCELLED){
+			if (btrfs_mode){
+				status = bak.remove(true); // wait till complete
 
-				var message = "%s '%s' (%s)".printf(_("Removed"), bak.name, delete_file_task.stat_time_elapsed);
+				var message = "%s '%s'".printf(_("Removed"), bak.name);
 				OSDNotify.notify_send("TimeShift", message, 10000, "low");
-
-				delete_list.remove(bak);
 			}
+			else{
+
+				delete_file_task = bak.delete_file_task;
+				delete_file_task.prg_count_total = Main.first_snapshot_count;
+			
+				status = bak.remove(true); // wait till complete
+
+				if (delete_file_task.status != AppStatus.CANCELLED){
+					var message = "%s '%s' (%s)".printf(_("Removed"), bak.name, delete_file_task.stat_time_elapsed);
+					OSDNotify.notify_send("TimeShift", message, 10000, "low");
+				}
+			}
+
+			delete_list.remove(bak);
 		}
 
 		thread_delete_running = false;
-		thread_delete_success = false;
-
-		//return thread_delete_success;
+		thread_delete_success = status;
 	}
 	
 	// restore  - properties
@@ -1535,7 +1599,7 @@ public class Main : GLib.Object{
 		(to prevent the "cloned" system from using the original device)
 		*/
 		
-		if (App.mirror_system){
+		if (mirror_system){
 			dst_root = null;
 			foreach (var entry in mount_list){
 				// user should select another device
@@ -1581,7 +1645,7 @@ public class Main : GLib.Object{
 			update_grub = true;
 		}
 		else{
-			if (App.snapshot_to_restore.distro.dist_id == "fedora"){
+			if (snapshot_to_restore.distro.dist_id == "fedora"){
 				// grub2-install should never be run on EFI fedora systems
 				reinstall_grub2 = false;
 				update_initramfs = false;
@@ -1603,10 +1667,10 @@ public class Main : GLib.Object{
 
 		// remove mount points which will remain on root fs
 		
-		for(int i = App.mount_list.size-1; i >= 0; i--){
-			var entry = App.mount_list[i];
+		for(int i = mount_list.size-1; i >= 0; i--){
+			var entry = mount_list[i];
 			if (entry.device == null){
-				App.mount_list.remove(entry);
+				mount_list.remove(entry);
 			}
 		}
 			
@@ -1872,16 +1936,7 @@ public class Main : GLib.Object{
 
 			// check and repair file system errors
 			
-			if (!restore_current_system){
-				string sh_fsck = "echo '" + _("Checking file systems for errors...") + "' \n";
-				foreach(var mnt in mount_list){
-					if (mnt.device != null) {
-						sh_fsck += "fsck -y %s \n".printf(mnt.device.device);
-					}
-				}
-				sh_fsck += "echo '' \n";
-				int ret_val = exec_script_sync(sh_fsck, null, null, false, false, false, true);
-			}
+			check_and_repair_filesystems();
 		}
 		catch(Error e){
 			log_error (e.message);
@@ -2011,6 +2066,7 @@ public class Main : GLib.Object{
 				sh += "%s update-initramfs -u -k all \n".printf(chroot);
 			}
 		}
+		
 		// update grub menu --------------
 
 		if (update_grub){
@@ -2367,6 +2423,20 @@ public class Main : GLib.Object{
 		log_debug("Main: fix_crypttab_file(): exit");
 	}
 
+	private void check_and_repair_filesystems(){
+		
+		if (!restore_current_system){
+			string sh_fsck = "echo '" + _("Checking file systems for errors...") + "' \n";
+			foreach(var mnt in mount_list){
+				if (mnt.device != null) {
+					sh_fsck += "fsck -y %s \n".printf(mnt.device.device);
+				}
+			}
+			sh_fsck += "echo '' \n";
+			int ret_val = exec_script_sync(sh_fsck, null, null, false, false, false, true);
+		}
+	}
+	
 	//app config
 
 	public void save_app_config(){
@@ -2374,7 +2444,7 @@ public class Main : GLib.Object{
 		log_debug("Main: save_app_config()");
 		
 		var config = new Json.Object();
-
+		
 		if ((repo != null) && repo.available()){
 			// save backup device uuid
 			config.set_string_member("backup_device_uuid",
@@ -2389,6 +2459,8 @@ public class Main : GLib.Object{
 			config.set_string_member("backup_device_uuid", backup_uuid);
 			config.set_string_member("parent_device_uuid", backup_parent_uuid); 
 		}
+
+		config.set_string_member("btrfs_mode", btrfs_mode.to_string());
 
 		config.set_string_member("schedule_monthly", schedule_monthly.to_string());
 		config.set_string_member("schedule_weekly", schedule_weekly.to_string());
@@ -2458,6 +2530,7 @@ public class Main : GLib.Object{
 
 		// initialize repo using config file values
 
+		btrfs_mode = json_get_bool(config,"btrfs_mode", false); // false as default
 		backup_uuid = json_get_string(config,"backup_device_uuid", backup_uuid);
 		backup_parent_uuid = json_get_string(config,"parent_device_uuid", backup_parent_uuid);
 		
@@ -2525,23 +2598,23 @@ public class Main : GLib.Object{
 		
 		if (backup_uuid.length > 0){
 			log_debug("repo: creating from uuid");
-			repo = new SnapshotRepo.from_uuid(backup_uuid, parent_window);
+			repo = new SnapshotRepo.from_uuid(backup_uuid, parent_window, btrfs_mode);
 
 			if ((repo == null) || !repo.available()){
 				if (backup_parent_uuid.length > 0){
 					log_debug("repo: creating from parent uuid");
-					repo = new SnapshotRepo.from_uuid(backup_parent_uuid, parent_window);
+					repo = new SnapshotRepo.from_uuid(backup_parent_uuid, parent_window, btrfs_mode);
 				}
 			}
 		}
 		else{
 			if (sys_root != null){
 				log_debug("repo: uuid is empty, creating from root device");
-				repo = new SnapshotRepo.from_device(sys_root, parent_window);
+				repo = new SnapshotRepo.from_device(sys_root, parent_window, btrfs_mode);
 			}
 			else{
 				log_debug("repo: root device is null");
-				repo = new SnapshotRepo.from_null(parent_window);
+				repo = new SnapshotRepo.from_null();
 			}
 		}
 
@@ -2551,7 +2624,7 @@ public class Main : GLib.Object{
 			var cmd_dev = Device.get_device_by_name(cmd_backup_device);
 			if (cmd_dev != null){
 				log_debug("repo: creating from command argument: %s".printf(cmd_backup_device));
-				repo = new SnapshotRepo.from_device(cmd_dev, parent_window);
+				repo = new SnapshotRepo.from_device(cmd_dev, parent_window, btrfs_mode);
 				
 				// TODO: move this code to main window
 			}
@@ -2608,13 +2681,14 @@ public class Main : GLib.Object{
 		sys_boot = null;
 		sys_efi = null;
 		sys_home = null;
-		
+
 		foreach(Device pi in partitions){
 			foreach(var mp in pi.mount_points){
 				// skip loop devices - Fedora Live uses loop devices containing ext4-formatted lvm volumes
 				if ((pi.type == "loop") || (pi.has_parent() && (pi.parent.type == "loop"))){
 					continue;
 				}
+
 				if (mp.mount_point == "/"){
 					sys_root = pi;
 					if ((app_mode == "")||(LOG_DEBUG)){
@@ -2658,10 +2732,11 @@ public class Main : GLib.Object{
 						log_debug(txt);
 					}
 				}
+
 			}
 		}
 
-		//log_msg("");
+		sys_subvolumes = Subvolume.detect_subvolumes_for_system_by_path("/", parent_window);
 	}
 
 	public bool mount_target_devices(Gtk.Window? parent_win = null){

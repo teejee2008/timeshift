@@ -1,0 +1,125 @@
+using TeeJee.Logging;
+using TeeJee.FileSystem;
+using TeeJee.JsonHelper;
+using TeeJee.ProcessHelper;
+using TeeJee.GtkHelper;
+using TeeJee.System;
+using TeeJee.Misc;
+
+public class Subvolume : GLib.Object{
+
+	public string dev_uuid;
+	public string name = "";
+	public string path = "";
+	public long id = -1;
+	public int64 total_bytes = 0;
+	public int64 unshared_bytes = 0;
+
+	public Subvolume(string name, string path, string parent_dev_uuid){
+		this.name = name;
+		this.path = path;
+		this.dev_uuid = parent_dev_uuid;
+	}
+
+	public string total_formatted{
+		owned get{
+			return format_file_size(total_bytes);
+		}
+	}
+
+	public string unshared_formatted{
+		owned get{
+			return format_file_size(unshared_bytes);
+		}
+	}
+
+	public Device? get_device(){
+		return Device.get_device_by_uuid(dev_uuid);
+	}
+	
+	public static Gee.HashMap<string, Subvolume> detect_subvolumes_for_system_by_path(string system_path, Gtk.Window? parent_window){
+
+		var map = new Gee.HashMap<string, Subvolume>();
+		
+		log_debug("Searching subvolume for system at path: %s".printf(system_path));
+		
+		var fstab = FsTabEntry.read_file(path_combine(system_path, "/etc/fstab"));
+		var crypttab = CryptTabEntry.read_file(path_combine(system_path, "/etc/crypttab"));
+		
+		foreach(var item in fstab){
+			if (!item.is_for_system_directory()){
+				continue;
+			}
+			
+			if (item.subvolume_name().length > 0){
+				var dev = item.resolve_device(crypttab, parent_window);
+				var dev_name = (dev == null) ? "" : dev.device;
+				var dev_uuid = (dev == null) ? "" : dev.uuid;
+				
+				log_debug("Found subvolume: %s, on device: %s".printf(item.subvolume_name(), dev_name));
+				
+				var subvol = new Subvolume(item.subvolume_name(), item.mount_point, dev_uuid);
+				map.set(subvol.name, subvol);
+			}
+		}
+
+		return map;
+	}
+
+	public void print_info(){
+		log_debug("name=%s, uuid=%s, id=%ld, path=%s".printf(name, dev_uuid, id, path));
+	}
+
+	public bool remove(){
+		string cmd = "";
+		string std_out;
+		string std_err;
+		int ret_val;
+
+		print_info();
+		
+		try{
+			if (dir_exists(path)){
+				
+				cmd = "btrfs subvolume delete '%s'".printf(path);
+				if (LOG_COMMANDS) { log_debug(cmd); }
+				ret_val = exec_sync(cmd, out std_out, out std_err);
+				if (ret_val != 0){
+					log_error(_("Failed to delete snapshot subvolume") + ": '%s'".printf(path));
+					return false;
+				}
+
+				if (id > 0){
+					string dev_path = "";
+					var dev = get_device();
+					if (dev != null){
+						foreach(var mp in dev.mount_points){
+							if ((mp.device.uuid == dev_uuid) && !mp.mount_options.contains("subvol")){
+								dev_path = mp.mount_point;
+							}
+						}
+					}
+
+					if (dev_path.length > 0){
+						cmd = "btrfs qgroup destroy 0/%ld '%s'".printf(id, dev_path);
+						if (LOG_COMMANDS) { log_debug(cmd); }
+						ret_val = exec_sync(cmd, out std_out, out std_err);
+						if (ret_val != 0){
+							log_error(_("Failed to destroy qgroup") + ": '0/%ld'".printf(id));
+							return false;
+						}
+					}
+				}
+
+				return true;
+			}
+			else{
+				return true; // ok, item does not exist
+			}
+		}
+		catch(Error e){
+			log_error (e.message);
+			return false;
+		}
+	}
+}

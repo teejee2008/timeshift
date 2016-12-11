@@ -94,7 +94,7 @@ public class Device : GLib.Object{
 		}
 		
 		string std_out, std_err;
-		int status = exec_sync("lsblk --version", out std_out, out std_err);
+		int status = exec_sync("lsblk --bytes --pairs --output HOTPLUG,PKNAME,VENDOR,SERIAL,REV", out std_out, out std_err);
 		if (status == 0){
 			lsblk_version = std_out;
 			lsblk_is_ancient = false;
@@ -1372,7 +1372,7 @@ public class Device : GLib.Object{
 		
 		var mps = Device.get_device_mount_points(dev_name_or_uuid);
 		foreach(var mp in mps){
-			if (mp.mount_point.contains(mount_point)){
+			if (mp.mount_point.contains(mount_point) && mp.mount_options.contains(mount_options)){
 				if (!silent){
 					string msg = "";
 					msg += "%s: %s %s".printf(_("Mounted"), _("device"), dev_name_or_uuid);

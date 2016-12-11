@@ -10,9 +10,19 @@ app_name=timeshift
 app_fullname=Timeshift
 
 vte_version=$(shell { ((ldconfig -p | grep libvte-2.91*.so) >/dev/null && echo 'vte-2.91') || echo 'vte-2.90'; } )
-define_symbols=$(shell { ((ldconfig -p | grep libvte-2.91*.so) >/dev/null && echo '-D VTE_291') || echo ''; } )
+vte_symbols=$(shell { ((ldconfig -p | grep libvte-2.91*.so) >/dev/null && echo '-D VTE_291') || echo ''; } )
+gtk3_version=$(shell { (pkg-config --modversion gtk+-3.0 | cut -d. -f2); } )
+
+ifeq ($(shell { test ${gtk3_version} -gt 17 ; echo $$? ; } ), 0)
+gtk3_symbols=$(shell { echo '-D GTK3_18'; } )
+else
+gtk3_symbols=$(shell { echo ''; } )
+endif
+
+define_symbols=$(shell { echo "${vte_symbols} ${gtk3_symbols}"; } )
 
 all:
+
 	#timeshift-gtk
 	valac -X -D'GETTEXT_PACKAGE="${app_name}"' --Xcc="-lm" -X -Wl,-rpath,/usr/share/${app_name}/libs ${define_symbols} --thread Core/*.vala Utility/*.vala  Utility/Gtk/*.vala  Gtk/*.vala -o ${app_name}-gtk --pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix --pkg gtk+-3.0 --pkg $(vte_version) --pkg gee-0.8 --pkg json-glib-1.0  --pkg libsoup-2.4 #--target-glib=2.32  --pkg libsoup-2.4  --pkg libxml-2.0
 

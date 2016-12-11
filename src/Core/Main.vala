@@ -349,11 +349,15 @@ public class Main : GLib.Object{
 		if ((dev_root != null) && (dev_root.fstype == "btrfs")){
 			
 			if ((dev_home != null) && (dev_home.fstype == "btrfs")){
-				supported = supported && check_btrfs_volume(dev_root, "@");
-				supported = supported && check_btrfs_volume(dev_home, "@home");
-			}
-			else{
-				supported = supported && check_btrfs_volume(dev_root, "@,@home");
+
+				if (dev_home != dev_root){
+					
+					supported = supported && check_btrfs_volume(dev_root, "@");
+					supported = supported && check_btrfs_volume(dev_home, "@home");
+				}
+				else{
+					supported = supported && check_btrfs_volume(dev_root, "@,@home");
+				}
 			}
 		}
 
@@ -2890,8 +2894,10 @@ public class Main : GLib.Object{
 		string mnt_btrfs = mount_point_app + "/btrfs";
 		dir_create(mnt_btrfs);
 
-		Device.unmount(mnt_btrfs);
-		Device.mount(dev.uuid, mnt_btrfs, "", true);
+		if (!dev.is_mounted_at_path("", mnt_btrfs)){
+			Device.unmount(mnt_btrfs);
+			Device.mount(dev.uuid, mnt_btrfs, "", true);
+		}
 
 		bool supported = true;
 

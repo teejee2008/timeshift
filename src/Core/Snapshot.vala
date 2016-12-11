@@ -438,7 +438,9 @@ public class Snapshot : GLib.Object{
 	
 	public void mark_for_deletion(){
 		string delete_trigger_file = path + "/delete";
-		file_write(delete_trigger_file, "");
+		if (!file_exists(delete_trigger_file)){
+			file_write(delete_trigger_file, "");
+		}
 		marked_for_deletion = true;
 	}
 

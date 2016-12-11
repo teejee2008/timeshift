@@ -75,13 +75,13 @@ class BackupDeviceBox : Gtk.Box{
 		//msg += "\n" + _("Snapshots will be saved in folder /timeshift");
 
 		// treeview
-		create_device_list();
+		init_tv_devices();
 
 		// tooltips
 		//tv_devices.set_tooltip_text(msg);
 
 		// infobar
-		create_infobar_location();
+		init_infobar_location();
 
 		log_debug("BackupDeviceBox: BackupDeviceBox(): exit");
     }
@@ -92,7 +92,7 @@ class BackupDeviceBox : Gtk.Box{
 	}
 
     
-	private void create_device_list(){
+	private void init_tv_devices(){
 		tv_devices = add_treeview(this);
 		tv_devices.vexpand = true;
 		tv_devices.headers_clickable = true;
@@ -268,7 +268,7 @@ class BackupDeviceBox : Gtk.Box{
 		});
 	}
 
-	private void create_infobar_location(){
+	private void init_infobar_location(){
 		var infobar = new Gtk.InfoBar();
 		infobar.no_show_all = true;
 		add(infobar);
@@ -287,15 +287,18 @@ class BackupDeviceBox : Gtk.Box{
 		if (dev.type == "disk"){
 			bool found_child = false;
 			foreach (var child in dev.children){
-				if (child.has_linux_filesystem()){
+				if ((App.btrfs_mode && (child.fstype == "btrfs")) || (!App.btrfs_mode && child.has_linux_filesystem())){
 					change_backup_device(child);
 					found_child = true;
 					break;
 				}
 			}
 			if (!found_child){
-				lbl_infobar_location.label = "<span weight=\"bold\">%s</span>".printf(
-				_("Selected disk does not have Linux partitions"));
+				string msg = _("Selected device does not have Linux partition");
+				if (App.btrfs_mode){
+					msg = _("Selected device does not have BTRFS partition");
+				}
+				lbl_infobar_location.label = "<span weight=\"bold\">%s</span>".printf(msg);
 				infobar_location.message_type = Gtk.MessageType.ERROR;
 				infobar_location.no_show_all = false;
 				infobar_location.show_all();

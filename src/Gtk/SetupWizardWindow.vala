@@ -135,12 +135,16 @@ class SetupWizardWindow : Gtk.Window{
 	}
 	
 	private void create_actions(){
-		var hbox = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
+		var hbox = new Gtk.ButtonBox (Gtk.Orientation.HORIZONTAL);
 		hbox.margin = 0;
 		hbox.margin_left = 24;
 		hbox.margin_right = 24;
 		hbox.margin_top = 6;
         vbox_main.add(hbox);
+        
+        #if GTK3_18
+			hbox.set_layout (Gtk.ButtonBoxStyle.EXPAND);
+		#endif
 
 		Gtk.SizeGroup size_group = null;
 		
@@ -349,7 +353,7 @@ class SetupWizardWindow : Gtk.Window{
 			schedule_box.update_statusbar();
 			break;
 		case Tabs.FINISH:
-			finish_box.update_message();
+			finish_box.refresh();
 			break;
 		}
 	}
@@ -357,7 +361,7 @@ class SetupWizardWindow : Gtk.Window{
 	private bool validate_current_tab(){
 
 		if (notebook.page == Tabs.SNAPSHOT_BACKEND){
-			backend_box.init_backend();
+			return true;
 		}
 		else if (notebook.page == Tabs.BACKUP_DEVICE){
 			if (!App.repo.available() || !App.repo.has_space()){

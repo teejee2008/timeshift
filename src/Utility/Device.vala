@@ -143,6 +143,24 @@ public class Device : GLib.Object{
 		}
 	}
 
+	public bool is_mounted_at_path(string subvolname, string mount_path){
+		
+		foreach (var mnt in mount_points){
+			if (mnt.mount_point == mount_path){
+				if (subvolname.length == 0){
+					return true;
+				}
+				else if (mnt.mount_options.contains("subvol=%s".printf(subvolname))
+					|| mnt.mount_options.contains("subvol=/%s".printf(subvolname))){
+
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+
 	public bool has_linux_filesystem(){
 		switch (fstype){
 			case "ext2":

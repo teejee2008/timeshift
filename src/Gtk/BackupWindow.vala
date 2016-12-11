@@ -137,6 +137,10 @@ class BackupWindow : Gtk.Window{
         vbox_main.add(hbox);
         bbox_action = hbox;
 
+		#if GTK3_18
+        hbox.set_layout (Gtk.ButtonBoxStyle.EXPAND);
+		#endif
+		
 		Gtk.SizeGroup size_group = null;
 		
 		// previous
@@ -271,6 +275,9 @@ class BackupWindow : Gtk.Window{
 			btn_next.hide();
 			btn_close.hide();
 			btn_cancel.show();
+			#if GTK3_18
+			bbox_action.set_layout (Gtk.ButtonBoxStyle.CENTER);
+			#endif
 			break;
 		case Tabs.BACKUP_DEVICE:
 			btn_prev.show();
@@ -280,6 +287,9 @@ class BackupWindow : Gtk.Window{
 			btn_prev.sensitive = false;
 			btn_next.sensitive = true;
 			btn_close.sensitive = true;
+			#if GTK3_18
+			bbox_action.set_layout (Gtk.ButtonBoxStyle.EXPAND);
+			#endif
 			break;
 		case Tabs.BACKUP_FINISH:
 			btn_prev.hide();
@@ -287,6 +297,9 @@ class BackupWindow : Gtk.Window{
 			btn_close.show();
 			btn_close.sensitive = true;
 			btn_cancel.hide();
+			#if GTK3_18
+			bbox_action.set_layout (Gtk.ButtonBoxStyle.CENTER);
+			#endif
 			break;
 		}
 

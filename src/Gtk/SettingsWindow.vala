@@ -36,6 +36,7 @@ class SettingsWindow : Gtk.Window{
 	private Gtk.Box vbox_main;
 	private Gtk.Notebook notebook;
 
+	private SnapshotBackendBox backend_box;
 	private BackupDeviceBox backup_dev_box;
 	private ScheduleBox schedule_box;
 	private ExcludeBox exclude_box;
@@ -64,7 +65,11 @@ class SettingsWindow : Gtk.Window{
 		// add notebook
 		notebook = add_notebook(vbox_main, true, true);
 
-		var label = new Gtk.Label(_("Location"));
+		var label = new Gtk.Label(_("Type"));
+		backend_box = new SnapshotBackendBox(this);
+		notebook.append_page (backend_box, label);
+		
+		label = new Gtk.Label(_("Location"));
 		backup_dev_box = new BackupDeviceBox(this);
 		notebook.append_page (backup_dev_box, label);
 
@@ -79,6 +84,12 @@ class SettingsWindow : Gtk.Window{
 		label = new Gtk.Label(_("Notes"));
 		notes_box = new FinishBox(this, true);
 		notebook.append_page (notes_box, label);
+
+		backend_box.type_changed.connect(()=>{
+			exclude_box.visible = !App.btrfs_mode;
+			backup_dev_box.refresh();
+			notes_box.refresh();
+		});
 
 		create_actions();
 
@@ -137,10 +148,11 @@ class SettingsWindow : Gtk.Window{
 	}
 	
 	public enum Tabs{
-		BACKUP_DEVICE = 0,
-		SCHEDULE = 1,
-		EXCLUDE = 2,
-		NOTES = 3
+		BACKUP_TYPE = 0,
+		BACKUP_DEVICE = 1,
+		SCHEDULE = 2,
+		EXCLUDE = 3,
+		NOTES = 4
 	}
 }
 

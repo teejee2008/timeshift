@@ -38,6 +38,8 @@ class SnapshotBackendBox : Gtk.Box{
 	private Gtk.RadioButton opt_rsync;
 	private Gtk.RadioButton opt_btrfs;
 	private Gtk.Window parent_window;
+	
+	public signal void type_changed();
 
 	public SnapshotBackendBox (Gtk.Window _parent_window) {
 
@@ -74,6 +76,8 @@ class SnapshotBackendBox : Gtk.Box{
 		opt_rsync.toggled.connect(()=>{
 			if (opt_rsync.active){
 				App.btrfs_mode = false;
+				init_backend();
+				type_changed();
 			}
 			
 			// TODO: init
@@ -113,6 +117,8 @@ class SnapshotBackendBox : Gtk.Box{
 		opt_btrfs.toggled.connect(()=>{
 			if (opt_btrfs.active){
 				App.btrfs_mode = true;
+				init_backend();
+				type_changed();
 			}
 			
 			// TODO: init

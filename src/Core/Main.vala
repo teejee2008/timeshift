@@ -437,6 +437,7 @@ public class Main : GLib.Object{
 		exclude_list_default.add("/var/run/*");
 		exclude_list_default.add("/var/lock/*");
 		exclude_list_default.add("/var/spool/*");
+		exclude_list_default.add("/var/lib/docker/*");
 		exclude_list_default.add("/lost+found");
 		exclude_list_default.add("/timeshift/*");
 		exclude_list_default.add("/data/*");

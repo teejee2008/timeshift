@@ -126,6 +126,10 @@ namespace TeeJee.Misc {
 		return date.format ("%Y-%m-%d %H:%M");
 	}
 	
+	public string format_date_12_hour(DateTime date){
+		return date.format ("%Y-%m-%d %I:%M %p");
+	}
+	
 	public string format_duration (long millis){
 
 		/* Converts time in milliseconds to format '00:00:00.0' */
@@ -141,6 +145,17 @@ namespace TeeJee.Misc {
         return "%02.0lf:%02.0lf:%02.0lf".printf (hr, min, sec);
 	}
 
+	public string format_time_left(int64 millis){
+		double mins = (millis * 1.0) / 60000;
+		double secs = ((millis * 1.0) % 60000) / 1000;
+		string txt = "";
+		if (mins >= 1){
+			txt += "%.0fm ".printf(mins);
+		}
+		txt += "%.0fs".printf(secs);
+		return txt;
+	}
+	
 	public double parse_time (string time){
 
 		/* Converts time in format '00:00:00.0' to milliseconds */
@@ -329,5 +344,12 @@ namespace TeeJee.Misc {
 		return output;
 	}
 
-
+	public bool is_numeric(string text){
+		for (int i = 0; i < text.length; i++){
+			if (!text[i].isdigit()){
+				return false;
+			}
+		}
+		return true;
+	}
 }

@@ -1,6 +1,6 @@
 
 /*
- * ProcStats.vala
+ * OSDNotify.vala
  *
  * Copyright 2016 Tony George <teejeetech@gmail.com>
  *

@@ -244,6 +244,10 @@ namespace TeeJee.ProcessHelper{
 		return TEMP_DIR + "/" + timestamp_numeric() + (new Rand()).next_int().to_string();
 	}
 
+	public void exec_process_new_session(string command){
+		exec_script_async("setsid %s &".printf(command));
+	}
+	
 	// find process -------------------------------
 	
 	// dep: which

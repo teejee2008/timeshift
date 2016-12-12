@@ -1,3 +1,26 @@
+/*
+ * AsyncTask.vala
+ *
+ * Copyright 2016 Tony George <teejeetech@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ *
+ *
+ */
+
 using TeeJee.Logging;
 using TeeJee.FileSystem;
 using TeeJee.JsonHelper;
@@ -22,6 +45,7 @@ public abstract class AsyncTask : GLib.Object{
 	private int input_fd;
 	private int output_fd;
 	private int error_fd;
+	private bool finish_called = false;
 
 	protected string script_file = "";
 	protected string working_dir = "";
@@ -41,6 +65,7 @@ public abstract class AsyncTask : GLib.Object{
 	public int64 prg_count_total = 0;
 	public int64 prg_bytes = 0;
 	public int64 prg_bytes_total = 0;
+	public string eta = "";
 	//public bool is_running = false;
 	
 	// signals
@@ -52,6 +77,8 @@ public abstract class AsyncTask : GLib.Object{
 		working_dir = TEMP_DIR + "/" + timestamp_for_path();
 		script_file = path_combine(working_dir, "script.sh");
 		log_file = path_combine(working_dir, "task.log");
+
+		//regex = new Gee.HashMap<string,Regex>(); // needs to be initialized again in instance constructor
 		
 		dir_create(working_dir);
 	}
@@ -62,6 +89,7 @@ public abstract class AsyncTask : GLib.Object{
 		
 		bool has_started = true;
 		is_terminated = false;
+		finish_called = false;
 		
 		prg_count = 0;
 		prg_bytes = 0;
@@ -230,9 +258,17 @@ public abstract class AsyncTask : GLib.Object{
 	protected abstract void parse_stderr_line(string err_line);
 	
 	private void finish(){
+		// finish() gets called by 2 threads but should be executed only once
+		if (finish_called) { return; }
+		finish_called = true;
+		
+		log_debug("AsyncTask: finish(): enter");
+		
 		// dispose stdin
 		try{
-			dos_in.close();
+			if ((dos_in != null) && !dos_in.is_closed() && !dos_in.is_closing()){
+				dos_in.close();
+			}
 		}
 		catch(Error e){
 			// ignore
@@ -265,13 +301,15 @@ public abstract class AsyncTask : GLib.Object{
 		err_line = "";
 		out_line = "";
 
+		timer.stop();
+		
+		finish_task();
+
 		if ((status != AppStatus.CANCELLED) && (status != AppStatus.PASSWORD_REQUIRED)) {
 			status = AppStatus.FINISHED;
 		}
 
-		timer.stop();
-		
-		finish_task();
+		//dir_delete(working_dir);
 		
 		task_complete(); //signal
 	}
@@ -287,6 +325,10 @@ public abstract class AsyncTask : GLib.Object{
 		}
 		log_debug("exit_code: %d".printf(exit_code));
 		return exit_code;
+	}
+
+	public bool is_running(){
+		return (status == AppStatus.RUNNING);
 	}
 	
 	// public actions --------------

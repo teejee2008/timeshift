@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timeshift 1.6\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2016-12-26 21:17+0530\n"
+"POT-Creation-Date: 2016-12-26 22:10+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -210,7 +210,7 @@ msgid ""
 "snapshot."
 msgstr ""
 
-#: Gtk/SnapshotBackendBox.vala:105
+#: Gtk/SnapshotBackendBox.vala:97
 msgid "BTRFS"
 msgstr ""
 
@@ -283,7 +283,7 @@ msgid "Building file list..."
 msgstr ""
 
 #: Utility/GtkHelper.vala:122 Gtk/DeleteWindow.vala:187
-#: Gtk/SetupWizardWindow.vala:187 Gtk/RestoreWindow.vala:189
+#: Gtk/SetupWizardWindow.vala:182 Gtk/RestoreWindow.vala:189
 #: Gtk/BackupWindow.vala:177
 msgid "Cancel"
 msgstr ""
@@ -351,7 +351,7 @@ msgid "Cloning system..."
 msgstr ""
 
 #: Utility/Gtk/AboutWindow.vala:305 Gtk/BootOptionsWindow.vala:107
-#: Gtk/DeleteWindow.vala:169 Gtk/SettingsWindow.vala:143
+#: Gtk/DeleteWindow.vala:169 Gtk/SettingsWindow.vala:142
 #: Gtk/RestoreWindow.vala:179 Gtk/RsyncLogWindow.vala:249
 #: Gtk/BackupWindow.vala:167
 msgid "Close"
@@ -457,16 +457,12 @@ msgid ""
 "system"
 msgstr ""
 
-#: Gtk/SnapshotBackendBox.vala:106
+#: Gtk/SnapshotBackendBox.vala:98
 msgid "Create snapshots using RSYNC"
 msgstr ""
 
 #: Gtk/SnapshotBackendBox.vala:79
 msgid "Create snapshots using RSYNC tool and hard-links"
-msgstr ""
-
-#: Gtk/SnapshotBackendBox.vala:96
-msgid "Create snapshots using rsync tool and hard-links."
 msgstr ""
 
 #: Gtk/BackupBox.vala:81 Gtk/RestoreBox.vala:117
@@ -810,7 +806,7 @@ msgstr ""
 msgid "Failed to destroy qgroup"
 msgstr ""
 
-#: Core/Main.vala:3207 Core/Main.vala:3213
+#: Core/Main.vala:3259 Core/Main.vala:3265
 msgid "Failed to estimate system size"
 msgstr ""
 
@@ -912,7 +908,7 @@ msgid ""
 "Patterns starting with a + will include the item instead of excluding."
 msgstr ""
 
-#: Gtk/SnapshotBackendBox.vala:180
+#: Gtk/SnapshotBackendBox.vala:170
 msgid "Files and directories can be excluded to save disk space."
 msgstr ""
 
@@ -920,7 +916,7 @@ msgstr ""
 msgid "Files and directory counts:"
 msgstr ""
 
-#: Gtk/SnapshotBackendBox.vala:176
+#: Gtk/SnapshotBackendBox.vala:166
 msgid ""
 "Files are copied when the first snapshot is created. Subsequent snapshots "
 "are incremental. Unchanged files are hard-linked from the previous snapshot."
@@ -939,7 +935,7 @@ msgstr ""
 msgid "Filters"
 msgstr ""
 
-#: Gtk/DeleteWindow.vala:100 Gtk/SetupWizardWindow.vala:177
+#: Gtk/DeleteWindow.vala:100 Gtk/SetupWizardWindow.vala:172
 #: Gtk/BackupWindow.vala:94
 msgid "Finish"
 msgstr ""
@@ -1263,7 +1259,7 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: Gtk/DeleteWindow.vala:160 Gtk/SetupWizardWindow.vala:168
+#: Gtk/DeleteWindow.vala:160 Gtk/SetupWizardWindow.vala:163
 #: Gtk/RestoreWindow.vala:170 Gtk/BackupWindow.vala:158
 msgid "Next"
 msgstr ""
@@ -1341,14 +1337,14 @@ msgstr ""
 msgid "OK"
 msgstr ""
 
-#: Gtk/SnapshotBackendBox.vala:167
+#: Gtk/SnapshotBackendBox.vala:157
 msgid ""
 "OS must be installed on a BTRFS partition with Ubuntu-type subvolume layout "
 "(@ and @home subvolumes). Other file systems and subvolume layouts are not "
 "supported."
 msgstr ""
 
-#: Core/Main.vala:3328
+#: Core/Main.vala:3380
 msgid "Older log files removed"
 msgstr ""
 
@@ -1453,7 +1449,7 @@ msgstr ""
 msgid "Preparing..."
 msgstr ""
 
-#: Gtk/DeleteWindow.vala:151 Gtk/SetupWizardWindow.vala:159
+#: Gtk/DeleteWindow.vala:151 Gtk/SetupWizardWindow.vala:154
 #: Gtk/RestoreWindow.vala:161 Gtk/BackupWindow.vala:149
 msgid "Previous"
 msgstr ""
@@ -1674,7 +1670,7 @@ msgstr ""
 msgid "Select Target Device"
 msgstr ""
 
-#: Gtk/BackupDeviceBox.vala:342
+#: Gtk/BackupDeviceBox.vala:320
 #, c-format
 msgid "Select a partition on this disk"
 msgstr ""
@@ -1759,11 +1755,11 @@ msgstr ""
 msgid "Select the target devices where system will be cloned."
 msgstr ""
 
-#: Gtk/BackupDeviceBox.vala:323
+#: Gtk/BackupDeviceBox.vala:301
 msgid "Selected device does not have BTRFS partition"
 msgstr ""
 
-#: Gtk/BackupDeviceBox.vala:321
+#: Gtk/BackupDeviceBox.vala:299
 msgid "Selected device does not have Linux partition"
 msgstr ""
 
@@ -1836,7 +1832,7 @@ msgstr ""
 msgid "Size"
 msgstr ""
 
-#: Gtk/SnapshotBackendBox.vala:165
+#: Gtk/SnapshotBackendBox.vala:155
 msgid ""
 "Size of BTRFS snapshots are initially zero. As system files gradually change "
 "with time, data gets written to new blocks which take up disk space (copy-on-"
@@ -1908,38 +1904,38 @@ msgstr ""
 msgid "Snapshots"
 msgstr ""
 
-#: Gtk/SnapshotBackendBox.vala:157
+#: Gtk/SnapshotBackendBox.vala:147
 msgid ""
 "Snapshots are created and restored instantly. Snapshot creation is an atomic "
 "transaction at the file system level."
 msgstr ""
 
-#: Gtk/SnapshotBackendBox.vala:174
+#: Gtk/SnapshotBackendBox.vala:164
 msgid ""
 "Snapshots are created by creating copies of system files using rsync, and "
 "hard-linking unchanged files from the previous snapshot."
 msgstr ""
 
-#: Gtk/SnapshotBackendBox.vala:155
+#: Gtk/SnapshotBackendBox.vala:145
 msgid ""
 "Snapshots are created using the in-built capabilities of the BTRFS file "
 "system."
 msgstr ""
 
-#: Gtk/SnapshotBackendBox.vala:161
+#: Gtk/SnapshotBackendBox.vala:151
 msgid ""
 "Snapshots are perfect, byte-for-byte copies of the system. Excluding files "
 "is not supported."
 msgstr ""
 
-#: Gtk/SnapshotBackendBox.vala:159
+#: Gtk/SnapshotBackendBox.vala:149
 msgid ""
 "Snapshots are restored by replacing system subvolumes. Since files are never "
 "copied, deleted or overwritten, there is no risk of data loss. The existing "
 "system is preserved as a new snapshot after restore."
 msgstr ""
 
-#: Gtk/SnapshotBackendBox.vala:163
+#: Gtk/SnapshotBackendBox.vala:153
 msgid ""
 "Snapshots are saved on the same disk from which they are created (system "
 "disk). Storage on other disks is not supported. If your system disk fails "
@@ -1950,18 +1946,11 @@ msgstr ""
 msgid "Snapshots available for restore"
 msgstr ""
 
-#: Gtk/SnapshotBackendBox.vala:178
+#: Gtk/SnapshotBackendBox.vala:168
 msgid ""
 "Snapshots can be saved to any disk formatted with a Linux file system. "
 "Saving snapshots to a non-system/portable disk allows the system to be "
 "restored even if the system disk is damaged or re-formatted."
-msgstr ""
-
-#: Gtk/SnapshotBackendBox.vala:98
-msgid ""
-"Snapshots can be stored on non-system devices such as portable hard disks. "
-"This allows system to be restored even if the primary hard disk is damaged "
-"or re-formatted."
 msgstr ""
 
 #: Console/AppConsole.vala:254
@@ -2098,7 +2087,7 @@ msgstr ""
 msgid "The target partition has an unsupported subvolume layout."
 msgstr ""
 
-#: Gtk/BackupDeviceBox.vala:428
+#: Gtk/BackupDeviceBox.vala:406
 #, c-format
 msgid "There are no snapshots on this device"
 msgstr ""

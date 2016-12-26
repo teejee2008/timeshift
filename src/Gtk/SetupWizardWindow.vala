@@ -100,11 +100,6 @@ class SetupWizardWindow : Gtk.Window{
 		finish_box.margin = 0;
 		notebook.append_page (finish_box, label);
 
-		backend_box.type_changed.connect(()=>{
-			backup_dev_box.select_default_device();
-			backup_dev_box.refresh();
-		});
-
 		// TODO: Add a tab for excluding browser cache and other items
 		
 		create_actions();

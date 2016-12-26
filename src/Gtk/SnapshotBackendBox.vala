@@ -90,14 +90,6 @@ class SnapshotBackendBox : Gtk.Box{
 			
 			// TODO: init
 		});
-
-		string txt = "";
-
-		txt += "○ " + _("Create snapshots using rsync tool and hard-links.") + "\n";
-
-		txt += "○ " + _("Snapshots can be stored on non-system devices such as portable hard disks. This allows system to be restored even if the primary hard disk is damaged or re-formatted.") + "\n";
-
-		//label.label = format_text(txt, false, true, false);
 	}
 
 	private void add_opt_btrfs(Gtk.Box hbox){
@@ -117,8 +109,6 @@ class SnapshotBackendBox : Gtk.Box{
 			
 			// TODO: init
 		});
-
-		
 	}
 
 	private void add_description(){
@@ -184,28 +174,7 @@ class SnapshotBackendBox : Gtk.Box{
 	}
 	
 	public void init_backend(){
-		
-		if (App.btrfs_mode){
-			if (App.repo.available()){
-				if (App.repo.device.fstype != "btrfs"){
-					App.repo = new SnapshotRepo.from_null();
-				}
-				else{
-					App.repo = new SnapshotRepo.from_device(App.repo.device, parent_window, App.btrfs_mode);
-				}
-			}
-			else{
-				App.repo =  new SnapshotRepo.from_device(App.repo.device, parent_window, App.btrfs_mode);
-			}
-		}
-		else{
-			if (App.repo.available()){
-				App.repo = new SnapshotRepo.from_device(App.repo.device, parent_window, App.btrfs_mode);
-			}
-			else{
-				App.repo = new SnapshotRepo.from_null();
-			}
-		}
+		App.try_select_default_device_for_backup(parent_window);
 	}
 
 	public void refresh(){

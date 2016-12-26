@@ -87,7 +87,6 @@ class SettingsWindow : Gtk.Window{
 
 		backend_box.type_changed.connect(()=>{
 			exclude_box.visible = !App.btrfs_mode;
-			backup_dev_box.select_default_device();
 			backup_dev_box.refresh();
 			notes_box.refresh();
 		});

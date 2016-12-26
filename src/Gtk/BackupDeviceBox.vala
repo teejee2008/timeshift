@@ -279,28 +279,6 @@ class BackupDeviceBox : Gtk.Box{
 		lbl_infobar_location = label;
 	}
 
-	public void select_default_device(){
-		
-		App.update_partitions();
-		
-		foreach(var item in App.partitions){
-			
-			if (item.type == "disk") { continue; }
-
-			if (!App.btrfs_mode && item.has_linux_filesystem()){
-				change_backup_device(item);
-				return;
-			}
-			else if (App.btrfs_mode && (item.fstype == "btrfs")){
-				change_backup_device(item);
-				return;
-			}
-			else{
-				continue;
-			}
-		}
-	}
-	
 	private void try_change_device(Device dev){
 
 		log_debug("try_change_device: %s".printf(dev.device));

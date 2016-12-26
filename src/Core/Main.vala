@@ -3117,6 +3117,58 @@ public class Main : GLib.Object{
 		//return false;
 	}
 
+	public void try_select_default_device_for_backup(Gtk.Window? parent_win){
+
+		log_debug("try_select_default_device_for_backup()");
+
+		// check if currently selected device can be used
+		if (repo.available()){
+			if (check_device_for_backup(repo.device)){
+				repo = new SnapshotRepo.from_device(repo.device, parent_win, btrfs_mode);
+			}
+			else{
+				App.repo = new SnapshotRepo.from_null();
+			}
+		}
+		
+		update_partitions();
+
+		// In BTRFS mode, select the system disk if system disk is BTRFS
+		if (btrfs_mode && sys_subvolumes.has_key("@")){
+			var subvol_root = sys_subvolumes["@"];
+			repo = new SnapshotRepo.from_device(subvol_root.get_device(), parent_win, btrfs_mode);
+			return;
+		}
+			
+		foreach(var dev in partitions){
+			if (check_device_for_backup(dev)){
+				repo = new SnapshotRepo.from_device(dev, parent_win, btrfs_mode);
+			}
+			else{
+				continue;
+			}
+		}
+	}
+
+	public bool check_device_for_backup(Device dev){
+		bool ok = false;
+
+		if (dev.type == "disk") { return false; }
+		if (dev.has_children()) { return false; }
+		
+		if (btrfs_mode && (dev.fstype == "btrfs")){
+			if (check_btrfs_volume(dev, "@")){
+				return true;
+			}
+		}
+		else if (!btrfs_mode && dev.has_linux_filesystem()){
+			// TODO: check free space
+			return true;
+		}
+
+		return ok;
+	}
+	
 	public int64 estimate_system_size(){
 
 		log_debug("estimate_system_size()");

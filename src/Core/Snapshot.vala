@@ -25,11 +25,17 @@ public class Snapshot : GLib.Object{
 	public bool live = false;
 	public bool marked_for_deletion = false;
 	public LinuxDistro distro;
+	public SnapshotRepo repo;
+	
+	//btrfs
 	public bool btrfs_mode = false;
+	public Gee.HashMap<string,string> paths; // for btrfs snapshots only
+	public string mount_path_root = "";
+	public string mount_path_home = "";
 	
 	public DeleteFileTask delete_file_task;
 
-	public Snapshot(string dir_path, bool btrfs_snapshot){
+	public Snapshot(string dir_path, bool btrfs_snapshot, SnapshotRepo _repo){
 
 		try{
 			var f = File.new_for_path(dir_path);
@@ -39,6 +45,7 @@ public class Snapshot : GLib.Object{
 			name = info.get_name();
 			description = "";
 			btrfs_mode = btrfs_snapshot;
+			repo = _repo;
 			
 			date = new DateTime.from_unix_utc(0);
 			tags = new Gee.ArrayList<string>();
@@ -46,7 +53,8 @@ public class Snapshot : GLib.Object{
 			fstab_list = new Gee.ArrayList<FsTabEntry>();
 			delete_file_task = new DeleteFileTask();
 			subvolumes = new Gee.HashMap<string,Subvolume>();
-
+			paths = new Gee.HashMap<string,string>();
+			
 			read_control_file();
 			read_exclude_list();
 			read_fstab_file();
@@ -58,6 +66,12 @@ public class Snapshot : GLib.Object{
 	}
 
 	// properties
+	
+	public string date_formatted{
+		owned get{
+			return date.format("%Y-%m-%d %H:%M");
+		}
+	}
 
 	public string rsync_log_file{
 		owned get {
@@ -165,15 +179,18 @@ public class Snapshot : GLib.Object{
 			app_version = json_get_string(config,"app-version","");
 			file_count = json_get_int64(config,"file_count",file_count);
 			live = json_get_bool(config,"live",false);
-			
+
 			distro = LinuxDistro.get_dist_info(path_combine(path, "localhost"));
 
 			if (config.has_member("subvolumes")){
-				
+
 				var subvols = (Json.Object) config.get_object_member("subvolumes");
-				
+
 				foreach(string subvol_name in subvols.get_members()){
-					var subvol_path = path_combine(path, subvol_name);
+
+					paths[subvol_name] = path.replace(repo.mount_path, repo.mount_paths[subvol_name]);
+					
+					var subvol_path = path_combine(paths[subvol_name], subvol_name);
 					var subvolume = new Subvolume(subvol_name, subvol_path, ""); //subvolumes.get(subvol_name);
 					subvolumes.set(subvol_name, subvolume);
 					
@@ -196,7 +213,7 @@ public class Snapshot : GLib.Object{
 								subvolume.unshared_bytes = int64.parse(item);
 								break;
 							case 4:
-								subvolume.dev_uuid = item.strip();
+								subvolume.device_uuid = item.strip();
 								break;
 						}
 					}
@@ -281,7 +298,7 @@ public class Snapshot : GLib.Object{
 						arr.add_string_element(subvol.id.to_string());
 						arr.add_string_element(subvol.total_bytes.to_string());
 						arr.add_string_element(subvol.unshared_bytes.to_string());
-						arr.add_string_element(subvol.dev_uuid);
+						arr.add_string_element(subvol.device_uuid);
 						subvols.set_array_member(subvol.name,arr);
 					}
 				}
@@ -306,7 +323,7 @@ public class Snapshot : GLib.Object{
 	
 	public static Snapshot write_control_file(
 		string snapshot_path, DateTime dt_created, string root_uuid, string distro_full_name, 
-		string tag, string comments, int64 item_count, bool is_btrfs, bool is_live){
+		string tag, string comments, int64 item_count, bool is_btrfs, bool is_live, SnapshotRepo repo){
 			
 		var ctl_path = snapshot_path + "/info.json";
 		var config = new Json.Object();
@@ -339,7 +356,9 @@ public class Snapshot : GLib.Object{
 	        log_error (e.message);
 	    }
 
-	    return (new Snapshot(snapshot_path, is_btrfs));
+	    log_msg(_("Created control file") + ": %s".printf(ctl_path));
+
+	    return (new Snapshot(snapshot_path, is_btrfs, repo));
 	}
 
 	// check
@@ -414,26 +433,25 @@ public class Snapshot : GLib.Object{
 		
 		// delete subvolumes
 		
-		foreach(Subvolume subvolume in subvolumes.values){
-			bool ok = subvolume.remove();
-			if (!ok) { return false; }
+		foreach(var subvol in subvolumes.values){
+			bool ok = subvol.remove();
+			if (!ok) {
+				return false;
+			}
 		}
 
-		// delete snapshot directory
+		// delete directories after **all** subvolumes have been deleted
+
+		foreach(var subvol in subvolumes.values){
+			bool ok = dir_delete(paths[subvol.name], true);
+			if (!ok) {
+				return false;
+			}
+		}
+
+		log_msg(_("Deleted snapshot") + ": '%s'".printf(name));
 		
-		string cmd = "rm -rf '%s'".printf(path);
-		if (LOG_COMMANDS) { log_debug(cmd); }
-
-		string std_out, std_err;
-		int ret_val = exec_sync(cmd, out std_out, out std_err);
-		if (ret_val != 0){
-			log_error(_("Failed to delete snapshot directory") + ": '%s'".printf(name));
-			return false;
-		}
-		else{
-			log_msg(_("Snapshot deleted") + ": '%s'".printf(name));
-			return true;
-		}
+		return true;
 	}
 	
 	public void mark_for_deletion(){

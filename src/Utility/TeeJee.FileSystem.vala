@@ -294,7 +294,7 @@ namespace TeeJee.FileSystem{
 		return ( FileUtils.test(dir_path, GLib.FileTest.EXISTS) && FileUtils.test(dir_path, GLib.FileTest.IS_DIR));
 	}
 	
-	public bool dir_create (string dir_path){
+	public bool dir_create (string dir_path, bool show_message = false){
 
 		/* Creates a directory along with parents */
 
@@ -302,6 +302,9 @@ namespace TeeJee.FileSystem{
 			var dir = File.parse_name (dir_path);
 			if (dir.query_exists () == false) {
 				dir.make_directory_with_parents (null);
+				if (show_message){
+					log_msg(_("Created directory") + ": %s".printf(dir_path));
+				}
 			}
 			return true;
 		}
@@ -312,12 +315,19 @@ namespace TeeJee.FileSystem{
 		}
 	}
 
-	public bool dir_delete (string dir_path){
+	public bool dir_delete (string dir_path, bool show_message = false){
 		
 		/* Recursively deletes directory along with contents */
 		
+		if (!dir_exists(dir_path)){
+			return true;
+		}
+		
 		string cmd = "rm -rf '%s'".printf(escape_single_quote(dir_path));
 		int status = exec_sync(cmd);
+		if (show_message){
+			log_msg(_("Deleted directory") + ": %s".printf(dir_path));
+		}
 		return (status == 0);
 	}
 

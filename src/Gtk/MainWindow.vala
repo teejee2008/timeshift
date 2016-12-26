@@ -823,6 +823,7 @@ class MainWindow : Gtk.Window{
 		log_debug("MainWindow: btn_settings_clicked()");
 		
 		btn_settings.sensitive = false;
+		btn_wizard.sensitive = false;
 
 		this.hide();
 
@@ -832,6 +833,7 @@ class MainWindow : Gtk.Window{
 		win.set_transient_for(this);
 		win.destroy.connect(()=>{
 			btn_settings.sensitive = true;
+			btn_wizard.sensitive = true;
 			settings_changed(btrfs_mode_prev);
 		});
 	}
@@ -840,6 +842,7 @@ class MainWindow : Gtk.Window{
 
 		log_debug("MainWindow: btn_wizard_clicked()");
 		
+		btn_settings.sensitive = false;
 		btn_wizard.sensitive = false;
 
 		this.hide();
@@ -849,19 +852,25 @@ class MainWindow : Gtk.Window{
 		var win = new SetupWizardWindow();
 		win.set_transient_for(this);
 		win.destroy.connect(()=>{
+			btn_settings.sensitive = true;
 			btn_wizard.sensitive = true;
 			settings_changed(btrfs_mode_prev);
 		});
 	}
 
 	private void settings_changed(bool btrfs_mode_prev){
-		
+
 		if (btrfs_mode_prev != App.btrfs_mode){
-			if ((App.repo != null) && (App.repo.device.uuid.length > 0)){
+			if ((App.repo != null) && (App.repo.device != null) && (App.repo.device.uuid.length > 0)){
 				App.repo = new SnapshotRepo.from_uuid(App.repo.device.uuid, this, App.btrfs_mode);
 			}
 			else{
-				App.repo = new SnapshotRepo.from_null();
+				if ((App.sys_root != null) && (App.sys_root.fstype == "btrfs")){
+					App.repo = new SnapshotRepo.from_uuid(App.sys_root.uuid, this, App.btrfs_mode);
+				}
+				else{
+					App.repo = new SnapshotRepo.from_null();
+				}
 			}
 		}
 

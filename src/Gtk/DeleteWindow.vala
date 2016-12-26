@@ -106,6 +106,8 @@ class DeleteWindow : Gtk.Window{
 
 		show_all();
 
+		//go_first();
+
 		tmr_init = Timeout.add(100, init_delayed);
 
 		log_debug("DeleteWindow: DeleteWindow(): exit");
@@ -318,6 +320,16 @@ class DeleteWindow : Gtk.Window{
 			break;
 		case Tabs.DELETE_FINISH:
 			delete_finish_box.update_message(success);
+			gtk_do_events();
+			
+			if (App.btrfs_mode){
+				for(int i=0; i<10; i++){
+					sleep(100);
+					gtk_do_events();
+				}
+			}
+			
+			this.destroy();
 			break;
 		}
 	}

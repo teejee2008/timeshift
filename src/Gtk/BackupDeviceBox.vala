@@ -279,12 +279,35 @@ class BackupDeviceBox : Gtk.Box{
 		lbl_infobar_location = label;
 	}
 
+	public void select_default_device(){
+		
+		App.update_partitions();
+		
+		foreach(var item in App.partitions){
+			
+			if (item.type == "disk") { continue; }
 
+			if (!App.btrfs_mode && item.has_linux_filesystem()){
+				change_backup_device(item);
+				return;
+			}
+			else if (App.btrfs_mode && (item.fstype == "btrfs")){
+				change_backup_device(item);
+				return;
+			}
+			else{
+				continue;
+			}
+		}
+	}
+	
 	private void try_change_device(Device dev){
 
 		log_debug("try_change_device: %s".printf(dev.device));
 		
 		if (dev.type == "disk"){
+			
+			// find first valid partition
 			bool found_child = false;
 			foreach (var child in dev.children){
 				if ((App.btrfs_mode && (child.fstype == "btrfs")) || (!App.btrfs_mode && child.has_linux_filesystem())){
@@ -293,6 +316,7 @@ class BackupDeviceBox : Gtk.Box{
 					break;
 				}
 			}
+			
 			if (!found_child){
 				string msg = _("Selected device does not have Linux partition");
 				if (App.btrfs_mode){
@@ -305,12 +329,15 @@ class BackupDeviceBox : Gtk.Box{
 			}
 		}
 		else if (dev.has_children()){
+			// select the child instead of parent
 			change_backup_device(dev.children[0]);
 		}
 		else if (!dev.has_children()){
+			// select the device
 			change_backup_device(dev);
 		}
 		else {
+			// ask user to select
 			lbl_infobar_location.label = "<span weight=\"bold\">%s</span>".printf(
 				_("Select a partition on this disk"));
 			infobar_location.message_type = Gtk.MessageType.ERROR;

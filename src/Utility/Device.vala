@@ -1372,6 +1372,8 @@ public class Device : GLib.Object{
 		string device = "";
 		string uuid = "";
 
+		// resolve uuid and device name ----------
+		
 		if (dev_name_or_uuid.has_prefix("/dev")){
 			device = dev_name_or_uuid;
 			uuid = get_device_uuid(dev_name_or_uuid);
@@ -1382,68 +1384,51 @@ public class Device : GLib.Object{
 			device = resolve_device_name(device);
 		}
 
-		if (dir_exists(mount_point)){
-			dir_create(mount_point);
-		}
-		
-		// check if already mounted ------------------
+		// check if already mounted --------------
 		
 		var mps = Device.get_device_mount_points(dev_name_or_uuid);
 		foreach(var mp in mps){
 			if (mp.mount_point.contains(mount_point) && mp.mount_options.contains(mount_options)){
 				if (!silent){
-					string msg = "";
-					msg += "%s: %s %s".printf(_("Mounted"), _("device"), dev_name_or_uuid);
+					var msg = "%s is mounted at: %s".printf(device, mount_point);
 					if (mp.mount_options.length > 0){
-						msg += ", %s".printf(mp.mount_options);
+						msg += ", options: %s".printf(mp.mount_options);
 					}
-					msg += " at '%s'".printf(mount_point);
+					log_msg(msg);
 				}
 				return true;
 			}
 		}
+
+		dir_create(mount_point);
+
+		// mount the device -------------------
 		
-
-		try{
-			// check and create mount point -------------
-
-			File file = File.new_for_path(mount_point);
-			if (!file.query_exists()){
-				file.make_directory_with_parents();
-			}
-
-			// mount the device -----------------------------
-
-			if (mount_options.length > 0){
-				cmd = "mount -o %s \"%s\" \"%s\"".printf(mount_options, device, mount_point);
-			}
-			else{
-				cmd = "mount \"%s\" \"%s\"".printf(device, mount_point);
-			}
-
-			Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-
-			if (ret_val != 0){
-				log_error ("Failed to mount device '%s' at mount point '%s'".printf(device, mount_point));
-				log_error (std_err);
-				return false;
-			}
-			else{
-				if (!silent){
-					Device dev = get_device_by_name(device);
-					log_msg ("Mounted '%s'%s at '%s'".printf(
-						(dev == null) ? device : dev.device_name_with_parent,
-						(mount_options.length > 0) ? " (%s)".printf(mount_options) : "",
-						mount_point));
-				}
-				return true;
-			}
+		if (mount_options.length > 0){
+			cmd = "mount -o %s \"%s\" \"%s\"".printf(mount_options, device, mount_point);
 		}
-		catch(Error e){
-			log_error (e.message);
+		else{
+			cmd = "mount \"%s\" \"%s\"".printf(device, mount_point);
+		}
+
+		ret_val = exec_sync(cmd, out std_out, out std_err);
+
+		if (ret_val != 0){
+			log_error ("Failed to mount device '%s' at mount point '%s'".printf(device, mount_point));
+			log_error (std_err);
 			return false;
 		}
-
+		else{
+			if (!silent){
+				Device dev = get_device_by_name(device);
+				log_msg ("Mounted '%s'%s at '%s'".printf(
+					(dev == null) ? device : dev.device_name_with_parent,
+					(mount_options.length > 0) ? " (%s)".printf(mount_options) : "",
+					mount_point));
+			}
+			return true;
+		}
+			
 		// check if mounted successfully ------------------
 
 		/*mps = Device.get_device_mount_points(dev_name_or_uuid);

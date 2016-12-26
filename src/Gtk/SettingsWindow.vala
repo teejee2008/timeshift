@@ -43,7 +43,7 @@ class SettingsWindow : Gtk.Window{
 	private FinishBox notes_box;
 
 	private uint tmr_init;
-	private int def_width = 650;
+	private int def_width = 550;
 	private int def_height = 500;
 	
 	public SettingsWindow () {
@@ -87,6 +87,7 @@ class SettingsWindow : Gtk.Window{
 
 		backend_box.type_changed.connect(()=>{
 			exclude_box.visible = !App.btrfs_mode;
+			backup_dev_box.select_default_device();
 			backup_dev_box.refresh();
 			notes_box.refresh();
 		});
@@ -109,8 +110,9 @@ class SettingsWindow : Gtk.Window{
 			tmr_init = 0;
 		}
 
-		backup_dev_box.refresh();
-
+		backend_box.refresh();
+		//backup_dev_box.refresh(); //will be triggerred indirectly
+		
 		return false;
 	}
 	

@@ -8,7 +8,7 @@ using TeeJee.Misc;
 
 public class Subvolume : GLib.Object{
 
-	public string dev_uuid;
+	public string device_uuid;
 	public string name = "";
 	public string path = "";
 	public long id = -1;
@@ -18,7 +18,7 @@ public class Subvolume : GLib.Object{
 	public Subvolume(string name, string path, string parent_dev_uuid){
 		this.name = name;
 		this.path = path;
-		this.dev_uuid = parent_dev_uuid;
+		this.device_uuid = parent_dev_uuid;
 	}
 
 	public string total_formatted{
@@ -34,7 +34,7 @@ public class Subvolume : GLib.Object{
 	}
 
 	public Device? get_device(){
-		return Device.get_device_by_uuid(dev_uuid);
+		return Device.get_device_by_uuid(device_uuid);
 	}
 	
 	public static Gee.HashMap<string, Subvolume> detect_subvolumes_for_system_by_path(string system_path, Gtk.Window? parent_window){
@@ -67,7 +67,7 @@ public class Subvolume : GLib.Object{
 	}
 
 	public void print_info(){
-		log_debug("name=%s, uuid=%s, id=%ld, path=%s".printf(name, dev_uuid, id, path));
+		log_debug("name=%s, uuid=%s, id=%ld, path=%s".printf(name, device_uuid, id, path));
 	}
 
 	public bool remove(){
@@ -88,13 +88,16 @@ public class Subvolume : GLib.Object{
 					log_error(_("Failed to delete snapshot subvolume") + ": '%s'".printf(path));
 					return false;
 				}
+				else{
+					log_msg(_("Deleted subvolume") + ": %s".printf(path));
+				}
 
 				if (id > 0){
 					string dev_path = "";
 					var dev = get_device();
 					if (dev != null){
 						foreach(var mp in dev.mount_points){
-							if ((mp.device.uuid == dev_uuid) && !mp.mount_options.contains("subvol")){
+							if ((mp.device.uuid == device_uuid) && !mp.mount_options.contains("subvol")){
 								dev_path = mp.mount_point;
 							}
 						}
@@ -107,6 +110,9 @@ public class Subvolume : GLib.Object{
 						if (ret_val != 0){
 							log_error(_("Failed to destroy qgroup") + ": '0/%ld'".printf(id));
 							return false;
+						}
+						else{
+							log_msg(_("Destroyed qgroup") + ": %ld".printf(id));
 						}
 					}
 				}

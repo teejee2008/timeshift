@@ -37,6 +37,7 @@ class SnapshotBackendBox : Gtk.Box{
 	
 	private Gtk.RadioButton opt_rsync;
 	private Gtk.RadioButton opt_btrfs;
+	private Gtk.Label lbl_description;
 	private Gtk.Window parent_window;
 	
 	public signal void type_changed();
@@ -60,17 +61,23 @@ class SnapshotBackendBox : Gtk.Box{
 	private void build_ui(){
 
 		add_label_header(this, _("Select Snapshot Type"), true);
-		
-		add_opt_rsync();
 
-		add_opt_btrfs();
+		var hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 12);
+		//hbox.homogeneous = true;
+		add(hbox);
+		
+		add_opt_rsync(hbox);
+
+		add_opt_btrfs(hbox);
+
+		add_description();
 	}
 
-	private void add_opt_rsync(){
+	private void add_opt_rsync(Gtk.Box hbox){
 
-		var opt = new RadioButton.with_label_from_widget(null, _("Rsync + Hard-links"));
+		var opt = new RadioButton.with_label_from_widget(null, _("RSYNC"));
 		opt.set_tooltip_markup(_("Create snapshots using RSYNC tool and hard-links"));
-		add (opt);
+		hbox.add (opt);
 		opt_rsync = opt;
 
 		opt_rsync.toggled.connect(()=>{
@@ -78,40 +85,26 @@ class SnapshotBackendBox : Gtk.Box{
 				App.btrfs_mode = false;
 				init_backend();
 				type_changed();
+				update_description();
 			}
 			
 			// TODO: init
 		});
 
-
-		// scrolled
-		var scrolled = new ScrolledWindow(null, null);
-		//scrolled.set_shadow_type (ShadowType.ETCHED_IN);
-		//scrolled.margin = 6;
-		//scrolled.expand = true;
-		scrolled.set_size_request(-1,100);
-		scrolled.hscrollbar_policy = Gtk.PolicyType.NEVER;
-		scrolled.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
-		add(scrolled);
-		
-		var label = add_label((Gtk.Box)scrolled, "", false, true, false);
-		//label.vexpand = true;
-		label.margin_bottom = 6;
-		
 		string txt = "";
 
-		txt += "> " + _("Create snapshots using rsync tool and hard-links.") + "\n";
+		txt += "○ " + _("Create snapshots using rsync tool and hard-links.") + "\n";
 
-		txt += "> " + _("Snapshots can be stored on non-system devices such as portable hard disks. This allows system to be restored even if the primary hard disk is damaged or re-formatted.") + "\n";
+		txt += "○ " + _("Snapshots can be stored on non-system devices such as portable hard disks. This allows system to be restored even if the primary hard disk is damaged or re-formatted.") + "\n";
 
-		label.label = format_text(txt, false, true, false);
+		//label.label = format_text(txt, false, true, false);
 	}
 
-	private void add_opt_btrfs(){
+	private void add_opt_btrfs(Gtk.Box hbox){
 
 		var opt = new RadioButton.with_label_from_widget(opt_rsync, _("BTRFS"));
 		opt.set_tooltip_markup(_("Create snapshots using RSYNC"));
-		add (opt);
+		hbox.add (opt);
 		opt_btrfs = opt;
 
 		opt_btrfs.toggled.connect(()=>{
@@ -119,49 +112,105 @@ class SnapshotBackendBox : Gtk.Box{
 				App.btrfs_mode = true;
 				init_backend();
 				type_changed();
+				update_description();
 			}
 			
 			// TODO: init
 		});
 
+		
+	}
+
+	private void add_description(){
 		// scrolled
 		var scrolled = new ScrolledWindow(null, null);
-		//scrolled.set_shadow_type (ShadowType.ETCHED_IN);
+		scrolled.set_shadow_type (ShadowType.ETCHED_IN);
 		//scrolled.margin = 6;
 		//scrolled.expand = true;
 		scrolled.set_size_request(-1,200);
 		scrolled.hscrollbar_policy = Gtk.PolicyType.NEVER;
 		scrolled.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
 		add(scrolled);
-		
-		var label = add_label((Gtk.Box)scrolled, "", false, true, false);
-		//label.vexpand = true;
-		label.margin_bottom = 6;
-		
-		string txt = "";
 
-		txt += "> " + _("Create snapshots using the BTRFS file system tools") + "\n";
+		var lbl = new Gtk.Label("");
+		lbl.set_use_markup(true);
+		lbl.xalign = (float) 0.0;
+		lbl.yalign = (float) 0.0;
+		lbl.wrap = true;
+		lbl.wrap_mode = Pango.WrapMode.WORD;
+		lbl.margin = 6;
+		lbl.vexpand = true;
+		scrolled.add(lbl);
 
-		txt += "> " + _("Snapshots will be stored on the same device from which it is created (storage on external disks is not supported).") + "\n";
-
-		txt += "> " + _("Snapshots are atomic (created instantly as a single transaction). Snapshots can be created, deleted and restored instantly (without any delay).") + "\n";
-
-		txt += "> " + _("Snapshots are perfect bit-for-bit copies of your system (nothing is excluded).") + "\n";
-
-		txt += "> " + _("Snapshots are very space efficient and do not take space on disk when first created. As system files are modified over time, the files in snapshot will be duplicated, and the snapshot will gradually take up space on disk.") + "\n";
-		
-		label.label = format_text(txt, false, true, false);
+		lbl_description = lbl;
 	}
 
+	private void update_description(){
+
+		string bullet = "▰ ";
+		
+		if (opt_btrfs.active){
+			string txt = "<b>BTRFS Snapshots</b>\n\n";
+
+			txt += bullet + _("Snapshots are created using the in-built capabilities of the BTRFS file system.") + "\n\n";
+			
+			txt += bullet + _("Snapshots are created and restored instantly. Snapshot creation is an atomic transaction at the file system level.") + "\n\n";
+
+			txt += bullet + _("Snapshots are restored by replacing system subvolumes. Since files are never copied, deleted or overwritten, there is no risk of data loss. The existing system is preserved as a new snapshot after restore.") + "\n\n";
+			
+			txt += bullet + _("Snapshots are perfect, byte-for-byte copies of the system. Excluding files is not supported.") + "\n\n";
+
+			txt += bullet + _("Snapshots are saved on the same disk from which they are created (system disk). Storage on other disks is not supported. If your system disk fails then the snapshots stored on it will be lost along with the system.") + "\n\n";
+
+			txt += bullet + _("Size of BTRFS snapshots are initially zero. As system files gradually change with time, data gets written to new blocks which take up disk space (copy-on-write). The files in the snapshot continue to point to the original data blocks.") + "\n\n";
+
+			txt += bullet + _("OS must be installed on a BTRFS partition with Ubuntu-type subvolume layout (@ and @home subvolumes). Other file systems and subvolume layouts are not supported.") + "\n\n";
+			
+			lbl_description.label = txt;
+		}
+		else{
+			string txt = "<b>RSYNC Snapshots</b>\n\n";
+
+			txt += bullet + _("Snapshots are created by creating copies of system files using rsync, and hard-linking unchanged files from the previous snapshot.") + "\n\n";
+			
+			txt += bullet + _("Files are copied when the first snapshot is created. Subsequent snapshots are incremental. Unchanged files are hard-linked from the previous snapshot.") + "\n\n";
+
+			txt += bullet + _("Snapshots can be saved to any disk formatted with a Linux file system. Saving snapshots to a non-system/portable disk allows the system to be restored even if the system disk is damaged or re-formatted.") + "\n\n";
+
+			txt += bullet + _("Files and directories can be excluded to save disk space.") + "\n\n";
+
+			lbl_description.label = txt;
+		}
+	}
+	
 	public void init_backend(){
+		
 		if (App.btrfs_mode){
-			if (App.repo.available() && (App.repo.device.fstype != "btrfs")){
-				App.repo =  new SnapshotRepo.from_null();
+			if (App.repo.available()){
+				if (App.repo.device.fstype != "btrfs"){
+					App.repo = new SnapshotRepo.from_null();
+				}
+				else{
+					App.repo = new SnapshotRepo.from_device(App.repo.device, parent_window, App.btrfs_mode);
+				}
+			}
+			else{
+				App.repo =  new SnapshotRepo.from_device(App.repo.device, parent_window, App.btrfs_mode);
+			}
+		}
+		else{
+			if (App.repo.available()){
+				App.repo = new SnapshotRepo.from_device(App.repo.device, parent_window, App.btrfs_mode);
+			}
+			else{
+				App.repo = new SnapshotRepo.from_null();
 			}
 		}
 	}
 
 	public void refresh(){
 		opt_btrfs.active = App.btrfs_mode;
+		type_changed();
+		update_description();
 	}
 }

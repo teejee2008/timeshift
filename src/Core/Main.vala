@@ -635,6 +635,7 @@ public class Main : GLib.Object{
 		return exclude_list_restore;
 	}
 
+
 	public bool save_exclude_list_for_backup(string output_path){
 
 		log_debug("Main: save_exclude_list_for_backup()");
@@ -942,7 +943,7 @@ public class Main : GLib.Object{
 				repo.create_symlinks();
 			}
 			
-			log_msg("ok");
+			//log_msg("OK");
 		}
 		catch(Error e){
 			log_error (e.message);
@@ -999,8 +1000,7 @@ public class Main : GLib.Object{
 					// tag the backup
 					backup_to_rotate.add_tag(tag);
 	
-					var message = "%s '%s' %s '%s'".printf(
-						_("Snapshot"), backup_to_rotate.name, _("tagged"), tag);
+					var message = _("Tagged snapshot") + " '%s': %s".printf(backup_to_rotate.name, tag);
 					log_msg(message);
 
 					return true;
@@ -1035,7 +1035,7 @@ public class Main : GLib.Object{
 			OSDNotify.notify_send("TimeShift", message, 10000, "low");
 
 			if (new_snapshot != null){
-				message = "%s '%s' %s '%s'".printf(_("Snapshot"), new_snapshot.name, _("tagged"), tag);
+				message = _("Tagged snapshot") + " '%s': %s".printf(new_snapshot.name, tag);
 				log_msg(message);
 			}
 
@@ -1052,7 +1052,7 @@ public class Main : GLib.Object{
 
 	private Snapshot? create_snapshot_with_rsync(string tag, DateTime dt_created){
 		
-		log_msg(_("Creating new backup...") + "(RSYNC)");
+		log_msg(_("Creating new snapshot...") + "(RSYNC)");
 		
 		// take new backup ---------------------------------
 
@@ -1179,7 +1179,7 @@ public class Main : GLib.Object{
 		// write control file
 		Snapshot.write_control_file(
 			snapshot_path, dt_created, sys_uuid, current_distro.full_name(),
-			tag, cmd_comments, 0, false, false);
+			tag, cmd_comments, 0, false, false, App.repo);
 
 		// parse log file
 		progress_text = _("Parsing log file...");
@@ -1190,7 +1190,7 @@ public class Main : GLib.Object{
 		// write control file
 		var snapshot = Snapshot.write_control_file(
 			snapshot_path, dt_created, sys_uuid, current_distro.full_name(),
-			tag, cmd_comments, task.prg_count_total, false, false);
+			tag, cmd_comments, task.prg_count_total, false, false, App.repo);
 
 		return snapshot;
 	}
@@ -1207,34 +1207,21 @@ public class Main : GLib.Object{
 		}
 
 		string time_stamp = dt_created.format("%Y-%m-%d_%H-%M-%S");
-		string snapshot_dir = repo.snapshots_path;
 		string snapshot_name = time_stamp;
-		string snapshot_path = path_combine(snapshot_dir, snapshot_name);
-		dir_create(snapshot_path);
-		
 		string sys_uuid = (sys_root == null) ? "" : sys_root.uuid;
-		Snapshot snapshot_to_link = null;
-
+		string snapshot_path = "";
+		
 		// create subvolume snapshots
 		
 		foreach(var subvol in sys_subvolumes.values){
 
-			string mount_path = repo.mount_path;
+			snapshot_path = path_combine(repo.mount_paths[subvol.name], "timeshift-btrfs/snapshots/%s".printf(snapshot_name));
+			dir_create(snapshot_path, true);
 			
-			if ((subvol.name == "@home") && (subvol.dev_uuid != repo.device.uuid)){
-				
-				Device.automount_udisks(subvol.dev_uuid, parent_window);
-
-				var mps = Device.get_device_mount_points(subvol.dev_uuid);
-				if (mps.size > 0){
-					mount_path = mps[0].mount_point;
-				}
-				else{
-					mount_path = "";
-				}
-			}
-
-			string cmd = "btrfs subvolume snapshot '%s/%s' '%s/%s' \n".printf(mount_path, subvol.name, snapshot_path, subvol.name);
+			string src_path = path_combine(repo.mount_paths[subvol.name], subvol.name);
+			string dst_path = path_combine(snapshot_path, subvol.name);
+			
+			string cmd = "btrfs subvolume snapshot '%s' '%s' \n".printf(src_path, dst_path);
 			if (LOG_COMMANDS) { log_debug(cmd); }
 
 			string std_out, std_err;
@@ -1245,14 +1232,19 @@ public class Main : GLib.Object{
 				log_error(_("Failed to create subvolume snapshot") + ": %s".printf(subvol.name));
 				return null;
 			}
+			else{
+				log_msg(_("Created subvolume snapshot") + ": %s".printf(dst_path));
+			}
 		}
 
-		log_msg(_("Writing control file..."));
+		//log_msg(_("Writing control file..."));
+
+		snapshot_path = path_combine(repo.mount_paths["@"], "timeshift-btrfs/snapshots/%s".printf(snapshot_name));
 		
 		// write control file
 		var snapshot = Snapshot.write_control_file(
 			snapshot_path, dt_created, sys_uuid, current_distro.full_name(),
-			tag, cmd_comments, 0, true, false);
+			tag, cmd_comments, 0, true, false, App.repo);
 
 		// write subvolume info
 		foreach(var subvol in sys_subvolumes.values){
@@ -1711,15 +1703,27 @@ public class Main : GLib.Object{
 		
 		// final check - check if target root device is mounted
 
-		if (dst_root == null){
-			log_error(_("Target device not specified!"));
-			return false;
-		}
-
-		if (!restore_current_system){
-			if (mount_point_restore.strip().length == 0){
-				log_error(_("Target device is not mounted"));
+		if (btrfs_mode){
+			if (repo.mount_paths["@"].length == 0){
+				log_error(_("BTRFS device is not mounted") + ": @");
 				return false;
+			}
+			if (repo.mount_paths["@home"].length == 0){
+				log_error(_("BTRFS device is not mounted") + ": @home");
+				return false;
+			}
+		}
+		else{
+			if (dst_root == null){
+				log_error(_("Target device not specified!"));
+				return false;
+			}
+
+			if (!restore_current_system){
+				if (mount_point_restore.strip().length == 0){
+					log_error(_("Target device is not mounted"));
+					return false;
+				}
 			}
 		}
 
@@ -1771,6 +1775,12 @@ public class Main : GLib.Object{
 		foreach(var entry in mount_list){
 			if (entry.device == null){ continue; }
 
+			if (btrfs_mode){
+				if (entry.subvolume_name().length == 0){
+					continue;
+				}
+			}
+			
 			string dev_name = entry.device.full_name_with_parent;
 			if (entry.subvolume_name().length > 0){
 				dev_name = dev_name + "(%s)".printf(entry.subvolume_name());
@@ -1797,6 +1807,12 @@ public class Main : GLib.Object{
 		foreach(var entry in mount_list){
 			if (entry.device == null){ continue; }
 
+			if (btrfs_mode){
+				if (entry.subvolume_name().length == 0){
+					continue;
+				}
+			}
+			
 			string dev_name = entry.device.full_name_with_parent;
 			if (entry.subvolume_name().length > 0){
 				dev_name = dev_name + "(%s)".printf(entry.subvolume_name());
@@ -1867,7 +1883,7 @@ public class Main : GLib.Object{
 	public void restore_execute(){
 
 		log_debug("Main: restore_execute()");
-		
+
 		try{
 
 			log_debug("source_path=%s".printf(restore_source_path));
@@ -2440,6 +2456,167 @@ public class Main : GLib.Object{
 			sh_fsck += "echo '' \n";
 			int ret_val = exec_script_sync(sh_fsck, null, null, false, false, false, true);
 		}
+	}
+
+	public bool restore_execute_btrfs(Gtk.Window? parent_win){
+
+		log_debug("Main: restore_execute_btrfs()");
+		
+		string cmd, std_out, std_err;
+		
+		//query_subvolume_info();
+
+		bool ok = create_pre_restore_snapshot_btrfs();
+		if (!ok){
+			return false;
+		}
+		
+		// restore snapshot subvolumes by creating new subvolume snapshots
+
+		foreach(string subvol_name in new string[] { "@","@home" }){
+			
+			string subvol_path = path_combine(snapshot_to_restore.path, subvol_name);
+		
+			if (dir_exists(subvol_path)){
+				string src_path = path_combine(snapshot_to_restore.path, subvol_name);
+				string dst_path = path_combine(App.repo.mount_paths[subvol_name], subvol_name);
+				cmd = "btrfs subvolume snapshot '%s' '%s'".printf(src_path, dst_path);
+				log_debug(cmd);
+				int status = exec_sync(cmd, out std_out, out std_err);
+				if (status != 0){
+					log_error (std_err);
+					log_error(_("btrfs returned an error") + ": %d".printf(status));
+					log_error(_("Failed to restore system subvolume") + ": %s".printf(subvol_name));
+					return false;
+				}
+				else{
+					log_msg(_("Restored system subvolume") + ": %s".printf(subvol_name));
+				}
+			}
+		}
+
+		log_msg(_("Restore completed without errors"));
+		if (restore_current_system){
+			log_msg(_("Snapshot will become active after system is rebooted."));
+		}
+		
+		return true;
+	}
+
+	public bool create_pre_restore_snapshot_btrfs(){
+
+		log_debug("Main: create_pre_restore_snapshot_btrfs()");
+		
+		string cmd, std_out, std_err;
+		DateTime dt_created = new DateTime.now_local();
+		string time_stamp = dt_created.format("%Y-%m-%d_%H-%M-%S");
+		string snapshot_name = time_stamp;
+		string snapshot_path = path_combine(App.repo.snapshots_path, snapshot_name);
+
+		/* Note:
+		 * The @ and @home subvolumes need to be backed-up only if they are in use by the system.
+		 * If user restores a snapshot and then tries to restore another snapshot before the next reboot
+		 * then the @ and @home subvolumes are the ones that were previously restored and need to be deleted.
+		 * */
+
+		bool create_pre_restore_backup = false;
+
+		if (restore_current_system){
+			
+			// check for an existing pre-restore backup
+
+			Snapshot snap_prev = null;
+			bool found = false;
+			foreach(var bak in repo.snapshots){
+				if (bak.live){
+					found = true;
+					snap_prev = bak;
+					log_msg(_("Found existing pre-restore snapshot") + ": %s".printf(bak.name));
+					break;
+				}
+			}
+
+			if (found){
+				//delete system subvolumes
+				sys_subvolumes["@"].remove();
+				sys_subvolumes["@home"].remove();
+				log_msg(_("Deleted system subvolumes: @, @home"));
+				
+				//update description for pre-restore backup
+				snap_prev.description = "Before restoring '%s'".printf(snapshot_to_restore.date_formatted);
+				snap_prev.update_control_file();
+			}
+			else{
+				create_pre_restore_backup = true;
+			}
+		}
+		else{
+			create_pre_restore_backup = true;
+		}
+
+		if (create_pre_restore_backup){
+
+			log_msg(_("Creating pre-restore snapshot from system subvolumes..."));
+			
+			dir_create(snapshot_path);
+
+			// move subvolumes ----------------
+			
+			bool no_subvolumes_found = true;
+			
+			foreach(string subvol_name in new string[] { "@", "@home" }){
+				
+				string src_path = path_combine(repo.mount_paths[subvol_name], subvol_name);
+				if (!dir_exists(src_path)){
+					log_error(_("Could not find system subvolume") + ": %s".printf(subvol_name));
+					continue;
+				}
+				
+				no_subvolumes_found = false;
+				
+				string dst_path = path_combine(snapshot_path, subvol_name);
+				cmd = "mv '%s' '%s'".printf(src_path, dst_path);
+				log_debug(cmd);
+				int status = exec_sync(cmd, out std_out, out std_err);
+				if (status != 0){
+					log_error (std_err);
+					log_error(_("Failed to move system subvolume to snapshot directory") + ": %s".printf(subvol_name));
+					return false;
+				}
+				else{
+					log_msg(_("Moved system subvolume to snapshot directory") + ": %s".printf(subvol_name));
+				}
+			}
+
+			if (no_subvolumes_found){
+				//could not find system subvolumes for backing up(!)
+				file_delete(snapshot_path); //cleanup and ignore
+				log_error(_("Could not find system subvolumes for creating pre-restore snapshot"));
+			}
+			else{
+				// write control file -----------
+				
+				var snap = Snapshot.write_control_file(
+					snapshot_path, dt_created, sys_root.uuid, current_distro.full_name(),
+					"ondemand", "", 0, true, false, App.repo);
+
+				snap.description = "Before restoring '%s'".printf(snapshot_to_restore.date_formatted);
+				snap.live = true;
+				
+				// write subvolume info
+				foreach(var subvol in sys_subvolumes.values){
+					snap.subvolumes.set(subvol.name, subvol);
+				}
+				
+				snap.update_control_file(); // save subvolume info
+
+				log_msg(_("Created pre-restore snapshot") + ": %s".printf(snap.name));
+				
+				repo.load_snapshots();
+			}
+		}
+
+		return true;
 	}
 	
 	//app config

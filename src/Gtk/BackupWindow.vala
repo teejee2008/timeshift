@@ -320,6 +320,15 @@ class BackupWindow : Gtk.Window{
 			break;
 		case Tabs.BACKUP_FINISH:
 			backup_finish_box.update_message(success);
+			gtk_do_events();
+			
+			if (App.btrfs_mode){
+				for(int i=0; i<10; i++){
+					sleep(100);
+					gtk_do_events();
+				}
+			}
+			this.destroy();
 			break;
 		}
 	}

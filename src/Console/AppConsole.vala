@@ -208,6 +208,14 @@ public class AppConsole : GLib.Object {
 					LOG_DEBUG = false;
 					break;
 
+				case "--btrfs":
+					App.btrfs_mode = true;
+					break;
+
+				case "--rsync":
+					App.btrfs_mode = false;
+					break;
+
 				default:
 					LOG_TIMESTAMP = false;
 					log_error("%s: %s".printf(
@@ -335,6 +343,8 @@ public class AppConsole : GLib.Object {
 		msg += _("Global") + ":\n";
 		msg += "  --backup-device <device>   " + _("Specify backup device") + "\n";
 		msg += "  --yes                      " + _("Answer YES to all confirmation prompts") + "\n";
+		msg += "  --btrfs                    " + _("Switch to BTRFS mode") + "\n";
+		msg += "  --rsync                    " + _("Switch to RSYNC mode") + "\n";
 		msg += "  --debug                    " + _("Show additional debug messages") + "\n";
 		msg += "  --verbose                  " + _("Show rsync output (default)") + "\n";
 		msg += "  --quiet                    " + _("Hide rsync output") + "\n";

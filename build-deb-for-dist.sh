@@ -53,6 +53,8 @@ if [ $? -ne 0 ]; then
 	exit 1
 fi
 
+cp "${dist}-${arch}"/* ./
+
 #done
 
 cd "$backup"

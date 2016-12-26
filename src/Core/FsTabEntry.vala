@@ -164,7 +164,7 @@ public class FsTabEntry : GLib.Object{
 	}
 
 	
-	public Device? resolve_device(Gee.ArrayList<CryptTabEntry> crypttab, Gtk.Window parent_window){
+	public Device? resolve_device(Gee.ArrayList<CryptTabEntry> crypttab, Gtk.Window? parent_window){
 		Device dev_fstab = null;
 		if (device_uuid.length > 0){
 			dev_fstab = Device.get_device_by_uuid(device_uuid);

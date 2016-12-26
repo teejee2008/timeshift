@@ -231,18 +231,13 @@ class RestoreWindow : Gtk.Window{
 		
 		// set initial tab
 
-		notebook.page = Tabs.TARGET_DEVICE;
-		
-		/*if (Main.first_snapshot_size == 0){
-			notebook.page = Tabs.ESTIMATE;
-		}
-		else if (!App.repo.available() || !App.repo.has_space()){
-			notebook.page = Tabs.BACKUP_DEVICE;
+		if (App.btrfs_mode){
+			notebook.page = Tabs.SUMMARY;
 		}
 		else{
-			notebook.page = Tabs.BACKUP;
-		}*/
-
+			notebook.page = Tabs.TARGET_DEVICE;
+		}
+			
 		initialize_tab();
 	}
 	
@@ -276,8 +271,12 @@ class RestoreWindow : Gtk.Window{
 		
 		switch(notebook.page){
 		case Tabs.TARGET_DEVICE:
-			notebook.page = Tabs.RESTORE_EXCLUDE;
-			//notebook.page = Tabs.EXCLUDE_APPS;
+			if (App.btrfs_mode){
+				notebook.page = Tabs.SUMMARY;
+			}
+			else{
+				notebook.page = Tabs.RESTORE_EXCLUDE;
+			}
 			break;
 		case Tabs.RESTORE_EXCLUDE:
 			if (restore_exclude_box.show_all_apps()){

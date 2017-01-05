@@ -211,6 +211,7 @@ public class SnapshotRepo : GLib.Object{
 		if (dev.is_encrypted_partition()){
 
 			dev = unlock_encrypted_device(dev);
+			device = dev; // set repo device to unlocked child disk
 			
 			if (dev == null){
 				log_debug("device is null");
@@ -483,7 +484,7 @@ public class SnapshotRepo : GLib.Object{
 		}
 		else{*/
 		
-		log_debug("checking selected device");
+		//log_debug("checking selected device");
 
 		if (device == null){
 			log_debug("device is null");

@@ -323,7 +323,7 @@ public class Snapshot : GLib.Object{
 	
 	public static Snapshot write_control_file(
 		string snapshot_path, DateTime dt_created, string root_uuid, string distro_full_name, 
-		string tag, string comments, int64 item_count, bool is_btrfs, bool is_live, SnapshotRepo repo){
+		string tag, string comments, int64 item_count, bool is_btrfs, bool is_live, SnapshotRepo repo, bool silent = false){
 			
 		var ctl_path = snapshot_path + "/info.json";
 		var config = new Json.Object();
@@ -356,7 +356,9 @@ public class Snapshot : GLib.Object{
 	        log_error (e.message);
 	    }
 
-	    log_msg(_("Created control file") + ": %s".printf(ctl_path));
+		if (!silent){
+			log_msg(_("Created control file") + ": %s".printf(ctl_path));
+		}
 
 	    return (new Snapshot(snapshot_path, is_btrfs, repo));
 	}

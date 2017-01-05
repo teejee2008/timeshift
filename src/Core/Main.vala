@@ -1069,6 +1069,14 @@ public class Main : GLib.Object{
 	private Snapshot? create_snapshot_with_rsync(string tag, DateTime dt_created){
 		
 		log_msg(_("Creating new snapshot...") + "(RSYNC)");
+
+		if (btrfs_mode){
+			log_msg(_("Saving to device") + ": %s".printf(repo.device.device) + ", " + _("mounted at path") + ": %s".printf(repo.mount_paths["@"]));
+			log_msg(_("Saving to device") + ": %s".printf(repo.device.device) + ", " + _("mounted at path") + ": %s".printf(repo.mount_paths["@home"]));
+		}
+		else{
+			log_msg(_("Saving to device") + ": %s".printf(repo.device.device) + ", %s".printf(repo.mount_path));
+		}
 		
 		// take new backup ---------------------------------
 
@@ -1206,7 +1214,7 @@ public class Main : GLib.Object{
 		// write control file
 		var snapshot = Snapshot.write_control_file(
 			snapshot_path, dt_created, sys_uuid, current_distro.full_name(),
-			tag, cmd_comments, task.prg_count_total, false, false, App.repo);
+			tag, cmd_comments, task.prg_count_total, false, false, App.repo, true);
 
 		return snapshot;
 	}
@@ -2805,39 +2813,65 @@ public class Main : GLib.Object{
 		log_debug("backup_uuid=%s".printf(backup_uuid));
 		log_debug("backup_parent_uuid=%s".printf(backup_parent_uuid));
 
-		// initialize repo using command line parameter
-		 
-		if (cmd_backup_device.length > 0){
+		// use system disk for backup in btrfs mode
+		if (((app_mode == "backup")||((app_mode == "ondemand"))) && btrfs_mode){
+			if (sys_root != null){
+				log_msg("Using system disk as snapshot device for creating snapshot in BTRFS mode");
+				if (cmd_backup_device.length > 0){
+					log_msg(_("Option --snapshot-device should not be specified when creating backups in BTRFS mode"));
+				}
+				repo = new SnapshotRepo.from_device(sys_root, parent_window, btrfs_mode);
+			}
+			else{
+				log_error("System disk not found!");
+				exit_app(1);
+			}
+		}
+		// initialize repo using command line parameter if specified
+		else if (cmd_backup_device.length > 0){
 			var cmd_dev = Device.get_device_by_name(cmd_backup_device);
 			if (cmd_dev != null){
-				log_debug("repo: creating from command argument: %s".printf(cmd_backup_device));
+				log_debug("Using snapshot device specified as command argument: %s".printf(cmd_backup_device));
 				repo = new SnapshotRepo.from_device(cmd_dev, parent_window, btrfs_mode);
 				// TODO: move this code to main window
 			}
 			else{
-				log_error(_("Could not find device") + ": '%s'".printf(cmd_backup_device));
+				log_error(_("Device not found") + ": '%s'".printf(cmd_backup_device));
 				exit_app(1);
 			}
 		}
 		else{
+			log_debug("Setting snapshot device from config file");
+			
+			// find devices from uuid
+			Device dev = null;
+			Device dev_parent = null;
 			if (backup_uuid.length > 0){
+				dev = Device.get_device_by_uuid(backup_uuid);
+			}
+			if (backup_parent_uuid.length > 0){
+				dev_parent = Device.get_device_by_uuid(backup_parent_uuid);
+			}
+
+			// try unlocking encrypted parent
+			if ((dev_parent != null) && dev_parent.is_encrypted_partition() && !dev_parent.has_children()){
+				log_debug("Snapshot device is on an encrypted partition");
+				repo = new SnapshotRepo.from_uuid(backup_parent_uuid, parent_window, btrfs_mode);
+			}
+			// try device	
+			else if (dev != null){
 				log_debug("repo: creating from uuid");
 				repo = new SnapshotRepo.from_uuid(backup_uuid, parent_window, btrfs_mode);
-
-				if ((repo == null) || !repo.available()){
-					if (backup_parent_uuid.length > 0){
-						log_debug("repo: creating from parent uuid");
-						repo = new SnapshotRepo.from_uuid(backup_parent_uuid, parent_window, btrfs_mode);
-					}
-				}
 			}
-			else{
+			// try system disk
+			else {
+				log_debug("Could not find device with UUID" + ": %s".printf(backup_uuid));
 				if (sys_root != null){
-					log_debug("repo: uuid is empty, creating from root device");
+					log_debug("Using system disk as snapshot device");
 					repo = new SnapshotRepo.from_device(sys_root, parent_window, btrfs_mode);
 				}
 				else{
-					log_debug("repo: root device is null");
+					log_debug("System disk not found");
 					repo = new SnapshotRepo.from_null();
 				}
 			}

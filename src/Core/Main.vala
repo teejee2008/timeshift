@@ -1070,13 +1070,7 @@ public class Main : GLib.Object{
 		
 		log_msg(_("Creating new snapshot...") + "(RSYNC)");
 
-		if (btrfs_mode){
-			log_msg(_("Saving to device") + ": %s".printf(repo.device.device) + ", " + _("mounted at path") + ": %s".printf(repo.mount_paths["@"]));
-			log_msg(_("Saving to device") + ": %s".printf(repo.device.device) + ", " + _("mounted at path") + ": %s".printf(repo.mount_paths["@home"]));
-		}
-		else{
-			log_msg(_("Saving to device") + ": %s".printf(repo.device.device) + ", %s".printf(repo.mount_path));
-		}
+		log_msg(_("Saving to device") + ": %s".printf(repo.device.device) + ", " + _("mounted at path") + ": %s".printf(repo.mount_path));
 		
 		// take new backup ---------------------------------
 
@@ -1222,7 +1216,12 @@ public class Main : GLib.Object{
 	private Snapshot? create_snapshot_with_btrfs(string tag, DateTime dt_created){
 		
 		log_msg(_("Creating new backup...") + "(BTRFS)");
-		
+
+		log_msg(_("Saving to device") + ": %s".printf(repo.device.device) + ", " + _("mounted at path") + ": %s".printf(repo.mount_paths["@"]));
+		if ((repo.device_home != null) && (repo.device_home.uuid != repo.device.uuid)){
+			log_msg(_("Saving to device") + ": %s".printf(repo.device_home.device) + ", " + _("mounted at path") + ": %s".printf(repo.mount_paths["@home"]));
+		}
+
 		// take new backup ---------------------------------
 
 		if (repo.mount_path.length == 0){
@@ -2816,9 +2815,9 @@ public class Main : GLib.Object{
 		// use system disk for backup in btrfs mode
 		if (((app_mode == "backup")||((app_mode == "ondemand"))) && btrfs_mode){
 			if (sys_root != null){
-				log_msg("Using system disk as snapshot device for creating snapshot in BTRFS mode");
+				log_msg("Using system disk as snapshot device for creating snapshots in BTRFS mode");
 				if (cmd_backup_device.length > 0){
-					log_msg(_("Option --snapshot-device should not be specified when creating backups in BTRFS mode"));
+					log_msg(_("Option --snapshot-device should not be specified for creating snapshots in BTRFS mode"));
 				}
 				repo = new SnapshotRepo.from_device(sys_root, parent_window, btrfs_mode);
 			}

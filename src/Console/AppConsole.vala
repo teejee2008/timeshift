@@ -376,10 +376,10 @@ public class AppConsole : GLib.Object {
 
 	//console functions
 
-	private void list_snapshots(bool paginate){
+	private void list_snapshots(bool paginate, int page_size = 20){
 		int count = 0;
 		for(int index = 0; index < App.repo.snapshots.size; index++){
-			if (!paginate || ((index >= snapshot_list_start_index) && (index < snapshot_list_start_index + 10))){
+			if (!paginate || ((index >= snapshot_list_start_index) && (index < snapshot_list_start_index + page_size))){
 				count++;
 			}
 		}
@@ -398,7 +398,7 @@ public class AppConsole : GLib.Object {
 
 		for(int index = 0; index < App.repo.snapshots.size; index++){
 			Snapshot bak = App.repo.snapshots[index];
-			if (!paginate || ((index >= snapshot_list_start_index) && (index < snapshot_list_start_index + 10))){
+			if (!paginate || ((index >= snapshot_list_start_index) && (index < snapshot_list_start_index + page_size))){
 				col = -1;
 				grid[row, ++col] = "%d".printf(index);
 				grid[row, ++col] = ">";
@@ -612,55 +612,40 @@ public class AppConsole : GLib.Object {
 			}
 		}
 					
-		if (App.cmd_backup_device.length > 0){
-			//set backup device from command line argument
-			var cmd_dev = Device.get_device_by_name(App.cmd_backup_device);
-			if (cmd_dev != null){
-				App.repo = new SnapshotRepo.from_device(cmd_dev, null, App.btrfs_mode);
-				if (!App.repo.available()){
-					App.exit_app(1);
-				}
+		if ((App.repo.device == null) || (prompt_if_empty && (App.repo.snapshots.size == 0))){
+			//prompt user for backup device
+			log_msg("");
+
+			log_msg(_("Select backup device") + ":\n");
+			list_devices(list);
+			log_msg("");
+
+			Device dev = null;
+			int attempts = 0;
+			while (dev == null){
+				attempts++;
+				if (attempts > 3) { break; }
+				stdout.printf("" +
+					_("Enter device name or number (a=Abort)") + ": ");
+				stdout.flush();
+
+				dev = read_stdin_device(list, "");
 			}
-			else{
-				log_error(_("Could not find device") + ": '%s'".printf(App.cmd_backup_device));
+
+			log_msg("");
+			
+			if (dev == null){
+				log_error(_("Failed to get input from user in 3 attempts"));
+				log_msg(_("Aborted."));
+				App.exit_app(1);
+			}
+
+			App.repo = new SnapshotRepo.from_device(dev, null, App.btrfs_mode);
+			if (!App.repo.available()){
 				App.exit_app(1);
 			}
 		}
-		else{
-			if ((App.repo.device == null) || (prompt_if_empty && (App.repo.snapshots.size == 0))){
-				//prompt user for backup device
-				log_msg("");
-
-				log_msg(_("Select backup device") + ":\n");
-				list_devices(list);
-				log_msg("");
-
-				Device dev = null;
-				int attempts = 0;
-				while (dev == null){
-					attempts++;
-					if (attempts > 3) { break; }
-					stdout.printf("" +
-						_("Enter device name or number (a=Abort)") + ": ");
-					stdout.flush();
-
-					dev = read_stdin_device(list, "");
-				}
-
-				log_msg("");
-				
-				if (dev == null){
-					log_error(_("Failed to get input from user in 3 attempts"));
-					log_msg(_("Aborted."));
-					App.exit_app(1);
-				}
-
-				App.repo = new SnapshotRepo.from_device(dev, null, App.btrfs_mode);
-				if (!App.repo.available()){
-					App.exit_app(1);
-				}
-			}
-		}
+		
 	}
 
 	private Snapshot? select_snapshot(){

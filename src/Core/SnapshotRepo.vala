@@ -55,7 +55,7 @@ public class SnapshotRepo : GLib.Object{
 
 	public SnapshotRepo.from_device(Device dev, Gtk.Window? parent_win, bool btrfs_repo){
 
-		log_debug("SnapshotRepo: from_device()");
+		log_debug("SnapshotRepo: from_device(): %s".printf(btrfs_repo ? "BTRFS" : "RSYNC"));
 		
 		this.device = dev;
 		//this.use_snapshot_path_custom = false;
@@ -71,7 +71,7 @@ public class SnapshotRepo : GLib.Object{
 
 	public SnapshotRepo.from_uuid(string uuid, Gtk.Window? parent_win, bool btrfs_repo){
 
-		log_debug("SnapshotRepo: from_uuid()");
+		log_debug("SnapshotRepo: from_uuid(): %s".printf(btrfs_repo ? "BTRFS" : "RSYNC"));
 		log_debug("uuid=%s".printf(uuid));
 		
 		device = Device.get_device_by_uuid(uuid);
@@ -484,7 +484,7 @@ public class SnapshotRepo : GLib.Object{
 		else{*/
 		
 		log_debug("checking selected device");
-		
+
 		if (device == null){
 			log_debug("device is null");
 			status_message = _("Snapshot device not selected");
@@ -501,11 +501,40 @@ public class SnapshotRepo : GLib.Object{
 			return false;
 		}
 		else{
-			log_debug("is_available: ok");
-			// ok
-			return true;
+			if (btrfs_mode){
+				bool ok = has_btrfs_system();
+				if (ok){
+					log_debug("is_available: ok");
+				}
+				return ok;
+			}
+			else{
+				log_debug("is_available: ok");
+				return true;
+			}
 		}
-		//}
+
+		return false;
+	}
+
+	public bool has_btrfs_system(){
+		
+		log_debug("SnapshotRepo: has_btrfs_system()");
+
+		var root_path = path_combine(mount_paths["@"],"@");
+		log_debug("root_path=%s".printf(root_path));
+		log_debug("btrfs_mode=%s".printf(btrfs_mode.to_string()));
+		if (btrfs_mode){
+			if (!dir_exists(root_path)){
+				status_message = _("Selected snapshot device is not a system disk");
+				status_details = _("Select BTRFS system disk with @ subvolume");
+				status_code = SnapshotLocationStatus.NO_BTRFS_SYSTEM;
+				log_debug(status_message);
+				return false;
+			}
+		}
+
+		return true;
 	}
 	
 	public bool has_snapshots(){
@@ -976,6 +1005,7 @@ public enum SnapshotLocationStatus{
 	 3 - first snapshot not taken, disk space sufficient
 	 4 - path is readonly
      5 - hardlinks not supported
+     6 - btrfs device does not have @ subvolume
 	*/
 	NOT_SELECTED = -2,
 	NOT_AVAILABLE = -1,
@@ -984,5 +1014,6 @@ public enum SnapshotLocationStatus{
 	NO_SNAPSHOTS_NO_SPACE = 2,
 	NO_SNAPSHOTS_HAS_SPACE = 3,
 	READ_ONLY_FS = 4,
-	HARDLINKS_NOT_SUPPORTED = 5
+	HARDLINKS_NOT_SUPPORTED = 5,
+	NO_BTRFS_SYSTEM = 6
 }

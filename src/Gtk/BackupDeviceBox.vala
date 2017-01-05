@@ -366,8 +366,12 @@ class BackupDeviceBox : Gtk.Box{
 
 	private bool check_backup_location(){
 		bool ok = true;
-		string message, details;
-		int status_code = App.check_backup_location(out message, out details);
+
+		App.repo.check_status();
+		string message = App.repo.status_message;
+		string details = App.repo.status_details;
+		int status_code = App.repo.status_code;
+		
 		// TODO: call check on repo directly
 		
 		message = escape_html(message);
@@ -394,6 +398,14 @@ class BackupDeviceBox : Gtk.Box{
 			case SnapshotLocationStatus.READ_ONLY_FS:
 			case SnapshotLocationStatus.HARDLINKS_NOT_SUPPORTED:
 				lbl_infobar_location.label = "<span weight=\"bold\">%s</span>".printf(message);
+				infobar_location.message_type = Gtk.MessageType.ERROR;
+				infobar_location.no_show_all = false;
+				infobar_location.show_all();
+				ok = false;
+				break;
+
+			case SnapshotLocationStatus.NO_BTRFS_SYSTEM:
+				lbl_infobar_location.label = "<span weight=\"bold\">%s</span>".printf(details);
 				infobar_location.message_type = Gtk.MessageType.ERROR;
 				infobar_location.no_show_all = false;
 				infobar_location.show_all();
@@ -440,6 +452,14 @@ class BackupDeviceBox : Gtk.Box{
 				case SnapshotLocationStatus.READ_ONLY_FS:
 				case SnapshotLocationStatus.HARDLINKS_NOT_SUPPORTED:
 					lbl_infobar_location.label = "<span weight=\"bold\">%s</span>".printf(message);
+					infobar_location.message_type = Gtk.MessageType.ERROR;
+					infobar_location.no_show_all = false;
+					infobar_location.show_all();
+					ok = false;
+					break;
+
+				case SnapshotLocationStatus.NO_BTRFS_SYSTEM:
+					lbl_infobar_location.label = "<span weight=\"bold\">%s</span>".printf(details);
 					infobar_location.message_type = Gtk.MessageType.ERROR;
 					infobar_location.no_show_all = false;
 					infobar_location.show_all();

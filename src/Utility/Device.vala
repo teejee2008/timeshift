@@ -1387,8 +1387,16 @@ public class Device : GLib.Object{
 		// check if already mounted --------------
 		
 		var mps = Device.get_device_mount_points(dev_name_or_uuid);
+
+		log_debug("------------------");
+		log_debug("arg=%s, device=%s".printf(dev_name_or_uuid, device));
 		foreach(var mp in mps){
-			if (mp.mount_point.contains(mount_point) && mp.mount_options.contains(mount_options)){
+			log_debug(mp.mount_point);
+		}
+		log_debug("------------------");
+		
+		foreach(var mp in mps){
+			if ((mp.mount_point == mount_point) && mp.mount_options.contains(mount_options)){
 				if (!silent){
 					var msg = "%s is mounted at: %s".printf(device, mount_point);
 					if (mp.mount_options.length > 0){
@@ -1401,6 +1409,10 @@ public class Device : GLib.Object{
 		}
 
 		dir_create(mount_point);
+
+		// unmount if any other device is mounted
+
+		unmount(mount_point);
 
 		// mount the device -------------------
 		

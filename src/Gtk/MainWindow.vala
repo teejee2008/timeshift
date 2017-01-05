@@ -988,9 +988,12 @@ class MainWindow : Gtk.Window{
 		gtk_set_busy(!enable, this);
 	}
 
-	private void update_statusbar(){		
-		string message, details;
-		int status_code = App.check_backup_location(out message, out details);
+	private void update_statusbar(){
+		
+		App.repo.check_status();
+		string message = App.repo.status_message;
+		string details = App.repo.status_details;
+		int status_code = App.repo.status_code;
 		
 		DateTime? last_snapshot_date = null;
 		DateTime? oldest_snapshot_date = null;
@@ -1015,6 +1018,7 @@ class MainWindow : Gtk.Window{
 			switch (status_code){
 			case SnapshotLocationStatus.NOT_SELECTED:
 			case SnapshotLocationStatus.NOT_AVAILABLE:
+			case SnapshotLocationStatus.NO_BTRFS_SYSTEM:
 				set_shield_subnote(details);
 				break;
 			
@@ -1038,6 +1042,7 @@ class MainWindow : Gtk.Window{
 			case SnapshotLocationStatus.HARDLINKS_NOT_SUPPORTED:
 			case SnapshotLocationStatus.NOT_SELECTED:
 			case SnapshotLocationStatus.NOT_AVAILABLE:
+			case SnapshotLocationStatus.NO_BTRFS_SYSTEM:
 			case SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE:
 			case SnapshotLocationStatus.NO_SNAPSHOTS_NO_SPACE:
 				img_shield.pixbuf =

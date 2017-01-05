@@ -135,7 +135,8 @@ public class Main : GLib.Object{
 	public bool cmd_confirm = false;
 	public bool cmd_verbose = true;
 	public string cmd_comments = "";
-
+	public bool? cmd_btrfs_mode = null;
+	
 	public string progress_text = "";
 
 	public Gtk.Window? parent_window = null;
@@ -145,7 +146,7 @@ public class Main : GLib.Object{
 
 	public Main(string[] args, bool gui_mode){
 
-		parse_arguments_debug_mode(args);
+		parse_some_arguments(args);
 
 		if (gui_mode){
 			app_mode = "";
@@ -154,16 +155,16 @@ public class Main : GLib.Object{
 
 		log_debug("Main()");
 
-		if (LOG_DEBUG || (app_mode == "")){
+		if (LOG_DEBUG || gui_mode){
 			log_debug("");
 			log_debug(_("Running") + " %s v%s".printf(AppName, AppVersion));
 			log_debug("");
 		}
 
-		//init log ------------------
+		// init log ------------------
 
 		try {
-			string suffix = (app_mode.length == 0) ? "gui" : app_mode;
+			string suffix = gui_mode ? "gui" : app_mode;
 			
 			DateTime now = new DateTime.now_local();
 			log_dir = "/var/log/timeshift";
@@ -181,7 +182,7 @@ public class Main : GLib.Object{
 			}
 
 			dos_log = new DataOutputStream (file.create(FileCreateFlags.REPLACE_DESTINATION));
-			if ((app_mode == "")||(LOG_DEBUG)){
+			if (LOG_DEBUG || gui_mode){
 				log_debug(_("Session log file") + ": %s".printf(log_file));
 			}
 		}
@@ -189,32 +190,32 @@ public class Main : GLib.Object{
 			log_error (e.message);
 		}
 		
-		//get Linux distribution info -----------------------
+		// get Linux distribution info -----------------------
 		
 		this.current_distro = LinuxDistro.get_dist_info("/");
 
-		if (LOG_DEBUG || (app_mode == "")){
+		if (LOG_DEBUG || gui_mode){
 			log_debug(_("Distribution") + ": " + current_distro.full_name());
 			log_debug("DIST_ID" + ": " + current_distro.dist_id);
 		}
 
-		//check dependencies ---------------------
+		// check dependencies ---------------------
 
 		string message;
 		if (!check_dependencies(out message)){
-			if (app_mode == ""){
+			if (gui_mode){
 				string title = _("Missing Dependencies");
 				gtk_messagebox(title, message, null, true);
 			}
 			exit_app(1);
 		}
 
-		//check and create lock ------------------
+		// check and create lock ----------------------------
 
 		app_lock = new AppLock();
 		
 		if (!app_lock.create("timeshift", app_mode)){
-			if (app_mode == ""){
+			if (gui_mode){
 				string msg = "";
 				if (app_lock.lock_message == "backup"){
 					msg = _("Another instance of Timeshift is creating a snapshot.") + "\n";
@@ -234,14 +235,14 @@ public class Main : GLib.Object{
 			exit(1);
 		}
 
-		//initialize variables ------------------
+		// initialize variables -------------------------------
 
 		this.app_path = (File.new_for_path (args[0])).get_parent().get_path ();
 		this.share_folder = "/usr/share";
 		this.app_conf_path = "/etc/timeshift.json";
 		//sys_root and sys_home will be initalized by update_partition_list()
 
-		//check if running locally -------------
+		// check if running locally ------------------------
 
 		string local_exec = args[0];
 		string local_conf = app_path + "/timeshift.json";
@@ -265,31 +266,30 @@ public class Main : GLib.Object{
 			this.app_path = get_cmd_path("timeshift");
 		}
 
-		//initialize lists -------------------------
+		// initialize lists -----------------
 
 		repo = new SnapshotRepo();
-
 		mount_list = new Gee.ArrayList<MountEntry>();
 		delete_list = new Gee.ArrayList<Snapshot>();
 		sys_subvolumes = new Gee.HashMap<string, Subvolume>();
-
 		exclude_app_names = new Gee.ArrayList<string>();
 		add_default_exclude_entries();
 		//add_app_exclude_entries();
-
-		//initialize app --------------------
-
-		update_partitions();
-		detect_system_devices();
-
-		//finish initialization --------------
-
-		load_app_config();
-
 		task = new RsyncTask();
 		delete_file_task = new DeleteFileTask();
 
+		// set variables from config file ---------------------
+
+		load_app_config();
+
 		log_debug("Main(): ok");
+	}
+
+	public void initialize(){
+		update_partitions();
+		detect_system_devices();
+		initialize_repo();
+		
 	}
 
 	public bool check_dependencies(out string msg){
@@ -364,7 +364,7 @@ public class Main : GLib.Object{
 		return supported;
 	}
 
-	private void parse_arguments_debug_mode(string[] args){
+	private void parse_some_arguments(string[] args){
 		
 		for (int k = 1; k < args.length; k++) // Oth arg is app path
 		{
@@ -372,6 +372,16 @@ public class Main : GLib.Object{
 				case "--debug":
 					LOG_COMMANDS = true;
 					LOG_DEBUG = true;
+					break;
+
+				case "--btrfs":
+					btrfs_mode = true;
+					cmd_btrfs_mode = btrfs_mode;
+					break;
+
+				case "--rsync":
+					btrfs_mode = false;
+					cmd_btrfs_mode = btrfs_mode;
 					break;
 					
 				case "--backup":
@@ -1007,6 +1017,12 @@ public class Main : GLib.Object{
 				}
 			}
 
+			if (!repo.available() || !repo.has_space()){
+				log_error(repo.status_message);
+				log_error(repo.status_details);
+				exit_app();
+			}
+			
 			// create new snapshot -----------------------
 
 			Snapshot new_snapshot = null;
@@ -1884,6 +1900,11 @@ public class Main : GLib.Object{
 
 		log_debug("Main: restore_execute()");
 
+		if (btrfs_mode){
+			restore_execute_btrfs(parent_window);
+			return;
+		}
+
 		try{
 
 			log_debug("source_path=%s".printf(restore_source_path));
@@ -2511,8 +2532,8 @@ public class Main : GLib.Object{
 		DateTime dt_created = new DateTime.now_local();
 		string time_stamp = dt_created.format("%Y-%m-%d_%H-%M-%S");
 		string snapshot_name = time_stamp;
-		string snapshot_path = path_combine(App.repo.snapshots_path, snapshot_name);
-
+		string snapshot_path = "";
+		
 		/* Note:
 		 * The @ and @home subvolumes need to be backed-up only if they are in use by the system.
 		 * If user restores a snapshot and then tries to restore another snapshot before the next reboot
@@ -2565,10 +2586,14 @@ public class Main : GLib.Object{
 			bool no_subvolumes_found = true;
 			
 			foreach(string subvol_name in new string[] { "@", "@home" }){
-				
+
+				snapshot_path = path_combine(repo.mount_paths[subvol_name], "timeshift-btrfs/snapshots/%s".printf(snapshot_name));
+				dir_create(snapshot_path, true);
+			
 				string src_path = path_combine(repo.mount_paths[subvol_name], subvol_name);
 				if (!dir_exists(src_path)){
 					log_error(_("Could not find system subvolume") + ": %s".printf(subvol_name));
+					dir_delete(snapshot_path);
 					continue;
 				}
 				
@@ -2590,7 +2615,6 @@ public class Main : GLib.Object{
 
 			if (no_subvolumes_found){
 				//could not find system subvolumes for backing up(!)
-				file_delete(snapshot_path); //cleanup and ignore
 				log_error(_("Could not find system subvolumes for creating pre-restore snapshot"));
 			}
 			else{
@@ -2712,12 +2736,15 @@ public class Main : GLib.Object{
 
 		// initialize repo using config file values
 
-		btrfs_mode = json_get_bool(config,"btrfs_mode", false); // false as default
+		btrfs_mode = json_get_bool(config, "btrfs_mode", false); // false as default
+
+		if (cmd_btrfs_mode != null){
+			btrfs_mode = cmd_btrfs_mode; //override
+		}
+		
 		backup_uuid = json_get_string(config,"backup_device_uuid", backup_uuid);
 		backup_parent_uuid = json_get_string(config,"parent_device_uuid", backup_parent_uuid);
 		
-		initialize_repo();
-
         this.schedule_monthly = json_get_bool(config,"schedule_monthly",schedule_monthly);
 		this.schedule_weekly = json_get_bool(config,"schedule_weekly",schedule_weekly);
 		this.schedule_daily = json_get_bool(config,"schedule_daily",schedule_daily);
@@ -2777,28 +2804,6 @@ public class Main : GLib.Object{
 		
 		log_debug("backup_uuid=%s".printf(backup_uuid));
 		log_debug("backup_parent_uuid=%s".printf(backup_parent_uuid));
-		
-		if (backup_uuid.length > 0){
-			log_debug("repo: creating from uuid");
-			repo = new SnapshotRepo.from_uuid(backup_uuid, parent_window, btrfs_mode);
-
-			if ((repo == null) || !repo.available()){
-				if (backup_parent_uuid.length > 0){
-					log_debug("repo: creating from parent uuid");
-					repo = new SnapshotRepo.from_uuid(backup_parent_uuid, parent_window, btrfs_mode);
-				}
-			}
-		}
-		else{
-			if (sys_root != null){
-				log_debug("repo: uuid is empty, creating from root device");
-				repo = new SnapshotRepo.from_device(sys_root, parent_window, btrfs_mode);
-			}
-			else{
-				log_debug("repo: root device is null");
-				repo = new SnapshotRepo.from_null();
-			}
-		}
 
 		// initialize repo using command line parameter
 		 
@@ -2807,12 +2812,34 @@ public class Main : GLib.Object{
 			if (cmd_dev != null){
 				log_debug("repo: creating from command argument: %s".printf(cmd_backup_device));
 				repo = new SnapshotRepo.from_device(cmd_dev, parent_window, btrfs_mode);
-				
 				// TODO: move this code to main window
 			}
 			else{
 				log_error(_("Could not find device") + ": '%s'".printf(cmd_backup_device));
 				exit_app(1);
+			}
+		}
+		else{
+			if (backup_uuid.length > 0){
+				log_debug("repo: creating from uuid");
+				repo = new SnapshotRepo.from_uuid(backup_uuid, parent_window, btrfs_mode);
+
+				if ((repo == null) || !repo.available()){
+					if (backup_parent_uuid.length > 0){
+						log_debug("repo: creating from parent uuid");
+						repo = new SnapshotRepo.from_uuid(backup_parent_uuid, parent_window, btrfs_mode);
+					}
+				}
+			}
+			else{
+				if (sys_root != null){
+					log_debug("repo: uuid is empty, creating from root device");
+					repo = new SnapshotRepo.from_device(sys_root, parent_window, btrfs_mode);
+				}
+				else{
+					log_debug("repo: root device is null");
+					repo = new SnapshotRepo.from_null();
+				}
 			}
 		}
 
@@ -3091,30 +3118,6 @@ public class Main : GLib.Object{
 		}
 
 		return supported;
-	}
-
-	public bool backup_device_online(){
-		/*if (snapshot_device != null){
-			//mount_backup_device(null);
-			if (Device.get_device_mount_points(snapshot_device.uuid).size > 0){
-				return true;
-			}
-		}*/
-
-		string message, details;
-		var status = check_backup_location(out message, out details);
-
-		switch(status){
-		case SnapshotLocationStatus.NO_SNAPSHOTS_HAS_SPACE:
-		case SnapshotLocationStatus.NO_SNAPSHOTS_NO_SPACE:
-		case SnapshotLocationStatus.HAS_SNAPSHOTS_HAS_SPACE:
-		case SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE:
-			return true;
-		default:
-			//gtk_messagebox(message,details, this, true);
-			return false;
-		}
-		//return false;
 	}
 
 	public void try_select_default_device_for_backup(Gtk.Window? parent_win){

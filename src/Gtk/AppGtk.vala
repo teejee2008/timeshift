@@ -61,6 +61,7 @@ public class AppGtk : GLib.Object {
 
 		App = new Main(args, true);
 		parse_arguments(args);
+		App.initialize();
 		start_application();
 
 		App.exit_app();

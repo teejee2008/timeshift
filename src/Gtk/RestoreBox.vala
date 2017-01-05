@@ -244,6 +244,10 @@ class RestoreBox : Gtk.Box{
 			//gtk_do_events();
 		}
 
+		if (App.restore_current_system){
+			parent_window.show();
+		}
+
 		log_debug("RestoreBox: restore(): exit");
 
 		return (App.task.exit_code == 0);

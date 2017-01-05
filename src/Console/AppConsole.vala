@@ -78,6 +78,7 @@ public class AppConsole : GLib.Object {
 
 		App = new Main(args, false);
 		parse_arguments(args);
+		App.initialize();
 		
 		var console =  new AppConsole();
 		bool ok = console.start_application();
@@ -182,6 +183,7 @@ public class AppConsole : GLib.Object {
 					break;
 
 				case "--backup-device":
+				case "--snapshot-device":
 					App.cmd_backup_device = args[++k];
 					break;
 

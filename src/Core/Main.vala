@@ -453,6 +453,7 @@ public class Main : GLib.Object{
 		exclude_list_default.add("/data/*");
 		exclude_list_default.add("/cdrom/*");
 		exclude_list_default.add("/etc/timeshift.json");
+		exclude_list_default.add("/var/log/timeshift/*");
 		
 		exclude_list_default.add("/root/.thumbnails");
 		exclude_list_default.add("/root/.cache");
@@ -735,7 +736,7 @@ public class Main : GLib.Object{
 		
 		try
 		{
-			if (check_btrfs_layout_system() == false){
+			if (btrfs_mode && (check_btrfs_layout_system() == false)){
 				return false;
 			}
 		
@@ -2735,11 +2736,11 @@ public class Main : GLib.Object{
 			
 			bool supported = sys_subvolumes.has_key("@") && sys_subvolumes.has_key("@home") && cmd_exists("btrfs");
 			if (supported){
-				log_msg(_("Selected snapshot type as BTRFS"));
+				log_msg(_("Selected default snapshot type") + ": %s".printf("BTRFS"));
 				btrfs_mode = true;
 			}
 			else{
-				log_msg(_("Selected snapshot type as RSYNC"));
+				log_msg(_("Selected default snapshot type") + ": %s".printf("RSYNC"));
 				btrfs_mode = false;
 			}
 		
@@ -2851,9 +2852,14 @@ public class Main : GLib.Object{
 				exit_app(1);
 			}
 		}
+		// select default device for first run mode
 		else if (first_run && (backup_uuid.length == 0)){
-			log_msg(_("Selecting default snapshot device for first run mode"));
+			
 			try_select_default_device_for_backup(parent_window);
+
+			if ((repo != null) && (repo.device != null)){
+				log_msg(_("Selected default snapshot device") + ": %s".printf(repo.device.device));
+			}
 		}
 		else {
 			log_debug("Setting snapshot device from config file");
@@ -3266,7 +3272,7 @@ public class Main : GLib.Object{
 
 		try{
 
-			log_msg("Using temp dir '%s'".printf(TEMP_DIR));
+			log_debug("Using temp dir '%s'".printf(TEMP_DIR));
 
 			string file_exclude_list = path_combine(TEMP_DIR, "exclude.list");
 			var f = File.new_for_path(file_exclude_list);

@@ -517,7 +517,7 @@ class MainWindow : Gtk.Window{
 		
 		// check root device --------------
 
-		if (App.check_btrfs_layout_system(this) == false){
+		if (App.btrfs_mode && (App.check_btrfs_layout_system(this) == false)){
 			ui_sensitive(true);
 			return;
 		}

@@ -278,18 +278,18 @@ public class Main : GLib.Object{
 		task = new RsyncTask();
 		delete_file_task = new DeleteFileTask();
 
-		// set variables from config file ---------------------
+		update_partitions();
+		detect_system_devices();
+		
+		// set settings from config file ---------------------
 
 		load_app_config();
-
+		
 		log_debug("Main(): ok");
 	}
 
 	public void initialize(){
-		update_partitions();
-		detect_system_devices();
 		initialize_repo();
-		
 	}
 
 	public bool check_dependencies(out string msg){
@@ -2723,15 +2723,31 @@ public class Main : GLib.Object{
 	public void load_app_config(){
 
 		log_debug("Main: load_app_config()");
+
+		// check if first run -----------------------
 		
 		var f = File.new_for_path(this.app_conf_path);
 		if (!f.query_exists()) {
 			first_run = true;
-			log_debug("first run mode: config file not found");
-			initialize_repo();
+			log_msg("First run mode (config file not found)");
+
+			// load some defaults for first-run based on user's system type
+			
+			bool supported = sys_subvolumes.has_key("@") && sys_subvolumes.has_key("@home");
+			if (supported){
+				log_msg(_("Selected snapshot type as BTRFS"));
+				btrfs_mode = true;
+			}
+			else{
+				log_msg(_("Selected snapshot type as RSYNC"));
+				btrfs_mode = false;
+			}
+		
 			return;
 		}
 
+		// load settings from config file --------------------------
+		
 		var parser = new Json.Parser();
         try{
 			parser.load_from_file(this.app_conf_path);
@@ -2740,8 +2756,6 @@ public class Main : GLib.Object{
 	    }
         var node = parser.get_root();
         var config = node.get_object();
-
-		// initialize repo using config file values
 
 		btrfs_mode = json_get_bool(config, "btrfs_mode", false); // false as default
 
@@ -2764,11 +2778,9 @@ public class Main : GLib.Object{
 		this.count_hourly = json_get_int(config,"count_hourly",count_hourly);
 		this.count_boot = json_get_int(config,"count_boot",count_boot);
 
-		Main.first_snapshot_size = json_get_int64(config,"snapshot_size",
-			Main.first_snapshot_size);
+		Main.first_snapshot_size = json_get_int64(config,"snapshot_size", Main.first_snapshot_size);
 			
-		Main.first_snapshot_count = json_get_int64(config,"snapshot_count",
-			Main.first_snapshot_count);
+		Main.first_snapshot_count = json_get_int64(config,"snapshot_count", Main.first_snapshot_count);
 		
 		exclude_list_user.clear();
 		
@@ -2812,7 +2824,7 @@ public class Main : GLib.Object{
 		log_debug("backup_uuid=%s".printf(backup_uuid));
 		log_debug("backup_parent_uuid=%s".printf(backup_parent_uuid));
 
-		// use system disk for backup in btrfs mode
+		// use system disk as snapshot device in btrfs mode for backup
 		if (((app_mode == "backup")||((app_mode == "ondemand"))) && btrfs_mode){
 			if (sys_root != null){
 				log_msg("Using system disk as snapshot device for creating snapshots in BTRFS mode");
@@ -2839,7 +2851,11 @@ public class Main : GLib.Object{
 				exit_app(1);
 			}
 		}
-		else{
+		else if (first_run && (backup_uuid.length == 0)){
+			log_msg(_("Selecting default snapshot device for first run mode"));
+			try_select_default_device_for_backup(parent_window);
+		}
+		else {
 			log_debug("Setting snapshot device from config file");
 			
 			// find devices from uuid

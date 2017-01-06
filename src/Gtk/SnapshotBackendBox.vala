@@ -87,8 +87,6 @@ class SnapshotBackendBox : Gtk.Box{
 				type_changed();
 				update_description();
 			}
-			
-			// TODO: init
 		});
 	}
 
@@ -101,15 +99,33 @@ class SnapshotBackendBox : Gtk.Box{
 
 		opt_btrfs.toggled.connect(()=>{
 			if (opt_btrfs.active){
-				App.btrfs_mode = true;
-				init_backend();
-				type_changed();
-				update_description();
+				if (check_for_btrfs_tools()){
+					App.btrfs_mode = true;
+					init_backend();
+					type_changed();
+					update_description();
+				}
+				else{
+					opt_rsync.active = true;
+				}
 			}
-			
-			// TODO: init
 		});
 	}
+
+	private bool check_for_btrfs_tools(){
+		if (!cmd_exists("btrfs")){
+			string msg = _("The 'btrfs' command is not available on your system. Install the 'btrfs-tools' package and try again.");
+			string title = _("BTRFS Tools Not Found");
+			gtk_set_busy(false, parent_window);
+			gtk_messagebox(title, msg, parent_window, true);
+			
+			return false;
+		}
+		else{
+			return true;
+		}
+	}
+	
 
 	private void add_description(){
 		// scrolled

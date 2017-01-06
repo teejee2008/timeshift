@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timeshift 1.6\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2017-01-06 21:01+0530\n"
+"POT-Creation-Date: 2017-01-06 21:15+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -210,8 +210,12 @@ msgid ""
 "snapshot."
 msgstr ""
 
-#: Gtk/SnapshotBackendBox.vala:97
+#: Gtk/SnapshotBackendBox.vala:95
 msgid "BTRFS"
+msgstr ""
+
+#: Gtk/SnapshotBackendBox.vala:118
+msgid "BTRFS Tools Not Found"
 msgstr ""
 
 #: Core/Main.vala:1731 Core/Main.vala:1735
@@ -456,7 +460,7 @@ msgid ""
 "system"
 msgstr ""
 
-#: Gtk/SnapshotBackendBox.vala:98
+#: Gtk/SnapshotBackendBox.vala:96
 msgid "Create snapshots using RSYNC"
 msgstr ""
 
@@ -907,7 +911,7 @@ msgid ""
 "Patterns starting with a + will include the item instead of excluding."
 msgstr ""
 
-#: Gtk/SnapshotBackendBox.vala:170
+#: Gtk/SnapshotBackendBox.vala:186
 msgid "Files and directories can be excluded to save disk space."
 msgstr ""
 
@@ -915,7 +919,7 @@ msgstr ""
 msgid "Files and directory counts:"
 msgstr ""
 
-#: Gtk/SnapshotBackendBox.vala:166
+#: Gtk/SnapshotBackendBox.vala:182
 msgid ""
 "Files are copied when the first snapshot is created. Subsequent snapshots "
 "are incremental. Unchanged files are hard-linked from the previous snapshot."
@@ -1336,7 +1340,7 @@ msgstr ""
 msgid "OK"
 msgstr ""
 
-#: Gtk/SnapshotBackendBox.vala:157
+#: Gtk/SnapshotBackendBox.vala:173
 msgid ""
 "OS must be installed on a BTRFS partition with Ubuntu-type subvolume layout "
 "(@ and @home subvolumes). Other file systems and subvolume layouts are not "
@@ -1861,7 +1865,7 @@ msgstr ""
 msgid "Size"
 msgstr ""
 
-#: Gtk/SnapshotBackendBox.vala:155
+#: Gtk/SnapshotBackendBox.vala:171
 msgid ""
 "Size of BTRFS snapshots are initially zero. As system files gradually change "
 "with time, data gets written to new blocks which take up disk space (copy-on-"
@@ -1933,38 +1937,38 @@ msgstr ""
 msgid "Snapshots"
 msgstr ""
 
-#: Gtk/SnapshotBackendBox.vala:147
+#: Gtk/SnapshotBackendBox.vala:163
 msgid ""
 "Snapshots are created and restored instantly. Snapshot creation is an atomic "
 "transaction at the file system level."
 msgstr ""
 
-#: Gtk/SnapshotBackendBox.vala:164
+#: Gtk/SnapshotBackendBox.vala:180
 msgid ""
 "Snapshots are created by creating copies of system files using rsync, and "
 "hard-linking unchanged files from the previous snapshot."
 msgstr ""
 
-#: Gtk/SnapshotBackendBox.vala:145
+#: Gtk/SnapshotBackendBox.vala:161
 msgid ""
 "Snapshots are created using the in-built capabilities of the BTRFS file "
 "system."
 msgstr ""
 
-#: Gtk/SnapshotBackendBox.vala:151
+#: Gtk/SnapshotBackendBox.vala:167
 msgid ""
 "Snapshots are perfect, byte-for-byte copies of the system. Excluding files "
 "is not supported."
 msgstr ""
 
-#: Gtk/SnapshotBackendBox.vala:149
+#: Gtk/SnapshotBackendBox.vala:165
 msgid ""
 "Snapshots are restored by replacing system subvolumes. Since files are never "
 "copied, deleted or overwritten, there is no risk of data loss. The existing "
 "system is preserved as a new snapshot after restore."
 msgstr ""
 
-#: Gtk/SnapshotBackendBox.vala:153
+#: Gtk/SnapshotBackendBox.vala:169
 msgid ""
 "Snapshots are saved on the same disk from which they are created (system "
 "disk). Storage on other disks is not supported. If your system disk fails "
@@ -1975,7 +1979,7 @@ msgstr ""
 msgid "Snapshots available for restore"
 msgstr ""
 
-#: Gtk/SnapshotBackendBox.vala:168
+#: Gtk/SnapshotBackendBox.vala:184
 msgid ""
 "Snapshots can be saved to any disk formatted with a Linux file system. "
 "Saving snapshots to a non-system/portable disk allows the system to be "
@@ -2097,6 +2101,12 @@ msgstr ""
 
 #: Core/Main.vala:1741
 msgid "Target device not specified!"
+msgstr ""
+
+#: Gtk/SnapshotBackendBox.vala:117
+msgid ""
+"The 'btrfs' command is not available on your system. Install the 'btrfs-"
+"tools' package and try again."
 msgstr ""
 
 #: Gtk/FinishBox.vala:105

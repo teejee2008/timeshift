@@ -2733,7 +2733,7 @@ public class Main : GLib.Object{
 
 			// load some defaults for first-run based on user's system type
 			
-			bool supported = sys_subvolumes.has_key("@") && sys_subvolumes.has_key("@home");
+			bool supported = sys_subvolumes.has_key("@") && sys_subvolumes.has_key("@home") && cmd_exists("btrfs");
 			if (supported){
 				log_msg(_("Selected snapshot type as BTRFS"));
 				btrfs_mode = true;

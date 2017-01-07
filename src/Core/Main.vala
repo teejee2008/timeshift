@@ -2638,6 +2638,8 @@ public class Main : GLib.Object{
 			}
 			else{
 				// write control file -----------
+
+				snapshot_path = path_combine(repo.mount_paths["@"], "timeshift-btrfs/snapshots/%s".printf(snapshot_name));
 				
 				var snap = Snapshot.write_control_file(
 					snapshot_path, dt_created, sys_root.uuid, current_distro.full_name(),

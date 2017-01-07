@@ -293,33 +293,75 @@ class SnapshotListBox : Gtk.Box{
 			
 		Snapshot bak;
 		model.get (iter, 0, out bak, -1);
-		(cell as Gtk.CellRendererText).text = bak.date.format ("%Y-%m-%d %H:%M");
-		(cell as Gtk.CellRendererText).sensitive = !bak.marked_for_deletion;
+		
+		var ctxt = (cell as Gtk.CellRendererText);
+		ctxt.text = bak.date_formatted;
+		ctxt.sensitive = !bak.marked_for_deletion;
+
+		if (bak.live){
+			ctxt.markup = "<b>%s</b>".printf(ctxt.text);
+		}
+		else{
+			ctxt.markup = ctxt.text;
+		}
+		
 		// Note: Avoid AM/PM as it may be hidden due to locale settings
 	}
 
 	private void cell_tags_render(
 		CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
+			
 		Snapshot bak;
 		model.get (iter, 0, out bak, -1);
-		(cell as Gtk.CellRendererText).text = bak.taglist_short;
-		(cell as Gtk.CellRendererText).sensitive = !bak.marked_for_deletion;
+		
+		var ctxt = (cell as Gtk.CellRendererText);
+		ctxt.text = bak.taglist_short;
+		ctxt.sensitive = !bak.marked_for_deletion;
+
+		if (bak.live){
+			ctxt.markup = "<b>%s</b>".printf(ctxt.text);
+		}
+		else{
+			ctxt.markup = ctxt.text;
+		}
 	}
 
 	private void cell_system_render(
 		CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
+			
 		Snapshot bak;
 		model.get (iter, 0, out bak, -1);
-		(cell as Gtk.CellRendererText).text = bak.sys_distro;
-		(cell as Gtk.CellRendererText).sensitive = !bak.marked_for_deletion;
+		
+		var ctxt = (cell as Gtk.CellRendererText);
+		ctxt.text = bak.sys_distro;
+		ctxt.sensitive = !bak.marked_for_deletion;
+
+		if (bak.live){
+			ctxt.markup = "<b>%s</b>".printf(ctxt.text);
+		}
+		else{
+			ctxt.markup = ctxt.text;
+		}
 	}
 
 	private void cell_desc_render(
 		CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
 		Snapshot bak;
 		model.get (iter, 0, out bak, -1);
-		(cell as Gtk.CellRendererText).text = bak.description;
-		(cell as Gtk.CellRendererText).sensitive = !bak.marked_for_deletion;
+
+		var ctxt = (cell as Gtk.CellRendererText);
+		ctxt.text = bak.description;
+		ctxt.sensitive = !bak.marked_for_deletion;
+		if (bak.live){
+			ctxt.text = "[" + _("LIVE") + "] " + ctxt.text;
+		}
+
+		if (bak.live){
+			ctxt.markup = "<b>%s</b>".printf(ctxt.text);
+		}
+		else{
+			ctxt.markup = ctxt.text;
+		}
 	}
 
 	private bool menu_snapshots_popup (Gtk.Menu popup, Gdk.EventButton? event) {

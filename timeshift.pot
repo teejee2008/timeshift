@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timeshift 1.6\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2017-01-07 15:33+0530\n"
+"POT-Creation-Date: 2017-01-07 16:30+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -70,7 +70,7 @@ msgstr ""
 msgid "0.0%"
 msgstr ""
 
-#: Gtk/SnapshotListBox.vala:219
+#: Gtk/SnapshotListBox.vala:221
 msgid ""
 "<b>Backup Levels</b>\n"
 "\n"
@@ -82,15 +82,15 @@ msgid ""
 "M\tMonthly"
 msgstr ""
 
-#: Gtk/SnapshotListBox.vala:211
+#: Gtk/SnapshotListBox.vala:213
 msgid "<b>Comments</b> (double-click to edit)"
 msgstr ""
 
-#: Gtk/SnapshotListBox.vala:207
+#: Gtk/SnapshotListBox.vala:209
 msgid "<b>Snapshot Date:</b> Date on which snapshot was created"
 msgstr ""
 
-#: Gtk/SnapshotListBox.vala:215
+#: Gtk/SnapshotListBox.vala:217
 msgid "<b>System:</b> Installed Linux distribution"
 msgstr ""
 
@@ -103,6 +103,10 @@ msgstr ""
 
 #: Gtk/MainWindow.vala:392
 msgid "About"
+msgstr ""
+
+#: Gtk/SnapshotListBox.vala:358
+msgid "Active"
 msgstr ""
 
 #: Gtk/ExcludeBox.vala:218
@@ -274,7 +278,7 @@ msgstr ""
 msgid "Browse"
 msgstr ""
 
-#: Gtk/SnapshotListBox.vala:249
+#: Gtk/SnapshotListBox.vala:251
 msgid "Browse Files"
 msgstr ""
 
@@ -302,6 +306,10 @@ msgid ""
 "inconsistent state. The system may fail to boot or you may run into various "
 "issues. After cancelling, you need to restore another snapshot, to bring the "
 "system to a consistent state. Click Yes to confirm."
+msgstr ""
+
+#: Gtk/MainWindow.vala:567
+msgid "Cannot Delete Live Snapshot"
 msgstr ""
 
 #: Gtk/BackupBox.vala:83 Gtk/RestoreBox.vala:119
@@ -370,7 +378,7 @@ msgstr ""
 msgid "Commands listed below are not available on this system"
 msgstr ""
 
-#: Gtk/SnapshotListBox.vala:169
+#: Gtk/SnapshotListBox.vala:171
 msgid "Comments"
 msgstr ""
 
@@ -454,7 +462,7 @@ msgstr ""
 msgid "Create snapshot of current system"
 msgstr ""
 
-#: Gtk/MainWindow.vala:1094
+#: Gtk/MainWindow.vala:1110
 msgid ""
 "Create snapshots manually or enable scheduled snapshots to protect your "
 "system"
@@ -537,7 +545,7 @@ msgid "Data will be modified on following devices:"
 msgstr ""
 
 #: Console/AppConsole.vala:341 Gtk/DeleteWindow.vala:95 Gtk/MainWindow.vala:156
-#: Gtk/SnapshotListBox.vala:237
+#: Gtk/SnapshotListBox.vala:239
 msgid "Delete"
 msgstr ""
 
@@ -689,7 +697,7 @@ msgstr ""
 msgid "Editing and Re-Ordering"
 msgstr ""
 
-#: Gtk/MainWindow.vala:1087
+#: Gtk/MainWindow.vala:1103
 msgid "Enable scheduled snapshots to protect your system"
 msgstr ""
 
@@ -1062,7 +1070,7 @@ msgstr ""
 msgid "Invalid command line arguments"
 msgstr ""
 
-#: Gtk/MainWindow.vala:800
+#: Gtk/MainWindow.vala:811
 msgid "Invalid snapshot"
 msgstr ""
 
@@ -1166,7 +1174,7 @@ msgstr ""
 msgid "Last weekly snapshot not found"
 msgstr ""
 
-#: Gtk/MainWindow.vala:1066
+#: Gtk/MainWindow.vala:1082
 #, c-format
 msgid "Latest snapshot"
 msgstr ""
@@ -1188,7 +1196,7 @@ msgstr ""
 msgid "List snapshots"
 msgstr ""
 
-#: Gtk/MainWindow.vala:1015
+#: Gtk/MainWindow.vala:1031
 msgid "Live USB Mode (Restore Only)"
 msgstr ""
 
@@ -1205,11 +1213,11 @@ msgstr ""
 msgid "Main window closed by user"
 msgstr ""
 
-#: Gtk/SnapshotListBox.vala:243
+#: Gtk/SnapshotListBox.vala:245
 msgid "Mark for Deletion"
 msgstr ""
 
-#: Gtk/MainWindow.vala:628
+#: Gtk/MainWindow.vala:639
 msgid "Marked for deletion"
 msgstr ""
 
@@ -1254,7 +1262,7 @@ msgstr ""
 msgid "Moved system subvolume to snapshot directory"
 msgstr ""
 
-#: Gtk/MainWindow.vala:778
+#: Gtk/MainWindow.vala:789
 msgid "Multiple snapshots selected"
 msgstr ""
 
@@ -1271,16 +1279,16 @@ msgstr ""
 msgid "No Change"
 msgstr ""
 
-#: Gtk/DeleteWindow.vala:334 Gtk/MainWindow.vala:605
+#: Gtk/DeleteWindow.vala:334 Gtk/MainWindow.vala:616
 msgid "No Snapshots Selected"
 msgstr ""
 
-#: Gtk/MainWindow.vala:1093
+#: Gtk/MainWindow.vala:1109
 msgid "No snapshots available"
 msgstr ""
 
 #: Console/AppConsole.vala:293 Core/SnapshotRepo.vala:835
-#: Gtk/MainWindow.vala:1032
+#: Gtk/MainWindow.vala:1048
 msgid "No snapshots found"
 msgstr ""
 
@@ -1296,11 +1304,11 @@ msgstr ""
 msgid "No snapshots on this device"
 msgstr ""
 
-#: Gtk/MainWindow.vala:771
+#: Gtk/MainWindow.vala:782
 msgid "No snapshots selected"
 msgstr ""
 
-#: Gtk/MainWindow.vala:1067 Gtk/MainWindow.vala:1069
+#: Gtk/MainWindow.vala:1083 Gtk/MainWindow.vala:1085
 msgid "None"
 msgstr ""
 
@@ -1351,7 +1359,7 @@ msgstr ""
 msgid "Older log files removed"
 msgstr ""
 
-#: Gtk/MainWindow.vala:1068
+#: Gtk/MainWindow.vala:1084
 msgid "Oldest snapshot"
 msgstr ""
 
@@ -1433,7 +1441,7 @@ msgstr ""
 msgid "Please save your work and close all applications."
 msgstr ""
 
-#: Gtk/MainWindow.vala:674
+#: Gtk/MainWindow.vala:685
 msgid "Please select a snapshot to view the log!"
 msgstr ""
 
@@ -1445,7 +1453,7 @@ msgstr ""
 msgid "Please wait a few minutes and try again."
 msgstr ""
 
-#: Gtk/MainWindow.vala:742
+#: Gtk/MainWindow.vala:753
 msgid "Please wait for snapshots to be deleted."
 msgstr ""
 
@@ -1624,7 +1632,7 @@ msgstr ""
 msgid "Scheduled snapshot in progress..."
 msgstr ""
 
-#: Core/Main.vala:944 Gtk/ScheduleBox.vala:253 Gtk/MainWindow.vala:1086
+#: Core/Main.vala:944 Gtk/ScheduleBox.vala:253 Gtk/MainWindow.vala:1102
 msgid "Scheduled snapshots are disabled"
 msgstr ""
 
@@ -1659,7 +1667,7 @@ msgstr ""
 msgid "Select Path"
 msgstr ""
 
-#: Gtk/MainWindow.vala:673
+#: Gtk/MainWindow.vala:684
 msgid "Select Snapshot"
 msgstr ""
 
@@ -1688,7 +1696,7 @@ msgstr ""
 msgid "Select a partition on this disk"
 msgstr ""
 
-#: Gtk/MainWindow.vala:779
+#: Gtk/MainWindow.vala:790
 msgid "Select a single snapshot to restore"
 msgstr ""
 
@@ -1752,7 +1760,7 @@ msgstr ""
 msgid "Select the snapshot device"
 msgstr ""
 
-#: Gtk/MainWindow.vala:772
+#: Gtk/MainWindow.vala:783
 msgid "Select the snapshot to restore"
 msgstr ""
 
@@ -1760,7 +1768,7 @@ msgstr ""
 msgid "Select the snapshots to be deleted"
 msgstr ""
 
-#: Gtk/MainWindow.vala:606
+#: Gtk/MainWindow.vala:617
 msgid "Select the snapshots to mark for deletion"
 msgstr ""
 
@@ -1796,7 +1804,7 @@ msgstr ""
 msgid "Selected snapshot is marked for deletion"
 msgstr ""
 
-#: Gtk/MainWindow.vala:801
+#: Gtk/MainWindow.vala:812
 msgid "Selected snapshot is marked for deletion and cannot be restored"
 msgstr ""
 
@@ -1874,16 +1882,24 @@ msgid "Snaps"
 msgstr ""
 
 #: Core/Main.vala:1723 Core/SnapshotRepo.vala:651 Core/SnapshotRepo.vala:689
-#: Gtk/SnapshotListBox.vala:91
+#: Gtk/SnapshotListBox.vala:93
 #, c-format
 msgid "Snapshot"
+msgstr ""
+
+#: Gtk/MainWindow.vala:568
+#, c-format
+msgid ""
+"Snapshot '%s' is in-use by the system and cannot be deleted till the system "
+"is restarted.\n"
+"Restart the system to finish the previous restore."
 msgstr ""
 
 #: Gtk/BackupFinishBox.vala:60
 msgid "Snapshot Created"
 msgstr ""
 
-#: Gtk/MainWindow.vala:741
+#: Gtk/MainWindow.vala:752
 msgid "Snapshot deletion in progress..."
 msgstr ""
 
@@ -1973,7 +1989,7 @@ msgid ""
 "then the snapshots stored on it will be lost along with the system."
 msgstr ""
 
-#: Gtk/MainWindow.vala:1027
+#: Gtk/MainWindow.vala:1043
 msgid "Snapshots available for restore"
 msgstr ""
 
@@ -1988,7 +2004,7 @@ msgstr ""
 msgid "Snapshots cannot be created in Live CD mode"
 msgstr ""
 
-#: Gtk/MainWindow.vala:1077
+#: Gtk/MainWindow.vala:1093
 msgid "Snapshots will be created at selected intervals"
 msgstr ""
 
@@ -1998,7 +2014,7 @@ msgid ""
 "space (> 1 GB)"
 msgstr ""
 
-#: Gtk/MainWindow.vala:629
+#: Gtk/MainWindow.vala:640
 msgid "Snapshots will be removed during the next scheduled run"
 msgstr ""
 
@@ -2056,12 +2072,12 @@ msgstr ""
 msgid "Syntax"
 msgstr ""
 
-#: Utility/Device.vala:1769 Gtk/SnapshotListBox.vala:122
+#: Utility/Device.vala:1769 Gtk/SnapshotListBox.vala:124
 #, c-format
 msgid "System"
 msgstr ""
 
-#: Gtk/MainWindow.vala:971
+#: Gtk/MainWindow.vala:987
 msgid "System Restore Utility for Linux"
 msgstr ""
 
@@ -2077,7 +2093,7 @@ msgstr ""
 msgid "Tagged snapshot"
 msgstr ""
 
-#: Console/AppConsole.vala:395 Gtk/SnapshotListBox.vala:146
+#: Console/AppConsole.vala:395 Gtk/SnapshotListBox.vala:148
 msgid "Tags"
 msgstr ""
 
@@ -2144,7 +2160,7 @@ msgid ""
 "responsibility for any damage arising from the use of this program."
 msgstr ""
 
-#: Gtk/MainWindow.vala:1064 Gtk/MainWindow.vala:1076
+#: Gtk/MainWindow.vala:1080 Gtk/MainWindow.vala:1092
 msgid "Timeshift is active"
 msgstr ""
 
@@ -2249,11 +2265,11 @@ msgstr ""
 msgid "Vendor"
 msgstr ""
 
-#: Gtk/SnapshotListBox.vala:255
+#: Gtk/SnapshotListBox.vala:257
 msgid "View Log for Create"
 msgstr ""
 
-#: Gtk/SnapshotListBox.vala:261
+#: Gtk/SnapshotListBox.vala:263
 msgid "View Log for Restore"
 msgstr ""
 

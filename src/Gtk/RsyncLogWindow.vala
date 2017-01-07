@@ -72,7 +72,6 @@ public class RsyncLogWindow : Window {
 
 		log_debug("RsyncLogWindow: RsyncLogWindow()");
 		
-		//title = "rsync log for snapshot " + "%s".printf(bak.date.format ("%Y-%m-%d %I:%M %p"));
 		title = _("Log Viewer");
 		window_position = WindowPosition.CENTER;
 		set_default_size(def_width, def_height);

@@ -76,9 +76,9 @@ class RestoreFinishBox : Gtk.Box{
 		var msg = "";
 
 		if (App.btrfs_mode && App.restore_current_system){
-			msg += _("Snapshot was restored successfully and will become active after you restart your system.") + "\n";
+			msg += _("Snapshot was restored successfully and will become active after system is restarted.") + "\n";
 			msg += "\n";
-			msg += _("You can continue working on the current system. After restart, the running system will be visible as a new snapshot. You can restore this snapshot to 'undo' the restore.") + "\n";
+			msg += _("You can continue working on the current system. After restart, the running system will be visible as a new snapshot. You can restore the new snapshot to 'undo' the restore.") + "\n";
 		}
 
 		msg += "\n";

@@ -294,6 +294,8 @@ class MainWindow : Gtk.Window{
 		
 		vbox = new Box (Orientation.VERTICAL, 6);
 		vbox.margin = 6;
+		vbox.margin_left = 12;
+		vbox.margin_right = 12;
         scrolled.add(vbox);
         scrolled_snap_count = scrolled;
 
@@ -560,6 +562,17 @@ class MainWindow : Gtk.Window{
 			return;
 		}
 
+		// check if selected snapshot is live ------------------
+
+		foreach(var bak in snapshot_list_box.selected_snapshots()){
+			if (bak.live){
+				string title = _("Cannot Delete Live Snapshot");
+				string msg = _("Snapshot '%s' is being used by the system and cannot be deleted. Restart the system to activate the restored snapshot.").printf(bak.date_formatted);
+				gtk_messagebox(title,msg,this,false);
+				return;
+			}
+		}
+		
 		// get selected snapshots
 
 		if (!App.thread_delete_running){
@@ -816,6 +829,11 @@ class MainWindow : Gtk.Window{
 		var window = new RestoreWindow();
 		window.set_transient_for (this);
 		window.show_all();
+
+		window.destroy.connect(()=>{
+			App.repo.load_snapshots();
+			refresh_all();
+		});
 	}
 
 	private void btn_settings_clicked(){

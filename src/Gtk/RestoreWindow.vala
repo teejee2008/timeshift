@@ -333,7 +333,7 @@ class RestoreWindow : Gtk.Window{
 			btn_next.show();
 			btn_close.show();
 			btn_cancel.hide();
-			btn_prev.sensitive = true;
+			btn_prev.sensitive = !App.btrfs_mode;
 			btn_next.sensitive = true;
 			btn_close.sensitive = true;
 			#if GTK3_18

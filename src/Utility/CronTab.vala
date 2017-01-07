@@ -295,7 +295,7 @@ public class CronTab : GLib.Object {
 		sh += text + "\n";
 
 		if (file_exists(file_path) && (file_read(file_path) == sh)){
-			log_msg(_("Cron task exists") + ": %s".printf(file_path));
+			log_debug(_("Cron task exists") + ": %s".printf(file_path));
 			return true;
 		}
 

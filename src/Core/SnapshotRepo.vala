@@ -648,6 +648,7 @@ public class SnapshotRepo : GLib.Object{
 			log_msg("%-6s : %s".printf(_("Device"), device.device_name_with_parent));
 			log_msg("%-6s : %s".printf("UUID", device.uuid));
 			log_msg("%-6s : %s".printf(_("Path"), mount_path));
+			log_msg("%-6s : %s".printf(_("Mode"), btrfs_mode ? "BTRFS" : "RSYNC"));
 			log_msg(status_message);
 			log_msg(status_details);
 		}

@@ -1,19 +1,46 @@
 
-timeshift (16.12) trusty; urgency=medium
+timeshift (17.1) trusty; urgency=medium
 
-  * Added support for BTRFS snapshots
+  * Added support for BTRFS snapshots. Snapshot type can be selected
+  from Settings window or from Setup Wizard window. Type will be
+  auto-selected on first run based on the type of system.
 
-  * Added support for systems with @ and @home on different disks
+  * Added support for BTRFS systems with @ and @home on different disks
 
-  * Fixed: "timeshift --delete" prompts for device even if not required
+  * Exclude: Added /var/lib/docker to default exclude list. This will
+  prevent recursive backups which can cause the disk to run out of
+  space.
 
-  * Fixed: /var/lib/docker will be excluded to avoid issue with docker
+  * Exclude: Added /timeshift-btrfs and /var/log/timeshift to
+  default exclude list
+
+  * Scheduling: Scripts will be created in /etc/cron.*/ instead of
+  adding entries to root user's crontab. This allows users to create
+  custom jobs for timeshift without any conflict with jobs created
+  automatically by the application.
+
+  * Console: Replaced options '--backup' with '--check', and
+  '--backup-now' with '--create'
+
+  * Console: Added option --tags to specify backup level while creating
+  snapshots
+
+  * Console: Added options --btrfs and --rsync to specify snapshot type
+
+  * Console: Fixed: Progress was not displayed when first snapshot was
+  taken. System size will be estimated before creating first snapshot.
+
+  * Console: Fixed: Comments passed as command argument were not saved
+
+  * Settings: Removed Notes tab from SettingsWindow
+
+  * Settings: Added option to stop emails sent by cron service
 
   * Use expanded ButtonBox if gtk+ version >= 3.18
   
- -- Tony George <tony.george.kol@gmail.com>  Fri, 11 Nov 2016 14:00:00 +0530
+ -- Tony George <tony.george.kol@gmail.com>  Sat, 10 Jan 2016 10:00:00 +0530
 
- 
+
 timeshift (16.11.2) trusty; urgency=medium
 
   * Fixed: Partitions were not detected correctly on LMDE2 Betsy

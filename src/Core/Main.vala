@@ -40,11 +40,13 @@ public class Main : GLib.Object{
 	public string rsnapshot_conf_path = "";
 	public string app_conf_path = "";
 	public bool first_run = false;
-
+	
 	public string backup_uuid = "";
 	public string backup_parent_uuid = "";
 
 	public bool btrfs_mode = true;
+	public bool stop_cron_emails = true;
+	
 	public Gee.ArrayList<Device> partitions;
 
 	public Gee.ArrayList<string> exclude_list_user;
@@ -1281,11 +1283,13 @@ public class Main : GLib.Object{
 		//log_msg(_("Writing control file..."));
 
 		snapshot_path = path_combine(repo.mount_paths["@"], "timeshift-btrfs/snapshots/%s".printf(snapshot_name));
+
+		string initial_tags = (tag == "ondemand") ? "" : tag;
 		
 		// write control file
 		var snapshot = Snapshot.write_control_file(
 			snapshot_path, dt_created, sys_uuid, current_distro.full_name(),
-			tag, cmd_comments, 0, true, false, repo);
+			initial_tags, cmd_comments, 0, true, false, repo);
 
 		// write subvolume info
 		foreach(var subvol in sys_subvolumes.values){
@@ -1293,6 +1297,8 @@ public class Main : GLib.Object{
 		}
 		snapshot.update_control_file(); // save subvolume info
 
+		set_tags(snapshot); // set_tags() will update the control file
+		
 		return snapshot;
 	}
 
@@ -2761,6 +2767,7 @@ public class Main : GLib.Object{
 		}
 
 		config.set_string_member("btrfs_mode", btrfs_mode.to_string());
+		config.set_string_member("stop_cron_emails", stop_cron_emails.to_string());
 
 		config.set_string_member("schedule_monthly", schedule_monthly.to_string());
 		config.set_string_member("schedule_weekly", schedule_weekly.to_string());
@@ -2845,6 +2852,7 @@ public class Main : GLib.Object{
         var config = node.get_object();
 
 		btrfs_mode = json_get_bool(config, "btrfs_mode", false); // false as default
+		stop_cron_emails = json_get_bool(config, "stop_cron_emails", stop_cron_emails);
 
 		if (cmd_btrfs_mode != null){
 			btrfs_mode = cmd_btrfs_mode; //override
@@ -3434,58 +3442,7 @@ public class Main : GLib.Object{
 		thread_estimate_running = false;
 	}
 
-	//cron jobs
-
-	public void cron_job_update_old(){
-
-		if (live_system()) { return; }
-
-		// check and remove crontab entries created by previous versions of timeshift
-
-		CronTab.clear_cached_text();
-		
-		string entry = "*/30 * * * * timeshift --backup";
-		CronTab.remove_job(entry, false, true);
-
-		foreach(string interval in new string[] {"@monthly","@weekly","@daily"}){
-			entry = "%s timeshift --backup".printf(interval);
-			CronTab.remove_job(entry, false, true);
-		}
-
-		CronTab.clear_cached_text();
-		
-		//entry = "^@(daily|weekly|monthly|hourly) timeshift --backup$";
-		//CronTab.remove_job(entry, true);
-
-		//entry = "^@reboot sleep [0-9]*m && timeshift --backup$";
-		//CronTab.remove_job(entry, true);
-
-		// update crontab entries
-
-		string entry_boot = "@reboot sleep %dm && timeshift --backup".printf(startup_delay_interval_mins);
-		//entry_boot += " #timeshift-16.10-hourly";
-		
-		string entry_hourly = "@hourly timeshift --backup";
-		//entry_hourly += " #timeshift-16.10-boot";
-		
-		if (scheduled){
-			CronTab.add_job(entry_boot, true);
-			CronTab.add_job(entry_hourly, true);
-		}
-		else{
-			CronTab.remove_job(entry_boot, false, true);
-			CronTab.remove_job(entry_hourly, false, true);
-		}
-
-		/*string cmd = "timeshift --backup";
-		
-		if (scheduled){
-			CronTab.add_script_hourly("timeshift-backup", cmd);
-		}
-		else{
-			CronTab.remove_script_hourly("timeshift-backup");
-		}*/
-	}
+	// cron jobs
 
 	public void cron_job_update(){
 		
@@ -3512,9 +3469,9 @@ public class Main : GLib.Object{
 		}
 
 		if (scheduled){
-			CronTab.add_script_file("timeshift-hourly", "hourly", "timeshift --check");
+			CronTab.add_script_file("timeshift-hourly", "hourly", "timeshift --check", stop_cron_emails);
 			if (schedule_boot){
-				CronTab.add_script_file("timeshift-boot", "d", "@reboot root sleep 10m && timeshift --create --tags B");
+				CronTab.add_script_file("timeshift-boot", "d", "@reboot root sleep 10m && timeshift --create --tags B", stop_cron_emails);
 			}
 			else{
 				CronTab.remove_script_file("timeshift-boot", "d");
@@ -3526,7 +3483,7 @@ public class Main : GLib.Object{
 		}
 	}
 	
-	//cleanup
+	// cleanup
 
 	public void clean_logs(){
 

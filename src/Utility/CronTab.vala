@@ -267,7 +267,7 @@ public class CronTab : GLib.Object {
 		return install(file_path, user_name);
 	}
 
-	public static bool add_script_file(string file_name, string cron_dir_type, string text){
+	public static bool add_script_file(string file_name, string cron_dir_type, string text, bool stop_cron_emails){
 
 		switch (cron_dir_type){
 		case "d":
@@ -288,6 +288,9 @@ public class CronTab : GLib.Object {
 		string sh = "";
 		sh += "SHELL=/bin/sh" + "\n";
 		sh += "PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin" + "\n";
+		if (stop_cron_emails){
+			sh += "MAILTO=\"\"" + "\n";
+		}
 		sh += "\n";
 		sh += text + "\n";
 

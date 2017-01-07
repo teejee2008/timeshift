@@ -1070,6 +1070,13 @@ public class Main : GLib.Object{
 	}
 
 	private Snapshot? create_snapshot_with_rsync(string tag, DateTime dt_created){
+
+		log_msg(string.nfill(78, '-'));
+
+		if (first_snapshot_size == 0){
+			log_msg(_("Estimating system size..."));
+			estimate_system_size();
+		}
 		
 		log_msg(_("Creating new snapshot...") + "(RSYNC)");
 
@@ -1200,7 +1207,7 @@ public class Main : GLib.Object{
 		// write control file
 		Snapshot.write_control_file(
 			snapshot_path, dt_created, sys_uuid, current_distro.full_name(),
-			tag, cmd_comments, 0, false, false, App.repo);
+			tag, cmd_comments, 0, false, false, repo);
 
 		// parse log file
 		progress_text = _("Parsing log file...");
@@ -1211,7 +1218,7 @@ public class Main : GLib.Object{
 		// write control file
 		var snapshot = Snapshot.write_control_file(
 			snapshot_path, dt_created, sys_uuid, current_distro.full_name(),
-			tag, cmd_comments, task.prg_count_total, false, false, App.repo, true);
+			tag, cmd_comments, task.prg_count_total, false, false, repo, true);
 
 		return snapshot;
 	}
@@ -1270,7 +1277,7 @@ public class Main : GLib.Object{
 		// write control file
 		var snapshot = Snapshot.write_control_file(
 			snapshot_path, dt_created, sys_uuid, current_distro.full_name(),
-			tag, cmd_comments, 0, true, false, App.repo);
+			tag, cmd_comments, 0, true, false, repo);
 
 		// write subvolume info
 		foreach(var subvol in sys_subvolumes.values){
@@ -2518,7 +2525,7 @@ public class Main : GLib.Object{
 			if (dir_exists(snapshot_path)){
 				
 				string src_path = path_combine(snapshot_path, subvol_name);
-				string dst_path = path_combine(App.repo.mount_paths[subvol_name], subvol_name);
+				string dst_path = path_combine(repo.mount_paths[subvol_name], subvol_name);
 				cmd = "btrfs subvolume snapshot '%s' '%s'".printf(src_path, dst_path);
 				log_debug(cmd);
 				
@@ -2652,7 +2659,7 @@ public class Main : GLib.Object{
 				
 				var snap = Snapshot.write_control_file(
 					snapshot_path, dt_created, sys_root.uuid, current_distro.full_name(),
-					"ondemand", "", 0, true, false, App.repo);
+					"ondemand", "", 0, true, false, repo);
 
 				snap.description = "Before restoring '%s'".printf(snapshot_to_restore.date_formatted);
 				snap.live = true;
@@ -3204,14 +3211,14 @@ public class Main : GLib.Object{
 		// check if currently selected device can be used
 		if (repo.available()){
 			if (check_device_for_backup(repo.device)){
-				if (repo.btrfs_mode != App.btrfs_mode){
+				if (repo.btrfs_mode != btrfs_mode){
 					// reinitialize
 					repo = new SnapshotRepo.from_device(repo.device, parent_win, btrfs_mode);
 				}
 				return;
 			}
 			else{
-				App.repo = new SnapshotRepo.from_null();
+				repo = new SnapshotRepo.from_null();
 			}
 		}
 		

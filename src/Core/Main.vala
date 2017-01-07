@@ -3195,7 +3195,11 @@ public class Main : GLib.Object{
 		// check if currently selected device can be used
 		if (repo.available()){
 			if (check_device_for_backup(repo.device)){
-				repo = new SnapshotRepo.from_device(repo.device, parent_win, btrfs_mode);
+				if (repo.btrfs_mode != App.btrfs_mode){
+					// reinitialize
+					repo = new SnapshotRepo.from_device(repo.device, parent_win, btrfs_mode);
+				}
+				return;
 			}
 			else{
 				App.repo = new SnapshotRepo.from_null();

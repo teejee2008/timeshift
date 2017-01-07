@@ -370,9 +370,9 @@ class MainWindow : Gtk.Window{
 		});
 		
 		// snapshot logs
-		menu_item = create_menu_item(_("View rsync log for selected snapshot"), "", "", 16);
-		menu_extra.append(menu_item);
-		menu_item.activate.connect(()=>{ view_snapshot_log(false); });
+		//menu_item = create_menu_item(_("View rsync log for selected snapshot"), "", "", 16);
+		//menu_extra.append(menu_item);
+		//menu_item.activate.connect(()=>{ view_snapshot_log(false); });
 
 		if (!App.live_system()){
 			// app logs

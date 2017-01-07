@@ -44,9 +44,11 @@ class SnapshotListBox : Gtk.Box{
 	private bool treeview_sort_column_desc = true;
 
 	private Gtk.Menu menu_snapshots;
+	private Gtk.ImageMenuItem mi_browse;
 	private Gtk.ImageMenuItem mi_remove;
 	private Gtk.ImageMenuItem mi_mark;
-	private Gtk.ImageMenuItem mi_view_log;
+	private Gtk.ImageMenuItem mi_view_log_create;
+	private Gtk.ImageMenuItem mi_view_log_restore;
 	
 	private Gtk.Window parent_window;
 
@@ -234,35 +236,40 @@ class SnapshotListBox : Gtk.Box{
 		menu_snapshots = new Gtk.Menu();
 
 		// mi_remove
-		mi_remove = new ImageMenuItem.with_label(_("Delete"));
-		mi_remove.image = get_shared_icon("edit-delete","",16);
-		mi_remove.activate.connect(()=> { delete_selected(); });
-		menu_snapshots.append(mi_remove);
-
+		var item = new ImageMenuItem.with_label(_("Delete"));
+		item.image = get_shared_icon("edit-delete","",16);
+		item.activate.connect(()=> { delete_selected(); });
+		menu_snapshots.append(item);
+		mi_remove = item;
+		
 		// mi_mark
-		mi_mark = new ImageMenuItem.with_label(_("Mark for Deletion"));
-		mi_mark.image = get_shared_icon("edit-delete","",16);
-		mi_mark.activate.connect(()=> { mark_selected(); });
-		menu_snapshots.append(mi_mark);
-
-		// mi_mark
-		mi_mark = new ImageMenuItem.with_label(_("Browse Files"));
-		mi_mark.image = get_shared_icon("folder","",16);
-		mi_mark.activate.connect(()=> { browse_selected(); });
-		menu_snapshots.append(mi_mark);
-
-		// mi_mark
-		mi_view_log = new ImageMenuItem.with_label(_("View Log for Create"));
-		mi_view_log.image = get_shared_icon("gtk-file","gtk-file.png",16);
-		mi_view_log.activate.connect(()=> { view_snapshot_log(false); });
-		menu_snapshots.append(mi_view_log);
-
-		// mi_mark
-		mi_view_log = new ImageMenuItem.with_label(_("View Log for Restore"));
-		mi_view_log.image = get_shared_icon("gtk-file","gtk-file.png",16);
-		mi_view_log.activate.connect(()=> { view_snapshot_log(true); });
-		menu_snapshots.append(mi_view_log);
-
+		item = new ImageMenuItem.with_label(_("Mark for Deletion"));
+		item.image = get_shared_icon("edit-delete","",16);
+		item.activate.connect(()=> { mark_selected(); });
+		menu_snapshots.append(item);
+		mi_mark = item;
+		
+		// mi_browse
+		item = new ImageMenuItem.with_label(_("Browse Files"));
+		item.image = get_shared_icon("folder","",16);
+		item.activate.connect(()=> { browse_selected(); });
+		menu_snapshots.append(item);
+		mi_browse = item;
+		
+		// mi_view_log_create
+		item = new ImageMenuItem.with_label(_("View Log for Create"));
+		item.image = get_shared_icon("gtk-file","gtk-file.png",16);
+		item.activate.connect(()=> { view_snapshot_log(false); });
+		menu_snapshots.append(item);
+		mi_view_log_create = item;
+		
+		// mi_view_log_restore
+		item = new ImageMenuItem.with_label(_("View Log for Restore"));
+		item.image = get_shared_icon("gtk-file","gtk-file.png",16);
+		item.activate.connect(()=> { view_snapshot_log(true); });
+		menu_snapshots.append(item);
+		mi_view_log_restore = item;
+		
 		menu_snapshots.show_all();
 
 		// connect signal for shift+F10
@@ -368,7 +375,9 @@ class SnapshotListBox : Gtk.Box{
 		TreeSelection selection = treeview.get_selection();
 		int count = selection.count_selected_rows();
 		mi_remove.sensitive = (count > 0);
-		mi_mark.sensitive = (count > 0);
+		mi_mark.sensitive = (count > 0) && !App.btrfs_mode;
+		mi_view_log_create.sensitive = !App.btrfs_mode;
+		mi_view_log_restore.sensitive = !App.btrfs_mode;
 
 		if (event != null) {
 			menu_snapshots.popup (null, null, null, event.button, event.time);

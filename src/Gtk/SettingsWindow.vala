@@ -81,9 +81,9 @@ class SettingsWindow : Gtk.Window{
 		exclude_box = new ExcludeBox(this, false);
 		notebook.append_page (exclude_box, label);
 
-		label = new Gtk.Label(_("Notes"));
-		notes_box = new FinishBox(this, true);
-		notebook.append_page (notes_box, label);
+		//label = new Gtk.Label(_("Notes"));
+		//notes_box = new FinishBox(this, true);
+		//notebook.append_page (notes_box, label);
 
 		backend_box.type_changed.connect(()=>{
 			exclude_box.visible = !App.btrfs_mode;
@@ -152,8 +152,8 @@ class SettingsWindow : Gtk.Window{
 		BACKUP_TYPE = 0,
 		BACKUP_DEVICE = 1,
 		SCHEDULE = 2,
-		EXCLUDE = 3,
-		NOTES = 4
+		EXCLUDE = 3//,
+		//NOTES = 4
 	}
 }
 

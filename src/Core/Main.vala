@@ -2721,7 +2721,8 @@ public class Main : GLib.Object{
 				snapshot_path = path_combine(repo.mount_paths["@"], "timeshift-btrfs/snapshots/%s".printf(snapshot_name));
 				
 				var snap = Snapshot.write_control_file(
-					snapshot_path, dt_created, sys_root.uuid, current_distro.full_name(),
+					snapshot_path, dt_created, repo.device.uuid,
+					LinuxDistro.get_dist_info(repo.mount_paths["@"] + "/@").full_name(),
 					"ondemand", "", 0, true, false, repo);
 
 				snap.description = "Before restoring '%s'".printf(snapshot_to_restore.date_formatted);

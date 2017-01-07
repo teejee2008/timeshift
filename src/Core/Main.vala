@@ -1754,7 +1754,13 @@ public class Main : GLib.Object{
 		try {
 			thread_restore_running = true;
 			thr_success = false;
-			Thread.create<void> (restore_execute, true);
+			
+			if (btrfs_mode){
+				Thread.create<bool> (restore_execute_btrfs, true);
+			}
+			else{
+				Thread.create<bool> (restore_execute_rsync, true);
+			}
 		}
 		catch (ThreadError e) {
 			thread_restore_running = false;
@@ -1902,99 +1908,6 @@ public class Main : GLib.Object{
 		}
 
 		log_debug("Main: get_restore_messages(): exit");
-	}
-
-	public void restore_execute(){
-
-		log_debug("Main: restore_execute()");
-
-		if (btrfs_mode){
-			restore_execute_btrfs(parent_window);
-			return;
-		}
-
-		try{
-
-			log_debug("source_path=%s".printf(restore_source_path));
-			log_debug("target_path=%s".printf(restore_target_path));
-			
-			string sh_sync, sh_finish;
-			create_restore_scripts(out sh_sync, out sh_finish);
-			
-			save_exclude_list_for_restore(restore_source_path);
-
-			file_delete(restore_log_file);
-			file_delete(restore_log_file + "-changes");
-			file_delete(restore_log_file + ".gz");
-			
-			if (restore_current_system){
-				string control_file_path = path_combine(snapshot_to_restore.path,".sync-restore");
-
-				var f = File.new_for_path(control_file_path);
-				if(f.query_exists()){
-					f.delete(); //delete existing file
-				}
-
-				file_write(control_file_path, snapshot_to_restore.path); //save snapshot name
-			}
-
-			// run the scripts --------------------
-		
-			if (snapshot_to_restore != null){
-				log_msg(_("Restoring snapshot..."));
-			}
-			else{
-				log_msg(_("Cloning system..."));
-			}
-
-			progress_text = _("Synching files with rsync...");
-			log_msg(progress_text);
-
-			bool ok = true;
-			
-			if (app_mode == ""){ // GUI
-				if (restore_current_system){
-					ok = restore_current_gui(sh_sync, sh_finish);
-				}
-				else{
-					ok = restore_other_gui(sh_sync, sh_finish);
-				}
-			}
-			else{
-				if (restore_current_system){
-					ok = restore_current_console(sh_sync, sh_finish);
-				}
-				else{
-					ok = restore_other_console(sh_sync, sh_finish);
-				}
-			}
-
-			log_msg(_("Restore completed"));
-			thr_success = true;
-				
-			/*if (ok){
-				
-			}
-			else{
-				log_error(_("Restore completed with errors"));
-				thr_success = false;
-			}*/
-
-			// unmount ----------
-			
-			unmount_target_device(false);
-
-			// check and repair file system errors
-			
-			check_and_repair_filesystems();
-		}
-		catch(Error e){
-			log_error (e.message);
-			thr_success = false;
-			thread_restore_running = false;
-		}
-
-		thread_restore_running = false;
 	}
 
 	private void create_restore_scripts(out string sh_sync, out string sh_finish){
@@ -2487,7 +2400,94 @@ public class Main : GLib.Object{
 		}
 	}
 
-	public bool restore_execute_btrfs(Gtk.Window? parent_win){
+	public bool restore_execute_rsync(){
+		
+		log_debug("Main: restore_execute_rsync()");
+
+		try{
+			log_debug("source_path=%s".printf(restore_source_path));
+			log_debug("target_path=%s".printf(restore_target_path));
+			
+			string sh_sync, sh_finish;
+			create_restore_scripts(out sh_sync, out sh_finish);
+			
+			save_exclude_list_for_restore(restore_source_path);
+
+			file_delete(restore_log_file);
+			file_delete(restore_log_file + "-changes");
+			file_delete(restore_log_file + ".gz");
+			
+			if (restore_current_system){
+				string control_file_path = path_combine(snapshot_to_restore.path,".sync-restore");
+
+				var f = File.new_for_path(control_file_path);
+				if(f.query_exists()){
+					f.delete(); //delete existing file
+				}
+
+				file_write(control_file_path, snapshot_to_restore.path); //save snapshot name
+			}
+
+			// run the scripts --------------------
+		
+			if (snapshot_to_restore != null){
+				log_msg(_("Restoring snapshot..."));
+			}
+			else{
+				log_msg(_("Cloning system..."));
+			}
+
+			progress_text = _("Synching files with rsync...");
+			log_msg(progress_text);
+
+			bool ok = true;
+			
+			if (app_mode == ""){ // GUI
+				if (restore_current_system){
+					ok = restore_current_gui(sh_sync, sh_finish);
+				}
+				else{
+					ok = restore_other_gui(sh_sync, sh_finish);
+				}
+			}
+			else{
+				if (restore_current_system){
+					ok = restore_current_console(sh_sync, sh_finish);
+				}
+				else{
+					ok = restore_other_console(sh_sync, sh_finish);
+				}
+			}
+
+			log_msg(_("Restore completed"));
+			thr_success = true;
+				
+			/*if (ok){
+				
+			}
+			else{
+				log_error(_("Restore completed with errors"));
+				thr_success = false;
+			}*/
+
+			// unmount ----------
+			
+			unmount_target_device(false);
+
+			// check and repair file system errors
+			
+			check_and_repair_filesystems();
+		}
+		catch(Error e){
+			log_error (e.message);
+			thr_success = false;
+		}
+
+		thread_restore_running = false;
+		return thr_success;
+	}
+	
+	public bool restore_execute_btrfs(){
 
 		log_debug("Main: restore_execute_btrfs()");
 		
@@ -2497,26 +2497,34 @@ public class Main : GLib.Object{
 
 		bool ok = create_pre_restore_snapshot_btrfs();
 		if (!ok){
-			return false;
+			thread_restore_running = false;
+			thr_success = false;
+			return thr_success;
 		}
 		
 		// restore snapshot subvolumes by creating new subvolume snapshots
 
 		foreach(string subvol_name in new string[] { "@","@home" }){
 			
-			string subvol_path = path_combine(snapshot_to_restore.path, subvol_name);
-		
-			if (dir_exists(subvol_path)){
-				string src_path = path_combine(snapshot_to_restore.path, subvol_name);
+			string snapshot_path = path_combine(repo.mount_paths[subvol_name], "timeshift-btrfs/snapshots/%s".printf(snapshot_to_restore.name));
+ 
+			if (dir_exists(snapshot_path)){
+				
+				string src_path = path_combine(snapshot_path, subvol_name);
 				string dst_path = path_combine(App.repo.mount_paths[subvol_name], subvol_name);
 				cmd = "btrfs subvolume snapshot '%s' '%s'".printf(src_path, dst_path);
 				log_debug(cmd);
+				
 				int status = exec_sync(cmd, out std_out, out std_err);
+				
 				if (status != 0){
 					log_error (std_err);
 					log_error(_("btrfs returned an error") + ": %d".printf(status));
 					log_error(_("Failed to restore system subvolume") + ": %s".printf(subvol_name));
-					return false;
+					
+					thread_restore_running = false;
+					thr_success = false;
+					return thr_success;
 				}
 				else{
 					log_msg(_("Restored system subvolume") + ": %s".printf(subvol_name));
@@ -2524,12 +2532,15 @@ public class Main : GLib.Object{
 			}
 		}
 
-		log_msg(_("Restore completed without errors"));
+		log_msg(_("Restore completed"));
+		thr_success = true;
+		
 		if (restore_current_system){
 			log_msg(_("Snapshot will become active after system is rebooted."));
 		}
-		
-		return true;
+
+		thread_restore_running = false;
+		return thr_success;
 	}
 
 	public bool create_pre_restore_snapshot_btrfs(){

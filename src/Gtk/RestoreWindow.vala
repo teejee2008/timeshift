@@ -375,6 +375,7 @@ class RestoreWindow : Gtk.Window{
 			break;
 		case Tabs.FINISH:
 			restore_finish_box.update_message(success);
+			//wait_and_close_window(1000, this); // do not auto-close restore window.
 			break;
 		}
 	}

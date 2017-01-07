@@ -334,7 +334,7 @@ public class Snapshot : GLib.Object{
 		config.set_string_member("app-version", AppVersion);
 		config.set_string_member("file_count", item_count.to_string());
 		config.set_string_member("tags", tag);
-		config.set_string_member("comments", "");
+		config.set_string_member("comments", comments);
 		config.set_string_member("live", is_live.to_string());
 		config.set_string_member("type", (is_btrfs ? "btrfs" : "rsync"));
 

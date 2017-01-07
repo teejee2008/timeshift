@@ -40,7 +40,7 @@ class SettingsWindow : Gtk.Window{
 	private BackupDeviceBox backup_dev_box;
 	private ScheduleBox schedule_box;
 	private ExcludeBox exclude_box;
-	private FinishBox notes_box;
+	//private FinishBox notes_box;
 
 	private uint tmr_init;
 	private int def_width = 550;
@@ -88,7 +88,7 @@ class SettingsWindow : Gtk.Window{
 		backend_box.type_changed.connect(()=>{
 			exclude_box.visible = !App.btrfs_mode;
 			backup_dev_box.refresh();
-			notes_box.refresh();
+			//notes_box.refresh();
 		});
 
 		create_actions();

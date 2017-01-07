@@ -55,6 +55,36 @@ public class CronTab : GLib.Object {
 		}
 	}
 
+	public static bool has_job(string entry, bool partial_match, bool use_cached_text){
+		
+		// read crontab file
+		string tab = "";
+		if (use_cached_text && (crontab_text != null)){
+			tab = crontab_text;
+		}
+		else{
+			crontab_text = crontab_read_all();
+			tab = crontab_text;
+		}
+
+		var lines = new Gee.ArrayList<string>();
+		foreach(string line in tab.split("\n")){
+			lines.add(line);
+		}
+
+		// check if entry exists
+		foreach(string line in lines){
+			if (line == entry){
+				return true; // return
+			}
+			else if (partial_match && line.contains(entry)){
+				return true; // return
+			}
+		}
+
+		return false;
+	}
+	
 	public static bool add_job(string entry, bool use_cached_text){
 		
 		// read crontab file
@@ -235,5 +265,72 @@ public class CronTab : GLib.Object {
 
 	public static bool import(string file_path, string user_name = ""){
 		return install(file_path, user_name);
+	}
+
+	public static bool add_script_file(string file_name, string cron_dir_type, string text){
+
+		switch (cron_dir_type){
+		case "d":
+		case "hourly":
+		case "daily":
+		case "weekly":
+		case "monthly":
+			break;
+		default:
+			log_error("Cron directory type parameter not valid" + ": %s".printf(cron_dir_type));
+			log_error("Expected values: d, hourly, daily, weekly, monthly");
+			return false;
+			break;
+		}
+
+		string file_path = "/etc/cron.%s/%s".printf(cron_dir_type, file_name.replace(".","-")); // dot is not allowed in file name
+
+		string sh = "";
+		sh += "SHELL=/bin/sh" + "\n";
+		sh += "PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin" + "\n";
+		sh += "\n";
+		sh += text + "\n";
+
+		if (file_exists(file_path) && (file_read(file_path) == sh)){
+			log_msg(_("Cron task exists") + ": %s".printf(file_path));
+			return true;
+		}
+
+		file_write(file_path, sh);
+		chown(file_path, "root", "root");
+		chmod(file_path, "644");
+
+		log_msg(_("Added cron task") + ": %s".printf(file_path));
+		
+		return true;
+	}
+
+	public static bool remove_script_file(string file_name, string cron_dir_type){
+
+		switch (cron_dir_type){
+		case "d":
+		case "hourly":
+		case "daily":
+		case "weekly":
+		case "monthly":
+			break;
+		default:
+			log_error("Cron directory type parameter not valid" + ": %s".printf(cron_dir_type));
+			log_error("Expected values: d, hourly, daily, weekly, monthly");
+			return false;
+			break;
+		}
+
+		string file_path = "/etc/cron.%s/%s".printf(cron_dir_type, file_name.replace(".","-")); // dot is not allowed in file name
+
+		if (!file_exists(file_path)){
+			return true;
+		}
+		
+		file_delete(file_path);
+
+		log_msg(_("Removed cron task") + ": %s".printf(file_path));
+		
+		return true;
 	}
 }

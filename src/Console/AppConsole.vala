@@ -112,7 +112,8 @@ public class AppConsole : GLib.Object {
 		for (int k = 1; k < args.length; k++) // Oth arg is app path
 		{
 			switch (args[k].down()){
-				case "--backup":
+				//case "--backup": // deprecated
+				case "--check":
 					LOG_TIMESTAMP = false;
 					LOG_DEBUG = false;
 					App.app_mode = "backup";
@@ -144,7 +145,8 @@ public class AppConsole : GLib.Object {
 					App.app_mode = "restore";
 					break;
 
-				case "--backup-now":
+				//case "--backup-now": // deprecated
+				case "--create":
 					LOG_TIMESTAMP = false;
 					LOG_DEBUG = false;
 					App.app_mode = "ondemand";
@@ -192,6 +194,11 @@ public class AppConsole : GLib.Object {
 					App.cmd_snapshot = args[++k];
 					break;
 
+				case "--tags":
+					App.cmd_tags = args[++k];
+					App.validate_cmd_tags();
+					break;
+
 				case "--debug":
 					LOG_COMMANDS = true;
 					LOG_DEBUG = true;
@@ -218,6 +225,18 @@ public class AppConsole : GLib.Object {
 					App.btrfs_mode = false;
 					break;
 
+				case "--backup":
+					log_error("Option --backup has been replaced by option --check");
+					log_error("Run 'timeshift --help' to list all available options");
+					App.exit_app(1);
+					break;
+
+				case "--backup-now":
+					log_error("Option --backup-now has been replaced by option --create");
+					log_error("Run 'timeshift --help' to list all available options");
+					App.exit_app(1);
+					break;
+					
 				default:
 					LOG_TIMESTAMP = false;
 					log_error("%s: %s".printf(
@@ -326,9 +345,10 @@ public class AppConsole : GLib.Object {
 		msg += "  --list-devices             " + _("List devices") + "\n";
 		msg += "\n";
 		msg += _("Backup") + ":\n";
-		msg += "  --backup                   " + _("Take scheduled backup") + "\n";
-		msg += "  --backup-now               " + _("Take on-demand backup") + "\n";
-		msg += "  --comments                  " + _("Snapshot description") + "\n";
+		msg += "  --check                    " + _("Create snapshot if scheduled") + "\n";
+		msg += "  --create                   " + _("Create snapshot (even if not scheduled)") + "\n";
+		msg += "  --comments \"string\"      " + _("Set snapshot description") + "\n";
+		msg += "  --tags {O,B,H,D,W,M}       " + _("Add tags to snapshot (default: O)") + "\n";;
 		msg += "\n";
 		msg += _("Restore") + ":\n";
 		msg += "  --restore                  " + _("Restore snapshot") + "\n";
@@ -343,10 +363,10 @@ public class AppConsole : GLib.Object {
 		msg += "  --delete-all               " + _("Delete all snapshots") + "\n";
 		msg += "\n";
 		msg += _("Global") + ":\n";
-		msg += "  --backup-device <device>   " + _("Specify backup device") + "\n";
+		msg += "  --backup-device <device>   " + _("Specify backup device (default: config)") + "\n";
 		msg += "  --yes                      " + _("Answer YES to all confirmation prompts") + "\n";
-		msg += "  --btrfs                    " + _("Switch to BTRFS mode") + "\n";
-		msg += "  --rsync                    " + _("Switch to RSYNC mode") + "\n";
+		msg += "  --btrfs                    " + _("Switch to BTRFS mode (default: config)") + "\n";
+		msg += "  --rsync                    " + _("Switch to RSYNC mode (default: config)") + "\n";
 		msg += "  --debug                    " + _("Show additional debug messages") + "\n";
 		msg += "  --verbose                  " + _("Show rsync output (default)") + "\n";
 		msg += "  --quiet                    " + _("Hide rsync output") + "\n";

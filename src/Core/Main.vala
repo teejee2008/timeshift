@@ -135,6 +135,7 @@ public class Main : GLib.Object{
 	public bool cmd_confirm = false;
 	public bool cmd_verbose = true;
 	public string cmd_comments = "";
+	public string cmd_tags = "";
 	public bool? cmd_btrfs_mode = null;
 	
 	public string progress_text = "";
@@ -384,7 +385,7 @@ public class Main : GLib.Object{
 					cmd_btrfs_mode = btrfs_mode;
 					break;
 					
-				case "--backup":
+				case "--check":
 					app_mode = "backup";
 					break;
 
@@ -404,7 +405,7 @@ public class Main : GLib.Object{
 					app_mode = "restore";
 					break;
 
-				case "--backup-now":
+				case "--create":
 					app_mode = "ondemand";
 					break;
 
@@ -450,10 +451,12 @@ public class Main : GLib.Object{
 		exclude_list_default.add("/var/lib/docker/*");
 		exclude_list_default.add("/lost+found");
 		exclude_list_default.add("/timeshift/*");
+		exclude_list_default.add("/timeshift-btrfs/*");
 		exclude_list_default.add("/data/*");
 		exclude_list_default.add("/cdrom/*");
 		exclude_list_default.add("/etc/timeshift.json");
 		exclude_list_default.add("/var/log/timeshift/*");
+		exclude_list_default.add("/var/log/timeshift-btrfs/*");
 		
 		exclude_list_default.add("/root/.thumbnails");
 		exclude_list_default.add("/root/.cache");
@@ -772,7 +775,7 @@ public class Main : GLib.Object{
 
 			// ondemand
 			if (is_ondemand){
-				bool ok = create_snapshot_for_tag ("ondemand",now);
+				bool ok = create_snapshot_for_tag ("ondemand",now); 
 				if(!ok){
 					return false;
 				}
@@ -1204,10 +1207,13 @@ public class Main : GLib.Object{
 			return null;
 		}
 
+		string initial_tags = (tag == "ondemand") ? "" : tag;
+		
 		// write control file
+		// this step is redundant - just in case if app crashes while parsing log file in next step
 		Snapshot.write_control_file(
 			snapshot_path, dt_created, sys_uuid, current_distro.full_name(),
-			tag, cmd_comments, 0, false, false, repo);
+			initial_tags, cmd_comments, 0, false, false, repo);
 
 		// parse log file
 		progress_text = _("Parsing log file...");
@@ -1215,10 +1221,12 @@ public class Main : GLib.Object{
 		var task = new RsyncTask();
 		task.parse_log(log_file);
 
-		// write control file
+		// write control file (final - with file count after parsing log)
 		var snapshot = Snapshot.write_control_file(
 			snapshot_path, dt_created, sys_uuid, current_distro.full_name(),
-			tag, cmd_comments, task.prg_count_total, false, false, repo, true);
+			initial_tags, cmd_comments, task.prg_count_total, false, false, repo, true);
+
+		set_tags(snapshot); // set_tags() will update the control file
 
 		return snapshot;
 	}
@@ -1288,6 +1296,55 @@ public class Main : GLib.Object{
 		return snapshot;
 	}
 
+	private void set_tags(Snapshot snapshot){
+
+		// add tags passed on commandline for both --check and --create
+		
+		foreach(string tag in cmd_tags.split(",")){
+			switch(tag.strip().up()){
+			case "B":
+				snapshot.add_tag("boot");
+				break;
+			case "H":
+				snapshot.add_tag("hourly");
+				break;
+			case "D":
+				snapshot.add_tag("daily");
+				break;
+			case "W":
+				snapshot.add_tag("weekly");
+				break;
+			case "M":
+				snapshot.add_tag("monthly");
+				break;
+			}
+		}
+
+		// add tag as ondemand if no other tag is specified
+		
+		if (snapshot.tags.size == 0){
+			snapshot.add_tag("ondemand");
+		}
+	}
+
+	public void validate_cmd_tags(){
+		foreach(string tag in cmd_tags.split(",")){
+			switch(tag.strip().up()){
+			case "B":
+			case "H":
+			case "D":
+			case "W":
+			case "M":
+				break;
+			default:
+				log_error(_("Unknown value specified for option --tags") + " (%s).".printf(tag));
+				log_error(_("Expected values: O, B, H, D, W, M"));
+				exit_app(1);
+				break;
+			}
+		}
+	}
+	
 	// gui delete
 
 	public void delete_begin(){
@@ -3379,7 +3436,7 @@ public class Main : GLib.Object{
 
 	//cron jobs
 
-	public void cron_job_update(){
+	public void cron_job_update_old(){
 
 		if (live_system()) { return; }
 
@@ -3430,6 +3487,45 @@ public class Main : GLib.Object{
 		}*/
 	}
 
+	public void cron_job_update(){
+		
+		if (live_system()) { return; }
+
+		string entry = "timeshift --backup";
+
+		int count = 0;
+		while (CronTab.has_job(entry, true, false)){
+			CronTab.remove_job(entry, true, true);
+			if (++count == 100){
+				break;
+			}
+		}
+
+		entry = "timeshift-btrfs --backup";
+
+		count = 0;
+		while (CronTab.has_job(entry, true, false)){
+			CronTab.remove_job(entry, true, true);
+			if (++count == 100){
+				break;
+			}
+		}
+
+		if (scheduled){
+			CronTab.add_script_file("timeshift-hourly", "hourly", "timeshift --check");
+			if (schedule_boot){
+				CronTab.add_script_file("timeshift-boot", "d", "@reboot root sleep 10m && timeshift --create --tags B");
+			}
+			else{
+				CronTab.remove_script_file("timeshift-boot", "d");
+			}
+		}
+		else{
+			CronTab.remove_script_file("timeshift-hourly", "hourly");
+			CronTab.remove_script_file("timeshift-boot", "d");
+		}
+	}
+	
 	//cleanup
 
 	public void clean_logs(){

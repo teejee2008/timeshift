@@ -604,10 +604,11 @@ public class AppConsole : GLib.Object {
 		stdin.read_line();
 
 		init_mounts();
-
-		map_devices();
-
+		
 		if (!App.btrfs_mode){
+
+			map_devices();
+
 			select_grub_device();
 		}
 

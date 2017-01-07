@@ -944,6 +944,8 @@ public class Main : GLib.Object{
 				log_msg(_("Scheduled snapshots are disabled") + " - " + _("Nothing to do!"));
 				cron_job_update();
 			}
+			
+			log_msg(string.nfill(78, '-'));
 
 			if (app_mode.length != 0){
 				repo.auto_remove();
@@ -1215,7 +1217,7 @@ public class Main : GLib.Object{
 	}
 
 	private Snapshot? create_snapshot_with_btrfs(string tag, DateTime dt_created){
-		
+
 		log_msg(_("Creating new backup...") + "(BTRFS)");
 
 		log_msg(_("Saving to device") + ": %s".printf(repo.device.device) + ", " + _("mounted at path") + ": %s".printf(repo.mount_paths["@"]));
@@ -1275,7 +1277,7 @@ public class Main : GLib.Object{
 			snapshot.subvolumes.set(subvol.name, subvol);
 		}
 		snapshot.update_control_file(); // save subvolume info
-		
+
 		return snapshot;
 	}
 
@@ -2461,7 +2463,9 @@ public class Main : GLib.Object{
 
 			log_msg(_("Restore completed"));
 			thr_success = true;
-				
+
+			log_msg(string.nfill(78, '-'));
+			
 			/*if (ok){
 				
 			}
@@ -2496,6 +2500,9 @@ public class Main : GLib.Object{
 		//query_subvolume_info();
 
 		bool ok = create_pre_restore_snapshot_btrfs();
+
+		log_msg(string.nfill(78, '-'));
+		
 		if (!ok){
 			thread_restore_running = false;
 			thr_success = false;
@@ -2538,6 +2545,8 @@ public class Main : GLib.Object{
 		if (restore_current_system){
 			log_msg(_("Snapshot will become active after system is rebooted."));
 		}
+
+		log_msg(string.nfill(78, '-'));
 
 		thread_restore_running = false;
 		return thr_success;

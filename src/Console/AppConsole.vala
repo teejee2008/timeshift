@@ -587,7 +587,9 @@ public class AppConsole : GLib.Object {
 
 		map_devices();
 
-		select_grub_device();
+		if (!App.btrfs_mode){
+			select_grub_device();
+		}
 
 		confirm_restore();
 

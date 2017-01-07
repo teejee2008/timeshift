@@ -335,6 +335,30 @@ public class SnapshotRepo : GLib.Object{
 			return t1.date.compare(t2.date);
 		});
 
+		// reset the 'live' flag ------------
+		
+		DateTime dt_boot = new DateTime.now_local();
+		dt_boot = dt_boot.add_seconds(-1.0 * get_system_uptime_seconds());
+		foreach(var bak in snapshots){
+			if (bak.live){
+				if ((App.sys_root == null) || (App.sys_root.uuid != bak.sys_uuid)){
+					// we are accessing the snapshot from a live system or another system
+					bak.live = false;
+					bak.update_control_file();
+				}
+				else{
+					 if (bak.date.difference(dt_boot) < 0){
+						// snapshot was created before the last reboot
+						bak.live = false;
+						bak.update_control_file();
+					}
+					else{
+						// do nothing, snapshot is still in use by system
+					}
+				}
+			}
+		}
+
 		log_debug("loading snapshots from '%s': %d found".printf(snapshots_path, snapshots.size));
 
 		return true;

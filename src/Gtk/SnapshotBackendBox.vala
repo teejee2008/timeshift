@@ -144,7 +144,7 @@ class SnapshotBackendBox : Gtk.Box{
 		lbl.yalign = (float) 0.0;
 		lbl.wrap = true;
 		lbl.wrap_mode = Pango.WrapMode.WORD;
-		lbl.margin = 6;
+		lbl.margin = 12;
 		lbl.vexpand = true;
 		scrolled.add(lbl);
 
@@ -158,7 +158,7 @@ class SnapshotBackendBox : Gtk.Box{
 		if (opt_btrfs.active){
 			string txt = "<b>BTRFS Snapshots</b>\n\n";
 
-			txt += bullet + _("Snapshots are created using the in-built capabilities of the BTRFS file system.") + "\n\n";
+			txt += bullet + _("Snapshots are created using the built-in features of the BTRFS file system.") + "\n\n";
 			
 			txt += bullet + _("Snapshots are created and restored instantly. Snapshot creation is an atomic transaction at the file system level.") + "\n\n";
 

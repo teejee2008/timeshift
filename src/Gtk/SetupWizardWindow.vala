@@ -325,7 +325,7 @@ class SetupWizardWindow : Gtk.Window{
 			btn_close.sensitive = true;
 			break;
 		case Tabs.FINISH:
-			btn_prev.sensitive = true;
+			btn_prev.sensitive = false;
 			btn_next.sensitive = false;
 			btn_close.sensitive = true;
 			break;

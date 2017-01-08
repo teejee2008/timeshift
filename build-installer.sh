@@ -1,7 +1,7 @@
 #!/bin/bash
 
 app_name='timeshift'
-app_fullname='Timeshift RSYNC'
+app_fullname='Timeshift'
 tgz="../../pbuilder/"
 dsc="../../builds/${app_name}*.dsc"
 libs="../../libs"

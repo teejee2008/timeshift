@@ -11,9 +11,10 @@ Homepage: http://teejeetech.blogspot.in/
 Package: timeshift
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, rsync
-#Recommends: 
+#Recommends:
+Replaces: timeshift-btrfs
 Description: System restore utility for Linux
- TimeShift is a system restore utility which takes snapshots
+ Timeshift is a system restore utility which takes snapshots
  of the system at regular intervals. These snapshots can be restored
- at a later date to undo all changes that were made after the snapshot
- was taken.
+ at a later date to undo system changes. Creates incremental snapshots
+ using rsync or BTRFS snapshots using BTRFS tools.

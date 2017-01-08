@@ -138,20 +138,21 @@ class ScheduleBox : Gtk.Box{
 			App.count_boot = (int) spin_b.get_value();
 		});
 
+		// buffer
+		var label = new Gtk.Label("");
+		label.vexpand = true;
+		add(label);
+		
 		// crontab 
 
 		var chk_cron = add_checkbox(this, "Stop cron daemon from sending emails for scheduled jobs");
 		chk_cron.set_tooltip_text(_("The cron service sends the output of scheduled tasks as an email to the current user. Select this option to suppress the emails for cron tasks created by Timeshift."));
+		//chk_cron.margin_bottom = 12;
 		
 		chk_cron.active = App.stop_cron_emails;
 		chk_cron.toggled.connect(()=>{
 			App.stop_cron_emails = chk_cron.active;
 		});
-
-		// buffer
-		var label = new Gtk.Label("");
-		label.vexpand = true;
-		add(label);
 
 		// scrolled
 		var scrolled = new ScrolledWindow(null, null);

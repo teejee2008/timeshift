@@ -150,7 +150,7 @@ public class Main : GLib.Object{
 	public Main(string[] args, bool gui_mode){
 
 		parse_some_arguments(args);
-
+	
 		if (gui_mode){
 			app_mode = "";
 			parent_window = new Gtk.Window(); // dummy
@@ -164,6 +164,8 @@ public class Main : GLib.Object{
 			log_debug("");
 		}
 
+		check_and_remove_timeshift_btrfs();
+		
 		// init log ------------------
 
 		try {
@@ -321,6 +323,14 @@ public class Main : GLib.Object{
 		}
 	}
 
+	public void check_and_remove_timeshift_btrfs(){
+		if (cmd_exists("timeshift-btrfs")){
+			string std_out, std_err;
+			exec_sync("timeshift-btrfs-uninstall", out std_out, out std_err);
+			log_msg(_("** Uninstalled Timeshift BTRFS **"));
+		}
+	}
+	
 	public bool check_btrfs_layout_system(Gtk.Window? win = null){
 
 		log_debug("check_btrfs_layout_system()");
@@ -2811,7 +2821,7 @@ public class Main : GLib.Object{
 	    }
 
 	    if ((app_mode == "")||(LOG_DEBUG)){
-			log_msg(_("App config saved") + ": '%s'".printf(this.app_conf_path));
+			log_msg(_("App config saved") + ": %s".printf(this.app_conf_path));
 		}
 	}
 
@@ -2909,7 +2919,7 @@ public class Main : GLib.Object{
 		}
 
 		if ((app_mode == "")||(LOG_DEBUG)){
-			log_msg(_("App config loaded") + ": '%s'".printf(this.app_conf_path));
+			log_msg(_("App config loaded") + ": %s".printf(this.app_conf_path));
 		}
 	}
 

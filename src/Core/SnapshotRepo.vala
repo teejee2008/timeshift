@@ -170,14 +170,17 @@ public class SnapshotRepo : GLib.Object{
 		if (btrfs_mode){
 			mount_paths["@"] = mount_path;
 			mount_paths["@home"] = mount_path; //default
-
+			device_home = device; //default
+			
 			// mount @home if on different disk -------
 		
 			var repo_subvolumes = Subvolume.detect_subvolumes_for_system_by_path(path_combine(mount_path,"@"), parent_window);
 			if (repo_subvolumes.has_key("@home")){
 				var subvol = repo_subvolumes["@home"];
 				if (subvol.device_uuid != device.uuid){
-					mount_paths["@home"] = unlock_and_mount_device(subvol.get_device(), "/mnt/timeshift/backup-home");
+					// @home is on a separate device
+					device_home = subvol.get_device();
+					mount_paths["@home"] = unlock_and_mount_device(device_home, "/mnt/timeshift/backup-home");
 					if (mount_paths["@home"].length == 0){
 						return false;
 					}

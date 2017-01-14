@@ -2739,7 +2739,7 @@ public class Main : GLib.Object{
 				
 				var snap = Snapshot.write_control_file(
 					snapshot_path, dt_created, repo.device.uuid,
-					LinuxDistro.get_dist_info(repo.mount_paths["@"] + "/@").full_name(),
+					LinuxDistro.get_dist_info(path_combine(snapshot_path,"@")).full_name(),
 					"ondemand", "", 0, true, false, repo);
 
 				snap.description = "Before restoring '%s'".printf(snapshot_to_restore.date_formatted);

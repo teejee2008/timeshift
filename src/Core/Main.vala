@@ -99,7 +99,10 @@ public class Main : GLib.Object{
 
 	public bool thread_delete_running = false;
 	public bool thread_delete_success = false;
-			
+
+	public bool thread_subvol_info_running = false;
+	public bool thread_subvol_info_success = false;
+		
 	public int thr_retval = -1;
 	public string thr_arg1 = "";
 	public bool thr_timeout_active = false;
@@ -2722,7 +2725,7 @@ public class Main : GLib.Object{
 				}
 				else{
 					var subvol_dev = (subvol_name == "@") ? repo.device : repo.device_home;
-					subvol_list.add(new Subvolume(subvol_name, dst_path, subvol_dev.uuid));
+					subvol_list.add(new Subvolume(subvol_name, dst_path, subvol_dev.uuid, repo));
 					
 					log_msg(_("Moved system subvolume to snapshot directory") + ": %s".printf(subvol_name));
 				}
@@ -3112,7 +3115,7 @@ public class Main : GLib.Object{
 			}
 		}
 
-		sys_subvolumes = Subvolume.detect_subvolumes_for_system_by_path("/", parent_window);
+		sys_subvolumes = Subvolume.detect_subvolumes_for_system_by_path("/", null, parent_window);
 	}
 
 	public bool mount_target_devices(Gtk.Window? parent_win = null){
@@ -3486,6 +3489,293 @@ public class Main : GLib.Object{
 
 		thread_estimate_running = false;
 	}
+
+	// btrfs
+
+	public void query_subvolume_info(){
+
+		if ((repo == null) || !repo.btrfs_mode){
+			return;
+		}
+		
+		log_debug(_("Querying subvolume info..."));
+		
+		try {
+			thread_subvol_info_running = true;
+			thread_subvol_info_success = false;
+			Thread.create<void> (query_subvolume_info_thread, true);
+		} catch (ThreadError e) {
+			thread_subvol_info_running = false;
+			thread_subvol_info_success = false;
+			log_error (e.message);
+		}
+
+		while (thread_subvol_info_running){
+			gtk_do_events ();
+			Thread.usleep((ulong) GLib.TimeSpan.MILLISECOND * 100);
+		}
+
+		log_debug(_("Query completed"));
+	}
+
+	public void query_subvolume_info_thread(){
+		thread_subvol_info_running = true;
+
+		//query IDs
+		bool ok = query_subvolume_ids();
+		if (!ok){
+			thread_subvol_info_success = false;
+			thread_subvol_info_running = false;
+			return;
+		}
+
+		//query quota
+		ok = query_subvolume_quotas();
+		if (!ok){
+			//try enabling quota
+			ok = enable_subvolume_quotas();
+			if (!ok){
+				thread_subvol_info_success = false;
+				thread_subvol_info_running = false;
+				return;
+			}
+
+			//query quota again
+			ok = query_subvolume_quotas();
+			if (!ok){
+				thread_subvol_info_success = false;
+				thread_subvol_info_running = false;
+				return;
+			}
+		}
+
+		thread_subvol_info_success = true;
+		thread_subvol_info_running = false;
+		return;
+	}
+
+	public bool query_subvolume_ids(){
+		bool ok = query_subvolume_id("@");
+		if (repo.device.uuid != repo.device_home.uuid){
+			ok = ok && query_subvolume_id("@home");
+		}
+		return ok;
+	}
+	
+	public bool query_subvolume_id(string subvol_name){
+
+		log_debug("query_subvolume_id():%s".printf(subvol_name));
+		
+		string cmd = "";
+		string std_out;
+		string std_err;
+		int ret_val;
+
+		cmd = "btrfs subvolume list '%s'".printf(repo.mount_paths[subvol_name]);
+		log_debug(cmd);
+		ret_val = exec_sync(cmd, out std_out, out std_err);
+		if (ret_val != 0){
+			log_error (std_err);
+			log_error(_("btrfs returned an error") + ": %d".printf(ret_val));
+			log_error(_("Failed to query subvolume list"));
+			return false;
+		}
+
+		/* Sample Output:
+		 *
+		ID 257 gen 56 top level 5 path timeshift-btrfs/snapshots/2014-09-26_23-34-08/@
+		ID 258 gen 52 top level 5 path timeshift-btrfs/snapshots/2014-09-26_23-34-08/@home
+		* */
+
+		foreach(string line in std_out.split("\n")){
+			if (line == null) { continue; }
+
+			string[] parts = line.split(" ");
+			if (parts.length < 2) { continue; }
+
+			Subvolume subvol = null;
+
+			if (line.has_suffix(sys_subvolumes["@"].path.replace(repo.mount_paths["@"] + "/"," "))){
+				subvol = sys_subvolumes["@"];
+			}
+			else if (line.has_suffix(sys_subvolumes["@home"].path.replace(repo.mount_paths["@home"] + "/"," "))){
+				subvol = sys_subvolumes["@home"];
+			}
+			else {
+				foreach(var bak in repo.snapshots){
+					foreach(var sub in bak.subvolumes.values){
+						if (line.has_suffix(sub.path.replace(repo.mount_paths[sub.name] + "/",""))){
+							subvol = sub;
+						}
+					}
+				}
+			}
+
+			if (subvol != null){
+				subvol.id = long.parse(parts[1]);
+			}
+		}
+
+		return true;
+	}
+
+	public bool query_subvolume_quotas(){
+		bool ok = query_subvolume_quota("@");
+		if (repo.device.uuid != repo.device_home.uuid){
+			ok = ok && query_subvolume_quota("@home");
+		}
+		return ok;
+	}
+	
+	public bool query_subvolume_quota(string subvol_name){
+
+		log_debug("query_subvolume_quota():%s".printf(subvol_name));
+		
+		string cmd = "";
+		string std_out;
+		string std_err;
+		int ret_val;
+
+		cmd = "btrfs qgroup show --raw '%s'".printf(repo.mount_paths[subvol_name]);
+		log_debug(cmd);
+		ret_val = exec_sync(cmd, out std_out, out std_err);
+		if (ret_val != 0){
+			log_error (std_err);
+			log_error(_("btrfs returned an error") + ": %d".printf(ret_val));
+			log_error(_("Failed to query subvolume quota"));
+			return false;
+		}
+		
+		/* Sample Output:
+		 *
+		qgroupid rfer       excl
+		-------- ----       ----
+		0/5      106496     106496
+		0/257    3825262592 557056
+		0/258    12689408   49152
+		 * */
+
+		foreach(string line in std_out.split("\n")){
+			if (line == null) { continue; }
+
+			string[] parts = line.split(" ");
+			if (parts.length < 3) { continue; }
+			if (parts[0].split("/").length < 2) { continue; }
+
+			int subvol_id = int.parse(parts[0].split("/")[1]);
+
+			Subvolume subvol = null;
+
+			if (sys_subvolumes["@"].id == subvol_id){
+				subvol = sys_subvolumes["@"];
+			}
+			else if (sys_subvolumes["@home"].id == subvol_id){
+				subvol = sys_subvolumes["@home"];
+			}
+			else {
+				foreach(var bak in repo.snapshots){
+					foreach(var sub in bak.subvolumes.values){
+						if (sub.id == subvol_id){
+							subvol = sub;
+						}
+					}
+				}
+			}
+
+			if (subvol != null){
+				int part_num = -1;
+				foreach(string part in parts){
+					if (part.strip().length > 0){
+						part_num ++;
+						switch (part_num){
+							case 1:
+								subvol.total_bytes = int64.parse(part);
+								break;
+							case 2:
+								subvol.unshared_bytes = int64.parse(part);
+								break;
+							default:
+								//ignore
+								break;
+						}
+					}
+				}
+			}
+		}
+
+		foreach(var bak in repo.snapshots){
+			bak.update_control_file();
+		}
+
+		return true;
+	}
+
+	public bool enable_subvolume_quotas(){
+		bool ok = enable_subvolume_quota("@");
+		if (repo.device.uuid != repo.device_home.uuid){
+			ok = ok && enable_subvolume_quota("@home");
+		}
+		if (ok){
+			log_msg(_("Enabled subvolume quota support"));
+		}
+		return ok;
+	}
+	
+	public bool enable_subvolume_quota(string subvol_name){
+
+		log_debug("enable_subvolume_quota():%s".printf(subvol_name));
+		
+		string cmd = "";
+		string std_out;
+		string std_err;
+		int ret_val;
+
+		cmd = "btrfs quota enable '%s'".printf(repo.mount_paths[subvol_name]);
+		log_debug(cmd);
+		ret_val = exec_sync(cmd, out std_out, out std_err);
+		if (ret_val != 0){
+			log_error (std_err);
+			log_error(_("btrfs returned an error") + ": %d".printf(ret_val));
+			log_error(_("Failed to enable subvolume quota"));
+			return false;
+		}
+
+		return true;
+	}
+
+	public bool rescan_subvolume_quotas(){
+		bool ok = rescan_subvolume_quota("@");
+		if (repo.device.uuid != repo.device_home.uuid){
+			ok = ok && rescan_subvolume_quota("@home");
+		}
+		if (ok){
+			log_msg(_("Enabled subvolume quota support"));
+		}
+		return ok;
+	}
+	
+	public bool rescan_subvolume_quota(string subvol_name){
+
+		log_debug("rescan_subvolume_quota():%s".printf(subvol_name));
+		
+		string cmd = "";
+		string std_out;
+		string std_err;
+		int ret_val;
+
+		cmd = "btrfs quota rescan '%s'".printf(repo.mount_paths[subvol_name]);
+		log_debug(cmd);
+		ret_val = exec_sync(cmd, out std_out, out std_err);
+		if (ret_val != 0){
+			log_error (std_err);
+			log_error(_("btrfs returned an error") + ": %d".printf(ret_val));
+			log_error(_("Failed to rescan subvolume quota"));
+			return false;
+		}
+
+		return true;
+	}
+
 
 	// cron jobs
 

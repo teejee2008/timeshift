@@ -15,10 +15,14 @@ public class Subvolume : GLib.Object{
 	public int64 total_bytes = 0;
 	public int64 unshared_bytes = 0;
 
-	public Subvolume(string name, string path, string parent_dev_uuid){
+	//parent
+	public SnapshotRepo? repo;
+	
+	public Subvolume(string name, string path, string parent_dev_uuid, SnapshotRepo? parent_repo){
 		this.name = name;
 		this.path = path;
 		this.device_uuid = parent_dev_uuid;
+		this.repo = parent_repo;
 	}
 
 	public string total_formatted{
@@ -37,7 +41,7 @@ public class Subvolume : GLib.Object{
 		return Device.get_device_by_uuid(device_uuid);
 	}
 	
-	public static Gee.HashMap<string, Subvolume> detect_subvolumes_for_system_by_path(string system_path, Gtk.Window? parent_window){
+	public static Gee.HashMap<string, Subvolume> detect_subvolumes_for_system_by_path(string system_path, SnapshotRepo? repo, Gtk.Window? parent_window){
 
 		var map = new Gee.HashMap<string, Subvolume>();
 		
@@ -58,7 +62,7 @@ public class Subvolume : GLib.Object{
 				
 				log_debug("Found subvolume: %s, on device: %s".printf(item.subvolume_name(), dev_name));
 				
-				var subvol = new Subvolume(item.subvolume_name(), item.mount_point, dev_uuid);
+				var subvol = new Subvolume(item.subvolume_name(), item.mount_point, dev_uuid, repo);
 				map.set(subvol.name, subvol);
 			}
 		}
@@ -78,54 +82,37 @@ public class Subvolume : GLib.Object{
 
 		print_info();
 		
-		try{
-			if (dir_exists(path)){
-				
-				cmd = "btrfs subvolume delete '%s'".printf(path);
-				log_debug(cmd);
-				ret_val = exec_sync(cmd, out std_out, out std_err);
-				if (ret_val != 0){
-					log_error(_("Failed to delete snapshot subvolume") + ": '%s'".printf(path));
-					return false;
-				}
-				else{
-					log_msg(_("Deleted subvolume") + ": %s".printf(path));
-				}
-
-				if (id > 0){
-					string dev_path = "";
-					var dev = get_device();
-					if (dev != null){
-						foreach(var mp in dev.mount_points){
-							if ((mp.device.uuid == device_uuid) && !mp.mount_options.contains("subvol")){
-								dev_path = mp.mount_point;
-							}
-						}
-					}
-
-					if (dev_path.length > 0){
-						cmd = "btrfs qgroup destroy 0/%ld '%s'".printf(id, dev_path);
-						if (LOG_COMMANDS) { log_debug(cmd); }
-						ret_val = exec_sync(cmd, out std_out, out std_err);
-						if (ret_val != 0){
-							log_error(_("Failed to destroy qgroup") + ": '0/%ld'".printf(id));
-							return false;
-						}
-						else{
-							log_msg(_("Destroyed qgroup") + ": %ld".printf(id));
-						}
-					}
-				}
-
-				return true;
-			}
-			else{
-				return true; // ok, item does not exist
-			}
+		if (!dir_exists(path)){
+			return true; // ok, item does not exist
 		}
-		catch(Error e){
-			log_error (e.message);
+
+		log_debug(_("Deleting subvolume")+ ": %s".printf(name));
+		
+		cmd = "btrfs subvolume delete '%s'".printf(path);
+		log_debug(cmd);
+		ret_val = exec_sync(cmd, out std_out, out std_err);
+		if (ret_val != 0){
+			log_error(_("Failed to delete snapshot subvolume") + ": '%s'".printf(path));
 			return false;
 		}
+
+		log_msg(_("Deleted subvolume") + " (id %ld): %s".printf(id, path));
+
+		if ((id > 0) && (repo != null)){
+
+			log_debug(_("Destroying qgroup")+ ": 0/%ld".printf(id));
+			
+			cmd = "btrfs qgroup destroy 0/%ld '%s'".printf(id, repo.mount_paths[name]);
+			log_debug(cmd);
+			ret_val = exec_sync(cmd, out std_out, out std_err);
+			if (ret_val != 0){
+				log_error(_("Failed to destroy qgroup") + ": '0/%ld'".printf(id));
+				return false;
+			}
+
+			log_msg(_("Destroyed qgroup") + ": 0/%ld".printf(id));
+		}
+
+		return true;
 	}
 }

@@ -191,7 +191,7 @@ public class Snapshot : GLib.Object{
 					paths[subvol_name] = path.replace(repo.mount_path, repo.mount_paths[subvol_name]);
 					
 					var subvol_path = path_combine(paths[subvol_name], subvol_name);
-					var subvolume = new Subvolume(subvol_name, subvol_path, ""); //subvolumes.get(subvol_name);
+					var subvolume = new Subvolume(subvol_name, subvol_path, "", repo); //subvolumes.get(subvol_name);
 					subvolumes.set(subvol_name, subvolume);
 					
 					int index = -1;
@@ -292,7 +292,7 @@ public class Snapshot : GLib.Object{
 				if (btrfs_mode){
 					var subvols = new Json.Object();
 					config.set_object_member("subvolumes",subvols);
-					foreach(Subvolume subvol in subvolumes.values){
+					foreach(var subvol in subvolumes.values){
 						Json.Array arr = new Json.Array();
 						arr.add_string_element(subvol.name);
 						arr.add_string_element(subvol.id.to_string());

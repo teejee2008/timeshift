@@ -38,6 +38,8 @@ class SnapshotListBox : Gtk.Box{
 	public Gtk.TreeView treeview;
     private Gtk.TreeViewColumn col_date;
     private Gtk.TreeViewColumn col_tags;
+    private Gtk.TreeViewColumn col_size;
+    private Gtk.TreeViewColumn col_unshared;
     private Gtk.TreeViewColumn col_system;
     private Gtk.TreeViewColumn col_desc;
 	private int treeview_sort_column_index = 0;
@@ -94,6 +96,7 @@ class SnapshotListBox : Gtk.Box{
 		col_date.clickable = true;
 		col_date.resizable = true;
 		col_date.spacing = 1;
+		col_date.min_width = 200;
 
 		CellRendererPixbuf cell_backup_icon = new CellRendererPixbuf ();
 		cell_backup_icon.pixbuf = get_shared_icon_pixbuf("clock","clock.png",16);
@@ -166,6 +169,56 @@ class SnapshotListBox : Gtk.Box{
 			refresh();
 		});
 
+		//col_size
+		var col = new TreeViewColumn();
+		col.title = _("Size");
+		col.resizable = true;
+		col.min_width = 80;
+		col.clickable = true;
+		var cell_size = new CellRendererText ();
+		cell_size.ellipsize = Pango.EllipsizeMode.END;
+		cell_size.xalign = (float) 1.0;
+		col.pack_start (cell_size, false);
+		col.set_cell_data_func (cell_size, cell_size_render);
+		col_size = col;
+		treeview.append_column(col_size);
+		
+		col_size.clicked.connect(() => {
+			if(treeview_sort_column_index == 2){
+				treeview_sort_column_desc = !treeview_sort_column_desc;
+			}
+			else{
+				treeview_sort_column_index = 2;
+				treeview_sort_column_desc = false;
+			}
+			refresh();
+		});
+
+		//col_unshared
+		col = new TreeViewColumn();
+		col.title = _("Unshared");
+		col.resizable = true;
+		col.min_width = 80;
+		col.clickable = true;
+		var cell_unshared = new CellRendererText ();
+		cell_unshared.ellipsize = Pango.EllipsizeMode.END;
+		cell_unshared.xalign = (float) 1.0;
+		col.pack_start (cell_unshared, false);
+		col.set_cell_data_func (cell_unshared, cell_unshared_render);
+		col_unshared = col;
+		treeview.append_column(col_unshared);
+		
+		col_unshared.clicked.connect(() => {
+			if(treeview_sort_column_index == 2){
+				treeview_sort_column_desc = !treeview_sort_column_desc;
+			}
+			else{
+				treeview_sort_column_index = 2;
+				treeview_sort_column_desc = false;
+			}
+			refresh();
+		});
+
 		//cell_desc
 		col_desc = new TreeViewColumn();
 		col_desc.title = _("Comments");
@@ -200,24 +253,24 @@ class SnapshotListBox : Gtk.Box{
 			TreeModel model;
 			TreePath path;
 			TreeIter iter;
-			TreeViewColumn col;
+			TreeViewColumn column;
 			if (treeview.get_tooltip_context (ref x, ref y, keyboard_tooltip, out model, out path, out iter)){
 				int bx, by;
 				treeview.convert_widget_to_bin_window_coords(x, y, out bx, out by);
-				if (treeview.get_path_at_pos (bx, by, null, out col, null, null)){
-					if (col == col_date){
+				if (treeview.get_path_at_pos (bx, by, null, out column, null, null)){
+					if (column == col_date){
 						tooltip.set_markup(_("<b>Snapshot Date:</b> Date on which snapshot was created"));
 						return true;
 					}
-					else if (col == col_desc){
+					else if (column == col_desc){
 						tooltip.set_markup(_("<b>Comments</b> (double-click to edit)"));
 						return true;
 					}
-					else if (col == col_system){
+					else if (column == col_system){
 						tooltip.set_markup(_("<b>System:</b> Installed Linux distribution"));
 						return true;
 					}
-					else if (col == col_tags){
+					else if (column == col_tags){
 						tooltip.set_markup(_("<b>Backup Levels</b>\n\nO	On demand (manual)\nB	Boot\nH	Hourly\nD	Daily\nW	Weekly\nM	Monthly"));
 						return true;
 					}
@@ -323,6 +376,56 @@ class SnapshotListBox : Gtk.Box{
 		
 		var ctxt = (cell as Gtk.CellRendererText);
 		ctxt.text = bak.taglist_short;
+		ctxt.sensitive = !bak.marked_for_deletion;
+
+		if (bak.live){
+			ctxt.markup = "<b>%s</b>".printf(ctxt.text);
+		}
+		else{
+			ctxt.markup = ctxt.text;
+		}
+	}
+
+	private void cell_size_render(
+		CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
+			
+		Snapshot bak;
+		model.get (iter, 0, out bak, -1);
+		
+		var ctxt = (cell as Gtk.CellRendererText);
+
+		if (bak.btrfs_mode){
+			ctxt.text = format_file_size(bak.subvolumes["@"].total_bytes + bak.subvolumes["@home"].total_bytes);
+		}
+		else{
+			ctxt.text = "";
+		}
+		
+		ctxt.sensitive = !bak.marked_for_deletion;
+
+		if (bak.live){
+			ctxt.markup = "<b>%s</b>".printf(ctxt.text);
+		}
+		else{
+			ctxt.markup = ctxt.text;
+		}
+	}
+
+	private void cell_unshared_render(
+		CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
+			
+		Snapshot bak;
+		model.get (iter, 0, out bak, -1);
+		
+		var ctxt = (cell as Gtk.CellRendererText);
+
+		if (bak.btrfs_mode){
+			ctxt.text = format_file_size(bak.subvolumes["@"].unshared_bytes + bak.subvolumes["@home"].unshared_bytes);
+		}
+		else{
+			ctxt.text = "";
+		}
+		
 		ctxt.sensitive = !bak.marked_for_deletion;
 
 		if (bak.live){
@@ -449,6 +552,9 @@ class SnapshotListBox : Gtk.Box{
 			model.append(out iter);
 			model.set (iter, 0, bak);
 		}
+
+		col_size.visible = App.btrfs_mode;
+		col_unshared.visible = App.btrfs_mode; 
 
 		treeview.set_model (model);
 		treeview.columns_autosize ();

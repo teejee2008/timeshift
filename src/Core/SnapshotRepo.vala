@@ -122,10 +122,10 @@ public class SnapshotRepo : GLib.Object{
 		if ((device != null) && (device.device.length > 0)){
 			check_status();
 		}
-		
+
 		log_debug("SnapshotRepo: init_from_device(): exit");
 	}
-	
+
 	// properties
 	
 	public string timeshift_path {
@@ -174,7 +174,7 @@ public class SnapshotRepo : GLib.Object{
 			
 			// mount @home if on different disk -------
 		
-			var repo_subvolumes = Subvolume.detect_subvolumes_for_system_by_path(path_combine(mount_path,"@"), parent_window);
+			var repo_subvolumes = Subvolume.detect_subvolumes_for_system_by_path(path_combine(mount_path,"@"), this, parent_window);
 			if (repo_subvolumes.has_key("@home")){
 				var subvol = repo_subvolumes["@home"];
 				if (subvol.device_uuid != device.uuid){
@@ -347,6 +347,10 @@ public class SnapshotRepo : GLib.Object{
 			}
 		}
 
+		if (btrfs_mode){
+			App.query_subvolume_info();
+		}
+		
 		log_debug("loading snapshots from '%s': %d found".printf(snapshots_path, snapshots.size));
 
 		return true;

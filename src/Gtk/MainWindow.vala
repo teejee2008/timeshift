@@ -63,8 +63,8 @@ class MainWindow : Gtk.Window{
 	
 	//timers
 	private uint tmr_init;
-	private int def_width = 650;
-	private int def_height = 500;
+	private int def_width = 800;
+	private int def_height = 600;
 
 	public MainWindow () {
 

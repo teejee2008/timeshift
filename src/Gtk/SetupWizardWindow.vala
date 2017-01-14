@@ -253,34 +253,34 @@ class SetupWizardWindow : Gtk.Window{
 			return;
 		}
 
-		if (App.live_system()){
-			destroy();
-		}
-		else{
-			switch(notebook.page){
-			case Tabs.SNAPSHOT_BACKEND:
-				if (App.btrfs_mode){
-					notebook.page = Tabs.BACKUP_DEVICE;
-				}
-				else{
-					notebook.page = Tabs.ESTIMATE; // rsync mode only
-				}
-				break;
-			case Tabs.ESTIMATE:
+		switch(notebook.page){
+		case Tabs.SNAPSHOT_BACKEND:
+			if (App.btrfs_mode){
 				notebook.page = Tabs.BACKUP_DEVICE;
-				break;
-			case Tabs.BACKUP_DEVICE:
-				notebook.page = Tabs.SCHEDULE;
-				break;
-			case Tabs.SCHEDULE:
-				notebook.page = Tabs.FINISH;
-				break;
-			case Tabs.FINISH:
-				// btn_next is disabled for this page
-				break;
 			}
+			else{
+				notebook.page = Tabs.ESTIMATE; // rsync mode only
+			}
+			break;
+		case Tabs.ESTIMATE:
+			notebook.page = Tabs.BACKUP_DEVICE;
+			break;
+		case Tabs.BACKUP_DEVICE:
+			if (App.live_system()){
+				destroy();
+			}
+			else{
+				notebook.page = Tabs.SCHEDULE;
+			}
+			break;
+		case Tabs.SCHEDULE:
+			notebook.page = Tabs.FINISH;
+			break;
+		case Tabs.FINISH:
+			// btn_next is disabled for this page
+			break;
 		}
-
+	
 		initialize_tab();
 	}
 
@@ -316,7 +316,7 @@ class SetupWizardWindow : Gtk.Window{
 			break;
 		case Tabs.BACKUP_DEVICE:
 			btn_prev.sensitive = true;
-			btn_next.sensitive = !App.live_system();
+			btn_next.sensitive = true;
 			btn_close.sensitive = true;
 			break;
 		case Tabs.SCHEDULE:

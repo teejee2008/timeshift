@@ -355,7 +355,7 @@ public class Main : GLib.Object{
 		return supported;
 	}
 
-	public bool check_btrfs_layout(Device? dev_root, Device? dev_home){
+	public bool check_btrfs_layout(Device? dev_root, Device? dev_home, bool unlock){
 		
 		bool supported = true; // keep true for non-btrfs systems
 
@@ -365,11 +365,11 @@ public class Main : GLib.Object{
 
 				if (dev_home != dev_root){
 					
-					supported = supported && check_btrfs_volume(dev_root, "@");
-					supported = supported && check_btrfs_volume(dev_home, "@home");
+					supported = supported && check_btrfs_volume(dev_root, "@", unlock);
+					supported = supported && check_btrfs_volume(dev_home, "@home", unlock);
 				}
 				else{
-					supported = supported && check_btrfs_volume(dev_root, "@,@home");
+					supported = supported && check_btrfs_volume(dev_root, "@,@home", unlock);
 				}
 			}
 		}
@@ -2839,7 +2839,7 @@ public class Main : GLib.Object{
 			// load some defaults for first-run based on user's system type
 			
 			bool supported = sys_subvolumes.has_key("@") && sys_subvolumes.has_key("@home") && cmd_exists("btrfs");
-			if (supported){
+			if (supported || (cmd_btrfs_mode == true)){
 				log_msg(_("Selected default snapshot type") + ": %s".printf("BTRFS"));
 				btrfs_mode = true;
 			}
@@ -3147,7 +3147,7 @@ public class Main : GLib.Object{
 
 			//check subvolume layout
 
-			bool supported = check_btrfs_layout(dst_root, dst_home);
+			bool supported = check_btrfs_layout(dst_root, dst_home, false);
 			
 			if (!supported && snapshot_to_restore.has_subvolumes()){
 				string msg = _("The target partition has an unsupported subvolume layout.") + "\n";
@@ -3252,7 +3252,7 @@ public class Main : GLib.Object{
 		return repo.status_code;
 	}
 
-	public bool check_btrfs_volume(Device dev, string subvol_names){
+	public bool check_btrfs_volume(Device dev, string subvol_names, bool unlock){
 
 		log_debug("check_btrfs_volume():%s".printf(subvol_names));
 		
@@ -3260,8 +3260,34 @@ public class Main : GLib.Object{
 		dir_create(mnt_btrfs);
 
 		if (!dev.is_mounted_at_path("", mnt_btrfs)){
+			
 			Device.unmount(mnt_btrfs);
-			Device.mount(dev.uuid, mnt_btrfs, "", true);
+
+			// unlock encrypted device
+			if (dev.is_encrypted_partition()){
+
+				if (unlock){
+					
+					string msg_out, msg_err;
+					var dev_unlocked = Device.luks_unlock(
+						dev, "", "", parent_window, out msg_out, out msg_err);
+				
+					if (dev_unlocked == null){
+						log_debug("device is null");
+						log_debug("SnapshotRepo: check_btrfs_volume(): exit");
+						return false;
+					}
+					else{
+						Device.mount(dev_unlocked.uuid, mnt_btrfs, "", true);
+					}
+				}
+				else{
+					return false;
+				}
+			}
+			else{
+				Device.mount(dev.uuid, mnt_btrfs, "", true);
+			}
 		}
 
 		bool supported = true;
@@ -3286,7 +3312,7 @@ public class Main : GLib.Object{
 
 		// check if currently selected device can be used
 		if (repo.available()){
-			if (check_device_for_backup(repo.device)){
+			if (check_device_for_backup(repo.device, false)){
 				if (repo.btrfs_mode != btrfs_mode){
 					// reinitialize
 					repo = new SnapshotRepo.from_device(repo.device, parent_win, btrfs_mode);
@@ -3308,8 +3334,9 @@ public class Main : GLib.Object{
 		}
 			
 		foreach(var dev in partitions){
-			if (check_device_for_backup(dev)){
+			if (check_device_for_backup(dev, false)){
 				repo = new SnapshotRepo.from_device(dev, parent_win, btrfs_mode);
+				break;
 			}
 			else{
 				continue;
@@ -3317,14 +3344,14 @@ public class Main : GLib.Object{
 		}
 	}
 
-	public bool check_device_for_backup(Device dev){
+	public bool check_device_for_backup(Device dev, bool unlock){
 		bool ok = false;
 
 		if (dev.type == "disk") { return false; }
 		if (dev.has_children()) { return false; }
 		
-		if (btrfs_mode && (dev.fstype == "btrfs")){
-			if (check_btrfs_volume(dev, "@")){
+		if (btrfs_mode && ((dev.fstype == "btrfs")||(dev.fstype == "luks"))){
+			if (check_btrfs_volume(dev, "@", unlock)){
 				return true;
 			}
 		}

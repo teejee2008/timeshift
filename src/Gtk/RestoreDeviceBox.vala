@@ -516,7 +516,7 @@ class RestoreDeviceBox : Gtk.Box{
 
 		// check BTRFS subvolume layout --------------
 
-		bool supported = App.check_btrfs_layout(App.dst_root, App.dst_home);
+		bool supported = App.check_btrfs_layout(App.dst_root, App.dst_home, false);
 		
 		if (!supported){
 			var title = _("Unsupported Subvolume Layout")

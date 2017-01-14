@@ -333,10 +333,11 @@ public class AppConsole : GLib.Object {
 		msg += "\n";
 		msg += "Syntax:\n";
 		msg += "\n";
-		msg += "  timeshift --list-{snapshots|devices} [OPTIONS]\n";
-		msg += "  timeshift --backup[-now] [OPTIONS]\n";
+		msg += "  timeshift --check\n";
+		msg += "  timeshift --create [OPTIONS]\n";
 		msg += "  timeshift --restore [OPTIONS]\n";
 		msg += "  timeshift --delete-[all] [OPTIONS]\n";
+		msg += "  timeshift --list-{snapshots|devices} [OPTIONS]\n";
 		msg += "\n";
 		msg += _("Options") + ":\n";
 		msg += "\n";
@@ -347,7 +348,7 @@ public class AppConsole : GLib.Object {
 		msg += _("Backup") + ":\n";
 		msg += "  --check                    " + _("Create snapshot if scheduled") + "\n";
 		msg += "  --create                   " + _("Create snapshot (even if not scheduled)") + "\n";
-		msg += "  --comments \"string\"      " + _("Set snapshot description") + "\n";
+		msg += "  --comments <string>        " + _("Set snapshot description") + "\n";
 		msg += "  --tags {O,B,H,D,W,M}       " + _("Add tags to snapshot (default: O)") + "\n";;
 		msg += "\n";
 		msg += _("Restore") + ":\n";
@@ -363,7 +364,7 @@ public class AppConsole : GLib.Object {
 		msg += "  --delete-all               " + _("Delete all snapshots") + "\n";
 		msg += "\n";
 		msg += _("Global") + ":\n";
-		msg += "  --backup-device <device>   " + _("Specify backup device (default: config)") + "\n";
+		msg += "  --snapshot-device <device> " + _("Specify backup device (default: config)") + "\n";
 		msg += "  --yes                      " + _("Answer YES to all confirmation prompts") + "\n";
 		msg += "  --btrfs                    " + _("Switch to BTRFS mode (default: config)") + "\n";
 		msg += "  --rsync                    " + _("Switch to RSYNC mode (default: config)") + "\n";
@@ -376,20 +377,21 @@ public class AppConsole : GLib.Object {
 		msg += _("Examples") + ":\n";
 		msg += "\n";
 		msg += "timeshift --list\n";
-		msg += "timeshift --list --backup-device /dev/sda1\n";
-		msg += "timeshift --backup-now \n";
+		msg += "timeshift --list --snapshot-device /dev/sda1\n";
+		msg += "timeshift --create --comments \"after update\" --tags D\n";
 		msg += "timeshift --restore \n";
-		msg += "timeshift --restore --snapshot '2014-10-12_16-29-08' --target /dev/sda1 --skip-grub\n";
+		msg += "timeshift --restore --snapshot '2014-10-12_16-29-08' --target /dev/sda1\n";
 		msg += "timeshift --delete  --snapshot '2014-10-12_16-29-08'\n";
 		msg += "timeshift --delete-all \n";
 		msg += "\n";
 
 		msg += _("Notes") + ":\n";
 		msg += "\n";
-		msg += "  1) --backup-now will always create a snapshot\n";
-		msg += "  2) --backup will create a snapshot only if a scheduled snapshot is due\n";
+		msg += "  1) --create will always create a new snapshot\n";
+		msg += "  2) --check will create a snapshot only if a scheduled snapshot is due\n";
 		msg += "  3) Use --restore without other options to select options interactively\n";
 		msg += "  4) UUID can be specified instead of device name\n";
+		msg += "  5) Default values will be loaded from app config if options are not specified\n";
 		msg += "\n";
 		return msg;
 	}
@@ -653,6 +655,12 @@ public class AppConsole : GLib.Object {
 				stdout.flush();
 
 				dev = read_stdin_device(list, "");
+
+				if (App.btrfs_mode && !App.check_device_for_backup(dev, true)){
+					log_error(_("Selected snapshot device is not a system disk"));
+					log_error(_("Select BTRFS system disk with root subvolume (@)"));
+					dev = null;
+				}
 			}
 
 			log_msg("");

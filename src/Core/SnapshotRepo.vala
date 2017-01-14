@@ -264,31 +264,16 @@ public class SnapshotRepo : GLib.Object{
 		log_debug("SnapshotRepo: unlock_encrypted_device()");
 		
 		if (luks_device == null){
-			log_debug("luks_device=null".printf());
+			log_debug("luks_device=null");
 			return null;
 		}
 		else{
 			log_debug("luks_device=%s".printf(luks_device.device));
 		}
 
-		Device luks_unlocked = null;
-
-		string mapped_name = "%s_unlocked".printf(luks_device.name);
-
-		var partitions = Device.get_block_devices_using_lsblk();
-		
-		// check if already unlocked
-		foreach(var part in partitions){
-			if (part.pkname == luks_device.kname){
-				log_debug(_("Unlocked device is mapped to '%s'").printf(part.device));
-				log_debug("");
-				return part;
-			}
-		}
-			
 		string msg_out, msg_err;
-		luks_unlocked = Device.luks_unlock(
-			luks_device, mapped_name, "", parent_window, out msg_out, out msg_err);
+		var luks_unlocked = Device.luks_unlock(
+			luks_device, "", "", parent_window, out msg_out, out msg_err);
 
 		return luks_unlocked;
 	}
@@ -552,7 +537,7 @@ public class SnapshotRepo : GLib.Object{
 		if (btrfs_mode){
 			if (!dir_exists(root_path)){
 				status_message = _("Selected snapshot device is not a system disk");
-				status_details = _("Select BTRFS system disk with @ subvolume");
+				status_details = _("Select BTRFS system disk with root subvolume (@)");
 				status_code = SnapshotLocationStatus.NO_BTRFS_SYSTEM;
 				log_debug(status_message);
 				return false;

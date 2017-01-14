@@ -2692,6 +2692,8 @@ public class Main : GLib.Object{
 			// move subvolumes ----------------
 			
 			bool no_subvolumes_found = true;
+
+			var subvol_list = new Gee.ArrayList<Subvolume>();
 			
 			foreach(string subvol_name in new string[] { "@", "@home" }){
 
@@ -2706,17 +2708,22 @@ public class Main : GLib.Object{
 				}
 				
 				no_subvolumes_found = false;
-				
+
 				string dst_path = path_combine(snapshot_path, subvol_name);
 				cmd = "mv '%s' '%s'".printf(src_path, dst_path);
 				log_debug(cmd);
+				
 				int status = exec_sync(cmd, out std_out, out std_err);
+				
 				if (status != 0){
 					log_error (std_err);
 					log_error(_("Failed to move system subvolume to snapshot directory") + ": %s".printf(subvol_name));
 					return false;
 				}
 				else{
+					var subvol_dev = (subvol_name == "@") ? repo.device : repo.device_home;
+					subvol_list.add(new Subvolume(subvol_name, dst_path, subvol_dev.uuid));
+					
 					log_msg(_("Moved system subvolume to snapshot directory") + ": %s".printf(subvol_name));
 				}
 			}
@@ -2739,7 +2746,7 @@ public class Main : GLib.Object{
 				snap.live = true;
 				
 				// write subvolume info
-				foreach(var subvol in sys_subvolumes.values){
+				foreach(var subvol in subvol_list){
 					snap.subvolumes.set(subvol.name, subvol);
 				}
 				

@@ -82,7 +82,7 @@ public class Subvolume : GLib.Object{
 			if (dir_exists(path)){
 				
 				cmd = "btrfs subvolume delete '%s'".printf(path);
-				if (LOG_COMMANDS) { log_debug(cmd); }
+				log_debug(cmd);
 				ret_val = exec_sync(cmd, out std_out, out std_err);
 				if (ret_val != 0){
 					log_error(_("Failed to delete snapshot subvolume") + ": '%s'".printf(path));

@@ -2063,7 +2063,6 @@ public class Main : GLib.Object{
 			sh += "echo '' \n";
 			sh += "echo '" + _("Re-installing GRUB2 bootloader...") + "' \n";
 
-			
 			// search for other operating systems
 			//sh += "chroot \"%s\" os-prober \n".printf(restore_target_path);
 			
@@ -2072,8 +2071,8 @@ public class Main : GLib.Object{
 			if (target_distro.dist_type == "redhat"){
 
 				// this will run only in clone mode
-				sh += "%s grub2-install %s \n".printf(chroot, grub_device);
-				sh += "%s grub2-install --recheck %s \n".printf(chroot, grub_device);
+				//sh += "%s grub2-install %s \n".printf(chroot, grub_device);
+				sh += "%s grub2-install --recheck --force %s \n".printf(chroot, grub_device);
 
 				/* NOTE:
 				 * grub2-install should NOT be run on Fedora EFI systems 
@@ -2087,8 +2086,8 @@ public class Main : GLib.Object{
 				*/
 			}
 			else {
-				sh += "%s grub-install %s \n".printf(chroot, grub_device);
-				sh += "%s grub-install --recheck %s \n".printf(chroot, grub_device);
+				//sh += "%s grub-install %s \n".printf(chroot, grub_device);
+				sh += "%s grub-install --recheck --force %s \n".printf(chroot, grub_device);
 			}
 
 			// create new grub menu

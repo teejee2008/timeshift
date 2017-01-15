@@ -3493,8 +3493,12 @@ public class Main : GLib.Object{
 
 	// btrfs
 
-	public void query_subvolume_info(){
+	public void query_subvolume_info(SnapshotRepo parent_repo){
 
+		// SnapshotRepo contructor calls this code in load_snapshots()
+		// save the new object reference to App.repo since repo still holds previous object
+		repo = parent_repo; 
+		
 		if ((repo == null) || !repo.btrfs_mode){
 			return;
 		}

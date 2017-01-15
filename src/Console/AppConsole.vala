@@ -219,10 +219,12 @@ public class AppConsole : GLib.Object {
 
 				case "--btrfs":
 					App.btrfs_mode = true;
+					App.cmd_btrfs_mode = true;
 					break;
 
 				case "--rsync":
 					App.btrfs_mode = false;
+					App.cmd_btrfs_mode = false;
 					break;
 
 				case "--backup":

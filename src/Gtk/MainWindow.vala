@@ -928,7 +928,9 @@ class MainWindow : Gtk.Window{
 			"Michał Olber, eloaders (Polish):https://translations.launchpad.net/+groups/launchpad-translators",
 			"Eugene Marshal, admin_x, Владимир Шаталин (Russian):https://launchpad.net/~lp-l10n-ru",
 			"Adolfo Jayme (Spanish):https://launchpad.net/~lp-l10n-es",
-			"Ultimate (Turkish):https://launchpad.net/~lolcat"
+			"Ultimate (Turkish):https://launchpad.net/~lolcat",
+			"Ihor Chomko (Ukranian):https://launchpad.net/~igorchomko",
+			"Åke Engelbrektson.(Swedish):https://launchpad.net/~eson"
 		};
 
 		dialog.contributors = {
@@ -951,6 +953,7 @@ class MainWindow : Gtk.Window{
 			"Ashton Tate",
 			"Carl Andersen",
 			"Charming Critters Art & More",
+			"Chou Tso-Chuan",
 			"Christopher Nascone",
 			"Christopher Wolfe",
 			"Christopher Wolfe",
@@ -959,6 +962,7 @@ class MainWindow : Gtk.Window{
 			"Diego Ariel Capeletti",
 			"Doug Rohm",
 			"ertugrulharman.com",
+			"F C De Nys",
 			"Frank Henke",
 			"Gary Harris",
 			"Gunter Beckmann",
@@ -969,6 +973,7 @@ class MainWindow : Gtk.Window{
 			"Joan Brians Cendra",
 			"Jonathan Barton",
 			"Kovalskiy Sergey",
+			"Lance May",
 			"Loeper Matthias",
 			"Michael Abboud",
 			"Michael Young",

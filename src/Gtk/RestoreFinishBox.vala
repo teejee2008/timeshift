@@ -79,7 +79,7 @@ class RestoreFinishBox : Gtk.Box{
 		if (App.btrfs_mode && App.restore_current_system){
 			msg += bullet + _("Restored subvolumes will become active after system is restarted.") + "\n";
 			msg += "\n";
-			msg += bullet + _("You can continue working on the current system. After restart, the current system will be visible as a new snapshot. This snapshot can be restored later, if required, to 'undo' the restore.") + "\n";
+			msg += bullet + _("You can continue working on the current system. After restart, the current system will be visible as a new snapshot. This snapshot can be restored later if required, to 'undo' the restore.") + "\n";
 		}
 
 		if (!App.btrfs_mode){

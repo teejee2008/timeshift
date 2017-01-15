@@ -77,17 +77,17 @@ class RestoreFinishBox : Gtk.Box{
 		string bullet = "▰ ";
 
 		if (App.btrfs_mode && App.restore_current_system){
-			msg += bullet + _("Snapshot was restored successfully and will become active after system is restarted.") + "\n";
+			msg += bullet + _("Restored subvolumes will become active after system is restarted.") + "\n";
 			msg += "\n";
-			msg += bullet + _("You can continue working on the current system. After restart, the current system will be visible as a new snapshot. This snapshot can be restored later (if required) to 'undo' the restore.") + "\n";
+			msg += bullet + _("You can continue working on the current system. After restart, the current system will be visible as a new snapshot. This snapshot can be restored later, if required, to 'undo' the restore.") + "\n";
 		}
 
 		if (!App.btrfs_mode){
-			msg += bullet + _("If system is unable to boot after restart, then boot from the Ubuntu Live CD/USB, install Timeshift on the live system and try restoring another snapshot.") + "\n\n";
+			msg += bullet + _("If the restored system fails to boot, then boot from the Ubuntu Live CD/USB, install Timeshift, and try restoring another snapshot.") + "\n\n";
 		}
 
 		msg += "\n";
-		msg += _("Close window to exit") + "\n\n";
+		msg += "<b>" + _("Close window to exit") + "</b>\n\n";
 		
 		lbl_message.label = msg;
 	}

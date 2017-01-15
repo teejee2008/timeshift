@@ -88,8 +88,10 @@ public class Subvolume : GLib.Object{
 
 		App.progress_text = _("Deleting subvolume")+ ": %s".printf(name);
 		log_debug(App.progress_text);
+
+		string options = App.use_option_raw ? "--commit-after" : "";
 		
-		cmd = "btrfs subvolume delete --commit-after '%s'".printf(path);
+		cmd = "btrfs subvolume delete %s '%s'".printf(options, path);
 		log_debug(cmd);
 		ret_val = exec_sync(cmd, out std_out, out std_err);
 		if (ret_val != 0){

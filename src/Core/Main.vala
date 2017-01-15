@@ -3497,7 +3497,9 @@ public class Main : GLib.Object{
 
 		// SnapshotRepo contructor calls this code in load_snapshots()
 		// save the new object reference to App.repo since repo still holds previous object
-		repo = parent_repo; 
+		repo = parent_repo;
+
+		// TODO: move query_subvolume_info() and related methods to SnapshotRepo
 		
 		if ((repo == null) || !repo.btrfs_mode){
 			return;

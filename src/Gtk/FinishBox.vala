@@ -95,6 +95,9 @@ class FinishBox : Gtk.Box{
 
 			msg += bullet + _("Saving snapshots to a non-system disk allows you to format and re-install the OS on the system disk without losing snapshots stored on it. You can even install another Linux distribution and later roll-back the previous distribution by restoring a snapshot.") + "\n\n";
 		}
+		
+		msg += "\n";
+		msg += "<b>" + _("Close window to exit") + "</b>\n\n";
 
 		lbl_message.label = msg;
 	}

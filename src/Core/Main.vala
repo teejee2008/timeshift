@@ -131,6 +131,7 @@ public class Main : GLib.Object{
 	public bool update_initramfs = false;
 	public bool update_grub = true;
 	public string grub_device = "";
+	public bool use_option_raw = true;
 
 	public bool cmd_skip_grub = false;
 	public string cmd_grub_device = "";
@@ -3637,16 +3638,31 @@ public class Main : GLib.Object{
 		string std_err;
 		int ret_val;
 
-		cmd = "btrfs qgroup show --raw '%s'".printf(repo.mount_paths[subvol_name]);
+		string options = use_option_raw ? "--raw" : "";
+		
+		cmd = "btrfs qgroup show %s '%s'".printf(options, repo.mount_paths[subvol_name]);
 		log_debug(cmd);
 		ret_val = exec_sync(cmd, out std_out, out std_err);
-		if (ret_val != 0){
-			log_error (std_err);
-			log_error(_("btrfs returned an error") + ": %d".printf(ret_val));
-			log_error(_("Failed to query subvolume quota"));
-			return false;
-		}
 		
+		if (ret_val != 0){
+			
+			if (use_option_raw){
+				use_option_raw = false;
+
+				// try again without --raw option
+				cmd = "btrfs qgroup show '%s'".printf(repo.mount_paths[subvol_name]);
+				log_debug(cmd);
+				ret_val = exec_sync(cmd, out std_out, out std_err);
+			}	
+			
+			if (ret_val != 0){
+				log_error (std_err);
+				log_error(_("btrfs returned an error") + ": %d".printf(ret_val));
+				log_error(_("Failed to query subvolume quota"));
+				return false;
+			}
+		}
+
 		/* Sample Output:
 		 *
 		qgroupid rfer       excl

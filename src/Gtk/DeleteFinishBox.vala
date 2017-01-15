@@ -67,7 +67,8 @@ class DeleteFinishBox : Gtk.Box{
 		
 		var msg = "";
 
-		msg += _("Close window to exit") + "\n\n";
+		msg += "\n";
+		msg += "<b>" + _("Close window to exit") + "</b>\n\n";
 		
 		lbl_message.label = msg;
 	}

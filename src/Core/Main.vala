@@ -1369,6 +1369,7 @@ public class Main : GLib.Object{
 	public void delete_begin(){
 
 		log_debug("Main: delete_begin()");
+		progress_text = _("Preparing...");
 		
 		try {
 			thread_delete_running = true;

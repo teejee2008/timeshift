@@ -95,6 +95,7 @@ class DeleteBox : Gtk.Box{
 
 		if (App.btrfs_mode){
 			while (App.thread_delete_running){
+				lbl_msg.label = App.progress_text;
 				gtk_do_events();
 				sleep(200);
 			}

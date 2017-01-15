@@ -164,24 +164,24 @@ class SnapshotBackendBox : Gtk.Box{
 
 			txt += bullet + _("Snapshots are restored by replacing system subvolumes. Since files are never copied, deleted or overwritten, there is no risk of data loss. The existing system is preserved as a new snapshot after restore.") + "\n\n";
 			
-			txt += bullet + _("Snapshots are perfect, byte-for-byte copies of the system. Excluding files is not supported.") + "\n\n";
+			txt += bullet + _("Snapshots are perfect, byte-for-byte copies of the system. Nothing is excluded.") + "\n\n";
 
-			txt += bullet + _("Snapshots are saved on the same disk from which they are created (system disk). Storage on other disks is not supported. If your system disk fails then the snapshots stored on it will be lost along with the system.") + "\n\n";
+			txt += bullet + _("Snapshots are saved on the same disk from which they are created (system disk). Storage on other disks is not supported. If system disk fails then snapshots stored on it will be lost along with the system.") + "\n\n";
 
-			txt += bullet + _("Size of BTRFS snapshots are initially zero. As system files gradually change with time, data gets written to new blocks which take up disk space (copy-on-write). The files in the snapshot continue to point to the original data blocks.") + "\n\n";
+			txt += bullet + _("Size of BTRFS snapshots are initially zero. As system files gradually change with time, data gets written to new data blocks which take up disk space (copy-on-write). Files in the snapshot continue to point to original data blocks.") + "\n\n";
 
-			txt += bullet + _("OS must be installed on a BTRFS partition with Ubuntu-type subvolume layout (@ and @home subvolumes). Other file systems and subvolume layouts are not supported.") + "\n\n";
+			txt += bullet + _("OS must be installed on a BTRFS partition with Ubuntu-type subvolume layout (@ and @home subvolumes). Other layouts are not supported.") + "\n\n";
 			
 			lbl_description.label = txt;
 		}
 		else{
 			string txt = "<b>RSYNC Snapshots</b>\n\n";
 
-			txt += bullet + _("Snapshots are created by creating copies of system files using rsync, and hard-linking unchanged files from the previous snapshot.") + "\n\n";
+			txt += bullet + _("Snapshots are created by creating copies of system files using rsync, and hard-linking unchanged files from previous snapshot.") + "\n\n";
 			
-			txt += bullet + _("Files are copied when the first snapshot is created. Subsequent snapshots are incremental. Unchanged files are hard-linked from the previous snapshot.") + "\n\n";
+			txt += bullet + _("All files are copied when first snapshot is created. Subsequent snapshots are incremental. Unchanged files will be hard-linked from the previous snapshot if available.") + "\n\n";
 
-			txt += bullet + _("Snapshots can be saved to any disk formatted with a Linux file system. Saving snapshots to a non-system/portable disk allows the system to be restored even if the system disk is damaged or re-formatted.") + "\n\n";
+			txt += bullet + _("Snapshots can be saved to any disk formatted with a Linux file system. Saving snapshots to non-system or external disk allows the system to be restored even if system disk is damaged or re-formatted.") + "\n\n";
 
 			txt += bullet + _("Files and directories can be excluded to save disk space.") + "\n\n";
 

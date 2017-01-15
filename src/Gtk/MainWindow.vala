@@ -305,7 +305,7 @@ class MainWindow : Gtk.Window{
 		vbox.pack_start(label, true, true, 0);
 		lbl_snap_count = label;
 		
-		label = new Label(_("Snaps"));
+		label = new Label(_("Snapshots"));
 		label.justify = Gtk.Justification.CENTER;
 		vbox.pack_start(label, false, false, 0);
 

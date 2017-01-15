@@ -396,6 +396,8 @@ public class Snapshot : GLib.Object{
 	
 	public bool remove_rsync(bool wait){
 
+		log_msg(string.nfill(78, '-'));
+		
 		var message = _("Removing") + " '%s'...".printf(name);
 		log_msg(message);
 		
@@ -423,6 +425,7 @@ public class Snapshot : GLib.Object{
 
 			message = "%s '%s'".printf(_("Removed"), name);	
 			log_msg(message);
+			log_msg(string.nfill(78, '-'));
 		}
 
 		return true;
@@ -430,7 +433,9 @@ public class Snapshot : GLib.Object{
 
 	public bool remove_btrfs(){
 
-		var message = _("Removing") + " '%s'...".printf(name);
+		log_msg(string.nfill(78, '-'));
+		
+		var message = _("Removing snapshot") + ": %s".printf(name);
 		log_msg(message);
 		
 		// delete subvolumes
@@ -451,7 +456,9 @@ public class Snapshot : GLib.Object{
 			}
 		}
 
-		log_msg(_("Deleted snapshot") + ": '%s'".printf(name));
+		log_msg(_("Removed snapshot") + ": %s".printf(name));
+
+		log_msg(string.nfill(78, '-'));
 		
 		return true;
 	}

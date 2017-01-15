@@ -98,14 +98,14 @@ class SnapshotListBox : Gtk.Box{
 		col_date.spacing = 1;
 		col_date.min_width = 200;
 
-		CellRendererPixbuf cell_backup_icon = new CellRendererPixbuf ();
+		var cell_backup_icon = new CellRendererPixbuf ();
 		cell_backup_icon.pixbuf = get_shared_icon_pixbuf("clock","clock.png",16);
 		//cell_backup_icon.xpad = 1;
 		cell_backup_icon.xpad = 4;
 		cell_backup_icon.ypad = 6;
 		col_date.pack_start (cell_backup_icon, false);
 
-		CellRendererText cell_date = new CellRendererText ();
+		var cell_date = new CellRendererText ();
 		col_date.pack_start (cell_date, false);
 		col_date.set_cell_data_func (cell_date, cell_date_render);
 
@@ -129,7 +129,7 @@ class SnapshotListBox : Gtk.Box{
 		col_system.clickable = true;
 		col_system.min_width = 200;
 
-		CellRendererText cell_system = new CellRendererText ();
+		var cell_system = new CellRendererText ();
 		cell_system.ellipsize = Pango.EllipsizeMode.END;
 		col_system.pack_start (cell_system, false);
 		col_system.set_cell_data_func (cell_system, cell_system_render);
@@ -152,7 +152,7 @@ class SnapshotListBox : Gtk.Box{
 		col_tags.resizable = true;
 		//col_tags.min_width = 80;
 		col_tags.clickable = true;
-		CellRendererText cell_tags = new CellRendererText ();
+		var cell_tags = new CellRendererText ();
 		cell_tags.ellipsize = Pango.EllipsizeMode.END;
 		col_tags.pack_start (cell_tags, false);
 		col_tags.set_cell_data_func (cell_tags, cell_tags_render);
@@ -225,7 +225,7 @@ class SnapshotListBox : Gtk.Box{
 		col_desc.resizable = true;
 		col_desc.clickable = true;
 		col_desc.expand = true;
-		CellRendererText cell_desc = new CellRendererText ();
+		var cell_desc = new CellRendererText ();
 		cell_desc.ellipsize = Pango.EllipsizeMode.END;
 		col_desc.pack_start (cell_desc, false);
 		col_desc.set_cell_data_func (cell_desc, cell_desc_render);
@@ -478,7 +478,7 @@ class SnapshotListBox : Gtk.Box{
 		TreeSelection selection = treeview.get_selection();
 		int count = selection.count_selected_rows();
 		mi_remove.sensitive = (count > 0);
-		mi_mark.sensitive = (count > 0) && !App.btrfs_mode;
+		mi_mark.sensitive = (count > 0);
 		mi_view_log_create.sensitive = !App.btrfs_mode;
 		mi_view_log_restore.sensitive = !App.btrfs_mode;
 

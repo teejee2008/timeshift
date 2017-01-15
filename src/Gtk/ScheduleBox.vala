@@ -48,7 +48,7 @@ class ScheduleBox : Gtk.Box{
 		parent_window = _parent_window;
 		margin = 12;
 		
-		add_label_header(this, _("Select Snapshot Intervals"), true);
+		add_label_header(this, _("Select Snapshot Levels"), true);
 
 		Gtk.CheckButton chk_m, chk_w, chk_d, chk_h, chk_b;
 		Gtk.SpinButton spin_m, spin_w, spin_d, spin_h, spin_b;
@@ -145,7 +145,7 @@ class ScheduleBox : Gtk.Box{
 		
 		// crontab 
 
-		var chk_cron = add_checkbox(this, "Stop cron daemon from sending emails for scheduled jobs");
+		var chk_cron = add_checkbox(this, "Stop cron service from sending emails for scheduled jobs");
 		chk_cron.set_tooltip_text(_("The cron service sends the output of scheduled tasks as an email to the current user. Select this option to suppress the emails for cron tasks created by Timeshift."));
 		//chk_cron.margin_bottom = 12;
 		

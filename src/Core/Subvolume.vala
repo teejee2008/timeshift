@@ -86,9 +86,10 @@ public class Subvolume : GLib.Object{
 			return true; // ok, item does not exist
 		}
 
-		log_debug(_("Deleting subvolume")+ ": %s".printf(name));
+		App.progress_text = _("Deleting subvolume")+ ": %s".printf(name);
+		log_debug(App.progress_text);
 		
-		cmd = "btrfs subvolume delete '%s'".printf(path);
+		cmd = "btrfs subvolume delete --commit-after '%s'".printf(path);
 		log_debug(cmd);
 		ret_val = exec_sync(cmd, out std_out, out std_err);
 		if (ret_val != 0){
@@ -96,7 +97,7 @@ public class Subvolume : GLib.Object{
 			return false;
 		}
 
-		log_msg(_("Deleted subvolume") + " (id %ld): %s".printf(id, path));
+		log_msg(_("Deleted subvolume") + ": %s (id %ld)".printf(name, id));
 
 		if ((id > 0) && (repo != null)){
 

@@ -3596,10 +3596,10 @@ public class Main : GLib.Object{
 
 			Subvolume subvol = null;
 
-			if (line.has_suffix(sys_subvolumes["@"].path.replace(repo.mount_paths["@"] + "/"," "))){
+			if ((sys_subvolumes.size > 0) && line.has_suffix(sys_subvolumes["@"].path.replace(repo.mount_paths["@"] + "/"," "))){
 				subvol = sys_subvolumes["@"];
 			}
-			else if (line.has_suffix(sys_subvolumes["@home"].path.replace(repo.mount_paths["@home"] + "/"," "))){
+			else if ((sys_subvolumes.size > 0) && line.has_suffix(sys_subvolumes["@home"].path.replace(repo.mount_paths["@home"] + "/"," "))){
 				subvol = sys_subvolumes["@home"];
 			}
 			else {
@@ -3607,6 +3607,7 @@ public class Main : GLib.Object{
 					foreach(var sub in bak.subvolumes.values){
 						if (line.has_suffix(sub.path.replace(repo.mount_paths[sub.name] + "/",""))){
 							subvol = sub;
+							break;
 						}
 					}
 				}
@@ -3667,10 +3668,10 @@ public class Main : GLib.Object{
 
 			Subvolume subvol = null;
 
-			if (sys_subvolumes["@"].id == subvol_id){
+			if ((sys_subvolumes.size > 0) && (sys_subvolumes["@"].id == subvol_id)){
 				subvol = sys_subvolumes["@"];
 			}
-			else if (sys_subvolumes["@home"].id == subvol_id){
+			else if ((sys_subvolumes.size > 0) && (sys_subvolumes["@home"].id == subvol_id)){
 				subvol = sys_subvolumes["@home"];
 			}
 			else {

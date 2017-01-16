@@ -35,12 +35,13 @@ using TeeJee.Misc;
 class SettingsWindow : Gtk.Window{
 	private Gtk.Box vbox_main;
 	private Gtk.Notebook notebook;
-
+	private Gtk.StackSwitcher switcher;
+	private Gtk.Stack stack;
+	
 	private SnapshotBackendBox backend_box;
 	private BackupDeviceBox backup_dev_box;
 	private ScheduleBox schedule_box;
 	private ExcludeBox exclude_box;
-	//private FinishBox notes_box;
 
 	private uint tmr_init;
 	private int def_width = 550;
@@ -57,33 +58,38 @@ class SettingsWindow : Gtk.Window{
 		this.icon = get_app_icon(16);
 
 		this.delete_event.connect(on_delete_event);
-		
-        vbox_main = new Box (Orientation.VERTICAL, 6);
-        vbox_main.margin = 12;
+
+        vbox_main = new Box (Orientation.VERTICAL, 0);
+        //vbox_main.margin = 6;
         add(vbox_main);
 
-		// add notebook
-		notebook = add_notebook(vbox_main, true, true);
+		var hbox = new Gtk.ButtonBox (Gtk.Orientation.HORIZONTAL);
+		hbox.set_layout (Gtk.ButtonBoxStyle.CENTER);
+		hbox.get_style_context().add_class(Gtk.STYLE_CLASS_PRIMARY_TOOLBAR);
+        vbox_main.add(hbox);
+        
+		switcher = new Gtk.StackSwitcher();
+		switcher.margin = 6;
+		hbox.add (switcher);
 
-		var label = new Gtk.Label(_("Type"));
-		backend_box = new SnapshotBackendBox(this);
-		notebook.append_page (backend_box, label);
+		stack = new Gtk.Stack();
+		stack.set_transition_duration (200);
+        stack.set_transition_type (Gtk.StackTransitionType.SLIDE_LEFT_RIGHT);
+		vbox_main.add(stack);
+
+		switcher.set_stack(stack);
 		
-		label = new Gtk.Label(_("Location"));
+		backend_box = new SnapshotBackendBox(this);
+		stack.add_titled (backend_box, _("Type"), _("Type"));
+		
 		backup_dev_box = new BackupDeviceBox(this);
-		notebook.append_page (backup_dev_box, label);
+		stack.add_titled (backup_dev_box, _("Location"), _("Location"));
 
-		label = new Gtk.Label(_("Schedule"));
 		schedule_box = new ScheduleBox(this);
-		notebook.append_page (schedule_box, label);
+		stack.add_titled (schedule_box, _("Schedule"), _("Schedule"));
 
-		label = new Gtk.Label(_("Filters"));
 		exclude_box = new ExcludeBox(this, false);
-		notebook.append_page (exclude_box, label);
-
-		//label = new Gtk.Label(_("Notes"));
-		//notes_box = new FinishBox(this, true);
-		//notebook.append_page (notes_box, label);
+		stack.add_titled (exclude_box, _("Filters"), _("Filters"));
 
 		backend_box.type_changed.connect(()=>{
 			exclude_box.visible = !App.btrfs_mode;
@@ -130,8 +136,8 @@ class SettingsWindow : Gtk.Window{
 	private void create_actions(){
 		
 		var hbox = new Gtk.ButtonBox (Gtk.Orientation.HORIZONTAL);
-		hbox.margin = 0;
-		hbox.margin_top = 6;
+		hbox.margin = 6;
+		hbox.margin_top = 0;
         vbox_main.add(hbox);
 
 		Gtk.SizeGroup size_group = null;
@@ -147,7 +153,7 @@ class SettingsWindow : Gtk.Window{
 			this.destroy();
 		});
 	}
-	
+
 	public enum Tabs{
 		BACKUP_TYPE = 0,
 		BACKUP_DEVICE = 1,

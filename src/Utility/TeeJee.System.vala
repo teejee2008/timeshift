@@ -468,7 +468,7 @@ namespace TeeJee.System{
 		return (ulong)((seconds * 1000 ) + (microseconds / 1000));
 	}
 
-	public void sleep(int milliseconds, bool do_events = false){
+	public void sleep(int milliseconds){
 		Thread.usleep ((ulong) milliseconds * 1000);
 	}
 

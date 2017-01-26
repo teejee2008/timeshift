@@ -443,6 +443,8 @@ public class Snapshot : GLib.Object{
 		foreach(var subvol in subvolumes.values){
 			bool ok = subvol.remove();
 			if (!ok) {
+				log_error(_("Failed to remove snapshot") + ": %s".printf(name));
+				log_msg(string.nfill(78, '-'));
 				return false;
 			}
 		}
@@ -452,12 +454,19 @@ public class Snapshot : GLib.Object{
 		foreach(var subvol in subvolumes.values){
 			bool ok = dir_delete(paths[subvol.name], true);
 			if (!ok) {
+				log_error(_("Failed to remove snapshot") + ": %s".printf(name));
+				log_msg(string.nfill(78, '-'));
 				return false;
 			}
 		}
 
-		log_msg(_("Removed snapshot") + ": %s".printf(name));
+		if (!dir_delete(path, true)){
+			log_error(_("Failed to remove snapshot") + ": %s".printf(name));
+			log_msg(string.nfill(78, '-'));
+			return false;
+		}
 
+		log_msg(_("Removed snapshot") + ": %s".printf(name));
 		log_msg(string.nfill(78, '-'));
 		
 		return true;

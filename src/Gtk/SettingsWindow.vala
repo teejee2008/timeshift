@@ -34,7 +34,6 @@ using TeeJee.Misc;
 
 class SettingsWindow : Gtk.Window{
 	private Gtk.Box vbox_main;
-	private Gtk.Notebook notebook;
 	private Gtk.StackSwitcher switcher;
 	private Gtk.Stack stack;
 	

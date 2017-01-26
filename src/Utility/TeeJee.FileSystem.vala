@@ -301,16 +301,21 @@ namespace TeeJee.FileSystem{
 		try{
 			var dir = File.parse_name (dir_path);
 			if (dir.query_exists () == false) {
-				dir.make_directory_with_parents (null);
+				bool ok = dir.make_directory_with_parents (null);
 				if (show_message){
-					log_msg(_("Created directory") + ": %s".printf(dir_path));
+					if (ok){
+						log_msg(_("Created directory") + ": %s".printf(dir_path));
+					}
+					else{
+						log_error(_("Failed to create directory") + ": %s".printf(dir_path));
+					}
 				}
 			}
 			return true;
 		}
 		catch (Error e) {
 			log_error (e.message);
-			log_error(_("Failed to create dir") + ": %s".printf(dir_path));
+			log_error(_("Failed to create directory") + ": %s".printf(dir_path));
 			return false;
 		}
 	}
@@ -324,10 +329,20 @@ namespace TeeJee.FileSystem{
 		}
 		
 		string cmd = "rm -rf '%s'".printf(escape_single_quote(dir_path));
-		int status = exec_sync(cmd);
+		log_debug(cmd);
+		string std_out, std_err;
+		int status = exec_sync(cmd, out std_out, out std_err);
 		if (show_message){
-			log_msg(_("Deleted directory") + ": %s".printf(dir_path));
+			if (status == 0){
+				log_msg(_("Deleted directory") + ": %s".printf(dir_path));
+			}
+			else{
+				log_error(_("Failed to delete directory") + ": %s".printf(dir_path));
+				log_error(std_out);
+				log_error(std_err);
+			}
 		}
+		
 		return (status == 0);
 	}
 

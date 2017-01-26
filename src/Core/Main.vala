@@ -966,12 +966,14 @@ public class Main : GLib.Object{
 			
 			log_msg(string.nfill(78, '-'));
 
+			repo.load_snapshots(); // reload list for new snapshot
+			
 			if (app_mode.length != 0){
 				repo.auto_remove();
+				repo.load_snapshots();
 			}
 
 			if (update_symlinks){
-				repo.load_snapshots();
 				repo.create_symlinks();
 			}
 			
@@ -1076,9 +1078,6 @@ public class Main : GLib.Object{
 				message = _("Tagged snapshot") + " '%s': %s".printf(new_snapshot.name, tag);
 				log_msg(message);
 			}
-
-			repo.load_snapshots();
-			
 		}
 		catch(Error e){
 			log_error (e.message);

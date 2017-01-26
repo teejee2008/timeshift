@@ -3805,6 +3805,8 @@ public class Main : GLib.Object{
 		
 		if (live_system()) { return; }
 
+		// remove entries created by previous versions -----------
+		
 		string entry = "timeshift --backup";
 
 		int count = 0;
@@ -3825,9 +3827,12 @@ public class Main : GLib.Object{
 			}
 		}
 
+		CronTab.remove_script_file("timeshift-hourly", "hourly");
+			
+		// start update ---------------------------
+		
 		if (scheduled){
-			//others
-			CronTab.remove_script_file("timeshift-hourly", "hourly");
+			//hourly
 			CronTab.add_script_file("timeshift-hourly", "d", "0 * * * * root timeshift --check", stop_cron_emails);
 			
 			//boot
@@ -3839,7 +3844,7 @@ public class Main : GLib.Object{
 			}
 		}
 		else{
-			CronTab.remove_script_file("timeshift-hourly", "hourly");
+			CronTab.remove_script_file("timeshift-hourly", "d");
 			CronTab.remove_script_file("timeshift-boot", "d");
 		}
 	}

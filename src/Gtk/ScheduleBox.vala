@@ -36,6 +36,9 @@ class ScheduleBox : Gtk.Box{
 	private Gtk.Image img_shield;
 	private Gtk.Label lbl_shield;
 	private Gtk.Label lbl_shield_subnote;
+	private Gtk.SizeGroup sg_title;
+	private Gtk.SizeGroup sg_subtitle;
+	private Gtk.SizeGroup sg_count;
 	
 	private Gtk.Window parent_window;
 	
@@ -50,17 +53,18 @@ class ScheduleBox : Gtk.Box{
 		
 		add_label_header(this, _("Select Snapshot Levels"), true);
 
-		Gtk.CheckButton chk_m, chk_w, chk_d, chk_h, chk_b;
+		Gtk.CheckButton chk_m, chk_w, chk_d, chk_h, chk_b, chk_cron = null;
 		Gtk.SpinButton spin_m, spin_w, spin_d, spin_h, spin_b;
 
 		// monthly
 		
-		add_schedule_option(this, _("Monthly"), _("Create one per month"), out chk_m, out spin_m);
+		add_schedule_option(this, _("Monthly") + " *", _("Create one per month"), out chk_m, out spin_m);
 
 		chk_m.active = App.schedule_monthly;
 		chk_m.toggled.connect(()=>{
 			App.schedule_monthly = chk_m.active;
 			spin_m.sensitive = chk_m.active;
+			chk_cron.sensitive = App.scheduled;
 			update_statusbar();
 		});
 
@@ -72,12 +76,13 @@ class ScheduleBox : Gtk.Box{
 		
 		// weekly
 		
-		add_schedule_option(this, _("Weekly"), _("Create one per week"), out chk_w, out spin_w);
+		add_schedule_option(this, _("Weekly") + " *", _("Create one per week"), out chk_w, out spin_w);
 
 		chk_w.active = App.schedule_weekly;
 		chk_w.toggled.connect(()=>{
 			App.schedule_weekly = chk_w.active;
 			spin_w.sensitive = chk_w.active;
+			chk_cron.sensitive = App.scheduled;
 			update_statusbar();
 		});
 
@@ -89,12 +94,13 @@ class ScheduleBox : Gtk.Box{
 
 		// daily
 		
-		add_schedule_option(this, _("Daily"), _("Create one per day"), out chk_d, out spin_d);
+		add_schedule_option(this, _("Daily") + " *", _("Create one per day"), out chk_d, out spin_d);
 
 		chk_d.active = App.schedule_daily;
 		chk_d.toggled.connect(()=>{
 			App.schedule_daily = chk_d.active;
 			spin_d.sensitive = chk_d.active;
+			chk_cron.sensitive = App.scheduled;
 			update_statusbar();
 		});
 
@@ -106,12 +112,13 @@ class ScheduleBox : Gtk.Box{
 
 		// hourly
 		
-		add_schedule_option(this, _("Hourly"), _("Create one per hour"), out chk_h, out spin_h);
+		add_schedule_option(this, _("Hourly") + " *", _("Create one per hour"), out chk_h, out spin_h);
 
 		chk_h.active = App.schedule_hourly;
 		chk_h.toggled.connect(()=>{
 			App.schedule_hourly = chk_h.active;
 			spin_h.sensitive = chk_h.active;
+			chk_cron.sensitive = App.scheduled;
 			update_statusbar();
 		});
 
@@ -129,6 +136,7 @@ class ScheduleBox : Gtk.Box{
 		chk_b.toggled.connect(()=>{
 			App.schedule_boot = chk_b.active;
 			spin_b.sensitive = chk_b.active;
+			chk_cron.sensitive = App.scheduled;
 			update_statusbar();
 		});
 
@@ -138,16 +146,23 @@ class ScheduleBox : Gtk.Box{
 			App.count_boot = (int) spin_b.get_value();
 		});
 
+		var label = new Gtk.Label("<i>* " + _("Scheduled task runs once every hour") + "</i>");
+		label.xalign = (float) 0.0;
+		label.margin_top = 6;
+		label.margin_left = 12;
+		label.set_use_markup(true);
+		add(label);
+		
 		// buffer
-		var label = new Gtk.Label("");
+		label = new Gtk.Label("");
 		label.vexpand = true;
 		add(label);
 		
-		// crontab 
-
-		var chk_cron = add_checkbox(this, "Stop cron service from sending emails for scheduled jobs");
+		// cron emails
+		chk_cron = add_checkbox(this, _("Stop cron emails for scheduled tasks"));
+		//chk_cron.hexpand = true;
 		chk_cron.set_tooltip_text(_("The cron service sends the output of scheduled tasks as an email to the current user. Select this option to suppress the emails for cron tasks created by Timeshift."));
-		//chk_cron.margin_bottom = 12;
+		//chk_cron.margin_bottom = 12;	
 		
 		chk_cron.active = App.stop_cron_emails;
 		chk_cron.toggled.connect(()=>{
@@ -227,20 +242,31 @@ class ScheduleBox : Gtk.Box{
 		out Gtk.CheckButton chk, out Gtk.SpinButton spin){
 
 		var hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
+		hbox.margin_left = 6;
 		box.add(hbox);
-		
-        var txt = "<b>%s</b> - %s".printf(period, period_desc);
-		chk = add_checkbox(hbox, txt);
 
-		var label = add_label(hbox, "");
-		label.hexpand = true;
+		if (sg_title == null){
+			sg_title = new Gtk.SizeGroup(Gtk.SizeGroupMode.HORIZONTAL);
+			sg_subtitle = new Gtk.SizeGroup(Gtk.SizeGroupMode.HORIZONTAL);
+			sg_count = new Gtk.SizeGroup(Gtk.SizeGroupMode.HORIZONTAL);
+		}
+		
+        var txt = "<b>%s</b>".printf(period);
+		chk = add_checkbox(hbox, txt);
+		sg_title.add_widget(chk);
+		
+		//var label = add_label(hbox, " - %s".printf(period_desc));
+		//label.hexpand = true;
+		//sg_subtitle.add_widget(label);
 
 		var tt = _("Number of snapshots to keep.\nOlder snapshots will be removed once this limit is exceeded.");
-		label = add_label(hbox, _("Keep"));
+		var label = add_label(hbox, _("Keep"));
+		label.margin_left = 24;
 		label.set_tooltip_text(tt);
-		
+
 		var spin2 = add_spin(hbox, 1, 999, 10);
 		spin2.set_tooltip_text(tt);
+		sg_count.add_widget(spin2);
 		
 		spin2.notify["sensitive"].connect(()=>{
 			label.sensitive = spin2.sensitive;

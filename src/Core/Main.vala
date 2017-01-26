@@ -3826,7 +3826,11 @@ public class Main : GLib.Object{
 		}
 
 		if (scheduled){
-			CronTab.add_script_file("timeshift-hourly", "hourly", "timeshift --check", stop_cron_emails);
+			//others
+			CronTab.remove_script_file("timeshift-hourly", "hourly");
+			CronTab.add_script_file("timeshift-hourly", "d", "0 * * * * root timeshift --check", stop_cron_emails);
+			
+			//boot
 			if (schedule_boot){
 				CronTab.add_script_file("timeshift-boot", "d", "@reboot root sleep 10m && timeshift --create --tags B", stop_cron_emails);
 			}

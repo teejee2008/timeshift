@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timeshift 1.6\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2017-01-26 11:37+0530\n"
+"POT-Creation-Date: 2017-01-26 13:48+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -137,7 +137,7 @@ msgstr ""
 msgid "Add tags to snapshot (default: O)"
 msgstr ""
 
-#: Utility/CronTab.vala:306
+#: Utility/CronTab.vala:313
 msgid "Added cron task"
 msgstr ""
 
@@ -224,6 +224,10 @@ msgstr ""
 msgid "BTRFS"
 msgstr ""
 
+#: Gtk/SnapshotBackendBox.vala:159
+msgid "BTRFS Snapshots"
+msgstr ""
+
 #: Gtk/SnapshotBackendBox.vala:118
 msgid "BTRFS Tools Not Found"
 msgstr ""
@@ -264,7 +268,7 @@ msgstr ""
 msgid "Bittorrent Clients"
 msgstr ""
 
-#: Gtk/ScheduleBox.vala:126
+#: Gtk/ScheduleBox.vala:133
 msgid "Boot"
 msgstr ""
 
@@ -444,23 +448,23 @@ msgstr ""
 msgid "Create Snapshot"
 msgstr ""
 
-#: Gtk/ScheduleBox.vala:126
+#: Gtk/ScheduleBox.vala:133
 msgid "Create one per boot"
 msgstr ""
 
-#: Gtk/ScheduleBox.vala:92
+#: Gtk/ScheduleBox.vala:97
 msgid "Create one per day"
 msgstr ""
 
-#: Gtk/ScheduleBox.vala:109
+#: Gtk/ScheduleBox.vala:115
 msgid "Create one per hour"
 msgstr ""
 
-#: Gtk/ScheduleBox.vala:58
+#: Gtk/ScheduleBox.vala:61
 msgid "Create one per month"
 msgstr ""
 
-#: Gtk/ScheduleBox.vala:75
+#: Gtk/ScheduleBox.vala:79
 msgid "Create one per week"
 msgstr ""
 
@@ -542,11 +546,11 @@ msgstr ""
 msgid "Cron job removed"
 msgstr ""
 
-#: Utility/CronTab.vala:298
+#: Utility/CronTab.vala:305
 msgid "Cron task exists"
 msgstr ""
 
-#: Gtk/ScheduleBox.vala:92
+#: Gtk/ScheduleBox.vala:97
 msgid "Daily"
 msgstr ""
 
@@ -1073,7 +1077,7 @@ msgstr ""
 msgid "Home Directory"
 msgstr ""
 
-#: Gtk/ScheduleBox.vala:109
+#: Gtk/ScheduleBox.vala:115
 msgid "Hourly"
 msgstr ""
 
@@ -1122,7 +1126,7 @@ msgstr ""
 msgid "Items Not Selected"
 msgstr ""
 
-#: Gtk/ScheduleBox.vala:239
+#: Gtk/ScheduleBox.vala:263
 msgid "Keep"
 msgstr ""
 
@@ -1295,7 +1299,7 @@ msgstr ""
 msgid "Model"
 msgstr ""
 
-#: Gtk/ScheduleBox.vala:58
+#: Gtk/ScheduleBox.vala:61
 msgid "Monthly"
 msgstr ""
 
@@ -1390,7 +1394,7 @@ msgstr ""
 msgid "Num"
 msgstr ""
 
-#: Gtk/ScheduleBox.vala:238
+#: Gtk/ScheduleBox.vala:262
 msgid ""
 "Number of snapshots to keep.\n"
 "Older snapshots will be removed once this limit is exceeded."
@@ -1407,7 +1411,7 @@ msgid ""
 "(@ and @home subvolumes). Other layouts are not supported."
 msgstr ""
 
-#: Core/Main.vala:3881
+#: Core/Main.vala:3885
 msgid "Older log files removed"
 msgstr ""
 
@@ -1539,6 +1543,10 @@ msgstr ""
 msgid "RSYNC"
 msgstr ""
 
+#: Gtk/SnapshotBackendBox.vala:178
+msgid "RSYNC Snapshots"
+msgstr ""
+
 #: Gtk/BootOptionsBox.vala:138
 msgid ""
 "Re-generates initramfs for all installed kernels. This is generally not "
@@ -1590,7 +1598,7 @@ msgstr ""
 msgid "Removed"
 msgstr ""
 
-#: Utility/CronTab.vala:335
+#: Utility/CronTab.vala:342
 msgid "Removed cron task"
 msgstr ""
 
@@ -1722,7 +1730,7 @@ msgstr ""
 msgid "Scheduled snapshot in progress..."
 msgstr ""
 
-#: Core/Main.vala:963 Gtk/ScheduleBox.vala:264 Gtk/MainWindow.vala:1109
+#: Core/Main.vala:963 Gtk/ScheduleBox.vala:290 Gtk/MainWindow.vala:1109
 msgid "Scheduled snapshots are disabled"
 msgstr ""
 
@@ -1730,7 +1738,7 @@ msgstr ""
 msgid "Scheduled snapshots are disabled. It's recommended to enable it."
 msgstr ""
 
-#: Gtk/ScheduleBox.vala:258
+#: Gtk/ScheduleBox.vala:284
 msgid "Scheduled snapshots are enabled"
 msgstr ""
 
@@ -1738,6 +1746,10 @@ msgstr ""
 msgid ""
 "Scheduled snapshots are enabled. Snapshots will be created automatically for "
 "selected levels."
+msgstr ""
+
+#: Gtk/ScheduleBox.vala:149
+msgid "Scheduled task runs once every hour"
 msgstr ""
 
 #: Console/AppConsole.vala:845
@@ -1761,7 +1773,7 @@ msgstr ""
 msgid "Select Snapshot"
 msgstr ""
 
-#: Gtk/ScheduleBox.vala:51
+#: Gtk/ScheduleBox.vala:54
 msgid "Select Snapshot Levels"
 msgstr ""
 
@@ -1838,7 +1850,7 @@ msgstr ""
 msgid "Select the devices where files will be restored."
 msgstr ""
 
-#: Gtk/ScheduleBox.vala:265
+#: Gtk/ScheduleBox.vala:291
 msgid "Select the intervals for creating snapshots"
 msgstr ""
 
@@ -2086,7 +2098,7 @@ msgstr ""
 msgid "Snapshots will be created at selected intervals"
 msgstr ""
 
-#: Gtk/ScheduleBox.vala:259
+#: Gtk/ScheduleBox.vala:285
 msgid ""
 "Snapshots will be created at selected intervals if snapshot disk has enough "
 "space (> 1 GB)"
@@ -2115,6 +2127,10 @@ msgstr ""
 #: Core/SnapshotRepo.vala:436
 #, c-format
 msgid "Status"
+msgstr ""
+
+#: Gtk/ScheduleBox.vala:162
+msgid "Stop cron emails for scheduled tasks"
 msgstr ""
 
 #: Utility/TeeJee.Process.vala:511
@@ -2197,7 +2213,7 @@ msgid ""
 "tools' package and try again."
 msgstr ""
 
-#: Gtk/ScheduleBox.vala:149
+#: Gtk/ScheduleBox.vala:164
 msgid ""
 "The cron service sends the output of scheduled tasks as an email to the "
 "current user. Select this option to suppress the emails for cron tasks "
@@ -2375,7 +2391,7 @@ msgstr ""
 msgid "Web Browsers"
 msgstr ""
 
-#: Gtk/ScheduleBox.vala:75
+#: Gtk/ScheduleBox.vala:79
 msgid "Weekly"
 msgstr ""
 

@@ -156,7 +156,7 @@ class SnapshotBackendBox : Gtk.Box{
 		string bullet = "▰ ";
 		
 		if (opt_btrfs.active){
-			string txt = "<b>BTRFS Snapshots</b>\n\n";
+			string txt = "<b>" + _("BTRFS Snapshots") + "</b>\n\n";
 
 			txt += bullet + _("Snapshots are created using the built-in features of the BTRFS file system.") + "\n\n";
 			
@@ -175,7 +175,7 @@ class SnapshotBackendBox : Gtk.Box{
 			lbl_description.label = txt;
 		}
 		else{
-			string txt = "<b>RSYNC Snapshots</b>\n\n";
+			string txt = "<b>" + _("RSYNC Snapshots") + "</b>\n\n";
 
 			txt += bullet + _("Snapshots are created by creating copies of system files using rsync, and hard-linking unchanged files from previous snapshot.") + "\n\n";
 			

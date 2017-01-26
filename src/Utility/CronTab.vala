@@ -268,6 +268,13 @@ public class CronTab : GLib.Object {
 	}
 
 	public static bool add_script_file(string file_name, string cron_dir_type, string text, bool stop_cron_emails){
+		
+		/* Note:
+		 * cron.d and cron.hourly are managed by cron so it expects entries in crontab format
+		 * minute hour day_of_month month day_of_week user command
+		 * 
+		 * cron.{daily|weekly|monthly} are read by anacron. scripts placed here should have commands only.
+		 * */
 
 		switch (cron_dir_type){
 		case "d":
@@ -286,7 +293,7 @@ public class CronTab : GLib.Object {
 		string file_path = "/etc/cron.%s/%s".printf(cron_dir_type, file_name.replace(".","-")); // dot is not allowed in file name
 
 		string sh = "";
-		sh += "SHELL=/bin/sh" + "\n";
+		sh += "SHELL=/bin/bash" + "\n";
 		sh += "PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin" + "\n";
 		if (stop_cron_emails){
 			sh += "MAILTO=\"\"" + "\n";

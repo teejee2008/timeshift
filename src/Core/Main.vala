@@ -3832,6 +3832,7 @@ public class Main : GLib.Object{
 		// start update ---------------------------
 		
 		if (scheduled){
+			
 			//hourly
 			CronTab.add_script_file("timeshift-hourly", "d", "0 * * * * root timeshift --check", stop_cron_emails);
 			

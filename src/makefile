@@ -68,7 +68,7 @@ install:
 	chmod --recursive 0755 $(DESTDIR)$(sharedir)/${app_name}/*
 
 	#launcher
-	install -m 0755 ${app_name}.desktop "$(DESTDIR)$(launcherdir)"
+	install -m 0755 ${app_name}-gtk.desktop "$(DESTDIR)$(launcherdir)"
 
 	#app icons
 	cp -dpr --no-preserve=ownership -t "$(DESTDIR)$(sharedir)/icons" ./share/icons/*
@@ -101,7 +101,7 @@ uninstall:
 	rm -rf "$(DESTDIR)$(sharedir)/${app_name}"
 
 	#launcher
-	rm -f "$(DESTDIR)$(launcherdir)/${app_name}.desktop"
+	rm -f "$(DESTDIR)$(launcherdir)/${app_name}-gtk.desktop"
 
 	#app icon
 	rm -f "$(DESTDIR)$(sharedir)/icons/hicolor/*/apps/${app_name}.png"

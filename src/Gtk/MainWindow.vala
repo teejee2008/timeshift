@@ -991,7 +991,7 @@ class MainWindow : Gtk.Window{
 		};
 
 		dialog.program_name = AppName;
-		dialog.comments = _("System Restore Utility for Linux");
+		dialog.comments = _("System Restore Utility");
 		dialog.copyright = "Copyright © 2016 Tony George (%s)".printf(AppAuthorEmail);
 		dialog.version = AppVersion;
 		dialog.logo = get_app_icon(128);

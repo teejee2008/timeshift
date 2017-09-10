@@ -70,7 +70,7 @@ class MainWindow : Gtk.Window{
 
 		log_debug("MainWindow: MainWindow()");
 		
-		this.title = AppName + " v" + AppVersion;
+		this.title = AppName;
         this.window_position = WindowPosition.CENTER;
         this.modal = true;
         this.set_default_size (def_width, def_height);

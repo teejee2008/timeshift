@@ -1953,7 +1953,7 @@ public class Main : GLib.Object{
 		msg_devices = msg;
 
 		//msg += _("Files will be overwritten on the target device!") + "\n";
-		//msg += _("If restore fails and you are unable to boot the system, then boot from the Ubuntu Live CD, install Timeshift, and try to restore again.") + "\n";
+		//msg += _("If restore fails and you are unable to boot the system, then boot from the Live CD, install Timeshift, and try to restore again.") + "\n";
 
 		// msg_reboot -----------------------
 		

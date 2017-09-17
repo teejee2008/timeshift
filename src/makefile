@@ -42,7 +42,7 @@ install:
 	mkdir -p "$(DESTDIR)$(man1dir)"
 	mkdir -p "$(DESTDIR)$(launcherdir)"
 	mkdir -p "$(DESTDIR)$(sharedir)/${app_name}"
-	mkdir -p "$(DESTDIR)$(sharedir)/pixmaps"
+	mkdir -p "$(DESTDIR)$(sharedir)/icons"
 	mkdir -p "$(DESTDIR)$(localedir)/ca/LC_MESSAGES"
 	mkdir -p "$(DESTDIR)$(localedir)/cs/LC_MESSAGES"
 	mkdir -p "$(DESTDIR)$(localedir)/es/LC_MESSAGES"
@@ -68,10 +68,11 @@ install:
 	chmod --recursive 0755 $(DESTDIR)$(sharedir)/${app_name}/*
 
 	#launcher
-	install -m 0755 ${app_name}.desktop "$(DESTDIR)$(launcherdir)"
+	install -m 0755 ${app_name}-gtk.desktop "$(DESTDIR)$(launcherdir)"
 
-	#app icon
-	install -m 0755 ./share/pixmaps/${app_name}.png "$(DESTDIR)$(sharedir)/pixmaps/"
+	#app icons
+	cp -dpr --no-preserve=ownership -t "$(DESTDIR)$(sharedir)/icons" ./share/icons/*
+	chmod --recursive 0755 $(DESTDIR)$(sharedir)/icons/*
 
 	#translations
 	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/ca/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-ca.po
@@ -100,10 +101,10 @@ uninstall:
 	rm -rf "$(DESTDIR)$(sharedir)/${app_name}"
 
 	#launcher
-	rm -f "$(DESTDIR)$(launcherdir)/${app_name}.desktop"
+	rm -f "$(DESTDIR)$(launcherdir)/${app_name}-gtk.desktop"
 
 	#app icon
-	rm -f "$(DESTDIR)$(sharedir)/pixmaps/${app_name}.png"
+	rm -f "$(DESTDIR)$(sharedir)/icons/hicolor/*/apps/${app_name}.png"
 
 	#translations
 	rm -f $(DESTDIR)$(localedir)/*/LC_MESSAGES/${app_name}.mo

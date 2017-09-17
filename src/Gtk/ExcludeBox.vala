@@ -269,6 +269,7 @@ class ExcludeBox : Gtk.Box{
 	// actions
 	
     private void remove_clicked(){
+		
 		var sel = treeview.get_selection();
 		var store = (Gtk.ListStore) treeview.model;
 
@@ -297,9 +298,7 @@ class ExcludeBox : Gtk.Box{
 			iterExists = store.iter_next (ref iter);
 		}
 		
-		foreach(var item in iter_list){
-			store.remove(item);
-		}
+		refresh_treeview();
 
 		save_changes();
 	}

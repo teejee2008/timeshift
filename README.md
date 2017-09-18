@@ -1,7 +1,5 @@
 # TimeShift
 
-https://launchpad.net/timeshift
-
 TimeShift for Linux is an application that provides functionality similar to the _System Restore_ feature in Windows and the _Time Machine_ tool in Mac OS. TimeShift protects your system by taking incremental snapshots of the file system at regular intervals. These snapshots can be restored at a later date to undo all changes to the system.   
 
 Snapshots are taken using [rsync](http://rsync.samba.org/) and [hard-links](http://en.wikipedia.org/wiki/Hard_link). Common files are shared between snapshots which saves disk space. Each snapshot is a full system backup that can be browsed with a file manager.   
@@ -49,26 +47,35 @@ TimeShift is designed to protect system files and settings. User data such as do
 
 ## Installation
 
-### Ubuntu
-Packages are available in my launchpad PPA for supported Ubuntu releases. Run the following commands in a terminal window:
+### Ubuntu-based Distributions
 
-    sudo apt-add-repository -y ppa:teejee2008/ppa
-    sudo apt-get update
-    sudo apt-get install timeshift
+Ubuntu, Linux Mint, Elementary OS, etc.
+
+Packages are available in the Launchpad PPA for supported Ubuntu releases.
+Run the following commands in a terminal window:  
+
+```sh
+sudo apt-add-repository -y ppa:teejee2008/ppa
+sudo apt-get update
+sudo apt-get install timeshift
+```
+
+DEB and RUN packages are available on [Releases](https://github.com/teejee2008/timeshift/releases) page for older Ubuntu releases which have reached end-of-life.
 
 ### Other Linux Distributions
-Download the installer from following links:  
-[timeshift-latest-i386.run](http://dl.dropbox.com/u/67740416/linux/timeshift-latest-i386.run?dl=1) (32-bit, 170 KB)  
-[timeshift-latest-amd64.run](http://dl.dropbox.com/u/67740416/linux/timeshift-latest-amd64.run?dl=1) (64-bit, 180 KB)    
 
-Run it from a terminal window using the following commands:  
+Download the .RUN installer from [Releases](https://github.com/teejee2008/timeshift/releases) page and execute it in a terminal window: 
 
-    ./timeshift-latest-i386.run  #32-bit
-    ./timeshift-latest-amd64.run  #64-bit
+```sh
+sudo sh ./timeshift*amd64.run # 64-bit
+sudo sh ./timeshift*i386.run  # 32-bit
+```
 
-Depending on the distribution that you are using, you may need to install packages for the following dependencies:  
+Installer can be used on the following distribution types:
 
-    libgee json-glib rsync
+- **RedHat** based - Fedora, RedHat, Cent OS, etc (supports **dnf** and **yum**)
+- **Debian** based - Debian, Ubuntu, Linux Mint, Elementary OS, etc (supports **apt**)
+- **Arch** based - Arch Linux, Manjaro, etc (supports **pacman**)
 
 ## UnInstall
 

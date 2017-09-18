@@ -43,20 +43,16 @@ install:
 	mkdir -p "$(DESTDIR)$(launcherdir)"
 	mkdir -p "$(DESTDIR)$(sharedir)/${app_name}"
 	mkdir -p "$(DESTDIR)$(sharedir)/icons"
-	mkdir -p "$(DESTDIR)$(localedir)/ca/LC_MESSAGES"
+	mkdir -p "$(DESTDIR)$(localedir)/bg/LC_MESSAGES"
 	mkdir -p "$(DESTDIR)$(localedir)/cs/LC_MESSAGES"
 	mkdir -p "$(DESTDIR)$(localedir)/es/LC_MESSAGES"
 	mkdir -p "$(DESTDIR)$(localedir)/fr/LC_MESSAGES"
-	mkdir -p "$(DESTDIR)$(localedir)/it/LC_MESSAGES"
-	mkdir -p "$(DESTDIR)$(localedir)/ko/LC_MESSAGES"
 	mkdir -p "$(DESTDIR)$(localedir)/nl/LC_MESSAGES"
-	mkdir -p "$(DESTDIR)$(localedir)/pl/LC_MESSAGES"
 	mkdir -p "$(DESTDIR)$(localedir)/pt_BR/LC_MESSAGES"
 	mkdir -p "$(DESTDIR)$(localedir)/ru/LC_MESSAGES"
 	mkdir -p "$(DESTDIR)$(localedir)/sv/LC_MESSAGES"
 	mkdir -p "$(DESTDIR)$(localedir)/tr/LC_MESSAGES"
-	mkdir -p "$(DESTDIR)$(localedir)/uk/LC_MESSAGES"
-	
+
 	#binary
 	install -m 0755 ${app_name} "$(DESTDIR)$(bindir)"
 	install -m 0755 ${app_name}-gtk "$(DESTDIR)$(bindir)"
@@ -75,19 +71,15 @@ install:
 	chmod --recursive 0755 $(DESTDIR)$(sharedir)/icons/*
 
 	#translations
-	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/ca/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-ca.po
+	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/bg/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-bg.po
 	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/cs/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-cs.po
 	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/es/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-es.po
 	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/fr/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-fr.po
-	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/it/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-it.po
-	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/ko/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-ko.po
 	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/nl/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-nl.po
-	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/pl/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-pl.po
 	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/pt_BR/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-pt_BR.po
 	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/ru/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-ru.po
 	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/sv/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-sv.po
 	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/tr/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-tr.po
-	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/uk/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-uk.po
 
 uninstall:
 

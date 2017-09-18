@@ -86,7 +86,7 @@ namespace TeeJee.Logging{
 			msg += "[" + timestamp(true) +  "] ";
 		}
 
-		string prefix = (is_warning) ? _("W") : _("E");
+		string prefix = (is_warning) ? "W" : "E";
 
 		msg += prefix + ": " + message;
 

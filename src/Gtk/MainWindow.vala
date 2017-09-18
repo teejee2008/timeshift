@@ -299,7 +299,7 @@ class MainWindow : Gtk.Window{
         scrolled.add(vbox);
         scrolled_snap_count = scrolled;
 
-        var label = new Label("<b>" + _("0.0%") + "</b>");
+        var label = new Label("<b>" + "0.0%" + "</b>");
 		label.set_use_markup(true);
 		label.justify = Gtk.Justification.CENTER;
 		vbox.pack_start(label, true, true, 0);
@@ -333,7 +333,7 @@ class MainWindow : Gtk.Window{
         scrolled.add(vbox);
         scrolled_free_space = scrolled;
 
-		label = new Label("<b>" + _("0.0%") + "</b>");
+		label = new Label("<b>" + "0.0%" + "</b>");
 		label.set_use_markup(true);
 		label.justify = Gtk.Justification.CENTER;
 		vbox.pack_start(label, true, true, 0);
@@ -919,18 +919,7 @@ class MainWindow : Gtk.Window{
 		};
 
 		dialog.translators = {
-			"BennyBeat (Catalan):https://launchpad.net/~bennybeat",
-			"Pavel Borecki (Czech):https://launchpad.net/~pavel-borecki",
-			"Jerre van Erp, cropr (Dutch):https://launchpad.net/~lp-l10n-nl",
-			"Anne, Debaru, Nikos, alienus (French):launchpad.net/~lp-l10n-fr",
-			"tomberry88 (Italian):launchpad.net/~tomberry",
-			"B.W.Knight, Jung-Kyu Park (Korean):https://launchpad.net/~lp-l10n-ko",
-			"Michał Olber, eloaders (Polish):https://translations.launchpad.net/+groups/launchpad-translators",
-			"Eugene Marshal, admin_x, Владимир Шаталин (Russian):https://launchpad.net/~lp-l10n-ru",
-			"Adolfo Jayme (Spanish):https://launchpad.net/~lp-l10n-es",
-			"Ultimate (Turkish):https://launchpad.net/~lolcat",
-			"Ihor Chomko (Ukranian):https://launchpad.net/~igorchomko",
-			"Åke Engelbrektson.(Swedish):https://launchpad.net/~eson"
+			"Launchpad Translation Teams:https://translations.launchpad.net/linuxmint/latest/+pots/timeshift"
 		};
 
 		dialog.contributors = {
@@ -944,55 +933,11 @@ class MainWindow : Gtk.Window{
 
 		dialog.documenters = null;
 		dialog.artists = null;
-
-		dialog.donations = {
-			"Alexandru Repede",
-			"Angelo Argano",
-			"Arnold Lindquist",
-			"Art Doyle",
-			"Ashton Tate",
-			"Carl Andersen",
-			"Charming Critters Art & More",
-			"Chou Tso-Chuan",
-			"Christopher Nascone",
-			"Christopher Wolfe",
-			"Christopher Wolfe",
-			"Colin Mills",
-			"Didier Lima",
-			"Diego Ariel Capeletti",
-			"Doug Rohm",
-			"ertugrulharman.com",
-			"F C De Nys",
-			"Frank Henke",
-			"Gary Harris",
-			"Gunter Beckmann",
-			"Hubert Banas",
-			"Jamie Brittain",
-			"Jan Espen Pedersen",
-			"Jessie Spencer",
-			"Joan Brians Cendra",
-			"Jonathan Barton",
-			"Kovalskiy Sergey",
-			"Lance May",
-			"Loeper Matthias",
-			"Michael Abboud",
-			"Michael Young",
-			"Mirko Anderlini",
-			"Nicola Jelmorini",
-			"Nikolaos D. Kakias & SIA E.E.",
-			"Palmer Glunt",
-			"Paul Niklas Krauth",
-			"Robert E Hallstrom",
-			"Silvia Götze",
-			"Steve Jackson",
-			"Terrance Harris",
-			"Thierry Guignard",
-			"XCELLENCE Software Solutions"
-		};
+		dialog.donations = null;
 
 		dialog.program_name = AppName;
 		dialog.comments = _("System Restore Utility");
-		dialog.copyright = "Copyright © 2016 Tony George (%s)".printf(AppAuthorEmail);
+		dialog.copyright = "Copyright © 2012-17 Tony George (%s)".printf(AppAuthorEmail);
 		dialog.version = AppVersion;
 		dialog.logo = get_app_icon(128);
 

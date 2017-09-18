@@ -599,7 +599,7 @@ public class AppConsole : GLib.Object {
 
 		select_snapshot_for_restore();
 		
-		stdout.printf(_("\n\n"));
+		stdout.printf("\n\n");
 		log_msg(string.nfill(78, '*'));
 		stdout.printf(_("To restore with default options, press the ENTER key for all prompts!") + "\n");
 		log_msg(string.nfill(78, '*'));

@@ -102,9 +102,7 @@ class BootOptionsWindow : Gtk.Window{
 		Gtk.SizeGroup size_group = null;
 		
 		// close
-		
-		var img = new Image.from_stock("gtk-close", Gtk.IconSize.BUTTON);
-		var btn_close = add_button(hbox, _("Close"), "", ref size_group, img);
+		var btn_close = add_button(hbox, _("Close"), "", ref size_group, null);
 		//hbox.set_child_packing(btn_close, false, true, 6, Gtk.PackType.END);
 		
         btn_close.clicked.connect(()=>{

@@ -127,13 +127,13 @@ class MainWindow : Gtk.Window{
 	private void init_ui_toolbar(){
 		//toolbar
 		toolbar = new Gtk.Toolbar ();
-		toolbar.toolbar_style = ToolbarStyle.BOTH_HORIZ;
+		toolbar.toolbar_style = ToolbarStyle.BOTH;
 		toolbar.get_style_context().add_class(Gtk.STYLE_CLASS_PRIMARY_TOOLBAR);
-		//toolbar.set_size_request(-1,48);
 		vbox_main.add(toolbar);
 
 		//btn_backup
-		btn_backup = new Gtk.ToolButton.from_stock ("gtk-save");
+		var img_backup = new Gtk.Image.from_icon_name ("document-save-symbolic", Gtk.IconSize.BUTTON);
+		btn_backup = new Gtk.ToolButton (img_backup, null);
 		btn_backup.is_important = true;
 		btn_backup.label = _("Create");
 		btn_backup.set_tooltip_text (_("Create snapshot of current system"));
@@ -142,7 +142,8 @@ class MainWindow : Gtk.Window{
         btn_backup.clicked.connect (create_snapshot);
 
 		//btn_restore
-		btn_restore = new Gtk.ToolButton.from_stock ("gtk-apply");
+		var img_restore = new Gtk.Image.from_icon_name ("document-open-recent-symbolic", Gtk.IconSize.SMALL_TOOLBAR);
+		btn_restore = new Gtk.ToolButton (img_restore, null);
 		btn_restore.is_important = true;
 		btn_restore.label = _("Restore");
 		btn_restore.set_tooltip_text (_("Restore selected snapshot"));
@@ -151,7 +152,8 @@ class MainWindow : Gtk.Window{
 		btn_restore.clicked.connect (btn_restore_clicked);
 
 		//btn_delete_snapshot
-		btn_delete_snapshot = new Gtk.ToolButton.from_stock ("gtk-delete");
+		var img_delete = new Gtk.Image.from_icon_name ("edit-delete-symbolic", Gtk.IconSize.SMALL_TOOLBAR);
+		btn_delete_snapshot = new Gtk.ToolButton (img_delete, null);
 		btn_delete_snapshot.is_important = true;
 		btn_delete_snapshot.label = _("Delete");
 		btn_delete_snapshot.set_tooltip_text (_("Delete selected snapshot"));
@@ -160,7 +162,8 @@ class MainWindow : Gtk.Window{
         btn_delete_snapshot.clicked.connect (delete_selected);
         
 	    //btn_browse_snapshot
-		btn_browse_snapshot = new Gtk.ToolButton.from_stock ("gtk-directory");
+	    var img_browse = new Gtk.Image.from_icon_name ("folder-symbolic", Gtk.IconSize.SMALL_TOOLBAR);
+		btn_browse_snapshot = new Gtk.ToolButton (img_browse, null);
 		btn_browse_snapshot.is_important = true;
 		btn_browse_snapshot.label = _("Browse");
 		btn_browse_snapshot.set_tooltip_text (_("Browse selected snapshot"));
@@ -169,7 +172,8 @@ class MainWindow : Gtk.Window{
         btn_browse_snapshot.clicked.connect (browse_selected);
 
         //btn_settings
-		btn_settings = new Gtk.ToolButton.from_stock ("gtk-preferences");
+        var img_settings = new Gtk.Image.from_icon_name ("preferences-system-symbolic", Gtk.IconSize.SMALL_TOOLBAR);
+		btn_settings = new Gtk.ToolButton (img_settings, null);
 		btn_settings.is_important = true;
 		btn_settings.label = _("Settings");
 		btn_settings.set_tooltip_text (_("Settings"));
@@ -178,11 +182,11 @@ class MainWindow : Gtk.Window{
         btn_settings.clicked.connect (btn_settings_clicked);
 
         //btn_wizard
-		btn_wizard = new Gtk.ToolButton.from_stock ("tools-wizard");
+        var img_wizard = new Gtk.Image.from_icon_name ("emblem-default-symbolic", Gtk.IconSize.SMALL_TOOLBAR);
+		btn_wizard = new Gtk.ToolButton (img_wizard, null);
 		btn_wizard.is_important = true;
 		btn_wizard.label = _("Wizard");
 		btn_wizard.set_tooltip_text (_("Settings wizard"));
-		btn_wizard.icon_widget = get_shared_icon("tools-wizard","tools-wizard.svg",24);
         toolbar.add(btn_wizard);
 
         btn_wizard.clicked.connect (btn_wizard_clicked);
@@ -210,11 +214,11 @@ class MainWindow : Gtk.Window{
 		toolbar.add (separator);
 
 		//btn_hamburger
-        var button = new Gtk.ToolButton.from_stock ("gtk-menu");
+		var img = new Gtk.Image.from_icon_name ("open-menu-symbolic", Gtk.IconSize.SMALL_TOOLBAR);
+		var button = new Gtk.ToolButton (img, null);
 		button.label = _("Menu");
 		button.set_tooltip_text (_("Open Menu"));
-		button.icon_widget = get_shared_icon("","open-menu.svg",24);
-        toolbar.add(button);
+		toolbar.add(button);
 
         // click event
 		button.clicked.connect(()=>{

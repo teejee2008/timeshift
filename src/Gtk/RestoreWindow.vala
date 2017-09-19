@@ -157,8 +157,7 @@ class RestoreWindow : Gtk.Window{
 		
 		// previous
 		
-		Gtk.Image img = new Image.from_stock("gtk-go-back", Gtk.IconSize.BUTTON);
-		btn_prev = add_button(hbox, _("Previous"), "", ref size_group, img);
+		btn_prev = add_button(hbox, _("Previous"), "", ref size_group, null);
 		
         btn_prev.clicked.connect(()=>{
 			go_prev();
@@ -166,8 +165,7 @@ class RestoreWindow : Gtk.Window{
 
 		// next
 		
-		img = new Image.from_stock("gtk-go-forward", Gtk.IconSize.BUTTON);
-		btn_next = add_button(hbox, _("Next"), "", ref size_group, img);
+		btn_next = add_button(hbox, _("Next"), "", ref size_group, null);
 
         btn_next.clicked.connect(()=>{
 			go_next();
@@ -175,8 +173,7 @@ class RestoreWindow : Gtk.Window{
 
 		// close
 		
-		img = new Image.from_stock("gtk-close", Gtk.IconSize.BUTTON);
-		btn_close = add_button(hbox, _("Close"), "", ref size_group, img);
+		btn_close = add_button(hbox, _("Close"), "", ref size_group, null);
 
         btn_close.clicked.connect(()=>{
 			save_changes();
@@ -185,8 +182,7 @@ class RestoreWindow : Gtk.Window{
 
 		// cancel
 		
-		img = new Image.from_stock("gtk-cancel", Gtk.IconSize.BUTTON);
-		btn_cancel = add_button(hbox, _("Cancel"), "", ref size_group, img);
+		btn_cancel = add_button(hbox, _("Cancel"), "", ref size_group, null);
 
         btn_cancel.clicked.connect(()=>{
 

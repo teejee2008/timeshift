@@ -244,8 +244,7 @@ public class RsyncLogWindow : Window {
 		// close
 
 		size_group = null;
-		var img = new Image.from_stock("gtk-close", Gtk.IconSize.BUTTON);
-		var btn_close = add_button(hbox, _("Close"), "", ref size_group, img);
+		var btn_close = add_button(hbox, _("Close"), "", ref size_group, null);
 
         btn_close.clicked.connect(()=>{
 			this.destroy();

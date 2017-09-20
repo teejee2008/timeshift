@@ -66,9 +66,8 @@ class RestoreDeviceBox : Gtk.Box{
        
 		// refresh device button
 		
-		Gtk.Image img = new Image.from_stock("gtk-refresh", Gtk.IconSize.BUTTON);
 		Gtk.SizeGroup size_group = null;
-		var btn_refresh = add_button(hbox, _("Refresh"), "", ref size_group, img);
+		var btn_refresh = add_button(hbox, _("Refresh"), "", ref size_group, null);
         btn_refresh.clicked.connect(()=>{
 			App.update_partitions();
 			refresh();

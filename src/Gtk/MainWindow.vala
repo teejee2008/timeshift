@@ -1,7 +1,7 @@
 /*
  * MainWindow.vala
  *
- * Copyright 2016 Tony George <teejee@tony-pc>
+ * Copyright 2012-17 Tony George <teejeetech@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -923,7 +923,10 @@ class MainWindow : Gtk.Window{
 		};
 
 		dialog.contributors = {
-			"Maxim Taranov:png2378@gmail.com"
+			"Clement Lefebvre:https://github.com/clefebvre",
+			"Maxim Taranov:https://github.com/png2378",
+			"Peter Stevenson:https://github.com/2E0PGS",
+			"Giuseppe Pignataro:https://github.com/Fastbyte01"
 		};
 
 		dialog.third_party = {
@@ -942,8 +945,8 @@ class MainWindow : Gtk.Window{
 		dialog.logo = get_app_icon(128);
 
 		dialog.license = "This program is free for personal and commercial use and comes with absolutely no warranty. You use this program entirely at your own risk. The author will not be liable for any damages arising from the use of this program.";
-		dialog.website = "http://teejeetech.in";
-		dialog.website_label = "http://teejeetech.blogspot.in";
+		dialog.website = "https://github.com/teejee2008/timeshift";
+		dialog.website_label = "https://github.com/teejee2008/timeshift";
 
 		dialog.initialize();
 		dialog.show_all();

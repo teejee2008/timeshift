@@ -34,6 +34,7 @@ using TeeJee.System;
 using TeeJee.Misc;
 
 public class CustomMessageDialog : Gtk.Dialog {
+	
 	private Gtk.Box vbox_main;
 	private Gtk.Label lbl_msg;
 	private Gtk.ScrolledWindow sw_msg;
@@ -119,7 +120,7 @@ public class CustomMessageDialog : Gtk.Dialog {
 
 		var text = "<span weight=\"bold\" size=\"x-large\">%s</span>\n\n%s".printf(
 			escape_html(msg_title),
-			escape_html(msg_body));
+			msg_body);
 		lbl_msg = new Gtk.Label(text);
 		lbl_msg.xalign = (float) 0.0;
 		lbl_msg.max_width_chars = 70;

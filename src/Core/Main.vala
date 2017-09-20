@@ -35,6 +35,7 @@ using TeeJee.System;
 using TeeJee.Misc;
 
 public class Main : GLib.Object{
+	
 	public string app_path = "";
 	public string share_folder = "";
 	public string rsnapshot_conf_path = "";
@@ -150,6 +151,14 @@ public class Main : GLib.Object{
 	
 	public RsyncTask task;
 	public DeleteFileTask delete_file_task;
+
+	public Gee.HashMap<string, SystemUser> current_system_users;
+	public string users_with_encrypted_home = "";
+	public string encrypted_home_dirs = "";
+	public bool encrypted_home_warning_shown = false;
+
+	public string encrypted_private_dirs = "";
+	public bool encrypted_private_warning_shown = false;
 
 	public Main(string[] args, bool gui_mode){
 
@@ -288,8 +297,11 @@ public class Main : GLib.Object{
 		delete_file_task = new DeleteFileTask();
 
 		update_partitions();
-		detect_system_devices();
 		
+		detect_system_devices();
+
+		detect_encrypted_dirs();
+
 		// set settings from config file ---------------------
 
 		load_app_config();
@@ -436,6 +448,44 @@ public class Main : GLib.Object{
 			}
 		}
 	}
+
+	private void detect_encrypted_dirs(){
+		
+		current_system_users = SystemUser.read_users_from_file("/etc/passwd","","");
+
+		string txt = "";
+		users_with_encrypted_home = "";
+		encrypted_home_dirs = "";
+		encrypted_private_dirs = "";
+		
+		foreach(var user in current_system_users.values){
+			
+			if (user.is_system) { continue; }
+			
+			if (txt.length > 0) { txt += " "; }
+			txt += "%s".printf(user.name);
+
+			if (user.has_encrypted_home){
+				
+				users_with_encrypted_home += " %s".printf(user.name);
+
+				encrypted_home_dirs += "%s\n".printf(user.home_path);
+			}
+
+			if (user.has_encrypted_private_dirs){
+
+				foreach(string enc_path in user.encrypted_private_dirs){
+					encrypted_private_dirs += "%s\n".printf(enc_path);
+				}
+			}
+		}
+		users_with_encrypted_home = users_with_encrypted_home.strip();
+		
+		log_debug("Users: %s".printf(txt));
+		log_debug("Encrypted home users: %s".printf(users_with_encrypted_home));
+		log_debug("Encrypted home dirs:\n%s".printf(encrypted_home_dirs));
+		log_debug("Encrypted private dirs:\n%s".printf(encrypted_private_dirs));
+	}
 	
 	// exclude lists
 	
@@ -558,28 +608,60 @@ public class Main : GLib.Object{
 		
 		var list = new Gee.ArrayList<string>();
 
-		//add default entries
+		// add default entries
 		foreach(string path in exclude_list_default){
 			if (!list.contains(path)){
 				list.add(path);
 			}
 		}
 
-		//add default extra entries
+		// add default extra entries
 		foreach(string path in exclude_list_default_extra){
 			if (!list.contains(path)){
 				list.add(path);
 			}
 		}
 
-		//add user entries from current settings
+		// add entries to exclude encrypted home
+		foreach(var user in current_system_users.values){
+			
+			if (user.is_system){ continue; }
+			
+			if (user.has_encrypted_home){
+				
+				// exclude everything in user's home 
+				string path = "%s/**".printf(user.home_path);
+				list.add(path);
+				
+				// explicitly include user's .ecryptfs directory
+				path = "+ /home/.ecryptfs/%s/***".printf(user.name);
+				list.add(path);
+			}
+			
+			if (user.has_encrypted_private_dirs){
+
+				foreach(string enc_path in user.encrypted_private_dirs){
+					// exclude everything in private dirs ($HOME/Private)
+					string path = "%s/**".printf(enc_path);
+					list.add(path);
+				}
+
+				// explicitly exclude $HOME/.Private
+				string path = "%s/.Private/**".printf(user.home_path);
+				list.add(path);
+
+				// Note: Do not exclude $HOME/.ecryptfs
+			}
+		}
+
+		// add user entries from current settings
 		foreach(string path in exclude_list_user){
 			if (!list.contains(path)){
 				list.add(path);
 			}
 		}
 
-		//add home entries
+		// add home entries
 		foreach(string path in exclude_list_home){
 			if (!list.contains(path)){
 				list.add(path);
@@ -2789,6 +2871,8 @@ public class Main : GLib.Object{
 
 		config.set_string_member("btrfs_mode", btrfs_mode.to_string());
 		config.set_string_member("stop_cron_emails", stop_cron_emails.to_string());
+		config.set_string_member("encrypted_home_warning_shown", encrypted_home_warning_shown.to_string());
+		config.set_string_member("encrypted_private_warning_shown", encrypted_private_warning_shown.to_string());
 
 		config.set_string_member("schedule_monthly", schedule_monthly.to_string());
 		config.set_string_member("schedule_weekly", schedule_weekly.to_string());
@@ -2874,6 +2958,8 @@ public class Main : GLib.Object{
 
 		btrfs_mode = json_get_bool(config, "btrfs_mode", false); // false as default
 		stop_cron_emails = json_get_bool(config, "stop_cron_emails", stop_cron_emails);
+		encrypted_home_warning_shown = json_get_bool(config, "encrypted_home_warning_shown", encrypted_home_warning_shown);
+		encrypted_private_warning_shown = json_get_bool(config, "encrypted_private_warning_shown", encrypted_private_warning_shown);
 
 		if (cmd_btrfs_mode != null){
 			btrfs_mode = cmd_btrfs_mode; //override
@@ -3490,12 +3576,56 @@ public class Main : GLib.Object{
 		thread_estimate_running = false;
 	}
 
+	public void check_encrypted_home(Gtk.Window _window){
+		
+		if (!btrfs_mode && !encrypted_home_warning_shown && (users_with_encrypted_home.length > 0)){
+			
+			string txt = _("Warning: Encrypted Home Directories");
+
+			string bullet = "▰ ";
+			
+			string msg = "%s:\n\n%s\n%s\n\n%s".printf(
+				_("Some users on this system have encrypted home directories"),
+				encrypted_home_dirs,
+				bullet + _("<b>Entire contents</b> of these directories will be <b>included</b> for backup and restore (instead of just hidden files and directories in home)"),
+				bullet + _("Any exclude filters added for these directories will be ignored")
+				);
+				
+			gtk_messagebox(txt, msg, _window, true);
+
+			encrypted_home_warning_shown = true;
+			save_app_config();
+		}
+	}
+
+	public void check_encrypted_private_dirs(Gtk.Window _window){
+		
+		if (!btrfs_mode && !encrypted_private_warning_shown && (encrypted_private_dirs.length > 0)){
+			
+			string txt = _("Warning: Encrypted Private Directories");
+
+			string bullet = "▰ ";
+			
+			string msg = "%s:\n\n%s\n%s\n\n%s".printf(
+				_("Some users on this system have encrypted private directories"),
+				encrypted_private_dirs,
+				bullet + _("<b>Entire contents</b> of these directories will be <b>excluded</b> for backup and restore (since it contains user data)"),
+				bullet + _("Any include filters added for these directories will be ignored")
+				);
+				
+			gtk_messagebox(txt, msg, _window, true);
+
+			encrypted_private_warning_shown = true;
+			save_app_config();
+		}
+	}
+	
 	// btrfs
 
 	public void query_subvolume_info(SnapshotRepo parent_repo){
 
 		// SnapshotRepo contructor calls this code in load_snapshots()
-		// save the new object reference to App.repo since repo still holds previous object
+		// save the new object reference to repo since repo still holds previous object
 		repo = parent_repo;
 
 		// TODO: move query_subvolume_info() and related methods to SnapshotRepo

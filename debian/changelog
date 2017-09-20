@@ -1,3 +1,19 @@
+timeshift (17.9) xenial; urgency=medium
+
+  * Updated translations
+
+  * Fixed: Encrypted home directories will be backed-up and restored
+  using the encrypted files in /home/.ecryptfs. Decrypted contents will
+  NOT be saved to backup location. Entire contents of encrypted home
+  will be included for backup and restore. Any specific filters added
+  for the user's home will be ignored.
+
+  * Fixed: Build error with valac-0.36
+
+  * Installer was updated
+  
+ -- Tony George <tony.george.kol@gmail.com>  Sun, 24 Sep 2017 10:00:00 +0530
+
 
 timeshift (17.2) trusty; urgency=medium
 
@@ -7,7 +23,7 @@ timeshift (17.2) trusty; urgency=medium
 
   * Settings: Updated messages in Schedule tab to avoid confusion
   
- -- Tony George <tony.george.kol@gmail.com>  Thu, 26 Jan 2016 10:00:00 +0530
+ -- Tony George <tony.george.kol@gmail.com>  Thu, 26 Jan 2017 10:00:00 +0530
 
 
 timeshift (17.1) trusty; urgency=medium
@@ -56,7 +72,7 @@ timeshift (17.1) trusty; urgency=medium
 
   * Added Swedish translation by Åke Engelbrektson
   
- -- Tony George <tony.george.kol@gmail.com>  Sun, 15 Jan 2016 10:00:00 +0530
+ -- Tony George <tony.george.kol@gmail.com>  Sun, 15 Jan 2017 10:00:00 +0530
 
 
 timeshift (16.11.2) trusty; urgency=medium

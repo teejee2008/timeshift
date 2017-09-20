@@ -123,13 +123,19 @@ class SettingsWindow : Gtk.Window{
 	private bool on_delete_event(Gdk.EventAny event){
 		
 		save_changes();
-		
+
 		return false; // close window
 	}
 	
 	private void save_changes(){
+		
 		exclude_box.save_changes();
+		
 		App.cron_job_update();
+
+		App.check_encrypted_home(this);
+
+		App.check_encrypted_private_dirs(this);
 	}
 
 	private void create_actions(){

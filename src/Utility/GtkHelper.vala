@@ -809,7 +809,7 @@ namespace TeeJee.GtkHelper{
 	// add_button
 	private Gtk.Button add_button(
 		Gtk.Box box, string text, string tooltip,
-		ref Gtk.SizeGroup? size_group,
+		Gtk.SizeGroup? size_group,
 		Gtk.Image? icon = null){
 			
 		var button = new Gtk.Button();
@@ -823,19 +823,17 @@ namespace TeeJee.GtkHelper{
 			button.set_always_show_image(true);
 		}
 
-		if (size_group == null){
-			size_group = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
+		if (size_group != null){
+			size_group.add_widget(button);
 		}
-		
-		size_group.add_widget(button);
-		
+
         return button;
 	}
 
 	// add_toggle_button
 	private Gtk.ToggleButton add_toggle_button(
 		Gtk.Box box, string text, string tooltip,
-		ref Gtk.SizeGroup? size_group,
+		Gtk.SizeGroup? size_group,
 		Gtk.Image? icon = null){
 			
 		var button = new Gtk.ToggleButton();
@@ -849,11 +847,9 @@ namespace TeeJee.GtkHelper{
 			button.set_always_show_image(true);
 		}
 
-		if (size_group == null){
-			size_group = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
+		if (size_group != null){
+			size_group.add_widget(button);
 		}
-		
-		size_group.add_widget(button);
 		
         return button;
 	}

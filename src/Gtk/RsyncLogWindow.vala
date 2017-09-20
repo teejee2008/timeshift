@@ -243,8 +243,8 @@ public class RsyncLogWindow : Window {
 
 		// close
 
-		size_group = null;
-		var btn_close = add_button(hbox, _("Close"), "", ref size_group, null);
+		size_group = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
+		var btn_close = add_button(hbox, _("Close"), "", size_group, null);
 
         btn_close.clicked.connect(()=>{
 			this.destroy();

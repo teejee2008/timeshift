@@ -129,8 +129,8 @@ class ExcludeAppsBox : Gtk.Box{
 	}
 
 	private void init_exclude_summary_link(Gtk.Box box){
-		Gtk.SizeGroup size_group = null;
-		var button = add_button(box, _("Summary"), "", ref size_group, null);
+		var size_group = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
+		var button = add_button(box, _("Summary"), "", size_group, null);
         button.clicked.connect(()=>{
 			new ExcludeListSummaryWindow(true);
 		});

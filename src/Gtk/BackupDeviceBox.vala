@@ -61,8 +61,8 @@ class BackupDeviceBox : Gtk.Box{
        
 		// refresh device button
 		
-		Gtk.SizeGroup size_group = null;
-		var btn_refresh = add_button(hbox, _("Refresh"), "", ref size_group, null);
+		var size_group = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
+		var btn_refresh = add_button(hbox, _("Refresh"), "", size_group, null);
         btn_refresh.clicked.connect(()=>{
 			App.update_partitions();
 			tv_devices_refresh();

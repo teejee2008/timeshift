@@ -33,6 +33,7 @@ using TeeJee.System;
 using TeeJee.Misc;
 
 class SettingsWindow : Gtk.Window{
+	
 	private Gtk.Box vbox_main;
 	private Gtk.StackSwitcher switcher;
 	private Gtk.Stack stack;
@@ -76,6 +77,19 @@ class SettingsWindow : Gtk.Window{
         stack.set_transition_type (Gtk.StackTransitionType.SLIDE_LEFT_RIGHT);
 		vbox_main.add(stack);
 
+		var lbl = new Gtk.Label("");
+		lbl.hexpand = true;
+		hbox.add(lbl);
+		
+		var btn_close = add_button(hbox, _("Close"), "", null, null);
+		btn_close.margin = 6;
+		hbox.add(btn_close);
+		
+        btn_close.clicked.connect(()=>{
+			save_changes();
+			this.destroy();
+		});
+
 		switcher.set_stack(stack);
 		
 		backend_box = new SnapshotBackendBox(this);
@@ -95,10 +109,6 @@ class SettingsWindow : Gtk.Window{
 			backup_dev_box.refresh();
 			//notes_box.refresh();
 		});
-
-		create_actions();
-
-		//log_debug("ui created");
 
 		show_all();
 
@@ -136,26 +146,6 @@ class SettingsWindow : Gtk.Window{
 		App.check_encrypted_home(this);
 
 		App.check_encrypted_private_dirs(this);
-	}
-
-	private void create_actions(){
-		
-		var hbox = new Gtk.ButtonBox (Gtk.Orientation.HORIZONTAL);
-		hbox.margin = 6;
-		hbox.margin_top = 0;
-        vbox_main.add(hbox);
-
-		Gtk.SizeGroup size_group = null;
-		
-		// close
-		
-		var btn_close = add_button(hbox, _("Close"), "", ref size_group, null);
-		//hbox.set_child_packing(btn_close, false, true, 6, Gtk.PackType.END);
-		
-        btn_close.clicked.connect(()=>{
-			save_changes();
-			this.destroy();
-		});
 	}
 
 	public enum Tabs{

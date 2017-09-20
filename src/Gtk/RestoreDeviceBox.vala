@@ -66,8 +66,8 @@ class RestoreDeviceBox : Gtk.Box{
        
 		// refresh device button
 		
-		Gtk.SizeGroup size_group = null;
-		var btn_refresh = add_button(hbox, _("Refresh"), "", ref size_group, null);
+		Gtk.SizeGroup size_group = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
+		var btn_refresh = add_button(hbox, _("Refresh"), "", size_group, null);
         btn_refresh.clicked.connect(()=>{
 			App.update_partitions();
 			refresh();
@@ -401,12 +401,12 @@ class RestoreDeviceBox : Gtk.Box{
 		hbox.margin_bottom = 24;
         add(hbox);
 
-		Gtk.SizeGroup size_group = null;
+		var size_group = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
 		
 		// close
 		
 		//var img = new Image.from_stock("gtk-dialog-warning", Gtk.IconSize.BUTTON);
-		var button = add_button(hbox, _("Bootloader Options (Advanced)"), "", ref size_group, null);
+		var button = add_button(hbox, _("Bootloader Options (Advanced)"), "", size_group, null);
 		button.set_size_request(300, 40);
 		button.set_tooltip_text(_("[Advanced Users Only] Change these settings only if the restored system fails to boot."));
 		var btn_boot_options = button;

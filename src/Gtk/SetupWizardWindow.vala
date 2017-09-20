@@ -151,11 +151,11 @@ class SetupWizardWindow : Gtk.Window{
 			hbox.set_layout (Gtk.ButtonBoxStyle.EXPAND);
 		#endif
 
-		Gtk.SizeGroup size_group = null;
+		var size_group = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
 		
 		// previous
 		
-		btn_prev = add_button(hbox, _("Previous"), "", ref size_group, null);
+		btn_prev = add_button(hbox, _("Previous"), "", size_group, null);
 		
         btn_prev.clicked.connect(()=>{
 			go_prev();
@@ -163,7 +163,7 @@ class SetupWizardWindow : Gtk.Window{
 
 		// next
 		
-		btn_next = add_button(hbox, _("Next"), "", ref size_group, null);
+		btn_next = add_button(hbox, _("Next"), "", size_group, null);
 
         btn_next.clicked.connect(()=>{
 			go_next();
@@ -171,7 +171,7 @@ class SetupWizardWindow : Gtk.Window{
 
 		// close
 		
-		btn_close = add_button(hbox, _("Finish"), "", ref size_group, null);
+		btn_close = add_button(hbox, _("Finish"), "", size_group, null);
 
         btn_close.clicked.connect(()=>{
 			save_changes();
@@ -180,7 +180,7 @@ class SetupWizardWindow : Gtk.Window{
 
 		// cancel
 		
-		btn_cancel = add_button(hbox, _("Cancel"), "", ref size_group, null);
+		btn_cancel = add_button(hbox, _("Cancel"), "", size_group, null);
 
         btn_cancel.clicked.connect(()=>{
 			if (App.task != null){

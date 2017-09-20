@@ -77,12 +77,12 @@ class ExcludeListSummaryWindow : Gtk.Window{
 		
 		var hbox = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
         vbox_main.add(hbox);
-		Gtk.SizeGroup size_group = null;
+		var size_group = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
 		
 		// close
 		
 		var img = new Image.from_stock("gtk-ok", Gtk.IconSize.BUTTON);
-		btn_close = add_button(hbox, _("OK"), "", ref size_group, img);
+		btn_close = add_button(hbox, _("OK"), "", size_group, img);
 
         btn_close.clicked.connect(()=>{
 			this.destroy();

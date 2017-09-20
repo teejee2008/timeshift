@@ -201,8 +201,8 @@ class ExcludeBox : Gtk.Box{
 	}
 
     private void init_exclude_summary_link(Gtk.Box box){
-		Gtk.SizeGroup size_group = null;
-		var button = add_button(box, _("Summary"), "", ref size_group, null);
+		var size_group = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
+		var button = add_button(box, _("Summary"), "", size_group, null);
         button.clicked.connect(()=>{
 			new ExcludeListSummaryWindow(false);
 		});
@@ -214,9 +214,9 @@ class ExcludeBox : Gtk.Box{
 		var hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
 		add(hbox);
 
-		Gtk.SizeGroup size_group = null;
-		var button = add_button(hbox, _("Add"),
-			_("Add custom pattern"), ref size_group, null);
+		var size_group = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
+		var button = add_button(hbox, _("Add"), _("Add custom pattern"), size_group, null);
+		
         button.clicked.connect(()=>{
 
 			string pattern = gtk_inputbox(
@@ -229,16 +229,14 @@ class ExcludeBox : Gtk.Box{
 			}
 		});
 		
-		size_group = null;
-		button = add_button(hbox, _("Add Files"),
-			_("Add files"), ref size_group, null);
+		button = add_button(hbox, _("Add Files"), _("Add files"), size_group, null);
+		
         button.clicked.connect(()=>{
 			add_files_clicked();
 		});
 
-		size_group = null;
-		button = add_button(hbox, _("Add Folders"),
-			_("Add directories"), ref size_group, null);
+		button = add_button(hbox, _("Add Folders"), _("Add directories"), size_group, null);
+		
         button.clicked.connect(()=>{
 			add_folder_clicked();
 		});
@@ -251,14 +249,12 @@ class ExcludeBox : Gtk.Box{
 			add_folder_contents_clicked();
 		});*/
 
-		size_group = null;
-		button = add_button(hbox, _("Remove"), "", ref size_group, null);
+		button = add_button(hbox, _("Remove"), "", size_group, null);
         button.clicked.connect(()=>{
 			remove_clicked();
 		});
 
-		size_group = null;
-		button = add_button(hbox, _("Info"), "", ref size_group, null);
+		button = add_button(hbox, _("Info"), "", size_group, null);
         button.clicked.connect(()=>{
 			string title = _("Editing and Re-Ordering");
 			string msg = _("Click an item to edit the pattern.\nDrag and drop items with mouse to re-order.");

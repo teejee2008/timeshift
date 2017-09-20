@@ -153,11 +153,11 @@ class RestoreWindow : Gtk.Window{
 			hbox.set_layout (Gtk.ButtonBoxStyle.EXPAND);	
 		#endif
 
-		Gtk.SizeGroup size_group = null;
+		Gtk.SizeGroup size_group = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
 		
 		// previous
 		
-		btn_prev = add_button(hbox, _("Previous"), "", ref size_group, null);
+		btn_prev = add_button(hbox, _("Previous"), "", size_group, null);
 		
         btn_prev.clicked.connect(()=>{
 			go_prev();
@@ -165,7 +165,7 @@ class RestoreWindow : Gtk.Window{
 
 		// next
 		
-		btn_next = add_button(hbox, _("Next"), "", ref size_group, null);
+		btn_next = add_button(hbox, _("Next"), "", size_group, null);
 
         btn_next.clicked.connect(()=>{
 			go_next();
@@ -173,7 +173,7 @@ class RestoreWindow : Gtk.Window{
 
 		// close
 		
-		btn_close = add_button(hbox, _("Close"), "", ref size_group, null);
+		btn_close = add_button(hbox, _("Close"), "", size_group, null);
 
         btn_close.clicked.connect(()=>{
 			save_changes();
@@ -182,7 +182,7 @@ class RestoreWindow : Gtk.Window{
 
 		// cancel
 		
-		btn_cancel = add_button(hbox, _("Cancel"), "", ref size_group, null);
+		btn_cancel = add_button(hbox, _("Cancel"), "", size_group, null);
 
         btn_cancel.clicked.connect(()=>{
 

@@ -99,10 +99,10 @@ class BootOptionsWindow : Gtk.Window{
 		hbox.margin_top = 24;
         vbox_main.add(hbox);
 
-		Gtk.SizeGroup size_group = null;
+		var size_group = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
 		
 		// close
-		var btn_close = add_button(hbox, _("Close"), "", ref size_group, null);
+		var btn_close = add_button(hbox, _("Close"), "", size_group, null);
 		//hbox.set_child_packing(btn_close, false, true, 6, Gtk.PackType.END);
 		
         btn_close.clicked.connect(()=>{

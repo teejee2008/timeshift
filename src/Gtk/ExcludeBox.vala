@@ -35,9 +35,9 @@ using TeeJee.Misc;
 class ExcludeBox : Gtk.Box{
 	private Gtk.TreeView treeview;
 	private Gtk.Window parent_window;
-	//public bool include = false;
+	private UsersBox users_box;
 	
-	public ExcludeBox (Gtk.Window _parent_window, bool include_mode) {
+	public ExcludeBox (Gtk.Window _parent_window) {
 
 		log_debug("ExcludeBox: ExcludeBox()");
 		
@@ -65,7 +65,12 @@ class ExcludeBox : Gtk.Box{
 		log_debug("ExcludeBox: ExcludeBox(): exit");
     }
 
+    public void set_users_box(UsersBox _users_box){
+		users_box = _users_box;
+	}
+
     private void init_treeview(){
+		
 		// treeview
 		treeview = new TreeView();
 		treeview.get_selection().mode = SelectionMode.MULTIPLE;
@@ -570,6 +575,8 @@ class ExcludeBox : Gtk.Box{
 			log_debug(item);
 		}
 		log_debug("");
+
+		users_box.refresh_treeview();
 	}
 	
 /*

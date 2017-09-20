@@ -34,6 +34,7 @@ using TeeJee.System;
 using TeeJee.Misc;
 
 class RestoreBox : Gtk.Box{
+	
 	private Gtk.Spinner spinner;
 	public Gtk.Label lbl_msg;
 	public Gtk.Label lbl_status;

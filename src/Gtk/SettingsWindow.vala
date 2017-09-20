@@ -42,12 +42,13 @@ class SettingsWindow : Gtk.Window{
 	private BackupDeviceBox backup_dev_box;
 	private ScheduleBox schedule_box;
 	private ExcludeBox exclude_box;
+	private UsersBox users_box;
 
 	private uint tmr_init;
 	private int def_width = 550;
 	private int def_height = 500;
 	
-	public SettingsWindow () {
+	public SettingsWindow() {
 
 		log_debug("SettingsWindow: SettingsWindow()");
 
@@ -101,7 +102,12 @@ class SettingsWindow : Gtk.Window{
 		schedule_box = new ScheduleBox(this);
 		stack.add_titled (schedule_box, _("Schedule"), _("Schedule"));
 
-		exclude_box = new ExcludeBox(this, false);
+		exclude_box = new ExcludeBox(this);
+		users_box = new UsersBox(this, exclude_box);
+		exclude_box.set_users_box(users_box);
+		
+		stack.add_titled (users_box, _("Users"), _("Users"));
+
 		stack.add_titled (exclude_box, _("Filters"), _("Filters"));
 
 		backend_box.type_changed.connect(()=>{

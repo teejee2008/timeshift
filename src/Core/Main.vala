@@ -552,9 +552,9 @@ public class Main : GLib.Object{
 
 		//default home ----------------
 
-		exclude_list_home.add("+ /root/.**");
+		//exclude_list_home.add("+ /root/.**");
+		//exclude_list_home.add("+ /home/*/.**");
 		exclude_list_home.add("/root/**");
-		exclude_list_home.add("+ /home/*/.**");
 		exclude_list_home.add("/home/*/**");
 
 		/*
@@ -632,10 +632,6 @@ public class Main : GLib.Object{
 				// exclude everything in user's home 
 				string path = "%s/**".printf(user.home_path);
 				list.add(path);
-				
-				// explicitly include user's .ecryptfs directory
-				path = "+ /home/.ecryptfs/%s/***".printf(user.name);
-				list.add(path);
 			}
 			
 			if (user.has_encrypted_private_dirs){
@@ -645,10 +641,6 @@ public class Main : GLib.Object{
 					string path = "%s/**".printf(enc_path);
 					list.add(path);
 				}
-
-				// explicitly exclude $HOME/.Private
-				string path = "%s/.Private/**".printf(user.home_path);
-				list.add(path);
 
 				// Note: Do not exclude $HOME/.ecryptfs
 			}

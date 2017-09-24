@@ -272,7 +272,7 @@ public class SystemUser : GLib.Object {
 				if (path == home_path){
 					has_encrypted_home = true;
 				}
-				
+
 				encrypted_dirs.add(path);
 			}
 		}

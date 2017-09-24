@@ -27,6 +27,7 @@ using TeeJee.FileSystem;
 using TeeJee.ProcessHelper;
 
 public class SystemGroup : GLib.Object {
+	
 	public string name = "";
 	public string password = "";
 	public int gid = -1;

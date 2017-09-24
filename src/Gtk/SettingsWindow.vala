@@ -94,27 +94,29 @@ class SettingsWindow : Gtk.Window{
 		switcher.set_stack(stack);
 		
 		backend_box = new SnapshotBackendBox(this);
-		stack.add_titled (backend_box, _("Type"), _("Type"));
+		stack.add_titled (backend_box, "type", _("Type"));
 		
 		backup_dev_box = new BackupDeviceBox(this);
-		stack.add_titled (backup_dev_box, _("Location"), _("Location"));
+		stack.add_titled (backup_dev_box, "location", _("Location"));
 
 		schedule_box = new ScheduleBox(this);
-		stack.add_titled (schedule_box, _("Schedule"), _("Schedule"));
+		stack.add_titled (schedule_box, "schedule", _("Schedule"));
 
 		exclude_box = new ExcludeBox(this);
 		users_box = new UsersBox(this, exclude_box);
 		exclude_box.set_users_box(users_box);
 		
-		stack.add_titled (users_box, _("Users"), _("Users"));
+		stack.add_titled (users_box, "users", _("Users"));
 
-		stack.add_titled (exclude_box, _("Filters"), _("Filters"));
+		stack.add_titled (exclude_box, "filters", _("Filters"));
 
 		backend_box.type_changed.connect(()=>{
 			exclude_box.visible = !App.btrfs_mode;
 			backup_dev_box.refresh();
-			//notes_box.refresh();
+			users_box.refresh();
 		});
+
+		stack.set_visible_child_name("type");
 
 		show_all();
 
@@ -131,6 +133,7 @@ class SettingsWindow : Gtk.Window{
 		}
 
 		backend_box.refresh();
+		stack.set_visible_child_name("type");
 		//backup_dev_box.refresh(); //will be triggerred indirectly
 		
 		return false;
@@ -149,9 +152,9 @@ class SettingsWindow : Gtk.Window{
 		
 		App.cron_job_update();
 
-		App.check_encrypted_home(this);
+		//App.check_encrypted_home(this);
 
-		App.check_encrypted_private_dirs(this);
+		//App.check_encrypted_private_dirs(this);
 	}
 
 	public enum Tabs{

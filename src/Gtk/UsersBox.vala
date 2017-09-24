@@ -35,8 +35,11 @@ using TeeJee.Misc;
 class UsersBox : Gtk.Box{
 	
 	private Gtk.TreeView treeview;
+	private Gtk.ScrolledWindow scrolled_treeview;
 	private Gtk.Window parent_window;
 	private ExcludeBox exclude_box;
+	private Gtk.Label lbl_message;
+	private Gtk.CheckButton chk_include_btrfs_home;
 	
 	public UsersBox (Gtk.Window _parent_window, ExcludeBox _exclude_box) {
 
@@ -54,18 +57,19 @@ class UsersBox : Gtk.Box{
 		
 		add_label_header(box, _("User Home Directories"), true);
 
-		var label = add_label(this, _("User home directories are excluded by default unless you enable them here"));
-
 		var buffer = add_label(box, "");
 		buffer.hexpand = true;
 
-		//init_exclude_summary_link(box);
+		// ------------------------
+		
+		var label = add_label(this, _("User home directories are excluded by default unless you enable them here"));
+		lbl_message = label;
 
 		init_treeview();
 
-		//init_actions();
-		
-		refresh_treeview();
+		init_btrfs_home_option();
+
+		refresh();
 
 		log_debug("UsersBox: UsersBox(): exit");
     }
@@ -87,7 +91,8 @@ class UsersBox : Gtk.Box{
 		scrolled.add (treeview);
 		scrolled.expand = true;
 		add(scrolled);
-
+		scrolled_treeview = scrolled;
+		
 		// column
 		var col = new TreeViewColumn();
 		col.title = _("User");
@@ -120,7 +125,7 @@ class UsersBox : Gtk.Box{
 
 		// column
 		col = new TreeViewColumn();
-		col.title = _("Include hidden items in home");
+		col.title = _("Include hidden items");
 		treeview.append_column(col);
 		
 		// radio_include
@@ -138,16 +143,18 @@ class UsersBox : Gtk.Box{
 			var model = (Gtk.ListStore) treeview.model;
 			TreeIter iter;
 			
-			bool enabled;
+			
 			model.get_iter_from_string (out iter, path);
-			model.get(iter, 1, out enabled);
-			enabled = !enabled;
-			model.set(iter, 1, enabled);
 
+			bool enabled;
+			model.get(iter, 1, out enabled);
+			
 			SystemUser user;
 			model.get(iter, 0, out user);
 
 			string pattern = "+ %s/.**".printf(user.home_path);
+
+			enabled = !enabled;
 			
 			if (enabled){
 				
@@ -155,13 +162,13 @@ class UsersBox : Gtk.Box{
 					
 					string txt = _("Encrypted Home Directory");
 
-					string msg = _("This user has an encrypted home directory. It's not possible to include only hidden files.");
+					string msg = _("Selected user has an encrypted home directory. It's not possible to include only hidden files.");
 					
 					gtk_messagebox(txt, msg, parent_window, true);
 
 					return;
 				}
-				
+
 				if (!App.exclude_list_user.contains(pattern)){
 					App.exclude_list_user.add(pattern);
 				}
@@ -172,12 +179,14 @@ class UsersBox : Gtk.Box{
 				}
 			}
 
+			model.set(iter, 1, enabled); // update iter
+
 			exclude_box.refresh_treeview();
 		});
 
 		// column
 		col = new TreeViewColumn();
-		col.title = _("Include everything in home");
+		col.title = _("Include everything");
 		treeview.append_column(col);
 
 		// radio_exclude
@@ -223,9 +232,50 @@ class UsersBox : Gtk.Box{
 		});
 	}
 
+	private void init_btrfs_home_option(){
+		
+		chk_include_btrfs_home = new Gtk.CheckButton.with_label(_("Include @home subvolume in backups"));
+		add(chk_include_btrfs_home);
+
+		chk_include_btrfs_home.toggled.connect(()=>{
+			App.include_btrfs_home = chk_include_btrfs_home.active; 
+		});
+	}
+	
 	// helpers
 
-	public void refresh_treeview(){
+	public void refresh(){
+
+		if (App.btrfs_mode){
+
+			lbl_message.hide();
+			lbl_message.set_no_show_all(true);
+
+			scrolled_treeview.hide();
+			scrolled_treeview.set_no_show_all(true);
+
+			chk_include_btrfs_home.show();
+			chk_include_btrfs_home.set_no_show_all(false);
+
+			chk_include_btrfs_home.active = App.include_btrfs_home;
+		}
+		else{
+			lbl_message.show();
+			lbl_message.set_no_show_all(false);
+
+			scrolled_treeview.show();
+			scrolled_treeview.set_no_show_all(false);
+
+			refresh_treeview();
+
+			chk_include_btrfs_home.hide();
+			chk_include_btrfs_home.set_no_show_all(true);
+		}
+
+		show_all();
+	}
+	
+	private void refresh_treeview(){
 		
 		var model = new Gtk.ListStore(3, typeof(SystemUser), typeof(bool), typeof(bool));
 		treeview.model = model;

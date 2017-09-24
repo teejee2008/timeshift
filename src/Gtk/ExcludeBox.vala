@@ -576,7 +576,7 @@ class ExcludeBox : Gtk.Box{
 		}
 		log_debug("");
 
-		users_box.refresh_treeview();
+		users_box.refresh();
 	}
 	
 /*

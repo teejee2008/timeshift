@@ -134,9 +134,9 @@ class SetupWizardWindow : Gtk.Window{
 		
 		App.cron_job_update();
 		
-		App.check_encrypted_home(this);
+		//App.check_encrypted_home(this);
 
-		App.check_encrypted_private_dirs(this);
+		//App.check_encrypted_private_dirs(this);
 	}
 	
 	private void create_actions(){

@@ -46,6 +46,8 @@ public class Main : GLib.Object{
 	public string backup_parent_uuid = "";
 
 	public bool btrfs_mode = true;
+	public bool include_btrfs_home = false;
+	
 	public bool stop_cron_emails = true;
 	
 	public Gee.ArrayList<Device> partitions;
@@ -78,9 +80,9 @@ public class Main : GLib.Object{
 
 	public bool schedule_monthly = false;
 	public bool schedule_weekly = false;
-	public bool schedule_daily = true;
+	public bool schedule_daily = false;
 	public bool schedule_hourly = false;
-	public bool schedule_boot = true;
+	public bool schedule_boot = false;
 	public int count_monthly = 2;
 	public int count_weekly = 3;
 	public int count_daily = 5;
@@ -351,7 +353,10 @@ public class Main : GLib.Object{
 
 		log_debug("check_btrfs_layout_system()");
 
-		bool supported = sys_subvolumes.has_key("@") && sys_subvolumes.has_key("@home");
+		bool supported = sys_subvolumes.has_key("@");
+		if (include_btrfs_home){
+			supported =  supported && sys_subvolumes.has_key("@home");
+		}
 
 		if (!supported){
 			string msg = _("The system partition has an unsupported subvolume layout.") + " ";
@@ -382,10 +387,18 @@ public class Main : GLib.Object{
 				if (dev_home != dev_root){
 					
 					supported = supported && check_btrfs_volume(dev_root, "@", unlock);
-					supported = supported && check_btrfs_volume(dev_home, "@home", unlock);
+
+					if (include_btrfs_home){
+						supported = supported && check_btrfs_volume(dev_home, "@home", unlock);
+					}
 				}
 				else{
-					supported = supported && check_btrfs_volume(dev_root, "@,@home", unlock);
+					if (include_btrfs_home){
+						supported = supported && check_btrfs_volume(dev_root, "@,@home", unlock);
+					}
+					else{
+						supported = supported && check_btrfs_volume(dev_root, "@", unlock);
+					}
 				}
 			}
 		}
@@ -1342,14 +1355,19 @@ public class Main : GLib.Object{
 		string snapshot_path = "";
 		
 		// create subvolume snapshots
-		
-		foreach(var subvol in sys_subvolumes.values){
 
-			snapshot_path = path_combine(repo.mount_paths[subvol.name], "timeshift-btrfs/snapshots/%s".printf(snapshot_name));
+		var subvol_names = new string[] { "@" };
+		if (include_btrfs_home){
+			subvol_names = new string[] { "@","@home" };
+		}
+		
+		foreach(var subvol_name in subvol_names){
+
+			snapshot_path = path_combine(repo.mount_paths[subvol_name], "timeshift-btrfs/snapshots/%s".printf(snapshot_name));
 			dir_create(snapshot_path, true);
 			
-			string src_path = path_combine(repo.mount_paths[subvol.name], subvol.name);
-			string dst_path = path_combine(snapshot_path, subvol.name);
+			string src_path = path_combine(repo.mount_paths[subvol_name], subvol_name);
+			string dst_path = path_combine(snapshot_path, subvol_name);
 			
 			string cmd = "btrfs subvolume snapshot '%s' '%s' \n".printf(src_path, dst_path);
 			if (LOG_COMMANDS) { log_debug(cmd); }
@@ -1359,7 +1377,7 @@ public class Main : GLib.Object{
 			if (ret_val != 0){
 				log_error (std_err);
 				log_error(_("btrfs returned an error") + ": %d".printf(ret_val));
-				log_error(_("Failed to create subvolume snapshot") + ": %s".printf(subvol.name));
+				log_error(_("Failed to create subvolume snapshot") + ": %s".printf(subvol_name));
 				return null;
 			}
 			else{
@@ -1892,7 +1910,7 @@ public class Main : GLib.Object{
 				log_error(_("BTRFS device is not mounted") + ": @");
 				return false;
 			}
-			if (repo.mount_paths["@home"].length == 0){
+			if (include_btrfs_home && (repo.mount_paths["@home"].length == 0)){
 				log_error(_("BTRFS device is not mounted") + ": @home");
 				return false;
 			}
@@ -2668,7 +2686,12 @@ public class Main : GLib.Object{
 		
 		// restore snapshot subvolumes by creating new subvolume snapshots
 
-		foreach(string subvol_name in new string[] { "@","@home" }){
+		var subvol_names = new string[] { "@" };
+		if (include_btrfs_home){
+			subvol_names = new string[] { "@","@home" };
+		}
+
+		foreach(string subvol_name in subvol_names){
 			
 			string snapshot_path = path_combine(repo.mount_paths[subvol_name], "timeshift-btrfs/snapshots/%s".printf(snapshot_to_restore.name));
  
@@ -2745,9 +2768,14 @@ public class Main : GLib.Object{
 			if (found){
 				//delete system subvolumes
 				sys_subvolumes["@"].remove();
-				sys_subvolumes["@home"].remove();
-				log_msg(_("Deleted system subvolumes: @, @home"));
-				
+				if (include_btrfs_home){
+					sys_subvolumes["@home"].remove();
+					log_msg(_("Deleted system subvolumes") + ": @, @home");
+				}
+				else{
+					log_msg(_("Deleted system subvolumes") + ": @");
+				}
+
 				//update description for pre-restore backup
 				snap_prev.description = "Before restoring '%s'".printf(snapshot_to_restore.date_formatted);
 				snap_prev.update_control_file();
@@ -2771,8 +2799,13 @@ public class Main : GLib.Object{
 			bool no_subvolumes_found = true;
 
 			var subvol_list = new Gee.ArrayList<Subvolume>();
+
+			var subvol_names = new string[] { "@" };
+			if (include_btrfs_home){
+				subvol_names = new string[] { "@","@home" };
+			}
 			
-			foreach(string subvol_name in new string[] { "@", "@home" }){
+			foreach(string subvol_name in subvol_names){
 
 				snapshot_path = path_combine(repo.mount_paths[subvol_name], "timeshift-btrfs/snapshots/%s".printf(snapshot_name));
 				dir_create(snapshot_path, true);
@@ -2861,11 +2894,11 @@ public class Main : GLib.Object{
 			config.set_string_member("parent_device_uuid", backup_parent_uuid); 
 		}
 
+		config.set_string_member("do_first_run", false.to_string());
 		config.set_string_member("btrfs_mode", btrfs_mode.to_string());
+		config.set_string_member("include_btrfs_home", include_btrfs_home.to_string());
 		config.set_string_member("stop_cron_emails", stop_cron_emails.to_string());
-		config.set_string_member("encrypted_home_warning_shown", encrypted_home_warning_shown.to_string());
-		config.set_string_member("encrypted_private_warning_shown", encrypted_private_warning_shown.to_string());
-
+		
 		config.set_string_member("schedule_monthly", schedule_monthly.to_string());
 		config.set_string_member("schedule_weekly", schedule_weekly.to_string());
 		config.set_string_member("schedule_daily", schedule_daily.to_string());
@@ -2919,21 +2952,7 @@ public class Main : GLib.Object{
 		
 		var f = File.new_for_path(this.app_conf_path);
 		if (!f.query_exists()) {
-			first_run = true;
-			log_msg("First run mode (config file not found)");
-
-			// load some defaults for first-run based on user's system type
-			
-			bool supported = sys_subvolumes.has_key("@") && sys_subvolumes.has_key("@home") && cmd_exists("btrfs");
-			if (supported || (cmd_btrfs_mode == true)){
-				log_msg(_("Selected default snapshot type") + ": %s".printf("BTRFS"));
-				btrfs_mode = true;
-			}
-			else{
-				log_msg(_("Selected default snapshot type") + ": %s".printf("RSYNC"));
-				btrfs_mode = false;
-			}
-		
+			set_first_run_flag();
 			return;
 		}
 
@@ -2948,10 +2967,15 @@ public class Main : GLib.Object{
         var node = parser.get_root();
         var config = node.get_object();
 
+		bool do_first_run = json_get_bool(config, "do_first_run", false); // false as default
+		
+		if (do_first_run){
+			set_first_run_flag();
+		}
+
 		btrfs_mode = json_get_bool(config, "btrfs_mode", false); // false as default
+		include_btrfs_home = json_get_bool(config, "include_btrfs_home", include_btrfs_home);
 		stop_cron_emails = json_get_bool(config, "stop_cron_emails", stop_cron_emails);
-		encrypted_home_warning_shown = json_get_bool(config, "encrypted_home_warning_shown", encrypted_home_warning_shown);
-		encrypted_private_warning_shown = json_get_bool(config, "encrypted_private_warning_shown", encrypted_private_warning_shown);
 
 		if (cmd_btrfs_mode != null){
 			btrfs_mode = cmd_btrfs_mode; //override
@@ -3011,6 +3035,25 @@ public class Main : GLib.Object{
 		}
 	}
 
+	public void set_first_run_flag(){
+		
+		first_run = true;
+		
+		log_msg("First run mode (config file not found)");
+
+		// load some defaults for first-run based on user's system type
+		
+		bool supported = sys_subvolumes.has_key("@") && cmd_exists("btrfs"); // && sys_subvolumes.has_key("@home")
+		if (supported || (cmd_btrfs_mode == true)){
+			log_msg(_("Selected default snapshot type") + ": %s".printf("BTRFS"));
+			btrfs_mode = true;
+		}
+		else{
+			log_msg(_("Selected default snapshot type") + ": %s".printf("RSYNC"));
+			btrfs_mode = false;
+		}
+	}
+	
 	public void initialize_repo(){
 
 		log_debug("Main: initialize_repo()");
@@ -3290,8 +3333,10 @@ public class Main : GLib.Object{
 				if (mnt.mount_point == "/"){
 					mount_options = "subvol=@";
 				}
-				else if (mnt.mount_point == "/home"){
-					mount_options = "subvol=@home";
+				if (include_btrfs_home){
+					if (mnt.mount_point == "/home"){
+						mount_options = "subvol=@home";
+					}
 				}
 			}
 
@@ -3568,50 +3613,6 @@ public class Main : GLib.Object{
 		thread_estimate_running = false;
 	}
 
-	public void check_encrypted_home(Gtk.Window _window){
-		
-		if (!btrfs_mode && !encrypted_home_warning_shown && (users_with_encrypted_home.length > 0)){
-			
-			string txt = _("Warning: Encrypted Home Directories");
-
-			string bullet = "▰ ";
-			
-			string msg = "%s:\n\n%s\n%s\n\n%s".printf(
-				_("Some users on this system have encrypted home directories"),
-				encrypted_home_dirs,
-				bullet + _("<b>Entire contents</b> of these directories will be <b>included</b> for backup and restore (instead of just hidden files and directories in home)"),
-				bullet + _("Any exclude filters added for these directories will be ignored")
-				);
-				
-			gtk_messagebox(txt, msg, _window, true);
-
-			encrypted_home_warning_shown = true;
-			save_app_config();
-		}
-	}
-
-	public void check_encrypted_private_dirs(Gtk.Window _window){
-		
-		if (!btrfs_mode && !encrypted_private_warning_shown && (encrypted_private_dirs.length > 0)){
-			
-			string txt = _("Warning: Encrypted Private Directories");
-
-			string bullet = "▰ ";
-			
-			string msg = "%s:\n\n%s\n%s\n\n%s".printf(
-				_("Some users on this system have encrypted private directories"),
-				encrypted_private_dirs,
-				bullet + _("<b>Entire contents</b> of these directories will be <b>excluded</b> for backup and restore (since it contains user data)"),
-				bullet + _("Any include filters added for these directories will be ignored")
-				);
-				
-			gtk_messagebox(txt, msg, _window, true);
-
-			encrypted_private_warning_shown = true;
-			save_app_config();
-		}
-	}
-	
 	// btrfs
 
 	public void query_subvolume_info(SnapshotRepo parent_repo){
@@ -3919,7 +3920,6 @@ public class Main : GLib.Object{
 
 		return true;
 	}
-
 
 	// cron jobs
 

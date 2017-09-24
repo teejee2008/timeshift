@@ -62,16 +62,34 @@ public class CustomMessageDialog : Gtk.Dialog {
 		
 		init_window();
 
+		//lbl_msg.label += string.nfill(4000, 'n');
+		
+		lbl_msg.expand = true;
+		sw_msg.expand = true;
+		sw_msg.vscrollbar_policy = PolicyType.NEVER;
+		
+		//log_debug("0: label=%dx%d".printf(lbl_msg.get_allocated_width(), lbl_msg.get_allocated_height()));
+		//log_debug("0: scroll=%dx%d".printf(sw_msg.get_allocated_width(), sw_msg.get_allocated_height()));
+
+		sw_msg.set_size_request(500, 150); // sets minimum size
+
+		//log_debug("0: label=%dx%d".printf(lbl_msg.get_allocated_width(), lbl_msg.get_allocated_height()));
+		//log_debug("0: scroll=%dx%d".printf(sw_msg.get_allocated_width(), sw_msg.get_allocated_height()));
+
 		show_all();
+
+		//log_debug("1: label=%dx%d".printf(lbl_msg.get_allocated_width(), lbl_msg.get_allocated_height()));
+		//log_debug("1: scroll=%dx%d".printf(sw_msg.get_allocated_width(), sw_msg.get_allocated_height()));
 
 		if (lbl_msg.get_allocated_height() > 400){
 			sw_msg.vscrollbar_policy = PolicyType.AUTOMATIC;
-			sw_msg.set_size_request(-1,400);
-			lbl_msg.margin_right = 25;
+			sw_msg.set_size_request(500, 400);
+			//gtk_do_events();
+			//this.set_position(WindowPosition.CENTER);
 		}
-		else{
-			sw_msg.vscrollbar_policy = PolicyType.NEVER;
-		}
+
+		//log_debug("1: label=%dx%d".printf(lbl_msg.get_allocated_width(), lbl_msg.get_allocated_height()));
+		//log_debug("1: scroll=%dx%d".printf(sw_msg.get_allocated_width(), sw_msg.get_allocated_height()));
 	}
 
 	public void init_window () {
@@ -89,24 +107,24 @@ public class CustomMessageDialog : Gtk.Dialog {
 		vbox_main.margin = 6;
 
 		//hbox_contents
-		var hbox_contents = new Box (Orientation.HORIZONTAL, 6);
+		var hbox_contents = new Gtk.Box(Orientation.HORIZONTAL, 6);
 		hbox_contents.margin = 6;
 		vbox_main.add (hbox_contents);
 
-		string icon_name = "gtk-dialog-info";
+		string icon_name = "dialog-info";
 		
 		switch(msg_type){
 		case Gtk.MessageType.INFO:
-			icon_name = "gtk-dialog-info";
+			icon_name = "dialog-info";
 			break;
 		case Gtk.MessageType.WARNING:
-			icon_name = "gtk-dialog-warning";
+			icon_name = "dialog-warning";
 			break;
 		case Gtk.MessageType.QUESTION:
-			icon_name = "gtk-dialog-question";
+			icon_name = "dialog-question";
 			break;
 		case Gtk.MessageType.ERROR:
-			icon_name = "gtk-dialog-error";
+			icon_name = "dialog-error";
 			break;
 		}
 
@@ -122,20 +140,21 @@ public class CustomMessageDialog : Gtk.Dialog {
 			escape_html(msg_title),
 			msg_body);
 		lbl_msg = new Gtk.Label(text);
-		lbl_msg.xalign = (float) 0.0;
+		lbl_msg.xalign = 0.0f;
+		lbl_msg.yalign = 0.0f;
 		lbl_msg.max_width_chars = 70;
 		lbl_msg.wrap = true;
 		lbl_msg.wrap_mode = Pango.WrapMode.WORD_CHAR;
 		lbl_msg.use_markup = true;
-
+		lbl_msg.margin_right = 25;
+		
 		//sw_msg
-		sw_msg = new ScrolledWindow(null, null);
+		sw_msg = new Gtk.ScrolledWindow(null, null);
 		//sw_msg.set_shadow_type (ShadowType.ETCHED_IN);
 		sw_msg.add (lbl_msg);
-		sw_msg.expand = true;
 		sw_msg.hscrollbar_policy = PolicyType.NEVER;
-		sw_msg.vscrollbar_policy = PolicyType.AUTOMATIC;
-		//sw_msg.set_size_request();
+		sw_msg.vscrollbar_policy = PolicyType.NEVER;
+		//sw_msg.set_size_request(500, 400);
 		hbox_contents.add(sw_msg);
 
 		// actions -------------------------
@@ -145,15 +164,18 @@ public class CustomMessageDialog : Gtk.Dialog {
 
 		switch(buttons_type){
 		case Gtk.ButtonsType.OK:
-			btn_ok = (Gtk.Button) add_button ("_Ok", Gtk.ResponseType.OK);
+			btn_ok = (Gtk.Button) add_button (_("OK"), Gtk.ResponseType.OK);
+			btn_ok.grab_focus();
 			break;
 		case Gtk.ButtonsType.OK_CANCEL:
-			btn_ok = (Gtk.Button) add_button ("_Ok", Gtk.ResponseType.OK);
-			btn_cancel = (Gtk.Button) add_button ("_Cancel", Gtk.ResponseType.CANCEL);
+			btn_ok = (Gtk.Button) add_button (_("OK"), Gtk.ResponseType.OK);
+			btn_cancel = (Gtk.Button) add_button (_("Cancel"), Gtk.ResponseType.CANCEL);
+			btn_ok.grab_focus();
 			break;
 		case Gtk.ButtonsType.YES_NO:
-			btn_yes = (Gtk.Button) add_button ("_Yes", Gtk.ResponseType.YES);
-			btn_no = (Gtk.Button) add_button ("_No", Gtk.ResponseType.NO);
+			btn_yes = (Gtk.Button) add_button (_("Yes"), Gtk.ResponseType.YES);
+			btn_no = (Gtk.Button) add_button (_("No"), Gtk.ResponseType.NO);
+			btn_yes.grab_focus();
 			break;
 			
 		}

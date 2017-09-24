@@ -1,4 +1,5 @@
 prefix=/usr
+sysconfdir=/etc
 bindir=$(prefix)/bin
 sharedir=$(prefix)/share
 localedir=$(sharedir)/locale
@@ -23,13 +24,13 @@ define_symbols=$(shell { echo "${vte_symbols} ${gtk3_symbols}"; } )
 
 all:
 
-	#timeshift-gtk
+	# timeshift-gtk
 	valac -X -D'GETTEXT_PACKAGE="${app_name}"' --Xcc="-lm" -X -Wl,-rpath,/usr/share/${app_name}/libs ${define_symbols} --thread Core/*.vala Utility/*.vala  Utility/Gtk/*.vala  Gtk/*.vala -o ${app_name}-gtk --pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix --pkg gtk+-3.0 --pkg $(vte_version) --pkg gee-0.8 --pkg json-glib-1.0  --pkg libsoup-2.4 #--target-glib=2.32  --pkg libsoup-2.4  --pkg libxml-2.0
 
-	#timeshift
+	# timeshift
 	valac -X -D'GETTEXT_PACKAGE="${app_name}"' --Xcc="-lm" -X -Wl,-rpath,/usr/share/${app_name}/libs ${define_symbols} --thread Core/*.vala Utility/*.vala Utility/Gtk/*.vala Console/*.vala -o ${app_name} --pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix --pkg gtk+-3.0 --pkg $(vte_version) --pkg gee-0.8 --pkg json-glib-1.0 --pkg libsoup-2.4
 
-	#update translation template
+	# update translation template
 	find . -iname "*.vala" | xargs xgettext --from-code=UTF-8 --language=C --keyword=_ --copyright-holder='Tony George (teejeetech@gmail.com)' --package-name="${app_name}" --package-version='1.6' --msgid-bugs-address='teejeetech@gmail.com' --escape --sort-output -o ../${app_name}.pot
 
 clean:
@@ -41,6 +42,7 @@ install:
 	mkdir -p "$(DESTDIR)$(mandir)"
 	mkdir -p "$(DESTDIR)$(man1dir)"
 	mkdir -p "$(DESTDIR)$(launcherdir)"
+	mkdir -p "$(DESTDIR)$(sysconfdir)"
 	mkdir -p "$(DESTDIR)$(sharedir)/${app_name}"
 	mkdir -p "$(DESTDIR)$(sharedir)/icons"
 	mkdir -p "$(DESTDIR)$(localedir)/bg/LC_MESSAGES"
@@ -53,24 +55,27 @@ install:
 	mkdir -p "$(DESTDIR)$(localedir)/sv/LC_MESSAGES"
 	mkdir -p "$(DESTDIR)$(localedir)/tr/LC_MESSAGES"
 
-	#binary
+	# binary
 	install -m 0755 ${app_name} "$(DESTDIR)$(bindir)"
 	install -m 0755 ${app_name}-gtk "$(DESTDIR)$(bindir)"
 	install -m 0755 ${app_name}-uninstall "$(DESTDIR)$(bindir)"
 	install -m 0755 ${app_name}-launcher "$(DESTDIR)$(bindir)"
 
-	#shared files
+	# shared files
 	cp -dpr --no-preserve=ownership -t "$(DESTDIR)$(sharedir)/${app_name}" ./share/${app_name}/*
 	chmod --recursive 0755 $(DESTDIR)$(sharedir)/${app_name}/*
 
-	#launcher
+	# launcher
 	install -m 0755 ${app_name}-gtk.desktop "$(DESTDIR)$(launcherdir)"
 
-	#app icons
+	# config
+	install -m 0755 ../files/${app_name}.json "$(DESTDIR)$(sysconfdir)"
+
+	# app icons
 	cp -dpr --no-preserve=ownership -t "$(DESTDIR)$(sharedir)/icons" ./share/icons/*
 	chmod --recursive 0755 $(DESTDIR)$(sharedir)/icons/*
 
-	#translations
+	# translations
 	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/bg/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-bg.po
 	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/cs/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-cs.po
 	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/es/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-es.po
@@ -83,20 +88,20 @@ install:
 
 uninstall:
 
-	#binary
+	# binary
 	rm -f "$(DESTDIR)$(bindir)/${app_name}"
 	rm -f "$(DESTDIR)$(bindir)/${app_name}-gtk"
 	rm -f "$(DESTDIR)$(bindir)/${app_name}-uninstall"
 	rm -f "$(DESTDIR)$(bindir)/${app_name}-launcher"
 
-	#shared files
+	# shared files
 	rm -rf "$(DESTDIR)$(sharedir)/${app_name}"
 
-	#launcher
+	# launcher
 	rm -f "$(DESTDIR)$(launcherdir)/${app_name}-gtk.desktop"
 
-	#app icon
+	# app icon
 	rm -f "$(DESTDIR)$(sharedir)/icons/hicolor/*/apps/${app_name}.png"
 
-	#translations
+	# translations
 	rm -f $(DESTDIR)$(localedir)/*/LC_MESSAGES/${app_name}.mo

@@ -60,7 +60,7 @@ public class ExcludeMessageWindow : Gtk.Dialog{
 
         //set app icon
 		try{
-			this.icon = new Gdk.Pixbuf.from_file (App.share_folder + "/pixmaps/timeshift.png");
+			this.icon = new Gdk.Pixbuf.from_file (App.share_folder + "/icons/48x48/apps/timeshift.png");
 		}
         catch(Error e){
 	        log_error (e.message);

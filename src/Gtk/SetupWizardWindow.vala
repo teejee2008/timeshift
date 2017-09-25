@@ -49,6 +49,8 @@ class SetupWizardWindow : Gtk.Window{
 	private Gtk.Button btn_cancel;
 	private Gtk.Button btn_close;
 
+	private bool schedule_accepted = false;
+
 	private uint tmr_init;
 	private int def_width = 450;
 	private int def_height = 500;
@@ -69,6 +71,15 @@ class SetupWizardWindow : Gtk.Window{
         vbox_main = new Box (Orientation.VERTICAL, 6);
         vbox_main.margin = 12;
         add(vbox_main);
+
+        if (App.first_run && !schedule_accepted){
+			App.schedule_boot = false;
+			App.schedule_hourly = false;
+			App.schedule_daily = true; // set
+			log_debug("Setting schedule_daily for first run");
+			App.schedule_weekly = false;
+			App.schedule_monthly = false;
+		}
 
 		// add notebook
 		notebook = add_notebook(vbox_main, false, false);
@@ -124,6 +135,14 @@ class SetupWizardWindow : Gtk.Window{
 	}
 
 	private bool on_delete_event(Gdk.EventAny event){
+
+		if (!schedule_accepted){
+			App.schedule_boot = false;
+			App.schedule_hourly = false;
+			App.schedule_daily = false; // unset
+			App.schedule_weekly = false;
+			App.schedule_monthly = false;
+		}
 
 		save_changes();
 		
@@ -276,6 +295,7 @@ class SetupWizardWindow : Gtk.Window{
 			break;
 		case Tabs.SCHEDULE:
 			notebook.page = Tabs.FINISH;
+			schedule_accepted = true;
 			break;
 		case Tabs.FINISH:
 			// btn_next is disabled for this page

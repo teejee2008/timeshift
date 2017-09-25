@@ -230,6 +230,12 @@ class UsersBox : Gtk.Box{
 
 			exclude_box.refresh_treeview();
 		});
+
+		col = new TreeViewColumn();
+		cell_text = new CellRendererText();
+		cell_text.width = 20;
+		col.pack_start (cell_text, false);
+		treeview.append_column(col);
 	}
 
 	private void init_btrfs_home_option(){

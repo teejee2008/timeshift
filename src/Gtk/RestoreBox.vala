@@ -25,6 +25,10 @@
 using Gtk;
 using Gee;
 
+#if XAPP
+using XApp;
+#endif
+
 using TeeJee.Logging;
 using TeeJee.FileSystem;
 using TeeJee.JsonHelper;
@@ -224,6 +228,10 @@ class RestoreBox : Gtk.Box{
 			
 			if (fraction < 0.99){
 				progressbar.fraction = fraction;
+
+				#if XAPP
+				XApp.set_window_progress(parent_window, (int)(fraction * 100.0));
+				#endif
 			}
 
 			lbl_msg.label = App.progress_text;
@@ -245,6 +253,10 @@ class RestoreBox : Gtk.Box{
 			//gtk_do_events();
 		}
 
+		#if XAPP
+		XApp.set_window_progress(parent_window, 0);
+		#endif
+		
 		if (App.restore_current_system){
 			parent_window.show();
 		}

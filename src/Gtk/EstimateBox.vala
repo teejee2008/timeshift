@@ -24,6 +24,10 @@
 using Gtk;
 using Gee;
 
+#if XAPP
+using XApp;
+#endif
+
 using TeeJee.Logging;
 using TeeJee.FileSystem;
 using TeeJee.JsonHelper;
@@ -33,6 +37,7 @@ using TeeJee.System;
 using TeeJee.Misc;
 
 class EstimateBox : Gtk.Box{
+	
 	private Gtk.ProgressBar progressbar;
 	private Gtk.Window parent_window;
 	
@@ -98,13 +103,23 @@ class EstimateBox : Gtk.Box{
 
 		// wait for completion and increment progressbar
 		while (thread_is_running){
+			
 			if (progressbar.fraction < 98.0){
+				
 				progressbar.fraction += 0.005;
+
+				#if XAPP
+				XApp.set_window_progress(parent_window, (int)(progressbar.fraction * 100.0));
+				#endif
 			}
 			
 			gtk_do_events();
 			sleep(100);
 		}
+
+		#if XAPP
+		XApp.set_window_progress(parent_window, 0);
+		#endif
 	}
 
 	private void estimate_system_size_thread(){

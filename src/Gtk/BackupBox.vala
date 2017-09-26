@@ -25,6 +25,10 @@
 using Gtk;
 using Gee;
 
+#if XAPP
+using XApp;
+#endif
+
 using TeeJee.Logging;
 using TeeJee.FileSystem;
 using TeeJee.JsonHelper;
@@ -172,10 +176,20 @@ class BackupBox : Gtk.Box{
 		}
 
 		if (App.btrfs_mode){
+			
 			while (thread_is_running){
+				
 				gtk_do_events();
 				sleep(200);
+
+				#if XAPP
+				XApp.set_window_progress_pulse(parent_window, true);
+				#endif
 			}
+
+			#if XAPP
+			XApp.set_window_progress_pulse(parent_window, false);
+			#endif
 		}
 		else{
 			
@@ -216,6 +230,9 @@ class BackupBox : Gtk.Box{
 				
 				if (fraction < 0.99){
 					progressbar.fraction = fraction;
+					#if XAPP
+					XApp.set_window_progress(parent_window, (int)(fraction * 100.0));
+					#endif
 				}
 
 				lbl_msg.label = escape_html(App.progress_text);
@@ -236,6 +253,10 @@ class BackupBox : Gtk.Box{
 				sleep(100);
 				//gtk_do_events();
 			}
+
+			#if XAPP
+			XApp.set_window_progress(parent_window, 0);
+			#endif
 		}
 
 		return thread_status_success;

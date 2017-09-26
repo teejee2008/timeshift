@@ -33,6 +33,7 @@ using TeeJee.System;
 using TeeJee.Misc;
 
 class DeleteWindow : Gtk.Window{
+	
 	private Gtk.Box vbox_main;
 	private Gtk.Notebook notebook;
 	private Gtk.ButtonBox bbox_action;

@@ -25,6 +25,10 @@
 using Gtk;
 using Gee;
 
+#if XAPP
+using XApp;
+#endif
+
 using TeeJee.Logging;
 using TeeJee.FileSystem;
 using TeeJee.JsonHelper;
@@ -94,11 +98,21 @@ class DeleteBox : Gtk.Box{
 		}
 
 		if (App.btrfs_mode){
+			
 			while (App.thread_delete_running){
+				
 				lbl_msg.label = App.progress_text;
 				gtk_do_events();
 				sleep(200);
+
+				#if XAPP
+				XApp.set_window_progress_pulse(parent_window, true);
+				#endif
 			}
+
+			#if XAPP
+			XApp.set_window_progress_pulse(parent_window, false);
+			#endif
 		}
 		else{
 			
@@ -130,15 +144,20 @@ class DeleteBox : Gtk.Box{
 
 				// time remaining
 				remaining_counter--;
+				
 				if (remaining_counter == 0){
-					lbl_remaining.label =
-						App.delete_file_task.stat_time_remaining + " remaining";
+					
+					lbl_remaining.label = App.delete_file_task.stat_time_remaining + " remaining";
 
 					remaining_counter = 10;
 				}
 					
 				if (fraction < 0.99){
 					progressbar.fraction = fraction;
+
+					#if XAPP
+					XApp.set_window_progress(parent_window, (int)(fraction * 100.0));
+					#endif
 				}
 
 				lbl_msg.label = App.delete_file_task.status_message;
@@ -147,6 +166,10 @@ class DeleteBox : Gtk.Box{
 
 				sleep(100);
 			}
+
+			#if XAPP
+			XApp.set_window_progress(parent_window, 0);
+			#endif
 		}
 		
 		//parent_window.destroy();

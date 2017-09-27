@@ -13,8 +13,8 @@ app_fullname=Timeshift
 vte_pkg=$(shell { ((ldconfig -p | grep libvte-2.91*.so) >/dev/null && echo '--pkg vte-2.91') || echo '--pkg vte-2.90'; } )
 vte_symbol=$(shell { ((ldconfig -p | grep libvte-2.91*.so) >/dev/null && echo '-D VTE_291') || echo ''; } )
 
-xapp_pkg=$(shell { ((ldconfig -p | grep libxapp.so.*) >/dev/null && echo '--pkg xapp') || echo ''; } )
-xapp_symbol=$(shell { ((ldconfig -p | grep libxapp.so.*) >/dev/null && echo '-D XAPP') || echo ''; } )
+xapp_pkg=$(shell { ((pkg-config --exists 'xapp >= 1.0.4') >/dev/null && echo '--pkg xapp') || echo ''; } )
+xapp_symbol=$(shell { ((pkg-config --exists 'xapp >= 1.0.4') >/dev/null && echo '-D XAPP') || echo ''; } )
 
 gtk3_version=$(shell { (pkg-config --modversion gtk+-3.0 | cut -d. -f2); } )
 

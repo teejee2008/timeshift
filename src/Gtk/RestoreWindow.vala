@@ -267,7 +267,7 @@ class RestoreWindow : Gtk.Window{
 		
 		switch(notebook.page){
 		case Tabs.TARGET_DEVICE:
-			if (App.btrfs_mode){
+			if (App.btrfs_mode || (App.exclude_list_apps.size == 0)){
 				notebook.page = Tabs.SUMMARY;
 			}
 			else{

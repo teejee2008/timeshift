@@ -46,7 +46,7 @@ install:
 	mkdir -p "$(DESTDIR)$(mandir)"
 	mkdir -p "$(DESTDIR)$(man1dir)"
 	mkdir -p "$(DESTDIR)$(launcherdir)"
-	mkdir -p "$(DESTDIR)$(sysconfdir)"
+	mkdir -p "$(DESTDIR)$(sysconfdir)/default"
 	mkdir -p "$(DESTDIR)$(sharedir)/${app_name}"
 	mkdir -p "$(DESTDIR)$(sharedir)/icons"
 	mkdir -p "$(DESTDIR)$(localedir)/bg/LC_MESSAGES"
@@ -73,7 +73,7 @@ install:
 	install -m 0755 ${app_name}-gtk.desktop "$(DESTDIR)$(launcherdir)"
 
 	# config
-	install -m 0755 ../files/${app_name}.json "$(DESTDIR)$(sysconfdir)"
+	install -m 0755 ../files/${app_name}.json "$(DESTDIR)$(sysconfdir)/default"
 
 	# app icons
 	cp -dpr --no-preserve=ownership -t "$(DESTDIR)$(sharedir)/icons" ./share/icons/*

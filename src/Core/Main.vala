@@ -40,6 +40,7 @@ public class Main : GLib.Object{
 	public string share_folder = "";
 	public string rsnapshot_conf_path = "";
 	public string app_conf_path = "";
+	public string app_conf_path_default = "";
 	public bool first_run = false;
 	
 	public string backup_uuid = "";
@@ -260,6 +261,7 @@ public class Main : GLib.Object{
 		this.app_path = (File.new_for_path (args[0])).get_parent().get_path ();
 		this.share_folder = "/usr/share";
 		this.app_conf_path = "/etc/timeshift.json";
+		this.app_conf_path_default = "/etc/default/timeshift.json";
 		//sys_root and sys_home will be initalized by update_partition_list()
 
 		// check if running locally ------------------------
@@ -568,7 +570,7 @@ public class Main : GLib.Object{
 		//exclude_list_home.add("+ /root/.**");
 		//exclude_list_home.add("+ /home/*/.**");
 		exclude_list_home.add("/root/**");
-		exclude_list_home.add("/home/*/**");
+		exclude_list_home.add("/home/*/**"); // Note: /home/** ignores include filters under /home
 
 		/*
 		Most web browsers store their cache under ~/.cache and /tmp
@@ -595,9 +597,9 @@ public class Main : GLib.Object{
 			add_app_exclude_entries_for_prefix(path_combine(snapshot_to_restore.path, "localhost"));
 		}
 
-		if (!restore_current_system){
-			add_app_exclude_entries_for_prefix(mount_point_restore);
-		}
+		//if (!restore_current_system){
+		//	add_app_exclude_entries_for_prefix(mount_point_restore);
+		//}
 
 		exclude_list_apps = AppExcludeEntry.get_apps_list(exclude_app_names);
 
@@ -2951,6 +2953,9 @@ public class Main : GLib.Object{
 		// check if first run -----------------------
 		
 		var f = File.new_for_path(this.app_conf_path);
+		if (!f.query_exists()) {
+			file_copy(app_conf_path_default, app_conf_path);
+		}
 		if (!f.query_exists()) {
 			set_first_run_flag();
 			return;

@@ -428,7 +428,6 @@ class MainWindow : Gtk.Window{
 		return menu_item;
 	}
 
-	
 	private bool refresh_all(){
 
 		/* updates statusbar messages and snapshot list after backup device is changed */

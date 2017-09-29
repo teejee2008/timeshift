@@ -2773,7 +2773,7 @@ public class Main : GLib.Object{
 			if (found){
 				//delete system subvolumes
 				sys_subvolumes["@"].remove();
-				if (include_btrfs_home){
+				if (include_btrfs_home && sys_subvolumes.has_key("@home")){
 					sys_subvolumes["@home"].remove();
 					log_msg(_("Deleted system subvolumes") + ": @, @home");
 				}
@@ -3693,7 +3693,7 @@ public class Main : GLib.Object{
 
 	public bool query_subvolume_ids(){
 		bool ok = query_subvolume_id("@");
-		if (repo.device.uuid != repo.device_home.uuid){
+		if ((repo.device_home != null) && (repo.device.uuid != repo.device_home.uuid)){
 			ok = ok && query_subvolume_id("@home");
 		}
 		return ok;
@@ -3735,7 +3735,10 @@ public class Main : GLib.Object{
 			if ((sys_subvolumes.size > 0) && line.has_suffix(sys_subvolumes["@"].path.replace(repo.mount_paths["@"] + "/"," "))){
 				subvol = sys_subvolumes["@"];
 			}
-			else if ((sys_subvolumes.size > 0) && line.has_suffix(sys_subvolumes["@home"].path.replace(repo.mount_paths["@home"] + "/"," "))){
+			else if ((sys_subvolumes.size > 0)
+				&& sys_subvolumes.has_key("@home")
+				&& line.has_suffix(sys_subvolumes["@home"].path.replace(repo.mount_paths["@home"] + "/"," "))){
+					
 				subvol = sys_subvolumes["@home"];
 			}
 			else {
@@ -3822,7 +3825,10 @@ public class Main : GLib.Object{
 			if ((sys_subvolumes.size > 0) && (sys_subvolumes["@"].id == subvol_id)){
 				subvol = sys_subvolumes["@"];
 			}
-			else if ((sys_subvolumes.size > 0) && (sys_subvolumes["@home"].id == subvol_id)){
+			else if ((sys_subvolumes.size > 0)
+				&& sys_subvolumes.has_key("@home")
+				&& (sys_subvolumes["@home"].id == subvol_id)){
+					
 				subvol = sys_subvolumes["@home"];
 			}
 			else {

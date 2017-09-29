@@ -503,19 +503,21 @@ public class SnapshotRepo : GLib.Object{
 		//log_debug("checking selected device");
 
 		if (device == null){
-			log_debug("device is null");
-			status_message = _("Snapshot device not selected");
-			status_details = _("Select the snapshot device");
-			status_code = SnapshotLocationStatus.NOT_SELECTED;
-			log_debug("is_available: false");
-			return false;
-		}
-		else if (device.device.length == 0){
-			status_message = _("Snapshot device not available");
-			status_details = _("Device not found") + ": UUID='%s'".printf(device.uuid);
-			status_code = SnapshotLocationStatus.NOT_AVAILABLE;
-			log_debug("is_available: false");
-			return false;
+			if (App.backup_uuid.length == 0){
+				log_debug("device is null");
+				status_message = _("Snapshot device not selected");
+				status_details = _("Select the snapshot device");
+				status_code = SnapshotLocationStatus.NOT_SELECTED;
+				log_debug("is_available: false");
+				return false;
+			}
+			else{
+				status_message = _("Snapshot device not available");
+				status_details = _("Device not found") + ": UUID='%s'".printf(App.backup_uuid);
+				status_code = SnapshotLocationStatus.NOT_AVAILABLE;
+				log_debug("is_available: false");
+				return false;
+			}
 		}
 		else{
 			if (btrfs_mode){

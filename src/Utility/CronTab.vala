@@ -287,7 +287,6 @@ public class CronTab : GLib.Object {
 			log_error("Cron directory type parameter not valid" + ": %s".printf(cron_dir_type));
 			log_error("Expected values: d, hourly, daily, weekly, monthly");
 			return false;
-			break;
 		}
 
 		string file_path = "/etc/cron.%s/%s".printf(cron_dir_type, file_name.replace(".","-")); // dot is not allowed in file name

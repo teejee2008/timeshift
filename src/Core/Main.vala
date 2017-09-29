@@ -144,6 +144,7 @@ public class Main : GLib.Object{
 	public string cmd_snapshot = "";
 	public bool cmd_confirm = false;
 	public bool cmd_verbose = true;
+	public bool cmd_scripted = false;
 	public string cmd_comments = "";
 	public string cmd_tags = "";
 	public bool? cmd_btrfs_mode = null;
@@ -3126,7 +3127,7 @@ public class Main : GLib.Object{
 				repo = new SnapshotRepo.from_uuid(backup_uuid, parent_window, btrfs_mode);
 			}
 			// try system disk
-			else {
+			/*else {
 				log_debug("Could not find device with UUID" + ": %s".printf(backup_uuid));
 				if (sys_root != null){
 					log_debug("Using system disk as snapshot device");
@@ -3136,7 +3137,7 @@ public class Main : GLib.Object{
 					log_debug("System disk not found");
 					repo = new SnapshotRepo.from_null();
 				}
-			}
+			}*/
 		}
 
 		/* Note: In command-line mode, user will be prompted for backup device */
@@ -3961,11 +3962,11 @@ public class Main : GLib.Object{
 		if (scheduled){
 			
 			//hourly
-			CronTab.add_script_file("timeshift-hourly", "d", "0 * * * * root timeshift --check", stop_cron_emails);
+			CronTab.add_script_file("timeshift-hourly", "d", "0 * * * * root timeshift --check --scripted", stop_cron_emails);
 			
 			//boot
 			if (schedule_boot){
-				CronTab.add_script_file("timeshift-boot", "d", "@reboot root sleep 10m && timeshift --create --tags B", stop_cron_emails);
+				CronTab.add_script_file("timeshift-boot", "d", "@reboot root sleep 10m && timeshift --create --scripted --tags B", stop_cron_emails);
 			}
 			else{
 				CronTab.remove_script_file("timeshift-boot", "d");

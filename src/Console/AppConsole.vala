@@ -169,6 +169,10 @@ public class AppConsole : GLib.Object {
 					App.cmd_verbose = false;
 					break;
 
+				case "--scripted":
+					App.cmd_scripted = true;
+					break;
+
 				case "--yes":
 					App.cmd_confirm = true;
 					break;
@@ -373,6 +377,7 @@ public class AppConsole : GLib.Object {
 		msg += "  --debug                    " + _("Show additional debug messages") + "\n";
 		msg += "  --verbose                  " + _("Show rsync output (default)") + "\n";
 		msg += "  --quiet                    " + _("Hide rsync output") + "\n";
+		msg += "  --scripted                 " + _("Run in non-interactive mode") + "\n";
 		msg += "  --help                     " + _("Show all options") + "\n";
 		msg += "\n";
 
@@ -643,6 +648,25 @@ public class AppConsole : GLib.Object {
 			//prompt user for backup device
 			log_msg("");
 
+			if (App.cmd_scripted){
+				
+				if (App.repo.device == null){
+					if (App.backup_uuid.length == 0){
+						log_debug("device is null");
+						string status_message = _("Snapshot device not selected");
+						log_msg(status_message);
+					}
+					else{
+						string status_message = _("Snapshot device not available");
+						string status_details = _("Device not found") + ": UUID='%s'".printf(App.backup_uuid);
+						log_msg(status_message);
+						log_msg(status_details);
+					}
+				}
+
+				App.exit_app(1);
+			}
+
 			log_msg(_("Select backup device") + ":\n");
 			list_devices(list);
 			log_msg("");
@@ -678,7 +702,6 @@ public class AppConsole : GLib.Object {
 				App.exit_app(1);
 			}
 		}
-		
 	}
 
 	private Snapshot? select_snapshot(){

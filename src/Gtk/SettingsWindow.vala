@@ -84,7 +84,7 @@ class SettingsWindow : Gtk.Window{
 		
 		var btn_close = add_button(hbox, _("Close"), "", null, null);
 		btn_close.margin = 6;
-		hbox.add(btn_close);
+		//hbox.add(btn_close);
 		
         btn_close.clicked.connect(()=>{
 			save_changes();

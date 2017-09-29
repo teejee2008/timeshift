@@ -58,6 +58,10 @@ install:
 	mkdir -p "$(DESTDIR)$(localedir)/ru/LC_MESSAGES"
 	mkdir -p "$(DESTDIR)$(localedir)/sv/LC_MESSAGES"
 	mkdir -p "$(DESTDIR)$(localedir)/tr/LC_MESSAGES"
+	mkdir -p "$(DESTDIR)$(localedir)/da/LC_MESSAGES"
+	mkdir -p "$(DESTDIR)$(localedir)/eu/LC_MESSAGES"
+	mkdir -p "$(DESTDIR)$(localedir)/lt/LC_MESSAGES"
+	mkdir -p "$(DESTDIR)$(localedir)/uk/LC_MESSAGES"
 
 	# binary
 	install -m 0755 ${app_name} "$(DESTDIR)$(bindir)"
@@ -89,6 +93,10 @@ install:
 	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/ru/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-ru.po
 	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/sv/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-sv.po
 	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/tr/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-tr.po
+	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/da/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-da.po
+	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/eu/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-eu.po
+	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/lt/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-lt.po
+	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/uk/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-uk.po
 
 uninstall:
 

@@ -56,7 +56,7 @@ class SettingsWindow : Gtk.Window{
         this.window_position = WindowPosition.CENTER;
         this.modal = true;
         this.set_default_size (def_width, def_height);
-		this.icon = get_app_icon(16);
+		this.icon = IconManager.lookup("timeshift",16);
 
 		this.delete_event.connect(on_delete_event);
 

@@ -205,7 +205,7 @@ class BootOptionsBox : Gtk.Box{
 	private void refresh_cmb_grub_dev(){
 		var store = new Gtk.ListStore(2, typeof(Device), typeof(Gdk.Pixbuf));
 
-		Gdk.Pixbuf pix_device = get_shared_icon("drive-harddisk","disk.png",16).pixbuf;
+		Gdk.Pixbuf pix_device = IconManager.lookup("drive-harddisk", 16);
 
 		TreeIter iter;
 		foreach(Device dev in Device.get_block_devices_using_lsblk()) {

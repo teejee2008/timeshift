@@ -489,7 +489,7 @@ class BackupDeviceBox : Gtk.Box{
 		
 		tv_devices.set_model (model);
 
-		Gdk.Pixbuf pix_device = get_shared_icon("disk","disk.png",16).pixbuf;
+		Gdk.Pixbuf pix_device = IconManager.lookup("drive-harddisk",16);
 
 		TreeIter iter0;
 
@@ -512,9 +512,9 @@ class BackupDeviceBox : Gtk.Box{
 	private void tv_append_child_volumes(
 		ref Gtk.TreeStore model, ref Gtk.TreeIter iter0, Device parent){
 			
-		Gdk.Pixbuf pix_device = get_shared_icon("disk","disk.png",16).pixbuf;
-		Gdk.Pixbuf pix_locked = get_shared_icon("locked","locked.png",16).pixbuf;
-		Gdk.Pixbuf pix_unlocked = get_shared_icon("unlocked","unlocked.png",16).pixbuf;
+		Gdk.Pixbuf pix_device = IconManager.lookup("drive-harddisk", 16);
+		Gdk.Pixbuf pix_locked = IconManager.lookup("locked", 16, false, true);
+		Gdk.Pixbuf pix_unlocked = IconManager.lookup("unlocked", 16, false, true);
 		
 		foreach(var part in App.partitions) {
 

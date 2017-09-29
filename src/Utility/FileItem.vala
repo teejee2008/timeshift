@@ -622,39 +622,6 @@ public class FileItem : GLib.Object,Gee.Comparable<FileItem> {
 		
 		return list;
 	}
-	/*public Gtk.Image get_icon_image(){
-
-		log_debug("FileItem.get_icon_image()");
-		
-		var image = get_shared_icon("gtk-directory","gtk-directory.png",16);
-		
-		if (is_archive) {
-			image.icon_name = "gnome-mime-application-x-archive";
-		}
-		else{
-			if ((content_type.length == 0) && (icon == null)){
-				query_file_info();
-			}
-
-			if ((icon != null) && file_path.has_prefix("/")) {
-				image.gicon = icon;
-				log_debug("using gicon for: %s".printf(file_name));
-			}
-			//else if (item.is_symlink) {
-			//	(cell as Gtk.CellRendererPixbuf).icon_name = "emblem-symbolic-link";
-			//}
-			else if (file_type == FileType.DIRECTORY) {
-				image.icon_name = "gtk-directory";
-			}
-			else{
-				image.icon_name = "gtk-file";
-			}
-		}
-
-		// TODO: use ThemedIcon?
-		
-		return image;
-	}*/
 }
 
 

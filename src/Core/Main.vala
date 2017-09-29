@@ -310,6 +310,8 @@ public class Main : GLib.Object{
 		// set settings from config file ---------------------
 
 		load_app_config();
+
+		IconManager.init(args, AppShortName);
 		
 		log_debug("Main(): ok");
 	}

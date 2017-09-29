@@ -463,8 +463,8 @@ class ExcludeBox : Gtk.Box{
 		log_debug("treeview_add_item(): %s".printf(pattern));
 
 		try{
-			pix_include = get_shared_icon_pixbuf("list-add","list-add.png",16);
-			pix_exclude = get_shared_icon_pixbuf("list-remove","list-remove.png",16);
+			pix_include = IconManager.lookup("list-add", 16);
+			pix_exclude = IconManager.lookup("list-remove", 16);
 		}
         catch(Error e){
 	        log_error (e.message);
@@ -501,8 +501,8 @@ class ExcludeBox : Gtk.Box{
 		log_debug("treeview_update_item(): %s".printf(pattern));
 
 		try{
-			pix_include = get_shared_icon_pixbuf("list-add","list-add.png",16);
-			pix_exclude = get_shared_icon_pixbuf("list-remove","list-remove.png",16);
+			pix_include = IconManager.lookup("list-add", 16);
+			pix_exclude = IconManager.lookup("list-remove", 16);
 		}
         catch(Error e){
 	        log_error (e.message);

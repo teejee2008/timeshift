@@ -198,8 +198,7 @@ class RestoreDeviceBox : Gtk.Box{
 			if (dev != null){
 
 				if (dev.type == "disk"){
-					(cell as Gtk.CellRendererPixbuf).pixbuf =
-						get_shared_icon_pixbuf("drive-harddisk", "drive-harddisk", 16);
+					(cell as Gtk.CellRendererPixbuf).pixbuf = IconManager.lookup("drive-harddisk", 16);
 				}
 			
 				(cell as Gtk.CellRendererPixbuf).sensitive = (dev.type != "disk");
@@ -219,7 +218,8 @@ class RestoreDeviceBox : Gtk.Box{
 			if (!selected) { return true; }
 			combo.model.get (iter, 0, out dev, -1);
 			
-			tooltip.set_icon(get_shared_icon_pixbuf("drive-harddisk", "drive-harddisk", 128));
+			tooltip.set_icon(IconManager.lookup("drive-harddisk", 128));
+			
 			if (dev != null){
 				tooltip.set_markup(dev.tooltip_text());
 			}

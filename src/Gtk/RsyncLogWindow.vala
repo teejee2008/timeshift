@@ -72,12 +72,12 @@ public class RsyncLogWindow : Window {
 
 		log_debug("RsyncLogWindow: RsyncLogWindow()");
 		
-		title = _("Log Viewer");
-		window_position = WindowPosition.CENTER;
-		set_default_size(def_width, def_height);
-		icon = get_app_icon(16);
-		resizable = true;
-		modal = true;
+		this.title = _("Log Viewer");
+		this.window_position = WindowPosition.CENTER;
+		this.set_default_size(def_width, def_height);
+		this.icon = IconManager.lookup("timeshift",16);
+		this.resizable = true;
+		this.modal = true;
 
 		this.delete_event.connect(on_delete_event);
 		
@@ -410,9 +410,8 @@ public class RsyncLogWindow : Window {
 		var icon_theme = Gtk.IconTheme.get_default();
 		
 		try {
-			pix_folder = icon_theme.load_icon_for_scale (
-				"folder", Gtk.IconSize.MENU, 16, Gtk.IconLookupFlags.FORCE_SIZE);
-			pix_file = get_shared_icon_pixbuf("gtk-file", "gtk-file.png", 16);
+			pix_folder = IconManager.generic_icon_directory(16);
+			pix_file = IconManager.generic_icon_file(16);
 		}
 		catch (Error e) {
 			warning (e.message);

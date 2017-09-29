@@ -235,7 +235,25 @@ namespace TeeJee.FileSystem{
 		return file_exists(dst_file);
 	}
 
+	public string file_resolve_executable_path(string file_path){
 
+		if (file_path.has_prefix("/")){
+			return file_path;
+		}
+		else if (!file_path.contains("/")){
+			return GLib.Environment.find_program_in_path(file_path);
+		}
+		else if (file_path.has_prefix("./")){
+			return path_combine(GLib.Environment.get_current_dir(), file_path[2:file_path.length]);
+		}
+		else if (file_path.has_prefix("../")){
+			return path_combine(file_parent(GLib.Environment.get_current_dir()), file_path[3:file_path.length]);
+		}
+		else {
+			return path_combine(GLib.Environment.get_current_dir(), file_path);
+		}
+	}
+	
 	// file info -----------------
 
 	public int64 file_get_size(string file_path){

@@ -99,7 +99,7 @@ class SnapshotListBox : Gtk.Box{
 		col_date.min_width = 200;
 
 		var cell_backup_icon = new CellRendererPixbuf ();
-		cell_backup_icon.pixbuf = get_shared_icon_pixbuf("clock","clock.png",16);
+		cell_backup_icon.pixbuf = IconManager.lookup("clock", 16);
 		//cell_backup_icon.xpad = 1;
 		cell_backup_icon.xpad = 4;
 		cell_backup_icon.ypad = 6;
@@ -290,35 +290,35 @@ class SnapshotListBox : Gtk.Box{
 
 		// mi_remove
 		var item = new ImageMenuItem.with_label(_("Delete"));
-		item.image = get_shared_icon("edit-delete","",16);
+		item.image = new Gtk.Image.from_pixbuf(IconManager.lookup("edit-delete", 16));
 		item.activate.connect(()=> { delete_selected(); });
 		menu_snapshots.append(item);
 		mi_remove = item;
 		
 		// mi_mark
 		item = new ImageMenuItem.with_label(_("Mark for Deletion"));
-		item.image = get_shared_icon("edit-delete","",16);
+		item.image = new Gtk.Image.from_pixbuf(IconManager.lookup("edit-delete", 16));
 		item.activate.connect(()=> { mark_selected(); });
 		menu_snapshots.append(item);
 		mi_mark = item;
 		
 		// mi_browse
 		item = new ImageMenuItem.with_label(_("Browse Files"));
-		item.image = get_shared_icon("folder","",16);
+		item.image = new Gtk.Image.from_pixbuf(IconManager.generic_icon_directory(16));
 		item.activate.connect(()=> { browse_selected(); });
 		menu_snapshots.append(item);
 		mi_browse = item;
 		
 		// mi_view_log_create
 		item = new ImageMenuItem.with_label(_("View Log for Create"));
-		item.image = get_shared_icon("gtk-file","gtk-file.png",16);
+		item.image = new Gtk.Image.from_pixbuf(IconManager.generic_icon_file(16));
 		item.activate.connect(()=> { view_snapshot_log(false); });
 		menu_snapshots.append(item);
 		mi_view_log_create = item;
 		
 		// mi_view_log_restore
 		item = new ImageMenuItem.with_label(_("View Log for Restore"));
-		item.image = get_shared_icon("gtk-file","gtk-file.png",16);
+		item.image = new Gtk.Image.from_pixbuf(IconManager.generic_icon_file(16));
 		item.activate.connect(()=> { view_snapshot_log(true); });
 		menu_snapshots.append(item);
 		mi_view_log_restore = item;

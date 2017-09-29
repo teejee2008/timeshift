@@ -63,10 +63,11 @@ public class TerminalWindow : Gtk.Window {
 	}
 
 	public void init_window () {
-		title = "";
-		icon = get_app_icon(16);
-		resizable = true;
-		deletable = false;
+		
+		this.title = "";
+		this.icon = IconManager.lookup("timeshift",16);
+		this.resizable = true;
+		this.deletable = false;
 		
 		// vbox_main ---------------
 		

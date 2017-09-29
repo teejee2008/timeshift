@@ -37,14 +37,14 @@ public class DonationWindow : Dialog {
 
 	public DonationWindow() {
 
-		set_title(_("Donate"));
-		window_position = WindowPosition.CENTER_ON_PARENT;
-		set_destroy_with_parent (true);
-		set_modal (true);
-		set_deletable(true);
-		set_skip_taskbar_hint(false);
-		set_default_size (500, 20);
-		icon = get_app_icon(16);
+		this.set_title(_("Donate"));
+		this.window_position = WindowPosition.CENTER_ON_PARENT;
+		this.set_destroy_with_parent (true);
+		this.set_modal (true);
+		this.set_deletable(true);
+		this.set_skip_taskbar_hint(false);
+		this.set_default_size (500, 20);
+		this.icon = IconManager.lookup("timeshift",16);
 
 		//vbox_main
 		var vbox_main = get_content_area();

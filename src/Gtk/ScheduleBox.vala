@@ -186,7 +186,7 @@ class ScheduleBox : Gtk.Box{
 
         // img_shield
 		img_shield = new Gtk.Image();
-		img_shield.pixbuf = get_shared_icon("security-high", "security-high.svg", 48).pixbuf;
+		img_shield.pixbuf = IconManager.lookup("security-high", 48);
 		img_shield.margin_bottom = 6;
         hbox.add(img_shield);
 
@@ -279,14 +279,12 @@ class ScheduleBox : Gtk.Box{
 		if (App.schedule_monthly || App.schedule_weekly || App.schedule_daily
 			|| App.schedule_hourly || App.schedule_boot){
 
-			img_shield.pixbuf =
-				get_shared_icon("", "security-high.svg", Main.SHIELD_ICON_SIZE).pixbuf;
+			img_shield.pixbuf = IconManager.lookup("security-high", Main.SHIELD_ICON_SIZE);
 			set_shield_label(_("Scheduled snapshots are enabled"));
 			set_shield_subnote(_("Snapshots will be created at selected intervals if snapshot disk has enough space (> 1 GB)"));
 		}
 		else{
-			img_shield.pixbuf =
-				get_shared_icon("", "security-low.svg", Main.SHIELD_ICON_SIZE).pixbuf;
+			img_shield.pixbuf = IconManager.lookup("security-low", Main.SHIELD_ICON_SIZE);
 			set_shield_label(_("Scheduled snapshots are disabled"));
 			set_shield_subnote(_("Select the intervals for creating snapshots"));
 		}

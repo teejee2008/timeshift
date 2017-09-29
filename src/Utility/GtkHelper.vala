@@ -38,10 +38,10 @@ namespace TeeJee.GtkHelper{
 		Gdk.Cursor? cursor = null;
 
 		if (busy){
-			cursor = new Gdk.Cursor(Gdk.CursorType.WATCH);
+			cursor = new Gdk.Cursor.from_name(Gdk.Display.get_default(), "wait");
 		}
 		else{
-			cursor = new Gdk.Cursor(Gdk.CursorType.ARROW);
+			cursor = new Gdk.Cursor.from_name(Gdk.Display.get_default(), "default");
 		}
 
 		var window = win.get_window ();

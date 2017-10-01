@@ -10,8 +10,7 @@ CFLAGS=--std=c99
 app_name=timeshift
 app_fullname=Timeshift
 
-vte_pkg=$(shell { ((ldconfig -p | grep libvte-2.91*.so) >/dev/null && echo '--pkg vte-2.91') || echo '--pkg vte-2.90'; } )
-vte_symbol=$(shell { ((ldconfig -p | grep libvte-2.91*.so) >/dev/null && echo '-D VTE_291') || echo ''; } )
+vte_symbol = -D VTE_291
 
 xapp_pkg=$(shell { ((pkg-config --exists 'xapp >= 1.0.4') >/dev/null && echo '--pkg xapp') || echo ''; } )
 xapp_symbol=$(shell { ((pkg-config --exists 'xapp >= 1.0.4') >/dev/null && echo '-D XAPP') || echo ''; } )
@@ -19,20 +18,20 @@ xapp_symbol=$(shell { ((pkg-config --exists 'xapp >= 1.0.4') >/dev/null && echo 
 gtk3_version=$(shell { (pkg-config --modversion gtk+-3.0 | cut -d. -f2); } )
 
 ifeq ($(shell { test ${gtk3_version} -gt 17 ; echo $$? ; } ), 0)
-gtk3_symbol=$(shell { echo '-D GTK3_18'; } )
+gtk3_symbol=$(shell echo '-D GTK3_18')
 else
-gtk3_symbol=$(shell { echo ''; } )
+gtk3_symbol=$(shell echo '')
 endif
 
-symbols=$(shell { echo "${vte_symbol} ${gtk3_symbol} ${xapp_symbol}"; } )
+symbols=$(shell echo "${vte_symbol} ${gtk3_symbol} ${xapp_symbol}")
 
 all:
 
 	#timeshift-gtk
-	valac -X -D'GETTEXT_PACKAGE="${app_name}"' --Xcc="-lm" -X -Wl,-rpath,/usr/share/${app_name}/libs ${symbols} --thread Core/*.vala Utility/*.vala  Utility/Gtk/*.vala  Gtk/*.vala -o ${app_name}-gtk --pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix --pkg gtk+-3.0 $(vte_pkg) $(xapp_pkg) --pkg gee-0.8 --pkg json-glib-1.0
+	valac -X -D'GETTEXT_PACKAGE="${app_name}"' --Xcc="-lm" -X -Wl,-rpath,/usr/share/${app_name}/libs ${symbols} --thread Core/*.vala Utility/*.vala  Utility/Gtk/*.vala  Gtk/*.vala -o ${app_name}-gtk --pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix --pkg gtk+-3.0 $(xapp_pkg) --pkg vte-2.91 --pkg gee-0.8 --pkg json-glib-1.0
 
 	#timeshift
-	valac -X -D'GETTEXT_PACKAGE="${app_name}"' --Xcc="-lm" -X -Wl,-rpath,/usr/share/${app_name}/libs ${symbols} --thread Core/*.vala Utility/*.vala Utility/Gtk/*.vala Console/*.vala -o ${app_name} --pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix --pkg gtk+-3.0 $(vte_pkg) $(xapp_pkg) --pkg gee-0.8 --pkg json-glib-1.0
+	valac -X -D'GETTEXT_PACKAGE="${app_name}"' --Xcc="-lm" -X -Wl,-rpath,/usr/share/${app_name}/libs ${symbols} --thread Core/*.vala Utility/*.vala Utility/Gtk/*.vala Console/*.vala -o ${app_name} --pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix --pkg gtk+-3.0 $(xapp_pkg) --pkg vte-2.91 --pkg gee-0.8 --pkg json-glib-1.0
 
 	# update translation template
 	find . -iname "*.vala" | xargs xgettext --from-code=UTF-8 --language=C --keyword=_ --copyright-holder='Tony George (teejeetech@gmail.com)' --package-name="${app_name}" --package-version='1.6' --msgid-bugs-address='teejeetech@gmail.com' --escape --sort-output -o ../${app_name}.pot

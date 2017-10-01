@@ -1,18 +1,53 @@
-timeshift (17.9) xenial; urgency=medium
+timeshift (17.10) xenial; urgency=medium
 
-  * Updated translations
+  * [Changed] Entire contents of home directories will be excluded by
+  default. Any data to be included from home directories must be
+  explicitly selected from Settings window.
+   
+  * [Fixed] Encrypted home directories will be backed-up and restored
+  using encrypted files in /home/.ecryptfs. Decrypted contents will
+  NOT be saved to backup location.
 
-  * Fixed: Encrypted home directories will be backed-up and restored
-  using the encrypted files in /home/.ecryptfs. Decrypted contents will
-  NOT be saved to backup location. Entire contents of encrypted home
-  will be included for backup and restore. Any specific filters added
-  for the user's home will be ignored.
+  * [Added] Added support for BTRFS systems with @ on BTRFS volume
+  and /home mounted on non-BTRFS partition
 
-  * Fixed: Build error with valac-0.36
+  * [Added] Support for window progress in Cinnamon 3.6 using libxapp
 
-  * Installer was updated
+  * [Added] Install a default configuration file in 
+  /etc/default/timeshift.json
+
+  * [Removed] Removed the Exclude Apps page in restore wizard
+
+  * [Removed] Unnecessary dependency on libxml2 and libsoup
+
+  * [Fixed] Inverted mouse cursor was displayed for some cursor themes
+  on KDE and GTK
+
+  * [Fixed] Message dialog was unreadable when timeshift-gtk was
+  started without admin access on a system with newer versions of GTK+
+
+  * [Fixed] Updated timeshift-launcher to work with Wayland in Fedora
+
+  * [Fixed] Snapshots were saved on root device if backup device was missing
   
- -- Tony George <tony.george.kol@gmail.com>  Sun, 24 Sep 2017 10:00:00 +0530
+  * [Fixed] Build error with valac-0.36
+
+  * [Fixed] Build error with libvte-2.91 on Debian 9
+
+  * [Fixed] Scheduled tasks will be added only after user clicks 
+  Next on Schedule page. Tasks will not be added if user quits the
+  Setup Wizard without clicking Next on the Schedule page.
+
+  * [Changed] Use symbolic icons in toolbar for better contrast with
+  light and dark GTK themes
+
+  * [Updated] Donation window
+
+  * [Updated] Improved installer; More robust and supports more systems
+
+  * [Updated] Added new translations by Linux Mint translation teams
+  
+ -- Tony George <tony.george.kol@gmail.com>  Sun, 01 Oct 2017 10:00:00 +0530
 
 
 timeshift (17.2) trusty; urgency=medium

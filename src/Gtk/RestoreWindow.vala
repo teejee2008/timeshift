@@ -214,6 +214,7 @@ class RestoreWindow : Gtk.Window{
 	}
 
 	private void action_buttons_set_no_show_all(bool val){
+		
 		btn_prev.no_show_all = val;
 		btn_next.no_show_all = val;
 		btn_close.no_show_all = val;
@@ -238,17 +239,21 @@ class RestoreWindow : Gtk.Window{
 	}
 	
 	private void go_prev(){
+		
 		switch(notebook.page){
 		case Tabs.RESTORE_EXCLUDE:
 			notebook.page = Tabs.TARGET_DEVICE;
 			break;
+			
 		case Tabs.EXCLUDE_APPS:
 			notebook.page = Tabs.RESTORE_EXCLUDE;
 			//notebook.page = Tabs.TARGET_DEVICE;
 			break;
+			
 		case Tabs.SUMMARY:
 			notebook.page = Tabs.RESTORE_EXCLUDE; // go to parent (RESTORE_EXCLUDE)
 			break;
+			
 		case Tabs.TARGET_DEVICE:
 		case Tabs.RESTORE:
 		case Tabs.FINISH:
@@ -267,13 +272,17 @@ class RestoreWindow : Gtk.Window{
 		
 		switch(notebook.page){
 		case Tabs.TARGET_DEVICE:
-			if (App.btrfs_mode || (App.exclude_list_apps.size == 0)){
+
+			notebook.page = Tabs.SUMMARY;
+			
+			/*if (App.btrfs_mode || (App.exclude_list_apps.size == 0)){
 				notebook.page = Tabs.SUMMARY;
 			}
 			else{
 				notebook.page = Tabs.RESTORE_EXCLUDE;
-			}
+			}*/
 			break;
+			
 		case Tabs.RESTORE_EXCLUDE:
 			if (restore_exclude_box.show_all_apps()){
 				notebook.page = Tabs.EXCLUDE_APPS;
@@ -282,15 +291,19 @@ class RestoreWindow : Gtk.Window{
 				notebook.page = Tabs.SUMMARY;
 			}	
 			break;
+			
 		case Tabs.EXCLUDE_APPS:
 			notebook.page = Tabs.SUMMARY;
 			break;
+			
 		case Tabs.SUMMARY:
 			notebook.page = Tabs.RESTORE;
 			break;
+			
 		case Tabs.RESTORE:
 			notebook.page = Tabs.FINISH;
 			break;
+			
 		case Tabs.FINISH:
 			destroy();
 			break;

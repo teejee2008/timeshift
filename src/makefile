@@ -2,6 +2,7 @@ prefix=/usr
 sysconfdir=/etc
 bindir=$(prefix)/bin
 sharedir=$(prefix)/share
+polkitdir=$(sharedir)/polkit-1/actions
 localedir=$(sharedir)/locale
 launcherdir=$(sharedir)/applications
 mandir=$(sharedir)/man
@@ -45,6 +46,7 @@ install:
 	mkdir -p "$(DESTDIR)$(mandir)"
 	mkdir -p "$(DESTDIR)$(man1dir)"
 	mkdir -p "$(DESTDIR)$(launcherdir)"
+	mkdir -p "$(DESTDIR)$(polkitdir)"
 	mkdir -p "$(DESTDIR)$(sysconfdir)/default"
 	mkdir -p "$(DESTDIR)$(sharedir)/${app_name}"
 	mkdir -p "$(DESTDIR)$(sharedir)/icons"
@@ -71,6 +73,9 @@ install:
 	# shared files
 	cp -dpr --no-preserve=ownership -t "$(DESTDIR)$(sharedir)/${app_name}" ./share/${app_name}/*
 	chmod --recursive 0755 $(DESTDIR)$(sharedir)/${app_name}/*
+
+	# polkit policy file
+	install -m 0644 ./share/polkit-1/actions/in.teejeetech.pkexec.timeshift.policy "$(DESTDIR)$(polkitdir)"
 
 	# launcher
 	install -m 0755 ${app_name}-gtk.desktop "$(DESTDIR)$(launcherdir)"
@@ -110,6 +115,9 @@ uninstall:
 
 	# launcher
 	rm -f "$(DESTDIR)$(launcherdir)/${app_name}-gtk.desktop"
+
+	# polkit policy file
+	rm -f "$(DESTDIR)$(polkitdir)/in.teejeetech.pkexec.timeshift.policy"
 
 	# app icon
 	rm -f "$(DESTDIR)$(sharedir)/icons/hicolor/*/apps/${app_name}.png"

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC
+ "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
+<policyconfig>
+  <vendor>Tony George</vendor>
+  <vendor_url>https://github.com/teejee2008</vendor_url>
+  <action id="in.teejeetech.pkexec.timeshift-gtk">
+    <message gettext-domain="timeshift">Authentication is required to run Timeshift as Administrator</message>
+    <description>Run Timeshift as Administrator</description>
+    <icon_name>timeshift</icon_name>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/bin/timeshift-gtk</annotate>
+    <annotate key="org.freedesktop.policykit.exec.allow_gui">true</annotate>
+  </action>
+  <action id="in.teejeetech.pkexec.timeshift">
+    <message gettext-domain="timeshift">Authentication is required to run Timeshift as Administrator</message>
+    <description>Run Timeshift as Administrator</description>
+    <icon_name>timeshift</icon_name>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/bin/timeshift</annotate>
+    <annotate key="org.freedesktop.policykit.exec.allow_gui">true</annotate>
+  </action>
+</policyconfig>

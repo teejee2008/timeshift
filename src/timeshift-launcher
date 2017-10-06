@@ -14,7 +14,7 @@ else
 		#script is running in non-interactive mode
 		if [ $XDG_SESSION_TYPE = "wayland" ] ; then
 			xhost +SI:localuser:root
-			sudo ${app_command}
+			pkexec ${app_command}
 			xhost -SI:localuser:root
 			xhost
 		elif command -v gksu >/dev/null 2>&1; then

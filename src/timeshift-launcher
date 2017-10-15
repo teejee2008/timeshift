@@ -17,8 +17,6 @@ else
 			pkexec ${app_command}
 			xhost -SI:localuser:root
 			xhost
-		elif command -v gksu >/dev/null 2>&1; then
-			gksu ${app_command}
 		elif command -v pkexec >/dev/null 2>&1; then
 			pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY ${app_command}
 		elif command -v sudo >/dev/null 2>&1; then

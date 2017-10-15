@@ -1,3 +1,6 @@
+SHELL=/bin/bash
+CFLAGS=--std=c99
+
 prefix=/usr
 sysconfdir=/etc
 bindir=$(prefix)/bin
@@ -7,7 +10,7 @@ localedir=$(sharedir)/locale
 launcherdir=$(sharedir)/applications
 mandir=$(sharedir)/man
 man1dir=$(mandir)/man1
-CFLAGS=--std=c99
+
 app_name=timeshift
 app_fullname=Timeshift
 
@@ -38,8 +41,11 @@ all:
 	find . -iname "*.vala" | xargs xgettext --from-code=UTF-8 --language=C --keyword=_ --copyright-holder='Tony George (teejeetech@gmail.com)' --package-name="${app_name}" --package-version='1.6' --msgid-bugs-address='teejeetech@gmail.com' --escape --sort-output -o ../${app_name}.pot
 
 clean:
-	rm -rf *.o ${app_name}
-
+	rm -rfv ../release/{source,i386,amd64,armel,armhf}
+	rm -rfv ../release/*.{run,deb}
+	rm -rfv *.c *.o *.mo
+	rm -fv ${app_name} ${app_name}-gtk
+	
 install:
 	mkdir -p "$(DESTDIR)$(bindir)"
 	mkdir -p "$(DESTDIR)$(sharedir)"
@@ -50,19 +56,6 @@ install:
 	mkdir -p "$(DESTDIR)$(sysconfdir)/default"
 	mkdir -p "$(DESTDIR)$(sharedir)/${app_name}"
 	mkdir -p "$(DESTDIR)$(sharedir)/icons"
-	mkdir -p "$(DESTDIR)$(localedir)/bg/LC_MESSAGES"
-	mkdir -p "$(DESTDIR)$(localedir)/cs/LC_MESSAGES"
-	mkdir -p "$(DESTDIR)$(localedir)/es/LC_MESSAGES"
-	mkdir -p "$(DESTDIR)$(localedir)/fr/LC_MESSAGES"
-	mkdir -p "$(DESTDIR)$(localedir)/nl/LC_MESSAGES"
-	mkdir -p "$(DESTDIR)$(localedir)/pt_BR/LC_MESSAGES"
-	mkdir -p "$(DESTDIR)$(localedir)/ru/LC_MESSAGES"
-	mkdir -p "$(DESTDIR)$(localedir)/sv/LC_MESSAGES"
-	mkdir -p "$(DESTDIR)$(localedir)/tr/LC_MESSAGES"
-	mkdir -p "$(DESTDIR)$(localedir)/da/LC_MESSAGES"
-	mkdir -p "$(DESTDIR)$(localedir)/eu/LC_MESSAGES"
-	mkdir -p "$(DESTDIR)$(localedir)/lt/LC_MESSAGES"
-	mkdir -p "$(DESTDIR)$(localedir)/uk/LC_MESSAGES"
 
 	# binary
 	install -m 0755 ${app_name} "$(DESTDIR)$(bindir)"
@@ -88,6 +81,20 @@ install:
 	chmod --recursive 0755 $(DESTDIR)$(sharedir)/icons/*
 
 	# translations
+	mkdir -p "$(DESTDIR)$(localedir)/bg/LC_MESSAGES"
+	mkdir -p "$(DESTDIR)$(localedir)/cs/LC_MESSAGES"
+	mkdir -p "$(DESTDIR)$(localedir)/es/LC_MESSAGES"
+	mkdir -p "$(DESTDIR)$(localedir)/fr/LC_MESSAGES"
+	mkdir -p "$(DESTDIR)$(localedir)/nl/LC_MESSAGES"
+	mkdir -p "$(DESTDIR)$(localedir)/pt_BR/LC_MESSAGES"
+	mkdir -p "$(DESTDIR)$(localedir)/ru/LC_MESSAGES"
+	mkdir -p "$(DESTDIR)$(localedir)/sv/LC_MESSAGES"
+	mkdir -p "$(DESTDIR)$(localedir)/tr/LC_MESSAGES"
+	mkdir -p "$(DESTDIR)$(localedir)/da/LC_MESSAGES"
+	mkdir -p "$(DESTDIR)$(localedir)/eu/LC_MESSAGES"
+	mkdir -p "$(DESTDIR)$(localedir)/lt/LC_MESSAGES"
+	mkdir -p "$(DESTDIR)$(localedir)/uk/LC_MESSAGES"
+	
 	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/bg/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-bg.po
 	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/cs/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-cs.po
 	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/es/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-es.po

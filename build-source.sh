@@ -16,29 +16,30 @@ echo "app_name: $app_name"
 echo "pkg_name: $pkg_name"
 echo "--------------------------------------------------------------------------"
 
-# commit to bzr repo
-bzr add *
-bzr commit -m "updated"
+# clean build dir
 
-#skip errors as commit may fail if no changes
+rm -rfv /tmp/builds
+mkdir -pv /tmp/builds
+
+make clean
+
+rm -rfv release/source
+mkdir -pv release/source
 
 echo "--------------------------------------------------------------------------"
 
-# clean build dir
-rm -rf ../builds
+# build source package
+dpkg-source --build ./
 
-# build source
-bzr builddeb --source --native --build-dir ../builds/temp --result-dir ../builds
+mv -vf ../$pkg_name*.dsc release/source/
+mv -vf ../$pkg_name*.tar.xz release/source/
 
-#check for errors
-if [ $? -ne 0 ]; then
-	cd "$backup"; echo "Failed"; exit 1;
-fi
+if [ $? -ne 0 ]; then cd "$backup"; echo "Failed"; exit 1; fi
 
 echo "--------------------------------------------------------------------------"
 
 # list files
-ls -l ../builds
+ls -l release/source
 
 echo "-------------------------------------------------------------------------"
 

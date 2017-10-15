@@ -56,6 +56,7 @@ install:
 	mkdir -p "$(DESTDIR)$(sysconfdir)/default"
 	mkdir -p "$(DESTDIR)$(sharedir)/${app_name}"
 	mkdir -p "$(DESTDIR)$(sharedir)/icons"
+	mkdir -p "$(DESTDIR)$(sharedir)/appdata"
 
 	# binary
 	install -m 0755 ${app_name} "$(DESTDIR)$(bindir)"
@@ -67,7 +68,7 @@ install:
 	cp -dpr --no-preserve=ownership -t "$(DESTDIR)$(sharedir)/${app_name}" ./share/${app_name}/*
 	chmod --recursive 0755 $(DESTDIR)$(sharedir)/${app_name}/*
 
-	# polkit policy file
+	# polkit
 	install -m 0644 ./share/polkit-1/actions/in.teejeetech.pkexec.timeshift.policy "$(DESTDIR)$(polkitdir)"
 
 	# launcher
@@ -78,7 +79,10 @@ install:
 
 	# app icons
 	cp -dpr --no-preserve=ownership -t "$(DESTDIR)$(sharedir)/icons" ./share/icons/*
-	chmod --recursive 0755 $(DESTDIR)$(sharedir)/icons/*
+	chmod --recursive 0755 $(DESTDIR)$(sharedir)/icons/hicolor/*/apps/${app_name}.png
+
+	# appdata
+	install -m 0755 ../debian/${app_name}.appdata.xml "$(DESTDIR)$(sharedir)/appdata"
 
 	# translations
 	mkdir -p "$(DESTDIR)$(localedir)/bg/LC_MESSAGES"
@@ -123,11 +127,14 @@ uninstall:
 	# launcher
 	rm -f "$(DESTDIR)$(launcherdir)/${app_name}-gtk.desktop"
 
-	# polkit policy file
+	# polkit
 	rm -f "$(DESTDIR)$(polkitdir)/in.teejeetech.pkexec.timeshift.policy"
 
 	# app icon
-	rm -f "$(DESTDIR)$(sharedir)/icons/hicolor/*/apps/${app_name}.png"
+	rm -f $(DESTDIR)$(sharedir)/icons/hicolor/*/apps/${app_name}.png
 
 	# translations
 	rm -f $(DESTDIR)$(localedir)/*/LC_MESSAGES/${app_name}.mo
+
+	# appdata
+	rm -f "$(DESTDIR)$(sharedir)/appdata/${app_name}.appdata.xml"

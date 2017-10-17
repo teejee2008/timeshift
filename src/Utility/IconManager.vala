@@ -242,7 +242,7 @@ public class IconManager : GLib.Object {
 		
 		//log_debug("pixbuf_resized: %d, %d".printf(pixbuf_resized.width, pixbuf_resized.height));
 
-		copy_pixbuf_options(pixbuf_image, pixbuf_resized);
+		//copy_pixbuf_options(pixbuf_image, pixbuf_resized);
 		
         return pixbuf_resized;
     }
@@ -296,14 +296,6 @@ public class IconManager : GLib.Object {
 		}
 		
 		return null;
-	}
-
-	public static void copy_pixbuf_options(Gdk.Pixbuf source, Gdk.Pixbuf target){
-
-		var map = source.get_options();
-		foreach(string key in map.get_keys()){
-			target.set_option(key, map[key]);
-		}
 	}
 
     public static Gdk.Pixbuf? generic_icon_image(int icon_size) {

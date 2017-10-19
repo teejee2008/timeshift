@@ -58,14 +58,6 @@ public class ExcludeMessageWindow : Gtk.Dialog{
 		this.set_modal (true);
         this.set_default_size (400, 400);
 
-        //set app icon
-		try{
-			this.icon = new Gdk.Pixbuf.from_file (App.share_folder + "/icons/48x48/apps/timeshift.png");
-		}
-        catch(Error e){
-	        log_error (e.message);
-	    }
-
 	    string msg;
 
 	    //vbox_main
@@ -111,7 +103,7 @@ public class ExcludeMessageWindow : Gtk.Dialog{
 
 		CellRendererPixbuf cell_exclude_icon = new CellRendererPixbuf ();
 		col_exclude.pack_start (cell_exclude_icon, false);
-		col_exclude.set_attributes(cell_exclude_icon, "pixbuf", 1);
+		col_exclude.set_attributes(cell_exclude_icon, "icon-name", 1);
 
 		CellRendererText cell_exclude_text = new CellRendererText ();
 		col_exclude.pack_start (cell_exclude_text, false);
@@ -149,7 +141,7 @@ public class ExcludeMessageWindow : Gtk.Dialog{
 
 		//initialize -----------------------------------------
 
-		var model = new Gtk.ListStore(2, typeof(string), typeof(Gdk.Pixbuf));
+		var model = new Gtk.ListStore(2, typeof(string), typeof(string));
 		tv_exclude.model = model;
 
 		foreach(string path in App.exclude_list_default){
@@ -166,30 +158,20 @@ public class ExcludeMessageWindow : Gtk.Dialog{
 	}
 
 	private void tv_exclude_add_item(string path){
-		Gdk.Pixbuf pix_exclude = null;
-		Gdk.Pixbuf pix_include = null;
-		Gdk.Pixbuf pix_selected = null;
-
-		try{
-			pix_exclude = new Gdk.Pixbuf.from_file (App.share_folder + "/timeshift/images/item-gray.png");
-			pix_include = new Gdk.Pixbuf.from_file (App.share_folder + "/timeshift/images/item-blue.png");
-		}
-        catch(Error e){
-	        log_error (e.message);
-	    }
+		string icon_name = null;
 
 		TreeIter iter;
 		var model = (Gtk.ListStore) tv_exclude.model;
 		model.append(out iter);
 
 		if (path.has_prefix("+ ")){
-			pix_selected = pix_include;
+			icon_name = "item-blue";
 		}
 		else{
-			pix_selected = pix_exclude;
+			icon_name = "item-gray";
 		}
 
-		model.set (iter, 0, path, 1, pix_selected);
+		model.set (iter, 0, path, 1, icon_name);
 
 		Adjustment adj = tv_exclude.get_hadjustment();
 		adj.value = adj.upper;

@@ -45,6 +45,7 @@ class RestoreDeviceBox : Gtk.Box{
 	private Gtk.SizeGroup sg_device = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
 	private Gtk.SizeGroup sg_mount_options = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
 	private Gtk.Window parent_window;
+    private Gtk.IconSize tooltip_size = Gtk.icon_size_register("ttip", 128, 128);
 
 	public RestoreDeviceBox (Gtk.Window _parent_window) {
 
@@ -198,7 +199,7 @@ class RestoreDeviceBox : Gtk.Box{
 			if (dev != null){
 
 				if (dev.type == "disk"){
-					(cell as Gtk.CellRendererPixbuf).pixbuf = IconManager.lookup("drive-harddisk", 16);
+					(cell as Gtk.CellRendererPixbuf).icon_name = IconManager.ICON_HARDDRIVE;
 				}
 			
 				(cell as Gtk.CellRendererPixbuf).sensitive = (dev.type != "disk");
@@ -218,7 +219,7 @@ class RestoreDeviceBox : Gtk.Box{
 			if (!selected) { return true; }
 			combo.model.get (iter, 0, out dev, -1);
 			
-			tooltip.set_icon(IconManager.lookup("drive-harddisk", 128));
+			tooltip.set_icon_from_icon_name(IconManager.ICON_HARDDRIVE, tooltip_size);
 			
 			if (dev != null){
 				tooltip.set_markup(dev.tooltip_text());

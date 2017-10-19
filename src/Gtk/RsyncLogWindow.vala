@@ -58,9 +58,6 @@ public class RsyncLogWindow : Window {
 	//private uint tmr_task = 0;
 	private uint tmr_init = 0;
 	private bool thread_is_running = false;
-	
-	Gdk.Pixbuf pix_file = null;
-	Gdk.Pixbuf pix_folder = null;
 
 	private string rsync_log_file;
 	private FileItem log_root;
@@ -291,7 +288,7 @@ public class RsyncLogWindow : Window {
 		var cell_pix = new CellRendererPixbuf ();
 		cell_pix.stock_size = Gtk.IconSize.MENU;
 		col.pack_start(cell_pix, false);
-		col.set_attributes(cell_pix, "pixbuf", 3);
+		col.set_attributes(cell_pix, "icon-name", 3);
 
 		// cell text
 		var cell_text = new CellRendererText ();
@@ -402,20 +399,12 @@ public class RsyncLogWindow : Window {
 			typeof(FileItem), // object
 			typeof(bool), // odd row
 			typeof(string), // file_name
-			typeof(Gdk.Pixbuf),
+			typeof(string),
 			typeof(string), // size text
 			typeof(string) // file_status
 		);
 
 		var icon_theme = Gtk.IconTheme.get_default();
-		
-		try {
-			pix_folder = IconManager.generic_icon_directory(16);
-			pix_file = IconManager.generic_icon_file(16);
-		}
-		catch (Error e) {
-			warning (e.message);
-		}
 
 		TreeIter iter0;
 
@@ -444,10 +433,10 @@ public class RsyncLogWindow : Window {
 				}
 				
 				if (item.file_type == FileType.DIRECTORY){
-					model.set (iter0, 3, pix_folder);
+					model.set (iter0, 3, IconManager.GENERIC_ICON_DIRECTORY);
 				}
 				else{
-					model.set (iter0, 3, pix_file);
+					model.set (iter0, 3, IconManager.GENERIC_ICON_FILE);
 				}
 
 				if (item.is_symlink){
@@ -543,10 +532,10 @@ public class RsyncLogWindow : Window {
 				}
 
 				if (item.file_type == FileType.DIRECTORY){
-					model.set (iter1, 3, pix_folder);
+					model.set (iter1, 3, IconManager.GENERIC_ICON_DIRECTORY);
 				}
 				else{
-					model.set (iter1, 3, pix_file);
+					model.set (iter1, 3, IconManager.GENERIC_ICON_FILE);
 				}
 
 				

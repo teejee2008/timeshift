@@ -203,9 +203,7 @@ class BootOptionsBox : Gtk.Box{
 	}
 	
 	private void refresh_cmb_grub_dev(){
-		var store = new Gtk.ListStore(2, typeof(Device), typeof(Gdk.Pixbuf));
-
-		Gdk.Pixbuf pix_device = IconManager.lookup("drive-harddisk", 16);
+		var store = new Gtk.ListStore(2, typeof(Device), typeof(string));
 
 		TreeIter iter;
 		foreach(Device dev in Device.get_block_devices_using_lsblk()) {
@@ -227,7 +225,7 @@ class BootOptionsBox : Gtk.Box{
 
 			store.append(out iter);
 			store.set (iter, 0, dev);
-			store.set (iter, 1, pix_device);
+			store.set (iter, 1, IconManager.ICON_HARDDRIVE);
 		}
 
 		cmb_grub_dev.model = store;

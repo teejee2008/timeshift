@@ -166,7 +166,7 @@ class ExcludeBox : Gtk.Box{
 		// icon
 		var cell_icon = new CellRendererPixbuf ();
 		col.pack_start (cell_icon, false);
-		col.set_attributes(cell_icon, "pixbuf", 1);
+		col.set_attributes(cell_icon, "icon-name", 1);
 
 		// pattern
 		cell_text = new CellRendererText ();
@@ -447,7 +447,7 @@ class ExcludeBox : Gtk.Box{
 	// helpers
 
 	public void refresh_treeview(){
-		var model = new Gtk.ListStore(4, typeof(string), typeof(Gdk.Pixbuf), typeof(bool), typeof(bool));
+		var model = new Gtk.ListStore(4, typeof(string), typeof(string), typeof(bool), typeof(bool));
 		treeview.model = model;
 
 		foreach(string pattern in App.exclude_list_user){
@@ -456,35 +456,16 @@ class ExcludeBox : Gtk.Box{
 	}
 
 	private void treeview_add_item(Gtk.TreeView treeview, string pattern){
-		Gdk.Pixbuf pix_exclude = null;
-		Gdk.Pixbuf pix_include = null;
-		Gdk.Pixbuf pix_selected = null;
-
 		log_debug("treeview_add_item(): %s".printf(pattern));
-
-		try{
-			pix_include = IconManager.lookup("list-add", 16);
-			pix_exclude = IconManager.lookup("list-remove", 16);
-		}
-        catch(Error e){
-	        log_error (e.message);
-	    }
 
 		TreeIter iter;
 		var model = (Gtk.ListStore) treeview.model;
 		model.append(out iter);
 
 		bool include = pattern.has_prefix("+ ");
-		
-		if (include){
-			pix_selected = pix_include;
-		}
-		else{
-			pix_selected = pix_exclude;
-		}
 
 		model.set (iter, 0, pattern);
-		model.set (iter, 1, pix_selected);
+		model.set (iter, 1, include ? "list-add" : "list-remove");
 		model.set (iter, 2, include);
 		model.set (iter, 3, !include);
 
@@ -493,33 +474,13 @@ class ExcludeBox : Gtk.Box{
 	}
 
 	private void treeview_update_item(ref TreeIter iter, string pattern){
-
-		Gdk.Pixbuf pix_exclude = null;
-		Gdk.Pixbuf pix_include = null;
-		Gdk.Pixbuf pix_selected = null;
-
 		log_debug("treeview_update_item(): %s".printf(pattern));
 
-		try{
-			pix_include = IconManager.lookup("list-add", 16);
-			pix_exclude = IconManager.lookup("list-remove", 16);
-		}
-        catch(Error e){
-	        log_error (e.message);
-	    }
-
 	    bool include = pattern.has_prefix("+ ");
-		
-		if (include){
-			pix_selected = pix_include;
-		}
-		else{
-			pix_selected = pix_exclude;
-		}
-	    
+
 		var model = (Gtk.ListStore) treeview.model;
 		model.set (iter, 0, pattern);
-		model.set (iter, 1, pix_selected);
+		model.set (iter, 1, include ? "list-add" : "list-remove");
 		model.set (iter, 2, include);
 		model.set (iter, 3, !include);
 	}

@@ -24,6 +24,7 @@
 
 using Gtk;
 using Gee;
+using Cairo;
 
 using TeeJee.Logging;
 using TeeJee.FileSystem;
@@ -38,6 +39,24 @@ public class IconManager : GLib.Object {
 	public static Gtk.IconTheme theme;
 
 	public static Gee.ArrayList<string> search_paths = new Gee.ArrayList<string>();
+
+    public const int SHIELD_ICON_SIZE = 64;
+
+    public const string GENERIC_ICON_IMAGE = "image-x-generic";
+    public const string GENERIC_ICON_IMAGE_MISSING = "image-missing";
+    public const string GENERIC_ICON_VIDEO = "video-x-generic";
+    public const string GENERIC_ICON_FILE = "text-x-preview";
+    public const string GENERIC_ICON_ARCHIVE_FILE = "package-x-generic";
+    public const string GENERIC_ICON_DIRECTORY = "folder";
+    public const string GENERIC_ICON_ISO = "media-cdrom";
+    public const string GENERIC_ICON_PDF = "application-pdf";
+
+    public const string ICON_HARDDRIVE = "drive-harddisk";
+
+    public const string SHIELD_LIVE= "media-optical";
+    public const string SHIELD_LOW = "security-low";
+    public const string SHIELD_MED = "security-medium";
+    public const string SHIELD_HIGH = "security-high";
 
 	public static void init(string[] args, string app_name){
 
@@ -76,7 +95,7 @@ public class IconManager : GLib.Object {
 		}
 	}
 
-	public static Gdk.Pixbuf? lookup(string icon_name, int icon_size, bool symbolic = false, bool use_hardcoded = false){
+	public static Gdk.Pixbuf? lookup(string icon_name, int icon_size, bool symbolic = false, bool use_hardcoded = false, int scale = 1){
 
 		Gdk.Pixbuf? pixbuf = null;
 
@@ -84,7 +103,7 @@ public class IconManager : GLib.Object {
 
 		if (!use_hardcoded){
 			try {
-				pixbuf = theme.load_icon_for_scale(icon_name, icon_size, 1, Gtk.IconLookupFlags.FORCE_SIZE);
+				pixbuf = theme.load_icon_for_scale(icon_name, icon_size, scale, Gtk.IconLookupFlags.FORCE_SIZE);
 				if (pixbuf != null){ return pixbuf; }
 			}
 			catch (Error e) {
@@ -112,15 +131,33 @@ public class IconManager : GLib.Object {
 	public static Gtk.Image? lookup_image(string icon_name, int icon_size, bool symbolic = false, bool use_hardcoded = false){
 
 		if (icon_name.length == 0){ return null; }
-		
-		Gdk.Pixbuf? pix = lookup(icon_name, icon_size, symbolic, use_hardcoded);
+
+        Gtk.Image image = new Gtk.Image();
+
+		Gdk.Pixbuf? pix = lookup(icon_name, icon_size, symbolic, use_hardcoded, image.scale_factor);
 		
 		if (pix == null){
-			pix = generic_icon_image_missing(icon_size);
+			pix = lookup(GENERIC_ICON_IMAGE_MISSING, icon_size, symbolic, use_hardcoded, image.scale_factor);
 		}
 
-		return new Gtk.Image.from_pixbuf(pix);
+        Cairo.Surface surf = Gdk.cairo_surface_create_from_pixbuf(pix, image.scale_factor, null);
+
+        image.set_from_surface(surf);
+
+        return image;
 	}
+
+    public static Cairo.Surface? lookup_surface(string icon_name, int icon_size, int scale = 1, bool symbolic = false, bool use_hardcoded = false){
+        if (icon_name.length == 0){ return null; }
+        
+        Gdk.Pixbuf? pix = lookup(icon_name, icon_size, symbolic, use_hardcoded, scale);
+        
+        if (pix == null){
+            pix = lookup(GENERIC_ICON_IMAGE_MISSING, icon_size, symbolic, use_hardcoded, scale);
+        }
+
+        return Gdk.cairo_surface_create_from_pixbuf(pix, scale, null);
+    }
 
 	public static Gdk.Pixbuf? lookup_gicon(GLib.Icon? gicon, int icon_size){
 
@@ -297,37 +334,4 @@ public class IconManager : GLib.Object {
 		
 		return null;
 	}
-
-    public static Gdk.Pixbuf? generic_icon_image(int icon_size) {
-		return lookup("image-x-generic", icon_size, false);
-    }
-
-    public static Gdk.Pixbuf? generic_icon_image_missing(int icon_size) {
-		return lookup("image-missing", icon_size, false);
-    }
-
-    public static Gdk.Pixbuf? generic_icon_video(int icon_size) {
-		return lookup("video-x-generic", icon_size, false);
-    }
-
-    public static Gdk.Pixbuf? generic_icon_file(int icon_size) {
-		return lookup("text-x-preview", icon_size, false);
-    }
-
-     public static Gdk.Pixbuf? generic_archive_file(int icon_size) {
-		return lookup("package-x-generic", icon_size, false);
-    }
-
-    public static Gdk.Pixbuf? generic_icon_directory(int icon_size) {
-		return lookup("folder", icon_size, false);
-    }
-
-    public static Gdk.Pixbuf? generic_icon_iso(int icon_size) {
-		return lookup("media-cdrom", icon_size, false);
-    }
-
-    public static Gdk.Pixbuf? generic_icon_pdf(int icon_size) {
-		return lookup("application-pdf", icon_size, false);
-    }
-
 }

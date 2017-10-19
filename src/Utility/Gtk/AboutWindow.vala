@@ -127,8 +127,8 @@ public class AboutWindow : Dialog {
 		}
 	}
 
-	private Gdk.Pixbuf _logo;
-	public Gdk.Pixbuf logo{
+	private string _logo;
+	public string logo{
 		get{
 			return _logo;
 		}
@@ -307,7 +307,7 @@ public class AboutWindow : Dialog {
 
 	public void initialize() {
 		title = program_name;
-		img_logo.pixbuf = logo.scale_simple(128,128,Gdk.InterpType.HYPER);
+        img_logo.surface = IconManager.lookup_surface(logo, 128, img_logo.scale_factor);
 		lbl_program_name.label = "<span size='larger'>%s</span>".printf(program_name);
 		lbl_version.label = "v%s".printf(version);
 		lbl_comments.label = "%s".printf(comments);

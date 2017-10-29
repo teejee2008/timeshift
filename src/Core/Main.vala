@@ -117,7 +117,6 @@ public class Main : GLib.Object{
 	
 	public int64 snapshot_location_free_space = 0;
 
-	public const int SHIELD_ICON_SIZE = 64;
 	public const int64 MIN_FREE_SPACE = 1 * GB;
 	public static int64 first_snapshot_size = 0;
 	public static int64 first_snapshot_count = 0;

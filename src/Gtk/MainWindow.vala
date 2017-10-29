@@ -66,6 +66,8 @@ class MainWindow : Gtk.Window{
 	private int def_width = 800;
 	private int def_height = 600;
 
+    private int TOOLBAR_ICON_SIZE = 24;
+
 	public MainWindow () {
 
 		log_debug("MainWindow: MainWindow()");
@@ -131,9 +133,8 @@ class MainWindow : Gtk.Window{
 		toolbar.get_style_context().add_class(Gtk.STYLE_CLASS_PRIMARY_TOOLBAR);
 		vbox_main.add(toolbar);
 
-		//btn_backup
-		var img_backup = IconManager.lookup_image("document-save-symbolic", 24);
-		btn_backup = new Gtk.ToolButton (img_backup, null);
+        Gtk.Image img = new Gtk.Image.from_icon_name("document-save-symbolic", Gtk.IconSize.LARGE_TOOLBAR);
+		btn_backup = new Gtk.ToolButton (img, null);
 		btn_backup.is_important = true;
 		btn_backup.label = _("Create");
 		btn_backup.set_tooltip_text (_("Create snapshot of current system"));
@@ -142,8 +143,8 @@ class MainWindow : Gtk.Window{
         btn_backup.clicked.connect (create_snapshot);
 
 		//btn_restore
-		var img_restore = IconManager.lookup_image("document-open-recent-symbolic", 24);
-		btn_restore = new Gtk.ToolButton (img_restore, null);
+        img = new Gtk.Image.from_icon_name("document-open-recent-symbolic", Gtk.IconSize.LARGE_TOOLBAR);
+		btn_restore = new Gtk.ToolButton (img, null);
 		btn_restore.is_important = true;
 		btn_restore.label = _("Restore");
 		btn_restore.set_tooltip_text (_("Restore selected snapshot"));
@@ -152,8 +153,8 @@ class MainWindow : Gtk.Window{
 		btn_restore.clicked.connect (btn_restore_clicked);
 
 		//btn_delete_snapshot
-		var img_delete = IconManager.lookup_image("edit-delete-symbolic", 24);
-		btn_delete_snapshot = new Gtk.ToolButton (img_delete, null);
+		img = new Gtk.Image.from_icon_name("edit-delete-symbolic", Gtk.IconSize.LARGE_TOOLBAR);
+		btn_delete_snapshot = new Gtk.ToolButton (img, null);
 		btn_delete_snapshot.is_important = true;
 		btn_delete_snapshot.label = _("Delete");
 		btn_delete_snapshot.set_tooltip_text (_("Delete selected snapshot"));
@@ -162,8 +163,8 @@ class MainWindow : Gtk.Window{
         btn_delete_snapshot.clicked.connect (delete_selected);
         
 	    //btn_browse_snapshot
-	    var img_browse = IconManager.lookup_image("folder-symbolic", 24);
-		btn_browse_snapshot = new Gtk.ToolButton (img_browse, null);
+        img = new Gtk.Image.from_icon_name("folder-symbolic", Gtk.IconSize.LARGE_TOOLBAR);
+		btn_browse_snapshot = new Gtk.ToolButton (img, null);
 		btn_browse_snapshot.is_important = true;
 		btn_browse_snapshot.label = _("Browse");
 		btn_browse_snapshot.set_tooltip_text (_("Browse selected snapshot"));
@@ -172,8 +173,8 @@ class MainWindow : Gtk.Window{
         btn_browse_snapshot.clicked.connect (browse_selected);
 
         //btn_settings
-        var img_settings = IconManager.lookup_image("preferences-system-symbolic", 24);
-		btn_settings = new Gtk.ToolButton (img_settings, null);
+        img = new Gtk.Image.from_icon_name("preferences-system-symbolic", Gtk.IconSize.LARGE_TOOLBAR);
+		btn_settings = new Gtk.ToolButton (img, null);
 		btn_settings.is_important = true;
 		btn_settings.label = _("Settings");
 		btn_settings.set_tooltip_text (_("Settings"));
@@ -182,8 +183,8 @@ class MainWindow : Gtk.Window{
         btn_settings.clicked.connect (btn_settings_clicked);
 
         //btn_wizard
-        var img_wizard = IconManager.lookup_image("emblem-default-symbolic", 24);
-		btn_wizard = new Gtk.ToolButton (img_wizard, null);
+        img = new Gtk.Image.from_icon_name("emblem-default-symbolic", Gtk.IconSize.LARGE_TOOLBAR);
+		btn_wizard = new Gtk.ToolButton (img, null);
 		btn_wizard.is_important = true;
 		btn_wizard.label = _("Wizard");
 		btn_wizard.set_tooltip_text (_("Settings wizard"));
@@ -200,7 +201,7 @@ class MainWindow : Gtk.Window{
 		toolbar.add (separator);
 
 		//btn_hamburger
-		var img = IconManager.lookup_image("open-menu-symbolic", 24);
+        img = new Gtk.Image.from_icon_name("open-menu-symbolic", Gtk.IconSize.LARGE_TOOLBAR);
 		var button = new Gtk.ToolButton (img, null);
 		button.label = _("Menu");
 		button.set_tooltip_text (_("Open Menu"));
@@ -246,7 +247,7 @@ class MainWindow : Gtk.Window{
 
         // img_shield
 		img_shield = new Gtk.Image();
-		img_shield.pixbuf = IconManager.lookup("security-high", 48);
+		img_shield.surface = IconManager.lookup_surface(IconManager.SHIELD_HIGH, IconManager.SHIELD_ICON_SIZE, img_shield.scale_factor);
 		img_shield.margin_bottom = 6;
         box.add(img_shield);
 
@@ -927,7 +928,7 @@ class MainWindow : Gtk.Window{
 		dialog.comments = _("System Restore Utility");
 		dialog.copyright = "Copyright © 2012-17 Tony George (%s)".printf(AppAuthorEmail);
 		dialog.version = AppVersion;
-		dialog.logo = IconManager.lookup("timeshift", 128);
+		dialog.logo = "timeshift";
 
 		dialog.license = "This program is free for personal and commercial use and comes with absolutely no warranty. You use this program entirely at your own risk. The author will not be liable for any damages arising from the use of this program.";
 		dialog.website = "https://github.com/teejee2008/timeshift";
@@ -966,7 +967,7 @@ class MainWindow : Gtk.Window{
 			statusbar.visible = true;
 			statusbar.show_all();
 
-			img_shield.pixbuf = IconManager.lookup("media-optical", Main.SHIELD_ICON_SIZE);
+			img_shield.surface = IconManager.lookup_surface(IconManager.SHIELD_LIVE, IconManager.SHIELD_ICON_SIZE, img_shield.scale_factor);
 			set_shield_label(_("Live USB Mode (Restore Only)"));
 			set_shield_subnote("");
 
@@ -1000,7 +1001,7 @@ class MainWindow : Gtk.Window{
 			case SnapshotLocationStatus.NO_BTRFS_SYSTEM:
 			case SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE:
 			case SnapshotLocationStatus.NO_SNAPSHOTS_NO_SPACE:
-				img_shield.pixbuf = IconManager.lookup("security-low", Main.SHIELD_ICON_SIZE);
+				img_shield.surface = IconManager.lookup_surface(IconManager.SHIELD_LOW, IconManager.SHIELD_ICON_SIZE, img_shield.scale_factor);
 				set_shield_label(message);
 				set_shield_subnote(details);
 				break;
@@ -1012,7 +1013,7 @@ class MainWindow : Gtk.Window{
 					// is scheduled
 					if (App.repo.has_snapshots()){
 						// has snaps
-						img_shield.pixbuf = IconManager.lookup("security-high", Main.SHIELD_ICON_SIZE);
+						img_shield.surface = IconManager.lookup_surface(IconManager.SHIELD_HIGH, IconManager.SHIELD_ICON_SIZE, img_shield.scale_factor);
 						//set_shield_label(_("System is protected"));
 						set_shield_label(_("Timeshift is active"));
 						set_shield_subnote("%s: %s\n%s: %s".printf(
@@ -1024,7 +1025,7 @@ class MainWindow : Gtk.Window{
 					}
 					else{
 						// no snaps
-						img_shield.pixbuf = IconManager.lookup("security-high", Main.SHIELD_ICON_SIZE);
+						img_shield.surface = IconManager.lookup_surface(IconManager.SHIELD_HIGH, IconManager.SHIELD_ICON_SIZE, img_shield.scale_factor);
 						set_shield_label(_("Timeshift is active"));
 						set_shield_subnote(_("Snapshots will be created at selected intervals"));
 					}
@@ -1033,13 +1034,13 @@ class MainWindow : Gtk.Window{
 					// not scheduled
 					if (App.repo.has_snapshots()){
 						// has snaps
-						img_shield.pixbuf = IconManager.lookup("security-medium", Main.SHIELD_ICON_SIZE);
+						img_shield.surface = IconManager.lookup_surface(IconManager.SHIELD_MED, IconManager.SHIELD_ICON_SIZE, img_shield.scale_factor);
 						set_shield_label(_("Scheduled snapshots are disabled"));
 						set_shield_subnote(_("Enable scheduled snapshots to protect your system"));
 					}
 					else{
 						// no snaps
-						img_shield.pixbuf = IconManager.lookup("security-low", Main.SHIELD_ICON_SIZE);
+						img_shield.surface = IconManager.lookup_surface(IconManager.SHIELD_LOW, IconManager.SHIELD_ICON_SIZE, img_shield.scale_factor);
 						set_shield_label(_("No snapshots available"));
 						set_shield_subnote(_("Create snapshots manually or enable scheduled snapshots to protect your system"));
 					}

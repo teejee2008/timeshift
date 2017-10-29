@@ -111,16 +111,14 @@ class BackupDeviceBox : Gtk.Box{
 		col.resizable = true;
 		
 		col.set_cell_data_func(cell_pix, (cell_layout, cell, model, iter)=>{
-			Gdk.Pixbuf pix = null;
-			model.get (iter, 2, out pix, -1);
-
 			Device dev;
 			model.get (iter, 0, out dev, -1);
 
-			(cell as Gtk.CellRendererPixbuf).pixbuf = pix;
 			(cell as Gtk.CellRendererPixbuf).visible = (dev.type == "disk");
 			
 		});
+
+        col.add_attribute(cell_pix, "icon-name", 2);
 
 		col.set_cell_data_func(cell_radio, (cell_layout, cell, model, iter)=>{
 			Device dev;
@@ -484,12 +482,10 @@ class BackupDeviceBox : Gtk.Box{
 		var model = new Gtk.TreeStore(4,
 			typeof(Device),
 			typeof(string),
-			typeof(Gdk.Pixbuf),
+			typeof(string),
 			typeof(bool));
 		
 		tv_devices.set_model (model);
-
-		Gdk.Pixbuf pix_device = IconManager.lookup("drive-harddisk",16);
 
 		TreeIter iter0;
 
@@ -499,7 +495,7 @@ class BackupDeviceBox : Gtk.Box{
 			model.append(out iter0, null);
 			model.set(iter0, 0, disk, -1);
 			model.set(iter0, 1, disk.tooltip_text(), -1);
-			model.set(iter0, 2, pix_device, -1);
+			model.set(iter0, 2, IconManager.ICON_HARDDRIVE, -1);
 			model.set(iter0, 3, false, -1);
 
 			tv_append_child_volumes(ref model, ref iter0, disk);
@@ -511,11 +507,7 @@ class BackupDeviceBox : Gtk.Box{
 
 	private void tv_append_child_volumes(
 		ref Gtk.TreeStore model, ref Gtk.TreeIter iter0, Device parent){
-			
-		Gdk.Pixbuf pix_device = IconManager.lookup("drive-harddisk", 16);
-		Gdk.Pixbuf pix_locked = IconManager.lookup("locked", 16, false, true);
-		Gdk.Pixbuf pix_unlocked = IconManager.lookup("unlocked", 16, false, true);
-		
+
 		foreach(var part in App.partitions) {
 
 			if (!part.has_linux_filesystem()){ continue; }
@@ -540,11 +532,11 @@ class BackupDeviceBox : Gtk.Box{
 				model.append(out iter1, iter0);
 				model.set(iter1, 0, part, -1);
 				model.set(iter1, 1, part.tooltip_text(), -1);
-				model.set(iter1, 2, (part.fstype == "luks") ? pix_locked : pix_device, -1);
+				model.set(iter1, 2, (part.fstype == "luks") ? "locked" : IconManager.ICON_HARDDRIVE, -1);
 				
 				if (parent.fstype == "luks"){
 					// change parent's icon to unlocked
-					model.set(iter0, 2, pix_unlocked, -1);
+					model.set(iter0, 2, "unlocked", -1);
 				}
 
 				if ((App.repo.device != null) && (part.uuid == App.repo.device.uuid)){

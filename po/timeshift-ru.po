@@ -281,7 +281,7 @@ msgstr "Устройство резервного копирования не з
 
 #: Utility/Gtk/DonationWindow.vala:85
 msgid "Become a Patron"
-msgstr ""
+msgstr "Поддержать проект на Patreon"
 
 #: Gtk/RestoreExcludeBox.vala:116
 msgid "Bittorrent Clients"
@@ -415,7 +415,7 @@ msgstr "Закрыть"
 
 #: Utility/Gtk/DonationWindow.vala:117
 msgid "Close Window"
-msgstr ""
+msgstr "Закрыть окно"
 
 #: Gtk/FinishBox.vala:100 Gtk/DeleteFinishBox.vala:71
 #: Gtk/BackupFinishBox.vala:70 Gtk/RestoreFinishBox.vala:90
@@ -707,7 +707,7 @@ msgid ""
 msgstr ""
 "Считаете эту программу полезной?\n"
 "\n"
-"Чтобы оказать поддержку вы можете купить мне кофе или сделать пожертвование "
+"Чтобы оказать поддержку, вы можете купить мне кофе или сделать пожертвование "
 "с помощью PayPal. Или просто напишите мне письмо и скажите \"Привет\". Эта "
 "программа полностью бесплатна и будет оставаться таковой. Ваши пожертвования "
 "помогут поддержке и развитию проекта.\n"
@@ -804,7 +804,7 @@ msgstr "Введите номер снимка (a=Сброс, p=Предыдущ
 
 #: Gtk/ExcludeBox.vala:229
 msgid "Enter the pattern to exclude (Ex: *.mp3, *.bak)"
-msgstr "Введите шаблон для исключений (Напр: *.mp3, *.bak)"
+msgstr "Введите шаблон для исключений (например: *.mp3, *.bak)"
 
 #: Utility/GtkHelper.vala:18 Gtk/RestoreDeviceBox.vala:533
 msgid "Error"
@@ -1024,7 +1024,7 @@ msgid ""
 "Patterns starting with a + will include the item instead of excluding."
 msgstr ""
 "Файлы и каталоги, соответствующие шаблонам ниже, будут исключены. Шаблоны, "
-"начинающиеся с + будут включать объекты, независимо от исключений."
+"начинающиеся с \"+\", будут включать объекты независимо от исключений."
 
 #: Gtk/SnapshotBackendBox.vala:186
 msgid "Files and directories can be excluded to save disk space."
@@ -1124,7 +1124,7 @@ msgstr "Скрыть это окно (файлы будут удалены в ф
 
 #: Gtk/UsersBox.vala:113
 msgid "Home"
-msgstr ""
+msgstr "Домашняя папка"
 
 #: Gtk/ExcludeMessageWindow.vala:123
 msgid "Home Directory"
@@ -1162,15 +1162,15 @@ msgstr "Шаблоны включений / исключений"
 
 #: Gtk/UsersBox.vala:243
 msgid "Include @home subvolume in backups"
-msgstr ""
+msgstr "Включать подраздел @home в резервные копии"
 
 #: Gtk/UsersBox.vala:189
 msgid "Include everything"
-msgstr ""
+msgstr "Включать все"
 
 #: Gtk/UsersBox.vala:128
 msgid "Include hidden items"
-msgstr ""
+msgstr "Включать скрытые файлы и папки"
 
 #: Gtk/ExcludeBox.vala:262
 msgid "Info"
@@ -1191,7 +1191,9 @@ msgstr "Некорректный снимок"
 
 #: Utility/Gtk/DonationWindow.vala:93
 msgid "Issue Tracker ~ Report Issues, Request Features, Ask Questions"
-msgstr ""
+msgstr
+"Трекер ошибок ~ сообщайте об ошибках, спрашивайте о новых функциях, "
+"задавайте вопросы"
 
 #: Gtk/ExcludeBox.vala:278
 msgid "Items Not Selected"
@@ -1399,6 +1401,10 @@ msgstr "Монтировать"
 msgid "Moved system subvolume to snapshot directory"
 msgstr "Системный подраздел перемещён в каталог снимков"
 
+#: Gtk/EstimateBox.vala:66
+msgid "Please wait..."
+msgstr "Пожалуйста, подождите..."
+
 #: Gtk/MainWindow.vala:795
 msgid "Multiple snapshots selected"
 msgstr "Выбрано несколько снимков"
@@ -1414,7 +1420,7 @@ msgstr "Далее"
 
 #: Utility/Gtk/CustomMessageDialog.vala:177
 msgid "No"
-msgstr ""
+msgstr "Нет"
 
 #: Gtk/BackupBox.vala:84 Gtk/RestoreBox.vala:121
 msgid "No Change"
@@ -2324,7 +2330,7 @@ msgstr "Система"
 
 #: Gtk/MainWindow.vala:946
 msgid "System Restore Utility"
-msgstr "Утилита восстановления системы"
+msgstr "Программа для восстановления системы"
 
 #: Gtk/FinishBox.vala:81
 msgid "System can be rolled-back to a previous date by restoring a snapshot."
@@ -2513,11 +2519,11 @@ msgstr "Используется"
 
 #: Gtk/UsersBox.vala:98
 msgid "User"
-msgstr ""
+msgstr "Пользователь"
 
 #: Gtk/UsersBox.vala:58
 msgid "User Home Directories"
-msgstr ""
+msgstr "Домашние папки пользователей"
 
 #: Utility/Device.vala:1272
 msgid "User cancelled the password prompt"
@@ -2526,11 +2532,13 @@ msgstr "Пользователь отменил ввод пароля"
 #: Gtk/UsersBox.vala:65
 msgid ""
 "User home directories are excluded by default unless you enable them here"
-msgstr ""
+msgstr
+"Домашние папки пользователей по умолчанию исключены до тех пор, пока "
+"вы не включите их самостоятельно"
 
 #: Gtk/SettingsWindow.vala:109
 msgid "Users"
-msgstr ""
+msgstr "Пользователи"
 
 #: Utility/Device.vala:1743
 #, c-format
@@ -2568,7 +2576,7 @@ msgstr "Веб-браузеры"
 #: Utility/Gtk/DonationWindow.vala:109
 #, c-format
 msgid "Website"
-msgstr ""
+msgstr "Веб-сайт"
 
 #: Gtk/ScheduleBox.vala:79
 msgid "Weekly"
@@ -2584,7 +2592,7 @@ msgstr "Создание еженедельных снимков включен�
 
 #: Utility/Gtk/DonationWindow.vala:101
 msgid "Wiki ~ Documentation & Help"
-msgstr ""
+msgstr "Wiki ~ документация и помощь"
 
 #: Gtk/DeleteFinishBox.vala:63 Gtk/BackupFinishBox.vala:63
 msgid "With Errors"
@@ -2600,7 +2608,7 @@ msgstr "Неверный пароль"
 
 #: Utility/Gtk/CustomMessageDialog.vala:176
 msgid "Yes"
-msgstr ""
+msgstr "Да"
 
 #: Gtk/RestoreFinishBox.vala:82
 msgid ""

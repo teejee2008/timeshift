@@ -18,7 +18,7 @@ Timeshift is similar to applications like [rsnapshot](http://www.rsnapshot.org/)
 
 *   Snapshots are saved by default on the system (root) partition in path **/timeshift**. Other linux partitions can also be selected. For best results the snapshots should be saved to an external (non-system) partition.
 
-          ![](images/settings_location.png)
+![](images/settings_location.png)
 
 ### Multiple Snapshot Levels
 
@@ -28,7 +28,7 @@ Timeshift is similar to applications like [rsnapshot](http://www.rsnapshot.org/)
 
 *   Boot snapshots provide an additional level of backup and are created every time the system starts. Boot snapshots are deplayed by 10 mins so that system startup is not affected.
 
-          ![](images/settings_schedule.png)
+![](images/settings_schedule.png)
 
 ### Rsync & BTRFS Snapshots
 
@@ -85,11 +85,9 @@ You can selectively include items for backup from the ***Settings*** window. Sel
 - **BTRFS** - OS installed on BTRFS volumes (with or without LUKS)
 
   - Only Ubuntu-type layouts with **@** and **@home** subvolumes are supported
-
-
-- **@** and **@home** subvolumes may be on same or different BTRFS volumes
-- **@** may be on BTRFS volume and **/home** may be mounted on non-BTRFS partition
-    - Other layouts are not supported
+  - **@** and **@home** subvolumes may be on same or different BTRFS volumes
+  - **@** may be on BTRFS volume and **/home** may be mounted on non-BTRFS partition
+  - Other layouts are not supported
 
 - **GRUB2** - Bootloader must be GRUB2. GRUB legacy and other bootloaders are not supported.
 
@@ -169,7 +167,16 @@ If the backup device is running out of space, try the following steps:
 
 This program is free for personal and commercial use and comes with absolutely no warranty. You use this program entirely at your own risk. The author will not be liable for any damages arising from the use of this program. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.   
 
-# Donate
+## Contribute
+
+You can contribute to this project in various ways:
+
+- Submitting ideas, and reporting issues in the [tracker](https://github.com/teejee2008/timeshift/issues)
+- [Translating](https://translations.launchpad.net/linuxmint/latest/+pots/timeshift) this application to other languages
+- Contributing code changes by fixing issues and submitting a pull request
+- Making a donation via PayPal or bitcoin, or signing-up as a patron on Patreon
+
+## Donate
 
 *Timeshift* is a non-commercial application. I work on it during my free time based on my requirements and interest. If you wish to support this project, you can make a donation for $10 or more via PayPal. Your contributions will help keep the project alive and support future development.
 

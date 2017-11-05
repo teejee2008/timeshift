@@ -18,7 +18,7 @@ Timeshift is similar to applications like [rsnapshot](http://www.rsnapshot.org/)
 
 *   Snapshots are saved by default on the system (root) partition in path **/timeshift**. Other linux partitions can also be selected. For best results the snapshots should be saved to an external (non-system) partition.
 
-      ![](images/settings_location.png)
+          ![](images/settings_location.png)
 
 ### Multiple Snapshot Levels
 
@@ -28,7 +28,7 @@ Timeshift is similar to applications like [rsnapshot](http://www.rsnapshot.org/)
 
 *   Boot snapshots provide an additional level of backup and are created every time the system starts. Boot snapshots are deplayed by 10 mins so that system startup is not affected.
 
-      ![](images/settings_schedule.png)
+          ![](images/settings_schedule.png)
 
 ### Rsync & BTRFS Snapshots
 
@@ -74,6 +74,32 @@ You can selectively include items for backup from the ***Settings*** window. Sel
 - Since installing a new linux distribution also formats your root partition you need to save your snapshots on a separate linux partition for this to work.
 - It is recommended to include hidden items in home directory by selecting the option "*Include  Hidden Items*" from *Settings* > *Users*.
 
+## Supported System Configurations
+
+- **Normal** - OS installed on non-encrypted partitions
+
+- **LUKS Encrypted** - OS installed on LUKS-encrypted partitions
+
+- **LVM2** - OS installed on LVM2 volumes (with or without LUKS)
+
+- **BTRFS** - OS installed on BTRFS volumes (with or without LUKS)
+
+  - Only Ubuntu-type layouts with **@** and **@home** subvolumes are supported
+
+
+- **@** and **@home** subvolumes may be on same or different BTRFS volumes
+- **@** may be on BTRFS volume and **/home** may be mounted on non-BTRFS partition
+    - Other layouts are not supported
+
+- **GRUB2** - Bootloader must be GRUB2. GRUB legacy and other bootloaders are not supported.
+
+- **EFI** - EFI systems are supported. Make sure that ```/boot/efi``` partition is selected for mounting before restoring snapshots (application will do it automatically).
+
+
+- **Encrypted Home** - For users with encrypted home, files in ```/home/.ecryptfs/$USER``` will be backed-up and restored. The decrypted contents in ```$HOME``` will be excluded. This avoids the security risk of decrypted contents becoming available outside the user's home directory.
+- **Encrypted Private Directory** - For users with encrypted *Private* directory, the encrypted files in ```$HOME/.Private```, as well as the decrypted files in ```$HOME/Private```, will be excluded (as it contains user data). Filters added by user to include files from ```$HOME/.Private``` or ```$HOME/Private``` will be ignored.
+- **Docker & Containers** - Docker and containerized systems are not supported. Running Timeshift on such systems will have unpredictable results.
+
 ## Installation
 
 #### Ubuntu-based Distributions
@@ -84,7 +110,7 @@ Packages are available in the Launchpad PPA for supported Ubuntu releases.
 Run the following commands in a terminal window:  
 
 ```sh
-sudo apt-add-repository -y ppa:teejee2008/ppa
+sudo add-apt-repository -y ppa:teejee2008/ppa
 sudo apt-get update
 sudo apt-get install timeshift
 ```
@@ -149,11 +175,11 @@ This program is free for personal and commercial use and comes with absolutely n
 
 **PayPal** ~ If you find this application useful and wish to say thanks, you can buy me a coffee by making a donation with Paypal.
 
-[![](https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg)](https://www.paypal.com/cgi-bin/webscr?business=teejeetech@gmail.com&cmd=_xclick&currency_code=USD&amount=10&item_name=Timeshift%20Donation)  
+[![](images/PayPal.png)](https://www.paypal.com/cgi-bin/webscr?business=teejeetech@gmail.com&cmd=_xclick&currency_code=USD&amount=10&item_name=Timeshift%20Donation)  
 
 **Patreon** ~ You can also sign up as a sponsor on [Patreon.com](https://www.patreon.com/teejeetech). As a patron you will get access to beta releases of new applications that I'm working on. You will also get news and updates about new features that are not published elsewhere.
 
-[![](https://2.bp.blogspot.com/-DNeWEUF2INM/WINUBAXAKUI/AAAAAAAAFmw/fTckfRrryy88pLyQGk5lJV0F0ESXeKrXwCLcB/s200/patreon.png)](https://www.patreon.com/bePatron?u=3059450)
+[![](images/patreon.png)](https://www.patreon.com/bePatron?u=3059450)
 
 **Bitcoin** ~ You can send bitcoins at this address or by scanning the QR code below:
 

@@ -40,6 +40,11 @@ all:
 	# update translation template
 	find . -iname "*.vala" | xargs xgettext --from-code=UTF-8 --language=C --keyword=_ --copyright-holder='Tony George (teejeetech@gmail.com)' --package-name="${app_name}" --package-version='1.6' --msgid-bugs-address='teejeetech@gmail.com' --escape --sort-output -o ../${app_name}.pot
 
+	# translations
+	for lang in am ar az bg ca cs da de el en_GB es et eu fr he hi hr hu ia id is it ko lt nb ne nl pl pt pt_BR ro ru sk sr sv tr uk vi zh_CN; do \
+		msgmerge --update -v ../po/${app_name}-$$lang.po ../${app_name}.pot ; \
+	done
+	
 clean:
 	rm -rfv ../release/{source,i386,amd64,armel,armhf}
 	rm -rfv ../release/*.{run,deb}
@@ -85,33 +90,10 @@ install:
 	install -m 0755 ../debian/${app_name}.appdata.xml "$(DESTDIR)$(sharedir)/appdata"
 
 	# translations
-	mkdir -p "$(DESTDIR)$(localedir)/bg/LC_MESSAGES"
-	mkdir -p "$(DESTDIR)$(localedir)/cs/LC_MESSAGES"
-	mkdir -p "$(DESTDIR)$(localedir)/es/LC_MESSAGES"
-	mkdir -p "$(DESTDIR)$(localedir)/fr/LC_MESSAGES"
-	mkdir -p "$(DESTDIR)$(localedir)/nl/LC_MESSAGES"
-	mkdir -p "$(DESTDIR)$(localedir)/pt_BR/LC_MESSAGES"
-	mkdir -p "$(DESTDIR)$(localedir)/ru/LC_MESSAGES"
-	mkdir -p "$(DESTDIR)$(localedir)/sv/LC_MESSAGES"
-	mkdir -p "$(DESTDIR)$(localedir)/tr/LC_MESSAGES"
-	mkdir -p "$(DESTDIR)$(localedir)/da/LC_MESSAGES"
-	mkdir -p "$(DESTDIR)$(localedir)/eu/LC_MESSAGES"
-	mkdir -p "$(DESTDIR)$(localedir)/lt/LC_MESSAGES"
-	mkdir -p "$(DESTDIR)$(localedir)/uk/LC_MESSAGES"
-	
-	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/bg/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-bg.po
-	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/cs/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-cs.po
-	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/es/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-es.po
-	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/fr/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-fr.po
-	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/nl/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-nl.po
-	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/pt_BR/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-pt_BR.po
-	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/ru/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-ru.po
-	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/sv/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-sv.po
-	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/tr/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-tr.po
-	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/da/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-da.po
-	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/eu/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-eu.po
-	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/lt/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-lt.po
-	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/uk/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-uk.po
+	for lang in am ar az bg ca cs da de el en_GB es et eu fr he hi hr hu ia id is it ko lt nb ne nl pl pt pt_BR ro ru sk sr sv tr uk vi zh_CN; do \
+		mkdir -p "$(DESTDIR)$(localedir)/$$lang/LC_MESSAGES"; \
+		msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/$$lang/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-$$lang.po ; \
+	done
 
 uninstall:
 

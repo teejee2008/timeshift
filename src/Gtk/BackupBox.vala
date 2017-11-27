@@ -223,7 +223,7 @@ class BackupBox : Gtk.Box{
 				remaining_counter--;
 				if (remaining_counter == 0){
 					lbl_remaining.label =
-						App.task.stat_time_remaining + " remaining";
+						App.task.stat_time_remaining + " " + _("remaining");
 
 					remaining_counter = 10;
 				}	

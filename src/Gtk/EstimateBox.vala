@@ -63,7 +63,7 @@ class EstimateBox : Gtk.Box{
 		hbox_status.add(spinner);
 		
 		//lbl_msg
-		var lbl_msg = add_label(hbox_status, "Please wait...");
+		var lbl_msg = add_label(hbox_status, _("Please wait..."));
 		lbl_msg.halign = Align.START;
 		lbl_msg.ellipsize = Pango.EllipsizeMode.END;
 		lbl_msg.max_width_chars = 50;

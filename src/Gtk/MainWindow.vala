@@ -916,8 +916,8 @@ class MainWindow : Gtk.Window{
 		};
 
 		dialog.third_party = {
-			"Timeshift is powered by the following tools and components. Please visit the links for more information.",
-			"rsync by Andrew Tridgell, Wayne Davison, and others.:http://rsync.samba.org/"
+			_("Timeshift is powered by the following tools and components. Please visit the links for more information."),
+			"rsync by Andrew Tridgell, Wayne Davison, and others:http://rsync.samba.org/"
 		};
 
 		dialog.documenters = null;
@@ -930,7 +930,7 @@ class MainWindow : Gtk.Window{
 		dialog.version = AppVersion;
 		dialog.logo = "timeshift";
 
-		dialog.license = "This program is free for personal and commercial use and comes with absolutely no warranty. You use this program entirely at your own risk. The author will not be liable for any damages arising from the use of this program.";
+		dialog.license = _("This program is free for personal and commercial use and comes with absolutely no warranty. You use this program entirely at your own risk. The author will not be liable for any damages arising from the use of this program.");
 		dialog.website = "https://github.com/teejee2008/timeshift";
 		dialog.website_label = "https://github.com/teejee2008/timeshift";
 

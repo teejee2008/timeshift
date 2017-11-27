@@ -147,7 +147,7 @@ class DeleteBox : Gtk.Box{
 				
 				if (remaining_counter == 0){
 					
-					lbl_remaining.label = App.delete_file_task.stat_time_remaining + " remaining";
+					lbl_remaining.label = App.delete_file_task.stat_time_remaining + " " + _("remaining");
 
 					remaining_counter = 10;
 				}

@@ -34,6 +34,8 @@ using TeeJee.GtkHelper;
 public class DonationWindow : Dialog {
 
 	private string username = "";
+	private Box hbox_action;
+	private Button btn_close;
 
 	public DonationWindow() {
 
@@ -53,6 +55,8 @@ public class DonationWindow : Dialog {
 		//vbox_main.homogeneous = false;
 
 		//get_action_area().visible = false;
+		
+		hbox_action = (Box) get_action_area();
 
 		string msg = _("Did you find this software useful?\n\nYou can buy me a coffee or make a donation via PayPal to show your support. Or just drop me an email and say Hi. This application is completely free and will continue to remain that way. Your contributions will help in keeping this project alive and improving it further.\n\nFeel free to send me an email if you find any issues in this application or if you need any changes. Suggestions and feedback are always welcome.\n\nThanks,\nTony George\n(teejeetech@gmail.com)");
 		
@@ -113,12 +117,11 @@ public class DonationWindow : Dialog {
 			xdg_open("http://www.teejeetech.in", username);
 		});
 
-		// close window
-		button = new Gtk.LinkButton.with_label("", _("Close Window"));
-		vbox_main.add(button);
-		button.clicked.connect(() => {
-			this.destroy();
-		});
+		//btn_close
+		btn_close = new Button.with_label("  " + _("Close"));
+		hbox_action.add(btn_close);
+
+		btn_close.clicked.connect(()=>{ this.destroy(); });
 
 		this.show_all();
 	}

@@ -123,13 +123,73 @@ class UsersBox : Gtk.Box{
 			(cell as Gtk.CellRendererText).text = user.home_path;
 		});
 
-		// column
+		// column -------------------------------------------------
+		
 		col = new TreeViewColumn();
-		col.title = _("Include hidden items");
+		col.title = _("Exclude All");
+		treeview.append_column(col);
+		
+		// radio_exclude
+		var cell_radio = new Gtk.CellRendererToggle();
+		cell_radio.radio = true;
+		cell_radio.xpad = 2;
+		cell_radio.activatable = true;
+		col.pack_start (cell_radio, false);
+
+		col.set_attributes(cell_radio, "active", 3);
+		
+		cell_radio.toggled.connect((cell, path)=>{
+
+			log_debug("cell_exclude.toggled()");
+			
+			var model = (Gtk.ListStore) treeview.model;
+			TreeIter iter;
+			
+			model.get_iter_from_string (out iter, path);
+
+			bool enabled;
+			model.get(iter, 3, out enabled);
+			
+			SystemUser user;
+			model.get(iter, 0, out user);
+
+			string exc_pattern = "%s/**".printf(user.home_path);
+			string inc_pattern = "+ %s/**".printf(user.home_path);
+			string inc_hidden_pattern = "+ %s/.**".printf(user.home_path);
+
+			if (user.has_encrypted_home){
+				inc_pattern = "+ /home/.ecryptfs/%s/***".printf(user.name);
+				exc_pattern = "/home/.ecryptfs/%s/***".printf(user.name);
+			}
+			
+			enabled = !enabled;
+			
+			if (enabled){
+				if (!App.exclude_list_user.contains(exc_pattern)){
+					App.exclude_list_user.add(exc_pattern);
+				}
+				if (App.exclude_list_user.contains(inc_pattern)){
+					App.exclude_list_user.remove(inc_pattern);
+				}
+				if (App.exclude_list_user.contains(inc_hidden_pattern)){
+					App.exclude_list_user.remove(inc_hidden_pattern);
+				}
+			}
+
+			this.refresh_treeview();
+			
+			//exclude_box.refresh_treeview();
+		});
+
+		// column -------------------------------------------------
+		
+		col = new TreeViewColumn();
+		col.title = _("Include Hidden");
 		treeview.append_column(col);
 		
 		// radio_include
-		var cell_radio = new Gtk.CellRendererToggle();
+		cell_radio = new Gtk.CellRendererToggle();
+		cell_radio.radio = true;
 		cell_radio.xpad = 2;
 		cell_radio.activatable = true;
 		col.pack_start (cell_radio, false);
@@ -143,7 +203,6 @@ class UsersBox : Gtk.Box{
 			var model = (Gtk.ListStore) treeview.model;
 			TreeIter iter;
 			
-			
 			model.get_iter_from_string (out iter, path);
 
 			bool enabled;
@@ -152,8 +211,15 @@ class UsersBox : Gtk.Box{
 			SystemUser user;
 			model.get(iter, 0, out user);
 
-			string pattern = "+ %s/.**".printf(user.home_path);
-
+			string exc_pattern = "%s/**".printf(user.home_path);
+			string inc_pattern = "+ %s/**".printf(user.home_path);
+			string inc_hidden_pattern = "+ %s/.**".printf(user.home_path);
+			
+			if (user.has_encrypted_home){
+				inc_pattern = "+ /home/.ecryptfs/%s/***".printf(user.name);
+				exc_pattern = "/home/.ecryptfs/%s/***".printf(user.name);
+			}
+			
 			enabled = !enabled;
 			
 			if (enabled){
@@ -169,28 +235,33 @@ class UsersBox : Gtk.Box{
 					return;
 				}
 
-				if (!App.exclude_list_user.contains(pattern)){
-					App.exclude_list_user.add(pattern);
+				if (!App.exclude_list_user.contains(inc_hidden_pattern)){
+					App.exclude_list_user.add(inc_hidden_pattern);
 				}
-			}
-			else{
-				if (App.exclude_list_user.contains(pattern)){
-					App.exclude_list_user.remove(pattern);
+
+				if (App.exclude_list_user.contains(inc_pattern)){
+					App.exclude_list_user.remove(inc_pattern);
+				}
+
+				if (App.exclude_list_user.contains(exc_pattern)){
+					App.exclude_list_user.remove(exc_pattern);
 				}
 			}
 
-			model.set(iter, 1, enabled); // update iter
+			this.refresh_treeview();
 
-			exclude_box.refresh_treeview();
+			//exclude_box.refresh_treeview();
 		});
 
-		// column
+		// column --------------------------------------------
+		
 		col = new TreeViewColumn();
-		col.title = _("Include everything");
+		col.title = _("Include All");
 		treeview.append_column(col);
 
 		// radio_exclude
 		cell_radio = new Gtk.CellRendererToggle();
+		cell_radio.radio = true;
 		cell_radio.xpad = 2;
 		cell_radio.activatable = true;
 		col.pack_start (cell_radio, false);
@@ -211,24 +282,30 @@ class UsersBox : Gtk.Box{
 			SystemUser user;
 			model.get(iter, 0, out user);
 
-			string pattern = "+ %s/**".printf(user.home_path);
+			string exc_pattern = "%s/**".printf(user.home_path);
+			string inc_pattern = "+ %s/**".printf(user.home_path);
+			string inc_hidden_pattern = "+ %s/.**".printf(user.home_path);
 
 			if (user.has_encrypted_home){
-				pattern = "+ /home/.ecryptfs/%s/***".printf(user.name);
+				inc_pattern = "+ /home/.ecryptfs/%s/***".printf(user.name);
+				exc_pattern = "/home/.ecryptfs/%s/***".printf(user.name);
 			}
 			
 			if (enabled){
-				if (!App.exclude_list_user.contains(pattern)){
-					App.exclude_list_user.add(pattern);
+				if (!App.exclude_list_user.contains(inc_pattern)){
+					App.exclude_list_user.add(inc_pattern);
 				}
-			}
-			else{
-				if (App.exclude_list_user.contains(pattern)){
-					App.exclude_list_user.remove(pattern);
+				if (App.exclude_list_user.contains(exc_pattern)){
+					App.exclude_list_user.remove(exc_pattern);
+				}
+				if (App.exclude_list_user.contains(inc_hidden_pattern)){
+					App.exclude_list_user.remove(inc_hidden_pattern);
 				}
 			}
 
-			exclude_box.refresh_treeview();
+			this.refresh_treeview();
+
+			//exclude_box.refresh_treeview();
 		});
 
 		col = new TreeViewColumn();
@@ -283,7 +360,7 @@ class UsersBox : Gtk.Box{
 	
 	private void refresh_treeview(){
 		
-		var model = new Gtk.ListStore(3, typeof(SystemUser), typeof(bool), typeof(bool));
+		var model = new Gtk.ListStore(4, typeof(SystemUser), typeof(bool), typeof(bool), typeof(bool));
 		treeview.model = model;
 
 		TreeIter iter;
@@ -292,11 +369,40 @@ class UsersBox : Gtk.Box{
 
 			if (user.is_system){ continue; }
 
+			string exc_pattern = "%s/**".printf(user.home_path);
+			string inc_pattern = "+ %s/**".printf(user.home_path);
+			string inc_hidden_pattern = "+ %s/.**".printf(user.home_path);
+
+			if (user.has_encrypted_home){
+				inc_pattern = "+ /home/.ecryptfs/%s/***".printf(user.name);
+				exc_pattern = "/home/.ecryptfs/%s/***".printf(user.name);
+			}
+			
+			bool include_hidden = App.exclude_list_user.contains(inc_hidden_pattern);
+			bool include_all = App.exclude_list_user.contains(inc_pattern);
+			bool exclude_all = !include_hidden && !include_all; //App.exclude_list_user.contains(exc_pattern);
+
+			if (exclude_all){
+				
+				if (!App.exclude_list_user.contains(exc_pattern)){
+					App.exclude_list_user.add(exc_pattern);
+				}
+				if (App.exclude_list_user.contains(inc_pattern)){
+					App.exclude_list_user.remove(inc_pattern);
+				}
+				if (App.exclude_list_user.contains(inc_hidden_pattern)){
+					App.exclude_list_user.remove(inc_hidden_pattern);
+				}
+			}
+			
 			model.append(out iter);
 			model.set (iter, 0, user);
-			model.set (iter, 1, App.exclude_list_user.contains("+ %s/.**".printf(user.home_path)));
-			model.set (iter, 2, App.exclude_list_user.contains("+ %s/**".printf(user.home_path)));
+			model.set (iter, 1, include_hidden);
+			model.set (iter, 2, include_all);
+			model.set (iter, 3, exclude_all);
 		}
+
+		exclude_box.refresh_treeview();
 	}
 
 	public void save_changes(){

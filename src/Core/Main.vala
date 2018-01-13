@@ -521,7 +521,7 @@ public class Main : GLib.Object{
 		
 		partitions = new Gee.ArrayList<Device>();
 
-		//default exclude entries -------------------
+		// default exclude entries -------------------
 
 		exclude_list_default.add("/dev/*");
 		exclude_list_default.add("/proc/*");
@@ -559,7 +559,7 @@ public class Main : GLib.Object{
 		exclude_list_default.add("/home/*/.gvfs");
 		exclude_list_default.add("/home/*/.local/share/[Tt]rash");
 
-		//default extra ------------------
+		// default extra ------------------
 
 		exclude_list_default_extra.add("/root/.mozilla/firefox/*.default/Cache");
 		exclude_list_default_extra.add("/root/.mozilla/firefox/*.default/OfflineCache");
@@ -573,7 +573,7 @@ public class Main : GLib.Object{
 		exclude_list_default_extra.add("/home/*/.kde/share/apps/kio_http/cache");
 		exclude_list_default_extra.add("/home/*/.kde/share/cache/http");
 
-		//default home ----------------
+		// default home ----------------
 
 		//exclude_list_home.add("+ /root/.**");
 		//exclude_list_home.add("+ /home/*/.**");
@@ -631,28 +631,34 @@ public class Main : GLib.Object{
 		
 		var list = new Gee.ArrayList<string>();
 
-		// add default entries
+		// add default entries ---------------------------
+		
 		foreach(string path in exclude_list_default){
 			if (!list.contains(path)){
 				list.add(path);
 			}
 		}
 
-		// add default extra entries
+		// add default extra entries ---------------------------
+		
 		foreach(string path in exclude_list_default_extra){
 			if (!list.contains(path)){
 				list.add(path);
 			}
 		}
 
-		// add entries to exclude encrypted home
+		// add entries to exclude **decrypted** contents in $HOME
+		// decrypted contents should never be backed-up or restored
+		// this overrides all other user entries in exclude_list_user
+		//  -------------------------------------------------------
+		
 		foreach(var user in current_system_users.values){
 			
 			if (user.is_system){ continue; }
 			
 			if (user.has_encrypted_home){
 				
-				// exclude everything in user's home 
+				// exclude decrypted contents in user's home ($HOME)
 				string path = "%s/**".printf(user.home_path);
 				list.add(path);
 			}
@@ -660,23 +666,56 @@ public class Main : GLib.Object{
 			if (user.has_encrypted_private_dirs){
 
 				foreach(string enc_path in user.encrypted_private_dirs){
-					// exclude everything in private dirs ($HOME/Private)
+					
+					// exclude decrypted contents in private dirs ($HOME/Private)
 					string path = "%s/**".printf(enc_path);
 					list.add(path);
 				}
-
-				// Note: Do not exclude $HOME/.ecryptfs
 			}
 		}
 
-		// add user entries from current settings
+		// exclude each user individually if not included in exclude_list_user
+
+		foreach(var user in current_system_users.values){
+
+			if (user.is_system){ continue; }
+
+			string exc_pattern = "%s/**".printf(user.home_path);
+			string inc_pattern = "+ %s/**".printf(user.home_path);
+			string inc_hidden_pattern = "+ %s/.**".printf(user.home_path);
+
+			if (user.has_encrypted_home){
+				inc_pattern = "+ /home/.ecryptfs/%s/***".printf(user.name);
+				exc_pattern = "/home/.ecryptfs/%s/***".printf(user.name);
+			}
+			
+			bool include_hidden = exclude_list_user.contains(inc_hidden_pattern);
+			bool include_all = exclude_list_user.contains(inc_pattern);
+			bool exclude_all = !include_hidden && !include_all;
+
+			if (exclude_all){
+				if (!exclude_list_user.contains(exc_pattern)){
+					exclude_list_user.add(exc_pattern);
+				}
+				if (exclude_list_user.contains(inc_pattern)){
+					exclude_list_user.remove(inc_pattern);
+				}
+				if (exclude_list_user.contains(inc_hidden_pattern)){
+					exclude_list_user.remove(inc_hidden_pattern);
+				}
+			}
+		}
+
+		// add user entries from current settings ----------
+		
 		foreach(string path in exclude_list_user){
 			if (!list.contains(path)){
 				list.add(path);
 			}
 		}
 
-		// add home entries
+		// add common entries for excluding home folders for all users --------
+		
 		foreach(string path in exclude_list_home){
 			if (!list.contains(path)){
 				list.add(path);
@@ -691,6 +730,10 @@ public class Main : GLib.Object{
 		log_debug("Main: create_exclude_list_for_backup(): exit");
 		
 		return list;
+	}
+
+	public void update_exclude_list_user(){
+
 	}
 	
 	public Gee.ArrayList<string> create_exclude_list_for_restore(){

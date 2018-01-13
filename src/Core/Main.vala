@@ -537,7 +537,9 @@ public class Main : GLib.Object{
 		exclude_list_default.add("/timeshift/*");
 		exclude_list_default.add("/timeshift-btrfs/*");
 		exclude_list_default.add("/data/*");
+		exclude_list_default.add("/DATA/*");
 		exclude_list_default.add("/cdrom/*");
+		exclude_list_default.add("/sdcard/*");
 		exclude_list_default.add("/etc/timeshift.json");
 		exclude_list_default.add("/var/log/timeshift/*");
 		exclude_list_default.add("/var/log/timeshift-btrfs/*");

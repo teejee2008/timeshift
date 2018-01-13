@@ -26,14 +26,17 @@ Timeshift is similar to applications like [rsnapshot](http://www.rsnapshot.org/)
 
 *   Number of snapshots to retain can be specified for each level
 
-*   Boot snapshots provide an additional level of backup and are created every time the system starts. Boot snapshots are deplayed by 10 mins so that system startup is not affected.
+*   Boot snapshots provide an additional level of backup and are created every time the system starts. Boot snapshots are created with a delay of 10 mins so that system startup is not affected.
 
 ![](images/settings_schedule.png)
 
 ### Rsync & BTRFS Snapshots
 
 * Supports rsync snapshots on all systems
+
 * Supports BTRFS snapshots on BTRFS systems
+
+It is strongly recommended to use BTRFS snapshots on systems that are installed on BTRFS partition. BTRFS snapshots are perfect byte-for-byte copies of the system. Nothing is excluded. BTRFS snapshots can be created and restored in seconds, and have very low overhead in terms of disk space.
 
   ![](images/settings_rsync.png)
 
@@ -117,7 +120,7 @@ DEB and RUN packages are available on [Releases](https://github.com/teejee2008/T
 
 #### Other Linux Distributions
 
-Download the .RUN installer from [Releases](https://github.com/teejee2008/Timeshift/releases) page and execute it in a terminal window: 
+Download the installer from [Releases](https://github.com/teejee2008/Timeshift/releases) page and execute it in a terminal window: 
 
 ```sh
 sudo sh ./timeshift*amd64.run # 64-bit
@@ -126,7 +129,7 @@ sudo sh ./timeshift*i386.run  # 32-bit
 
 Installer can be used on the following distribution types:
 
-- **RedHat** based - Fedora, RedHat, Cent OS, etc (supports **dnf** and **yum**)
+- **Fedora** based - Fedora, RedHat, Cent OS, etc (supports **dnf** and **yum**)
 - **Debian** based - Debian, Ubuntu, Linux Mint, Elementary OS, etc (supports **apt**)
 - **Arch** based - Arch Linux, Manjaro, etc (supports **pacman**)
 
@@ -162,6 +165,7 @@ If the backup device is running out of space, try the following steps:
 #### Bootloader & EFI
 * Only those systems are supported which use GRUB2 bootloader. Trying to create and restore snapshots on a system using older versions of GRUB will result in a non-bootable system.  
 * EFI systems are fully supported. Ensure that the ***/boot/efi*** partition is mapped while restoring a snapshot. It will be mapped automatically if detected.
+* If you are restoring from Live CD/USB, and your installed system uses EFI mode, then you must boot from Live CD/USB in EFI mode.
 
 ## Disclaimer
 

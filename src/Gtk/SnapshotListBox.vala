@@ -271,7 +271,16 @@ class SnapshotListBox : Gtk.Box{
 						return true;
 					}
 					else if (column == col_tags){
-						tooltip.set_markup(_("<b>Backup Levels</b>\n\nO	On demand (manual)\nB	Boot\nH	Hourly\nD	Daily\nW	Weekly\nM	Monthly"));
+						tooltip.set_markup(
+							"<b>%s</b>\n\nO \t%s\nB \t%s\nH \t%s\nD \t%s\nW \t%s\nM \t%s".printf(
+								_("Snapshot Levels"),
+								_("On demand (manual)"),
+								_("Boot"),
+								_("Hourly"),
+								_("Daily"),
+								_("Weekly"),
+								_("Monthly"))
+						);
 						return true;
 					}
 				}

@@ -63,13 +63,13 @@ class ScheduleBox : Gtk.Box{
 		chk_m.active = App.schedule_monthly;
 		chk_m.toggled.connect(()=>{
 			App.schedule_monthly = chk_m.active;
-			spin_m.sensitive = chk_m.active;
+			//spin_m.sensitive = chk_m.active;
 			chk_cron.sensitive = App.scheduled;
 			update_statusbar();
 		});
 
 		spin_m.set_value(App.count_monthly);
-		spin_m.sensitive = chk_m.active;
+		//spin_m.sensitive = chk_m.active;
 		spin_m.value_changed.connect(()=>{
 			App.count_monthly = (int) spin_m.get_value();
 		});
@@ -81,13 +81,13 @@ class ScheduleBox : Gtk.Box{
 		chk_w.active = App.schedule_weekly;
 		chk_w.toggled.connect(()=>{
 			App.schedule_weekly = chk_w.active;
-			spin_w.sensitive = chk_w.active;
+			//spin_w.sensitive = chk_w.active;
 			chk_cron.sensitive = App.scheduled;
 			update_statusbar();
 		});
 
 		spin_w.set_value(App.count_weekly);
-		spin_w.sensitive = chk_w.active;
+		//spin_w.sensitive = chk_w.active;
 		spin_w.value_changed.connect(()=>{
 			App.count_weekly = (int) spin_w.get_value();
 		});
@@ -99,13 +99,13 @@ class ScheduleBox : Gtk.Box{
 		chk_d.active = App.schedule_daily;
 		chk_d.toggled.connect(()=>{
 			App.schedule_daily = chk_d.active;
-			spin_d.sensitive = chk_d.active;
+			//spin_d.sensitive = chk_d.active;
 			chk_cron.sensitive = App.scheduled;
 			update_statusbar();
 		});
 
 		spin_d.set_value(App.count_daily);
-		spin_d.sensitive = chk_d.active;
+		//spin_d.sensitive = chk_d.active;
 		spin_d.value_changed.connect(()=>{
 			App.count_daily = (int) spin_d.get_value();
 		});
@@ -117,13 +117,13 @@ class ScheduleBox : Gtk.Box{
 		chk_h.active = App.schedule_hourly;
 		chk_h.toggled.connect(()=>{
 			App.schedule_hourly = chk_h.active;
-			spin_h.sensitive = chk_h.active;
+			//spin_h.sensitive = chk_h.active;
 			chk_cron.sensitive = App.scheduled;
 			update_statusbar();
 		});
 
 		spin_h.set_value(App.count_hourly);
-		spin_h.sensitive = chk_h.active;
+		//spin_h.sensitive = chk_h.active;
 		spin_h.value_changed.connect(()=>{
 			App.count_hourly = (int) spin_h.get_value();
 		});
@@ -135,13 +135,13 @@ class ScheduleBox : Gtk.Box{
 		chk_b.active = App.schedule_boot;
 		chk_b.toggled.connect(()=>{
 			App.schedule_boot = chk_b.active;
-			spin_b.sensitive = chk_b.active;
+			//spin_b.sensitive = chk_b.active;
 			chk_cron.sensitive = App.scheduled;
 			update_statusbar();
 		});
 
 		spin_b.set_value(App.count_boot);
-		spin_b.sensitive = chk_b.active;
+		//spin_b.sensitive = chk_b.active;
 		spin_b.value_changed.connect(()=>{
 			App.count_boot = (int) spin_b.get_value();
 		});

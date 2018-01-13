@@ -58,7 +58,7 @@ class ScheduleBox : Gtk.Box{
 
 		// monthly
 		
-		add_schedule_option(this, _("Monthly") + " *", _("Create one per month"), out chk_m, out spin_m);
+		add_schedule_option(this, _("Monthly"), _("Create one per month"), out chk_m, out spin_m);
 
 		chk_m.active = App.schedule_monthly;
 		chk_m.toggled.connect(()=>{
@@ -76,7 +76,7 @@ class ScheduleBox : Gtk.Box{
 		
 		// weekly
 		
-		add_schedule_option(this, _("Weekly") + " *", _("Create one per week"), out chk_w, out spin_w);
+		add_schedule_option(this, _("Weekly"), _("Create one per week"), out chk_w, out spin_w);
 
 		chk_w.active = App.schedule_weekly;
 		chk_w.toggled.connect(()=>{
@@ -94,7 +94,7 @@ class ScheduleBox : Gtk.Box{
 
 		// daily
 		
-		add_schedule_option(this, _("Daily") + " *", _("Create one per day"), out chk_d, out spin_d);
+		add_schedule_option(this, _("Daily"), _("Create one per day"), out chk_d, out spin_d);
 
 		chk_d.active = App.schedule_daily;
 		chk_d.toggled.connect(()=>{
@@ -112,7 +112,7 @@ class ScheduleBox : Gtk.Box{
 
 		// hourly
 		
-		add_schedule_option(this, _("Hourly") + " *", _("Create one per hour"), out chk_h, out spin_h);
+		add_schedule_option(this, _("Hourly"), _("Create one per hour"), out chk_h, out spin_h);
 
 		chk_h.active = App.schedule_hourly;
 		chk_h.toggled.connect(()=>{
@@ -146,12 +146,17 @@ class ScheduleBox : Gtk.Box{
 			App.count_boot = (int) spin_b.get_value();
 		});
 
-		var label = new Gtk.Label("<i>* " + _("Scheduled task runs once every hour") + "</i>");
+		var msg = "◈ %s\n◈ %s\n◈ %s".printf(
+			_("Snapshots are not scheduled at fixed times."),
+			_("A maintenance task runs once every hour and creates snapshots as needed."),
+			_("Boot snapshots are created with a delay of 10 minutes after system startup."));
+		
+		var label = add_label(this, msg);
 		label.xalign = (float) 0.0;
-		label.margin_top = 6;
-		label.margin_left = 12;
+		label.margin_top = 20;
+		//label.margin_left = 6;
 		label.set_use_markup(true);
-		add(label);
+		//add(label);
 		
 		// buffer
 		label = new Gtk.Label("");

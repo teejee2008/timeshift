@@ -95,7 +95,6 @@ public class CustomMessageDialog : Gtk.Dialog {
 	public void init_window () {
 		
 		this.title = "";
-		
 		this.window_position = WindowPosition.CENTER_ON_PARENT;
 		this.icon = IconManager.lookup("timeshift", 16);
 		this.resizable = false;

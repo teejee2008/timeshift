@@ -38,6 +38,7 @@ class BackupDeviceBox : Gtk.Box{
 	private Gtk.TreeView tv_devices;
 	private Gtk.InfoBar infobar_location;
 	private Gtk.Label lbl_infobar_location;
+	private Gtk.Label lbl_common;
 	
 	private Gtk.Window parent_window;
 
@@ -86,11 +87,28 @@ class BackupDeviceBox : Gtk.Box{
     }
 
     public void refresh(){
+		
 		tv_devices_refresh();
+		
 		check_backup_location();
+
+		if (App.btrfs_mode){
+			
+			lbl_common.label = "◈ %s\n◈ %s".printf(
+				_("BRTFS snapshots are saved on system partion. Other locations are not supported."),
+				_("Snapshots are saved to /timeshift on selected partition. Other locations are not supported.")
+			);
+		}
+		else {
+			lbl_common.label = "◈ %s\n◈ %s\n◈ %s\n◈ %s".printf(
+				_("Devices displayed above have Linux filesystems"),
+				_("Devices with Windows file systems are not supported (NTFS, FAT, etc)"),
+				_("Remote and network locations are not supported"),
+				_("Snapshots are saved to /timeshift on selected partition. Other locations are not supported.")
+			);
+		}
 	}
 
-    
 	private void init_tv_devices(){
 		tv_devices = add_treeview(this);
 		tv_devices.vexpand = true;
@@ -266,6 +284,7 @@ class BackupDeviceBox : Gtk.Box{
 	}
 
 	private void init_infobar_location(){
+		
 		var infobar = new Gtk.InfoBar();
 		infobar.no_show_all = true;
 		add(infobar);
@@ -274,6 +293,8 @@ class BackupDeviceBox : Gtk.Box{
 		var content = (Gtk.Box) infobar.get_content_area ();
 		var label = add_label(content, "");
 		lbl_infobar_location = label;
+
+		lbl_common = add_label(this, "");
 	}
 
 	private void try_change_device(Device dev){

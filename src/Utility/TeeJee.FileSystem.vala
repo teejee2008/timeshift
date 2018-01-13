@@ -720,10 +720,12 @@ namespace TeeJee.FileSystem{
 		uint64 size, bool binary_units = false,
 		string unit = "", bool show_units = true, int decimals = 1){
 			
-		int64 unit_k = binary_units ? 1024 : 1000;
-		int64 unit_m = binary_units ? 1024 * unit_k : 1000 * unit_k;
-		int64 unit_g = binary_units ? 1024 * unit_m : 1000 * unit_m;
-		int64 unit_t = binary_units ? 1024 * unit_g : 1000 * unit_g;
+		uint64 unit_k = binary_units ? 1024 : 1000;
+		uint64 unit_m = binary_units ? 1024 * unit_k : 1000 * unit_k;
+		uint64 unit_g = binary_units ? 1024 * unit_m : 1000 * unit_m;
+		uint64 unit_t = binary_units ? 1024 * unit_g : 1000 * unit_g;
+
+		log_debug("size: %'lld".printf(size));
 
 		string txt = "";
 		
@@ -757,6 +759,8 @@ namespace TeeJee.FileSystem{
 				txt += " B";
 			}
 		}
+
+		log_debug("converted: %s".printf(txt));
 
 		return txt;
 	}

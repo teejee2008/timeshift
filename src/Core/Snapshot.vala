@@ -177,7 +177,7 @@ public class Snapshot : GLib.Object{
 			taglist = json_get_string(config,"tags","");
 			description = json_get_string(config,"comments","");
 			app_version = json_get_string(config,"app-version","");
-			file_count = json_get_int64(config,"file_count",file_count);
+			file_count = (int64) json_get_uint64(config,"file_count",file_count);
 			live = json_get_bool(config,"live",false);
 
 			distro = LinuxDistro.get_dist_info(path_combine(path, "localhost"));

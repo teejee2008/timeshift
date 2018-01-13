@@ -71,9 +71,9 @@ namespace TeeJee.JsonHelper{
 		}
 	}
 	
-	public int64 json_get_int64(Json.Object jobj, string member, int64 def_value){
+	public uint64 json_get_uint64(Json.Object jobj, string member, uint64 def_value){
 		if (jobj.has_member(member)){
-			return int64.parse(jobj.get_string_member(member));
+			return uint64.parse(jobj.get_string_member(member));
 		}
 		else{
 			log_debug ("Member not found in JSON object: " + member);

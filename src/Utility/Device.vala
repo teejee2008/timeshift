@@ -62,9 +62,9 @@ public class Device : GLib.Object{
 	public bool removable = false;
 	public bool read_only = false;
 	
-	public int64 size_bytes = 0;
-	public int64 used_bytes = 0;
-	public int64 available_bytes = 0;
+	public uint64 size_bytes = 0;
+	public uint64 used_bytes = 0;
+	public uint64 available_bytes = 0;
 	
 	public string used_percent = "";
 	public string dist_info = "";
@@ -105,7 +105,7 @@ public class Device : GLib.Object{
 		}
 	}
 	
-	public int64 free_bytes{
+	public uint64 free_bytes{
 		get{
 			return (used_bytes == 0) ? 0 : (size_bytes - used_bytes);
 		}
@@ -696,13 +696,13 @@ public class Device : GLib.Object{
 						pi.fstype = val.strip();
 						break;
 					case 3:
-						pi.size_bytes = int64.parse(val.strip());
+						pi.size_bytes = uint64.parse(val.strip());
 						break;
 					case 4:
-						pi.used_bytes = int64.parse(val.strip());
+						pi.used_bytes = uint64.parse(val.strip());
 						break;
 					case 5:
-						pi.available_bytes = int64.parse(val.strip());
+						pi.available_bytes = uint64.parse(val.strip());
 						break;
 					case 6:
 						pi.used_percent = val.strip();

@@ -34,6 +34,8 @@ using TeeJee.GtkHelper;
 using TeeJee.System;
 using TeeJee.Misc;
 
+public bool GTK_INITIALIZED = false;
+
 public class Main : GLib.Object{
 	
 	public string app_path = "";
@@ -117,8 +119,8 @@ public class Main : GLib.Object{
 	
 	public int64 snapshot_location_free_space = 0;
 
-	public const int64 MIN_FREE_SPACE = 1 * GB;
-	public static int64 first_snapshot_size = 0;
+	public const uint64 MIN_FREE_SPACE = 1 * GB;
+	public static uint64 first_snapshot_size = 0;
 	public static int64 first_snapshot_count = 0;
 	
 	public string log_dir = "";
@@ -540,6 +542,7 @@ public class Main : GLib.Object{
 		exclude_list_default.add("/DATA/*");
 		exclude_list_default.add("/cdrom/*");
 		exclude_list_default.add("/sdcard/*");
+		exclude_list_default.add("/system/*");
 		exclude_list_default.add("/etc/timeshift.json");
 		exclude_list_default.add("/var/log/timeshift/*");
 		exclude_list_default.add("/var/log/timeshift-btrfs/*");
@@ -1512,7 +1515,7 @@ public class Main : GLib.Object{
 			else{
 
 				delete_file_task = bak.delete_file_task;
-				delete_file_task.prg_count_total = Main.first_snapshot_count;
+				delete_file_task.prg_count_total = (int64) Main.first_snapshot_count;
 			
 				status = bak.remove(true); // wait till complete
 
@@ -3006,9 +3009,9 @@ public class Main : GLib.Object{
 		this.count_hourly = json_get_int(config,"count_hourly",count_hourly);
 		this.count_boot = json_get_int(config,"count_boot",count_boot);
 
-		Main.first_snapshot_size = json_get_int64(config,"snapshot_size", Main.first_snapshot_size);
+		Main.first_snapshot_size = json_get_uint64(config,"snapshot_size", Main.first_snapshot_size);
 			
-		Main.first_snapshot_count = json_get_int64(config,"snapshot_count", Main.first_snapshot_count);
+		Main.first_snapshot_count = (int64) json_get_uint64(config,"snapshot_count", Main.first_snapshot_count);
 		
 		exclude_list_user.clear();
 		
@@ -3506,7 +3509,7 @@ public class Main : GLib.Object{
 		return ok;
 	}
 	
-	public int64 estimate_system_size(){
+	public uint64 estimate_system_size(){
 
 		log_debug("estimate_system_size()");
 		
@@ -3546,7 +3549,7 @@ public class Main : GLib.Object{
 		string std_out;
 		string std_err;
 		int ret_val;
-		int64 required_space = 0;
+		uint64 required_space = 0;
 		int64 file_count = 0;
 
 		try{
@@ -4020,12 +4023,19 @@ public class Main : GLib.Object{
 			list.sort((owned) compare_func);
 
 			if (list.size > 500){
-				for(int k=0; k<100; k++){
+
+				// delete oldest 100 files ---------------
+
+				for(int k = 0; k < 100; k++){
+					
 					var file = File.new_for_path (list[k]);
-					if (file.query_exists()){
+					 
+					if (file.query_exists()){ 
 						file.delete();
+						log_msg("%s: %s".printf(_("Removed"), list[k]));
 					}
 				}
+            
 				log_msg(_("Older log files removed"));
 			}
 		}

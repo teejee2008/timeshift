@@ -1,7 +1,7 @@
 /*
  * AboutWindow.vala
  *
- * Copyright 2012-17 Tony George <teejeetech@gmail.com>
+ * Copyright 2012-2017 Tony George <teejeetech@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,20 +32,24 @@ using TeeJee.System;
 using TeeJee.Misc;
 
 public class AboutWindow : Dialog {
-	private Box vbox_main;
-	private Box vbox_logo;
-	private Box vbox_credits;
-	private Box vbox_lines;
-	private Box hbox_action;
-	private Button btn_credits;
-	private Button btn_close;
+	
+	private Gtk.Box vbox_main;
+	private Gtk.Box vbox_logo;
+	private Gtk.Box vbox_credits;
+	private Gtk.Box vbox_license;
+	private Gtk.Box vbox_lines;
+	private Gtk.Box hbox_action;
+	private Gtk.Button btn_license;
+	private Gtk.Button btn_credits;
+	private Gtk.Button btn_close;
 
 	private Gtk.Image img_logo;
-	private Label lbl_program_name;
-	private Label lbl_version;
-	private Label lbl_comments;
-	private LinkButton lbtn_website;
-	private Label lbl_copyright;
+	private Gtk.Label lbl_program_name;
+	private Gtk.Label lbl_version;
+	private Gtk.Label lbl_comments;
+	private Gtk.Label lbl_license;
+	private Gtk.LinkButton lbtn_website;
+	private Gtk.Label lbl_copyright;
 
 	private string[] _artists;
 	public string[] artists{
@@ -127,8 +131,8 @@ public class AboutWindow : Dialog {
 		}
 	}
 
-	private string _logo;
-	public string logo{
+	private Gdk.Pixbuf _logo;
+	public Gdk.Pixbuf logo{
 		get{
 			return _logo;
 		}
@@ -156,7 +160,7 @@ public class AboutWindow : Dialog {
 			_translators = value;
 		}
 	}
-
+	
 	private string[] _third_party;
 	public string[] third_party{
 		get{
@@ -197,27 +201,67 @@ public class AboutWindow : Dialog {
 		}
 	}
 
+	private string username = "";
+	
 	public AboutWindow() {
+		
         window_position = WindowPosition.CENTER_ON_PARENT;
 		set_destroy_with_parent (true);
 		set_modal (true);
         skip_taskbar_hint = false;
         set_default_size (450, 400);
 
+		if (get_user_id_effective() == 0){
+			username = get_username();
+		}
+
 	    vbox_main = get_content_area();
 		vbox_main.margin = 6;
 		vbox_main.spacing = 6;
 
-		vbox_logo = new Box(Orientation.VERTICAL,0);
+		vbox_logo = new Gtk.Box(Orientation.VERTICAL,0);
 		vbox_main.add(vbox_logo);
 
-		vbox_credits = new Box(Orientation.VERTICAL,0);
+		// license -------------------------------------
+		
+		vbox_license = new Gtk.Box(Orientation.VERTICAL,0);
+		vbox_license.no_show_all = true;
+		vbox_main.add(vbox_license);
+
+		var sw_license = new Gtk.ScrolledWindow(null, null);
+		sw_license.set_shadow_type(ShadowType.ETCHED_IN);
+		sw_license.expand = true;
+		vbox_license.add(sw_license);
+		
+		var label = new Gtk.Label("");
+		label.set_use_markup(true);
+		label.margin_top = 5;
+		label.xalign = 0.0f;
+		label.yalign = 0.0f;
+		//label.max_width_chars = 70;
+		label.wrap = true;
+		label.wrap_mode = Pango.WrapMode.WORD_CHAR;
+		label.use_markup = true;
+		label.margin = 6;
+		label.margin_right = 25;
+		sw_license.add(label);
+		lbl_license = label;
+		
+		// credits --------------------------------
+		
+		vbox_credits = new Gtk.Box(Orientation.VERTICAL,0);
 		vbox_credits.no_show_all = true;
 		vbox_main.add(vbox_credits);
 
-		vbox_lines = new Box(Orientation.VERTICAL,0);
+		var sw_credits = new Gtk.ScrolledWindow(null, null);
+		sw_credits.set_shadow_type(ShadowType.ETCHED_IN);
+		sw_credits.expand = true;
+		vbox_credits.add(sw_credits);
+		
+		vbox_lines = new Gtk.Box(Orientation.VERTICAL,0);
 		vbox_lines.margin_top = 10;
-
+		sw_credits.add(vbox_lines);
+		
 		//logo
 		img_logo = new Gtk.Image();
 		img_logo.margin_top = 6;
@@ -225,18 +269,18 @@ public class AboutWindow : Dialog {
         vbox_logo.add(img_logo);
 
 		//program_name
-		lbl_program_name = new Label("");
+		lbl_program_name = new Gtk.Label("");
 		lbl_program_name.set_use_markup(true);
 		vbox_logo.add(lbl_program_name);
 
 		//version
-		lbl_version = new Label("");
+		lbl_version = new Gtk.Label("");
 		lbl_version.set_use_markup(true);
 		lbl_version.margin_top = 5;
 		vbox_logo.add(lbl_version);
 
 		//comments
-		lbl_comments = new Label("");
+		lbl_comments = new Gtk.Label("");
 		lbl_comments.set_use_markup(true);
 		lbl_comments.margin_top = 10;
 		vbox_logo.add(lbl_comments);
@@ -247,77 +291,125 @@ public class AboutWindow : Dialog {
 		vbox_logo.add(lbtn_website);
 
 		lbtn_website.activate_link.connect(()=>{
-			try{
-				return Gtk.show_uri(null, lbtn_website.uri, Gdk.CURRENT_TIME);
-			}
-			catch(Error e){
-				return false;
-			}
+			return xdg_open(lbtn_website.uri, username); 
 		});
 
 		//copyright
-		lbl_copyright = new Label("");
+		lbl_copyright = new Gtk.Label("");
 		lbl_copyright.set_use_markup(true);
 		lbl_copyright.margin_top = 5;
 		vbox_logo.add(lbl_copyright);
 
 		//spacer_bottom
-		var spacer_bottom = new Label("");
+		var spacer_bottom = new Gtk.Label("");
 		spacer_bottom.margin_top = 20;
 		vbox_logo.add(spacer_bottom);
 
-		//scroller
-		var sw_credits = new ScrolledWindow(null, null);
-		sw_credits.set_shadow_type(ShadowType.ETCHED_IN);
-		sw_credits.expand = true;
+		add_action_buttons();
+	}
 
-		vbox_credits.add(sw_credits);
-		sw_credits.add(vbox_lines);
-
-		//hbox_commands --------------------------------------------------
-
+	private void add_action_buttons(){
+		
 		hbox_action = (Box) get_action_area();
 
+		//btn_license
+		btn_license = new Gtk.Button.with_label("  " + _("License"));
+		btn_license.image = IconManager.lookup_image("help-about-symbolic", 16);
+		hbox_action.add(btn_license);
+
 		//btn_credits
-		btn_credits = new Button.with_label("  " + _("Credits"));
+		btn_credits = new Gtk.Button.with_label("  " + _("Credits"));
+		btn_credits.image = IconManager.lookup_image("help-about-symbolic", 16);
 		hbox_action.add(btn_credits);
 
-        btn_credits.clicked.connect(()=>{
-			vbox_logo.visible = !(vbox_logo.visible);
-			vbox_credits.visible = !(vbox_credits.visible);
+		// handlers
+		
+        btn_license.clicked.connect(()=>{
+			
+			vbox_logo.visible = !vbox_logo.visible;
 
-			if ((vbox_credits.visible)&&(!sw_credits.visible)){
-				sw_credits.show_all();
+			vbox_license.visible = !vbox_license.visible;
+			
+			if (vbox_license.visible){
+				vbox_license.set_no_show_all(false);
+				vbox_license.show_all();
+				vbox_credits.hide();
+				vbox_logo.hide();
+			}
+			else{
+				vbox_logo.show_all();
+			}
+
+			if (vbox_license.visible){
+				btn_license.label = "  " + _("Back");
+				btn_license.image = IconManager.lookup_image("go-previous-symbolic", 16);
+				btn_license.always_show_image = true;
+				btn_credits.hide();
+				this.resize(800, 500);
+			}
+			else{
+				btn_license.label = "  " + _("License");
+				btn_license.image = null;
+				btn_license.always_show_image = false;
+				btn_credits.show();
+				this.resize(450, 400);
+			}
+		});
+
+        btn_credits.clicked.connect(()=>{
+			
+			vbox_logo.visible = !vbox_logo.visible;
+
+			vbox_credits.visible = !vbox_credits.visible;
+
+			if (vbox_credits.visible){
+				vbox_credits.set_no_show_all(false);
+				vbox_credits.show_all();
+				vbox_license.hide();
+				vbox_logo.hide();
+			}
+			else{
+				vbox_logo.show_all();
 			}
 
 			if (vbox_credits.visible){
 				btn_credits.label = "  " + _("Back");
+				btn_credits.image = IconManager.lookup_image("go-previous-symbolic", 16);
+				btn_credits.always_show_image = true;
+				btn_license.hide();
 			}
 			else{
 				btn_credits.label = "  " + _("Credits");
+				btn_credits.image = null;
+				btn_credits.always_show_image = false;
+				btn_license.show();
 			}
 		});
 
-		//btn_close
-		btn_close = new Button.with_label("  " + _("Close"));
-		hbox_action.add(btn_close);
 
 		btn_close.clicked.connect(()=>{ this.destroy(); });
 	}
 
 	public void initialize() {
+		
 		title = program_name;
-        img_logo.surface = IconManager.lookup_surface(logo, 128, img_logo.scale_factor);
+		img_logo.pixbuf = logo.scale_simple(128,128,Gdk.InterpType.HYPER);
 		lbl_program_name.label = "<span size='larger'>%s</span>".printf(program_name);
 		lbl_version.label = "v%s".printf(version);
 		lbl_comments.label = "%s".printf(comments);
 		lbtn_website.uri = website;
 		lbtn_website.label = website_label;
-		//lbl_copyright.label = "<span size='smaller'>%s</span>".printf(copyright);
 		lbl_copyright.label = "<span>%s</span>".printf(copyright);
 
+		if (license.length > 0){
+			lbl_license.label = license;
+		}
+		else{
+			lbl_license.label = escape_html(GPLv2LicenseText);
+		}
+
 		if (authors.length > 0){
-			add_header("<b>%s</b>\n".printf(_("Authors")));
+			add_header(_("Authors"));
 			foreach(string name in authors){
 				add_line("%s\n".printf(name));
 			}
@@ -325,23 +417,15 @@ public class AboutWindow : Dialog {
 		}
 
 		if (contributors.length > 0){
-			add_header("<b>%s</b>\n".printf(_("Contributions")));
+			add_header(_("Code Contributions"));
 			foreach(string name in contributors){
-				add_line("%s\n".printf(name));
-			}
-			add_line("\n");
-		}
-		
-		if (third_party.length > 0){
-			add_header("<b>%s</b>\n".printf(_("Third Party Tools")));
-			foreach(string name in third_party){
 				add_line("%s\n".printf(name));
 			}
 			add_line("\n");
 		}
 
 		if (artists.length > 0){
-			add_header("<b>%s</b>\n".printf(_("Artists")));
+			add_header(_("Artists"));
 			foreach(string name in artists){
 				add_line("%s\n".printf(name));
 			}
@@ -349,7 +433,7 @@ public class AboutWindow : Dialog {
 		}
 
 		if (translators.length > 0){
-			add_header("<b>%s</b>\n".printf(_("Translators")));
+			add_header(_("Translations"));
 			foreach(string name in translators){
 				add_line("%s\n".printf(name));
 			}
@@ -357,15 +441,23 @@ public class AboutWindow : Dialog {
 		}
 
 		if (documenters.length > 0){
-			add_header("<b>%s</b>\n".printf(_("Documenters")));
+			add_header(_("Documentation"));
 			foreach(string name in documenters){
 				add_line("%s\n".printf(name));
 			}
 			add_line("\n");
 		}
 
+		if (third_party.length > 0){
+			add_header(_("Icon Themes & Utilities"));
+			foreach(string name in third_party){
+				add_line("%s\n".printf(name));
+			}
+			add_line("\n");
+		}
+
 		if (donations.length > 0){
-			add_header("<b>%s</b>\n".printf(_("Donations")));
+			add_header(_("Donations"));
 			foreach(string name in donations){
 				add_line("%s\n".printf(name));
 			}
@@ -377,7 +469,7 @@ public class AboutWindow : Dialog {
 		}
 	}
 
-	public void add_line(string text, bool escape_html_chars = true){
+	private void add_line(string text, bool escape_html_chars = true){
 		
 		if (text.split(":").length >= 2){
 			var link = new LinkButton(escape_html(text.split(":")[0]));
@@ -387,7 +479,7 @@ public class AboutWindow : Dialog {
 			if (val.contains("@")){
 				link.uri = "mailto:" + val;
 			}
-			else if(val.has_prefix("http://")){
+			else if(val.has_prefix("http://") || val.has_prefix("https://")){
 				link.uri = val;
 			}
 			else{
@@ -395,12 +487,7 @@ public class AboutWindow : Dialog {
 			}
 
 			link.activate_link.connect(()=>{
-				try{
-					return Gtk.show_uri(null, link.uri, Gdk.CURRENT_TIME);
-				}
-				catch(Error e){
-					return false;
-				}
+				return xdg_open(link.uri, username); 
 			});
 		}
 		else{
@@ -409,7 +496,7 @@ public class AboutWindow : Dialog {
 				txt = escape_html(text);
 			}
 
-			var lbl = new Label(txt);
+			var lbl = new Gtk.Label(txt);
 			lbl.set_use_markup(true);
 			lbl.valign = Align.START;
 			lbl.wrap = true;
@@ -418,7 +505,7 @@ public class AboutWindow : Dialog {
 		}
 	}
 
-	public void add_header(string text){
-		add_line(text, false);
+	private void add_header(string text){
+		add_line("<b>%s</b>\n".printf(escape_html(text)), false);
 	}
 }

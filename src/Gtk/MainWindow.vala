@@ -44,7 +44,7 @@ class MainWindow : Gtk.Window{
 	private Gtk.ToolButton btn_browse_snapshot;
 	private Gtk.ToolButton btn_settings;
 	private Gtk.ToolButton btn_wizard;
-	private Gtk.ToolButton btn_clone;
+	//private Gtk.ToolButton btn_clone;
 	private Gtk.Menu menu_extra;
 
 	private SnapshotListBox snapshot_list_box;
@@ -66,7 +66,7 @@ class MainWindow : Gtk.Window{
 	private int def_width = 800;
 	private int def_height = 600;
 
-    private int TOOLBAR_ICON_SIZE = 24;
+    //private int TOOLBAR_ICON_SIZE = 24;
 
 	public MainWindow () {
 
@@ -928,16 +928,15 @@ class MainWindow : Gtk.Window{
 		dialog.comments = _("System Restore Utility");
 		dialog.copyright = "Copyright © 2012-17 Tony George (%s)".printf(AppAuthorEmail);
 		dialog.version = AppVersion;
-		dialog.logo = "timeshift";
+		dialog.logo = IconManager.lookup("timeshift", 256);
 
-		dialog.license = _("This program is free for personal and commercial use and comes with absolutely no warranty. You use this program entirely at your own risk. The author will not be liable for any damages arising from the use of this program.");
+		//dialog.license = "";
 		dialog.website = "https://github.com/teejee2008/timeshift";
 		dialog.website_label = "https://github.com/teejee2008/timeshift";
 
 		dialog.initialize();
 		dialog.show_all();
 	}
-
 
 	private void ui_sensitive(bool enable){
 		toolbar.sensitive = enable;

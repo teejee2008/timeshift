@@ -55,6 +55,8 @@ public class AppGtk : GLib.Object {
 
 		Gtk.init(ref args);
 
+		GTK_INITIALIZED = true;
+
 		init_tmp(AppShortName);
 
 		check_if_admin();

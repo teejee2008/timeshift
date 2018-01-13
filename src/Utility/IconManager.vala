@@ -89,6 +89,9 @@ public class IconManager : GLib.Object {
 	}
 
 	public static void refresh_icon_theme(){
+
+		if (!GTK_INITIALIZED) { return; }
+		
 		theme = Gtk.IconTheme.get_default();
 		foreach(string path in search_paths){
 			theme.append_search_path(path);
@@ -96,7 +99,7 @@ public class IconManager : GLib.Object {
 	}
 
 	public static Gdk.Pixbuf? lookup(string icon_name, int icon_size, bool symbolic = false, bool use_hardcoded = false, int scale = 1){
-
+		
 		Gdk.Pixbuf? pixbuf = null;
 
 		if (icon_name.length == 0){ return null; }

@@ -60,9 +60,16 @@ public class OSDNotify : GLib.Object {
 		}
 
 		if (seconds > NOTIFICATION_INTERVAL){
-			string s = "notify-send -t %d -u %s -i %s \"%s\" \"%s\"".printf(durationMillis, urgency, "gtk-dialog-" + dialog_type, title, message);
-			retVal = exec_sync (s, null, null);
-			dt_last_notification = new DateTime.now_local();
+			
+			if (cmd_exists("notify-send")){
+				
+				string s = "notify-send -t %d -u %s -i %s \"%s\" \"%s\"".printf(
+					durationMillis, urgency, "gtk-dialog-" + dialog_type, title, message);
+					
+				retVal = exec_sync (s, null, null);
+				
+				dt_last_notification = new DateTime.now_local();
+			}
 		}
 
 		return retVal;

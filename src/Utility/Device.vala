@@ -42,18 +42,30 @@ public class Device : GLib.Object{
 	public static double GiB = 1024 * MiB;
 	
 	public string device = "";
+	public string name = "";
 	public string kname = "";
 	public string pkname = "";
-	public string name = "";
+	public string pkname_toplevel = "";
 	public string mapped_name = "";
+	public string uuid = "";
+	public string label = "";
+	public string partuuid = "";
+	public string partlabel = "";
 	
+	public int major = -1;
+	public int minor = -1;
+
+	public string device_mapper = "";
+	public string device_by_uuid = "";
+	public string device_by_label = "";
+	public string device_by_partuuid = "";  // gpt only
+	public string device_by_partlabel = ""; // gpt only
+
 	public string type = ""; // disk, part, crypt, loop, rom, lvm
 	public string fstype = ""; // iso9660, ext4, btrfs, ...
 
-	public string label = "";
-	public string uuid = "";
 	public int order = -1;
-	
+
 	public string vendor = "";
 	public string model = "";
 	public string serial = "";
@@ -92,7 +104,7 @@ public class Device : GLib.Object{
 		if ((lsblk_version != null) && (lsblk_version.length > 0)){
 			return;
 		}
-		
+
 		string std_out, std_err;
 		int status = exec_sync("lsblk --bytes --pairs --output HOTPLUG,PKNAME,VENDOR,SERIAL,REV", out std_out, out std_err);
 		if (status == 0){
@@ -278,11 +290,30 @@ public class Device : GLib.Object{
 		}
 	}
 
-	private static void find_child_devices_using_dmsetup(Gee.ArrayList<Device> list){
+	private static void find_toplevel_parent(Gee.ArrayList<Device> list, Device dev){
+
+		if (dev.pkname.length == 0){ return; }
+
+		var top_kname = dev.pkname;
 		
+		foreach (var part in list){
+			if (part.kname == top_kname){
+				if (part.pkname.length > 0){
+					top_kname = part.pkname; // get parent's parent if not empty
+				}
+			}
+		}
+
+		dev.pkname_toplevel = top_kname;
+
+		//log_debug("%s -> %s -> %s".printf(dev.pkname_toplevel, dev.pkname, dev.kname));
+	}
+
+	private static void find_child_devices_using_dmsetup(Gee.ArrayList<Device> list){
+
 		string std_out, std_err;
 		exec_sync("dmsetup deps -o blkdevname", out std_out, out std_err);
-		
+
 		/*
 		sdb3_crypt: 1 dependencies	: (sdb3)
 		sda5_crypt: 1 dependencies	: (sda5)
@@ -296,11 +327,11 @@ public class Device : GLib.Object{
 			if (line.strip().length == 0) { continue; }
 
 			try{
-	
+
 				rex = new Regex("""([^:]*)\:.*\((.*)\)""");
 
 				if (rex.match (line, 0, out match)){
-	
+
 					string child_name = match.fetch(1).strip();
 					string parent_kname = match.fetch(2).strip();
 
@@ -319,12 +350,12 @@ public class Device : GLib.Object{
 							break;
 						}
 					}
-					
+
 					if ((parent != null) && (child != null)){
 						child.pkname = parent.kname;
-						log_debug("%s -> %s".printf(parent.kname, child.kname));
+						//log_debug("%s -> %s".printf(parent.kname, child.kname));
 					}
-					
+
 				}
 				else{
 					log_debug("no-match: %s".printf(line));
@@ -336,13 +367,16 @@ public class Device : GLib.Object{
 		}
 	}
 
+
 	public static Gee.ArrayList<Device> get_block_devices_using_lsblk(string dev_name = ""){
 
+		//log_debug("Device: get_block_devices_using_lsblk()");
+		
 		/* Returns list of mounted partitions using 'lsblk' command
 		   Populates device, type, uuid, label */
 
 		test_lsblk_version();
-		
+
 		var list = new Gee.ArrayList<Device>();
 
 		string std_out;
@@ -353,39 +387,27 @@ public class Device : GLib.Object{
 		MatchInfo match;
 
 		if (lsblk_is_ancient){
-			cmd = "lsblk --bytes --pairs --output NAME,KNAME,LABEL,UUID,TYPE,FSTYPE,SIZE,MOUNTPOINT,MODEL,RO,RM";
+			cmd = "lsblk --bytes --pairs --output NAME,KNAME,LABEL,UUID,TYPE,FSTYPE,SIZE,MOUNTPOINT,MODEL,RO,RM,MAJ:MIN";
 		}
 		else{
-			cmd = "lsblk --bytes --pairs --output NAME,KNAME,LABEL,UUID,TYPE,FSTYPE,SIZE,MOUNTPOINT,MODEL,RO,HOTPLUG,PKNAME,VENDOR,SERIAL,REV";
+			cmd = "lsblk --bytes --pairs --output NAME,KNAME,LABEL,UUID,TYPE,FSTYPE,SIZE,MOUNTPOINT,MODEL,RO,HOTPLUG,MAJ:MIN,PARTLABEL,PARTUUID,PKNAME,VENDOR,SERIAL,REV";
 		}
 
 		if (dev_name.length > 0){
 			cmd += " %s".printf(dev_name);
 		}
 
-		if (LOG_DEBUG){
-			log_debug("");
-			log_debug(cmd);
-		}
-			
 		ret_val = exec_sync(cmd, out std_out, out std_err);
-		
-		//if (ret_val != 0){
-		//	var msg = "lsblk: " + _("Failed to get partition list");
-		//	msg += (device_file.length > 0) ? ": " + device_file : "";
-		//	log_error (msg);
-		//	return list; //return empty map
-		//}
 
 		/*
 		sample output
 		-----------------
 		NAME="sda" KNAME="sda" PKNAME="" LABEL="" UUID="" FSTYPE="" SIZE="119.2G" MOUNTPOINT="" HOTPLUG="0"
-		
+
 		NAME="sda1" KNAME="sda1" PKNAME="sda" LABEL="" UUID="5345-E139" FSTYPE="vfat" SIZE="47.7M" MOUNTPOINT="/boot/efi" HOTPLUG="0"
-		
+
 		NAME="mmcblk0p1" KNAME="mmcblk0p1" PKNAME="mmcblk0" LABEL="" UUID="3c0e4bbf" FSTYPE="crypto_LUKS" SIZE="60.4G" MOUNTPOINT="" HOTPLUG="1"
-		
+
 		NAME="luks-3c0" KNAME="dm-1" PKNAME="mmcblk0p1" LABEL="" UUID="f0d933c0-" FSTYPE="ext4" SIZE="60.4G" MOUNTPOINT="/mnt/sdcard" HOTPLUG="0"
 		*/
 
@@ -394,56 +416,87 @@ public class Device : GLib.Object{
 		Example: Loop devices created by mounting the same ISO multiple times.
 		*/
 
-		//parse output and build filesystem map -------------
+		// parse output and add to list -------------
 
 		int index = -1;
-		
+
 		foreach(string line in std_out.split("\n")){
 			if (line.strip().length == 0) { continue; }
 
 			try{
 				if (lsblk_is_ancient){
-					rex = new Regex("""NAME="(.*)" KNAME="(.*)" LABEL="(.*)" UUID="(.*)" TYPE="(.*)" FSTYPE="(.*)" SIZE="(.*)" MOUNTPOINT="(.*)" MODEL="(.*)" RO="([0-9]+)" RM="([0-9]+)"""");
+					rex = new Regex("""NAME="(.*)" KNAME="(.*)" LABEL="(.*)" UUID="(.*)" TYPE="(.*)" FSTYPE="(.*)" SIZE="(.*)" MOUNTPOINT="(.*)" MODEL="(.*)" RO="([0-9]+)" RM="([0-9]+)" MAJ:MIN="([0-9:]+)"""");
 				}
 				else{
-					rex = new Regex("""NAME="(.*)" KNAME="(.*)" LABEL="(.*)" UUID="(.*)" TYPE="(.*)" FSTYPE="(.*)" SIZE="(.*)" MOUNTPOINT="(.*)" MODEL="(.*)" RO="([0-9]+)" HOTPLUG="([0-9]+)" PKNAME="(.*)" VENDOR="(.*)" SERIAL="(.*)" REV="(.*)"""");
+					rex = new Regex("""NAME="(.*)" KNAME="(.*)" LABEL="(.*)" UUID="(.*)" TYPE="(.*)" FSTYPE="(.*)" SIZE="(.*)" MOUNTPOINT="(.*)" MODEL="(.*)" RO="([0-9]+)" HOTPLUG="([0-9]+)" MAJ:MIN="([0-9:]+)" PARTLABEL="(.*)" PARTUUID="(.*)" PKNAME="(.*)" VENDOR="(.*)" SERIAL="(.*)" REV="(.*)"""");
 				}
-				
+
 				if (rex.match (line, 0, out match)){
 
 					Device pi = new Device();
-					pi.name = match.fetch(1).strip();
-					pi.kname = match.fetch(2).strip();
-					pi.label = match.fetch(3); // do not strip - labels can have leading or trailing spaces
-					pi.uuid = match.fetch(4).strip();
-					pi.type = match.fetch(5).strip().down();
+
+					int pos = 0;
 					
-					pi.fstype = match.fetch(6).strip().down();
+					pi.name = match.fetch(++pos).strip();
+					pi.kname = match.fetch(++pos).strip();
+					
+					pi.label = match.fetch(++pos); // don't strip; labels can have leading or trailing spaces
+					pi.uuid = match.fetch(++pos).strip();
+
+					pi.type = match.fetch(++pos).strip().down();
+
+					pi.fstype = match.fetch(++pos).strip().down();
 					pi.fstype = (pi.fstype == "crypto_luks") ? "luks" : pi.fstype;
 					pi.fstype = (pi.fstype == "lvm2_member") ? "lvm2" : pi.fstype;
-					
-					pi.size_bytes = int64.parse(match.fetch(7).strip());
 
-					var mp = match.fetch(8).strip();
+					pi.size_bytes = int64.parse(match.fetch(++pos).strip());
+
+					var mp = match.fetch(++pos).strip();
 					if (mp.length > 0){
 						pi.mount_points.add(new MountEntry(pi,mp,""));
 					}
 
-					pi.model = match.fetch(9).strip();
+					pi.model = match.fetch(++pos).strip();
 
-					pi.read_only = (match.fetch(10).strip() == "1");
+					pi.read_only = (match.fetch(++pos).strip() == "1");
 
-					pi.removable = (match.fetch(11).strip() == "1");
+					pi.removable = (match.fetch(++pos).strip() == "1");
 
-					if (!lsblk_is_ancient){
-						pi.pkname = match.fetch(12).strip();
-						pi.vendor = match.fetch(13).strip();
-						pi.serial = match.fetch(14).strip();
-						pi.revision = match.fetch(15).strip();
+					string txt = match.fetch(++pos).strip();
+					if (txt.contains(":")){
+						pi.major = int.parse(txt.split(":")[0]);
+						pi.minor = int.parse(txt.split(":")[1]);
 					}
 					
+					if (!lsblk_is_ancient){
+						
+						pi.partlabel = match.fetch(++pos); // don't strip; labels can have leading or trailing spaces
+						pi.partuuid = match.fetch(++pos).strip();
+					
+						pi.pkname = match.fetch(++pos).strip();
+						pi.vendor = match.fetch(++pos).strip();
+						pi.serial = match.fetch(++pos).strip();
+						pi.revision = match.fetch(++pos).strip();
+					}
+
 					pi.order = ++index;
 					pi.device = "/dev/%s".printf(pi.kname);
+
+					if (pi.uuid.length > 0){
+						pi.device_by_uuid = "/dev/disk/by-uuid/%s".printf(pi.uuid);
+					}
+
+					if (pi.label.length > 0){
+						pi.device_by_label = "/dev/disk/by-label/%s".printf(pi.label);
+					}
+
+					if (pi.partuuid.length > 0){
+						pi.device_by_partuuid = "/dev/disk/by-partuuid/%s".printf(pi.partuuid);
+					}
+
+					if (pi.partlabel.length > 0){
+						pi.device_by_partlabel = "/dev/disk/by-partlabel/%s".printf(pi.partlabel);
+					}
 
 					//if ((pi.type == "crypt") && (pi.pkname.length > 0)){
 					//	pi.name = "%s (unlocked)".printf(pi.pkname);
@@ -477,23 +530,23 @@ public class Device : GLib.Object{
 		}
 
 		// add aliases from /dev/mapper/
-		
+
 		try
 		{
 			File f_dev_mapper = File.new_for_path ("/dev/mapper");
-			
+
 			FileEnumerator enumerator = f_dev_mapper.enumerate_children (
 				"%s,%s".printf(
 					FileAttribute.STANDARD_NAME, FileAttribute.STANDARD_SYMLINK_TARGET),
 				FileQueryInfoFlags.NOFOLLOW_SYMLINKS);
-				
+
 			FileInfo info;
 			while ((info = enumerator.next_file ()) != null) {
 
 				if (info.get_name() == "control") { continue; }
-				
+
 				File f_mapped = f_dev_mapper.resolve_relative_path(info.get_name());
-				
+
 				string mapped_file = f_mapped.get_path();
 				string mapped_device = info.get_symlink_target();
 				mapped_device = mapped_device.replace("..","/dev");
@@ -501,12 +554,12 @@ public class Device : GLib.Object{
 				//log_debug("info.get_symlink_target(): %s".printf(info.get_symlink_target()));
 				//log_debug("mapped_file: %s".printf(mapped_file));
 				//log_debug("mapped_device: %s".printf(mapped_device));
-				
+
 				foreach(var dev in list){
 					if (dev.device == mapped_device){
 						dev.mapped_name = mapped_file.replace("/dev/mapper/","");
 						dev.symlinks.add(mapped_file);
-						log_debug("found link: %s -> %s".printf(mapped_file, dev.device));
+						//log_debug("found link: %s -> %s".printf(mapped_file, dev.device));
 						break;
 					}
 				}
@@ -520,16 +573,19 @@ public class Device : GLib.Object{
 
 		foreach (var part in list){
 			find_child_devices(list, part);
+			find_toplevel_parent(list, part);
 		}
+
+		//find_toplevel_parent();
 
 		if (lsblk_is_ancient){
 			find_child_devices_using_dmsetup(list);
 		}
-		
-		print_device_list(list);
 
-		log_debug("Device: get_block_devices_using_lsblk(): %d".printf(list.size));
-		
+		//print_device_list(list);
+
+		//log_debug("Device: get_block_devices_using_lsblk(): %d".printf(list.size));
+
 		return list;
 	}
 

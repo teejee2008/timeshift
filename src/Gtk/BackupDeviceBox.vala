@@ -94,16 +94,17 @@ class BackupDeviceBox : Gtk.Box{
 
 		if (App.btrfs_mode){
 			
-			lbl_common.label = "◈ %s\n◈ %s".printf(
-				_("BRTFS snapshots are saved on system partion. Other locations are not supported."),
+			lbl_common.label = "◈ %s\n◈ %s\n◈ %s".printf(
+				_("Devices displayed above have BTRFS file systems."),
+				_("BRTFS snapshots are saved on system partition. Other partitions are not supported."),
 				_("Snapshots are saved to /timeshift on selected partition. Other locations are not supported.")
 			);
 		}
 		else {
 			lbl_common.label = "◈ %s\n◈ %s\n◈ %s\n◈ %s".printf(
-				_("Devices displayed above have Linux filesystems"),
-				_("Devices with Windows file systems are not supported (NTFS, FAT, etc)"),
-				_("Remote and network locations are not supported"),
+				_("Devices displayed above have Linux file systems."),
+				_("Devices with Windows file systems are not supported (NTFS, FAT, etc)."),
+				_("Remote and network locations are not supported."),
 				_("Snapshots are saved to /timeshift on selected partition. Other locations are not supported.")
 			);
 		}
@@ -224,6 +225,44 @@ class BackupDeviceBox : Gtk.Box{
 			else{
 				(cell as Gtk.CellRendererText).text =
 					(dev.free_bytes > 0) ? format_file_size(dev.free_bytes, false, "", true, 0) : "";
+			}
+
+			(cell as Gtk.CellRendererText).sensitive = (dev.type != "disk");
+		});
+
+		// name
+		
+		col = add_column_text(tv_devices, _("Name"), out cell_text);
+		cell_text.xalign = 0.0f;
+		
+		col.set_cell_data_func(cell_text, (cell_layout, cell, model, iter)=>{
+			Device dev;
+			model.get (iter, 0, out dev, -1);
+
+			if (dev.type == "disk"){
+				(cell as Gtk.CellRendererText).text = "";
+			}
+			else{
+				(cell as Gtk.CellRendererText).text = dev.partlabel;
+			}
+
+			(cell as Gtk.CellRendererText).sensitive = (dev.type != "disk");
+		});
+
+		// label
+		
+		col = add_column_text(tv_devices, _("Label"), out cell_text);
+		cell_text.xalign = 0.0f;
+		
+		col.set_cell_data_func(cell_text, (cell_layout, cell, model, iter)=>{
+			Device dev;
+			model.get (iter, 0, out dev, -1);
+
+			if (dev.type == "disk"){
+				(cell as Gtk.CellRendererText).text = "";
+			}
+			else{
+				(cell as Gtk.CellRendererText).text = dev.label;
 			}
 
 			(cell as Gtk.CellRendererText).sensitive = (dev.type != "disk");

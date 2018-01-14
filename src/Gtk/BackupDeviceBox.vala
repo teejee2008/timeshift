@@ -550,6 +550,7 @@ class BackupDeviceBox : Gtk.Box{
 			}
 			
 			if (part.pkname == parent.kname) {
+				
 				TreeIter iter1;
 				model.append(out iter1, iter0);
 				model.set(iter1, 0, part, -1);
@@ -569,6 +570,30 @@ class BackupDeviceBox : Gtk.Box{
 				}
 
 				tv_append_child_volumes(ref model, ref iter1, part);
+			}
+			else if ((part.kname == parent.kname) && (part.type == "disk") && part.has_linux_filesystem() && !part.has_children()){
+				
+				// partition-less disk with linux filesystem
+
+				// create a dummy partition
+				var part2 = new Device();
+				part2.copy_fields_from(part);
+				part2.type = "part";
+				part2.pkname = part.device.replace("/dev/","");
+				part2.parent = part;
+
+				TreeIter iter1;
+				model.append(out iter1, iter0);
+				model.set(iter1, 0, part2, -1);
+				model.set(iter1, 1, part2.tooltip_text(), -1);
+				model.set(iter1, 2, (part2.fstype == "luks") ? "locked" : IconManager.ICON_HARDDRIVE, -1);
+				
+				if ((App.repo.device != null) && (part2.uuid == App.repo.device.uuid)){
+					model.set(iter1, 3, true, -1);
+				}
+				else{
+					model.set(iter1, 3, false, -1);
+				}
 			}
 		}
 	}

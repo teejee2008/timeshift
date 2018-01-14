@@ -1,3 +1,31 @@
+timeshift (18.1) xenial; urgency=medium
+
+  * Added messages to Settings window to answer common questions
+
+  * Added 3 options for including and excluding home directory contents
+
+  * Number of snapshots to keep will be enabled, even if snapshot level
+  is not selected.
+
+  * /var/lib/schroot will be excluded by default to prevent an issue
+  with the snapshot never completing
+
+  * /DATA and /sdcard will be excluded by default, as some users mount
+  devices at these locations.
+
+  * Added a check for "notify-send" before sending a desktop
+  notification. "notify-send" is not available on some systems.
+
+  * About window was updated to include the GPL license text. Web links
+  will open web browser as non-admin user.
+
+  * #95 Added support for selecting partition-less devices as snapshot device
+  
+  * #97 PARTLABEL and LABEL will be displayed in device list
+
+ -- Tony George <tony.george.kol@gmail.com>  Sun, 14 Jan 2018 10:00:00 +0530
+
+
 timeshift (17.11) xenial; urgency=medium
 
   * Added appdata file

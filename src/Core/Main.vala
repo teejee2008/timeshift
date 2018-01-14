@@ -1731,13 +1731,29 @@ public class Main : GLib.Object{
 		
 		foreach(var fs_entry in fstab_list){
 
-			// skip mounting for non-system devices
+			// skip mounting for non-system devices ----------
 			
 			if (!fs_entry.is_for_system_directory()){
 				continue;
 			}
 
-			// find device by name or uuid
+			// skip mounting excluded devices -----------------------
+			
+			string p1 = "%s/*".printf(fs_entry.mount_point);
+			string p2 = "%s/**".printf(fs_entry.mount_point);
+			string p3 = "%s/***".printf(fs_entry.mount_point);
+			
+			if (exclude_list_default.contains(p1) || exclude_list_user.contains(p1)){
+				continue;
+			}
+			else if (exclude_list_default.contains(p2) || exclude_list_user.contains(p2)){
+				continue;
+			}
+			else if (exclude_list_default.contains(p3) || exclude_list_user.contains(p3)){
+				continue;
+			}
+
+			// find device by name or uuid --------------------------
 			
 			Device dev_fstab = null;
 			if (fs_entry.device_uuid.length > 0){

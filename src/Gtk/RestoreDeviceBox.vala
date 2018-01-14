@@ -160,6 +160,7 @@ class RestoreDeviceBox : Gtk.Box{
 	}
 
 	private void add_device_selection_option(MountEntry entry){
+
 		var box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
 		option_box.add(box);
 

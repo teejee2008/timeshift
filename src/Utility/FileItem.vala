@@ -35,6 +35,7 @@ using TeeJee.System;
 using TeeJee.Misc;
 
 public class FileItem : GLib.Object,Gee.Comparable<FileItem> {
+	
 	public string file_name = "";
 	public string file_location = "";
 	public string file_path = "";
@@ -107,6 +108,13 @@ public class FileItem : GLib.Object,Gee.Comparable<FileItem> {
 	public FileItem.dummy_root() {
 		file_name = "dummy";
 		file_location = "";
+	}
+
+	public FileItem.from_disk_path(string _file_path) {
+		file_path = _file_path;
+		file_name = file_basename(_file_path);
+		file_location = file_parent(_file_path);
+		query_file_info();
 	}
 
 	public FileItem.from_path_and_type(string _file_path, FileType _file_type) {
@@ -621,6 +629,28 @@ public class FileItem : GLib.Object,Gee.Comparable<FileItem> {
 		});
 		
 		return list;
+	}
+
+	// icons
+
+	public Gdk.Pixbuf? get_icon(int icon_size, bool add_transparency, bool add_emblems){
+
+		Gdk.Pixbuf? pixbuf = null;
+
+		if (icon != null) {
+			pixbuf = IconManager.lookup_gicon(icon, icon_size);
+		}
+
+		if (pixbuf == null){
+			if (file_type == FileType.DIRECTORY) {
+				pixbuf = IconManager.lookup("folder", icon_size, false);
+			}
+			else{
+				pixbuf = IconManager.lookup("text-x-preview", icon_size, false);
+			}
+		}
+
+		return pixbuf;
 	}
 }
 

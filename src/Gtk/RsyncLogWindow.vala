@@ -39,10 +39,14 @@ public class RsyncLogWindow : Window {
 	private Gtk.Box vbox_progress;
 	private Gtk.Box vbox_list;
 
-	private Gtk.TreeView tv_files;
-	private Gtk.TreeModelFilter filter_files;
+	private Gtk.TreeView treeview;
+	private Gtk.TreeModelFilter treefilter;
 	private Gtk.ComboBox cmb_filter;
 	private Gtk.Box hbox_filter;
+	private Gtk.Entry txt_pattern;
+	
+	private string name_filter = "";
+	private string status_filter = "";
 
 	public Gtk.Label lbl_header;
 	private Gtk.Spinner spinner;
@@ -52,25 +56,22 @@ public class RsyncLogWindow : Window {
 	public Gtk.ProgressBar progressbar;
 	
 	//window
-	private int def_width = 600;
-	private int def_height = 450;
+	private int def_width = 800;
+	private int def_height = 600;
 
 	//private uint tmr_task = 0;
 	private uint tmr_init = 0;
 	private bool thread_is_running = false;
 
 	private string rsync_log_file;
-	private FileItem log_root;
-	private bool flat_view = false;
+	private Gee.ArrayList<FileItem> loglist;
 
-	private string filter = "";
-	
 	public RsyncLogWindow(string _rsync_log_file) {
 
 		log_debug("RsyncLogWindow: RsyncLogWindow()");
 		
-		this.title = _("Log Viewer");
-		this.window_position = WindowPosition.CENTER;
+		this.title = _("Rsync Log Viewer");
+		this.window_position = Gtk.WindowPosition.CENTER_ON_PARENT;
 		this.set_default_size(def_width, def_height);
 		this.icon = IconManager.lookup("timeshift",16);
 		this.resizable = true;
@@ -81,24 +82,25 @@ public class RsyncLogWindow : Window {
 		rsync_log_file = _rsync_log_file;
 		
 		//vbox_main
-		vbox_main = new Box (Orientation.VERTICAL, 12);
+		vbox_main = new Box (Orientation.VERTICAL, 6);
 		vbox_main.margin = 6;
 		add (vbox_main);
 
 		create_progressbar();
 
+		create_filters();
+		
 		create_treeview();
 
-		create_toolbar();
-
 		cmb_filter.changed.connect(() => {
-			filter = gtk_combobox_get_value(cmb_filter, 0, "");
-			log_debug("combo_changed(): filter=%s".printf(filter));
+			
+			status_filter = gtk_combobox_get_value(cmb_filter, 0, "");
+			log_debug("combo_changed(): filter=%s".printf(status_filter));
 
 			hbox_filter.sensitive = false;
 			gtk_set_busy(true, this);
-			//filter_files.refilter();
-			tv_files_refresh();
+			treefilter.refilter();
+			//treeview_refresh();
 			hbox_filter.sensitive = true;
 			gtk_set_busy(false, this);
 		});
@@ -111,30 +113,10 @@ public class RsyncLogWindow : Window {
 		
 	}
 
-	private void create_progressbar(){
-		vbox_progress = new Gtk.Box(Orientation.VERTICAL, 6);
-		vbox_main.add(vbox_progress);
-		
-		lbl_header = add_label_header(vbox_progress, _("Parsing log file..."), true);
-		
-		var hbox_status = new Box (Orientation.HORIZONTAL, 6);
-		vbox_progress.add(hbox_status);
-		
-		spinner = new Gtk.Spinner();
-		spinner.active = true;
-		hbox_status.add(spinner);
-		
-		//lbl_msg
-		lbl_msg = add_label(hbox_status, _("Preparing..."));
-		lbl_msg.hexpand = true;
-		lbl_msg.ellipsize = Pango.EllipsizeMode.END;
-		lbl_msg.max_width_chars = 50;
-
-		//lbl_remaining = add_label(hbox_status, "");
-
-		//progressbar
-		progressbar = new Gtk.ProgressBar();
-		vbox_progress.add (progressbar);
+	private bool is_restore_log {
+		get {
+			return file_basename(rsync_log_file).contains("restore");
+		}
 	}
 
 	public bool init_delayed(){
@@ -181,44 +163,80 @@ public class RsyncLogWindow : Window {
 		
 		lbl_msg.label = _("Populating list...");
 		gtk_do_events();
-		tv_files_refresh();
+		treeview_refresh();
 
 		vbox_progress.hide();
 		gtk_do_events();
 
 		vbox_list.no_show_all = false;
 		vbox_list.show_all();
+
+		hbox_filter.no_show_all = false;
+		hbox_filter.show_all();
 	}
 	
 	private void parse_log_file_thread(){
 		App.task = new RsyncTask();
-		log_root = App.task.parse_log(rsync_log_file);
+		loglist = App.task.parse_log(rsync_log_file);
 		thread_is_running = false;
 	}
-	
-	private void create_toolbar(){
-		log_debug("create_toolbar()");
+
+	// create ui -----------------------------------------
+
+	private void create_progressbar(){
+		
+		vbox_progress = new Gtk.Box(Orientation.VERTICAL, 6);
+		vbox_main.add(vbox_progress);
+		
+		lbl_header = add_label_header(vbox_progress, _("Parsing log file..."), true);
+		
+		var hbox_status = new Box (Orientation.HORIZONTAL, 6);
+		vbox_progress.add(hbox_status);
+		
+		spinner = new Gtk.Spinner();
+		spinner.active = true;
+		hbox_status.add(spinner);
+		
+		//lbl_msg
+		lbl_msg = add_label(hbox_status, _("Preparing..."));
+		lbl_msg.hexpand = true;
+		lbl_msg.ellipsize = Pango.EllipsizeMode.END;
+		lbl_msg.max_width_chars = 50;
+
+		//lbl_remaining = add_label(hbox_status, "");
+
+		//progressbar
+		progressbar = new Gtk.ProgressBar();
+		vbox_progress.add (progressbar);
+	}
+
+	// create filters -------------------------------------------
+
+	private void create_filters(){
+		
+		log_debug("create_filters()");
 		
 		var hbox = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
-        vbox_list.add(hbox);
+		hbox.no_show_all = true;
+        vbox_main.add(hbox);
 		hbox_filter = hbox;
 		
-		var label = add_label(hbox, _("View:"));
+		add_label(hbox, _("Filter:"));
 
-		int_combo_filter(hbox);
+		add_search_entry(hbox);
 
-		label = add_label(hbox, "");
+		add_combo(hbox);
+
+		var label = add_label(hbox, "");
 		label.hexpand = true;
 		
-		Gtk.SizeGroup size_group = null;
-		/*var btn_flat = add_toggle_button(hbox, _("Flat View"), "", ref size_group, null);
-		btn_flat.active = flat_view;
-        btn_flat.toggled.connect(()=>{
-			flat_view = btn_flat.active;
-			tv_files_refresh();
-		});*/
+		var button = new Gtk.Button.with_label(_("Close"));
+		hbox.add(button);
+		
+        button.clicked.connect(()=>{
+			this.destroy();
+		});
 
-		size_group = null;
 		/*var btn_exclude = add_button(hbox,
 			_("Exclude Selected"),
 			_("Exclude selected items from future snapshots (careful!)"),
@@ -235,114 +253,12 @@ public class RsyncLogWindow : Window {
 				exclude_selected_items();
 			}
 			
-			tv_files_refresh();
+			treeview_refresh();
 		});*/
-
-		// close
-
-		size_group = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
-		var btn_close = add_button(hbox, _("Close"), "", size_group, null);
-
-        btn_close.clicked.connect(()=>{
-			this.destroy();
-		});
-
-		log_debug("init_toolbar(): finished");
 	}
 
-	private void create_treeview() {
-
-		vbox_list = new Gtk.Box(Orientation.VERTICAL, 6);
-		vbox_list.no_show_all = true;
-		vbox_main.add(vbox_list);
+	private void add_combo(Gtk.Box hbox){
 		
-		//add_label(vbox_list,
-		//	_("Following files have changed since previous snapshot:"));
-
-		// tv_files
-		tv_files = new TreeView();
-		tv_files.get_selection().mode = SelectionMode.MULTIPLE;
-		tv_files.headers_clickable = true;
-		tv_files.rubber_banding = true;
-		tv_files.has_tooltip = true;
-		tv_files.set_rules_hint(true);
-
-		// sw_files
-		var sw_files = new ScrolledWindow(null, null);
-		sw_files.set_shadow_type (ShadowType.ETCHED_IN);
-		sw_files.add (tv_files);
-		sw_files.vexpand = true;
-		vbox_list.add(sw_files);
-		
-		// name ----------------------------------------------
-
-		// column
-		var col = new TreeViewColumn();
-		col.title = _("Name");
-		col.clickable = true;
-		col.resizable = true;
-		col.expand = true;
-		tv_files.append_column(col);
-
-		// cell icon
-		var cell_pix = new CellRendererPixbuf ();
-		cell_pix.stock_size = Gtk.IconSize.MENU;
-		col.pack_start(cell_pix, false);
-		col.set_attributes(cell_pix, "icon-name", 3);
-
-		// cell text
-		var cell_text = new CellRendererText ();
-		cell_text.ellipsize = Pango.EllipsizeMode.END;
-		col.pack_start (cell_text, false);
-		col.set_attributes(cell_text, "text", 2);
-
-		// name ----------------------------------------------
-
-		// column
-		col = new TreeViewColumn();
-		col.title = _("Size");
-		col.clickable = true;
-		col.resizable = true;
-		//col.expand = true;
-		tv_files.append_column(col);
-
-		// cell text
-		cell_text = new CellRendererText ();
-		//cell_text.ellipsize = Pango.EllipsizeMode.END;
-		cell_text.xalign = (float) 1.0;
-		col.pack_start (cell_text, false);
-		col.set_attributes(cell_text, "text", 4);
-		
-		// status ------------------------------------------------
-
-		col = new TreeViewColumn();
-		col.title = "Change";
-		//col.clickable = false;
-		//col.resizable = false;
-		tv_files.append_column(col);
-		//var col_spacer = col;
-		
-		// cell text
-		cell_text = new CellRendererText ();
-		col.pack_start (cell_text, false);
-		col.set_attributes(cell_text, "text", 5);
-		
-		// buffer ------------------------------------------------
-
-		col = new TreeViewColumn();
-		col.title = "";
-		col.clickable = false;
-		col.resizable = false;
-		col.min_width = 20;
-		tv_files.append_column(col);
-		//var col_spacer = col;
-		
-		// cell text
-		cell_text = new CellRendererText ();
-		col.pack_start (cell_text, false);
-	}
-
-	private void int_combo_filter(Gtk.Box hbox){
 		// combo
 		var combo = new Gtk.ComboBox ();
 		hbox.add(combo);
@@ -364,124 +280,348 @@ public class RsyncLogWindow : Window {
 
 		TreeIter iter;
 		model.append(out iter);
-		model.set (iter, 0, "", 1, "All");
+		model.set (iter, 0, "", 1, _("All Files"));
 		model.append(out iter);
-		model.set (iter, 0, "created", 1, "Created");
+		model.set (iter, 0, "created", 1, "%s".printf(_("Created")));
 		model.append(out iter);
-		model.set (iter, 0, "deleted", 1, "Deleted");
+		model.set (iter, 0, "deleted", 1, "%s".printf(_("Deleted")));
 		model.append(out iter);
-		model.set (iter, 0, "changed", 1, "Changed");
+		model.set (iter, 0, "changed", 1, "%s".printf(is_restore_log ? _("Restored") : _("Changed")));
 		model.append(out iter);
-		model.set (iter, 0, "checksum", 1, " └ Checksum");
+		model.set (iter, 0, "checksum", 1, " └ %s".printf(_("Checksum")));
 		model.append(out iter);
-		model.set (iter, 0, "size", 1, " └ Size");
+		model.set (iter, 0, "size", 1, " └ %s".printf(_("Size")));
 		model.append(out iter);
-		model.set (iter, 0, "timestamp", 1, " └ Timestamp");
+		model.set (iter, 0, "timestamp", 1, " └ %s".printf(_("Timestamp")));
 		model.append(out iter);
-		model.set (iter, 0, "permissions", 1, " └ Permissions");
+		model.set (iter, 0, "permissions", 1, " └ %s".printf(_("Permissions")));
 		model.append(out iter);
-		model.set (iter, 0, "owner", 1, " └ Owner");
+		model.set (iter, 0, "owner", 1, " └ %s".printf(_("Owner")));
 		model.append(out iter);
-		model.set (iter, 0, "group", 1, " └ Group");
+		model.set (iter, 0, "group", 1, " └ %s".printf(_("Group")));
 
 		cmb_filter.active = 0;
 	}
+
+	private void add_search_entry(Gtk.Box hbox){
+
+		var txt = new Gtk.Entry();
+		txt.xalign = 0.0f;
+		txt.hexpand = true;
+		txt.margin = 0;
+		hbox.add(txt);
+		
+		txt.placeholder_text = _("Enter file name or path");
+
+		txt_pattern = txt;
+
+		txt.activate.connect(()=>{
+			execute_action();
+		});
+
+		txt.focus_out_event.connect((event) => {
+			txt.activate();
+			return false;
+		});
+
+		// connect signal for shift+F10
+        txt.popup_menu.connect(() => {
+			return true; // suppress right-click menu
+		});
+
+        // connect signal for right-click
+		txt.button_press_event.connect((w, event) => {
+			if (event.button == 3) { return true; } // suppress right-click menu
+			return false;
+		});
+
+		txt.key_press_event.connect((event) => {
+			//string key_name = Gdk.keyval_name(event.keyval);
+			//if (key_name.down() == "escape"){
+			//	close_panel(true);
+			//	return false;
+			//}
+			add_action_delayed();
+			return false;
+		});
+		
+		//txt.set_no_show_all(true);
+	}
+
+	private uint tmr_action = 0;
 	
-	private void tv_files_refresh() {
-		log_debug("tv_files_refresh()");
+	private void add_action_delayed(){
+		clear_action_delayed();
+		tmr_action = Timeout.add(200, execute_action);
+	}
+
+	private void clear_action_delayed(){
+		if (tmr_action > 0){
+			Source.remove(tmr_action);
+			tmr_action = 0;
+		}
+	}
+
+	private bool execute_action(){
+
+		clear_action_delayed();
+
+		name_filter = txt_pattern.text;
+		
+		treefilter.refilter();
+		
+		return false;
+	}
+
+	// treeview --------------------------------------------------------
+
+	private void create_treeview() {
+
+		vbox_list = new Gtk.Box(Orientation.VERTICAL, 6);
+		vbox_list.no_show_all = true;
+		vbox_main.add(vbox_list);
+
+		//add_label(vbox_list,
+		//	_("Following files have changed since previous snapshot:"));
+
+		// treeview
+		treeview = new Gtk.TreeView();
+		treeview.get_selection().mode = SelectionMode.MULTIPLE;
+		treeview.headers_clickable = true;
+		treeview.rubber_banding = true;
+		treeview.has_tooltip = true;
+		treeview.set_rules_hint(true);
+		treeview.show_expanders = false;
+
+		// scrolled
+		var scrolled = new Gtk.ScrolledWindow(null, null);
+		scrolled.set_shadow_type(ShadowType.ETCHED_IN);
+		scrolled.add (treeview);
+		scrolled.hscrollbar_policy = PolicyType.AUTOMATIC;
+		scrolled.vscrollbar_policy = PolicyType.AUTOMATIC;
+		scrolled.vexpand = true;
+		vbox_list.add(scrolled);
+
+		add_column_status();
+
+		add_column_name();
+
+		add_column_buffer();
+	}
+
+	private void add_column_status(){
+
+		var col = new Gtk.TreeViewColumn();
+		col.title = is_restore_log ? _("Action") : _("Status");
+		treeview.append_column(col);
+
+		// cell icon
+		var cell_pix = new Gtk.CellRendererPixbuf();
+		cell_pix.stock_size = Gtk.IconSize.MENU;
+		col.pack_start(cell_pix, false);
+
+		// cell text
+		var cell_text = new Gtk.CellRendererText ();
+		col.pack_start (cell_text, false);
+
+		// render icon
+		col.set_cell_data_func (cell_pix, (cell_layout, cell, model, iter) => {
+
+			var pixcell = cell as Gtk.CellRendererPixbuf;
+
+			Gdk.Pixbuf pixbuf;
+			model.get (iter, 3, out pixbuf, -1);
+
+			pixcell.pixbuf = pixbuf;
+		});
+
+		// render text
+		col.set_cell_data_func (cell_text, (cell_layout, cell, model, iter) => {
+
+			var txtcell = cell as Gtk.CellRendererText;
+
+			string status;
+			model.get (iter, 4, out status, -1);
+
+			txtcell.text = status;
+		});
+	}
+
+	private void add_column_name(){
+
+		// column
+		var col = new Gtk.TreeViewColumn();
+		col.title = _("Name");
+		col.clickable = true;
+		col.resizable = true;
+		col.expand = true;
+		treeview.append_column(col);
+
+		// cell icon
+		var cell_pix = new Gtk.CellRendererPixbuf();
+		cell_pix.stock_size = Gtk.IconSize.MENU;
+		col.pack_start(cell_pix, false);
+
+		// cell text
+		var cell_text = new Gtk.CellRendererText ();
+		cell_text.ellipsize = Pango.EllipsizeMode.END;
+		col.pack_start (cell_text, false);
+
+		// render icon
+		col.set_cell_data_func (cell_pix, (cell_layout, cell, model, iter) => {
+
+			var pixcell = cell as Gtk.CellRendererPixbuf;
+
+			Gdk.Pixbuf pixbuf;
+			model.get (iter, 1, out pixbuf, -1);
+
+			pixcell.pixbuf = pixbuf;
+		});
+
+		// render text
+		col.set_cell_data_func (cell_text, (cell_layout, cell, model, iter) => {
+
+			var txtcell = cell as Gtk.CellRendererText;
+
+			string path;
+			model.get (iter, 2, out path, -1);
+
+			txtcell.text = path;
+		});
+	}
+
+	private void add_column_buffer(){
+
+		var col = new Gtk.TreeViewColumn();
+		col.title = "";
+		col.clickable = false;
+		col.resizable = false;
+		col.min_width = 20;
+		treeview.append_column(col);
+		//var col_spacer = col;
+		
+		// cell text
+		var cell_text = new Gtk.CellRendererText ();
+		col.pack_start (cell_text, false);
+	}
+	
+	private void treeview_refresh() {
+		
+		log_debug("treeview_refresh()");
 
 		hbox_filter.sensitive = false;
 		gtk_set_busy(true, this);
 
-		tv_files.show_expanders = !flat_view;
-		
-		var model = new Gtk.TreeStore(6,
-			typeof(FileItem), // object
-			typeof(bool), // odd row
-			typeof(string), // file_name
-			typeof(string),
-			typeof(string), // size text
-			typeof(string) // file_status
+		var model = new Gtk.ListStore(5,
+			typeof(FileItem), 	// item
+			typeof(Gdk.Pixbuf), // file icon
+			typeof(string), 	// path
+			typeof(Gdk.Pixbuf), // status icon
+			typeof(string) 		// status
 		);
-
-		var icon_theme = Gtk.IconTheme.get_default();
 
 		TreeIter iter0;
 
-		// workaround for compiler error 'iter0 not set'
-		model.append(out iter0, null);
-		model.clear();
+		var spath = "%s/localhost".printf(file_parent(rsync_log_file));
 		
-		bool odd_row = false;
-		int row_index = -1;
-		foreach(FileItem item in log_root.get_children_sorted()) {
-			row_index++;
-			odd_row = !odd_row;
+		foreach(var item in loglist) {
+			
+			if (item.file_type != FileType.DIRECTORY){
 
-			if ((!flat_view) || (item.file_type != FileType.DIRECTORY)){
-
-				// add row
-				model.append(out iter0, null);
-				model.set (iter0, 0, item);
-				model.set (iter0, 1, odd_row);
-
-				if (flat_view){
-					model.set (iter0, 2, "/%s".printf(item.file_path));
-				}
-				else{
-					model.set (iter0, 2, "%s".printf(item.file_name));
-				}
+				string status = "";
+				Gdk.Pixbuf status_icon = null;
 				
-				if (item.file_type == FileType.DIRECTORY){
-					model.set (iter0, 3, IconManager.GENERIC_ICON_DIRECTORY);
+				if (is_restore_log){
+
+					switch(item.file_status){
+					case "checksum":
+					case "size":
+					case "timestamp":
+					case "permissions":
+					case "owner":
+					case "group":
+						status = _("Restored");
+						status_icon = IconManager.lookup("item-yellow",16);
+						break;
+					case "created":
+						status = _("Created");
+						status_icon = IconManager.lookup("item-green",16);
+						break;
+					case "deleted":
+						status = _("Deleted");
+						status_icon = IconManager.lookup("item-red",16);
+						break;
+					}
 				}
 				else{
-					model.set (iter0, 3, IconManager.GENERIC_ICON_FILE);
+					switch(item.file_status){
+					case "checksum":
+					case "size":
+					case "timestamp":
+					case "permissions":
+					case "owner":
+					case "group":
+						status = _("Changed");
+						status_icon = IconManager.lookup("item-yellow",16);
+						break;
+					case "created":
+						status = _("Created");
+						status_icon = IconManager.lookup("item-green",16);
+						break;
+					case "deleted":
+						status = _("Deleted");
+						status_icon = IconManager.lookup("item-red",16);
+						break;
+					}
 				}
 
-				if (item.is_symlink){
-					model.set (iter0, 4, "link");
-				}
-				else if (item.size >= 0){
-					model.set (iter0, 4, format_file_size(item.size));
-				}
-				else{
-					model.set (iter0, 4, "");
-				}
-
-				model.set (iter0, 5, item.file_status);
-			}
-
-			if (item.file_type == FileType.DIRECTORY){
-				log_debug("Appending: %s".printf(item.file_path));
-				tv_append_to_iter(ref model, ref iter0, item, odd_row, false);
+				var relpath = item.file_path[spath.length:item.file_path.length];
+				
+				// add row
+				model.append(out iter0);
+				model.set(iter0, 0, item);
+				model.set(iter0, 1, item.get_icon(16, false, false));
+				model.set(iter0, 2, relpath);
+				model.set(iter0, 3, status_icon);
+				model.set(iter0, 4, status);
 			}
 		}
 		
-		filter_files = new TreeModelFilter (model, null);
-		filter_files.set_visible_func(filter_packages_func);
-		tv_files.set_model (filter_files);
+		treefilter = new Gtk.TreeModelFilter (model, null);
+		treefilter.set_visible_func(filter_packages_func);
+		treeview.set_model(treefilter);
 		
-		//tv_files.set_model(model);
-		//tv_files.columns_autosize();
+		//treeview.set_model(model);
+		//treeview.columns_autosize();
 
 		hbox_filter.sensitive = true;
 		gtk_set_busy(false, this);
 	}
 
 	private bool filter_packages_func (Gtk.TreeModel model, Gtk.TreeIter iter) {
+		
 		FileItem item;
 		model.get (iter, 0, out item, -1);
-
+		
 		if (item.file_type == FileType.DIRECTORY){
-			return !flat_view; // show directories
+			return false;
 		}
-		// TODO: medium: hard: find a way to hide empty directories after filter
 
-		if (filter.length == 0){
+		if (name_filter.length > 0){
+
+			var spath = "%s/localhost".printf(file_parent(rsync_log_file));
+			var relpath = item.file_path[spath.length:item.file_path.length];
+			
+			if (!relpath.down().contains(name_filter)){
+				
+				return false;
+			}
+		}
+
+		if (status_filter.length == 0){
 			return true;
 		}
-		else if (filter == "changed"){
+		else if (status_filter == "changed"){
 			switch(item.file_status){
 			case "checksum":
 			case "size":
@@ -495,85 +635,7 @@ public class RsyncLogWindow : Window {
 			}
 		}
 		else{
-			return (item.file_status == filter);
-		}
-	}
-
-	private TreeIter? tv_append_to_iter(
-		ref TreeStore model, ref TreeIter iter0, FileItem? item,
-		bool odd_row, bool addItem = true) {
-
-		//append sub-directories
-
-		TreeIter iter1 = iter0;
-
-		if (addItem && (item.parent != null)) {
-
-			//log_debug("add:%s".printf(item.file_path));
-
-			if (check_visibility(item)){
-
-				// add row
-				if (flat_view){
-					model.append (out iter1, null);
-				}
-				else{
-					model.append (out iter1, iter0);
-				}
-
-				model.set (iter1, 0, item);
-				model.set (iter1, 1, odd_row);
-
-				if (flat_view){
-					model.set (iter1, 2, "/%s".printf(item.file_path));
-				}
-				else{
-					model.set (iter1, 2, "%s".printf(item.file_name));
-				}
-
-				if (item.file_type == FileType.DIRECTORY){
-					model.set (iter1, 3, IconManager.GENERIC_ICON_DIRECTORY);
-				}
-				else{
-					model.set (iter1, 3, IconManager.GENERIC_ICON_FILE);
-				}
-
-				
-				if (item.is_symlink){
-					model.set (iter1, 4, "link");
-				}
-				else if (item.size >= 0){
-					model.set (iter1, 4, format_file_size(item.size));
-				}
-				else{
-					model.set (iter1, 4, "");
-				}
-
-				model.set (iter1, 5, item.file_status);
-			}
-		}
-
-		// add new child iters -------------------------
-		
-		foreach(var child in item.get_children_sorted()) {
-			odd_row = !odd_row;
-			tv_append_to_iter(ref model, ref iter1, child, odd_row);
-		}
-
-		return iter1;
-	}
-
-	private bool check_visibility(FileItem item){
-
-		if (item.file_type == FileType.DIRECTORY){
-			return !flat_view;
-		}
-		
-		if (filter.length == 0){
-			return true;
-		}
-		else{
-			return (item.file_status == filter);
+			return (item.file_status == status_filter);
 		}
 	}
 
@@ -588,7 +650,7 @@ public class RsyncLogWindow : Window {
 		
 		// add include list
 		TreeIter iter;
-		var store = (Gtk.ListStore) tv_files.model;
+		var store = (Gtk.ListStore) treeview.model;
 		bool iterExists = store.get_iter_first (out iter);
 		while (iterExists) {
 			FileItem item;

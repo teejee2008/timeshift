@@ -79,9 +79,21 @@ public class Snapshot : GLib.Object{
 		}	
 	}
 
+	public string rsync_changes_log_file{
+		owned get {
+			return path_combine(path, "rsync-log-changes");
+		}	
+	}
+
 	public string rsync_restore_log_file{
 		owned get {
 			return path_combine(path, "rsync-log-restore");
+		}	
+	}
+
+	public string rsync_restore_changes_log_file{
+		owned get {
+			return path_combine(path, "rsync-log-restore-changes");
 		}	
 	}
 	

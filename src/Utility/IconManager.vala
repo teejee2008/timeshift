@@ -169,7 +169,10 @@ public class IconManager : GLib.Object {
 		if (gicon == null){ return null; }
 		
 		try {
-			pixbuf = theme.lookup_by_gicon(gicon, icon_size, Gtk.IconLookupFlags.FORCE_SIZE).load_icon();
+			var icon_info = theme.lookup_by_gicon(gicon, icon_size, Gtk.IconLookupFlags.FORCE_SIZE);
+			if (icon_info != null){
+				pixbuf = icon_info.load_icon();
+			}
 		}
 		catch (Error e) {
 			log_debug(e.message);

@@ -97,7 +97,7 @@ class BackupDeviceBox : Gtk.Box{
 			lbl_common.label = "◈ %s\n◈ %s\n◈ %s".printf(
 				_("Devices displayed above have BTRFS file systems."),
 				_("BRTFS snapshots are saved on system partition. Other partitions are not supported."),
-				_("Snapshots are saved to /timeshift on selected partition. Other locations are not supported.")
+				_("Snapshots are saved to /timeshift-btrfs on selected partition. Other locations are not supported.")
 			);
 		}
 		else {

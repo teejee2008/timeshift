@@ -319,14 +319,14 @@ class SnapshotListBox : Gtk.Box{
 		mi_browse = item;
 		
 		// mi_view_log_create
-		item = new ImageMenuItem.with_label(_("View Log for Create"));
+		item = new ImageMenuItem.with_label(_("View Rsync Log for Create"));
         item.image = IconManager.lookup_image(IconManager.GENERIC_ICON_FILE, 16);
 		item.activate.connect(()=> { view_snapshot_log(false); });
 		menu_snapshots.append(item);
 		mi_view_log_create = item;
 		
 		// mi_view_log_restore
-		item = new ImageMenuItem.with_label(_("View Log for Restore"));
+		item = new ImageMenuItem.with_label(_("View Rsync Log for Restore"));
         item.image = IconManager.lookup_image(IconManager.GENERIC_ICON_FILE, 16);
 		item.activate.connect(()=> { view_snapshot_log(true); });
 		menu_snapshots.append(item);
@@ -492,12 +492,22 @@ class SnapshotListBox : Gtk.Box{
 	}
 
 	private bool menu_snapshots_popup (Gtk.Menu popup, Gdk.EventButton? event) {
-		TreeSelection selection = treeview.get_selection();
-		int count = selection.count_selected_rows();
-		mi_remove.sensitive = (count > 0);
-		mi_mark.sensitive = (count > 0);
+		
+		var selected = selected_snapshots();
+		
+		mi_remove.sensitive = (selected.size > 0);
+		mi_mark.sensitive = (selected.size > 0);
 		mi_view_log_create.sensitive = !App.btrfs_mode;
 		mi_view_log_restore.sensitive = !App.btrfs_mode;
+
+		if (!App.btrfs_mode){
+
+			if (selected.size > 0){
+				
+				mi_view_log_restore.sensitive = file_exists(selected[0].rsync_restore_log_file)
+					|| file_exists(selected[0].rsync_restore_changes_log_file);
+			}
+		}
 
 		if (event != null) {
 			menu_snapshots.popup (null, null, null, event.button, event.time);
@@ -507,7 +517,6 @@ class SnapshotListBox : Gtk.Box{
 		
 		return true;
 	}
-
 
 	// actions
 	

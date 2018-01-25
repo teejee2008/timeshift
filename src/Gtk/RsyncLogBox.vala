@@ -71,13 +71,18 @@ public class RsyncLogBox : Gtk.Box {
 		
 		log_debug("RsyncLogBox: RsyncLogBox()");
 
-		window	= _window;	
+		window	= _window;
 	}
 
 	public void open_log(string _rsync_log_file){
 
 		rsync_log_file = _rsync_log_file;
 
+		// header
+		if (App.dry_run){
+			lbl_header = add_label_header(this, _("Confirm Actions"), true);
+		}
+		
 		create_progressbar();
 
 		create_filters();
@@ -218,21 +223,24 @@ public class RsyncLogBox : Gtk.Box {
         this.add(hbox);
 		hbox_filter = hbox;
 		
-		add_label(hbox, _("Filter:"));
+		//add_label(hbox, _("Filter:"));
 
 		add_search_entry(hbox);
 
 		add_combo(hbox);
 
-		var label = add_label(hbox, "");
-		label.hexpand = true;
-		
-		var button = new Gtk.Button.with_label(_("Close"));
-		hbox.add(button);
-		
-        button.clicked.connect(()=>{
-			window.destroy();
-		});
+		if (!App.dry_run){
+
+			var label = add_label(hbox, "");
+			label.hexpand = true;
+			
+			var button = new Gtk.Button.with_label(_("Close"));
+			hbox.add(button);
+			
+			button.clicked.connect(()=>{
+				window.destroy();
+			});
+		}
 
 		/*var btn_exclude = add_button(hbox,
 			_("Exclude Selected"),
@@ -254,52 +262,6 @@ public class RsyncLogBox : Gtk.Box {
 		});*/
 	}
 
-	private void add_combo(Gtk.Box hbox){
-		
-		// combo
-		var combo = new Gtk.ComboBox ();
-		hbox.add(combo);
-		cmb_filter = combo;
-		
-		var cell_text = new CellRendererText ();
-		cell_text.text = "";
-		combo.pack_start (cell_text, false);
-
-		combo.set_cell_data_func(cell_text, (cell_layout, cell, model, iter)=>{
-			string val;
-			model.get (iter, 1, out val, -1);
-			(cell as Gtk.CellRendererText).text = val;
-		});
-
-		//populate combo
-		var model = new Gtk.ListStore(2, typeof(string), typeof(string));
-		cmb_filter.model = model;
-
-		TreeIter iter;
-		model.append(out iter);
-		model.set (iter, 0, "", 1, _("All Files"));
-		model.append(out iter);
-		model.set (iter, 0, "created", 1, "%s".printf(_("Created")));
-		model.append(out iter);
-		model.set (iter, 0, "deleted", 1, "%s".printf(_("Deleted")));
-		model.append(out iter);
-		model.set (iter, 0, "changed", 1, "%s".printf(is_restore_log ? _("Restored") : _("Changed")));
-		model.append(out iter);
-		model.set (iter, 0, "checksum", 1, " └ %s".printf(_("Checksum")));
-		model.append(out iter);
-		model.set (iter, 0, "size", 1, " └ %s".printf(_("Size")));
-		model.append(out iter);
-		model.set (iter, 0, "timestamp", 1, " └ %s".printf(_("Timestamp")));
-		model.append(out iter);
-		model.set (iter, 0, "permissions", 1, " └ %s".printf(_("Permissions")));
-		model.append(out iter);
-		model.set (iter, 0, "owner", 1, " └ %s".printf(_("Owner")));
-		model.append(out iter);
-		model.set (iter, 0, "group", 1, " └ %s".printf(_("Group")));
-
-		cmb_filter.active = 0;
-	}
-
 	private void add_search_entry(Gtk.Box hbox){
 
 		var txt = new Gtk.Entry();
@@ -308,7 +270,7 @@ public class RsyncLogBox : Gtk.Box {
 		txt.margin = 0;
 		hbox.add(txt);
 		
-		txt.placeholder_text = _("Enter file name or path");
+		txt.placeholder_text = _("Filter by name or path");
 
 		txt_pattern = txt;
 
@@ -343,6 +305,71 @@ public class RsyncLogBox : Gtk.Box {
 		});
 		
 		//txt.set_no_show_all(true);
+	}
+
+	private void add_combo(Gtk.Box hbox){
+		
+		// combo
+		var combo = new Gtk.ComboBox ();
+		hbox.add(combo);
+		cmb_filter = combo;
+		
+		var cell_text = new CellRendererText ();
+		cell_text.text = "";
+		combo.pack_start (cell_text, false);
+
+		combo.set_cell_data_func(cell_text, (cell_layout, cell, model, iter)=>{
+			string val;
+			model.get (iter, 1, out val, -1);
+			(cell as Gtk.CellRendererText).text = val;
+		});
+
+		//populate combo
+		var model = new Gtk.ListStore(2, typeof(string), typeof(string));
+		cmb_filter.model = model;
+
+		TreeIter iter;
+		
+		model.append(out iter);
+		model.set (iter, 0, "", 1, _("All Files"));
+		
+		model.append(out iter);
+		model.set (iter, 0, "created", 1, "%s".printf(App.dry_run ? _("Create") : _("Created")));
+		
+		model.append(out iter);
+		model.set (iter, 0, "deleted", 1, "%s".printf(App.dry_run ? _("Delete") : _("Deleted")));
+		
+		model.append(out iter);
+
+		string txt = "";
+		if (App.dry_run){
+			txt = _("Replace");
+		}
+		else if (is_restore_log){
+			txt = _("Restored");
+		}
+		else{
+			txt = _("Changed");
+		}
+		
+		model.set (iter, 0, "changed", 1, "%s".printf(txt));
+
+		if (!App.dry_run){
+			model.append(out iter);
+			model.set (iter, 0, "checksum", 1, " └ %s".printf(_("Checksum")));
+			model.append(out iter);
+			model.set (iter, 0, "size", 1, " └ %s".printf(_("Size")));
+			model.append(out iter);
+			model.set (iter, 0, "timestamp", 1, " └ %s".printf(_("Timestamp")));
+			model.append(out iter);
+			model.set (iter, 0, "permissions", 1, " └ %s".printf(_("Permissions")));
+			model.append(out iter);
+			model.set (iter, 0, "owner", 1, " └ %s".printf(_("Owner")));
+			model.append(out iter);
+			model.set (iter, 0, "group", 1, " └ %s".printf(_("Group")));
+		}
+		
+		cmb_filter.active = 0;
 	}
 
 	private uint tmr_action = 0;
@@ -538,15 +565,15 @@ public class RsyncLogBox : Gtk.Box {
 					case "permissions":
 					case "owner":
 					case "group":
-						status = _("Restored");
+						status = App.dry_run ? _("Replace") : _("Restored");
 						status_icon = IconManager.lookup("item-yellow",16);
 						break;
 					case "created":
-						status = _("Created");
+						status =  App.dry_run ? _("Copy") : _("Created");
 						status_icon = IconManager.lookup("item-green",16);
 						break;
 					case "deleted":
-						status = _("Deleted");
+						status =  App.dry_run ? _("Delete") : _("Deleted");
 						status_icon = IconManager.lookup("item-red",16);
 						break;
 					}

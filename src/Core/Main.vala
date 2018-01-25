@@ -2022,7 +2022,9 @@ public class Main : GLib.Object{
 			Thread.usleep((ulong) GLib.TimeSpan.MILLISECOND * 100);
 		}
 
-		snapshot_to_restore = null;
+		if (!dry_run){
+			snapshot_to_restore = null;
+		}
 
 		log_debug("Main: restore_snapshot(): exit");
 		
@@ -2181,6 +2183,11 @@ public class Main : GLib.Object{
 		// run rsync ---------------------------------------
 
 		sh += "rsync -avir --force --delete --delete-after";
+
+		if (dry_run){
+			sh += " --dry-run";
+		}
+		
 		sh += " --log-file=\"%s\"".printf(restore_log_file);
 		sh += " --exclude-from=\"%s\"".printf(restore_exclude_file);
 
@@ -2189,6 +2196,12 @@ public class Main : GLib.Object{
 		}
 		else{
 			sh += " \"%s\" \"%s\" \n".printf(restore_source_path + "/localhost/", restore_target_path);
+		}
+
+		if (dry_run){
+			sh_sync = sh;
+			sh_finish = "";
+			return; // no need to continue
 		}
 
 		sh += "sync \n"; // sync file system
@@ -2424,7 +2437,9 @@ public class Main : GLib.Object{
 		task.delete_extra = true;
 		task.delete_excluded = false;
 		task.delete_after = true;
-		
+
+		task.dry_run = dry_run;
+	
 		if (mirror_system){
 			task.source_path = "/";
 		}
@@ -2454,10 +2469,20 @@ public class Main : GLib.Object{
 			sleep(1000);
 
 			if (task.status_line.length > 0){
-				progress_text = _("Synching files with rsync...");
+
+				if (dry_run){
+					progress_text = _("Comparing files with rsync...");
+				}
+				else{
+					progress_text = _("Synching files with rsync...");
+				}
 			}
 			
 			gtk_do_events();
+		}
+
+		if (dry_run){
+			return true; // no need to continue
 		}
 
 		// update files after sync --------------------
@@ -2691,11 +2716,11 @@ public class Main : GLib.Object{
 			bool ok = true;
 			
 			if (app_mode == ""){ // GUI
-				if (restore_current_system){
-					ok = restore_current_gui(sh_sync, sh_finish);
+				if (!restore_current_system || dry_run){
+					ok = restore_other_gui(sh_sync, sh_finish);
 				}
 				else{
-					ok = restore_other_gui(sh_sync, sh_finish);
+					ok = restore_current_gui(sh_sync, sh_finish);
 				}
 			}
 			else{
@@ -2707,26 +2732,17 @@ public class Main : GLib.Object{
 				}
 			}
 
-			log_msg(_("Restore completed"));
-			thr_success = true;
+			if (!dry_run){
 
-			log_msg(string.nfill(78, '-'));
-			
-			/*if (ok){
-				
+				log_msg(_("Restore completed"));
+				thr_success = true;
+
+				log_msg(string.nfill(78, '-'));
+
+				unmount_target_device(false);
+
+				check_and_repair_filesystems();
 			}
-			else{
-				log_error(_("Restore completed with errors"));
-				thr_success = false;
-			}*/
-
-			// unmount ----------
-			
-			unmount_target_device(false);
-
-			// check and repair file system errors
-			
-			check_and_repair_filesystems();
 		}
 		catch(Error e){
 			log_error (e.message);

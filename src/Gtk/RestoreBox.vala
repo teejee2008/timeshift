@@ -38,6 +38,8 @@ using TeeJee.System;
 using TeeJee.Misc;
 
 class RestoreBox : Gtk.Box{
+
+	public Gtk.Label lbl_header;
 	
 	private Gtk.Spinner spinner;
 	public Gtk.Label lbl_msg;
@@ -69,11 +71,11 @@ class RestoreBox : Gtk.Box{
 		margin = 12;
 
 		// header
-		if (App.mirror_system){
-			add_label_header(this, _("Cloning System..."), true);
+		if (App.dry_run){
+			lbl_header = add_label_header(this, _("Comparing Files (Dry Run)..."), true);
 		}
 		else{
-			add_label_header(this, _("Restoring Snapshot..."), true);
+			lbl_header = add_label_header(this, _("Restoring Snapshot..."), true);
 		}
 
 		var hbox_status = new Box (Orientation.HORIZONTAL, 6);
@@ -180,6 +182,13 @@ class RestoreBox : Gtk.Box{
 		
 		if (App.restore_current_system){
 			parent_window.hide();
+		}
+
+		if (App.dry_run){
+			lbl_header.label = format_text(_("Comparing Files (Dry Run)..."), true, false, true);
+		}
+		else{
+			lbl_header.label = format_text(_("Restoring Snapshot..."), true, false, true);
 		}
 		
 		try {

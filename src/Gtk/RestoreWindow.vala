@@ -33,6 +33,7 @@ using TeeJee.System;
 using TeeJee.Misc;
 
 class RestoreWindow : Gtk.Window{
+	
 	private Gtk.Box vbox_main;
 	private Gtk.Notebook notebook;
 	private Gtk.ButtonBox bbox_action;
@@ -42,6 +43,8 @@ class RestoreWindow : Gtk.Window{
 	private RestoreExcludeBox restore_exclude_box;
 	private ExcludeAppsBox exclude_apps_box;
 	private RestoreSummaryBox summary_box;
+	private RestoreBox check_box;
+	private RsyncLogBox log_box;
 	private RestoreBox restore_box;
 	private RestoreFinishBox restore_finish_box;
 
@@ -55,6 +58,8 @@ class RestoreWindow : Gtk.Window{
 	private int def_width = 500;
 	private int def_height = 500;
 	private bool success = false;
+
+	public bool check_before_restore = true; 
 	
 	public RestoreWindow() {
 
@@ -92,6 +97,16 @@ class RestoreWindow : Gtk.Window{
 		exclude_apps_box = new ExcludeAppsBox(this);
 		exclude_apps_box.margin = 0;
 		notebook.append_page (exclude_apps_box, label);
+
+		label = new Gtk.Label(_("Checking Restore Actions (Dry Run)"));
+		check_box = new RestoreBox(this);
+		check_box.margin = 0;
+		notebook.append_page (check_box, label);
+
+		label = new Gtk.Label(_("Confirm Actions"));
+		log_box = new RsyncLogBox(this);
+		log_box.margin = 0;
+		notebook.append_page (log_box, label);
 
 		label = new Gtk.Label(_("Summary"));
 		summary_box = new RestoreSummaryBox(this);
@@ -141,6 +156,7 @@ class RestoreWindow : Gtk.Window{
 	}
 	
 	private void create_actions(){
+		
 		var hbox = new Gtk.ButtonBox (Gtk.Orientation.HORIZONTAL);
 		hbox.margin = 0;
 		hbox.margin_left = 24;
@@ -221,8 +237,7 @@ class RestoreWindow : Gtk.Window{
 		btn_cancel.no_show_all = val;
 	}
 	
-
-	// navigation
+	// navigation ----------------------------------------------------
 
 	private void go_first(){
 		
@@ -272,18 +287,15 @@ class RestoreWindow : Gtk.Window{
 		
 		switch(notebook.page){
 		case Tabs.TARGET_DEVICE:
-
-			notebook.page = Tabs.SUMMARY;
-			
-			/*if (App.btrfs_mode || (App.exclude_list_apps.size == 0)){
-				notebook.page = Tabs.SUMMARY;
+			if (!App.btrfs_mode && check_before_restore){
+				notebook.page = Tabs.CHECK;
 			}
 			else{
-				notebook.page = Tabs.RESTORE_EXCLUDE;
-			}*/
+				notebook.page = Tabs.SUMMARY;
+			}
 			break;
 			
-		case Tabs.RESTORE_EXCLUDE:
+		/*case Tabs.RESTORE_EXCLUDE:
 			if (restore_exclude_box.show_all_apps()){
 				notebook.page = Tabs.EXCLUDE_APPS;
 			}
@@ -294,8 +306,16 @@ class RestoreWindow : Gtk.Window{
 			
 		case Tabs.EXCLUDE_APPS:
 			notebook.page = Tabs.SUMMARY;
-			break;
+			break;*/
 			
+		case Tabs.CHECK:
+			notebook.page = Tabs.SHOW_LOG;
+			break;
+
+		case Tabs.SHOW_LOG:
+			notebook.page = Tabs.SUMMARY;
+			break;
+
 		case Tabs.SUMMARY:
 			notebook.page = Tabs.RESTORE;
 			break;
@@ -314,9 +334,7 @@ class RestoreWindow : Gtk.Window{
 
 	private void initialize_tab(){
 
-		if (notebook.page < 0){
-			return;
-		}
+		if (notebook.page < 0){ return; }
 
 		log_debug("page: %d".printf(notebook.page));
 
@@ -334,6 +352,7 @@ class RestoreWindow : Gtk.Window{
 			bbox_action.set_layout (Gtk.ButtonBoxStyle.CENTER);
 			#endif
 			break;
+			
 		case Tabs.TARGET_DEVICE:
 		case Tabs.RESTORE_EXCLUDE:
 		case Tabs.EXCLUDE_APPS:
@@ -342,13 +361,27 @@ class RestoreWindow : Gtk.Window{
 			btn_next.show();
 			btn_close.show();
 			btn_cancel.hide();
-			btn_prev.sensitive = !App.btrfs_mode;
+			btn_prev.sensitive = false;
 			btn_next.sensitive = true;
 			btn_close.sensitive = true;
 			#if GTK3_18
 			bbox_action.set_layout (Gtk.ButtonBoxStyle.EXPAND);
 			#endif
 			break;
+
+		case Tabs.SHOW_LOG:
+			btn_prev.show();
+			btn_next.show();
+			btn_close.show();
+			btn_cancel.hide();
+			btn_prev.sensitive = false;
+			btn_next.sensitive = true;
+			btn_close.sensitive = true;
+			#if GTK3_18
+			bbox_action.set_layout (Gtk.ButtonBoxStyle.EXPAND);
+			#endif
+			break;
+			
 		case Tabs.FINISH:
 			btn_prev.show();
 			btn_next.show();
@@ -363,27 +396,50 @@ class RestoreWindow : Gtk.Window{
 			break;
 		}
 		
-		// actions
-
+		// actions ---------------------------------------------------
+		
 		switch(notebook.page){
 		case Tabs.TARGET_DEVICE:
 			restore_device_box.refresh(false); // false: App.init_mount_list() will be called before this window is shown
 			break;
+			
 		case Tabs.RESTORE_EXCLUDE:
 			restore_exclude_box.refresh();
 			break;
+			
 		case Tabs.EXCLUDE_APPS:
 			exclude_apps_box.refresh();
 			break;
+		
+		case Tabs.CHECK:
+			App.dry_run = true;
+			success = check_box.restore();
+			go_next();
+			break;
+			
+		case Tabs.SHOW_LOG:
+			if (file_exists(App.snapshot_to_restore.rsync_restore_log_file)){
+				log_box.open_log(App.snapshot_to_restore.rsync_restore_log_file);
+			}
+			else{
+				notebook.page = Tabs.FINISH;
+				initialize_tab();
+				restore_finish_box.update_message(false, _("Error running Rsync"), "");
+			}
+			break;
+
 		case Tabs.SUMMARY:
 			summary_box.refresh();
 			break;
+			
 		case Tabs.RESTORE:
+			App.dry_run = false;
 			success = restore_box.restore();
 			go_next();
 			break;
+			
 		case Tabs.FINISH:
-			restore_finish_box.update_message(success);
+			restore_finish_box.update_message(success,"","");
 			//wait_and_close_window(1000, this); // do not auto-close restore window.
 			break;
 		}
@@ -412,12 +468,15 @@ class RestoreWindow : Gtk.Window{
 	}
 
 	public enum Tabs{
+		// indexes here should match the order in which tabs were added to Notebook
 		TARGET_DEVICE = 0,
 		RESTORE_EXCLUDE = 1,
 		EXCLUDE_APPS = 2,
-		SUMMARY = 3,
-		RESTORE = 4,
-		FINISH = 5
+		CHECK = 3,
+		SHOW_LOG = 4,
+		SUMMARY = 5,
+		RESTORE = 6,
+		FINISH = 7
 	}
 }
 

@@ -43,6 +43,7 @@ public class RsyncTask : AsyncTask{
 	public string dest_path = "";
 	public bool verbose = true;
 	public bool io_nice = true;
+	public bool dry_run = false;
 
 	// regex
 	private Gee.HashMap<string, Regex> regex_list;
@@ -62,6 +63,8 @@ public class RsyncTask : AsyncTask{
 	public int64 count_owner;
 	public int64 count_group;
 	public int64 count_unchanged;
+
+	public StringBuilder log;
 	
 	public RsyncTask(){
 		init_regular_expressions();
@@ -74,35 +77,35 @@ public class RsyncTask : AsyncTask{
 		}
 		
 		regex_list = new Gee.HashMap<string,Regex>();
-		
+
 		try {
 			//Example: status=-1
 			regex_list["status"] = new Regex(
-				"""(.)(.)(c|\+|\.| )(s|\+|\.| )(t|\+|\.| )(p|\+|\.| )(o|\+|\.| )(g|\+|\.| )(u|\+|\.| )(a|\+|\.| )(x|\+|\.| ) (.*)""");
+				"""([<>ch.*])([.fdLDS])(c|\+|\.| )(s|\+|\.| )(t|\+|\.| )(p|\+|\.| )(o|\+|\.| )(g|\+|\.| )(u|\+|\.| )(a|\+|\.| )(x|\+|\.| ) (.*)""");
 
 			regex_list["created"] = new Regex(
-				"""(.)(.)\+\+\+\+\+\+\+\+\+ (.*)""");
+				"""([<>ch.*])([.fdLDS])[+]{9} (.*)""");
 
 			regex_list["log-created"] = new Regex(
-				"""[0-9/]+ [0-9:.]+ \[[0-9]+\] (.)(.)\+\+\+\+\+\+\+\+\+ (.*)""");
+				"""[0-9\/]+ [0-9:.]+ \[[0-9]+\] ([<>ch.*])([.fdLDS])[+]{9} (.*)""");
 				
 			regex_list["deleted"] = new Regex(
 				"""\*deleting[ \t]+(.*)""");
 
 			regex_list["log-deleted"] = new Regex(
-				"""[0-9/]+ [0-9:.]+ \[[0-9]+\] \*deleting[ \t]+(.*)""");
+				"""[0-9\/]+ [0-9:.]+ \[[0-9]+\] \*deleting[ \t]+(.*)""");
 
 			regex_list["modified"] = new Regex(
-				"""(.)(.)(c|\+|\.| )(s|\+|\.| )(t|\+|\.| )(p|\+|\.| )(o|\+|\.| )(g|\+|\.| )(u|\+|\.| )(a|\+|\.| )(x|\+|\.) (.*)""");
+				"""([<>ch.])([.fdLDS])(c|\+|\.| )(s|\+|\.| )(t|\+|\.| )(p|\+|\.| )(o|\+|\.| )(g|\+|\.| )(u|\+|\.| )(a|\+|\.| )(x|\+|\.) (.*)""");
 
 			regex_list["log-modified"] = new Regex(
-				"""[0-9/]+ [0-9:.]+ \[[0-9]+\] (.)(.)(c|\+|\.| )(s|\+|\.| )(t|\+|\.| )(p|\+|\.| )(o|\+|\.| )(g|\+|\.| )(u|\+|\.| )(a|\+|\.| )(x|\+|\.) (.*)""");
+				"""[0-9\/]+ [0-9:.]+ \[[0-9]+\] ([<>ch.])([.fdLDS])(c|\+|\.| )(s|\+|\.| )(t|\+|\.| )(p|\+|\.| )(o|\+|\.| )(g|\+|\.| )(u|\+|\.| )(a|\+|\.| )(x|\+|\.) (.*)""");
 
 			regex_list["unchanged"] = new Regex(
-				"""(.)(.)          (.*)""");
+				"""([.])([.fdLDS])[ ]{9} (.*)""");
 
 			regex_list["log-unchanged"] = new Regex(
-				"""[0-9/]+ [0-9:.]+ \[[0-9]+\] (.)(.)\+\+\+\+\+\+\+\+\+ (.*)""");
+				"""[0-9\/]+ [0-9:.]+ \[[0-9]+\] ([.])([.fdLDS])[ ]{9} (.*)""");
 				
 			regex_list["total-size"] = new Regex(
 				"""total size is ([0-9,]+)[ \t]+speedup is [0-9.]+""");
@@ -135,16 +138,25 @@ public class RsyncTask : AsyncTask{
 		count_owner = 0;
 		count_group = 0;
 		count_unchanged = 0;
+
+		log = new StringBuilder();
 	}
 
 	private string build_script() {
+		
 		var cmd = "";
 
 		if (io_nice){
 			//cmd += "ionice -c2 -n7 ";
 		}
 
-		cmd += "rsync -aii --recursive";
+		cmd += "rsync -aii";
+
+		//if (!dry_run){
+		//	cmd += "i";
+		//}
+
+		cmd += " --recursive";
 
 		if (verbose){
 			cmd += " --verbose";
@@ -170,9 +182,13 @@ public class RsyncTask : AsyncTask{
 		//if (relative){
 		//	cmd += " --relative";
 		//}
-		
+
 		if (delete_excluded){
 			cmd += " --delete-excluded";
+		}
+
+		if (dry_run){
+			cmd += " --dry-run";
 		}
 		
 		if (link_from_path.length > 0){
@@ -264,7 +280,8 @@ public class RsyncTask : AsyncTask{
 				bool item_is_symlink = false;
 				
 				MatchInfo match;
-				if (regex_list["log-created"].match(line, 0, out match)) {
+				if (regex_list["log-created"].match(line, 0, out match)
+					|| regex_list["created"].match(line, 0, out match)) {
 
 					if (dos_changes != null){
 						dos_changes.put_string("%s\n".printf(line));
@@ -282,7 +299,8 @@ public class RsyncTask : AsyncTask{
 					}
 					item_status = "created";
 				}
-				else if (regex_list["log-deleted"].match(line, 0, out match)) {
+				else if (regex_list["log-deleted"].match(line, 0, out match)
+					|| regex_list["deleted"].match(line, 0, out match)) {
 					
 					//log_debug("matched: deleted:%s".printf(line));
 
@@ -294,7 +312,8 @@ public class RsyncTask : AsyncTask{
 					item_type = item_path.has_suffix("/") ? FileType.DIRECTORY : FileType.REGULAR;
 					item_status = "deleted";
 				}
-				else if (regex_list["log-modified"].match(line, 0, out match)) {
+				else if (regex_list["log-modified"].match(line, 0, out match)
+					|| regex_list["modified"].match(line, 0, out match)) {
 
 					//log_debug("matched: modified:%s".printf(line));
 
@@ -330,8 +349,11 @@ public class RsyncTask : AsyncTask{
 						item_status = "group";
 					}
 				}
+				else if (regex_list["log-unchanged"].match(line, 0, out match)) {
+					// ignore
+				}
 				else{
-					//log_debug("not-matched: %s".printf(line));
+					log_debug("not-matched: %s".printf(line));
 				}
 				
 				if ((item_path.length > 0) && (item_path != "/./") && (item_path != "./")
@@ -435,6 +457,7 @@ public class RsyncTask : AsyncTask{
 			
 			count_created++;
 			status_line = match.fetch(3).split(" -> ")[0].strip();
+			log.append(line + "\n");
 		}
 		else if (regex_list["deleted"].match(line, 0, out match)) {
 			
@@ -442,10 +465,11 @@ public class RsyncTask : AsyncTask{
 
 			count_deleted++;
 			status_line = match.fetch(1).split(" -> ")[0].strip();
+			log.append(line + "\n");
 		}
 		else if (regex_list["unchanged"].match(line, 0, out match)) {
 			
-			//log_debug("matched: deleted:%s".printf(line));
+			//log_debug("matched: unchanged:%s".printf(line));
 
 			count_unchanged++;
 			status_line = match.fetch(3).split(" -> ")[0].strip();
@@ -456,6 +480,7 @@ public class RsyncTask : AsyncTask{
 
 			count_modified++;
 			status_line = match.fetch(12).split(" -> ")[0].strip();
+			log.append(line + "\n");
 			
 			if (match.fetch(3) == "c"){
 				count_checksum++;
@@ -490,9 +515,12 @@ public class RsyncTask : AsyncTask{
 	}
 
 	protected override void finish_task(){
+		
 		if ((status != AppStatus.CANCELLED) && (status != AppStatus.PASSWORD_REQUIRED)) {
 			status = AppStatus.FINISHED;
 		}
+
+		file_write(rsync_log_file + "-changes", log.str);
 	}
 
 	public int read_status(){

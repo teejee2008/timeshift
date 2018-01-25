@@ -725,7 +725,7 @@ namespace TeeJee.FileSystem{
 		uint64 unit_g = binary_units ? 1024 * unit_m : 1000 * unit_m;
 		uint64 unit_t = binary_units ? 1024 * unit_g : 1000 * unit_g;
 
-		log_debug("size: %'lld".printf(size));
+		//log_debug("size: %'lld".printf(size));
 
 		string txt = "";
 		
@@ -760,7 +760,7 @@ namespace TeeJee.FileSystem{
 			}
 		}
 
-		log_debug("converted: %s".printf(txt));
+		//log_debug("converted: %s".printf(txt));
 
 		return txt;
 	}

@@ -53,41 +53,58 @@ class RestoreFinishBox : Gtk.Box{
 		log_debug("RestoreFinishBox: RestoreFinishBox(): exit");
     }
 
-	public void update_message(bool success){
+	public void update_message(bool success, string message_header, string message_body){
 
-		var txt = "";
-		 
-		if (App.mirror_system){
-			txt = _("Cloning");
-		}
-		else{
-			txt = _("Restore");
-		}
+		// header -----------------------------------------
 		
-		if (success){
-			txt += " " + _("Completed");
+		var txt = "";
+
+		if (message_header.length > 0){
+
+			txt = message_header;
 		}
 		else{
-			txt += " " + _("Completed With Errors");
+			if (App.mirror_system){
+				txt = _("Cloning");
+			}
+			else{
+				txt = _("Restore");
+			}
+			
+			if (success){
+				txt += " " + _("Completed");
+			}
+			else{
+				txt += " " + _("Completed With Errors");
+			}
 		}
 
 		lbl_header.label = format_text(txt, true, false, true);
-		
+
+		// body ------------------------------------------------------
+
 		var msg = "";
-		string bullet = "▰ ";
+		
+		if (message_body.length > 0){
+			msg = message_body;
+		}
+		else {
+			
+			string bullet = "▰ ";
 
-		if (App.btrfs_mode && App.restore_current_system){
-			msg += bullet + _("Restored subvolumes will become active after system is restarted.") + "\n";
+			if (App.btrfs_mode && App.restore_current_system){
+				msg += bullet + _("Restored subvolumes will become active after system is restarted.") + "\n";
+				msg += "\n";
+				msg += bullet + _("You can continue working on the current system. After restart, the current system will be visible as a new snapshot. This snapshot can be restored later if required, to 'undo' the restore.") + "\n";
+			}
+
+			if (!App.btrfs_mode){
+				msg += bullet + _("If the restored system fails to boot, then boot from the Live CD/USB, install Timeshift, and try restoring another snapshot.") + "\n\n";
+			}
+
 			msg += "\n";
-			msg += bullet + _("You can continue working on the current system. After restart, the current system will be visible as a new snapshot. This snapshot can be restored later if required, to 'undo' the restore.") + "\n";
+			msg += "<b>" + _("Close window to exit") + "</b>\n\n";
 		}
-
-		if (!App.btrfs_mode){
-			msg += bullet + _("If the restored system fails to boot, then boot from the Live CD/USB, install Timeshift, and try restoring another snapshot.") + "\n\n";
-		}
-
-		msg += "\n";
-		msg += "<b>" + _("Close window to exit") + "</b>\n\n";
 		
 		lbl_message.label = msg;
 	}

@@ -1368,20 +1368,22 @@ public class Main : GLib.Object{
 		
 		// write control file
 		// this step is redundant - just in case if app crashes while parsing log file in next step
-		Snapshot.write_control_file(
-			snapshot_path, dt_created, sys_uuid, current_distro.full_name(),
-			initial_tags, cmd_comments, 0, false, false, repo);
+		//Snapshot.write_control_file(
+		//	snapshot_path, dt_created, sys_uuid, current_distro.full_name(),
+		//	initial_tags, cmd_comments, 0, false, false, repo);
 
 		// parse log file
-		progress_text = _("Parsing log file...");
-		log_msg(progress_text);
-		var task = new RsyncTask();
-		task.parse_log(log_file);
+		//progress_text = _("Parsing log file...");
+		//log_msg(progress_text);
+		//var task = new RsyncTask();
+		//task.parse_log(log_file);
+
+		int64 fcount = file_line_count(log_file);
 
 		// write control file (final - with file count after parsing log)
 		var snapshot = Snapshot.write_control_file(
 			snapshot_path, dt_created, sys_uuid, current_distro.full_name(),
-			initial_tags, cmd_comments, task.prg_count_total, false, false, repo, true);
+			initial_tags, cmd_comments, fcount, false, false, repo);
 
 		set_tags(snapshot); // set_tags() will update the control file
 

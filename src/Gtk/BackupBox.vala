@@ -96,6 +96,8 @@ class BackupBox : Gtk.Box{
 		lbl_owner = add_count_label(this, _("Owner"), ref sg_label, ref sg_value);
 		lbl_group = add_count_label(this, _("Group"), ref sg_label, ref sg_value, 24);
 
+		lbl_deleted.sensitive = false;
+
 		log_debug("BackupBox: BackupBox(): exit");
     }
 
@@ -137,7 +139,8 @@ class BackupBox : Gtk.Box{
 		label.xalign = (float) 1.0;
 		label.margin_left = 12;
 		label.margin_right = 6;
-
+		var text_label = label;
+		
 		if (add_margin_bottom > 0){
 			label.margin_bottom = add_margin_bottom;
 		}
@@ -160,6 +163,10 @@ class BackupBox : Gtk.Box{
 			sg_value = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
 		}
 		sg_value.add_widget(label);
+
+		label.notify["sensitive"].connect(()=>{
+			text_label.sensitive = label.sensitive;
+		});
 
 		return label;
 	}

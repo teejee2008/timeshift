@@ -335,9 +335,11 @@ public class RsyncLogBox : Gtk.Box {
 		
 		model.append(out iter);
 		model.set (iter, 0, "created", 1, "%s".printf(App.dry_run ? _("Create") : _("Created")));
-		
-		model.append(out iter);
-		model.set (iter, 0, "deleted", 1, "%s".printf(App.dry_run ? _("Delete") : _("Deleted")));
+
+		if (is_restore_log){
+			model.append(out iter);
+			model.set (iter, 0, "deleted", 1, "%s".printf(App.dry_run ? _("Delete") : _("Deleted")));
+		}
 		
 		model.append(out iter);
 

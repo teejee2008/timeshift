@@ -71,7 +71,8 @@ install:
 
 	# shared files
 	cp -dpr --no-preserve=ownership -t "$(DESTDIR)$(sharedir)/${app_name}" ./share/${app_name}/*
-	chmod --recursive 0755 $(DESTDIR)$(sharedir)/${app_name}/*
+	find $(DESTDIR)$(sharedir)/${app_name} -type d -exec chmod 755 {} \+
+	find $(DESTDIR)$(sharedir)/${app_name} -type f -exec chmod 644 {} \+
 
 	# polkit
 	install -m 0644 ./share/polkit-1/actions/in.teejeetech.pkexec.timeshift.policy "$(DESTDIR)$(polkitdir)"
@@ -80,14 +81,14 @@ install:
 	install -m 0755 ${app_name}-gtk.desktop "$(DESTDIR)$(launcherdir)"
 
 	# config
-	install -m 0755 ../files/${app_name}.json "$(DESTDIR)$(sysconfdir)/default"
+	install -m 0644 ../files/${app_name}.json "$(DESTDIR)$(sysconfdir)/default"
 
 	# app icons
 	cp -dpr --no-preserve=ownership -t "$(DESTDIR)$(sharedir)/icons" ./share/icons/*
-	chmod --recursive 0755 $(DESTDIR)$(sharedir)/icons/hicolor/*/apps/${app_name}.png
+	chmod --recursive 0644 $(DESTDIR)$(sharedir)/icons/hicolor/*/apps/${app_name}.png
 
 	# appdata
-	install -m 0755 ../debian/${app_name}.appdata.xml "$(DESTDIR)$(sharedir)/appdata"
+	install -m 0644 ../debian/${app_name}.appdata.xml "$(DESTDIR)$(sharedir)/appdata"
 
 	# translations
 	for lang in am ar az bg ca cs da de el en_GB es et eu fr he hi hr hu ia id is it ko lt nb ne nl pl pt pt_BR ro ru sk sr sv tr uk vi zh_CN; do \

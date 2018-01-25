@@ -771,6 +771,10 @@ public class Main : GLib.Object{
 
 		//add user entries from current settings
 		foreach(string path in exclude_list_user){
+
+			// skip include filters for restore
+			if (path.strip().has_prefix("+")){ continue; }
+			
 			if (!exclude_list_restore.contains(path) && !exclude_list_home.contains(path)){
 				exclude_list_restore.add(path);
 			}

@@ -926,7 +926,7 @@ class MainWindow : Gtk.Window{
 
 		dialog.program_name = AppName;
 		dialog.comments = _("System Restore Utility");
-		dialog.copyright = "Copyright © 2012-17 Tony George (%s)".printf(AppAuthorEmail);
+		dialog.copyright = "Copyright © 2012-18 Tony George (%s)".printf(AppAuthorEmail);
 		dialog.version = AppVersion;
 		dialog.logo = IconManager.lookup("timeshift", 256);
 

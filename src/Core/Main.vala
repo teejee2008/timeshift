@@ -94,6 +94,8 @@ public class Main : GLib.Object{
 
 	public string app_mode = "";
 
+	public bool dry_run = false;
+
 	//global vars for controlling threads
 	public bool thr_success = false;
 	
@@ -732,10 +734,6 @@ public class Main : GLib.Object{
 		return list;
 	}
 
-	public void update_exclude_list_user(){
-
-	}
-	
 	public Gee.ArrayList<string> create_exclude_list_for_restore(){
 
 		log_debug("Main: create_exclude_list_for_restore()");

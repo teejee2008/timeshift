@@ -59,7 +59,7 @@ class RestoreBox : Gtk.Box{
 
 	private bool thread_is_running = false;
 
-	public RestoreBox (Gtk.Window _parent_window) {
+	public RestoreBox(Gtk.Window _parent_window) {
 
 		log_debug("RestoreBox: RestoreBox()");
 		

@@ -576,6 +576,10 @@ public class RsyncLogWindow : Window {
 				}
 
 				var relpath = item.file_path[spath.length:item.file_path.length];
+
+				if (!is_restore_log){
+					relpath = relpath[1:relpath.length]; // show relative path; remove / prefix
+				}
 				
 				// add row
 				model.append(out iter0);

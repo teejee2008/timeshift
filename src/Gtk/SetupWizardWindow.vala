@@ -1,7 +1,7 @@
 /*
  * SetupWizardWindow.vala
  *
- * Copyright 2012-17 Tony George <teejeetech@gmail.com>
+ * Copyright 2012-2018 Tony George <teejeetech@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@ using TeeJee.System;
 using TeeJee.Misc;
 
 class SetupWizardWindow : Gtk.Window{
+	
 	private Gtk.Box vbox_main;
 	private Gtk.Notebook notebook;
 
@@ -68,7 +69,7 @@ class SetupWizardWindow : Gtk.Window{
 		this.delete_event.connect(on_delete_event);
 		
 	    // vbox_main
-        vbox_main = new Box (Orientation.VERTICAL, 6);
+        vbox_main = new Gtk.Box(Orientation.VERTICAL, 6);
         vbox_main.margin = 12;
         add(vbox_main);
 
@@ -159,6 +160,7 @@ class SetupWizardWindow : Gtk.Window{
 	}
 	
 	private void create_actions(){
+		
 		var hbox = new Gtk.ButtonBox (Gtk.Orientation.HORIZONTAL);
 		hbox.margin = 0;
 		hbox.margin_left = 24;
@@ -216,6 +218,7 @@ class SetupWizardWindow : Gtk.Window{
 	}
 
 	private void action_buttons_set_no_show_all(bool val){
+		
 		btn_prev.no_show_all = val;
 		btn_next.no_show_all = val;
 		btn_close.no_show_all = val;
@@ -248,6 +251,7 @@ class SetupWizardWindow : Gtk.Window{
 	}
 	
 	private void go_prev(){
+		
 		switch(notebook.page){
 		case Tabs.SNAPSHOT_BACKEND:
 		case Tabs.ESTIMATE:

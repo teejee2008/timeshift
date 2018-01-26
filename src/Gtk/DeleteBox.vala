@@ -1,8 +1,7 @@
-
 /*
  * DeleteBox.vala
  *
- * Copyright 2012-17 Tony George <teejeetech@gmail.com>
+ * Copyright 2012-2018 Tony George <teejeetech@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -58,7 +57,7 @@ class DeleteBox : Gtk.Box{
 		// header
 		add_label_header(this, _("Deleting Snapshots..."), true);
 
-		var hbox_status = new Box (Orientation.HORIZONTAL, 6);
+		var hbox_status = new Gtk.Box(Orientation.HORIZONTAL, 6);
 		add (hbox_status);
 		
 		spinner = new Gtk.Spinner();

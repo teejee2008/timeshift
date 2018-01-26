@@ -1,3 +1,26 @@
+/*
+ * AppExcludeEntry.vala
+ *
+ * Copyright 2012-2018 Tony George <teejeetech@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ *
+ *
+ */
+
 using TeeJee.Logging;
 using TeeJee.FileSystem;
 using TeeJee.JsonHelper;
@@ -7,6 +30,7 @@ using TeeJee.System;
 using TeeJee.Misc;
 
 public class AppExcludeEntry : GLib.Object{
+	
 	public string name = "";
 	public bool is_include = false;
 	public bool is_file = false;
@@ -18,6 +42,7 @@ public class AppExcludeEntry : GLib.Object{
 	public static Gee.HashMap<string, AppExcludeEntry> app_map;
 
 	public AppExcludeEntry(string _name, bool _is_include = false){
+		
 		name = _name;
 		is_include = _is_include;
 
@@ -26,6 +51,7 @@ public class AppExcludeEntry : GLib.Object{
 	}
 
 	public string tooltip_text(){
+		
 		string txt = "";
 		foreach(var item in items){
 			txt += "%s\n".printf(item);

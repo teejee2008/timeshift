@@ -1,8 +1,7 @@
-
 /*
  * RestoreExcludeBox.vala
  *
- * Copyright 2012-17 Tony George <teejeetech@gmail.com>
+ * Copyright 2012-2018 Tony George <teejeetech@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,6 +33,7 @@ using TeeJee.System;
 using TeeJee.Misc;
 
 class RestoreExcludeBox : Gtk.Box{
+	
 	//private Gtk.CheckButton chk_web;
 	private Gtk.CheckButton chk_other;
 	private Gtk.CheckButton chk_web;
@@ -50,31 +50,6 @@ class RestoreExcludeBox : Gtk.Box{
 		parent_window = _parent_window;
 		margin = 12;
 
-		// header ---------------
-		
-		//var label = add_label_header(this, _("Items to Restore"), true);
-
-		// personal files --------------------------------
-		
-		/*var chk = add_checkbox(this, _("Restore System Files &amp; Settings"));
-		//chk.margin_top = 12;
-		chk.active = true;
-		chk.sensitive = false;
-
-		chk = add_checkbox(this, _("Restore Local Application Settings"));
-		//chk.margin_top = 12;
-		chk.active = true;
-		chk.sensitive = false;*/
-		
-		/*label = add_label(this, _("If un-checked, personal files and folders in home directory will be reset to the previous state."), false, true);
-		label.margin_left = 24;
-		label.wrap = true;
-		label.wrap_mode = Pango.WrapMode.WORD_CHAR;
-			
-		var tt = _("Keep existing personal files and folders in home directory. If unchecked, personal files and folders in home directory will be reset to the state it was in when snapshot was taken.");
-		chk.set_tooltip_text(tt);
-		label.set_tooltip_text(tt);*/
-		
 		// app settings header --------------------------------
 		
 		var label = add_label_header(this, _("Exclude Application Settings"), true);
@@ -152,11 +127,13 @@ class RestoreExcludeBox : Gtk.Box{
     }
 
     public void refresh(){
+		
 		chk_web.toggled();
 		chk_torrent.toggled();
 	}
 
 	public bool show_all_apps(){
+		
 		return chk_other.active;
 	}	
 }

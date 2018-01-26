@@ -1,8 +1,7 @@
-
 /*
  * RestoreDeviceBox.vala
  *
- * Copyright 2012-17 Tony George <teejeetech@gmail.com>
+ * Copyright 2012-2018 Tony George <teejeetech@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -70,7 +69,7 @@ class BootOptionsBox : Gtk.Box{
 
 		add_chk_reinstall_grub();
 		
-		var hbox = new Box (Orientation.HORIZONTAL, 6);
+		var hbox = new Gtk.Box(Orientation.HORIZONTAL, 6);
 		hbox.margin_left = 12;
         add (hbox);
 
@@ -106,7 +105,7 @@ class BootOptionsBox : Gtk.Box{
 
 		/*string tt = "<b>" + _("** Advanced Users **") + "</b>\n\n"+ _("Skips bootloader (re)installation on target device.\nFiles in /boot directory on target partition will remain untouched.\n\nIf you are restoring a system that was bootable previously then it should boot successfully. Otherwise the system may fail to boot.");*/
 
-		hbox = new Gtk.Box (Orientation.HORIZONTAL, 6);
+		hbox = new Gtk.Box(Orientation.HORIZONTAL, 6);
         add (hbox);
         
 		add_chk_update_initramfs(hbox);
@@ -203,6 +202,7 @@ class BootOptionsBox : Gtk.Box{
 	}
 	
 	private void refresh_cmb_grub_dev(){
+		
 		var store = new Gtk.ListStore(2, typeof(Device), typeof(string));
 
 		TreeIter iter;

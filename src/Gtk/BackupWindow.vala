@@ -1,7 +1,7 @@
 /*
  * BackupWindow.vala
  *
- * Copyright 2012-17 Tony George <teejeetech@gmail.com>
+ * Copyright 2012-2018 Tony George <teejeetech@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -67,7 +67,7 @@ class BackupWindow : Gtk.Window{
 		this.delete_event.connect(on_delete_event);
 
 	    // vbox_main
-        vbox_main = new Box (Orientation.VERTICAL, 6);
+        vbox_main = new Gtk.Box(Orientation.VERTICAL, 6);
         vbox_main.margin = 12;
         add(vbox_main);
 
@@ -125,10 +125,12 @@ class BackupWindow : Gtk.Window{
 	}
 	
 	private void save_changes(){
+		
 		App.cron_job_update();
 	}
 	
 	private void create_actions(){
+		
 		var hbox = new Gtk.ButtonBox (Gtk.Orientation.HORIZONTAL);
 		hbox.margin = 0;
 		hbox.margin_left = 24;
@@ -184,6 +186,7 @@ class BackupWindow : Gtk.Window{
 	}
 
 	private void action_buttons_set_no_show_all(bool val){
+		
 		btn_prev.no_show_all = val;
 		btn_next.no_show_all = val;
 		btn_close.no_show_all = val;
@@ -216,6 +219,7 @@ class BackupWindow : Gtk.Window{
 	}
 	
 	private void go_prev(){
+		
 		switch(notebook.page){
 		case Tabs.ESTIMATE:
 		case Tabs.BACKUP_DEVICE:
@@ -253,9 +257,7 @@ class BackupWindow : Gtk.Window{
 
 	private void initialize_tab(){
 
-		if (notebook.page < 0){
-			return;
-		}
+		if (notebook.page < 0){ return; }
 
 		log_msg("");
 		log_debug("page: %d".printf(notebook.page));

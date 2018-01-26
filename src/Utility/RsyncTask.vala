@@ -1,7 +1,7 @@
 /*
  * RsyncTask.vala
  *
- * Copyright 2012-17 Tony George <teejeetech@gmail.com>
+ * Copyright 2012-2018 Tony George <teejeetech@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -268,20 +268,24 @@ public class RsyncTask : AsyncTask{
 			}
 
 			var dis = new DataInputStream (file.read());
-			while ((line = dis.read_line (null)) != null) {
+
+			string item_path = "";
+			string item_disk_path = "";
+			string item_status = "";
+
+			string item_basepath = path_combine(file_parent(log_file_path), "localhost");
+			
+			while ((line = dis.read_line(null)) != null) {
 
 				prg_count++;
 				
 				if (line.strip().length == 0) { continue; }
 
-				string item_path = "";
-				var item_type = FileType.REGULAR;
-				string item_status = "";
-				bool item_is_symlink = false;
+				item_path = "";
 				
 				MatchInfo match;
-				if (regex_list["log-created"].match(line, 0, out match)
-					|| regex_list["created"].match(line, 0, out match)) {
+				if (regex_list["created"].match(line, 0, out match)
+					|| regex_list["log-created"].match(line, 0, out match)) {
 
 					if (dos_changes != null){
 						dos_changes.put_string("%s\n".printf(line));
@@ -290,13 +294,13 @@ public class RsyncTask : AsyncTask{
 					//log_debug("matched: created:%s".printf(line));
 					
 					item_path = match.fetch(3).split(" -> ")[0].strip();
-					item_type = FileType.REGULAR;
+					/*item_type = FileType.REGULAR;
 					if (match.fetch(2) == "d"){
 						item_type = FileType.DIRECTORY;
 					}
 					else if (match.fetch(2) == "L"){
 						item_is_symlink = true;
-					}
+					}*/
 					item_status = "created";
 				}
 				else if (regex_list["log-deleted"].match(line, 0, out match)
@@ -309,11 +313,11 @@ public class RsyncTask : AsyncTask{
 					}
 					
 					item_path = match.fetch(1).split(" -> ")[0].strip();
-					item_type = item_path.has_suffix("/") ? FileType.DIRECTORY : FileType.REGULAR;
+					//item_type = item_path.has_suffix("/") ? FileType.DIRECTORY : FileType.REGULAR;
 					item_status = "deleted";
 				}
-				else if (regex_list["log-modified"].match(line, 0, out match)
-					|| regex_list["modified"].match(line, 0, out match)) {
+				else if (regex_list["modified"].match(line, 0, out match)
+					|| regex_list["log-modified"].match(line, 0, out match)) {
 
 					//log_debug("matched: modified:%s".printf(line));
 
@@ -323,12 +327,12 @@ public class RsyncTask : AsyncTask{
 					
 					item_path = match.fetch(12).split(" -> ")[0].strip();
 					
-					if (match.fetch(2) == "d"){
+					/*if (match.fetch(2) == "d"){
 						item_type = FileType.DIRECTORY;
 					}
 					else if (match.fetch(2) == "L"){
 						item_is_symlink = true;
-					}
+					}*/
 					
 					if (match.fetch(3) == "c"){
 						item_status = "checksum";
@@ -356,26 +360,15 @@ public class RsyncTask : AsyncTask{
 					log_debug("not-matched: %s".printf(line));
 				}
 				
-				if ((item_path.length > 0) && (item_path != "/./") && (item_path != "./")
-					//&& ((item_type == FileType.REGULAR)||(item_status == "created"))
-					){
+				if ((item_path.length > 0) && (item_path != "/./") && (item_path != "./")){
 						
-					int64 item_size = 0;//int64.parse(size);
-					string item_disk_path = path_combine(file_parent(log_file_path),"localhost");
-					item_disk_path = path_combine(item_disk_path, item_path);
-					item_size = file_get_size(item_disk_path);
-					if (item_size == -1){
-						item_size = 0;
-					}
+					item_disk_path = path_combine(item_basepath, item_path);
 
 					var item = new FileItem.from_disk_path_with_basic_info(item_disk_path);
-					//var item = root.add_descendant(item_path, item_type, item_size, 0);
 					item.file_status = item_status;
-					item.is_symlink = item_is_symlink;
 					list.add(item);
 					//log_debug("added: %s".printf(item_path));
 				}
-				
 			}
 		}
 		catch (Error e) {
@@ -384,6 +377,7 @@ public class RsyncTask : AsyncTask{
 
 		if (dos_changes != null){
 			// archive the raw log file
+			log_msg("Archiving: %s".printf(log_file_path));
 			file_gzip(log_file_path);
 		}
 
@@ -395,6 +389,7 @@ public class RsyncTask : AsyncTask{
 	// execution ----------------------------
 
 	public void execute() {
+		
 		log_debug("RsyncTask:execute()");
 		
 		prepare();

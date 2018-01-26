@@ -1,3 +1,27 @@
+/*
+ * Snapshot.vala
+ *
+ * Copyright 2012-2018 Tony George <teejeetech@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ *
+ *
+ */
+
+
 using TeeJee.Logging;
 using TeeJee.FileSystem;
 using TeeJee.JsonHelper;
@@ -8,6 +32,7 @@ using TeeJee.Misc;
 using Json;
 
 public class Snapshot : GLib.Object{
+	
 	public string path = "";
 	public string name = "";
 	public DateTime date;
@@ -140,6 +165,7 @@ public class Snapshot : GLib.Object{
 	}
 
 	public void add_tag(string tag){
+		
 		if (!tags.contains(tag.strip())){
 			tags.add(tag.strip());
 			update_control_file();
@@ -147,6 +173,7 @@ public class Snapshot : GLib.Object{
 	}
 
 	public void remove_tag(string tag){
+		
 		if (tags.contains(tag.strip())){
 			tags.remove(tag.strip());
 			update_control_file();
@@ -154,6 +181,7 @@ public class Snapshot : GLib.Object{
 	}
 
 	public bool has_tag(string tag){
+		
 		return tags.contains(tag.strip());
 	}
 
@@ -163,13 +191,17 @@ public class Snapshot : GLib.Object{
 		string ctl_file = path + "/info.json";
 
 		var f = File.new_for_path(ctl_file);
+		
 		if (f.query_exists()) {
+			
 			var parser = new Json.Parser();
+			
 			try{
 				parser.load_from_file(ctl_file);
 			} catch (Error e) {
 				log_error (e.message);
 			}
+			
 			var node = parser.get_root();
 			var config = node.get_object();
 
@@ -243,14 +275,19 @@ public class Snapshot : GLib.Object{
 	}
 
 	public void read_exclude_list(){
+		
 		string list_file = path + "/exclude.list";
 
 		exclude_list.clear();
 
 		var f = File.new_for_path(list_file);
+		
 		if (f.query_exists()) {
+			
 			foreach(string path in file_read(list_file).split("\n")){
+				
 				path = path.strip();
+				
 				if (!exclude_list.contains(path) && path.length > 0){
 					exclude_list.add(path);
 				}
@@ -264,18 +301,24 @@ public class Snapshot : GLib.Object{
 	}
 
 	public void read_fstab_file(){
+		
 		string fstab_path = path_combine(path, "/localhost/etc/fstab");
+		
 		if (btrfs_mode){
 			fstab_path = path_combine(path, "/@/etc/fstab");
 		}
+		
 		fstab_list = FsTabEntry.read_file(fstab_path);
 	}
 
 	public void read_crypttab_file(){
+		
 		string crypttab_path = path_combine(path, "/localhost/etc/crypttab");
+		
 		if (btrfs_mode){
 			crypttab_path = path_combine(path, "/@/etc/crypttab");
 		}
+		
 		cryttab_list = CryptTabEntry.read_file(crypttab_path);
 	}
 
@@ -329,6 +372,7 @@ public class Snapshot : GLib.Object{
 	}
 
 	public void remove_control_file(){
+		
 		string ctl_file = path + "/info.json";
 		file_delete(ctl_file);
 	}
@@ -453,6 +497,7 @@ public class Snapshot : GLib.Object{
 		// delete subvolumes
 		
 		foreach(var subvol in subvolumes.values){
+			
 			bool ok = subvol.remove();
 			if (!ok) {
 				log_error(_("Failed to remove snapshot") + ": %s".printf(name));
@@ -464,6 +509,7 @@ public class Snapshot : GLib.Object{
 		// delete directories after **all** subvolumes have been deleted
 
 		foreach(var subvol in subvolumes.values){
+			
 			bool ok = dir_delete(paths[subvol.name], true);
 			if (!ok) {
 				log_error(_("Failed to remove snapshot") + ": %s".printf(name));
@@ -473,6 +519,7 @@ public class Snapshot : GLib.Object{
 		}
 
 		if (!dir_delete(path, true)){
+			
 			log_error(_("Failed to remove snapshot") + ": %s".printf(name));
 			log_msg(string.nfill(78, '-'));
 			return false;
@@ -485,10 +532,13 @@ public class Snapshot : GLib.Object{
 	}
 	
 	public void mark_for_deletion(){
+		
 		string delete_trigger_file = path + "/delete";
+		
 		if (!file_exists(delete_trigger_file)){
 			file_write(delete_trigger_file, "");
 		}
+		
 		marked_for_deletion = true;
 	}
 

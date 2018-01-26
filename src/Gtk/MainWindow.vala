@@ -1,7 +1,7 @@
 /*
  * MainWindow.vala
  *
- * Copyright 2012-17 Tony George <teejeetech@gmail.com>
+ * Copyright 2012-2018 Tony George <teejeetech@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -80,7 +80,7 @@ class MainWindow : Gtk.Window{
 		this.icon = IconManager.lookup("timeshift",16);
 
 	    //vbox_main
-        vbox_main = new Box (Orientation.VERTICAL, 0);
+        vbox_main = new Gtk.Box(Orientation.VERTICAL, 0);
         vbox_main.margin = 0;
         add (vbox_main);
 
@@ -101,6 +101,7 @@ class MainWindow : Gtk.Window{
     }
 
     private bool init_delayed(){
+		
 		if (tmr_init > 0){
 			Source.remove(tmr_init);
 			tmr_init = 0;
@@ -127,6 +128,7 @@ class MainWindow : Gtk.Window{
 	}
 
 	private void init_ui_toolbar(){
+		
 		//toolbar
 		toolbar = new Gtk.Toolbar ();
 		toolbar.toolbar_style = ToolbarStyle.BOTH;
@@ -211,10 +213,10 @@ class MainWindow : Gtk.Window{
 		button.clicked.connect(()=>{
 			menu_extra_popup(null);
 		});
-
 	}
 
 	private void init_ui_snapshot_list(){
+		
 		snapshot_list_box = new SnapshotListBox(this);
 		snapshot_list_box.vexpand = true;
 		vbox_main.add(snapshot_list_box);
@@ -229,6 +231,7 @@ class MainWindow : Gtk.Window{
     }
 
 	private void init_ui_statusbar(){
+		
 		// scrolled
 		var scrolled = new ScrolledWindow(null, null);
 		scrolled.set_shadow_type (ShadowType.ETCHED_IN);
@@ -240,7 +243,7 @@ class MainWindow : Gtk.Window{
 		statusbar = scrolled;
 		
 		// hbox_shield
-		var box = new Box (Orientation.HORIZONTAL, 6);
+		var box = new Gtk.Box(Orientation.HORIZONTAL, 6);
 		box.margin = 6;
         box.margin_right = 12;
 		scrolled.add (box);
@@ -251,7 +254,7 @@ class MainWindow : Gtk.Window{
 		img_shield.margin_bottom = 6;
         box.add(img_shield);
 
-		var vbox = new Box (Orientation.VERTICAL, 6);
+		var vbox = new Gtk.Box(Orientation.VERTICAL, 6);
 		vbox.margin_right = 6;
         box.add (vbox);
         
@@ -271,7 +274,7 @@ class MainWindow : Gtk.Window{
 		//vbox.set_child_packing(lbl_shield_subnote, true, false, 0, PackType.START);
 
 		// snap_count
-		//vbox = new Box (Orientation.VERTICAL, 6);
+		//vbox = new Gtk.Box(Orientation.VERTICAL, 6);
 		//vbox.set_no_show_all(true);
         //box.add (vbox);
         //vbox_snap_count = vbox;
@@ -283,31 +286,31 @@ class MainWindow : Gtk.Window{
 		scrolled.set_no_show_all(true);
 		box.add (scrolled);
 		
-		vbox = new Box (Orientation.VERTICAL, 6);
+		vbox = new Gtk.Box(Orientation.VERTICAL, 6);
 		vbox.margin = 6;
 		vbox.margin_left = 12;
 		vbox.margin_right = 12;
         scrolled.add(vbox);
         scrolled_snap_count = scrolled;
 
-        var label = new Label("<b>" + "0.0%" + "</b>");
+        var label = new Gtk.Label("<b>" + "0.0%" + "</b>");
 		label.set_use_markup(true);
 		label.justify = Gtk.Justification.CENTER;
 		vbox.pack_start(label, true, true, 0);
 		lbl_snap_count = label;
 		
-		label = new Label(_("Snapshots"));
+		label = new Gtk.Label(_("Snapshots"));
 		label.justify = Gtk.Justification.CENTER;
 		vbox.pack_start(label, false, false, 0);
 
-		label = new Label("");
+		label = new Gtk.Label("");
 		label.set_use_markup(true);
 		label.justify = Gtk.Justification.CENTER;
 		vbox.pack_start(label, false, false, 0);
 		lbl_snap_count_subnote = label;
 		
 		// free space
-		//vbox = new Box (Orientation.VERTICAL, 6);
+		//vbox = new Gtk.Box(Orientation.VERTICAL, 6);
 		//vbox.set_no_show_all(true);
         //box.add(vbox);
         //vbox_free_space = vbox;
@@ -319,22 +322,22 @@ class MainWindow : Gtk.Window{
 		scrolled.set_no_show_all(true);
 		box.add (scrolled);
 		
-		vbox = new Box (Orientation.VERTICAL, 6);
+		vbox = new Gtk.Box(Orientation.VERTICAL, 6);
 		vbox.margin = 6;
         scrolled.add(vbox);
         scrolled_free_space = scrolled;
 
-		label = new Label("<b>" + "0.0%" + "</b>");
+		label = new Gtk.Label("<b>" + "0.0%" + "</b>");
 		label.set_use_markup(true);
 		label.justify = Gtk.Justification.CENTER;
 		vbox.pack_start(label, true, true, 0);
 		lbl_free_space = label;
 		
-		label = new Label(_("Available"));
+		label = new Gtk.Label(_("Available"));
 		label.justify = Gtk.Justification.CENTER;
 		vbox.pack_start(label, false, false, 0);
 
-		label = new Label("");
+		label = new Gtk.Label("");
 		label.set_use_markup(true);
 		label.justify = Gtk.Justification.CENTER;
 		vbox.pack_start(label, false, false, 0);
@@ -360,11 +363,6 @@ class MainWindow : Gtk.Window{
 			snapshot_list_box.refresh();
 		});
 		
-		// snapshot logs
-		//menu_item = create_menu_item(_("View rsync log for selected snapshot"), "", "", 16);
-		//menu_extra.append(menu_item);
-		//menu_item.activate.connect(()=>{ view_snapshot_log(false); });
-
 		if (!App.live_system()){
 			// app logs
 			menu_item = create_menu_item(_("View TimeShift Logs"), "", "", 16);
@@ -404,7 +402,7 @@ class MainWindow : Gtk.Window{
 			
 		var menu_item = new Gtk.MenuItem();
 	
-		var box = new Gtk.Box (Orientation.HORIZONTAL, 3);
+		var box = new Gtk.Box(Orientation.HORIZONTAL, 3);
 		menu_item.add(box);
 
 		var label = new Gtk.Label(label_text);
@@ -421,7 +419,7 @@ class MainWindow : Gtk.Window{
 		var menu_item = new Gtk.MenuItem();
 		menu_item.sensitive = false;
 		
-		var box = new Gtk.Box (Orientation.HORIZONTAL, 3);
+		var box = new Gtk.Box(Orientation.HORIZONTAL, 3);
 		menu_item.add(box);
 
 		box.add(new Gtk.Separator(Gtk.Orientation.HORIZONTAL));
@@ -593,13 +591,16 @@ class MainWindow : Gtk.Window{
 	}
 
 	public void mark_selected(){
+		
 		TreeIter iter;
 		bool is_success = true;
 
 		// check selected count ----------------
 
 		var sel = snapshot_list_box.treeview.get_selection();
+		
 		if (sel.count_selected_rows() == 0){
+			
 			gtk_messagebox(
 				_("No Snapshots Selected"),
 				_("Select the snapshots to mark for deletion"),
@@ -612,8 +613,11 @@ class MainWindow : Gtk.Window{
 
 		var store = (Gtk.ListStore) snapshot_list_box.treeview.model;
 		bool iterExists = store.get_iter_first (out iter);
+		
 		while (iterExists && is_success) {
+			
 			if (sel.iter_is_selected (iter)){
+				
 				Snapshot bak;
 				store.get (iter, 0, out bak);
 				// mark for deletion
@@ -632,9 +636,13 @@ class MainWindow : Gtk.Window{
 	}
 
 	public void browse_selected(){
+		
 		var sel = snapshot_list_box.treeview.get_selection ();
+		
 		if (sel.count_selected_rows() == 0){
+			
 			var f = File.new_for_path(App.repo.snapshots_path);
+			
 			if (f.query_exists()){
 				exo_open_folder(App.repo.snapshots_path);
 			}
@@ -648,8 +656,10 @@ class MainWindow : Gtk.Window{
 		var store = (Gtk.ListStore) snapshot_list_box.treeview.model;
 
 		bool iterExists = store.get_iter_first (out iter);
+		
 		while (iterExists) {
 			if (sel.iter_is_selected (iter)){
+				
 				Snapshot bak;
 				store.get (iter, 0, out bak);
 
@@ -666,7 +676,9 @@ class MainWindow : Gtk.Window{
 	}
 
 	public void view_snapshot_log(bool view_restore_log){
+		
 		var sel = snapshot_list_box.treeview.get_selection ();
+		
 		if (sel.count_selected_rows() == 0){
 			gtk_messagebox(
 				_("Select Snapshot"),
@@ -679,14 +691,13 @@ class MainWindow : Gtk.Window{
 		var store = (Gtk.ListStore) snapshot_list_box.treeview.model;
 
 		bool iterExists = store.get_iter_first (out iter);
+		
 		while (iterExists) {
+			
 			if (sel.iter_is_selected (iter)){
+				
 				Snapshot bak;
 				store.get (iter, 0, out bak);
-
-				//exo_open_textfile(bak.path + "/rsync-log");
-
-				
 
 				string log_file_name = bak.rsync_log_file;
 				if (view_restore_log){
@@ -757,6 +768,7 @@ class MainWindow : Gtk.Window{
 
 
 	private void restore(){
+		
 		TreeIter iter;
 		TreeSelection sel;
 
@@ -764,7 +776,8 @@ class MainWindow : Gtk.Window{
 
 			//check if single snapshot is selected -------------
 
-			sel = snapshot_list_box.treeview.get_selection ();
+			sel = snapshot_list_box.treeview.get_selection();
+			
 			if (sel.count_selected_rows() == 0){
 				gtk_messagebox(
 					_("No snapshots selected"),
@@ -786,6 +799,7 @@ class MainWindow : Gtk.Window{
 
 			var store = (Gtk.ListStore) snapshot_list_box.treeview.model;
 			bool iterExists = store.get_iter_first (out iter);
+			
 			while (iterExists) {
 				if (sel.iter_is_selected (iter)){
 					store.get (iter, 0, out snapshot_to_restore);
@@ -795,6 +809,7 @@ class MainWindow : Gtk.Window{
 			}
 
 			if ((snapshot_to_restore != null) && (snapshot_to_restore.marked_for_deletion)){
+				
 				gtk_messagebox(
 					_("Invalid snapshot"),
 					_("Selected snapshot is marked for deletion and cannot be restored"),
@@ -885,10 +900,12 @@ class MainWindow : Gtk.Window{
 	}
 
 	private void btn_view_app_logs_clicked(){
+		
 		exo_open_folder(App.log_dir);
 	}
 
 	public void btn_donate_clicked(){
+		
 		var dialog = new DonationWindow();
 		dialog.set_transient_for(this);
 		dialog.show_all();
@@ -897,6 +914,7 @@ class MainWindow : Gtk.Window{
 	}
 
 	private void btn_about_clicked (){
+		
 		var dialog = new AboutWindow();
 		dialog.set_transient_for (this);
 
@@ -939,6 +957,7 @@ class MainWindow : Gtk.Window{
 	}
 
 	private void ui_sensitive(bool enable){
+		
 		toolbar.sensitive = enable;
 		snapshot_list_box.treeview.sensitive = enable;
 		gtk_set_busy(!enable, this);
@@ -1081,6 +1100,7 @@ class MainWindow : Gtk.Window{
 	// ui helpers --------
 	
 	private string format_text_large(string text){
+		
 		return "<span size='xx-large'><b>" + text + "</b></span>";
 	}
 	

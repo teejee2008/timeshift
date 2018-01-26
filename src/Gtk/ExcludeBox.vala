@@ -1,7 +1,7 @@
 /*
  * ExcludeBox.vala
  *
- * Copyright 2012-17 Tony George <teejeetech@gmail.com>
+ * Copyright 2012-2018 Tony George <teejeetech@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@ using TeeJee.System;
 using TeeJee.Misc;
 
 class ExcludeBox : Gtk.Box{
+	
 	private Gtk.TreeView treeview;
 	private Gtk.Window parent_window;
 	private UsersBox users_box;
@@ -66,6 +67,7 @@ class ExcludeBox : Gtk.Box{
     }
 
     public void set_users_box(UsersBox _users_box){
+		
 		users_box = _users_box;
 	}
 
@@ -144,7 +146,7 @@ class ExcludeBox : Gtk.Box{
 			model.get_iter_from_string (out iter, path);
 			model.get (iter, 0, out pattern);
 
-			bool exclude = true;
+			//bool exclude = true;
 
 			if (pattern.has_prefix("+ ")){
 				pattern = pattern[2:pattern.length];
@@ -206,6 +208,7 @@ class ExcludeBox : Gtk.Box{
 	}
 
     private void init_exclude_summary_link(Gtk.Box box){
+		
 		var size_group = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
 		var button = add_button(box, _("Summary"), "", size_group, null);
         button.clicked.connect(()=>{
@@ -214,8 +217,8 @@ class ExcludeBox : Gtk.Box{
 	}
 
 	private void init_actions(){
-		// actions
-		
+
+
 		var hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
 		add(hbox);
 
@@ -405,6 +408,7 @@ class ExcludeBox : Gtk.Box{
 	}
 	
 	private SList<string> browse_files(){
+		
 		var dialog = new Gtk.FileChooserDialog(
 			_("Select file(s)"), parent_window,
 			Gtk.FileChooserAction.OPEN,
@@ -425,6 +429,7 @@ class ExcludeBox : Gtk.Box{
 	}
 
 	private SList<string> browse_folder(){
+		
 		var dialog = new Gtk.FileChooserDialog(
 			_("Select directory"), parent_window,
 			Gtk.FileChooserAction.SELECT_FOLDER,
@@ -447,6 +452,7 @@ class ExcludeBox : Gtk.Box{
 	// helpers
 
 	public void refresh_treeview(){
+		
 		var model = new Gtk.ListStore(4, typeof(string), typeof(string), typeof(bool), typeof(bool));
 		treeview.model = model;
 
@@ -456,6 +462,7 @@ class ExcludeBox : Gtk.Box{
 	}
 
 	private void treeview_add_item(Gtk.TreeView treeview, string pattern){
+		
 		log_debug("treeview_add_item(): %s".printf(pattern));
 
 		TreeIter iter;
@@ -474,6 +481,7 @@ class ExcludeBox : Gtk.Box{
 	}
 
 	private void treeview_update_item(ref TreeIter iter, string pattern){
+		
 		log_debug("treeview_update_item(): %s".printf(pattern));
 
 	    bool include = pattern.has_prefix("+ ");
@@ -485,8 +493,7 @@ class ExcludeBox : Gtk.Box{
 		model.set (iter, 3, !include);
 	}
 
-	private void cell_exclude_text_edited (
-		string path, string new_text) {
+	private void cell_exclude_text_edited(string path, string new_text) {
 			
 		string old_pattern;
 		string new_pattern;
@@ -503,10 +510,6 @@ class ExcludeBox : Gtk.Box{
 			new_pattern = new_text;
 		}
 		model.set (iter, 0, new_pattern);
-
-		//int index = temp_exclude_list.index_of(old_pattern);
-		//temp_exclude_list.insert(index, new_pattern);
-		//temp_exclude_list.remove(old_pattern);
 	}
 
 	public void save_changes(){
@@ -539,42 +542,4 @@ class ExcludeBox : Gtk.Box{
 
 		users_box.refresh();
 	}
-	
-/*
-	private void btn_warning_clicked(){
-		string msg = "";
-		msg += _("Documents, music and other folders in your home directory are excluded by default.") + " ";
-		msg += _("Please do NOT include these folders in your snapshot unless you have a very good reason for doing so.") + " ";
-		msg += _("If you include any specific folders then these folders will get overwritten with previous contents when you restore a snapshot.");
-
-		var dialog = new Gtk.MessageDialog.with_markup(null, Gtk.DialogFlags.MODAL, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, msg);
-		dialog.set_title("Warning");
-		dialog.set_default_size (200, -1);
-		dialog.set_transient_for(this);
-		dialog.set_modal(true);
-		dialog.run();
-		dialog.destroy();
-	}
-
-	private void btn_reset_exclude_list_clicked(){
-		//create a temp exclude list ----------------------------
-
-		temp_exclude_list = new Gee.ArrayList<string>();
-
-		//refresh treeview --------------------------
-
-		refresh_treeview();
-	}
-
-	private bool lnk_default_list_activate(){
-		//show message window -----------------
-		var dialog = new ExcludeMessageWindow();
-		dialog.set_transient_for (this);
-		dialog.show_all();
-		dialog.run();
-		dialog.destroy();
-		return true;
-	}
-*/
-	// TODO: Add link for default exclude items
 }

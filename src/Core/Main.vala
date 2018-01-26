@@ -1,7 +1,7 @@
 /*
  * Main.vala
  *
- * Copyright 2012-17 Tony George <teejeetech@gmail.com>
+ * Copyright 2012-2018 Tony George <teejeetech@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -320,10 +320,12 @@ public class Main : GLib.Object{
 	}
 
 	public void initialize(){
+		
 		initialize_repo();
 	}
 
 	public bool check_dependencies(out string msg){
+		
 		msg = "";
 
 		log_debug("Main: check_dependencies()");
@@ -350,6 +352,7 @@ public class Main : GLib.Object{
 	}
 
 	public void check_and_remove_timeshift_btrfs(){
+		
 		if (cmd_exists("timeshift-btrfs")){
 			string std_out, std_err;
 			exec_sync("timeshift-btrfs-uninstall", out std_out, out std_err);
@@ -617,6 +620,7 @@ public class Main : GLib.Object{
 	}
 
 	private void add_app_exclude_entries_for_prefix(string path_prefix){
+		
 		string path = "";
 
 		path = path_combine(path_prefix, "root");
@@ -3740,6 +3744,7 @@ public class Main : GLib.Object{
 	}
 
 	public void query_subvolume_info_thread(){
+		
 		thread_subvol_info_running = true;
 
 		//query IDs
@@ -3845,6 +3850,7 @@ public class Main : GLib.Object{
 	}
 
 	public bool query_subvolume_quotas(){
+		
 		bool ok = query_subvolume_quota("@");
 		if (repo.device.uuid != repo.device_home.uuid){
 			ok = ok && query_subvolume_quota("@home");
@@ -3954,13 +3960,16 @@ public class Main : GLib.Object{
 	}
 
 	public bool enable_subvolume_quotas(){
+		
 		bool ok = enable_subvolume_quota("@");
+		
 		if (repo.device.uuid != repo.device_home.uuid){
 			ok = ok && enable_subvolume_quota("@home");
 		}
 		if (ok){
 			log_msg(_("Enabled subvolume quota support"));
 		}
+		
 		return ok;
 	}
 	
@@ -3975,7 +3984,9 @@ public class Main : GLib.Object{
 
 		cmd = "btrfs quota enable '%s'".printf(repo.mount_paths[subvol_name]);
 		log_debug(cmd);
+		
 		ret_val = exec_sync(cmd, out std_out, out std_err);
+		
 		if (ret_val != 0){
 			log_error (std_err);
 			log_error(_("btrfs returned an error") + ": %d".printf(ret_val));
@@ -3987,13 +3998,16 @@ public class Main : GLib.Object{
 	}
 
 	public bool rescan_subvolume_quotas(){
+		
 		bool ok = rescan_subvolume_quota("@");
+		
 		if (repo.device.uuid != repo.device_home.uuid){
 			ok = ok && rescan_subvolume_quota("@home");
 		}
 		if (ok){
 			log_msg(_("Enabled subvolume quota support"));
 		}
+		
 		return ok;
 	}
 	
@@ -4008,8 +4022,11 @@ public class Main : GLib.Object{
 
 		cmd = "btrfs quota rescan '%s'".printf(repo.mount_paths[subvol_name]);
 		log_debug(cmd);
+		
 		ret_val = exec_sync(cmd, out std_out, out std_err);
+		
 		if (ret_val != 0){
+			
 			log_error (std_err);
 			log_error(_("btrfs returned an error") + ": %d".printf(ret_val));
 			log_error(_("Failed to rescan subvolume quota"));
@@ -4031,7 +4048,9 @@ public class Main : GLib.Object{
 
 		int count = 0;
 		while (CronTab.has_job(entry, true, false)){
+			
 			CronTab.remove_job(entry, true, true);
+			
 			if (++count == 100){
 				break;
 			}
@@ -4041,7 +4060,9 @@ public class Main : GLib.Object{
 
 		count = 0;
 		while (CronTab.has_job(entry, true, false)){
+			
 			CronTab.remove_job(entry, true, true);
+			
 			if (++count == 100){
 				break;
 			}

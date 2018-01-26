@@ -1,7 +1,7 @@
 /*
  * DeleteWindow.vala
  *
- * Copyright 2012-17 Tony George <teejeetech@gmail.com>
+ * Copyright 2012-2018 Tony George <teejeetech@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -68,7 +68,7 @@ class DeleteWindow : Gtk.Window{
 		this.delete_event.connect(on_delete_event);
 		
 	    // vbox_main
-        vbox_main = new Box (Orientation.VERTICAL, 6);
+        vbox_main = new Gtk.Box(Orientation.VERTICAL, 6);
         vbox_main.margin = 12;
         add(vbox_main);
 
@@ -77,7 +77,7 @@ class DeleteWindow : Gtk.Window{
 
 		// create tab
 		
-		var vbox_tab = new Box (Orientation.VERTICAL, 6);
+		var vbox_tab = new Gtk.Box(Orientation.VERTICAL, 6);
         vbox_tab.margin = 0;
  
 		add_label_header(vbox_tab, _("Select Snapshots"), true);
@@ -132,6 +132,7 @@ class DeleteWindow : Gtk.Window{
 	}
 	
 	private void create_actions(){
+		
 		var hbox = new Gtk.ButtonBox (Gtk.Orientation.HORIZONTAL);
 		hbox.margin = 0;
 		hbox.margin_left = 24;
@@ -200,6 +201,7 @@ class DeleteWindow : Gtk.Window{
 	}
 
 	private void action_buttons_set_no_show_all(bool val){
+		
 		btn_prev.no_show_all = val;
 		btn_next.no_show_all = val;
 		btn_hide.no_show_all = val;
@@ -224,6 +226,7 @@ class DeleteWindow : Gtk.Window{
 	}
 	
 	private void go_prev(){
+		
 		switch(notebook.page){
 		case Tabs.SNAPSHOT_LIST:
 		case Tabs.DELETE:
@@ -245,9 +248,11 @@ class DeleteWindow : Gtk.Window{
 			App.delete_list = snapshot_list_box.selected_snapshots();
 			notebook.page = Tabs.DELETE;
 			break;
+			
 		case Tabs.DELETE:
 			notebook.page = Tabs.DELETE_FINISH;
 			break;
+			
 		case Tabs.DELETE_FINISH:
 			destroy();
 			break;
@@ -280,6 +285,7 @@ class DeleteWindow : Gtk.Window{
 			bbox_action.set_layout (Gtk.ButtonBoxStyle.EXPAND);
 			#endif
 			break;
+			
 		case Tabs.SNAPSHOT_LIST:
 			btn_prev.show();
 			btn_next.show();
@@ -293,6 +299,7 @@ class DeleteWindow : Gtk.Window{
 			bbox_action.set_layout (Gtk.ButtonBoxStyle.EXPAND);
 			#endif
 			break;
+			
 		case Tabs.DELETE_FINISH:
 			btn_prev.hide();
 			btn_next.hide();
@@ -323,6 +330,7 @@ class DeleteWindow : Gtk.Window{
 	}
 
 	private bool validate_current_tab(){
+		
 		switch(notebook.page){
 		case Tabs.SNAPSHOT_LIST:
 			var sel = snapshot_list_box.treeview.get_selection ();

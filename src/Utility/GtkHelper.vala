@@ -87,7 +87,7 @@ namespace TeeJee.GtkHelper{
 		/* Shows a simple input prompt */
 
 		//vbox_main
-        Gtk.Box vbox_main = new Box (Orientation.VERTICAL, 0);
+        Gtk.Box vbox_main = new Gtk.Box(Orientation.VERTICAL, 0);
         vbox_main.margin = 0;
 
 		//lbl_input
@@ -426,7 +426,7 @@ namespace TeeJee.GtkHelper{
 		var label = new Gtk.Label(title);
 
         // vbox
-        var vbox = new Box (Gtk.Orientation.VERTICAL, spacing);
+        var vbox = new Gtk.Box(Gtk.Orientation.VERTICAL, spacing);
         vbox.margin = margin;
         book.append_page (vbox, label);
 

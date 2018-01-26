@@ -1,8 +1,7 @@
-
 /*
  * RestoreBox.vala
  *
- * Copyright 2012-17 Tony George <teejeetech@gmail.com>
+ * Copyright 2012-2018 Tony George <teejeetech@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -78,7 +77,7 @@ class RestoreBox : Gtk.Box{
 			lbl_header = add_label_header(this, _("Restoring Snapshot..."), true);
 		}
 
-		var hbox_status = new Box (Orientation.HORIZONTAL, 6);
+		var hbox_status = new Gtk.Box(Orientation.HORIZONTAL, 6);
 		add (hbox_status);
 		
 		spinner = new Gtk.Spinner();
@@ -142,7 +141,7 @@ class RestoreBox : Gtk.Box{
 		ref Gtk.SizeGroup? sg_label, ref Gtk.SizeGroup? sg_value,
 		int add_margin_bottom = 0){
 			
-		var hbox = new Box (Orientation.HORIZONTAL, 6);
+		var hbox = new Gtk.Box(Orientation.HORIZONTAL, 6);
 		box.add (hbox);
 
 		var label = add_label(hbox, text + ":");
@@ -276,6 +275,7 @@ class RestoreBox : Gtk.Box{
 	}
 	
 	private void restore_thread(){
+		
 		log_debug("RestoreBox: restore_thread()");
 		App.restore_snapshot(parent_window);
 		thread_is_running = false;

@@ -1,7 +1,7 @@
 /*
  * RsyncLogWindow.vala
  *
- * Copyright 2012-17 Tony George <teejeetech@gmail.com>
+ * Copyright 2012-2018 Tony George <teejeetech@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,8 +35,6 @@ using TeeJee.Misc;
 
 public class RsyncLogWindow : Window {
 
-	private Gtk.Box vbox_main;
-	
 	//window
 	private int def_width = 800;
 	private int def_height = 600;

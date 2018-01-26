@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: linuxmint\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2018-01-25 10:51+0530\n"
+"POT-Creation-Date: 2018-01-26 14:40+0530\n"
 "PO-Revision-Date: 2017-11-16 18:40+0000\n"
 "Last-Translator: Moo <hazap@hotmail.com>\n"
 "Language-Team: Lithuanian <lt@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "X-Launchpad-Export-Date: 2017-11-23 10:47+0000\n"
 "X-Generator: Launchpad (build 18509)\n"
 
-#: Console/AppConsole.vala:611
+#: Console/AppConsole.vala:613
 #, c-format
 msgid ""
 "\n"
@@ -27,42 +27,42 @@ msgstr ""
 "\n"
 "Norėdami tęsti, paspauskite ENTER..."
 
-#: Core/SnapshotRepo.vala:597
+#: Core/SnapshotRepo.vala:623
 #, c-format
 msgid "%d snapshots, %s free"
 msgstr "%d momentinių kopijų, %s laisva"
 
-#: Console/AppConsole.vala:912
+#: Console/AppConsole.vala:914
 #, c-format
 msgid "'%s' will be on '%s'"
 msgstr "\"%s\" bus patalpinta ties \"%s\""
 
-#: Console/AppConsole.vala:909
+#: Console/AppConsole.vala:911
 #, c-format
 msgid "'%s' will be on root device"
 msgstr "\"%s\" bus šaknies įrenginyje"
 
-#: Gtk/BootOptionsBox.vala:119
+#: Gtk/BootOptionsBox.vala:118
 msgid "(Re)install GRUB2 on:"
 msgstr "(Iš naujo) įdiegti GRUB2 ties:"
 
-#: Core/Main.vala:354
+#: Core/Main.vala:359
 msgid "** Uninstalled Timeshift BTRFS **"
 msgstr "** Timeshift BTRFS pašalinta **"
 
-#: Core/Main.vala:3271
+#: Core/Main.vala:3291
 msgid "/ is mapped to device"
 msgstr "/ yra susieta su įrenginiu"
 
-#: Core/Main.vala:3293
+#: Core/Main.vala:3313
 msgid "/boot is mapped to device"
 msgstr "/boot yra susieta su įrenginiu"
 
-#: Core/Main.vala:3304
+#: Core/Main.vala:3324
 msgid "/boot/efi is mapped to device"
 msgstr "/boot/efi yra susieta su įrenginiu"
 
-#: Core/Main.vala:3282
+#: Core/Main.vala:3302
 msgid "/home is mapped to device"
 msgstr "/home yra susieta su įrenginiu"
 
@@ -79,47 +79,52 @@ msgstr ""
 msgid "<b>System:</b> Installed Linux distribution"
 msgstr "<b>Sistema:</b> Įdiegta Linux distribucija"
 
-#: Gtk/ScheduleBox.vala:151
+#: Gtk/ScheduleBox.vala:152
 msgid ""
 "A maintenance task runs once every hour and creates snapshots as needed."
 msgstr ""
 
-#: Console/AppConsole.vala:696 Console/AppConsole.vala:760
-#: Console/AppConsole.vala:892 Console/AppConsole.vala:987
-#: Console/AppConsole.vala:1032 Console/AppConsole.vala:1073
-#: Console/AppConsole.vala:1090
+#: Console/AppConsole.vala:698 Console/AppConsole.vala:762
+#: Console/AppConsole.vala:894 Console/AppConsole.vala:989
+#: Console/AppConsole.vala:1034 Console/AppConsole.vala:1075
+#: Console/AppConsole.vala:1092
 msgid "Aborted."
 msgstr "Nutraukta."
 
-#: Gtk/MainWindow.vala:385
+#: Gtk/MainWindow.vala:383
 msgid "About"
 msgstr "Apie"
 
-#: Gtk/ExcludeBox.vala:223
+#: Gtk/RsyncLogBox.vala:465
+#, fuzzy
+msgid "Action"
+msgstr "Vieta"
+
+#: Gtk/ExcludeBox.vala:226
 msgid "Add"
 msgstr "Pridėti"
 
-#: Gtk/ExcludeBox.vala:237
+#: Gtk/ExcludeBox.vala:240
 msgid "Add Files"
 msgstr "Pridėti failus"
 
-#: Gtk/ExcludeBox.vala:243
+#: Gtk/ExcludeBox.vala:246
 msgid "Add Folders"
 msgstr "Pridėti aplankus"
 
-#: Gtk/ExcludeBox.vala:223
+#: Gtk/ExcludeBox.vala:226
 msgid "Add custom pattern"
 msgstr "Pridėti tinkintą šabloną"
 
-#: Gtk/ExcludeBox.vala:243
+#: Gtk/ExcludeBox.vala:246
 msgid "Add directories"
 msgstr "Pridėti katalogus"
 
-#: Gtk/ExcludeBox.vala:237
+#: Gtk/ExcludeBox.vala:240
 msgid "Add files"
 msgstr "Pridėti failus"
 
-#: Console/AppConsole.vala:358
+#: Console/AppConsole.vala:360
 msgid "Add tags to snapshot (default: O)"
 msgstr "Pridėti prie momentinės kopijos žymes (numatytoji: O)"
 
@@ -137,7 +142,12 @@ msgstr ""
 "Norint daryti atsarginę sistemos failų kopiją ir juos atkurti, reikalinga "
 "administratoriaus prieiga."
 
-#: Gtk/SnapshotBackendBox.vala:182
+#: Gtk/RsyncLogBox.vala:356
+#, fuzzy
+msgid "All Files"
+msgstr "Pridėti failus"
+
+#: Gtk/SnapshotBackendBox.vala:183
 msgid ""
 "All files are copied when first snapshot is created. Subsequent snapshots "
 "are incremental. Unchanged files will be hard-linked from the previous "
@@ -147,11 +157,11 @@ msgstr ""
 "momentinės kopijos yra prieauginės. Jei prieinama, nepakeistiems failams bus "
 "sukurti patvarieji saitai iš ankstesnės momentinės kopijos."
 
-#: Gtk/ExcludeMessageWindow.vala:129
+#: Gtk/ExcludeMessageWindow.vala:130
 msgid "All other files and folders are excluded."
 msgstr "Visi kiti failai ir aplankai yra išskirti."
 
-#: Gtk/RestoreDeviceBox.vala:499
+#: Gtk/RestoreDeviceBox.vala:500
 msgid ""
 "An encrypted device is selected for root file system (/). The boot directory "
 "(/boot) must be mounted on a non-encrypted device for the system to boot "
@@ -167,39 +177,39 @@ msgstr ""
 "Arba pasirinkite paleidimo katalogui nešifruotą įrenginį, arba pasirinkite "
 "nešifruotą įrenginį šaknies failų sistemai."
 
-#: Core/Main.vala:244
+#: Core/Main.vala:246
 msgid "Another instance of Timeshift is creating a snapshot."
 msgstr "Kitas Timeshift egzempliorius kuria momentinę kopiją."
 
-#: Utility/AppLock.vala:50
+#: Utility/AppLock.vala:49
 msgid "Another instance of this application is running"
 msgstr "Yra paleistas kitas šios programos egzempliorius"
 
-#: Core/Main.vala:248
+#: Core/Main.vala:250
 msgid "Another instance of timeshift is currently running!"
 msgstr "Šiuo metu yra paleistas kitas timeshift egzempliorius!"
 
-#: Console/AppConsole.vala:374
+#: Console/AppConsole.vala:376
 msgid "Answer YES to all confirmation prompts"
 msgstr "Atsakyti TAIP į visas patvirtinimo užklausas"
 
-#: Core/Main.vala:3110
+#: Core/Main.vala:3130
 msgid "App config loaded"
 msgstr "Programos konfigūracija įkelta"
 
-#: Core/Main.vala:3016
+#: Core/Main.vala:3036
 msgid "App config saved"
 msgstr "Programos konfigūracija įrašyta"
 
-#: Console/AppConsole.vala:100
+#: Console/AppConsole.vala:102
 msgid "Application needs admin access."
 msgstr "Programai reikia administratoriaus prieigos."
 
-#: Core/Main.vala:3448
+#: Core/Main.vala:3468
 msgid "Application will exit"
 msgstr "Programa užbaigs darbą"
 
-#: Core/Main.vala:370
+#: Core/Main.vala:375
 msgid "Application will exit."
 msgstr "Programa užbaigs darbą."
 
@@ -211,33 +221,33 @@ msgstr "Menininkai"
 msgid "Authors"
 msgstr "Autoriai"
 
-#: Gtk/MainWindow.vala:333
+#: Gtk/MainWindow.vala:336
 msgid "Available"
 msgstr "Prieinama"
 
-#: Gtk/BackupDeviceBox.vala:99
+#: Gtk/BackupDeviceBox.vala:98
 msgid ""
 "BRTFS snapshots are saved on system partition. Other partitions are not "
 "supported."
 msgstr ""
 
-#: Gtk/SnapshotBackendBox.vala:95
+#: Gtk/SnapshotBackendBox.vala:94
 msgid "BTRFS"
 msgstr "BTRFS"
 
-#: Gtk/SnapshotBackendBox.vala:159
+#: Gtk/SnapshotBackendBox.vala:160
 msgid "BTRFS Snapshots"
 msgstr "BTRFS momentinės kopijos"
 
-#: Gtk/SnapshotBackendBox.vala:118
+#: Gtk/SnapshotBackendBox.vala:119
 msgid "BTRFS Tools Not Found"
 msgstr "Nerasti BTRFS įrankiai"
 
-#: Core/Main.vala:1983 Core/Main.vala:1987
+#: Core/Main.vala:1987 Core/Main.vala:1991
 msgid "BTRFS device is not mounted"
 msgstr "BTRFS įrenginys nėra prijungtas"
 
-#: Gtk/FinishBox.vala:91
+#: Gtk/FinishBox.vala:92
 msgid ""
 "BTRFS snapshots are saved on the same disk from which it is created. If the "
 "system disk fails, snapshots will be lost along with the system. Save "
@@ -253,19 +263,19 @@ msgstr ""
 msgid "Back"
 msgstr "Atgal"
 
-#: Gtk/SetupWizardWindow.vala:89
+#: Gtk/SetupWizardWindow.vala:90
 msgid "Backend"
 msgstr "Vidinė pusė"
 
-#: Console/AppConsole.vala:354 Gtk/BackupWindow.vala:89
+#: Console/AppConsole.vala:356 Gtk/BackupWindow.vala:89
 msgid "Backup"
 msgstr "Atsarginė kopija"
 
-#: Core/Main.vala:1959
+#: Core/Main.vala:1963
 msgid "Backup Device"
 msgstr "Atsarginės kopijos įrenginys"
 
-#: Core/Main.vala:1954
+#: Core/Main.vala:1958
 msgid "Backup device not specified!"
 msgstr "Nenurodytas atsarginės kopijos įrenginys!"
 
@@ -273,23 +283,23 @@ msgstr "Nenurodytas atsarginės kopijos įrenginys!"
 msgid "Become a Patron"
 msgstr "Tapti remėju"
 
-#: Gtk/RestoreExcludeBox.vala:116
+#: Gtk/RestoreExcludeBox.vala:91
 msgid "Bittorrent Clients"
 msgstr "Bittorrent klientų programos"
 
-#: Gtk/ScheduleBox.vala:133 Gtk/SnapshotListBox.vala:278
+#: Gtk/ScheduleBox.vala:134 Gtk/SnapshotListBox.vala:278
 msgid "Boot"
 msgstr "Paleidimo metu"
 
-#: Gtk/RestoreDeviceBox.vala:498
+#: Gtk/RestoreDeviceBox.vala:499
 msgid "Boot device not selected"
 msgstr "Nepasirinktas paleidimo įrenginys"
 
-#: Core/Main.vala:977
+#: Core/Main.vala:979
 msgid "Boot snapshot failed!"
 msgstr "Paleidimo meto momentinė kopija patyrė nesėkmę!"
 
-#: Gtk/ScheduleBox.vala:152
+#: Gtk/ScheduleBox.vala:153
 #, fuzzy
 msgid ""
 "Boot snapshots are created with a delay of 10 minutes after system startup."
@@ -297,11 +307,11 @@ msgstr ""
 "Momentinės kopijos yra sukuriamos naudojant įtaisytas BTRFS failų sistemos "
 "ypatybes."
 
-#: Core/Main.vala:958
+#: Core/Main.vala:960
 msgid "Boot snapshots are enabled"
 msgstr "Momentinės kopijos paleidimo metu yra įjungtos"
 
-#: Gtk/BootOptionsWindow.vala:48
+#: Gtk/BootOptionsWindow.vala:49
 msgid "Bootloader Options"
 msgstr "Paleidyklės parametrai"
 
@@ -309,33 +319,33 @@ msgstr "Paleidyklės parametrai"
 msgid "Bootloader Options (Advanced)"
 msgstr "Paleidyklės parametrai (Išplėstiniai)"
 
-#: Gtk/MainWindow.vala:169
+#: Gtk/MainWindow.vala:171
 msgid "Browse"
 msgstr "Naršyti"
 
-#: Gtk/SnapshotListBox.vala:315
+#: Gtk/SnapshotListBox.vala:316
 msgid "Browse Files"
 msgstr "Naršyti failus"
 
-#: Gtk/MainWindow.vala:170
+#: Gtk/MainWindow.vala:172
 msgid "Browse selected snapshot"
 msgstr "Naršyti pasirinktą momentinę kopiją"
 
-#: Core/Main.vala:2421
+#: Core/Main.vala:2438
 msgid "Building file list..."
 msgstr "Kuriamas failų sąrašas..."
 
-#: Gtk/SetupWizardWindow.vala:202 Gtk/RestoreWindow.vala:185
-#: Gtk/BackupWindow.vala:173 Gtk/DeleteWindow.vala:184
+#: Gtk/SetupWizardWindow.vala:204 Gtk/RestoreWindow.vala:202
+#: Gtk/BackupWindow.vala:175 Gtk/DeleteWindow.vala:185
 #: Utility/GtkHelper.vala:122 Utility/Gtk/CustomMessageDialog.vala:172
 msgid "Cancel"
 msgstr "Atsisakyti"
 
-#: Gtk/RestoreWindow.vala:189
+#: Gtk/RestoreWindow.vala:206
 msgid "Cancel restore?"
 msgstr "Atsisakyti atkūrimo?"
 
-#: Gtk/RestoreWindow.vala:191
+#: Gtk/RestoreWindow.vala:208
 msgid ""
 "Cancelling the restore process will leave the target system in an "
 "inconsistent state. The system may fail to boot or you may run into various "
@@ -348,31 +358,42 @@ msgstr ""
 "būseną, turėsite atkurti kitą momentinę kopiją. Norėdami patvirtinti, "
 "spustelėkite Taip."
 
-#: Gtk/MainWindow.vala:555
+#: Gtk/MainWindow.vala:553
 msgid "Cannot Delete Live Snapshot"
 msgstr "Nepavyksta ištrinti tiesioginės (naudojamos) momentinės kopijos"
 
-#: Gtk/RestoreBox.vala:124 Gtk/BackupBox.vala:87
+#: Gtk/RsyncLogBox.vala:370 Gtk/RsyncLogBox.vala:558
+#, fuzzy
+msgid "Change"
+msgstr "Pakeista"
+
+#: Gtk/RestoreBox.vala:125 Gtk/BackupBox.vala:87 Gtk/RsyncLogBox.vala:373
+#: Gtk/RsyncLogBox.vala:376 Gtk/RsyncLogBox.vala:558 Gtk/RsyncLogBox.vala:579
 msgid "Changed"
 msgstr "Pakeista"
 
-#: Gtk/RestoreBox.vala:126 Gtk/BackupBox.vala:89
+#: Gtk/RestoreBox.vala:127 Gtk/BackupBox.vala:89
 msgid "Changed items:"
 msgstr "Pakeisti elementai:"
 
-#: Core/Main.vala:2642
+#: Gtk/RestoreWindow.vala:101
+msgid "Checking Restore Actions (Dry Run)"
+msgstr ""
+
+#: Core/Main.vala:2671
 msgid "Checking file systems for errors..."
 msgstr "Tikrinama ar failų sistemoje nėra klaidų..."
 
-#: Gtk/RestoreBox.vala:129 Gtk/BackupBox.vala:92
+#: Gtk/RestoreBox.vala:130 Gtk/BackupBox.vala:92 Gtk/RsyncLogBox.vala:383
+#, c-format
 msgid "Checksum"
 msgstr "Kontrolinė suma"
 
-#: Core/Main.vala:2310
+#: Core/Main.vala:2327
 msgid "Cleaning up..."
 msgstr "Išvaloma..."
 
-#: Gtk/ExcludeBox.vala:265
+#: Gtk/ExcludeBox.vala:268
 msgid ""
 "Click an item to edit the pattern.\n"
 "Drag and drop items with mouse to re-order."
@@ -380,39 +401,35 @@ msgstr ""
 "Spustelėkite ant elemento, norėdami taisyti šabloną.\n"
 "Vilkite elementus pele, norėdami juos pertvarkyti."
 
-#: Gtk/ExcludeBox.vala:80 Gtk/UsersBox.vala:85
+#: Gtk/ExcludeBox.vala:82 Gtk/UsersBox.vala:85
 msgid "Click to edit. Drag and drop to re-order."
 msgstr "Spustelėkite, norėdami taisyti. Vilkite, norėdami pertvarkyti."
 
-#: Gtk/RestoreWindow.vala:63
+#: Gtk/RestoreWindow.vala:68
 msgid "Clone System"
 msgstr "Klonuoti sistemą"
 
-#: Console/AppConsole.vala:362
+#: Console/AppConsole.vala:364
 msgid "Clone current system"
 msgstr "Klonuoti esamą sistemą"
 
-#: Gtk/RestoreFinishBox.vala:61
+#: Gtk/RestoreFinishBox.vala:68
 msgid "Cloning"
 msgstr "Klonuojama"
 
-#: Gtk/RestoreBox.vala:73
-msgid "Cloning System..."
-msgstr "Klonuojama sistema..."
-
-#: Core/Main.vala:2687
+#: Core/Main.vala:2716
 msgid "Cloning system..."
 msgstr "Klonuojama sistema..."
 
-#: Gtk/RestoreWindow.vala:176 Gtk/BackupWindow.vala:164
-#: Gtk/BootOptionsWindow.vala:105 Gtk/DeleteWindow.vala:167
-#: Gtk/RsyncLogWindow.vala:244 Gtk/SettingsWindow.vala:85
+#: Gtk/RestoreWindow.vala:193 Gtk/BackupWindow.vala:166
+#: Gtk/BootOptionsWindow.vala:106 Gtk/DeleteWindow.vala:168
+#: Gtk/RsyncLogBox.vala:259 Gtk/SettingsWindow.vala:85
 #: Utility/Gtk/DonationWindow.vala:121
 msgid "Close"
 msgstr "Užverti"
 
-#: Gtk/DeleteFinishBox.vala:71 Gtk/RestoreFinishBox.vala:90
-#: Gtk/FinishBox.vala:100 Gtk/BackupFinishBox.vala:70
+#: Gtk/DeleteFinishBox.vala:71 Gtk/RestoreFinishBox.vala:106
+#: Gtk/FinishBox.vala:101 Gtk/BackupFinishBox.vala:70
 msgid "Close window to exit"
 msgstr "Norėdami išeiti, užverkite langą"
 
@@ -421,7 +438,7 @@ msgstr "Norėdami išeiti, užverkite langą"
 msgid "Code Contributions"
 msgstr "Talkinimai"
 
-#: Core/Main.vala:340
+#: Core/Main.vala:344
 msgid "Commands listed below are not available on this system"
 msgstr "Žemiau išvardytos komandos nėra prieinamos šioje sistemoje"
 
@@ -429,21 +446,34 @@ msgstr "Žemiau išvardytos komandos nėra prieinamos šioje sistemoje"
 msgid "Comments"
 msgstr "Komentarai"
 
+#: Gtk/RestoreBox.vala:74 Gtk/RestoreBox.vala:187
+msgid "Comparing Files (Dry Run)..."
+msgstr ""
+
+#: Core/Main.vala:2480
+#, fuzzy
+msgid "Comparing files with rsync..."
+msgstr "Sinchronizuojami failai su rsync..."
+
 #: Gtk/DeleteFinishBox.vala:50 Gtk/RestoreFinishBox.vala:50
-#: Gtk/RestoreFinishBox.vala:68 Gtk/BackupFinishBox.vala:50
+#: Gtk/RestoreFinishBox.vala:75 Gtk/BackupFinishBox.vala:50
 msgid "Completed"
 msgstr "Užbaigta"
 
-#: Gtk/RestoreFinishBox.vala:71
+#: Gtk/RestoreFinishBox.vala:78
 msgid "Completed With Errors"
 msgstr "Užbaigta su klaidomis"
 
-#: Console/AppConsole.vala:1066
+#: Gtk/RestoreWindow.vala:106 Gtk/RsyncLogBox.vala:86
+msgid "Confirm Actions"
+msgstr ""
+
+#: Console/AppConsole.vala:1068
 #, c-format
 msgid "Continue with restore? (y/n): "
 msgstr "Tęsti atkūrimą? (y=taip/n=ne): "
 
-#: Console/AppConsole.vala:832 Console/AppConsole.vala:963
+#: Console/AppConsole.vala:834 Console/AppConsole.vala:965
 msgid "Could not find device"
 msgstr "Nepavyko rasti įrenginio"
 
@@ -452,21 +482,22 @@ msgstr "Nepavyko rasti įrenginio"
 msgid "Could not find file"
 msgstr "Nepavyko rasti failo"
 
-#: Console/AppConsole.vala:729
+#: Console/AppConsole.vala:731
 msgid "Could not find snapshot"
 msgstr "Nepavyko rasti momentinės kopijos"
 
-#: Core/Main.vala:2888
+#: Core/Main.vala:2908
 msgid "Could not find system subvolume"
 msgstr "Nepavyko rasti sistemos patomio"
 
-#: Core/Main.vala:2916
+#: Core/Main.vala:2936
 msgid "Could not find system subvolumes for creating pre-restore snapshot"
 msgstr ""
 "Nepavyko rasti sistemos patomių, skirtų išankstinio atkūrimo momentinės "
 "kopijos sukūrimui"
 
-#: Gtk/MainWindow.vala:139
+#: Gtk/MainWindow.vala:141 Gtk/RsyncLogBox.vala:359 Gtk/RsyncLogBox.vala:562
+#, c-format
 msgid "Create"
 msgstr "Sukurti"
 
@@ -474,39 +505,39 @@ msgstr "Sukurti"
 msgid "Create Snapshot"
 msgstr "Sukurti momentinę kopiją"
 
-#: Gtk/ScheduleBox.vala:133
+#: Gtk/ScheduleBox.vala:134
 msgid "Create one per boot"
 msgstr "Kurti kiekvieno paleidimo metu"
 
-#: Gtk/ScheduleBox.vala:97
+#: Gtk/ScheduleBox.vala:98
 msgid "Create one per day"
 msgstr "Kurti po vieną kiekvieną dieną"
 
-#: Gtk/ScheduleBox.vala:115
+#: Gtk/ScheduleBox.vala:116
 msgid "Create one per hour"
 msgstr "Kurti po vieną kiekvieną valandą"
 
-#: Gtk/ScheduleBox.vala:61
+#: Gtk/ScheduleBox.vala:62
 msgid "Create one per month"
 msgstr "Kurti po vieną kiekvieną mėnesį"
 
-#: Gtk/ScheduleBox.vala:79
+#: Gtk/ScheduleBox.vala:80
 msgid "Create one per week"
 msgstr "Kurti vieną kiekvieną savaitę"
 
-#: Console/AppConsole.vala:356
+#: Console/AppConsole.vala:358
 msgid "Create snapshot (even if not scheduled)"
 msgstr "Sukurti momentinę kopiją (net jeigu nesuplanuota)"
 
-#: Console/AppConsole.vala:355
+#: Console/AppConsole.vala:357
 msgid "Create snapshot if scheduled"
 msgstr "Sukurti momentinę kopiją, jei suplanuota"
 
-#: Gtk/MainWindow.vala:140
+#: Gtk/MainWindow.vala:142
 msgid "Create snapshot of current system"
 msgstr "Sukurti esamos sistemos momentinę kopiją"
 
-#: Gtk/MainWindow.vala:1044
+#: Gtk/MainWindow.vala:1063
 msgid ""
 "Create snapshots manually or enable scheduled snapshots to protect your "
 "system"
@@ -514,20 +545,22 @@ msgstr ""
 "Kurkite momentines kopijas rankiniu būdu arba, norėdami apsaugoti savo "
 "sistemą, įjunkite planines momentines kopijas"
 
-#: Gtk/SnapshotBackendBox.vala:96
+#: Gtk/SnapshotBackendBox.vala:95
 msgid "Create snapshots using RSYNC"
 msgstr "Sukurti momentines kopijas, naudojant RSYNC"
 
-#: Gtk/SnapshotBackendBox.vala:79
+#: Gtk/SnapshotBackendBox.vala:78
 msgid "Create snapshots using RSYNC tool and hard-links"
 msgstr ""
 "Sukurti momentines kopijas, naudojant RSYNC įrankį ir pastoviuosius saitus"
 
-#: Gtk/RestoreBox.vala:122 Gtk/BackupBox.vala:85
+#: Gtk/RestoreBox.vala:123 Gtk/BackupBox.vala:85 Gtk/RsyncLogBox.vala:359
+#: Gtk/RsyncLogBox.vala:562 Gtk/RsyncLogBox.vala:583
+#, c-format
 msgid "Created"
 msgstr "Sukurta"
 
-#: Core/Snapshot.vala:360
+#: Core/Snapshot.vala:416
 msgid "Created control file"
 msgstr "Sukurtas valdymo failas"
 
@@ -535,11 +568,11 @@ msgstr "Sukurtas valdymo failas"
 msgid "Created directory"
 msgstr "Sukurtas katalogas"
 
-#: Core/Main.vala:2938
+#: Core/Main.vala:2958
 msgid "Created pre-restore snapshot"
 msgstr "Sukurta išankstinio atkūrimo momentinė kopija"
 
-#: Core/Main.vala:1441
+#: Core/Main.vala:1445
 msgid "Created subvolume snapshot"
 msgstr "Sukurta patomio momentinė kopija"
 
@@ -547,15 +580,15 @@ msgstr "Sukurta patomio momentinė kopija"
 msgid "Creating Snapshot..."
 msgstr "Kuriama momentinė kopija..."
 
-#: Core/Main.vala:1395
+#: Core/Main.vala:1399
 msgid "Creating new backup..."
 msgstr "Kuriama nauja atsarginė kopija..."
 
-#: Core/Main.vala:1243
+#: Core/Main.vala:1245
 msgid "Creating new snapshot..."
 msgstr "Kuriama nauja momentinė kopija..."
 
-#: Core/Main.vala:2866
+#: Core/Main.vala:2886
 msgid "Creating pre-restore snapshot from system subvolumes..."
 msgstr "Iš sistemos patomių kuriama išankstinio atkūrimo momentinė kopija..."
 
@@ -563,7 +596,7 @@ msgstr "Iš sistemos patomių kuriama išankstinio atkūrimo momentinė kopija..
 msgid "Credits"
 msgstr "Padėkos"
 
-#: Core/Main.vala:3447
+#: Core/Main.vala:3467
 msgid "Critical Error"
 msgstr "Kritinė klaida"
 
@@ -579,24 +612,26 @@ msgstr "Pašalinta cron užduotis"
 msgid "Cron task exists"
 msgstr "Cron užduotis yra"
 
-#: Gtk/ScheduleBox.vala:97 Gtk/SnapshotListBox.vala:280
+#: Gtk/ScheduleBox.vala:98 Gtk/SnapshotListBox.vala:280
 msgid "Daily"
 msgstr "Kas dieną"
 
-#: Core/Main.vala:1037
+#: Core/Main.vala:1039
 msgid "Daily snapshot failed!"
 msgstr "Kasdienė momentinė kopija patyrė nesėkmę!"
 
-#: Core/Main.vala:1018
+#: Core/Main.vala:1020
 msgid "Daily snapshots are enabled"
 msgstr "Kasdienės momentinės kopijos yra įjungtos"
 
-#: Core/Main.vala:2051
+#: Core/Main.vala:2057
 msgid "Data will be modified on following devices:"
 msgstr "Duomenys bus modifikuoti šiuose įrenginiuose:"
 
-#: Console/AppConsole.vala:368 Gtk/MainWindow.vala:159
-#: Gtk/SnapshotListBox.vala:301 Gtk/DeleteWindow.vala:96
+#: Console/AppConsole.vala:370 Gtk/MainWindow.vala:161
+#: Gtk/SnapshotListBox.vala:302 Gtk/DeleteWindow.vala:96
+#: Gtk/RsyncLogBox.vala:363 Gtk/RsyncLogBox.vala:566
+#, c-format
 msgid "Delete"
 msgstr "Ištrinti"
 
@@ -604,19 +639,21 @@ msgstr "Ištrinti"
 msgid "Delete Snapshots"
 msgstr "Ištrinti momentines kopijas"
 
-#: Console/AppConsole.vala:370
+#: Console/AppConsole.vala:372
 msgid "Delete all snapshots"
 msgstr "Ištrinti visas momentines kopijas"
 
-#: Gtk/MainWindow.vala:160
+#: Gtk/MainWindow.vala:162
 msgid "Delete selected snapshot"
 msgstr "Ištrinti pasirinktą momentinę kopiją"
 
-#: Console/AppConsole.vala:369
+#: Console/AppConsole.vala:371
 msgid "Delete snapshot"
 msgstr "Ištrinti momentinę kopiją"
 
-#: Gtk/RestoreBox.vala:123 Gtk/BackupBox.vala:86
+#: Gtk/RestoreBox.vala:124 Gtk/BackupBox.vala:86 Gtk/RsyncLogBox.vala:363
+#: Gtk/RsyncLogBox.vala:566 Gtk/RsyncLogBox.vala:587
+#, c-format
 msgid "Deleted"
 msgstr "Ištrinta"
 
@@ -624,42 +661,42 @@ msgstr "Ištrinta"
 msgid "Deleted directory"
 msgstr "Ištrintas katalogas"
 
-#: Core/Subvolume.vala:102
+#: Core/Subvolume.vala:129
 msgid "Deleted subvolume"
 msgstr "Ištrintas patomis"
 
-#: Core/Main.vala:2846 Core/Main.vala:2849
+#: Core/Main.vala:2866 Core/Main.vala:2869
 msgid "Deleted system subvolumes"
 msgstr "Ištrinti sistemos patomiai"
 
-#: Gtk/DeleteBox.vala:59
+#: Gtk/DeleteBox.vala:58
 msgid "Deleting Snapshots..."
 msgstr "Ištrinamos momentinės kopijos..."
 
-#: Core/Subvolume.vala:89
+#: Core/Subvolume.vala:116
 msgid "Deleting subvolume"
 msgstr "Ištrinamas patomis"
 
-#: Gtk/RestoreExcludeBox.vala:130
+#: Gtk/RestoreExcludeBox.vala:105
 msgid "Deluge, Transmission"
 msgstr "Deluge, Transmission"
 
-#: Console/AppConsole.vala:425 Console/AppConsole.vala:540
+#: Console/AppConsole.vala:427 Console/AppConsole.vala:542
 msgid "Description"
 msgstr "Aprašas"
 
-#: Core/Subvolume.vala:116
+#: Core/Subvolume.vala:143
 msgid "Destroyed qgroup"
 msgstr "Sunaikinta qgroup"
 
-#: Core/Subvolume.vala:106
+#: Core/Subvolume.vala:133
 msgid "Destroying qgroup"
 msgstr "Sunaikinama qgroup"
 
-#: Core/SnapshotRepo.vala:49 Core/SnapshotRepo.vala:639
-#: Core/SnapshotRepo.vala:642 Core/Main.vala:2054 Core/Main.vala:2082
-#: Console/AppConsole.vala:452 Console/AppConsole.vala:491
-#: Console/AppConsole.vala:539 Gtk/RestoreDeviceBox.vala:98
+#: Core/SnapshotRepo.vala:72 Core/SnapshotRepo.vala:665
+#: Core/SnapshotRepo.vala:668 Core/Main.vala:2060 Core/Main.vala:2088
+#: Console/AppConsole.vala:454 Console/AppConsole.vala:493
+#: Console/AppConsole.vala:541 Gtk/RestoreDeviceBox.vala:97
 #: Utility/Device.vala:1798 Utility/Device.vala:1808
 #, c-format
 msgid "Device"
@@ -673,30 +710,30 @@ msgstr "Įrenginys atrakintas"
 msgid "Device name is empty!"
 msgstr "Įrenginio pavadinimas yra tuščias!"
 
-#: Core/SnapshotRepo.vala:516 Core/Main.vala:3163 Console/AppConsole.vala:661
+#: Core/SnapshotRepo.vala:542 Core/Main.vala:3183 Console/AppConsole.vala:663
 msgid "Device not found"
 msgstr "Įrenginys nerastas"
 
-#: Gtk/BackupDeviceBox.vala:98
+#: Gtk/BackupDeviceBox.vala:97
 #, fuzzy, c-format
 msgid "Devices displayed above have BTRFS file systems."
 msgstr "Įrenginiai su Linux failų sistemomis"
 
-#: Gtk/BackupDeviceBox.vala:105
+#: Gtk/BackupDeviceBox.vala:104
 #, fuzzy, c-format
 msgid "Devices displayed above have Linux file systems."
 msgstr "Įrenginiai su Linux failų sistemomis"
 
-#: Gtk/RestoreDeviceBox.vala:85
+#: Gtk/RestoreDeviceBox.vala:84
 msgid "Devices from which snapshot was created are pre-selected."
 msgstr ""
 "Įrenginiai iš kurių buvo sukurta momentinė kopija buvo pasirinkti iš anksto."
 
-#: Console/AppConsole.vala:324
+#: Console/AppConsole.vala:326
 msgid "Devices with Linux file systems"
 msgstr "Įrenginiai su Linux failų sistemomis"
 
-#: Gtk/BackupDeviceBox.vala:106
+#: Gtk/BackupDeviceBox.vala:105
 msgid "Devices with Windows file systems are not supported (NTFS, FAT, etc)."
 msgstr ""
 
@@ -735,11 +772,11 @@ msgstr ""
 msgid "Dir not found"
 msgstr "Katalogas nerastas"
 
-#: Core/SnapshotRepo.vala:938
+#: Core/SnapshotRepo.vala:964
 msgid "Directory not found"
 msgstr "Katalogas nerastas"
 
-#: Core/Main.vala:2139 Gtk/RestoreSummaryBox.vala:64
+#: Core/Main.vala:2145 Gtk/RestoreSummaryBox.vala:64
 msgid "Disclaimer"
 msgstr "Atsakomybės ribojimas"
 
@@ -747,7 +784,7 @@ msgstr "Atsakomybės ribojimas"
 msgid "Disk"
 msgstr "Diskas"
 
-#: Core/Main.vala:221
+#: Core/Main.vala:223
 msgid "Distribution"
 msgstr "Distribucija"
 
@@ -756,7 +793,7 @@ msgstr "Distribucija"
 msgid "Documentation"
 msgstr "Paaukojimai"
 
-#: Gtk/MainWindow.vala:380 Utility/Gtk/DonationWindow.vala:42
+#: Gtk/MainWindow.vala:378 Utility/Gtk/DonationWindow.vala:42
 msgid "Donate"
 msgstr "Paaukoti"
 
@@ -768,15 +805,15 @@ msgstr "Paaukoti naudojant PayPal"
 msgid "Donations"
 msgstr "Paaukojimai"
 
-#: Gtk/ExcludeBox.vala:264
+#: Gtk/ExcludeBox.vala:267
 msgid "Editing and Re-Ordering"
 msgstr "Taisymas ir pertvarkymas"
 
-#: Gtk/MainWindow.vala:1038
+#: Gtk/MainWindow.vala:1057
 msgid "Enable scheduled snapshots to protect your system"
 msgstr "Norėdami apsaugoti savo sistemą, įjunkite planines momentines kopijas"
 
-#: Core/Main.vala:3946 Core/Main.vala:3979
+#: Core/Main.vala:3970 Core/Main.vala:4008
 msgid "Enabled subvolume quota support"
 msgstr "Įjungtas patomiui leidžiamo duomenų kiekio palaikymas"
 
@@ -788,12 +825,12 @@ msgstr "Šifruotas įrenginys"
 msgid "Encrypted Home Directory"
 msgstr "Šifruotas namų katalogas"
 
-#: Console/AppConsole.vala:882
+#: Console/AppConsole.vala:884
 #, c-format
 msgid "Enter device name or number"
 msgstr "Įveskite įrenginio pavadinimą arba numerį"
 
-#: Console/AppConsole.vala:680 Console/AppConsole.vala:1011
+#: Console/AppConsole.vala:682 Console/AppConsole.vala:1013
 #, c-format
 msgid "Enter device name or number (a=Abort)"
 msgstr "Įveskite įrenginio pavadinimą ar numerį (a=Nutraukti)"
@@ -807,20 +844,24 @@ msgstr "Norėdami atrakinti \"%s\", įveskite slaptafrazę"
 msgid "Enter path or browse for directory"
 msgstr "Įveskite kelią arba naršykite katalogą"
 
-#: Console/AppConsole.vala:752
+#: Console/AppConsole.vala:754
 #, c-format
 msgid "Enter snapshot number (a=Abort, p=Previous, n=Next)"
 msgstr "Įveskite momentinės kopijos numerį (a=Nutraukti, p=Ankstesnė, n=Kita)"
 
-#: Gtk/ExcludeBox.vala:229
+#: Gtk/ExcludeBox.vala:232
 msgid "Enter the pattern to exclude (Ex: *.mp3, *.bak)"
 msgstr "Įveskite šabloną, kurį išskirti (Pvz.: *.mp3, *.bak)"
 
-#: Gtk/RestoreDeviceBox.vala:535 Utility/GtkHelper.vala:18
+#: Gtk/RestoreDeviceBox.vala:534 Utility/GtkHelper.vala:18
 msgid "Error"
 msgstr "Klaida"
 
-#: Gtk/SetupWizardWindow.vala:94 Gtk/BackupWindow.vala:79
+#: Gtk/RestoreWindow.vala:428
+msgid "Error running Rsync"
+msgstr ""
+
+#: Gtk/SetupWizardWindow.vala:95 Gtk/BackupWindow.vala:79
 msgid "Estimate"
 msgstr "Apskaičiuoti"
 
@@ -828,11 +869,11 @@ msgstr "Apskaičiuoti"
 msgid "Estimating System Size..."
 msgstr "Apskaičiuojamas sistemos dydis..."
 
-#: Core/Main.vala:1239
+#: Core/Main.vala:1241
 msgid "Estimating system size..."
 msgstr "Apskaičiuojamas sistemos dydis..."
 
-#: Console/AppConsole.vala:384
+#: Console/AppConsole.vala:386
 msgid "Examples"
 msgstr "Pavyzdžiai"
 
@@ -841,31 +882,31 @@ msgstr "Pavyzdžiai"
 msgid "Exclude All"
 msgstr "Išskirti programas"
 
-#: Gtk/RestoreExcludeBox.vala:80 Gtk/ExcludeAppsBox.vala:51
+#: Gtk/RestoreExcludeBox.vala:55 Gtk/ExcludeAppsBox.vala:51
 msgid "Exclude Application Settings"
 msgstr "Išskirkite programų nustatymus"
 
-#: Gtk/RestoreWindow.vala:91
+#: Gtk/RestoreWindow.vala:96
 msgid "Exclude Apps"
 msgstr "Išskirti programas"
 
-#: Gtk/ExcludeMessageWindow.vala:69
+#: Gtk/ExcludeMessageWindow.vala:70
 msgid "Exclude List"
 msgstr "Išskyrimų sąrašas"
 
-#: Gtk/ExcludeListSummaryWindow.vala:48
+#: Gtk/ExcludeListSummaryWindow.vala:49
 msgid "Exclude List Summary"
 msgstr "Išskyrimo sąrašo santrauka"
 
-#: Gtk/ExcludeBox.vala:228
+#: Gtk/ExcludeBox.vala:231
 msgid "Exclude Pattern"
 msgstr "Išskirti šabloną"
 
-#: Gtk/ExcludeMessageWindow.vala:55
+#: Gtk/ExcludeMessageWindow.vala:56
 msgid "Excluded Directories"
 msgstr "Išskirti katalogai"
 
-#: Core/Main.vala:1509
+#: Core/Main.vala:1513
 msgid "Expected values: O, B, H, D, W, M"
 msgstr "Tikėtinos reikšmės: O, B, H, D, W, M"
 
@@ -881,19 +922,19 @@ msgstr "Nepavyko nukopijuoti failo"
 msgid "Failed to create directory"
 msgstr "Nepavyko sukurti katalogo"
 
-#: Core/Main.vala:1365
+#: Core/Main.vala:1367
 msgid "Failed to create new snapshot"
 msgstr "Nepavyko sukurti naujos momentinės kopijos"
 
-#: Core/Main.vala:1215
+#: Core/Main.vala:1217
 msgid "Failed to create snapshot"
 msgstr "Nepavyko sukurti momentinės kopijos"
 
-#: Core/Main.vala:1437
+#: Core/Main.vala:1441
 msgid "Failed to create subvolume snapshot"
 msgstr "Nepavyko sukurti patomio momentinės kopijos"
 
-#: Core/SnapshotRepo.vala:979
+#: Core/SnapshotRepo.vala:1005
 msgid "Failed to create symlinks"
 msgstr "Nepavyko sukurti simbolinių nuorodų"
 
@@ -905,23 +946,23 @@ msgstr "Nepavyko ištrinti katalogo"
 msgid "Failed to delete file"
 msgstr "Nepavyko ištrinti failo"
 
-#: Core/Subvolume.vala:98
+#: Core/Subvolume.vala:125
 msgid "Failed to delete snapshot subvolume"
 msgstr "Nepavyko ištrinti momentinės kopijos patomio"
 
-#: Core/SnapshotRepo.vala:1005
+#: Core/SnapshotRepo.vala:1031
 msgid "Failed to delete symlinks"
 msgstr "Nepavyko ištrinti simbolinių nuorodų"
 
-#: Core/Subvolume.vala:112
+#: Core/Subvolume.vala:139
 msgid "Failed to destroy qgroup"
 msgstr "Nepavyko sunaikinti qgroup"
 
-#: Core/Main.vala:3966
+#: Core/Main.vala:3993
 msgid "Failed to enable subvolume quota"
 msgstr "Nepavyko įjungti patomiui leidžiamą duomenų kiekį"
 
-#: Core/Main.vala:3662 Core/Main.vala:3668
+#: Core/Main.vala:3682 Core/Main.vala:3688
 msgid "Failed to estimate system size"
 msgstr "Nepavyko apskaičiuoti sistemos dydžio"
 
@@ -929,9 +970,9 @@ msgstr "Nepavyko apskaičiuoti sistemos dydžio"
 msgid "Failed to export crontab file"
 msgstr "Nepavyko eksportuoti crontab failo"
 
-#: Console/AppConsole.vala:695 Console/AppConsole.vala:759
-#: Console/AppConsole.vala:891 Console/AppConsole.vala:986
-#: Console/AppConsole.vala:1031 Console/AppConsole.vala:1072
+#: Console/AppConsole.vala:697 Console/AppConsole.vala:761
+#: Console/AppConsole.vala:893 Console/AppConsole.vala:988
+#: Console/AppConsole.vala:1033 Console/AppConsole.vala:1074
 msgid "Failed to get input from user in 3 attempts"
 msgstr "Nepavyko per 3 bandymus gauti įvesti iš naudotojo"
 
@@ -939,7 +980,7 @@ msgstr "Nepavyko per 3 bandymus gauti įvesti iš naudotojo"
 msgid "Failed to get partition list"
 msgstr "Nepavyko gauti skaidinių sąrašo"
 
-#: Core/Main.vala:3246
+#: Core/Main.vala:3266
 msgid "Failed to get partition list."
 msgstr "Nepavyko gauti skaidinių sąrašo."
 
@@ -947,7 +988,7 @@ msgstr "Nepavyko gauti skaidinių sąrašo."
 msgid "Failed to install crontab file"
 msgstr "Nepavyko įdiegti crontab failą"
 
-#: Gtk/RestoreDeviceBox.vala:536
+#: Gtk/RestoreDeviceBox.vala:535
 msgid "Failed to mount devices"
 msgstr "Nepavyko prijungti įrenginius"
 
@@ -955,15 +996,15 @@ msgstr "Nepavyko prijungti įrenginius"
 msgid "Failed to move file"
 msgstr "Nepavyko perkelti failą"
 
-#: Core/Main.vala:2903
+#: Core/Main.vala:2923
 msgid "Failed to move system subvolume to snapshot directory"
 msgstr "Nepavyko perkelti sistemos patomį į momentinės kopijos katalogą"
 
-#: Core/Main.vala:3785
+#: Core/Main.vala:3806
 msgid "Failed to query subvolume list"
 msgstr "Nepavyko užklausti patomių sąrašo"
 
-#: Core/Main.vala:3868
+#: Core/Main.vala:3890
 msgid "Failed to query subvolume quota"
 msgstr "Nepavyko užklausti patomiui leidžiamo duomenų kiekio"
 
@@ -975,7 +1016,7 @@ msgstr "Nepavyko perskaityti cron tab"
 msgid "Failed to read file"
 msgstr "Nepavyko perskaityti failą"
 
-#: Core/SnapshotRepo.vala:925
+#: Core/SnapshotRepo.vala:951
 msgid "Failed to remove"
 msgstr "Nepavyko pašalinti"
 
@@ -983,19 +1024,19 @@ msgstr "Nepavyko pašalinti"
 msgid "Failed to remove cron job"
 msgstr "Nepavyko pašalinti cron užduotį"
 
-#: Core/Snapshot.vala:446 Core/Snapshot.vala:457 Core/Snapshot.vala:464
+#: Core/Snapshot.vala:503 Core/Snapshot.vala:515 Core/Snapshot.vala:523
 msgid "Failed to remove snapshot"
 msgstr "Nepavyko pašalinti momentinę kopiją"
 
-#: Core/Main.vala:3999
+#: Core/Main.vala:4032
 msgid "Failed to rescan subvolume quota"
 msgstr "Nepavyko peržiūrėti patomiui leidžiamą duomenų kiekį"
 
-#: Core/Main.vala:2783
+#: Core/Main.vala:2803
 msgid "Failed to restore system subvolume"
 msgstr "Nepavyko atkurti sistemos patomį"
 
-#: Core/Main.vala:1315
+#: Core/Main.vala:1317
 msgid "Failed to save exclude list"
 msgstr "Nepavyko įrašyti išskyrimų sąrašo"
 
@@ -1008,7 +1049,7 @@ msgstr "Nepavyko atrakinti įrenginį"
 msgid "Failed to unmount"
 msgstr "Nepavyko atjungti"
 
-#: Core/Main.vala:3448
+#: Core/Main.vala:3468
 msgid "Failed to unmount device!"
 msgstr "Nepavyko atjungti įrenginį!"
 
@@ -1016,7 +1057,17 @@ msgstr "Nepavyko atjungti įrenginį!"
 msgid "Failed to write file"
 msgstr "Nepavyko rašyti failo"
 
-#: Gtk/ExcludeMessageWindow.vala:97
+#: Gtk/RsyncLogBox.vala:120
+#, fuzzy
+msgid "File (snapshot)"
+msgstr "Ištrinti momentinę kopiją"
+
+#: Gtk/RsyncLogBox.vala:117
+#, fuzzy
+msgid "File (system)"
+msgstr "Failų sistema"
+
+#: Gtk/ExcludeMessageWindow.vala:98
 msgid "File Pattern"
 msgstr "Failo šablonas"
 
@@ -1028,12 +1079,12 @@ msgstr "Failų ir katalogų skaičius:"
 msgid "File is missing"
 msgstr "Trūksta failo"
 
-#: Utility/CronTab.vala:225 Utility/RsyncTask.vala:249
+#: Utility/CronTab.vala:225 Utility/RsyncTask.vala:266
 #: Utility/TeeJee.FileSystem.vala:205 Utility/TeeJee.FileSystem.vala:521
 msgid "File not found"
 msgstr "Failas nerastas"
 
-#: Gtk/ExcludeListSummaryWindow.vala:61
+#: Gtk/ExcludeListSummaryWindow.vala:62
 msgid ""
 "Files &amp; directories matching the patterns below will be excluded. "
 "Patterns starting with a + will include the item instead of excluding."
@@ -1042,16 +1093,16 @@ msgstr ""
 "Šablonai, kurie prasideda + simboliu įtrauks elementą, vietoj to, kad jį "
 "išskirtų."
 
-#: Gtk/SnapshotBackendBox.vala:186
+#: Gtk/SnapshotBackendBox.vala:187
 msgid "Files and directories can be excluded to save disk space."
 msgstr ""
 "Failai ir katalogai gali būti išskirti, siekiant sutaupyti vietą diske."
 
-#: Gtk/RestoreBox.vala:118
+#: Gtk/RestoreBox.vala:119
 msgid "Files and directory counts:"
 msgstr "Failų ir katalogų skaičius:"
 
-#: Gtk/ExcludeMessageWindow.vala:75
+#: Gtk/ExcludeMessageWindow.vala:76
 msgid "Files matching the following patterns will be excluded"
 msgstr "Šiuos šablonus atitinkantys failai bus išskirti"
 
@@ -1060,28 +1111,33 @@ msgstr "Šiuos šablonus atitinkantys failai bus išskirti"
 msgid "Filesystem"
 msgstr "Failų sistema"
 
+#: Gtk/RsyncLogBox.vala:295
+#, fuzzy
+msgid "Filter by name or path"
+msgstr "Įveskite įrenginio pavadinimą arba numerį"
+
 #: Gtk/SettingsWindow.vala:111
 msgid "Filters"
 msgstr "Filtrai"
 
-#: Gtk/SetupWizardWindow.vala:193 Gtk/BackupWindow.vala:94
+#: Gtk/SetupWizardWindow.vala:195 Gtk/BackupWindow.vala:94
 #: Gtk/DeleteWindow.vala:101
 msgid "Finish"
 msgstr "Užbaigti"
 
-#: Gtk/SetupWizardWindow.vala:109 Gtk/RestoreWindow.vala:106
+#: Gtk/SetupWizardWindow.vala:110 Gtk/RestoreWindow.vala:121
 msgid "Finished"
 msgstr "Užbaigta"
 
-#: Gtk/RestoreExcludeBox.vala:103
+#: Gtk/RestoreExcludeBox.vala:78
 msgid "Firefox, Chromium, Chrome, Opera, Epiphany, Midori"
 msgstr "Firefox, Chromium, Chrome, Opera, Epiphany, Midori"
 
-#: Core/SnapshotRepo.vala:623
+#: Core/SnapshotRepo.vala:649
 msgid "First snapshot requires:"
 msgstr "Pirmoji momentinė kopija reikalauja:"
 
-#: Core/Main.vala:2836
+#: Core/Main.vala:2856
 msgid "Found existing pre-restore snapshot"
 msgstr "Rasta esama išankstinio atkūrimo momentinė kopija"
 
@@ -1089,35 +1145,36 @@ msgstr "Rasta esama išankstinio atkūrimo momentinė kopija"
 msgid "Free"
 msgstr "Laisva"
 
-#: Core/SnapshotRepo.vala:50 Core/SnapshotRepo.vala:118
+#: Core/SnapshotRepo.vala:73 Core/SnapshotRepo.vala:141
 msgid "Free space"
 msgstr "Laisva vieta"
 
-#: Console/AppConsole.vala:1040
+#: Console/AppConsole.vala:1042
 msgid "GRUB Device"
 msgstr "GRUB įrenginys"
 
-#: Gtk/RestoreDeviceBox.vala:512
+#: Gtk/RestoreDeviceBox.vala:511
 msgid "GRUB device not selected"
 msgstr "Nepasirinktas GRUB įrenginys"
 
-#: Console/AppConsole.vala:1045
+#: Console/AppConsole.vala:1047
 msgid "GRUB will NOT be reinstalled"
 msgstr "GRUB NEBUS įdiegta iš naujo"
 
-#: Core/Main.vala:2270
+#: Core/Main.vala:2287
 msgid "Generating initramfs..."
 msgstr "Kuriama initramfs..."
 
-#: Console/AppConsole.vala:372
+#: Console/AppConsole.vala:374
 msgid "Global"
 msgstr "Visuotiniai"
 
-#: Gtk/RestoreBox.vala:134 Gtk/BackupBox.vala:97
+#: Gtk/RestoreBox.vala:135 Gtk/BackupBox.vala:97 Gtk/RsyncLogBox.vala:393
+#, c-format
 msgid "Group"
 msgstr "Grupė"
 
-#: Gtk/ExcludeMessageWindow.vala:128
+#: Gtk/ExcludeMessageWindow.vala:129
 msgid ""
 "Hidden files and folders are included by default since they contain user-"
 "specific configuration files."
@@ -1125,15 +1182,15 @@ msgstr ""
 "Paslėpti failai ir aplankai yra įtraukiami pagal numatymą, kadangi juose yra "
 "tam tikri naudotojo konfigūracijos failai."
 
-#: Gtk/DeleteWindow.vala:175
+#: Gtk/DeleteWindow.vala:176
 msgid "Hide"
 msgstr "Slėpti"
 
-#: Console/AppConsole.vala:379
+#: Console/AppConsole.vala:381
 msgid "Hide rsync output"
 msgstr "Slėpti rsync išvestį"
 
-#: Gtk/DeleteWindow.vala:176
+#: Gtk/DeleteWindow.vala:177
 msgid "Hide this window (files will be deleted in background)"
 msgstr "Slėpti šį langą (failai bus ištrinti fone)"
 
@@ -1141,19 +1198,19 @@ msgstr "Slėpti šį langą (failai bus ištrinti fone)"
 msgid "Home"
 msgstr "Namai"
 
-#: Gtk/ExcludeMessageWindow.vala:115
+#: Gtk/ExcludeMessageWindow.vala:116
 msgid "Home Directory"
 msgstr "Namų katalogas"
 
-#: Gtk/ScheduleBox.vala:115 Gtk/SnapshotListBox.vala:279
+#: Gtk/ScheduleBox.vala:116 Gtk/SnapshotListBox.vala:279
 msgid "Hourly"
 msgstr "Kas valandą"
 
-#: Core/Main.vala:1007
+#: Core/Main.vala:1009
 msgid "Hourly snapshot failed!"
 msgstr "Kasvalandinė momentinė kopija patyrė nesėkmę!"
 
-#: Core/Main.vala:988
+#: Core/Main.vala:990
 msgid "Hourly snapshots are enabled"
 msgstr "Kasvalandinės momentinės kopijos yra įjungtos"
 
@@ -1161,7 +1218,7 @@ msgstr "Kasvalandinės momentinės kopijos yra įjungtos"
 msgid "Icon Themes & Utilities"
 msgstr ""
 
-#: Gtk/RestoreFinishBox.vala:86
+#: Gtk/RestoreFinishBox.vala:102
 msgid ""
 "If the restored system fails to boot, then boot from the Live CD/USB, "
 "install Timeshift, and try restoring another snapshot."
@@ -1169,13 +1226,13 @@ msgstr ""
 "Jeigu atkurta sistema nepasileis, tuomet paleiskite Tiesioginį (angl. Live) "
 "CD/USB, įdiekite Timeshift ir pabandykite atkurti kitą momentinę kopiją."
 
-#: Core/Main.vala:2145
+#: Core/Main.vala:2151
 msgid ""
 "If these terms are not acceptable to you, please do not proceed beyond this "
 "point!"
 msgstr "Jeigu šios sąlygos nėra jums priimtinos, tuomet toliau nebetęskite!"
 
-#: Gtk/ExcludeBox.vala:52
+#: Gtk/ExcludeBox.vala:53
 msgid "Include / Exclude Patterns"
 msgstr "Įtraukimo / Išskyrimo šablonai"
 
@@ -1193,20 +1250,20 @@ msgstr "Išskirti programas"
 msgid "Include Hidden"
 msgstr "Įtraukti paslėptus elementus"
 
-#: Gtk/ExcludeBox.vala:262
+#: Gtk/ExcludeBox.vala:265
 msgid "Info"
 msgstr "Informacija"
 
-#: Core/Main.vala:1968
+#: Core/Main.vala:1972
 msgid "Invalid Snapshot"
 msgstr "Neteisinga momentinė kopija"
 
-#: Console/AppConsole.vala:249
+#: Console/AppConsole.vala:251
 #, c-format
 msgid "Invalid command line arguments"
 msgstr "Neteisingi komandų eilutės argumentai"
 
-#: Gtk/MainWindow.vala:799
+#: Gtk/MainWindow.vala:814
 msgid "Invalid snapshot"
 msgstr "Neteisinga momentinė kopija"
 
@@ -1215,15 +1272,15 @@ msgid "Issue Tracker ~ Report Issues, Request Features, Ask Questions"
 msgstr ""
 "Klaidų seklys ~ Pranešti apie klaidas, paprašyti ypatybių, užduoti klausimus"
 
-#: Gtk/ExcludeBox.vala:278
+#: Gtk/ExcludeBox.vala:281
 msgid "Items Not Selected"
 msgstr "Elementai nepažymėti"
 
-#: Gtk/ScheduleBox.vala:268
+#: Gtk/ScheduleBox.vala:269
 msgid "Keep"
 msgstr "Palikti"
 
-#: Gtk/RestoreExcludeBox.vala:137
+#: Gtk/RestoreExcludeBox.vala:112
 msgid ""
 "Keep configuration files for bittorrent clients like Deluge, Transmission, "
 "etc. If un-checked, previous configuration files will be restored from "
@@ -1233,7 +1290,7 @@ msgstr ""
 "konfigūracijos failus. Jei nepažymėta, tuomet ankstesni konfigūracijos "
 "failai bus atkurti iš momentinės kopijos."
 
-#: Gtk/RestoreExcludeBox.vala:110
+#: Gtk/RestoreExcludeBox.vala:85
 msgid ""
 "Keep configuration files for web browsers like Firefox and Chrome. If un-"
 "checked, previous configuration files will be restored from snapshot"
@@ -1250,86 +1307,86 @@ msgstr "Palikti šaknies įrenginyje"
 msgid "Keep this mount path on the root filesystem"
 msgstr "Palikti šį prijungimo kelią šaknies failų sistemoje"
 
-#: Gtk/SnapshotListBox.vala:483
+#: Gtk/SnapshotListBox.vala:486
 msgid "LIVE"
 msgstr "NAUDOJAMA"
 
-#: Console/AppConsole.vala:456 Console/AppConsole.vala:495
+#: Console/AppConsole.vala:458 Console/AppConsole.vala:497
 #: Gtk/BackupDeviceBox.vala:254 Utility/Device.vala:1817
 #, c-format
 msgid "Label"
 msgstr "Etiketė"
 
-#: Core/Main.vala:970
+#: Core/Main.vala:972
 #, c-format
 msgid "Last boot snapshot is %d hours old"
 msgstr "Paskutinė paleidimo momentinė kopija yra %d valandų senumo"
 
-#: Core/Main.vala:965
+#: Core/Main.vala:967
 msgid "Last boot snapshot is older than system start time"
 msgstr ""
 "Paskutinė paleidimo momentinė kopija yra senesnė nei sistemos paleidimo "
 "laikas"
 
-#: Core/Main.vala:961
+#: Core/Main.vala:963
 msgid "Last boot snapshot not found"
 msgstr "Paskutinė paleidimo momentinė kopija nerasta"
 
-#: Core/Main.vala:1030
+#: Core/Main.vala:1032
 #, c-format
 msgid "Last daily snapshot is %d hours old"
 msgstr "Paskutinė kasdienė momentinė kopija yra %d valandų senumo"
 
-#: Core/Main.vala:1025
+#: Core/Main.vala:1027
 msgid "Last daily snapshot is more than 1 day old"
 msgstr "Paskutinė kasdienė momentinė kopija yra daugiau nei 1 dienos senumo"
 
-#: Core/Main.vala:1021
+#: Core/Main.vala:1023
 msgid "Last daily snapshot not found"
 msgstr "Paskutinė kasdienė momentinė kopija nerasta"
 
-#: Core/Main.vala:1000
+#: Core/Main.vala:1002
 #, c-format
 msgid "Last hourly snapshot is %d minutes old"
 msgstr "Paskutinė kasvalandinė momentinė kopija yra %d minučių senumo"
 
-#: Core/Main.vala:995
+#: Core/Main.vala:997
 msgid "Last hourly snapshot is more than 1 hour old"
 msgstr ""
 "Paskutinė kasvalandinė momentinė kopija yra daugiau nei 1 valandos senumo"
 
-#: Core/Main.vala:991
+#: Core/Main.vala:993
 msgid "Last hourly snapshot not found"
 msgstr "Paskutinė kasvalandinė momentinė kopija nerasta"
 
-#: Core/Main.vala:1090
+#: Core/Main.vala:1092
 #, c-format
 msgid "Last monthly snapshot is %d days old"
 msgstr "Paskutinė kasmėnesinė momentinė kopija yra %d dienų senumo"
 
-#: Core/Main.vala:1085
+#: Core/Main.vala:1087
 msgid "Last monthly snapshot is more than 1 month old"
 msgstr ""
 "Paskutinė kasmėnesinė momentinė kopija yra daugiau nei 1 mėnesio senumo"
 
-#: Core/Main.vala:1081
+#: Core/Main.vala:1083
 msgid "Last monthly snapshot not found"
 msgstr "Paskutinė kasmėnesinė momentinė kopija nerasta"
 
-#: Core/Main.vala:1060
+#: Core/Main.vala:1062
 #, c-format
 msgid "Last weekly snapshot is %d days old"
 msgstr "Paskutinė savaitinė momentinė kopija yra %d dienų senumo"
 
-#: Core/Main.vala:1055
+#: Core/Main.vala:1057
 msgid "Last weekly snapshot is more than 1 week old"
 msgstr "Paskutinė savaitinė momentinė kopija yra daugiau nei 1 savaitės senumo"
 
-#: Core/Main.vala:1051
+#: Core/Main.vala:1053
 msgid "Last weekly snapshot not found"
 msgstr "Paskutinė savaitinė momentinė kopija nerasta"
 
-#: Gtk/MainWindow.vala:1019
+#: Gtk/MainWindow.vala:1038
 #, c-format
 msgid "Latest snapshot"
 msgstr "Paskiausia momentinė kopija"
@@ -1338,62 +1395,58 @@ msgstr "Paskiausia momentinė kopija"
 msgid "License"
 msgstr ""
 
-#: Core/Main.vala:1304
+#: Core/Main.vala:1306
 #, c-format
 msgid "Linking from snapshot"
 msgstr "Susiejimas iš momentinės kopijos"
 
-#: Console/AppConsole.vala:350
+#: Console/AppConsole.vala:352
 msgid "List"
 msgstr "Sąrašas"
 
-#: Console/AppConsole.vala:352
+#: Console/AppConsole.vala:354
 msgid "List devices"
 msgstr "Išvardyti įrenginius"
 
-#: Console/AppConsole.vala:351
+#: Console/AppConsole.vala:353
 msgid "List snapshots"
 msgstr "Išvardyti momentines kopijas"
 
-#: Gtk/MainWindow.vala:970
+#: Gtk/MainWindow.vala:989
 msgid "Live USB Mode (Restore Only)"
 msgstr "Paleidimo USB veiksena (Tik atkūrimas)"
 
-#: Gtk/SetupWizardWindow.vala:99 Gtk/BackupWindow.vala:84
+#: Gtk/SetupWizardWindow.vala:100 Gtk/BackupWindow.vala:84
 #: Gtk/SettingsWindow.vala:100
 msgid "Location"
 msgstr "Vieta"
 
-#: Gtk/RsyncLogWindow.vala:72
-msgid "Log Viewer"
-msgstr "Žurnalų žiūryklė"
-
-#: Gtk/MainWindow.vala:451
+#: Gtk/MainWindow.vala:449
 msgid "Main window closed by user"
 msgstr "Pagrindinis langas užvertas naudotojo"
 
-#: Gtk/SnapshotListBox.vala:308
+#: Gtk/SnapshotListBox.vala:309
 msgid "Mark for Deletion"
 msgstr "Žymėti ištrynimui"
 
-#: Gtk/MainWindow.vala:627
+#: Gtk/MainWindow.vala:631
 msgid "Marked for deletion"
 msgstr "Pažymėta ištrynimui"
 
-#: Core/SnapshotRepo.vala:667 Core/SnapshotRepo.vala:704
+#: Core/SnapshotRepo.vala:693 Core/SnapshotRepo.vala:730
 msgid "Maximum backups exceeded for backup level"
 msgstr ""
 "Atsarginės kopijos lygmeniui viršytas didžiausias atsarginių kopijų skaičius"
 
-#: Gtk/MainWindow.vala:206
+#: Gtk/MainWindow.vala:208
 msgid "Menu"
 msgstr "Meniu"
 
-#: Core/Main.vala:230
+#: Core/Main.vala:232
 msgid "Missing Dependencies"
 msgstr "Trūkstamos priklausomybės"
 
-#: Core/SnapshotRepo.vala:645
+#: Core/SnapshotRepo.vala:671
 #, c-format
 msgid "Mode"
 msgstr "Veiksena"
@@ -1403,37 +1456,37 @@ msgstr "Veiksena"
 msgid "Model"
 msgstr "Modelis"
 
-#: Gtk/ScheduleBox.vala:61 Gtk/SnapshotListBox.vala:282
+#: Gtk/ScheduleBox.vala:62 Gtk/SnapshotListBox.vala:282
 msgid "Monthly"
 msgstr "Kas mėnesį"
 
-#: Core/Main.vala:1078
+#: Core/Main.vala:1080
 msgid "Monthly snapshot are enabled"
 msgstr "Kasmėnesinės momentinės kopijos yra įjungtos"
 
-#: Core/Main.vala:1097
+#: Core/Main.vala:1099
 msgid "Monthly snapshot failed!"
 msgstr "Kasmėnesinė momentinė kopija patyrė nesėkmę!"
 
-#: Core/Main.vala:2053 Core/Main.vala:2082
+#: Core/Main.vala:2059 Core/Main.vala:2088
 msgid "Mount"
 msgstr "Prijungti"
 
-#: Core/Main.vala:2910
+#: Core/Main.vala:2930
 msgid "Moved system subvolume to snapshot directory"
 msgstr "Sistemos patomis perkeltas į momentinės kopijos katalogą"
 
-#: Gtk/MainWindow.vala:777
+#: Gtk/MainWindow.vala:790
 msgid "Multiple snapshots selected"
 msgstr "Pasirinktos kelios momentinės kopijos"
 
-#: Console/AppConsole.vala:423 Gtk/BackupDeviceBox.vala:235
-#: Gtk/RsyncLogWindow.vala:281
+#: Console/AppConsole.vala:425 Gtk/BackupDeviceBox.vala:235
+#: Gtk/RsyncLogBox.vala:485
 msgid "Name"
 msgstr "Pavadinimas"
 
-#: Gtk/SetupWizardWindow.vala:185 Gtk/RestoreWindow.vala:168
-#: Gtk/BackupWindow.vala:156 Gtk/DeleteWindow.vala:159
+#: Gtk/SetupWizardWindow.vala:187 Gtk/RestoreWindow.vala:185
+#: Gtk/BackupWindow.vala:158 Gtk/DeleteWindow.vala:160
 msgid "Next"
 msgstr "Kitas"
 
@@ -1441,69 +1494,69 @@ msgstr "Kitas"
 msgid "No"
 msgstr "Ne"
 
-#: Gtk/RestoreBox.vala:121 Gtk/BackupBox.vala:84
+#: Gtk/RestoreBox.vala:122 Gtk/BackupBox.vala:84
 msgid "No Change"
 msgstr "Be pakeitimų"
 
-#: Gtk/MainWindow.vala:604 Gtk/DeleteWindow.vala:331
+#: Gtk/MainWindow.vala:605 Gtk/DeleteWindow.vala:339
 msgid "No Snapshots Selected"
 msgstr "Nepasirinktos jokios momentinės kopijos"
 
-#: Gtk/MainWindow.vala:1043
+#: Gtk/MainWindow.vala:1062
 msgid "No snapshots available"
 msgstr "Nėra prieinamų momentinių kopijų"
 
-#: Core/SnapshotRepo.vala:854 Console/AppConsole.vala:318
-#: Gtk/MainWindow.vala:987
+#: Core/SnapshotRepo.vala:880 Console/AppConsole.vala:320
+#: Gtk/MainWindow.vala:1006
 msgid "No snapshots found"
 msgstr "Nerasta jokių momentinių kopijų"
 
-#: Console/AppConsole.vala:738
+#: Console/AppConsole.vala:740
 msgid "No snapshots found on device"
 msgstr "Įrenginyje nerasta jokių momentinių kopijų"
 
-#: Gtk/MainWindow.vala:545
+#: Gtk/MainWindow.vala:543
 msgid "No snapshots on device"
 msgstr "Įrenginyje nėra momentinių kopijų"
 
-#: Core/SnapshotRepo.vala:621
+#: Core/SnapshotRepo.vala:647
 msgid "No snapshots on this device"
 msgstr "Šiame įrenginyje nėra momentinių kopijų"
 
-#: Gtk/MainWindow.vala:770
+#: Gtk/MainWindow.vala:783
 msgid "No snapshots selected"
 msgstr "Nepasirinktos jokios momentinės kopijos"
 
-#: Gtk/MainWindow.vala:1020 Gtk/MainWindow.vala:1022
+#: Gtk/MainWindow.vala:1039 Gtk/MainWindow.vala:1041
 msgid "None"
 msgstr "Nėra"
 
-#: Core/SnapshotRepo.vala:639
+#: Core/SnapshotRepo.vala:665
 msgid "Not Selected"
 msgstr "Nepasirinkta"
 
-#: Core/Main.vala:371
+#: Core/Main.vala:376
 msgid "Not Supported"
 msgstr "Nepalaikoma"
 
-#: Core/SnapshotRepo.vala:585 Core/SnapshotRepo.vala:612
+#: Core/SnapshotRepo.vala:611 Core/SnapshotRepo.vala:638
 msgid "Not enough disk space"
 msgstr "Trūksta vietos diske"
 
-#: Console/AppConsole.vala:395 Gtk/FinishBox.vala:54
+#: Console/AppConsole.vala:397 Gtk/FinishBox.vala:55
 msgid "Notes"
 msgstr "Pastabos"
 
-#: Core/Main.vala:1107
+#: Core/Main.vala:1109
 msgid "Nothing to do!"
 msgstr "Nėra ką atlikti!"
 
-#: Console/AppConsole.vala:421 Console/AppConsole.vala:450
-#: Console/AppConsole.vala:489 Console/AppConsole.vala:537
+#: Console/AppConsole.vala:423 Console/AppConsole.vala:452
+#: Console/AppConsole.vala:491 Console/AppConsole.vala:539
 msgid "Num"
 msgstr "Nr."
 
-#: Gtk/ScheduleBox.vala:267
+#: Gtk/ScheduleBox.vala:268
 msgid ""
 "Number of snapshots to keep.\n"
 "Older snapshots will be removed once this limit is exceeded."
@@ -1511,13 +1564,13 @@ msgstr ""
 "Saugomų momentinių kopijų skaičius.\n"
 "Viršijus šią ribą, senesnės momentinės kopijos bus pašalintos."
 
-#: Gtk/ExcludeListSummaryWindow.vala:85 Utility/GtkHelper.vala:121
+#: Gtk/ExcludeListSummaryWindow.vala:84 Utility/GtkHelper.vala:121
 #: Utility/Gtk/CustomMessageDialog.vala:167
 #: Utility/Gtk/CustomMessageDialog.vala:171
 msgid "OK"
 msgstr "Gerai"
 
-#: Gtk/SnapshotBackendBox.vala:173
+#: Gtk/SnapshotBackendBox.vala:174
 msgid ""
 "OS must be installed on a BTRFS partition with Ubuntu-type subvolume layout "
 "(@ and @home subvolumes). Other layouts are not supported."
@@ -1525,11 +1578,11 @@ msgstr ""
 "Operacinė sistema privalo būti įdiegta BTRFS skaidinyje su Ubuntu tipo "
 "patomių išdėstymu (@ ir @home patomiai). Kiti išdėstymai yra nepalaikomi."
 
-#: Core/Main.vala:4102
+#: Core/Main.vala:4139
 msgid "Older log files removed"
 msgstr "Senesni žurnalų failai pašalinti"
 
-#: Gtk/MainWindow.vala:1021
+#: Gtk/MainWindow.vala:1040
 msgid "Oldest snapshot"
 msgstr "Seniausia momentinė kopija"
 
@@ -1537,17 +1590,17 @@ msgstr "Seniausia momentinė kopija"
 msgid "On demand (manual)"
 msgstr ""
 
-#: Core/Main.vala:369 Core/Main.vala:3361 Gtk/RestoreDeviceBox.vala:526
+#: Core/Main.vala:374 Core/Main.vala:3381 Gtk/RestoreDeviceBox.vala:525
 msgid ""
 "Only ubuntu-type layouts with @ and @home subvolumes are currently supported."
 msgstr ""
 "Šiuo metu yra palaikomi tik Ubuntu tipo išdėstymai su @ ir @home patomiais."
 
-#: Gtk/MainWindow.vala:207
+#: Gtk/MainWindow.vala:209
 msgid "Open Menu"
 msgstr "Atverti meniu"
 
-#: Core/Main.vala:3145
+#: Core/Main.vala:3165
 msgid ""
 "Option --snapshot-device should not be specified for creating snapshots in "
 "BTRFS mode"
@@ -1555,15 +1608,16 @@ msgstr ""
 "Parametras --snapshot-device neturėtų būti nurodomas momentinių kopijų "
 "kūrimui BTRFS veiksenoje"
 
-#: Console/AppConsole.vala:348 Gtk/AppGtk.vala:114
+#: Console/AppConsole.vala:350 Gtk/AppGtk.vala:114
 msgid "Options"
 msgstr "Parametrai"
 
-#: Gtk/RestoreExcludeBox.vala:143
+#: Gtk/RestoreExcludeBox.vala:118
 msgid "Other applications (next page)"
 msgstr "Kitos programos (kitas puslapis)"
 
-#: Gtk/RestoreBox.vala:133 Gtk/BackupBox.vala:96
+#: Gtk/RestoreBox.vala:134 Gtk/BackupBox.vala:96 Gtk/RsyncLogBox.vala:391
+#, c-format
 msgid "Owner"
 msgstr "Savininkas"
 
@@ -1572,37 +1626,37 @@ msgstr "Savininkas"
 msgid "Parent Device"
 msgstr "Pirminis įrenginys"
 
-#: Core/Main.vala:1378 Core/Main.vala:2391 Core/Main.vala:2470
-#: Gtk/RsyncLogWindow.vala:118
+#: Core/Main.vala:2408 Core/Main.vala:2499 Gtk/RsyncLogBox.vala:215
 msgid "Parsing log file..."
 msgstr "Nagrinėjamas žurnalo failas..."
 
-#: Gtk/RestoreDeviceBox.vala:525
+#: Gtk/RestoreDeviceBox.vala:524
 msgid "Partition has an unsupported subvolume layout."
 msgstr "Skaidinyje yra nepalaikomas patomių išdėstymas."
 
-#: Core/SnapshotRepo.vala:644 Gtk/RestoreDeviceBox.vala:94
+#: Core/SnapshotRepo.vala:670 Gtk/RestoreDeviceBox.vala:93
 #, c-format
 msgid "Path"
 msgstr "Kelias"
 
-#: Gtk/ExcludeBox.vala:158
+#: Gtk/ExcludeBox.vala:160
 msgid "Pattern"
 msgstr "Šablonas"
 
-#: Gtk/RestoreBox.vala:132 Gtk/BackupBox.vala:95
+#: Gtk/RestoreBox.vala:133 Gtk/BackupBox.vala:95 Gtk/RsyncLogBox.vala:389
+#, c-format
 msgid "Permissions"
 msgstr "Leidimai"
 
-#: Core/Main.vala:249
+#: Core/Main.vala:251
 msgid "Please check if you have multiple windows open."
 msgstr "Patikrinkite ar nesatę atvėrę kelių langų."
 
-#: Core/Main.vala:2177
+#: Core/Main.vala:2183
 msgid "Please do not interrupt the restore process!"
 msgstr "Prašome nepertraukti atkūrimo proceso!"
 
-#: Core/Main.vala:341
+#: Core/Main.vala:345
 msgid "Please install required packages and try running TimeShift again"
 msgstr "Įdiekite reikiamus paketus ir pabandykite vėl paleisti TimeShift"
 
@@ -1612,29 +1666,29 @@ msgstr ""
 "Prašome iš naujo paleisti programą administratoriaus teisėmis (naudojant "
 "\"sudo\" ar \"su\")"
 
-#: Console/AppConsole.vala:101
+#: Console/AppConsole.vala:103
 msgid "Please run the application as admin (using 'sudo' or 'su')"
 msgstr ""
 "Prašome paleisti programą administratoriaus teisėmis (naudojant \"sudo\" ar "
 "\"su\")"
 
-#: Core/Main.vala:2127
+#: Core/Main.vala:2133
 msgid "Please save your work and close all applications."
 msgstr "Įrašykite visą savo darbą ir užverkite visas programas."
 
-#: Gtk/MainWindow.vala:673
+#: Gtk/MainWindow.vala:685
 msgid "Please select a snapshot to view the log!"
 msgstr "Norėdami peržiūrėti žurnalą, pasirinkite momentinę kopiją!"
 
-#: Gtk/RestoreDeviceBox.vala:513
+#: Gtk/RestoreDeviceBox.vala:512
 msgid "Please select the GRUB device"
 msgstr "Pasirinkite GRUB įrenginį"
 
-#: Core/Main.vala:245
+#: Core/Main.vala:247
 msgid "Please wait a few minutes and try again."
 msgstr "Palaukite kelias minutes ir bandykite dar kartą."
 
-#: Gtk/MainWindow.vala:741
+#: Gtk/MainWindow.vala:752
 msgid "Please wait for snapshots to be deleted."
 msgstr "Palaukite, kol bus ištrintos momentinės kopijos."
 
@@ -1642,17 +1696,17 @@ msgstr "Palaukite, kol bus ištrintos momentinės kopijos."
 msgid "Please wait..."
 msgstr ""
 
-#: Gtk/RsyncLogWindow.vala:182
+#: Gtk/RsyncLogBox.vala:181
 msgid "Populating list..."
 msgstr "Užpildomas sąrašas..."
 
-#: Core/Main.vala:1521 Gtk/RestoreBox.vala:87 Gtk/BackupBox.vala:111
-#: Gtk/DeleteBox.vala:69 Gtk/RsyncLogWindow.vala:128
+#: Core/Main.vala:1525 Gtk/RestoreBox.vala:88 Gtk/BackupBox.vala:114
+#: Gtk/DeleteBox.vala:68 Gtk/RsyncLogBox.vala:225
 msgid "Preparing..."
 msgstr "Ruošiamasi..."
 
-#: Gtk/SetupWizardWindow.vala:177 Gtk/RestoreWindow.vala:160
-#: Gtk/BackupWindow.vala:148 Gtk/DeleteWindow.vala:151
+#: Gtk/SetupWizardWindow.vala:179 Gtk/RestoreWindow.vala:177
+#: Gtk/BackupWindow.vala:150 Gtk/DeleteWindow.vala:152
 msgid "Previous"
 msgstr "Ankstesnis"
 
@@ -1660,23 +1714,23 @@ msgstr "Ankstesnis"
 msgid "Print debug information"
 msgstr "Išvesti derinimo informaciją"
 
-#: Core/Main.vala:3723
+#: Core/Main.vala:3743
 msgid "Query completed"
 msgstr "Užklausa užbaigta"
 
-#: Core/Main.vala:3706
+#: Core/Main.vala:3726
 msgid "Querying subvolume info..."
 msgstr "Užklausiama patomio informacija..."
 
-#: Gtk/SnapshotBackendBox.vala:78
+#: Gtk/SnapshotBackendBox.vala:77
 msgid "RSYNC"
 msgstr "RSYNC"
 
-#: Gtk/SnapshotBackendBox.vala:178
+#: Gtk/SnapshotBackendBox.vala:179
 msgid "RSYNC Snapshots"
 msgstr "RSYNC momentinės kopijos"
 
-#: Gtk/BootOptionsBox.vala:138
+#: Gtk/BootOptionsBox.vala:137
 msgid ""
 "Re-generates initramfs for all installed kernels. This is generally not "
 "needed. Select this only if the restored system fails to boot."
@@ -1684,52 +1738,52 @@ msgstr ""
 "Visiems įdiegtiems branduoliams iš naujo sukuria initramfs. To, paprastai, "
 "nereikia. Pažymėkite tai tik tuo atveju, jei atkurta sistema nepasileidžia."
 
-#: Console/AppConsole.vala:980
+#: Console/AppConsole.vala:982
 #, c-format
 msgid "Re-install GRUB2 bootloader?"
 msgstr "Įdiegti iš naujo GRUB2 paleidyklę?"
 
-#: Core/Main.vala:2229
+#: Core/Main.vala:2246
 msgid "Re-installing GRUB2 bootloader..."
 msgstr "Iš naujo įdiegiama GRUB2 paleidyklė..."
 
-#: Gtk/BootOptionsBox.vala:121
+#: Gtk/BootOptionsBox.vala:120
 msgid "Re-installs the GRUB2 bootloader on the selected device."
 msgstr "Iš naujo įdiegia GRUB2 paleidyklę pasirinktame įrenginyje."
 
-#: Gtk/RsyncLogWindow.vala:175
+#: Gtk/RsyncLogBox.vala:174
 #, c-format
 msgid "Read %'d of %'d lines..."
 msgstr "Perskaityta %'d iš %'d eilučių..."
 
-#: Core/Main.vala:2322
+#: Core/Main.vala:2339
 msgid "Rebooting system..."
 msgstr "Iš naujo paleidžiama sistema..."
 
-#: Gtk/RestoreExcludeBox.vala:86 Gtk/RestoreExcludeBox.vala:116
+#: Gtk/RestoreExcludeBox.vala:61 Gtk/RestoreExcludeBox.vala:91
 #, c-format
 msgid "Recommended"
 msgstr "Rekomenduojama"
 
-#: Gtk/RestoreDeviceBox.vala:71 Gtk/BackupDeviceBox.vala:66
+#: Gtk/RestoreDeviceBox.vala:70 Gtk/BackupDeviceBox.vala:65
 msgid "Refresh"
 msgstr "Įkelti iš naujo"
 
-#: Gtk/MainWindow.vala:356
+#: Gtk/MainWindow.vala:359
 msgid "Refresh Snapshot List"
 msgstr "Iš naujo įkelti momentinių kopijų sąrašą"
 
-#: Gtk/BackupDeviceBox.vala:107
+#: Gtk/BackupDeviceBox.vala:106
 #, fuzzy
 msgid "Remote and network locations are not supported."
 msgstr "Kitos programos (kitas puslapis)"
 
-#: Gtk/ExcludeBox.vala:257
+#: Gtk/ExcludeBox.vala:260
 msgid "Remove"
 msgstr "Šalinti"
 
-#: Core/Snapshot.vala:426 Core/SnapshotRepo.vala:931 Core/Main.vala:1559
-#: Core/Main.vala:1570 Core/Main.vala:4098
+#: Core/Snapshot.vala:482 Core/SnapshotRepo.vala:957 Core/Main.vala:1563
+#: Core/Main.vala:1574 Core/Main.vala:4135
 #, c-format
 msgid "Removed"
 msgstr "Pašalinta"
@@ -1738,83 +1792,83 @@ msgstr "Pašalinta"
 msgid "Removed cron task"
 msgstr "Pašalinta cron užduotis"
 
-#: Core/Main.vala:3511
+#: Core/Main.vala:3531
 #, c-format
 msgid "Removed mount directory: '%s'"
 msgstr "Pašalintas prijungimo katalogas: \"%s\""
 
-#: Core/Snapshot.vala:469
+#: Core/Snapshot.vala:528
 msgid "Removed snapshot"
 msgstr "Pašalinta momentinė kopija"
 
-#: Core/Snapshot.vala:401
+#: Core/Snapshot.vala:457
 msgid "Removing"
 msgstr "Šalinama"
 
-#: Core/Snapshot.vala:438
+#: Core/Snapshot.vala:494
 msgid "Removing snapshot"
 msgstr "Šalinama momentinė kopija"
 
-#: Core/SnapshotRepo.vala:787 Core/SnapshotRepo.vala:806
-#: Core/SnapshotRepo.vala:824 Core/SnapshotRepo.vala:838
+#: Core/SnapshotRepo.vala:813 Core/SnapshotRepo.vala:832
+#: Core/SnapshotRepo.vala:850 Core/SnapshotRepo.vala:864
 #, c-format
 msgid "Removing snapshots"
 msgstr "Šalinamos momentinės kopijos"
 
-#: Console/AppConsole.vala:360 Gtk/MainWindow.vala:149
-#: Gtk/RestoreWindow.vala:101 Gtk/RestoreFinishBox.vala:64
+#: Console/AppConsole.vala:362 Gtk/MainWindow.vala:151
+#: Gtk/RestoreWindow.vala:116 Gtk/RestoreFinishBox.vala:71
 msgid "Restore"
 msgstr "Atkurti"
 
-#: Gtk/RestoreWindow.vala:81
+#: Gtk/RestoreWindow.vala:86
 msgid "Restore Device"
 msgstr "Atkurti įrenginį"
 
-#: Gtk/RestoreWindow.vala:86
+#: Gtk/RestoreWindow.vala:91
 msgid "Restore Exclude"
 msgstr "Atkurti išskyrimus"
 
-#: Gtk/RestoreWindow.vala:63
+#: Gtk/RestoreWindow.vala:68
 msgid "Restore Snapshot"
 msgstr "Atkurti momentinę kopiją"
 
-#: Core/Main.vala:2712 Core/Main.vala:2795
+#: Core/Main.vala:2743 Core/Main.vala:2815
 msgid "Restore completed"
 msgstr "Atkūrimas užbaigtas"
 
-#: Gtk/MainWindow.vala:150
+#: Gtk/MainWindow.vala:152
 msgid "Restore selected snapshot"
 msgstr "Atkurti pasirinktą momentinę kopiją"
 
-#: Console/AppConsole.vala:361
+#: Console/AppConsole.vala:363
 msgid "Restore snapshot"
 msgstr "Atkurti momentinę kopiją"
 
-#: Gtk/RestoreFinishBox.vala:80
+#: Gtk/RestoreFinishBox.vala:96
 msgid "Restored subvolumes will become active after system is restarted."
 msgstr ""
 "Atkurti patomiai taps aktyvūs po to, kai sistema bus paleista iš naujo."
 
-#: Core/Main.vala:2790
+#: Core/Main.vala:2810
 msgid "Restored system subvolume"
 msgstr "Atkurtas sistemos patomis"
 
-#: Gtk/RestoreBox.vala:76
+#: Gtk/RestoreBox.vala:77 Gtk/RestoreBox.vala:190
 msgid "Restoring Snapshot..."
 msgstr "Atkuriama momentinė kopija..."
 
-#: Gtk/FinishBox.vala:84
+#: Gtk/FinishBox.vala:85
 msgid ""
 "Restoring a snapshot will replace system subvolumes, and system subvolumes "
 "currently in use will be preserved as a new snapshot. If required, this "
 "snapshot can be restored later to 'undo' the restore."
 msgstr "Momentinės kopijos atkūrimas pakeis sistemos patomius"
 
-#: Core/Main.vala:2684
+#: Core/Main.vala:2713
 msgid "Restoring snapshot..."
 msgstr "Atkuriama momentinė kopija..."
 
-#: Gtk/FinishBox.vala:87
+#: Gtk/FinishBox.vala:88
 msgid ""
 "Restoring snapshots only replaces system files and settings. Non-hidden "
 "files and directories in user home directories will not be touched. This "
@@ -1834,9 +1888,14 @@ msgstr ""
 msgid "Revision"
 msgstr "Poversijis"
 
-#: Gtk/RestoreDeviceBox.vala:451
+#: Gtk/RestoreDeviceBox.vala:452
 msgid "Root device not selected"
 msgstr "Nepasirinktas šaknies įrenginys"
+
+#: Gtk/RsyncLogWindow.vala:49
+#, fuzzy
+msgid "Rsync Log Viewer"
+msgstr "Žurnalų žiūryklė"
 
 #: Gtk/AppGtk.vala:119
 #, c-format
@@ -1845,15 +1904,15 @@ msgstr ""
 "Norėdami naudoti šio įrankio komandų eilutės versiją, paleiskite komandą "
 "\"timeshift\""
 
-#: Console/AppConsole.vala:380
+#: Console/AppConsole.vala:382
 msgid "Run in non-interactive mode"
 msgstr "Paleisti neinteraktyvioje veiksenoje"
 
-#: Core/Main.vala:181
+#: Core/Main.vala:183
 msgid "Running"
 msgstr "Vykdoma"
 
-#: Gtk/FinishBox.vala:94
+#: Gtk/FinishBox.vala:95
 msgid ""
 "Save snapshots to an external disk instead of the system disk to guard "
 "against drive failures."
@@ -1861,7 +1920,7 @@ msgstr ""
 "Norėdami apsisaugoti nuo disko nesėkmių, vietoj sistemos disko, įrašykite "
 "momentines kopijas į išorinį diską."
 
-#: Gtk/FinishBox.vala:96
+#: Gtk/FinishBox.vala:97
 msgid ""
 "Saving snapshots to a non-system disk allows you to format and re-install "
 "the OS on the system disk without losing snapshots stored on it. You can "
@@ -1873,32 +1932,32 @@ msgstr ""
 "momentinių kopijų. Jūs netgi galite įdiegti kitą Linux distribuciją, o "
 "vėliau, atkūrus momentinę kopiją, sugrąžinti ankstesnę distribuciją."
 
-#: Core/Main.vala:1245 Core/Main.vala:1397 Core/Main.vala:1399
+#: Core/Main.vala:1247 Core/Main.vala:1401 Core/Main.vala:1403
 msgid "Saving to device"
 msgstr "Įrašoma į įrenginį"
 
-#: Gtk/SetupWizardWindow.vala:104 Gtk/SettingsWindow.vala:103
+#: Gtk/SetupWizardWindow.vala:105 Gtk/SettingsWindow.vala:103
 msgid "Schedule"
 msgstr "Tvarkaraštis"
 
-#: Core/Main.vala:252
+#: Core/Main.vala:254
 msgid "Scheduled snapshot in progress..."
 msgstr "Vykdoma suplanuota momentinė kopija..."
 
-#: Core/Main.vala:1107 Gtk/ScheduleBox.vala:293 Gtk/MainWindow.vala:1037
+#: Core/Main.vala:1109 Gtk/ScheduleBox.vala:299 Gtk/MainWindow.vala:1056
 msgid "Scheduled snapshots are disabled"
 msgstr "Planinės momentinės kopijos yra išjungtos"
 
-#: Gtk/FinishBox.vala:77
+#: Gtk/FinishBox.vala:78
 msgid "Scheduled snapshots are disabled. It's recommended to enable it."
 msgstr ""
 "Planinės momentinės kopijos yra išjungtos. Yra rekomenduojama jas įjungti."
 
-#: Gtk/ScheduleBox.vala:288
+#: Gtk/ScheduleBox.vala:292
 msgid "Scheduled snapshots are enabled"
 msgstr "Planinės momentinės kopijos yra įjungtos"
 
-#: Gtk/FinishBox.vala:74
+#: Gtk/FinishBox.vala:75
 msgid ""
 "Scheduled snapshots are enabled. Snapshots will be created automatically for "
 "selected levels."
@@ -1906,16 +1965,16 @@ msgstr ""
 "Planinės momentinės kopijos yra įjungtos. Momentinės kopijos bus "
 "automatiškai kuriamos pažymėtiems lygmenims."
 
-#: Console/AppConsole.vala:868
+#: Console/AppConsole.vala:870
 #, c-format
 msgid "Select '%s' device (default = %s)"
 msgstr "Pasirinkite \"%s\" įrenginį (pagal numatymą = %s)"
 
-#: Core/SnapshotRepo.vala:549 Console/AppConsole.vala:687
+#: Core/SnapshotRepo.vala:575 Console/AppConsole.vala:689
 msgid "Select BTRFS system disk with root subvolume (@)"
 msgstr "Pasirinkite BTRFS sistemos diską su šaknies patomiu (@)"
 
-#: Console/AppConsole.vala:996
+#: Console/AppConsole.vala:998
 msgid "Select GRUB device"
 msgstr "Pasirinkite GRUB įrenginį"
 
@@ -1923,19 +1982,19 @@ msgstr "Pasirinkite GRUB įrenginį"
 msgid "Select Path"
 msgstr "Pasirinkite kelią"
 
-#: Gtk/MainWindow.vala:672
+#: Gtk/MainWindow.vala:684
 msgid "Select Snapshot"
 msgstr "Pasirinkite momentinę kopiją"
 
-#: Gtk/ScheduleBox.vala:54
+#: Gtk/ScheduleBox.vala:55
 msgid "Select Snapshot Levels"
 msgstr "Pasirinkite momentinės kopijos lygmenis"
 
-#: Gtk/BackupDeviceBox.vala:57
+#: Gtk/BackupDeviceBox.vala:56
 msgid "Select Snapshot Location"
 msgstr "Pasirinkite momentinės kopijos vietą"
 
-#: Gtk/SnapshotBackendBox.vala:63
+#: Gtk/SnapshotBackendBox.vala:62
 msgid "Select Snapshot Type"
 msgstr "Pasirinkite momentinės kopijos tipą"
 
@@ -1943,7 +2002,7 @@ msgstr "Pasirinkite momentinės kopijos tipą"
 msgid "Select Snapshots"
 msgstr "Pasirinkite momentines kopijas"
 
-#: Gtk/RestoreDeviceBox.vala:62
+#: Gtk/RestoreDeviceBox.vala:61
 msgid "Select Target Device"
 msgstr "Pasirinkite paskirties įrenginį"
 
@@ -1952,71 +2011,71 @@ msgstr "Pasirinkite paskirties įrenginį"
 msgid "Select a partition on this disk"
 msgstr "Pasirinkite skaidinį šiame diske"
 
-#: Gtk/MainWindow.vala:778
+#: Gtk/MainWindow.vala:791
 msgid "Select a single snapshot to restore"
 msgstr "Pasirinkite vieną momentinę kopiją, kurią atkurti"
 
-#: Gtk/RestoreDeviceBox.vala:480
+#: Gtk/RestoreDeviceBox.vala:481
 msgid "Select another device for root file system (/)"
 msgstr "Pasirinkite šaknies failų sistemai (/) kitą įrenginį"
 
-#: Core/SnapshotRepo.vala:588 Core/SnapshotRepo.vala:615
+#: Core/SnapshotRepo.vala:614 Core/SnapshotRepo.vala:641
 msgid "Select another device or free up some space"
 msgstr "Pasirinkite kitą įrenginį arba atlaisvinkite šiek tiek vietos"
 
-#: Gtk/MainWindow.vala:539 Gtk/MainWindow.vala:546
+#: Gtk/MainWindow.vala:537 Gtk/MainWindow.vala:544
 msgid "Select another device to delete snasphots"
 msgstr "Pasirinkite kitą įrenginį, kuriame ištrinti momentines kopijas"
 
-#: Gtk/MainWindow.vala:473
+#: Gtk/MainWindow.vala:471
 msgid "Select another device?"
 msgstr "Pasirinkti kitą įrenginį?"
 
-#: Gtk/RestoreExcludeBox.vala:82
+#: Gtk/RestoreExcludeBox.vala:57
 msgid "Select applications to exclude from restore"
 msgstr "Pasirinkite programas, kurias neįtraukti į atkūrimą"
 
-#: Console/AppConsole.vala:670
+#: Console/AppConsole.vala:672
 msgid "Select backup device"
 msgstr "Pasirinkite atsarginės kopijos įrenginį"
 
-#: Gtk/ExcludeBox.vala:429
+#: Gtk/ExcludeBox.vala:434
 msgid "Select directory"
 msgstr "Pasirinkite katalogą"
 
-#: Gtk/ExcludeBox.vala:409
+#: Gtk/ExcludeBox.vala:413
 msgid "Select file(s)"
 msgstr "Pasirinkite failą(-us)"
 
-#: Console/AppConsole.vala:744
+#: Console/AppConsole.vala:746
 msgid "Select snapshot"
 msgstr "Pasirinkite momentinę kopiją"
 
-#: Gtk/DeleteWindow.vala:332
+#: Gtk/DeleteWindow.vala:340
 msgid "Select snapshots to delete"
 msgstr "Pasirinkite momentines kopijas, kurias ištrinti"
 
-#: Gtk/RestoreDeviceBox.vala:452
+#: Gtk/RestoreDeviceBox.vala:453
 msgid "Select the device for root file system (/)"
 msgstr "Pasirinkite įrenginį šaknies failų sistemai (/)"
 
-#: Gtk/RestoreDeviceBox.vala:84
+#: Gtk/RestoreDeviceBox.vala:83
 msgid "Select the devices where files will be restored."
 msgstr "Pasirinkite įrenginius į kuriuos bus atkurti failai."
 
-#: Gtk/ScheduleBox.vala:294
+#: Gtk/ScheduleBox.vala:300
 msgid "Select the intervals for creating snapshots"
 msgstr "Pasirinkite momentinių kopijų kūrimo intervalus"
 
-#: Gtk/ExcludeBox.vala:279
+#: Gtk/ExcludeBox.vala:282
 msgid "Select the items to be removed from the list"
 msgstr "Pažymėkite elementus, kuriuos šalinti iš sąrašo"
 
-#: Core/SnapshotRepo.vala:509
+#: Core/SnapshotRepo.vala:535
 msgid "Select the snapshot device"
 msgstr "Pasirinkite momentinės kopijos įrenginį"
 
-#: Gtk/MainWindow.vala:771
+#: Gtk/MainWindow.vala:784
 msgid "Select the snapshot to restore"
 msgstr "Pasirinkite momentinę kopiją, kurią atkurti"
 
@@ -2024,19 +2083,19 @@ msgstr "Pasirinkite momentinę kopiją, kurią atkurti"
 msgid "Select the snapshots to be deleted"
 msgstr "Pasirinkite momentines kopijas, kurios bus ištrintos"
 
-#: Gtk/MainWindow.vala:605
+#: Gtk/MainWindow.vala:606
 msgid "Select the snapshots to mark for deletion"
 msgstr "Pasirinkite momentines kopijas, kurias pažymėti ištrynimui"
 
-#: Gtk/RestoreDeviceBox.vala:80
+#: Gtk/RestoreDeviceBox.vala:79
 msgid "Select the target devices where system will be cloned."
 msgstr "Pasirinkite paskirties įrenginius, kur bus klonuota sistema."
 
-#: Core/Main.vala:3173
+#: Core/Main.vala:3193
 msgid "Selected default snapshot device"
 msgstr "Pasirinktas numatytasis momentinės kopijos įrenginys"
 
-#: Core/Main.vala:3124 Core/Main.vala:3128
+#: Core/Main.vala:3144 Core/Main.vala:3148
 msgid "Selected default snapshot type"
 msgstr "Pasirinktas numatytasis momentinės kopijos tipas"
 
@@ -2048,24 +2107,24 @@ msgstr "Pasirinktame įrenginyje nėra BTRFS skaidinio"
 msgid "Selected device does not have Linux partition"
 msgstr "Pasirinktame įrenginyje nėra Linux skaidinio"
 
-#: Core/SnapshotRepo.vala:117
+#: Core/SnapshotRepo.vala:140
 msgid "Selected snapshot device"
 msgstr "Pasirinktas momentinės kopijos įrenginys"
 
-#: Core/SnapshotRepo.vala:548 Console/AppConsole.vala:686
+#: Core/SnapshotRepo.vala:574 Console/AppConsole.vala:688
 msgid "Selected snapshot device is not a system disk"
 msgstr "Pasirinktas momentinės kopijos įrenginys nėra sistemos diskas"
 
-#: Core/Main.vala:1969
+#: Core/Main.vala:1973
 msgid "Selected snapshot is marked for deletion"
 msgstr "Pasirinkta momentinė kopija yra pažymėta ištrynimui"
 
-#: Gtk/MainWindow.vala:800
+#: Gtk/MainWindow.vala:815
 msgid "Selected snapshot is marked for deletion and cannot be restored"
 msgstr ""
 "Pasirinkta momentinė kopija yra pažymėta ištrynimui ir negali būti atkurta"
 
-#: Core/SnapshotRepo.vala:43
+#: Core/SnapshotRepo.vala:66
 msgid "Selected snapshot path"
 msgstr "Pasirinktas momentinės kopijos kelias"
 
@@ -2082,55 +2141,55 @@ msgstr ""
 msgid "Serial"
 msgstr "Serijinis"
 
-#: Core/Main.vala:209
+#: Core/Main.vala:211
 msgid "Session log file"
 msgstr "Seanso žurnalo failas"
 
-#: Console/AppConsole.vala:357
+#: Console/AppConsole.vala:359
 msgid "Set snapshot description"
 msgstr "Nustatyti momentinės kopijos aprašą"
 
-#: Gtk/MainWindow.vala:179 Gtk/MainWindow.vala:180 Gtk/SettingsWindow.vala:55
+#: Gtk/MainWindow.vala:181 Gtk/MainWindow.vala:182 Gtk/SettingsWindow.vala:55
 msgid "Settings"
 msgstr "Nustatymai"
 
-#: Gtk/MainWindow.vala:190
+#: Gtk/MainWindow.vala:192
 msgid "Settings wizard"
 msgstr "Nustatymų vediklis"
 
-#: Gtk/FinishBox.vala:57
+#: Gtk/FinishBox.vala:58
 msgid "Setup Complete"
 msgstr "Sąranka užbaigta"
 
-#: Gtk/SetupWizardWindow.vala:62
+#: Gtk/SetupWizardWindow.vala:63
 msgid "Setup Wizard"
 msgstr "Sąrankos vediklis"
 
-#: Console/AppConsole.vala:377
+#: Console/AppConsole.vala:379
 msgid "Show additional debug messages"
 msgstr "Rodyti papildomus derinimo pranešimus"
 
-#: Console/AppConsole.vala:381 Gtk/AppGtk.vala:117
+#: Console/AppConsole.vala:383 Gtk/AppGtk.vala:117
 msgid "Show all options"
 msgstr "Rodyti visus parametrus"
 
-#: Gtk/RestoreExcludeBox.vala:146
+#: Gtk/RestoreExcludeBox.vala:121
 msgid "Show more applications to exclude on the next page"
 msgstr "Rodyti kitame puslapyje daugiau programų, kurias išskirti"
 
-#: Console/AppConsole.vala:378
+#: Console/AppConsole.vala:380
 msgid "Show rsync output (default)"
 msgstr "Rodyti rsync išvestį (pagal numatymą)"
 
-#: Console/AppConsole.vala:454 Console/AppConsole.vala:493
-#: Gtk/RestoreBox.vala:130 Gtk/BackupBox.vala:93 Gtk/SnapshotListBox.vala:174
-#: Gtk/BackupDeviceBox.vala:202 Gtk/RsyncLogWindow.vala:303
+#: Console/AppConsole.vala:456 Console/AppConsole.vala:495
+#: Gtk/RestoreBox.vala:131 Gtk/BackupBox.vala:93 Gtk/SnapshotListBox.vala:174
+#: Gtk/BackupDeviceBox.vala:202 Gtk/RsyncLogBox.vala:385
 #: Utility/Device.vala:1804 Utility/Device.vala:1819
 #, c-format
 msgid "Size"
 msgstr "Dydis"
 
-#: Gtk/SnapshotBackendBox.vala:171
+#: Gtk/SnapshotBackendBox.vala:172
 msgid ""
 "Size of BTRFS snapshots are initially zero. As system files gradually change "
 "with time, data gets written to new data blocks which take up disk space "
@@ -2142,17 +2201,17 @@ msgstr ""
 "duomenų blokus, kurie užima vietą diske (kopijavimas įrašant). Failai "
 "momentinėje kopijoje ir toliau nurodo į pradinius duomenų blokus."
 
-#: Console/AppConsole.vala:366
+#: Console/AppConsole.vala:368
 msgid "Skip GRUB2 reinstall"
 msgstr "Praleisti GRUB2 įdiegimą iš naujo"
 
-#: Core/SnapshotRepo.vala:670 Core/SnapshotRepo.vala:708 Core/Main.vala:1974
+#: Core/SnapshotRepo.vala:696 Core/SnapshotRepo.vala:734 Core/Main.vala:1978
 #: Gtk/SnapshotListBox.vala:95
 #, c-format
 msgid "Snapshot"
 msgstr "Momentinė kopija"
 
-#: Gtk/MainWindow.vala:556
+#: Gtk/MainWindow.vala:554
 #, c-format
 msgid ""
 "Snapshot '%s' is being used by the system and cannot be deleted. Restart the "
@@ -2170,37 +2229,37 @@ msgstr "Momentinė kopija sukurta"
 msgid "Snapshot Levels"
 msgstr "Pasirinkite momentinės kopijos lygmenis"
 
-#: Gtk/MainWindow.vala:740
+#: Gtk/MainWindow.vala:751
 msgid "Snapshot deletion in progress..."
 msgstr "Momentinės kopijos ištrynimas eigoje..."
 
-#: Core/SnapshotRepo.vala:426
+#: Core/SnapshotRepo.vala:452
 #, c-format
 msgid "Snapshot device"
 msgstr "Momentinės kopijos įrenginys"
 
-#: Core/SnapshotRepo.vala:515 Console/AppConsole.vala:660
+#: Core/SnapshotRepo.vala:541 Console/AppConsole.vala:662
 msgid "Snapshot device not available"
 msgstr "Momentinės kopijos įrenginys yra neprieinamas"
 
-#: Core/SnapshotRepo.vala:508 Console/AppConsole.vala:656
+#: Core/SnapshotRepo.vala:534 Console/AppConsole.vala:658
 msgid "Snapshot device not selected"
 msgstr "Nepasirinktas momentinės kopijos įrenginys"
 
-#: Core/SnapshotRepo.vala:430
+#: Core/SnapshotRepo.vala:456
 #, c-format
 msgid "Snapshot location"
 msgstr "Momentinės kopijos vieta"
 
-#: Core/Main.vala:1212
+#: Core/Main.vala:1214
 msgid "Snapshot saved successfully"
 msgstr "Momentinė kopija sėkmingai įrašyta"
 
-#: Core/Main.vala:1964
+#: Core/Main.vala:1968
 msgid "Snapshot to restore not specified!"
 msgstr "Nenurodyta momentinė kopiją, kurią atkurti!"
 
-#: Core/Main.vala:2799
+#: Core/Main.vala:2819
 msgid "Snapshot will become active after system is rebooted."
 msgstr "Momentinė kopija taps aktyvi po to, kai sistema bus paleista iš naujo."
 
@@ -2208,11 +2267,11 @@ msgstr "Momentinė kopija taps aktyvi po to, kai sistema bus paleista iš naujo.
 msgid "Snapshot(s) Deleted"
 msgstr "Momentinė kopija(-os) ištrinta"
 
-#: Gtk/MainWindow.vala:299 Gtk/DeleteWindow.vala:87
+#: Gtk/MainWindow.vala:302 Gtk/DeleteWindow.vala:87
 msgid "Snapshots"
 msgstr "Momentinės kopijos"
 
-#: Gtk/SnapshotBackendBox.vala:163
+#: Gtk/SnapshotBackendBox.vala:164
 msgid ""
 "Snapshots are created and restored instantly. Snapshot creation is an atomic "
 "transaction at the file system level."
@@ -2220,7 +2279,7 @@ msgstr ""
 "Momentinės kopijos yra sukuriamos ir atkuriamos akimirksniu. Momentinės "
 "kopijos kūrimas yra atominė operacija failų sistemos lygmenyje."
 
-#: Gtk/SnapshotBackendBox.vala:180
+#: Gtk/SnapshotBackendBox.vala:181
 msgid ""
 "Snapshots are created by creating copies of system files using rsync, and "
 "hard-linking unchanged files from previous snapshot."
@@ -2229,19 +2288,19 @@ msgstr ""
 "rsync ir nepakeistų failų patvariuosius saitus iš ankstesnės momentinės "
 "kopijos."
 
-#: Gtk/SnapshotBackendBox.vala:161
+#: Gtk/SnapshotBackendBox.vala:162
 msgid ""
 "Snapshots are created using the built-in features of the BTRFS file system."
 msgstr ""
 "Momentinės kopijos yra sukuriamos naudojant įtaisytas BTRFS failų sistemos "
 "ypatybes."
 
-#: Gtk/ScheduleBox.vala:150
+#: Gtk/ScheduleBox.vala:151
 #, fuzzy, c-format
 msgid "Snapshots are not scheduled at fixed times."
 msgstr "Nepasirinktas momentinės kopijos įrenginys"
 
-#: Gtk/SnapshotBackendBox.vala:167
+#: Gtk/SnapshotBackendBox.vala:168
 msgid ""
 "Snapshots are perfect, byte-for-byte copies of the system. Nothing is "
 "excluded."
@@ -2249,7 +2308,7 @@ msgstr ""
 "Momentinės kopijos yra baitas į baitą tobulos sistemos kopijos. Niekas "
 "neišskiriama."
 
-#: Gtk/SnapshotBackendBox.vala:165
+#: Gtk/SnapshotBackendBox.vala:166
 msgid ""
 "Snapshots are restored by replacing system subvolumes. Since files are never "
 "copied, deleted or overwritten, there is no risk of data loss. The existing "
@@ -2260,7 +2319,7 @@ msgstr ""
 "duomenų praradimo rizikos. Po atkūrimo, esama sistema yra išsaugoma kaip "
 "nauja momentinė kopija."
 
-#: Gtk/SnapshotBackendBox.vala:169
+#: Gtk/SnapshotBackendBox.vala:170
 msgid ""
 "Snapshots are saved on the same disk from which they are created (system "
 "disk). Storage on other disks is not supported. If system disk fails then "
@@ -2271,23 +2330,23 @@ msgstr ""
 "sistemos diskas patirs nesėkmę, tuomet kartu su sistema bus prarastos ir "
 "saugomos momentinės kopijos."
 
-#: Gtk/BackupDeviceBox.vala:108
+#: Gtk/BackupDeviceBox.vala:107
 msgid ""
 "Snapshots are saved to /timeshift on selected partition. Other locations are "
 "not supported."
 msgstr ""
 
-#: Gtk/BackupDeviceBox.vala:100
+#: Gtk/BackupDeviceBox.vala:99
 msgid ""
 "Snapshots are saved to /timeshift-btrfs on selected partition. Other "
 "locations are not supported."
 msgstr ""
 
-#: Gtk/MainWindow.vala:982
+#: Gtk/MainWindow.vala:1001
 msgid "Snapshots available for restore"
 msgstr "Atkūrimui prieinamos momentinės kopijos"
 
-#: Gtk/SnapshotBackendBox.vala:184
+#: Gtk/SnapshotBackendBox.vala:185
 msgid ""
 "Snapshots can be saved to any disk formatted with a Linux file system. "
 "Saving snapshots to non-system or external disk allows the system to be "
@@ -2298,15 +2357,15 @@ msgstr ""
 "nesisteminį ar išorinį diską leidžia atkurti sistemą netgi tuo atveju, kai "
 "sistemos diskas yra pažeidžiamas ar iš naujo formatuojamas."
 
-#: Console/AppConsole.vala:281
+#: Console/AppConsole.vala:283
 msgid "Snapshots cannot be created in Live CD mode"
 msgstr "Momentinės kopijos negali būti kuriamos paleidimo CD veiksenoje"
 
-#: Gtk/MainWindow.vala:1029
+#: Gtk/MainWindow.vala:1048
 msgid "Snapshots will be created at selected intervals"
 msgstr "Momentinės kopijos bus kuriamos pažymėtais intervalais"
 
-#: Gtk/ScheduleBox.vala:289
+#: Gtk/ScheduleBox.vala:293
 msgid ""
 "Snapshots will be created at selected intervals if snapshot disk has enough "
 "space (> 1 GB)"
@@ -2314,32 +2373,32 @@ msgstr ""
 "Momentinės kopijos bus kuriamos pažymėtais intervalais, jeigu momentinės "
 "kopijos diske bus pakankamai vietos (>1 GB)"
 
-#: Gtk/MainWindow.vala:628
+#: Gtk/MainWindow.vala:632
 msgid "Snapshots will be removed during the next scheduled run"
 msgstr "Momentinės kopijos bus pašalintos kito suplanuoto paleidimo metu"
 
-#: Console/AppConsole.vala:373
+#: Console/AppConsole.vala:375
 msgid "Specify backup device (default: config)"
 msgstr "Nurodyti atsarginės kopijos įrenginį (pagal numatymą: config)"
 
-#: Console/AppConsole.vala:365
+#: Console/AppConsole.vala:367
 msgid "Specify device for installing GRUB2 bootloader"
 msgstr "Nurodyti įrenginį, skirtą GRUB2 paleidyklės įdiegimui"
 
-#: Console/AppConsole.vala:363
+#: Console/AppConsole.vala:365
 msgid "Specify snapshot to restore"
 msgstr "Nurodyti momentinę kopiją, kurią atkurti"
 
-#: Console/AppConsole.vala:364
+#: Console/AppConsole.vala:366
 msgid "Specify target device"
 msgstr "Nurodyti paskirties įrenginį"
 
-#: Core/SnapshotRepo.vala:436
+#: Core/SnapshotRepo.vala:462 Gtk/RsyncLogBox.vala:465
 #, c-format
 msgid "Status"
 msgstr "Būsena"
 
-#: Gtk/ScheduleBox.vala:167
+#: Gtk/ScheduleBox.vala:168
 msgid "Stop cron emails for scheduled tasks"
 msgstr "Stabdyti cron el. laiškus, skirtus planinėms užduotims"
 
@@ -2347,28 +2406,28 @@ msgstr "Stabdyti cron el. laiškus, skirtus planinėms užduotims"
 msgid "Stopped"
 msgstr "Sustabdyta"
 
-#: Gtk/RestoreWindow.vala:96 Gtk/ExcludeAppsBox.vala:133
-#: Gtk/ExcludeBox.vala:210
+#: Gtk/RestoreWindow.vala:111 Gtk/ExcludeAppsBox.vala:135
+#: Gtk/ExcludeBox.vala:213
 msgid "Summary"
 msgstr "Santrauka"
 
-#: Console/AppConsole.vala:375
+#: Console/AppConsole.vala:377
 msgid "Switch to BTRFS mode (default: config)"
 msgstr "Perjungti į BTRFS veikseną (pagal numatymą: config)"
 
-#: Console/AppConsole.vala:376
+#: Console/AppConsole.vala:378
 msgid "Switch to RSYNC mode (default: config)"
 msgstr "Perjungti į RSYNC veikseną (pagal numatymą: config)"
 
-#: Core/SnapshotRepo.vala:985
+#: Core/SnapshotRepo.vala:1011
 msgid "Symlinks updated"
 msgstr "Simbolinės nuorodos atnaujintos"
 
-#: Core/Main.vala:2304
+#: Core/Main.vala:2321
 msgid "Synching file systems..."
 msgstr "Sinchronizuojamos failų sistemos..."
 
-#: Core/Main.vala:1321 Core/Main.vala:2459 Core/Main.vala:2690
+#: Core/Main.vala:1323 Core/Main.vala:2483 Core/Main.vala:2719
 msgid "Synching files with rsync..."
 msgstr "Sinchronizuojami failai su rsync..."
 
@@ -2381,44 +2440,44 @@ msgstr "Sintaksė"
 msgid "System"
 msgstr "Sistema"
 
-#: Gtk/MainWindow.vala:928
+#: Gtk/MainWindow.vala:946
 msgid "System Restore Utility"
 msgstr "Sistemos atkūrimo paslaugų programa"
 
-#: Gtk/FinishBox.vala:81
+#: Gtk/FinishBox.vala:82
 msgid "System can be rolled-back to a previous date by restoring a snapshot."
 msgstr ""
 "Sistema gali būti sugrąžinta į ankstesnę datą, atkūrus momentinę kopiją."
 
-#: Core/Main.vala:2178
+#: Core/Main.vala:2184
 msgid "System will reboot after files are restored"
 msgstr "Atkūrus failus, sistema bus paleista iš naujo"
 
-#: Core/Main.vala:2128
+#: Core/Main.vala:2134
 msgid "System will reboot after files are restored."
 msgstr "Atkūrus failus, sistema bus paleista iš naujo."
 
-#: Core/Main.vala:1181 Core/Main.vala:1222
+#: Core/Main.vala:1183 Core/Main.vala:1224
 msgid "Tagged snapshot"
 msgstr "Momentine kopija su žyme"
 
-#: Console/AppConsole.vala:424 Gtk/SnapshotListBox.vala:151
+#: Console/AppConsole.vala:426 Gtk/SnapshotListBox.vala:151
 msgid "Tags"
 msgstr "Žymės"
 
-#: Core/Main.vala:1999
+#: Core/Main.vala:2003
 msgid "Target device is not mounted"
 msgstr "Paskirties įrenginys nėra prijungtas"
 
-#: Gtk/RestoreDeviceBox.vala:479
+#: Gtk/RestoreDeviceBox.vala:480
 msgid "Target device is same as system device"
 msgstr "Paskirties įrenginys yra toks pats kaip ir sistemos įrenginys"
 
-#: Core/Main.vala:1993
+#: Core/Main.vala:1997
 msgid "Target device not specified!"
 msgstr "Nenurodytas paskirties įrenginys!"
 
-#: Gtk/SnapshotBackendBox.vala:117
+#: Gtk/SnapshotBackendBox.vala:118
 msgid ""
 "The 'btrfs' command is not available on your system. Install the 'btrfs-"
 "tools' package and try again."
@@ -2426,7 +2485,7 @@ msgstr ""
 "Jūsų sistemoje nėra prieinama \"btrfs\" komanda. Įdiekite paketą \"btrfs-"
 "tools\" ir bandykite dar kartą."
 
-#: Gtk/ScheduleBox.vala:169
+#: Gtk/ScheduleBox.vala:170
 msgid ""
 "The cron service sends the output of scheduled tasks as an email to the "
 "current user. Select this option to suppress the emails for cron tasks "
@@ -2436,15 +2495,15 @@ msgstr ""
 "paštą. Pažymėkite šį parametrą, norėdami nesiųsti Timeshift sukurtų cron "
 "užduočių el. laiškais."
 
-#: Core/Main.vala:368
+#: Core/Main.vala:373
 msgid "The system partition has an unsupported subvolume layout."
 msgstr "Sistemos skaidinyje yra nepalaikomas patomių išdėstymas."
 
-#: Core/Main.vala:3360
+#: Core/Main.vala:3380
 msgid "The target partition has an unsupported subvolume layout."
 msgstr "Paskirties skaidinyje yra nepalaikomas patomių išdėstymas."
 
-#: Gtk/BackupDeviceBox.vala:475
+#: Gtk/BackupDeviceBox.vala:479
 #, c-format
 msgid "There are no snapshots on this device"
 msgstr "Šiame įrenginyje nėra jokių momentinių kopijų"
@@ -2453,7 +2512,7 @@ msgstr "Šiame įrenginyje nėra jokių momentinių kopijų"
 msgid "This device is not encrypted"
 msgstr "Šis įrenginys nėra šifruotas"
 
-#: Core/Main.vala:2144
+#: Core/Main.vala:2150
 msgid ""
 "This software comes without absolutely NO warranty and the author takes no "
 "responsibility for any damage arising from the use of this program."
@@ -2462,21 +2521,22 @@ msgstr ""
 "neprisiima jokios atsakomybės už bet kokią žalą, kylančią iš naudojimosi šia "
 "programa."
 
-#: Gtk/MainWindow.vala:1017 Gtk/MainWindow.vala:1028
+#: Gtk/MainWindow.vala:1036 Gtk/MainWindow.vala:1047
 msgid "Timeshift is active"
 msgstr "Timeshift yra aktyvi"
 
-#: Gtk/MainWindow.vala:919
+#: Gtk/MainWindow.vala:937
 msgid ""
 "Timeshift is powered by the following tools and components. Please visit the "
 "links for more information."
 msgstr ""
 
-#: Gtk/RestoreBox.vala:131 Gtk/BackupBox.vala:94
+#: Gtk/RestoreBox.vala:132 Gtk/BackupBox.vala:94 Gtk/RsyncLogBox.vala:387
+#, c-format
 msgid "Timestamp"
 msgstr "Laiko žyma"
 
-#: Console/AppConsole.vala:609
+#: Console/AppConsole.vala:611
 #, c-format
 msgid "To restore with default options, press the ENTER key for all prompts!"
 msgstr ""
@@ -2488,7 +2548,7 @@ msgstr ""
 msgid "Translations"
 msgstr "Vertėjai"
 
-#: Console/AppConsole.vala:455 Console/AppConsole.vala:494
+#: Console/AppConsole.vala:457 Console/AppConsole.vala:496
 #: Gtk/BackupDeviceBox.vala:190 Gtk/SettingsWindow.vala:97
 #: Utility/Device.vala:1815
 #, c-format
@@ -2504,11 +2564,11 @@ msgstr "UUID"
 msgid "Unknown option"
 msgstr "Nežinomas parametras"
 
-#: Core/Main.vala:1163
+#: Core/Main.vala:1165
 msgid "Unknown snapshot type"
 msgstr "Nežinomas momentinės kopijos tipas"
 
-#: Core/Main.vala:1508
+#: Core/Main.vala:1512
 msgid "Unknown value specified for option --tags"
 msgstr "Parametrui --tags nurodyta nežinoma reikšmė"
 
@@ -2529,27 +2589,27 @@ msgstr "Atjungiama nuo"
 msgid "Unshared"
 msgstr "Nebendrinama"
 
-#: Core/Main.vala:3364 Gtk/RestoreDeviceBox.vala:523
+#: Core/Main.vala:3384 Gtk/RestoreDeviceBox.vala:522
 msgid "Unsupported Subvolume Layout"
 msgstr "Nepalaikomas patomių išdėstymas"
 
-#: Gtk/BootOptionsBox.vala:151
+#: Gtk/BootOptionsBox.vala:150
 msgid "Update GRUB menu"
 msgstr "Atnaujinti GRUB meniu"
 
-#: Gtk/BootOptionsBox.vala:136
+#: Gtk/BootOptionsBox.vala:135
 msgid "Update initramfs"
 msgstr "Atnaujinti initramfs"
 
-#: Core/Main.vala:2634
+#: Core/Main.vala:2663
 msgid "Updated /etc/crypttab on target device"
 msgstr "Atnaujinta /etc/crypttab paskirties įrenginyje"
 
-#: Core/Main.vala:2554
+#: Core/Main.vala:2583
 msgid "Updated /etc/fstab on target device"
 msgstr "Atnaujinta /etc/fstab paskirties įrenginyje"
 
-#: Gtk/BootOptionsBox.vala:153
+#: Gtk/BootOptionsBox.vala:152
 msgid ""
 "Updates the GRUB menu entries (recommended). This is safe to run and should "
 "be left selected."
@@ -2557,11 +2617,11 @@ msgstr ""
 "Atnaujina GRUB meniu įrašus (rekomenduojama). Tai yra saugu vykdyti ir tai "
 "turėtų likti pažymėta."
 
-#: Core/Main.vala:2287
+#: Core/Main.vala:2304
 msgid "Updating GRUB menu..."
 msgstr "Atnaujinamas GRUB meniu..."
 
-#: Core/Main.vala:2478
+#: Core/Main.vala:2507
 msgid "Updating bootloader configuration..."
 msgstr "Atnaujinama paleidyklės konfigūracija..."
 
@@ -2598,31 +2658,29 @@ msgstr "Naudotojai"
 msgid "Vendor"
 msgstr "Tiekėjas"
 
-#: Gtk/SnapshotListBox.vala:322
-msgid "View Log for Create"
+#: Gtk/SnapshotListBox.vala:323
+#, fuzzy
+msgid "View Rsync Log for Create"
 msgstr "Rodyti sukūrimo žurnalą"
 
-#: Gtk/SnapshotListBox.vala:329
-msgid "View Log for Restore"
+#: Gtk/SnapshotListBox.vala:330
+#, fuzzy
+msgid "View Rsync Log for Restore"
 msgstr "Rodyti atkūrimo žurnalą"
 
-#: Gtk/MainWindow.vala:370
+#: Gtk/MainWindow.vala:368
 msgid "View TimeShift Logs"
 msgstr "Rodyti TimeShift žurnalus"
 
-#: Gtk/RsyncLogWindow.vala:206
-msgid "View:"
-msgstr "Rodinys:"
-
-#: Gtk/RestoreDeviceBox.vala:102
+#: Gtk/RestoreDeviceBox.vala:101
 msgid "Volume"
 msgstr "Tomas"
 
-#: Core/Main.vala:2046 Gtk/RestoreSummaryBox.vala:53
+#: Core/Main.vala:2052 Gtk/RestoreSummaryBox.vala:53
 msgid "Warning"
 msgstr "Įspėjimas"
 
-#: Gtk/RestoreExcludeBox.vala:86
+#: Gtk/RestoreExcludeBox.vala:61
 msgid "Web Browsers"
 msgstr "Saityno naršyklės"
 
@@ -2631,15 +2689,15 @@ msgstr "Saityno naršyklės"
 msgid "Website"
 msgstr "Internetinė svetainė"
 
-#: Gtk/ScheduleBox.vala:79 Gtk/SnapshotListBox.vala:281
+#: Gtk/ScheduleBox.vala:80 Gtk/SnapshotListBox.vala:281
 msgid "Weekly"
 msgstr "Kas savaitę"
 
-#: Core/Main.vala:1067
+#: Core/Main.vala:1069
 msgid "Weekly snapshot failed!"
 msgstr "Savaitinė momentinė kopija patyrė nesėkmę!"
 
-#: Core/Main.vala:1048
+#: Core/Main.vala:1050
 msgid "Weekly snapshots are enabled"
 msgstr "Savaitinės momentinės kopijos yra įjungtos"
 
@@ -2651,7 +2709,7 @@ msgstr "Vikis ~ Dokumentacija ir žinynas"
 msgid "With Errors"
 msgstr "Su klaidomis"
 
-#: Gtk/MainWindow.vala:189
+#: Gtk/MainWindow.vala:191
 msgid "Wizard"
 msgstr "Vediklis"
 
@@ -2663,7 +2721,7 @@ msgstr "Neteisingas slaptažodis"
 msgid "Yes"
 msgstr "Taip"
 
-#: Gtk/RestoreFinishBox.vala:82
+#: Gtk/RestoreFinishBox.vala:98
 msgid ""
 "You can continue working on the current system. After restart, the current "
 "system will be visible as a new snapshot. This snapshot can be restored "
@@ -2681,30 +2739,30 @@ msgstr ""
 "[Tik patyrusiems naudotojams] Keiskite šiuos nustatymus tik tuo atveju, jei "
 "atkurta sistema nepasileidžia."
 
-#: Console/AppConsole.vala:1008
+#: Console/AppConsole.vala:1010
 #, c-format
 msgid "[ENTER = Default (%s), a = Abort]"
 msgstr "[ENTER = Pagal numatymą (%s), a = Nutraukti]"
 
-#: Console/AppConsole.vala:879
+#: Console/AppConsole.vala:881
 #, c-format
 msgid "[ENTER = Default (%s), r = Root device, a = Abort]"
 msgstr "[ENTER = Pagal numatymą (%s), r = Šaknies įrenginys, a = Nutraukti]"
 
-#: Utility/AppLock.vala:55
+#: Utility/AppLock.vala:54
 msgid "[Warning] Deleted invalid lock"
 msgstr "[Įspėjimas] Ištrintas neteisingas užraktas"
 
-#: Core/SnapshotRepo.vala:838
+#: Core/SnapshotRepo.vala:864
 msgid "all"
 msgstr "visos"
 
-#: Core/Main.vala:1436 Core/Main.vala:2782 Core/Main.vala:3784
-#: Core/Main.vala:3867 Core/Main.vala:3965 Core/Main.vala:3998
+#: Core/Main.vala:1440 Core/Main.vala:2802 Core/Main.vala:3805
+#: Core/Main.vala:3889 Core/Main.vala:3992 Core/Main.vala:4031
 msgid "btrfs returned an error"
 msgstr "btrfs grąžino klaidą"
 
-#: Core/Snapshot.vala:417 Core/Main.vala:1353
+#: Core/Snapshot.vala:473 Core/Main.vala:1355
 msgid "complete"
 msgstr "užbaigta"
 
@@ -2716,31 +2774,53 @@ msgstr "crontab failas eksportuotas"
 msgid "crontab file installed"
 msgstr "crontab failas įdiegtas"
 
-#: Core/SnapshotRepo.vala:824
+#: Core/SnapshotRepo.vala:850
 msgid "incomplete"
 msgstr "nepilna"
 
-#: Core/SnapshotRepo.vala:806
+#: Core/SnapshotRepo.vala:832
 msgid "marked for deletion"
 msgstr "pažymėta ištrynimui"
 
-#: Core/Main.vala:1245 Core/Main.vala:1397 Core/Main.vala:1399
+#: Core/Main.vala:1247 Core/Main.vala:1401 Core/Main.vala:1403
 msgid "mounted at path"
 msgstr "prijungta ties keliu"
 
-#: Core/Snapshot.vala:418 Core/Main.vala:1353 Gtk/RestoreBox.vala:224
-#: Gtk/BackupBox.vala:226 Gtk/DeleteBox.vala:150
+#: Core/Snapshot.vala:474 Core/Main.vala:1355 Gtk/RestoreBox.vala:232
+#: Gtk/BackupBox.vala:234 Gtk/DeleteBox.vala:149
 msgid "remaining"
 msgstr "liko"
 
-#: Core/Main.vala:1364
+#: Core/Main.vala:1366
 msgid "rsync returned an error"
 msgstr "rsync grąžino klaidą"
 
-#: Core/SnapshotRepo.vala:670 Core/SnapshotRepo.vala:708
-#: Core/SnapshotRepo.vala:787
+#: Core/SnapshotRepo.vala:696 Core/SnapshotRepo.vala:734
+#: Core/SnapshotRepo.vala:813
 msgid "un-tagged"
 msgstr "be žymių"
+
+#, fuzzy
+#~ msgid "Restored"
+#~ msgstr "Atkurti"
+
+#, fuzzy
+#~ msgid "Review Actions"
+#~ msgstr "Poversijis"
+
+#, fuzzy
+#~ msgid "Filter:"
+#~ msgstr "Filtrai"
+
+#~ msgid "Cloning System..."
+#~ msgstr "Klonuojama sistema..."
+
+#~ msgid "View:"
+#~ msgstr "Rodinys:"
+
+#, fuzzy
+#~ msgid "deleted"
+#~ msgstr "Ištrinta"
 
 #~ msgid "Include everything"
 #~ msgstr "Įtraukti viską"

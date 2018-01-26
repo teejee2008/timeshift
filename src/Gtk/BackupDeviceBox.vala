@@ -1,8 +1,7 @@
-
 /*
  * BackupBox.vala
  *
- * Copyright 2012-17 Tony George <teejeetech@gmail.com>
+ * Copyright 2012-2018 Tony George <teejeetech@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -111,6 +110,7 @@ class BackupDeviceBox : Gtk.Box{
 	}
 
 	private void init_tv_devices(){
+		
 		tv_devices = add_treeview(this);
 		tv_devices.vexpand = true;
 		tv_devices.headers_clickable = true;
@@ -382,6 +382,7 @@ class BackupDeviceBox : Gtk.Box{
 	}
 
 	private void change_backup_device(Device pi){
+		
 		// return if device has not changed
 		if ((App.repo.device != null) && (pi.uuid == App.repo.device.uuid)){ return; }
 
@@ -394,6 +395,7 @@ class BackupDeviceBox : Gtk.Box{
 		App.repo = new SnapshotRepo.from_device(pi, parent_window, App.btrfs_mode);
 
 		if (pi.fstype == "luks"){
+			
 			App.update_partitions();
 
 			var dev = Device.find_device_in_list_by_uuid(App.partitions, pi.uuid);
@@ -422,6 +424,7 @@ class BackupDeviceBox : Gtk.Box{
 	}
 
 	private bool check_backup_location(){
+		
 		bool ok = true;
 
 		App.repo.check_status();
@@ -435,6 +438,7 @@ class BackupDeviceBox : Gtk.Box{
 		details = escape_html(details);
 		
 		if (App.live_system()){
+			
 			switch (status_code){
 			case SnapshotLocationStatus.NOT_SELECTED:
 				lbl_infobar_location.label = "<span weight=\"bold\">%s</span>".printf(details);
@@ -537,6 +541,7 @@ class BackupDeviceBox : Gtk.Box{
 	}
 
 	private void tv_devices_refresh(){
+		
 		App.update_partitions();
 
 		var model = new Gtk.TreeStore(4,
@@ -610,7 +615,8 @@ class BackupDeviceBox : Gtk.Box{
 
 				tv_append_child_volumes(ref model, ref iter1, part);
 			}
-			else if ((part.kname == parent.kname) && (part.type == "disk") && part.has_linux_filesystem() && !part.has_children()){
+			else if ((part.kname == parent.kname) && (part.type == "disk")
+				&& part.has_linux_filesystem() && !part.has_children()){
 				
 				// partition-less disk with linux filesystem
 

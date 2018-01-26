@@ -1,7 +1,7 @@
 /*
  * TerminalWindow.vala
  *
- * Copyright 2012-17 Tony George <teejeetech@gmail.com>
+ * Copyright 2012-2018 Tony George <teejeetech@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -71,7 +71,7 @@ public class TerminalWindow : Gtk.Window {
 		
 		// vbox_main ---------------
 		
-		vbox_main = new Box (Orientation.VERTICAL, 6);
+		vbox_main = new Gtk.Box(Orientation.VERTICAL, 6);
 		vbox_main.set_size_request (def_width, def_height);
 		add (vbox_main);
 

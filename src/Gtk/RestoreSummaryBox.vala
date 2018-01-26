@@ -1,8 +1,7 @@
-
 /*
  * RestoreSummaryBox.vala
  *
- * Copyright 2012-17 Tony George <teejeetech@gmail.com>
+ * Copyright 2012-2018 Tony George <teejeetech@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,6 +33,7 @@ using TeeJee.System;
 using TeeJee.Misc;
 
 class RestoreSummaryBox : Gtk.Box{
+	
 	public Gtk.Label lbl_devices;
 	public Gtk.Label lbl_reboot;
 	public Gtk.Label lbl_disclaimer;
@@ -65,20 +65,12 @@ class RestoreSummaryBox : Gtk.Box{
 		
 		lbl_disclaimer = add_label(this, "", false, false, false);
 
-		// click next
-		
-		//var label = add_label(this, _("Click Next to continue"), false, false, true);
-		//label.margin_top = 6;
-		//label.margin_bottom = 6;
-		
-		// refresh
-		
-		//refresh();
 
 		log_debug("RestoreSummaryBox: RestoreSummaryBox(): exit");
     }
 
     public void refresh(){
+		
 		string msg_devices = "";
 		string msg_reboot = "";
 		string msg_disclaimer = "";

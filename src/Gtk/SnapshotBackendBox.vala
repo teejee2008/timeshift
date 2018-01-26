@@ -1,8 +1,7 @@
-
 /*
  * SnapshotBackendBox.vala
  *
- * Copyright 2012-17 Tony George <teejeetech@gmail.com>
+ * Copyright 2012-2018 Tony George <teejeetech@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -113,7 +112,9 @@ class SnapshotBackendBox : Gtk.Box{
 	}
 
 	private bool check_for_btrfs_tools(){
+		
 		if (!cmd_exists("btrfs")){
+			
 			string msg = _("The 'btrfs' command is not available on your system. Install the 'btrfs-tools' package and try again.");
 			string title = _("BTRFS Tools Not Found");
 			gtk_set_busy(false, parent_window);
@@ -126,8 +127,8 @@ class SnapshotBackendBox : Gtk.Box{
 		}
 	}
 	
-
 	private void add_description(){
+		
 		// scrolled
 		var scrolled = new ScrolledWindow(null, null);
 		scrolled.set_shadow_type (ShadowType.ETCHED_IN);
@@ -190,10 +191,12 @@ class SnapshotBackendBox : Gtk.Box{
 	}
 	
 	public void init_backend(){
+		
 		App.try_select_default_device_for_backup(parent_window);
 	}
 
 	public void refresh(){
+		
 		opt_btrfs.active = App.btrfs_mode;
 		type_changed();
 		update_description();

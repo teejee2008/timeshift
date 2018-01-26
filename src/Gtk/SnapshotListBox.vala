@@ -1,8 +1,7 @@
-
 /*
  * SnapshotListBox.vala
  *
- * Copyright 2012-17 Tony George <teejeetech@gmail.com>
+ * Copyright 2012-2018 Tony George <teejeetech@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -76,6 +75,7 @@ class SnapshotListBox : Gtk.Box{
     }
 
     private void init_treeview(){
+		
 		//treeview
 		treeview = new TreeView();
 		treeview.get_selection().mode = SelectionMode.MULTIPLE;
@@ -291,6 +291,7 @@ class SnapshotListBox : Gtk.Box{
 	}
 
 	private void init_list_view_context_menu(){
+		
 		Gdk.RGBA gray = Gdk.RGBA();
 		gray.parse ("rgba(200,200,200,1)");
 
@@ -344,10 +345,12 @@ class SnapshotListBox : Gtk.Box{
 	// signals
 	
 	private bool treeview_popup_menu(){
+		
 		return menu_snapshots_popup (menu_snapshots, null);
 	}
 
 	private bool treeview_button_press_event(Gdk.EventButton event){
+		
 		if (event.button == 3) {
 			return menu_snapshots_popup (menu_snapshots, event);
 		}
@@ -587,6 +590,7 @@ class SnapshotListBox : Gtk.Box{
 	}
 
 	public void hide_context_menu(){
+		
 		// disconnect signal for shift+F10
         treeview.popup_menu.disconnect(treeview_popup_menu);
         
@@ -595,6 +599,7 @@ class SnapshotListBox : Gtk.Box{
 	}
 
 	public Gee.ArrayList<Snapshot> selected_snapshots(){
+		
 		var list = new Gee.ArrayList<Snapshot>();
 
 		TreeIter iter;

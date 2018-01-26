@@ -1,7 +1,7 @@
 /*
  * ExcludeListSummaryWindow.vala
  *
- * Copyright 2012-17 Tony George <teejeetech@gmail.com>
+ * Copyright 2012-2018 Tony George <teejeetech@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@ using TeeJee.System;
 using TeeJee.Misc;
 
 class ExcludeListSummaryWindow : Gtk.Window{
+	
 	private Gtk.Box vbox_main;
 	private Gtk.Label lbl_list;
 	private Gtk.Button btn_close;
@@ -54,14 +55,12 @@ class ExcludeListSummaryWindow : Gtk.Window{
 		for_restore = _for_restore;
 		
 	    // vbox_main
-        vbox_main = new Box (Orientation.VERTICAL, 6);
+        vbox_main = new Gtk.Box(Orientation.VERTICAL, 6);
         vbox_main.margin = 12;
         add(vbox_main);
 
 		add_label(vbox_main, _("Files &amp; directories matching the patterns below will be excluded. Patterns starting with a + will include the item instead of excluding."));
-		
-		//add_label(vbox_main, _("Items"));
-		
+
 		lbl_list = add_label_scrolled(vbox_main, "", true, true);
 
 		create_actions();
@@ -75,7 +74,7 @@ class ExcludeListSummaryWindow : Gtk.Window{
     
 	private void create_actions(){
 		
-		var hbox = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
+		var hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
         vbox_main.add(hbox);
 		var size_group = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
 		

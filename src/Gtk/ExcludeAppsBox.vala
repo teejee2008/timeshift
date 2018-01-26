@@ -1,7 +1,7 @@
 /*
  * ExcludeAppsBox.vala
  *
- * Copyright 2012-17 Tony George <teejeetech@gmail.com>
+ * Copyright 2012-2018 Tony George <teejeetech@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -122,6 +122,7 @@ class ExcludeAppsBox : Gtk.Box{
 		col.pack_start (cell_text, false);
 		
 		col.set_cell_data_func(cell_text, (cell_layout, cell, model, iter)=>{
+			
 			AppExcludeEntry entry;
 			model.get (iter, 0, out entry, -1);
 			(cell as Gtk.CellRendererText).text = entry.name;
@@ -129,6 +130,7 @@ class ExcludeAppsBox : Gtk.Box{
 	}
 
 	private void init_exclude_summary_link(Gtk.Box box){
+		
 		var size_group = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
 		var button = add_button(box, _("Summary"), "", size_group, null);
         button.clicked.connect(()=>{
@@ -139,10 +141,12 @@ class ExcludeAppsBox : Gtk.Box{
 	// helpers
 
 	public void refresh(){
+		
 		refresh_treeview();
 	}
 	
 	public void refresh_treeview(){
+		
 		var model = new Gtk.ListStore(3, typeof(AppExcludeEntry), typeof(bool), typeof(string));
 		treeview.model = model;
 

@@ -1,8 +1,7 @@
-
 /*
  * RestoreDeviceBox.vala
  *
- * Copyright 2012-17 Tony George <teejeetech@gmail.com>
+ * Copyright 2012-2018 Tony George <teejeetech@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -121,6 +120,7 @@ class RestoreDeviceBox : Gtk.Box{
     }
 
     public void refresh(bool reset_device_selections = true){
+		
 		log_debug("RestoreDeviceBox: refresh()");
 		App.update_partitions();
 		create_device_selection_options(reset_device_selections);
@@ -424,6 +424,7 @@ class RestoreDeviceBox : Gtk.Box{
 	}
 
 	private void create_infobar_location(){
+		
 		var infobar = new Gtk.InfoBar();
 		infobar.no_show_all = true;
 		add(infobar);
@@ -504,8 +505,6 @@ class RestoreDeviceBox : Gtk.Box{
 			}
 		}
 
-		
-		
 		//check if grub device selected ---------------
 
 		if (App.reinstall_grub2 && (App.grub_device.length == 0)){

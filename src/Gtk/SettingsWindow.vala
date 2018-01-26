@@ -1,7 +1,7 @@
 /*
  * SettingsWindow.vala
  *
- * Copyright 2012-17 Tony George <teejeetech@gmail.com>
+ * Copyright 2012-2018 Tony George <teejeetech@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -60,7 +60,7 @@ class SettingsWindow : Gtk.Window{
 
 		this.delete_event.connect(on_delete_event);
 
-        vbox_main = new Box (Orientation.VERTICAL, 0);
+        vbox_main = new Gtk.Box(Orientation.VERTICAL, 0);
         //vbox_main.margin = 6;
         add(vbox_main);
 

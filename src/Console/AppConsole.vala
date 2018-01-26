@@ -1,7 +1,7 @@
 /*
  * AppConsole.vala
  *
- * Copyright 2015 Tony George <teejee2008@gmail.com>
+ * Copyright 2012-2018 Tony George <teejeetech@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -88,6 +88,7 @@ public class AppConsole : GLib.Object {
 	}
 
 	private static void set_locale() {
+		
 		log_debug("setting locale...");
 		Intl.setlocale(GLib.LocaleCategory.MESSAGES, "timeshift");
 		Intl.textdomain(GETTEXT_PACKAGE);
@@ -96,6 +97,7 @@ public class AppConsole : GLib.Object {
 	}
 
 	public static void check_if_admin(){
+		
 		if (!user_is_admin()) {
 			log_msg(_("Application needs admin access."));
 			log_msg(_("Please run the application as admin (using 'sudo' or 'su')"));

@@ -1,3 +1,26 @@
+/*
+ * Subvolume.vala
+ *
+ * Copyright 2012-2018 Tony George <teejeetech@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ *
+ *
+ */
+
 using TeeJee.Logging;
 using TeeJee.FileSystem;
 using TeeJee.JsonHelper;
@@ -38,10 +61,12 @@ public class Subvolume : GLib.Object{
 	}
 
 	public Device? get_device(){
+		
 		return Device.get_device_by_uuid(device_uuid);
 	}
 	
-	public static Gee.HashMap<string, Subvolume> detect_subvolumes_for_system_by_path(string system_path, SnapshotRepo? repo, Gtk.Window? parent_window){
+	public static Gee.HashMap<string, Subvolume> detect_subvolumes_for_system_by_path(
+		string system_path, SnapshotRepo? repo, Gtk.Window? parent_window){
 
 		var map = new Gee.HashMap<string, Subvolume>();
 		
@@ -51,11 +76,11 @@ public class Subvolume : GLib.Object{
 		var crypttab = CryptTabEntry.read_file(path_combine(system_path, "/etc/crypttab"));
 		
 		foreach(var item in fstab){
-			if (!item.is_for_system_directory()){
-				continue;
-			}
+			
+			if (!item.is_for_system_directory()){ continue; }
 			
 			if (item.subvolume_name().length > 0){
+				
 				var dev = item.resolve_device(crypttab, parent_window);
 				var dev_name = (dev == null) ? "" : dev.device;
 				var dev_uuid = (dev == null) ? "" : dev.uuid;
@@ -71,10 +96,12 @@ public class Subvolume : GLib.Object{
 	}
 
 	public void print_info(){
+		
 		log_debug("name=%s, uuid=%s, id=%ld, path=%s".printf(name, device_uuid, id, path));
 	}
 
 	public bool remove(){
+		
 		string cmd = "";
 		string std_out;
 		string std_err;

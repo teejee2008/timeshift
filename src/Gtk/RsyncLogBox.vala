@@ -1,7 +1,7 @@
 /*
  * RsyncLogBox.vala
  *
- * Copyright 2012-17 Tony George <teejeetech@gmail.com>
+ * Copyright 2012-2018 Tony George <teejeetech@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,6 +43,9 @@ public class RsyncLogBox : Gtk.Box {
 	private Gtk.ComboBox cmb_filter;
 	private Gtk.Box hbox_filter;
 	private Gtk.Entry txt_pattern;
+
+	private Gtk.TreeViewColumn col_name;
+	private Gtk.TreeViewColumn col_status;
 	
 	private string name_filter = "";
 	private string status_filter = "";
@@ -82,7 +85,7 @@ public class RsyncLogBox : Gtk.Box {
 		if (App.dry_run){
 			lbl_header = add_label_header(this, _("Confirm Actions"), true);
 		}
-		
+
 		create_progressbar();
 
 		create_filters();
@@ -109,6 +112,13 @@ public class RsyncLogBox : Gtk.Box {
 				return false;
 			});
 		});
+
+		if (is_restore_log){
+			col_name.title = _("File (system)");
+		}
+		else{
+			col_name.title = _("File (snapshot)");
+		}
 
 		show_all();
 
@@ -204,7 +214,7 @@ public class RsyncLogBox : Gtk.Box {
 		
 		lbl_header = add_label_header(vbox_progress, _("Parsing log file..."), true);
 		
-		var hbox_status = new Box (Orientation.HORIZONTAL, 6);
+		var hbox_status = new Gtk.Box(Orientation.HORIZONTAL, 6);
 		vbox_progress.add(hbox_status);
 		
 		spinner = new Gtk.Spinner();
@@ -230,7 +240,7 @@ public class RsyncLogBox : Gtk.Box {
 		
 		log_debug("create_filters()");
 		
-		var hbox = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
+		var hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
 		hbox.no_show_all = true;
         this.add(hbox);
 		hbox_filter = hbox;
@@ -357,10 +367,10 @@ public class RsyncLogBox : Gtk.Box {
 
 		string txt = "";
 		if (App.dry_run){
-			txt = _("Replace");
+			txt = _("Change");
 		}
 		else if (is_restore_log){
-			txt = _("Restored");
+			txt = _("Changed");
 		}
 		else{
 			txt = _("Changed");
@@ -389,11 +399,13 @@ public class RsyncLogBox : Gtk.Box {
 	private uint tmr_action = 0;
 	
 	private void add_action_delayed(){
+		
 		clear_action_delayed();
 		tmr_action = Timeout.add(200, execute_action);
 	}
 
 	private void clear_action_delayed(){
+		
 		if (tmr_action > 0){
 			Source.remove(tmr_action);
 			tmr_action = 0;
@@ -452,6 +464,7 @@ public class RsyncLogBox : Gtk.Box {
 		var col = new Gtk.TreeViewColumn();
 		col.title = is_restore_log ? _("Action") : _("Status");
 		treeview.append_column(col);
+		col_status = col;
 
 		// cell icon
 		var cell_pix = new Gtk.CellRendererPixbuf();
@@ -463,28 +476,6 @@ public class RsyncLogBox : Gtk.Box {
 		var cell_text = new Gtk.CellRendererText ();
 		col.pack_start (cell_text, false);
 		col.set_attributes(cell_text, "text", 4);
-		
-		// render icon
-		/*col.set_cell_data_func (cell_pix, (cell_layout, cell, model, iter) => {
-
-			var pixcell = cell as Gtk.CellRendererPixbuf;
-
-			Gdk.Pixbuf pixbuf;
-			model.get (iter, 3, out pixbuf, -1);
-
-			pixcell.pixbuf = pixbuf;
-		});*/
-
-		// render text
-		/*col.set_cell_data_func (cell_text, (cell_layout, cell, model, iter) => {
-
-			var txtcell = cell as Gtk.CellRendererText;
-
-			string status;
-			model.get (iter, 4, out status, -1);
-
-			txtcell.text = status;
-		});*/
 	}
 
 	private void add_column_name(){
@@ -496,7 +487,8 @@ public class RsyncLogBox : Gtk.Box {
 		col.resizable = true;
 		col.expand = true;
 		treeview.append_column(col);
-
+		col_name = col;
+		
 		// cell icon
 		var cell_pix = new Gtk.CellRendererPixbuf();
 		cell_pix.stock_size = Gtk.IconSize.MENU;
@@ -508,28 +500,6 @@ public class RsyncLogBox : Gtk.Box {
 		cell_text.ellipsize = Pango.EllipsizeMode.END;
 		col.pack_start (cell_text, false);
 		col.set_attributes(cell_text, "text", 2);
-		
-		// render icon
-		/*col.set_cell_data_func (cell_pix, (cell_layout, cell, model, iter) => {
-
-			var pixcell = cell as Gtk.CellRendererPixbuf;
-
-			Gdk.Pixbuf pixbuf;
-			model.get (iter, 1, out pixbuf, -1);
-
-			pixcell.pixbuf = pixbuf;
-		});*/
-
-		// render text
-		/*col.set_cell_data_func (cell_text, (cell_layout, cell, model, iter) => {
-
-			var txtcell = cell as Gtk.CellRendererText;
-
-			string path;
-			model.get (iter, 2, out path, -1);
-
-			txtcell.text = path;
-		});*/
 	}
 
 	private void add_column_buffer(){
@@ -585,11 +555,11 @@ public class RsyncLogBox : Gtk.Box {
 				case "permissions":
 				case "owner":
 				case "group":
-					status = App.dry_run ? _("Replace") : _("Restored");
+					status = App.dry_run ? _("Change") : _("Changed");
 					status_icon = IconManager.lookup("item-yellow",16);
 					break;
 				case "created":
-					status =  App.dry_run ? _("Copy") : _("Created");
+					status =  App.dry_run ? _("Create") : _("Created");
 					status_icon = IconManager.lookup("item-green",16);
 					break;
 				case "deleted":

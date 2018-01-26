@@ -1,7 +1,7 @@
 /*
  * BootOptionsWindow.vala
  *
- * Copyright 2012-17 Tony George <teejeetech@gmail.com>
+ * Copyright 2012-2018 Tony George <teejeetech@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@ using TeeJee.System;
 using TeeJee.Misc;
 
 class BootOptionsWindow : Gtk.Window{
+	
 	private Gtk.Box vbox_main;
 	private Gtk.ButtonBox bbox_action;
 	private BootOptionsBox boot_options_box;
@@ -54,7 +55,7 @@ class BootOptionsWindow : Gtk.Window{
 		this.delete_event.connect(on_delete_event);
 
 	    // vbox_main
-        vbox_main = new Box (Orientation.VERTICAL, 6);
+        vbox_main = new Gtk.Box(Orientation.VERTICAL, 6);
         vbox_main.margin = 12;
         add(vbox_main);
 

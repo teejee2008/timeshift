@@ -1,7 +1,7 @@
 /*
  * ScheduleBox.vala
  *
- * Copyright 2012-17 Tony George <teejeetech@gmail.com>
+ * Copyright 2012-2018 Tony George <teejeetech@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@ using TeeJee.System;
 using TeeJee.Misc;
 
 class ScheduleBox : Gtk.Box{
+	
 	private Gtk.Image img_shield;
 	private Gtk.Label lbl_shield;
 	private Gtk.Label lbl_shield_subnote;
@@ -184,7 +185,7 @@ class ScheduleBox : Gtk.Box{
 		add(scrolled);
 		
 		// hbox
-		var hbox = new Gtk.Box (Orientation.HORIZONTAL, 6);
+		var hbox = new Gtk.Box(Orientation.HORIZONTAL, 6);
 		hbox.margin = 6;
 		hbox.margin_bottom = 12;
 		scrolled.add (hbox);
@@ -195,7 +196,7 @@ class ScheduleBox : Gtk.Box{
 		img_shield.margin_bottom = 6;
         hbox.add(img_shield);
 
-		var vbox = new Box (Orientation.VERTICAL, 6);
+		var vbox = new Gtk.Box(Orientation.VERTICAL, 6);
         hbox.add (vbox);
         
 		// lbl_shield
@@ -281,15 +282,20 @@ class ScheduleBox : Gtk.Box{
 	}
 
 	public void update_statusbar(){
+		
 		if (App.schedule_monthly || App.schedule_weekly || App.schedule_daily
 			|| App.schedule_hourly || App.schedule_boot){
 
-			img_shield.surface = IconManager.lookup_surface(IconManager.SHIELD_HIGH, IconManager.SHIELD_ICON_SIZE, img_shield.scale_factor);
+			img_shield.surface = IconManager.lookup_surface(IconManager.SHIELD_HIGH,
+				IconManager.SHIELD_ICON_SIZE, img_shield.scale_factor);
+			
 			set_shield_label(_("Scheduled snapshots are enabled"));
 			set_shield_subnote(_("Snapshots will be created at selected intervals if snapshot disk has enough space (> 1 GB)"));
 		}
 		else{
-			img_shield.surface = IconManager.lookup_surface(IconManager.SHIELD_LOW, IconManager.SHIELD_ICON_SIZE, img_shield.scale_factor);
+			img_shield.surface = IconManager.lookup_surface(IconManager.SHIELD_LOW,
+				IconManager.SHIELD_ICON_SIZE, img_shield.scale_factor);
+			
 			set_shield_label(_("Scheduled snapshots are disabled"));
 			set_shield_subnote(_("Select the intervals for creating snapshots"));
 		}

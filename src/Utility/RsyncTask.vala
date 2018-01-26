@@ -368,7 +368,7 @@ public class RsyncTask : AsyncTask{
 						item_size = 0;
 					}
 
-					var item = new FileItem.from_disk_path(item_disk_path);
+					var item = new FileItem.from_disk_path_with_basic_info(item_disk_path);
 					//var item = root.add_descendant(item_path, item_type, item_size, 0);
 					item.file_status = item_status;
 					item.is_symlink = item_is_symlink;

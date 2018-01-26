@@ -94,12 +94,20 @@ public class RsyncLogBox : Gtk.Box {
 			status_filter = gtk_combobox_get_value(cmb_filter, 0, "");
 			log_debug("combo_changed(): filter=%s".printf(status_filter));
 
-			hbox_filter.sensitive = false;
-			gtk_set_busy(true, window);
-			treefilter.refilter();
-			//treeview_refresh();
-			hbox_filter.sensitive = true;
-			gtk_set_busy(false, window);
+			Timeout.add(100, ()=>{
+
+				hbox_filter.sensitive = false;
+				treeview.sensitive = false;
+				
+				log_debug("refilter(): start");
+				treefilter.refilter();
+				log_debug("refilter(): end");
+
+				hbox_filter.sensitive = true;
+				treeview.sensitive = true;
+
+				return false;
+			});
 		});
 
 		show_all();
@@ -146,16 +154,19 @@ public class RsyncLogBox : Gtk.Box {
 		}
 
 		while (thread_is_running){
+			
 			double fraction = (App.task.prg_count * 1.0) / App.task.prg_count_total;
+			
 			if (fraction < 0.99){
 				progressbar.fraction = fraction;
 			}
+			
 			lbl_msg.label = _("Read %'d of %'d lines...").printf(
 				App.task.prg_count, App.task.prg_count_total);
-			sleep(200);
+				
+			sleep(500);
 			gtk_do_events();
 		}
-
 		
 		lbl_msg.label = _("Populating list...");
 		gtk_do_events();
@@ -172,6 +183,7 @@ public class RsyncLogBox : Gtk.Box {
 	}
 	
 	private void parse_log_file_thread(){
+		
 		App.task = new RsyncTask();
 		loglist = App.task.parse_log(rsync_log_file);
 		thread_is_running = false;
@@ -445,13 +457,15 @@ public class RsyncLogBox : Gtk.Box {
 		var cell_pix = new Gtk.CellRendererPixbuf();
 		cell_pix.stock_size = Gtk.IconSize.MENU;
 		col.pack_start(cell_pix, false);
-
+		col.set_attributes(cell_pix, "pixbuf", 3);
+		
 		// cell text
 		var cell_text = new Gtk.CellRendererText ();
 		col.pack_start (cell_text, false);
-
+		col.set_attributes(cell_text, "text", 4);
+		
 		// render icon
-		col.set_cell_data_func (cell_pix, (cell_layout, cell, model, iter) => {
+		/*col.set_cell_data_func (cell_pix, (cell_layout, cell, model, iter) => {
 
 			var pixcell = cell as Gtk.CellRendererPixbuf;
 
@@ -459,10 +473,10 @@ public class RsyncLogBox : Gtk.Box {
 			model.get (iter, 3, out pixbuf, -1);
 
 			pixcell.pixbuf = pixbuf;
-		});
+		});*/
 
 		// render text
-		col.set_cell_data_func (cell_text, (cell_layout, cell, model, iter) => {
+		/*col.set_cell_data_func (cell_text, (cell_layout, cell, model, iter) => {
 
 			var txtcell = cell as Gtk.CellRendererText;
 
@@ -470,7 +484,7 @@ public class RsyncLogBox : Gtk.Box {
 			model.get (iter, 4, out status, -1);
 
 			txtcell.text = status;
-		});
+		});*/
 	}
 
 	private void add_column_name(){
@@ -487,14 +501,16 @@ public class RsyncLogBox : Gtk.Box {
 		var cell_pix = new Gtk.CellRendererPixbuf();
 		cell_pix.stock_size = Gtk.IconSize.MENU;
 		col.pack_start(cell_pix, false);
-
+		col.set_attributes(cell_pix, "pixbuf", 1);
+		
 		// cell text
 		var cell_text = new Gtk.CellRendererText ();
 		cell_text.ellipsize = Pango.EllipsizeMode.END;
 		col.pack_start (cell_text, false);
-
+		col.set_attributes(cell_text, "text", 2);
+		
 		// render icon
-		col.set_cell_data_func (cell_pix, (cell_layout, cell, model, iter) => {
+		/*col.set_cell_data_func (cell_pix, (cell_layout, cell, model, iter) => {
 
 			var pixcell = cell as Gtk.CellRendererPixbuf;
 
@@ -502,10 +518,10 @@ public class RsyncLogBox : Gtk.Box {
 			model.get (iter, 1, out pixbuf, -1);
 
 			pixcell.pixbuf = pixbuf;
-		});
+		});*/
 
 		// render text
-		col.set_cell_data_func (cell_text, (cell_layout, cell, model, iter) => {
+		/*col.set_cell_data_func (cell_text, (cell_layout, cell, model, iter) => {
 
 			var txtcell = cell as Gtk.CellRendererText;
 
@@ -513,7 +529,7 @@ public class RsyncLogBox : Gtk.Box {
 			model.get (iter, 2, out path, -1);
 
 			txtcell.text = path;
-		});
+		});*/
 	}
 
 	private void add_column_buffer(){
@@ -533,7 +549,9 @@ public class RsyncLogBox : Gtk.Box {
 	
 	private void treeview_refresh() {
 		
-		log_debug("treeview_refresh()");
+		log_debug("treeview_refresh(): 0");
+
+		var tmr = timer_start();
 
 		hbox_filter.sensitive = false;
 		
@@ -553,77 +571,78 @@ public class RsyncLogBox : Gtk.Box {
 		
 		foreach(var item in loglist) {
 			
-			if (item.file_type != FileType.DIRECTORY){
+			//if (item.file_type == FileType.DIRECTORY){ continue; }
 
-				string status = "";
-				Gdk.Pixbuf status_icon = null;
-				
-				if (is_restore_log){
+			string status = "";
+			Gdk.Pixbuf status_icon = null;
+			
+			if (is_restore_log){
 
-					switch(item.file_status){
-					case "checksum":
-					case "size":
-					case "timestamp":
-					case "permissions":
-					case "owner":
-					case "group":
-						status = App.dry_run ? _("Replace") : _("Restored");
-						status_icon = IconManager.lookup("item-yellow",16);
-						break;
-					case "created":
-						status =  App.dry_run ? _("Copy") : _("Created");
-						status_icon = IconManager.lookup("item-green",16);
-						break;
-					case "deleted":
-						status =  App.dry_run ? _("Delete") : _("Deleted");
-						status_icon = IconManager.lookup("item-red",16);
-						break;
-					}
+				switch(item.file_status){
+				case "checksum":
+				case "size":
+				case "timestamp":
+				case "permissions":
+				case "owner":
+				case "group":
+					status = App.dry_run ? _("Replace") : _("Restored");
+					status_icon = IconManager.lookup("item-yellow",16);
+					break;
+				case "created":
+					status =  App.dry_run ? _("Copy") : _("Created");
+					status_icon = IconManager.lookup("item-green",16);
+					break;
+				case "deleted":
+					status =  App.dry_run ? _("Delete") : _("Deleted");
+					status_icon = IconManager.lookup("item-red",16);
+					break;
 				}
-				else{
-					switch(item.file_status){
-					case "checksum":
-					case "size":
-					case "timestamp":
-					case "permissions":
-					case "owner":
-					case "group":
-						status = _("Changed");
-						status_icon = IconManager.lookup("item-yellow",16);
-						break;
-					case "created":
-						status = _("Created");
-						status_icon = IconManager.lookup("item-green",16);
-						break;
-					case "deleted":
-						status = _("Deleted");
-						status_icon = IconManager.lookup("item-red",16);
-						break;
-					}
-				}
-
-				var relpath = item.file_path[spath.length:item.file_path.length];
-
-				if (!is_restore_log){
-					relpath = relpath[1:relpath.length]; // show relative path; remove / prefix
-				}
-				
-				// add row
-				model.append(out iter0);
-				model.set(iter0, 0, item);
-				model.set(iter0, 1, item.get_icon(16, false, false));
-				model.set(iter0, 2, relpath);
-				model.set(iter0, 3, status_icon);
-				model.set(iter0, 4, status);
 			}
+			else{
+				switch(item.file_status){
+				case "checksum":
+				case "size":
+				case "timestamp":
+				case "permissions":
+				case "owner":
+				case "group":
+					status = _("Changed");
+					status_icon = IconManager.lookup("item-yellow",16);
+					break;
+				case "created":
+					status = _("Created");
+					status_icon = IconManager.lookup("item-green",16);
+					break;
+				case "deleted":
+					status = _("Deleted");
+					status_icon = IconManager.lookup("item-red",16);
+					break;
+				}
+			}
+
+			var relpath = item.file_path[spath.length:item.file_path.length];
+
+			if (!is_restore_log){
+				relpath = relpath[1:relpath.length]; // show relative path; remove / prefix
+			}
+			
+			// add row
+			model.append(out iter0);
+			model.set(iter0, 0, item);
+			model.set(iter0, 1, item.get_icon(16, false, false));
+			model.set(iter0, 2, relpath);
+			model.set(iter0, 3, status_icon);
+			model.set(iter0, 4, status);
 		}
 		
-		treefilter = new Gtk.TreeModelFilter (model, null);
+		treefilter = new Gtk.TreeModelFilter(model, null);
 		treefilter.set_visible_func(filter_packages_func);
 		treeview.set_model(treefilter);
 		
 		//treeview.set_model(model);
 		//treeview.columns_autosize();
+
+		log_debug("treeview_refresh(): %s".printf(timer_elapsed_string(tmr)));
 
 		hbox_filter.sensitive = true;
 		gtk_set_busy(false, window);
@@ -633,10 +652,11 @@ public class RsyncLogBox : Gtk.Box {
 		
 		FileItem item;
 		model.get (iter, 0, out item, -1);
-		
-		if (item.file_type == FileType.DIRECTORY){
-			return false;
-		}
+
+		//return true;
+		//if (item.file_type == FileType.DIRECTORY){
+		//	return false;
+		//}
 
 		if (name_filter.length > 0){
 

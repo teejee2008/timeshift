@@ -110,11 +110,11 @@ public class FileItem : GLib.Object,Gee.Comparable<FileItem> {
 		file_location = "";
 	}
 
-	public FileItem.from_disk_path(string _file_path) {
+	public FileItem.from_disk_path_with_basic_info(string _file_path) {
 		file_path = _file_path;
 		file_name = file_basename(_file_path);
 		file_location = file_parent(_file_path);
-		query_file_info();
+		query_file_info_basic();
 	}
 
 	public FileItem.from_path_and_type(string _file_path, FileType _file_type) {
@@ -445,6 +445,31 @@ public class FileItem : GLib.Object,Gee.Comparable<FileItem> {
 				// owner_group
 				this.owner_group = info.get_attribute_string(FileAttribute.OWNER_GROUP);
 	
+			}
+		}
+		catch (Error e) {
+			log_error (e.message);
+		}
+	}
+
+	public void query_file_info_basic() {
+		
+		try {
+			FileInfo info;
+			File file = File.parse_name(file_path);
+
+			if (file.query_exists()) {
+
+				// get type and icon -- follow symlinks
+				
+				info = file.query_info("%s,%s".printf(
+				                           FileAttribute.STANDARD_TYPE,
+				                           FileAttribute.STANDARD_ICON
+				                           ), 0);
+				                           
+				this.icon = info.get_icon();
+
+				this.file_type = info.get_file_type();
 			}
 		}
 		catch (Error e) {

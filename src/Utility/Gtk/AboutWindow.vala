@@ -349,8 +349,8 @@ public class AboutWindow : Dialog {
 			}
 			else{
 				btn_license.label = "  " + _("License");
-				btn_license.image = null;
-				btn_license.always_show_image = false;
+				btn_license.image = IconManager.lookup_image("help-about-symbolic", 16);
+				btn_license.always_show_image = true;
 				btn_credits.show();
 				this.resize(450, 400);
 			}
@@ -380,8 +380,8 @@ public class AboutWindow : Dialog {
 			}
 			else{
 				btn_credits.label = "  " + _("Credits");
-				btn_credits.image = null;
-				btn_credits.always_show_image = false;
+				btn_credits.image = IconManager.lookup_image("help-about-symbolic", 16);
+				btn_credits.always_show_image = true;
 				btn_license.show();
 			}
 		});

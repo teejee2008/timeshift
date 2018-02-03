@@ -32,13 +32,32 @@ symbols=$(shell echo "${vte_symbol} ${gtk3_symbol} ${xapp_symbol}")
 all:
 
 	#timeshift-gtk
-	valac -X -D'GETTEXT_PACKAGE="${app_name}"' --Xcc="-lm" -X -Wl,-rpath,/usr/share/${app_name}/libs ${symbols} --thread Core/*.vala Utility/*.vala  Utility/Gtk/*.vala  Gtk/*.vala -o ${app_name}-gtk --pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix --pkg gtk+-3.0 $(xapp_pkg) --pkg vte-2.91 --pkg gee-0.8 --pkg json-glib-1.0
+	valac -X -D'GETTEXT_PACKAGE="${app_name}"' \
+		--Xcc="-lm" ${symbols} --thread \
+		Core/*.vala Gtk/*.vala Utility/*.vala Utility/Gtk/*.vala \
+		-o ${app_name}-gtk \
+		--pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix \
+		--pkg gee-0.8 --pkg json-glib-1.0 \
+		--pkg gtk+-3.0 --pkg vte-2.91 $(xapp_pkg)
 
 	#timeshift
-	valac -X -D'GETTEXT_PACKAGE="${app_name}"' --Xcc="-lm" -X -Wl,-rpath,/usr/share/${app_name}/libs ${symbols} --thread Core/*.vala Utility/*.vala Utility/Gtk/*.vala Console/*.vala -o ${app_name} --pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix --pkg gtk+-3.0 $(xapp_pkg) --pkg vte-2.91 --pkg gee-0.8 --pkg json-glib-1.0
+	valac -X -D'GETTEXT_PACKAGE="${app_name}"' \
+		--Xcc="-lm" ${symbols} --thread \
+		Core/*.vala Utility/*.vala Utility/Gtk/*.vala Console/*.vala \
+		-o ${app_name} \
+		--pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix \
+		--pkg gee-0.8 --pkg json-glib-1.0 \
+		--pkg gtk+-3.0 --pkg vte-2.91 $(xapp_pkg)
 
 	# update translation template
-	find . -iname "*.vala" | xargs xgettext --from-code=UTF-8 --language=C --keyword=_ --copyright-holder='Tony George (teejeetech@gmail.com)' --package-name="${app_name}" --package-version='1.6' --msgid-bugs-address='teejeetech@gmail.com' --escape --sort-output -o ../${app_name}.pot
+	find . -iname "*.vala" | xargs xgettext \
+		--from-code=UTF-8 --language=C --keyword=_ \
+		--copyright-holder='Tony George (teejeetech@gmail.com)' \
+		--package-name="${app_name}" \
+		--package-version='1.6' \
+		--msgid-bugs-address='teejeetech@gmail.com' \
+		--escape --sort-output \
+		-o ../${app_name}.pot
 
 	# translations
 	for lang in am ar az bg ca cs da de el en_GB es et eu fr he hi hr hu ia id is it ko lt nb ne nl pl pt pt_BR ro ru sk sr sv tr uk vi zh_CN; do \

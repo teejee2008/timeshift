@@ -9,11 +9,18 @@ cd $DIR
 rm -vf release/*.run
 rm -vf release/*.deb
 
-# build debs
-sh build-deb.sh
+arches=""
+if [ -z $1 ]; then
+	arches="i386 amd64"
+	# build deb
+	sh build-deb.sh
+else
+	arches="$1"
+	# build deb
+	sh build-deb.sh "$1"
+fi
 
-
-for arch in i386 amd64
+for arch in $arches
 do
 
 rm -rfv release/${arch}/files

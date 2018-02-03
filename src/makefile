@@ -54,7 +54,7 @@ all:
 		--from-code=UTF-8 --language=C --keyword=_ \
 		--copyright-holder='Tony George (teejeetech@gmail.com)' \
 		--package-name="${app_name}" \
-		--package-version='1.6' \
+		--package-version='18.2' \
 		--msgid-bugs-address='teejeetech@gmail.com' \
 		--escape --sort-output \
 		-o ../${app_name}.pot

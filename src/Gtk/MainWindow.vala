@@ -366,12 +366,12 @@ class MainWindow : Gtk.Window{
 		Gtk.MenuItem menu_item = null;
 
 		// refresh
-		menu_item = create_menu_item(_("Refresh Snapshot List"),"","",16);
+		/*menu_item = create_menu_item(_("Refresh Snapshot List"),"","",16);
 		menu_extra.append(menu_item);
 		menu_item.activate.connect(() => {
 			App.repo.load_snapshots();
 			snapshot_list_box.refresh();
-		});
+		});*/
 		
 		if (!App.live_system()){
 			// app logs

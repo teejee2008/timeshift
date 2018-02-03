@@ -78,6 +78,36 @@ public class RsyncTask : AsyncTask{
 		
 		regex_list = new Gee.HashMap<string,Regex>();
 
+		/*
+		2018/02/03 16:53:46 [2419] >f..t...... boot/grub/grubenv
+		                           >f.........
+		                           <dcstpoguax
+		                           cL
+		                           hD
+		                           .S
+								   *
+		columns-1:
+		< > means that a file is being transferred
+		c   means that a local change/creation is occurring for the item
+		h   means that the item is a hard link to another item
+		.   means that the item is not being updated (though it might have attributes that are being modified).
+		*   means that the rest of the itemized-output area contains a message (e.g. "deleting").
+
+		columns-2:
+		f file, d directory, L symlink, D device, S special file (e.g. named sockets and fifos).
+
+		columns-3-11:
+		c regular file has different checksum or that symlink, device, or special file has changed value
+		s size of a regular file is different and is being updated
+		t modification time is different and is being updated
+		p permissions are different and is being updated
+		o owner is differen and is being updated
+		g group is different and is being updated
+		u reserved for future use.
+		a ACL information changed.
+		x extended attribute information changed.
+		*/
+		
 		try {
 			//Example: status=-1
 			regex_list["status"] = new Regex(
@@ -102,10 +132,10 @@ public class RsyncTask : AsyncTask{
 				"""[0-9\/]+ [0-9:.]+ \[[0-9]+\] ([<>ch.])([.fdLDS])(c|\+|\.| )(s|\+|\.| )(t|\+|\.| )(p|\+|\.| )(o|\+|\.| )(g|\+|\.| )(u|\+|\.| )(a|\+|\.| )(x|\+|\.) (.*)""");
 
 			regex_list["unchanged"] = new Regex(
-				"""([.])([.fdLDS])[ ]{9} (.*)""");
+				"""([.h])([.fdLDS])[ ]{9} (.*)""");
 
 			regex_list["log-unchanged"] = new Regex(
-				"""[0-9\/]+ [0-9:.]+ \[[0-9]+\] ([.])([.fdLDS])[ ]{9} (.*)""");
+				"""[0-9\/]+ [0-9:.]+ \[[0-9]+\] ([.h])([.fdLDS])[ ]{9} (.*)""");
 				
 			regex_list["total-size"] = new Regex(
 				"""total size is ([0-9,]+)[ \t]+speedup is [0-9.]+""");

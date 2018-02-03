@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timeshift\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2018-01-26 14:40+0530\n"
+"POT-Creation-Date: 2018-02-03 19:50+0530\n"
 "PO-Revision-Date: 2017-11-17 14:25+0000\n"
 "Last-Translator: Jung-Kyu Park <bagjunggyu@gmail.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
@@ -15,6 +15,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2018-02-03 14:28+0000\n"
+"X-Generator: Launchpad (build 18544)\n"
 "X-Launchpad-Export-Date: 2017-11-23 10:47+0000\n"
 "X-Generator: Launchpad (build 18509)\n"
 
@@ -50,19 +52,19 @@ msgstr "GRUB2 (다시)설치:"
 msgid "** Uninstalled Timeshift BTRFS **"
 msgstr "** 설치되지 않은 타임시프트 BTRFS **"
 
-#: Core/Main.vala:3291
+#: Core/Main.vala:3296
 msgid "/ is mapped to device"
 msgstr "/ 를 장치에 맵핑했습니다"
 
-#: Core/Main.vala:3313
+#: Core/Main.vala:3318
 msgid "/boot is mapped to device"
 msgstr "/boot 를 장치에 맵핑했습니다"
 
-#: Core/Main.vala:3324
+#: Core/Main.vala:3329
 msgid "/boot/efi is mapped to device"
 msgstr "/boot/efi 를 장치에 맵핑했습니다"
 
-#: Core/Main.vala:3302
+#: Core/Main.vala:3307
 msgid "/home is mapped to device"
 msgstr "/home 을 장치에 맵핑했습니다"
 
@@ -90,12 +92,11 @@ msgstr ""
 msgid "Aborted."
 msgstr "중단되었습니다."
 
-#: Gtk/MainWindow.vala:383
+#: Gtk/MainWindow.vala:393
 msgid "About"
 msgstr "소개"
 
-#: Gtk/RsyncLogBox.vala:465
-#, fuzzy
+#: Gtk/RsyncLogBox.vala:472
 msgid "Action"
 msgstr "위치"
 
@@ -139,8 +140,7 @@ msgstr "관리자 권한이 필요합니다"
 msgid "Admin access is required to backup and restore system files."
 msgstr "시스템 파일을 백업하고 복원하려면 관리자 권한이 필요합니다."
 
-#: Gtk/RsyncLogBox.vala:356
-#, fuzzy
+#: Gtk/RsyncLogBox.vala:363
 msgid "All Files"
 msgstr "파일 추가"
 
@@ -188,11 +188,11 @@ msgstr "다른 타임시프트가 작동하고 있습니다!"
 msgid "Answer YES to all confirmation prompts"
 msgstr "모든 확인 프롬프트에 예라고 답변을 합니다"
 
-#: Core/Main.vala:3130
+#: Core/Main.vala:3135
 msgid "App config loaded"
 msgstr "프로그램 설정을 불러왔습니다"
 
-#: Core/Main.vala:3036
+#: Core/Main.vala:3041
 msgid "App config saved"
 msgstr "프로그램 설정을 저장했습니다"
 
@@ -200,7 +200,7 @@ msgstr "프로그램 설정을 저장했습니다"
 msgid "Application needs admin access."
 msgstr "애플리케이션에 관리자 권한이 필요합니다."
 
-#: Core/Main.vala:3468
+#: Core/Main.vala:3473
 msgid "Application will exit"
 msgstr "프로그램이 종료됩니다"
 
@@ -216,7 +216,7 @@ msgstr "아티스트"
 msgid "Authors"
 msgstr "저자"
 
-#: Gtk/MainWindow.vala:336
+#: Gtk/MainWindow.vala:346
 msgid "Available"
 msgstr "사용 가능"
 
@@ -295,7 +295,6 @@ msgid "Boot snapshot failed!"
 msgstr "부트 스냅샷 만들기에 실패했습니다"
 
 #: Gtk/ScheduleBox.vala:153
-#, fuzzy
 msgid ""
 "Boot snapshots are created with a delay of 10 minutes after system startup."
 msgstr "스냅샷은 BTRFS 파일 시스템의 내장 기능을 사용해서 만들어집니다."
@@ -328,17 +327,17 @@ msgstr "선택한 스냅샷 둘러보기"
 msgid "Building file list..."
 msgstr "파일 목록을 만들고 있습니다..."
 
-#: Gtk/SetupWizardWindow.vala:204 Gtk/RestoreWindow.vala:202
+#: Gtk/SetupWizardWindow.vala:204 Gtk/RestoreWindow.vala:204
 #: Gtk/BackupWindow.vala:175 Gtk/DeleteWindow.vala:185
 #: Utility/GtkHelper.vala:122 Utility/Gtk/CustomMessageDialog.vala:172
 msgid "Cancel"
 msgstr "취소"
 
-#: Gtk/RestoreWindow.vala:206
+#: Gtk/RestoreWindow.vala:210
 msgid "Cancel restore?"
 msgstr "복원을 취소할까요?"
 
-#: Gtk/RestoreWindow.vala:208
+#: Gtk/RestoreWindow.vala:212
 msgid ""
 "Cancelling the restore process will leave the target system in an "
 "inconsistent state. The system may fail to boot or you may run into various "
@@ -349,17 +348,12 @@ msgstr ""
 "게 되거나 여러 가지 이슈를 마주하게 될 겁니다. 취소 후에, 시스템을 일치하게 "
 "만들려면, 다른 스냅샷을 복원해야 합니다. 예를 눌러서 결정해주세요."
 
-#: Gtk/MainWindow.vala:553
+#: Gtk/MainWindow.vala:563
 msgid "Cannot Delete Live Snapshot"
 msgstr "라이브 스냅샷은 지울 수 없습니다"
 
-#: Gtk/RsyncLogBox.vala:370 Gtk/RsyncLogBox.vala:558
-#, fuzzy
-msgid "Change"
-msgstr "변경됨"
-
-#: Gtk/RestoreBox.vala:125 Gtk/BackupBox.vala:87 Gtk/RsyncLogBox.vala:373
-#: Gtk/RsyncLogBox.vala:376 Gtk/RsyncLogBox.vala:558 Gtk/RsyncLogBox.vala:579
+#: Gtk/RestoreBox.vala:125 Gtk/BackupBox.vala:87 Gtk/RsyncLogBox.vala:380
+#: Gtk/RsyncLogBox.vala:383 Gtk/RsyncLogBox.vala:567 Gtk/RsyncLogBox.vala:588
 msgid "Changed"
 msgstr "변경됨"
 
@@ -375,7 +369,7 @@ msgstr ""
 msgid "Checking file systems for errors..."
 msgstr "오류가 생긴 파일 시스템을 확인하고 있습니다..."
 
-#: Gtk/RestoreBox.vala:130 Gtk/BackupBox.vala:92 Gtk/RsyncLogBox.vala:383
+#: Gtk/RestoreBox.vala:130 Gtk/BackupBox.vala:92 Gtk/RsyncLogBox.vala:390
 #, c-format
 msgid "Checksum"
 msgstr "체크섬"
@@ -408,13 +402,13 @@ msgstr "현재의 시스템을 복제합니다"
 msgid "Cloning"
 msgstr "복제하기"
 
-#: Core/Main.vala:2716
+#: Core/Main.vala:2721
 msgid "Cloning system..."
 msgstr "시스템을 복제하고 있습니다..."
 
-#: Gtk/RestoreWindow.vala:193 Gtk/BackupWindow.vala:166
+#: Gtk/RestoreWindow.vala:195 Gtk/BackupWindow.vala:166
 #: Gtk/BootOptionsWindow.vala:106 Gtk/DeleteWindow.vala:168
-#: Gtk/RsyncLogBox.vala:259 Gtk/SettingsWindow.vala:85
+#: Gtk/RsyncLogBox.vala:266 Gtk/SettingsWindow.vala:85
 #: Utility/Gtk/DonationWindow.vala:121
 msgid "Close"
 msgstr "닫기"
@@ -425,7 +419,6 @@ msgid "Close window to exit"
 msgstr "끝낼 땐 창을 닫으세요"
 
 #: Utility/Gtk/AboutWindow.vala:420
-#, fuzzy
 msgid "Code Contributions"
 msgstr "기여"
 
@@ -437,12 +430,11 @@ msgstr "밑에 있는 명령어들은 이 시스템에 유효하지 않습니다
 msgid "Comments"
 msgstr "덧붙일 말"
 
-#: Gtk/RestoreBox.vala:74 Gtk/RestoreBox.vala:187
+#: Core/Main.vala:2714 Gtk/RestoreBox.vala:74 Gtk/RestoreBox.vala:187
 msgid "Comparing Files (Dry Run)..."
 msgstr ""
 
 #: Core/Main.vala:2480
-#, fuzzy
 msgid "Comparing files with rsync..."
 msgstr "rsync와 동기화하고 있습니다..."
 
@@ -455,7 +447,7 @@ msgstr "끝냄"
 msgid "Completed With Errors"
 msgstr "오류난 채로 마무리되었습니다"
 
-#: Gtk/RestoreWindow.vala:106 Gtk/RsyncLogBox.vala:86
+#: Gtk/RestoreWindow.vala:106 Gtk/RsyncLogBox.vala:87
 msgid "Confirm Actions"
 msgstr ""
 
@@ -477,15 +469,15 @@ msgstr "파일을 찾을 수 없습니다"
 msgid "Could not find snapshot"
 msgstr "스냅샷을 찾을 수 없습니다"
 
-#: Core/Main.vala:2908
+#: Core/Main.vala:2913
 msgid "Could not find system subvolume"
 msgstr "시스템 서브 볼륨을 찾을 수 없습니다"
 
-#: Core/Main.vala:2936
+#: Core/Main.vala:2941
 msgid "Could not find system subvolumes for creating pre-restore snapshot"
 msgstr "사전 복원 스냅샷을 만들기 위한 시스템 서브 볼륨을 찾을 수 없습니다"
 
-#: Gtk/MainWindow.vala:141 Gtk/RsyncLogBox.vala:359 Gtk/RsyncLogBox.vala:562
+#: Gtk/MainWindow.vala:141 Gtk/RsyncLogBox.vala:366 Gtk/RsyncLogBox.vala:571
 #, c-format
 msgid "Create"
 msgstr "만들기"
@@ -526,7 +518,7 @@ msgstr "계획된 스냅샷 만들기"
 msgid "Create snapshot of current system"
 msgstr "현재 시스템의 스냅샷 만들기"
 
-#: Gtk/MainWindow.vala:1063
+#: Gtk/MainWindow.vala:1074
 msgid ""
 "Create snapshots manually or enable scheduled snapshots to protect your "
 "system"
@@ -542,8 +534,8 @@ msgstr "RSYNC를 써서 스냅샷 만들기"
 msgid "Create snapshots using RSYNC tool and hard-links"
 msgstr "RSYNC도구와 하드 링크를 써서 스냅샷 만들기"
 
-#: Gtk/RestoreBox.vala:123 Gtk/BackupBox.vala:85 Gtk/RsyncLogBox.vala:359
-#: Gtk/RsyncLogBox.vala:562 Gtk/RsyncLogBox.vala:583
+#: Gtk/RestoreBox.vala:123 Gtk/BackupBox.vala:85 Gtk/RsyncLogBox.vala:366
+#: Gtk/RsyncLogBox.vala:571 Gtk/RsyncLogBox.vala:592
 #, c-format
 msgid "Created"
 msgstr "생성"
@@ -556,7 +548,7 @@ msgstr "생성된 제어 파일"
 msgid "Created directory"
 msgstr "생성된 디렉토리"
 
-#: Core/Main.vala:2958
+#: Core/Main.vala:2963
 msgid "Created pre-restore snapshot"
 msgstr "생성된 사전 복원 스냅샷"
 
@@ -576,7 +568,7 @@ msgstr "새 백업을 만들고 있습니다..."
 msgid "Creating new snapshot..."
 msgstr "새 스냅샷을 만들고 있습니다..."
 
-#: Core/Main.vala:2886
+#: Core/Main.vala:2891
 msgid "Creating pre-restore snapshot from system subvolumes..."
 msgstr "서브 볼륨에서 생성된 사전 복원 스냅샷..."
 
@@ -584,7 +576,7 @@ msgstr "서브 볼륨에서 생성된 사전 복원 스냅샷..."
 msgid "Credits"
 msgstr "제작자"
 
-#: Core/Main.vala:3467
+#: Core/Main.vala:3472
 msgid "Critical Error"
 msgstr "치명적인 오류"
 
@@ -618,7 +610,7 @@ msgstr "다음의 장치들에서 데이터가 수정될 겁니다:"
 
 #: Console/AppConsole.vala:370 Gtk/MainWindow.vala:161
 #: Gtk/SnapshotListBox.vala:302 Gtk/DeleteWindow.vala:96
-#: Gtk/RsyncLogBox.vala:363 Gtk/RsyncLogBox.vala:566
+#: Gtk/RsyncLogBox.vala:370 Gtk/RsyncLogBox.vala:575
 #, c-format
 msgid "Delete"
 msgstr "지우기"
@@ -639,8 +631,8 @@ msgstr "선택한 스냅샷 지우기"
 msgid "Delete snapshot"
 msgstr "스냅샷을 지웁니다"
 
-#: Gtk/RestoreBox.vala:124 Gtk/BackupBox.vala:86 Gtk/RsyncLogBox.vala:363
-#: Gtk/RsyncLogBox.vala:566 Gtk/RsyncLogBox.vala:587
+#: Gtk/RestoreBox.vala:124 Gtk/BackupBox.vala:86 Gtk/RsyncLogBox.vala:370
+#: Gtk/RsyncLogBox.vala:575 Gtk/RsyncLogBox.vala:596
 #, c-format
 msgid "Deleted"
 msgstr "지워짐"
@@ -653,7 +645,7 @@ msgstr "지워진 디렉토리"
 msgid "Deleted subvolume"
 msgstr "지워진 서브 볼륨"
 
-#: Core/Main.vala:2866 Core/Main.vala:2869
+#: Core/Main.vala:2871 Core/Main.vala:2874
 msgid "Deleted system subvolumes"
 msgstr "지워진 시스템 서브 볼륨"
 
@@ -698,17 +690,17 @@ msgstr "장치가 잠기지 않았습니다"
 msgid "Device name is empty!"
 msgstr "장치 이름이 없습니다!"
 
-#: Core/SnapshotRepo.vala:542 Core/Main.vala:3183 Console/AppConsole.vala:663
+#: Core/SnapshotRepo.vala:542 Core/Main.vala:3188 Console/AppConsole.vala:663
 msgid "Device not found"
 msgstr "장치가 없습니다"
 
 #: Gtk/BackupDeviceBox.vala:97
-#, fuzzy, c-format
+#, c-format
 msgid "Devices displayed above have BTRFS file systems."
 msgstr "리눅스 파일 시스템이 있는 장치"
 
 #: Gtk/BackupDeviceBox.vala:104
-#, fuzzy, c-format
+#, c-format
 msgid "Devices displayed above have Linux file systems."
 msgstr "리눅스 파일 시스템이 있는 장치"
 
@@ -775,11 +767,10 @@ msgid "Distribution"
 msgstr "배포판"
 
 #: Utility/Gtk/AboutWindow.vala:444
-#, fuzzy
 msgid "Documentation"
 msgstr "기부"
 
-#: Gtk/MainWindow.vala:378 Utility/Gtk/DonationWindow.vala:42
+#: Gtk/MainWindow.vala:388 Utility/Gtk/DonationWindow.vala:42
 msgid "Donate"
 msgstr "기부하기"
 
@@ -795,11 +786,11 @@ msgstr "기부"
 msgid "Editing and Re-Ordering"
 msgstr "편집 및 다시 정렬하기"
 
-#: Gtk/MainWindow.vala:1057
+#: Gtk/MainWindow.vala:1068
 msgid "Enable scheduled snapshots to protect your system"
 msgstr "여러분의 시스템 보호를 위해 스냅샷 스케줄을 실행하세요"
 
-#: Core/Main.vala:3970 Core/Main.vala:4008
+#: Core/Main.vala:3975 Core/Main.vala:4013
 msgid "Enabled subvolume quota support"
 msgstr "서브 볼륨 할당량 지원을 실행합니다"
 
@@ -843,7 +834,7 @@ msgstr "제외할 패턴을 입력하세요 (예: *.mp3, *.bak)"
 msgid "Error"
 msgstr "오류"
 
-#: Gtk/RestoreWindow.vala:428
+#: Gtk/RestoreWindow.vala:464
 msgid "Error running Rsync"
 msgstr ""
 
@@ -864,7 +855,6 @@ msgid "Examples"
 msgstr "예제"
 
 #: Gtk/UsersBox.vala:129
-#, fuzzy
 msgid "Exclude All"
 msgstr "앱 제외하기"
 
@@ -944,11 +934,11 @@ msgstr "심볼릭 링크 지우기에 실패했습니다"
 msgid "Failed to destroy qgroup"
 msgstr "그룹 해체 실패했습니다"
 
-#: Core/Main.vala:3993
+#: Core/Main.vala:3998
 msgid "Failed to enable subvolume quota"
 msgstr "서브 볼륨 할당량 실행에 실패했습니다"
 
-#: Core/Main.vala:3682 Core/Main.vala:3688
+#: Core/Main.vala:3687 Core/Main.vala:3693
 msgid "Failed to estimate system size"
 msgstr "시스템 크기 어림잡기에 실패했습니다"
 
@@ -966,7 +956,7 @@ msgstr "사용자의 계정으로 3번 입력 시도를 실패했습니다"
 msgid "Failed to get partition list"
 msgstr "파티션 목록을 가져오는 데 실패했습니다"
 
-#: Core/Main.vala:3266
+#: Core/Main.vala:3271
 msgid "Failed to get partition list."
 msgstr "파티션 목록을 가져오는 데 실패했습니다."
 
@@ -982,15 +972,15 @@ msgstr "장치 마운트 실패했습니다"
 msgid "Failed to move file"
 msgstr "파일 옮기기 실패했습니다"
 
-#: Core/Main.vala:2923
+#: Core/Main.vala:2928
 msgid "Failed to move system subvolume to snapshot directory"
 msgstr "시스템 서브 볼륨을 스냅샷 디렉토리로 옮기기에 실패했습니다"
 
-#: Core/Main.vala:3806
+#: Core/Main.vala:3811
 msgid "Failed to query subvolume list"
 msgstr "서브 볼륨 목록 쿼리에 실패했습니다"
 
-#: Core/Main.vala:3890
+#: Core/Main.vala:3895
 msgid "Failed to query subvolume quota"
 msgstr "서브 볼륨 할당량 쿼리에 실패했습니다"
 
@@ -1014,11 +1004,11 @@ msgstr "백업 일정 관리 지우기에 실패했습니다"
 msgid "Failed to remove snapshot"
 msgstr "스냅샷 제거 실패했습니다"
 
-#: Core/Main.vala:4032
+#: Core/Main.vala:4037
 msgid "Failed to rescan subvolume quota"
 msgstr "서브 볼륨 할당량 다시 스캔에 실패했습니다"
 
-#: Core/Main.vala:2803
+#: Core/Main.vala:2808
 msgid "Failed to restore system subvolume"
 msgstr "시스템 서브 볼륨 복원에 실패했습니다"
 
@@ -1035,7 +1025,7 @@ msgstr "장치를 잠금 해제하는 걸 실패했습니다"
 msgid "Failed to unmount"
 msgstr "장치를 해제하는 걸 실패했습니다"
 
-#: Core/Main.vala:3468
+#: Core/Main.vala:3473
 msgid "Failed to unmount device!"
 msgstr "연결된 장치 해제에 실패했습니다!"
 
@@ -1043,13 +1033,11 @@ msgstr "연결된 장치 해제에 실패했습니다!"
 msgid "Failed to write file"
 msgstr "파일 쓰기 실패했습니다"
 
-#: Gtk/RsyncLogBox.vala:120
-#, fuzzy
+#: Gtk/RsyncLogBox.vala:122
 msgid "File (snapshot)"
 msgstr "스냅샷을 지웁니다"
 
-#: Gtk/RsyncLogBox.vala:117
-#, fuzzy
+#: Gtk/RsyncLogBox.vala:119
 msgid "File (system)"
 msgstr "파일 시스템"
 
@@ -1065,7 +1053,7 @@ msgstr "파일 및 디렉토리 수:"
 msgid "File is missing"
 msgstr "파일이 없습니다"
 
-#: Utility/CronTab.vala:225 Utility/RsyncTask.vala:266
+#: Utility/CronTab.vala:225 Utility/RsyncTask.vala:296
 #: Utility/TeeJee.FileSystem.vala:205 Utility/TeeJee.FileSystem.vala:521
 msgid "File not found"
 msgstr "파일이 없습니다"
@@ -1095,8 +1083,7 @@ msgstr "다음 패턴에 부합되는 파일들은 제외됩니다"
 msgid "Filesystem"
 msgstr "파일 시스템"
 
-#: Gtk/RsyncLogBox.vala:295
-#, fuzzy
+#: Gtk/RsyncLogBox.vala:302
 msgid "Filter by name or path"
 msgstr "장치 이름 혹은 번호를 입력하십시오"
 
@@ -1121,7 +1108,7 @@ msgstr "파이어폭스, 크로미움, 크롬, 오페라, 에피퍼니, 미도�
 msgid "First snapshot requires:"
 msgstr "첫 번 째 스냅샷의 필수항목:"
 
-#: Core/Main.vala:2856
+#: Core/Main.vala:2861
 msgid "Found existing pre-restore snapshot"
 msgstr "기존의 사전 복원 스냅샷을 찾았습니다"
 
@@ -1153,7 +1140,7 @@ msgstr "initramfs를 만들고 있습니다..."
 msgid "Global"
 msgstr "전역"
 
-#: Gtk/RestoreBox.vala:135 Gtk/BackupBox.vala:97 Gtk/RsyncLogBox.vala:393
+#: Gtk/RestoreBox.vala:135 Gtk/BackupBox.vala:97 Gtk/RsyncLogBox.vala:400
 #, c-format
 msgid "Group"
 msgstr "그룹"
@@ -1225,12 +1212,10 @@ msgid "Include @home subvolume in backups"
 msgstr "백업에 있는 @home 서브 볼륨 포함하기"
 
 #: Gtk/UsersBox.vala:259
-#, fuzzy
 msgid "Include All"
 msgstr "앱 제외하기"
 
 #: Gtk/UsersBox.vala:187
-#, fuzzy
 msgid "Include Hidden"
 msgstr "숨김 항목 포함하기"
 
@@ -1247,7 +1232,7 @@ msgstr "잘못된 스냅샷"
 msgid "Invalid command line arguments"
 msgstr "사용 불가능한 명령어 인수입니다"
 
-#: Gtk/MainWindow.vala:814
+#: Gtk/MainWindow.vala:824
 msgid "Invalid snapshot"
 msgstr "잘못된 스냅샷"
 
@@ -1363,7 +1348,7 @@ msgstr "마지막 매주 스냅샷을 만든 지 일주일이 넘었습니다"
 msgid "Last weekly snapshot not found"
 msgstr "마지막 매주 스냅샷을 찾을 수 없습니다"
 
-#: Gtk/MainWindow.vala:1038
+#: Gtk/MainWindow.vala:1049
 #, c-format
 msgid "Latest snapshot"
 msgstr "최근 스냅샷"
@@ -1389,7 +1374,7 @@ msgstr "장치 목록을 봅니다"
 msgid "List snapshots"
 msgstr "스냅샷 목록을 봅니다"
 
-#: Gtk/MainWindow.vala:989
+#: Gtk/MainWindow.vala:1000
 msgid "Live USB Mode (Restore Only)"
 msgstr "라이브 USB 모드 (복원 전용)"
 
@@ -1398,7 +1383,7 @@ msgstr "라이브 USB 모드 (복원 전용)"
 msgid "Location"
 msgstr "위치"
 
-#: Gtk/MainWindow.vala:449
+#: Gtk/MainWindow.vala:459
 msgid "Main window closed by user"
 msgstr "주창이 사용자에 의해 닫혔습니다"
 
@@ -1406,7 +1391,7 @@ msgstr "주창이 사용자에 의해 닫혔습니다"
 msgid "Mark for Deletion"
 msgstr "삭제 표시"
 
-#: Gtk/MainWindow.vala:631
+#: Gtk/MainWindow.vala:641
 msgid "Marked for deletion"
 msgstr "삭제 표시됨"
 
@@ -1448,20 +1433,20 @@ msgstr "매월 스냅샷 만들기에 실패했습니다"
 msgid "Mount"
 msgstr "장착"
 
-#: Core/Main.vala:2930
+#: Core/Main.vala:2935
 msgid "Moved system subvolume to snapshot directory"
 msgstr "스냅샷 디렉토리로 옮긴 시스템 서브 볼륨"
 
-#: Gtk/MainWindow.vala:790
+#: Gtk/MainWindow.vala:800
 msgid "Multiple snapshots selected"
 msgstr "여러 개의 스냅샷이 선택되었습니다"
 
 #: Console/AppConsole.vala:425 Gtk/BackupDeviceBox.vala:235
-#: Gtk/RsyncLogBox.vala:485
+#: Gtk/RsyncLogBox.vala:492
 msgid "Name"
 msgstr "이름"
 
-#: Gtk/SetupWizardWindow.vala:187 Gtk/RestoreWindow.vala:185
+#: Gtk/SetupWizardWindow.vala:187 Gtk/RestoreWindow.vala:187
 #: Gtk/BackupWindow.vala:158 Gtk/DeleteWindow.vala:160
 msgid "Next"
 msgstr "다음"
@@ -1474,16 +1459,16 @@ msgstr "아니요"
 msgid "No Change"
 msgstr "그대로 두기"
 
-#: Gtk/MainWindow.vala:605 Gtk/DeleteWindow.vala:339
+#: Gtk/MainWindow.vala:615 Gtk/DeleteWindow.vala:339
 msgid "No Snapshots Selected"
 msgstr "스냅샷을 선택하지 않으셨습니다"
 
-#: Gtk/MainWindow.vala:1062
+#: Gtk/MainWindow.vala:1073
 msgid "No snapshots available"
 msgstr "사용 가능한 스냅샷이 없습니다"
 
 #: Core/SnapshotRepo.vala:880 Console/AppConsole.vala:320
-#: Gtk/MainWindow.vala:1006
+#: Gtk/MainWindow.vala:1017
 msgid "No snapshots found"
 msgstr "스냅샷이 없습니다"
 
@@ -1491,7 +1476,7 @@ msgstr "스냅샷이 없습니다"
 msgid "No snapshots found on device"
 msgstr "이 장치에서 스냅샷을 찾을 수 없습니다"
 
-#: Gtk/MainWindow.vala:543
+#: Gtk/MainWindow.vala:553
 msgid "No snapshots on device"
 msgstr "장치에 스냅샷이 없습니다"
 
@@ -1499,11 +1484,11 @@ msgstr "장치에 스냅샷이 없습니다"
 msgid "No snapshots on this device"
 msgstr "이 장치에는 스냅샷이 없습니다"
 
-#: Gtk/MainWindow.vala:783
+#: Gtk/MainWindow.vala:793
 msgid "No snapshots selected"
 msgstr "스냅샷이 선택되지 않았습니다"
 
-#: Gtk/MainWindow.vala:1039 Gtk/MainWindow.vala:1041
+#: Gtk/MainWindow.vala:1050 Gtk/MainWindow.vala:1052
 msgid "None"
 msgstr "없음"
 
@@ -1554,11 +1539,11 @@ msgstr ""
 "운영체제가 우분투 유형 서브 볼륨 레이아웃을 사용하여 BTRFS 파티션에 설치되어"
 "야 합니다 (@and @home 서브 볼륨). 다른 레이아웃은 지원되지 않습니다."
 
-#: Core/Main.vala:4139
+#: Core/Main.vala:4144
 msgid "Older log files removed"
 msgstr "오래된 로그파일들이 지워졌습니다"
 
-#: Gtk/MainWindow.vala:1040
+#: Gtk/MainWindow.vala:1051
 msgid "Oldest snapshot"
 msgstr "가장 오래된 스냅샷"
 
@@ -1566,7 +1551,7 @@ msgstr "가장 오래된 스냅샷"
 msgid "On demand (manual)"
 msgstr ""
 
-#: Core/Main.vala:374 Core/Main.vala:3381 Gtk/RestoreDeviceBox.vala:525
+#: Core/Main.vala:374 Core/Main.vala:3386 Gtk/RestoreDeviceBox.vala:525
 msgid ""
 "Only ubuntu-type layouts with @ and @home subvolumes are currently supported."
 msgstr ""
@@ -1576,7 +1561,7 @@ msgstr ""
 msgid "Open Menu"
 msgstr "메뉴 열기"
 
-#: Core/Main.vala:3165
+#: Core/Main.vala:3170
 msgid ""
 "Option --snapshot-device should not be specified for creating snapshots in "
 "BTRFS mode"
@@ -1591,7 +1576,7 @@ msgstr "선택 사항"
 msgid "Other applications (next page)"
 msgstr "다른 애플리케이션 (다음 페이지)"
 
-#: Gtk/RestoreBox.vala:134 Gtk/BackupBox.vala:96 Gtk/RsyncLogBox.vala:391
+#: Gtk/RestoreBox.vala:134 Gtk/BackupBox.vala:96 Gtk/RsyncLogBox.vala:398
 #, c-format
 msgid "Owner"
 msgstr "소유자"
@@ -1601,7 +1586,7 @@ msgstr "소유자"
 msgid "Parent Device"
 msgstr "상위 장치"
 
-#: Core/Main.vala:2408 Core/Main.vala:2499 Gtk/RsyncLogBox.vala:215
+#: Core/Main.vala:2408 Core/Main.vala:2499 Gtk/RsyncLogBox.vala:222
 msgid "Parsing log file..."
 msgstr "로그 파일 구문을 분석하고 있습니다..."
 
@@ -1618,7 +1603,7 @@ msgstr "경로"
 msgid "Pattern"
 msgstr "패턴"
 
-#: Gtk/RestoreBox.vala:133 Gtk/BackupBox.vala:95 Gtk/RsyncLogBox.vala:389
+#: Gtk/RestoreBox.vala:133 Gtk/BackupBox.vala:95 Gtk/RsyncLogBox.vala:396
 #, c-format
 msgid "Permissions"
 msgstr "권한"
@@ -1648,7 +1633,7 @@ msgstr "관리자로서 프로그램을 사용하여주십시오('sudo' 혹은 '
 msgid "Please save your work and close all applications."
 msgstr "작업을 저장하시고 모든 프로그램을 닫아주십시오."
 
-#: Gtk/MainWindow.vala:685
+#: Gtk/MainWindow.vala:695
 msgid "Please select a snapshot to view the log!"
 msgstr "로그를 보기 위한 스냅샷을 하나 선택해주십시오!"
 
@@ -1660,7 +1645,7 @@ msgstr "GRUB 장치를 선택해주세요"
 msgid "Please wait a few minutes and try again."
 msgstr "잠시 기다렸다 다시 시도해 주세요"
 
-#: Gtk/MainWindow.vala:752
+#: Gtk/MainWindow.vala:762
 msgid "Please wait for snapshots to be deleted."
 msgstr "스냅샷이 지워질 때까지 기다려주세요"
 
@@ -1668,16 +1653,16 @@ msgstr "스냅샷이 지워질 때까지 기다려주세요"
 msgid "Please wait..."
 msgstr ""
 
-#: Gtk/RsyncLogBox.vala:181
+#: Gtk/RsyncLogBox.vala:188
 msgid "Populating list..."
 msgstr "목록를 채우고 있습니다..."
 
 #: Core/Main.vala:1525 Gtk/RestoreBox.vala:88 Gtk/BackupBox.vala:114
-#: Gtk/DeleteBox.vala:68 Gtk/RsyncLogBox.vala:225
+#: Gtk/DeleteBox.vala:68 Gtk/RsyncLogBox.vala:232
 msgid "Preparing..."
 msgstr "준비하고 있습니다..."
 
-#: Gtk/SetupWizardWindow.vala:179 Gtk/RestoreWindow.vala:177
+#: Gtk/SetupWizardWindow.vala:179 Gtk/RestoreWindow.vala:179
 #: Gtk/BackupWindow.vala:150 Gtk/DeleteWindow.vala:152
 msgid "Previous"
 msgstr "이전"
@@ -1686,11 +1671,11 @@ msgstr "이전"
 msgid "Print debug information"
 msgstr "디버그 정보 출력"
 
-#: Core/Main.vala:3743
+#: Core/Main.vala:3748
 msgid "Query completed"
 msgstr "쿼리를 마무리했습니다"
 
-#: Core/Main.vala:3726
+#: Core/Main.vala:3731
 msgid "Querying subvolume info..."
 msgstr "서브 볼륨 정보 대기열을 만들고 있습니다..."
 
@@ -1723,7 +1708,7 @@ msgstr "GRUB2 부트로더를 재설치하는 중입니다..."
 msgid "Re-installs the GRUB2 bootloader on the selected device."
 msgstr "선택한 장치에 GRUB2를 다시 설치할까요?"
 
-#: Gtk/RsyncLogBox.vala:174
+#: Gtk/RsyncLogBox.vala:181
 #, c-format
 msgid "Read %'d of %'d lines..."
 msgstr "%'d / %'d 개의 줄 읽음..."
@@ -1741,12 +1726,7 @@ msgstr "권장"
 msgid "Refresh"
 msgstr "새로 고침"
 
-#: Gtk/MainWindow.vala:359
-msgid "Refresh Snapshot List"
-msgstr "스냅샷 목록 새로 고침"
-
 #: Gtk/BackupDeviceBox.vala:106
-#, fuzzy
 msgid "Remote and network locations are not supported."
 msgstr "다른 애플리케이션 (다음 페이지)"
 
@@ -1755,7 +1735,7 @@ msgid "Remove"
 msgstr "제거"
 
 #: Core/Snapshot.vala:482 Core/SnapshotRepo.vala:957 Core/Main.vala:1563
-#: Core/Main.vala:1574 Core/Main.vala:4135
+#: Core/Main.vala:1574 Core/Main.vala:4140
 #, c-format
 msgid "Removed"
 msgstr "제거됨"
@@ -1764,7 +1744,7 @@ msgstr "제거됨"
 msgid "Removed cron task"
 msgstr "제거된 백업 일정관리"
 
-#: Core/Main.vala:3531
+#: Core/Main.vala:3536
 #, c-format
 msgid "Removed mount directory: '%s'"
 msgstr "장착 디렉터리를 제거하십시오: '%s'"
@@ -1789,6 +1769,7 @@ msgstr "스냅샷 제거하기"
 
 #: Console/AppConsole.vala:362 Gtk/MainWindow.vala:151
 #: Gtk/RestoreWindow.vala:116 Gtk/RestoreFinishBox.vala:71
+#: Gtk/RsyncLogBox.vala:377 Gtk/RsyncLogBox.vala:567
 msgid "Restore"
 msgstr "복원"
 
@@ -1804,7 +1785,7 @@ msgstr "제외 항목 복원하기"
 msgid "Restore Snapshot"
 msgstr "스냅샷 복원"
 
-#: Core/Main.vala:2743 Core/Main.vala:2815
+#: Core/Main.vala:2748 Core/Main.vala:2820
 msgid "Restore completed"
 msgstr "복원 끝"
 
@@ -1820,7 +1801,7 @@ msgstr "스냅샷을 복원합니다"
 msgid "Restored subvolumes will become active after system is restarted."
 msgstr "복원한 서브 볼륨은 시스템을 다시 시작한 후에 작동하게 됩니다."
 
-#: Core/Main.vala:2810
+#: Core/Main.vala:2815
 msgid "Restored system subvolume"
 msgstr "복원된 시스템 서브 볼륨"
 
@@ -1838,7 +1819,7 @@ msgstr ""
 "서브 볼륨은 새 스냅샷으로 보존됩니다. 필요하면, 이 스냅샷은 나중에 복원을 '실"
 "행 취소'할 수 있습니다."
 
-#: Core/Main.vala:2713
+#: Core/Main.vala:2717
 msgid "Restoring snapshot..."
 msgstr "스넵샷을 복원하는 중입니다..."
 
@@ -1865,7 +1846,6 @@ msgid "Root device not selected"
 msgstr "루트 장치를 선택하지 않았습니다"
 
 #: Gtk/RsyncLogWindow.vala:49
-#, fuzzy
 msgid "Rsync Log Viewer"
 msgstr "로그 뷰어"
 
@@ -1913,7 +1893,7 @@ msgstr "일정 관리"
 msgid "Scheduled snapshot in progress..."
 msgstr "스냅샷 스케줄을 진행하고 있습니다..."
 
-#: Core/Main.vala:1109 Gtk/ScheduleBox.vala:299 Gtk/MainWindow.vala:1056
+#: Core/Main.vala:1109 Gtk/ScheduleBox.vala:299 Gtk/MainWindow.vala:1067
 msgid "Scheduled snapshots are disabled"
 msgstr "스냅샷 스케줄이 해제됐습니다"
 
@@ -1950,7 +1930,7 @@ msgstr "GRUB 장치를 선택하십시오"
 msgid "Select Path"
 msgstr "경로 선택"
 
-#: Gtk/MainWindow.vala:684
+#: Gtk/MainWindow.vala:694
 msgid "Select Snapshot"
 msgstr "스냅샷 선택"
 
@@ -1979,7 +1959,7 @@ msgstr "대상 장치 선택"
 msgid "Select a partition on this disk"
 msgstr "이 디스크에서 파티션 선택하기"
 
-#: Gtk/MainWindow.vala:791
+#: Gtk/MainWindow.vala:801
 msgid "Select a single snapshot to restore"
 msgstr "복원할 스냅샷을 하나 선택하세요"
 
@@ -1991,11 +1971,11 @@ msgstr "루트 파일 시스템 (/)을 위한 장치를 선택하세요"
 msgid "Select another device or free up some space"
 msgstr "다른 장치를 선택하거나 공간을 늘리세요"
 
-#: Gtk/MainWindow.vala:537 Gtk/MainWindow.vala:544
+#: Gtk/MainWindow.vala:547 Gtk/MainWindow.vala:554
 msgid "Select another device to delete snasphots"
 msgstr "스냅샷을 지울 다른 장치를 선택하세요"
 
-#: Gtk/MainWindow.vala:471
+#: Gtk/MainWindow.vala:481
 msgid "Select another device?"
 msgstr "다른 장치를 선택하시겠습니까?"
 
@@ -2043,7 +2023,7 @@ msgstr "선택한 항목은 목록에서 지워집니다"
 msgid "Select the snapshot device"
 msgstr "스냅샷 장치를 선택하세요"
 
-#: Gtk/MainWindow.vala:784
+#: Gtk/MainWindow.vala:794
 msgid "Select the snapshot to restore"
 msgstr "복원할 스냅샷을 선택하세요"
 
@@ -2051,7 +2031,7 @@ msgstr "복원할 스냅샷을 선택하세요"
 msgid "Select the snapshots to be deleted"
 msgstr "지울 스냅샷을 선택하세요"
 
-#: Gtk/MainWindow.vala:606
+#: Gtk/MainWindow.vala:616
 msgid "Select the snapshots to mark for deletion"
 msgstr "지움 표시할 스냅샷을 선택하세요"
 
@@ -2059,11 +2039,11 @@ msgstr "지움 표시할 스냅샷을 선택하세요"
 msgid "Select the target devices where system will be cloned."
 msgstr "시스템이 복제될 장치를 선택하세요."
 
-#: Core/Main.vala:3193
+#: Core/Main.vala:3198
 msgid "Selected default snapshot device"
 msgstr "선택한 기본 스냅샷 장치"
 
-#: Core/Main.vala:3144 Core/Main.vala:3148
+#: Core/Main.vala:3149 Core/Main.vala:3153
 msgid "Selected default snapshot type"
 msgstr "선택한 기본 스냅샷 형식"
 
@@ -2087,7 +2067,7 @@ msgstr "선택한 스냅샷 장치는 시스템 디스크가 아닙니다"
 msgid "Selected snapshot is marked for deletion"
 msgstr "선택한 스냅샷에 삭제 표시했습니다"
 
-#: Gtk/MainWindow.vala:815
+#: Gtk/MainWindow.vala:825
 msgid "Selected snapshot is marked for deletion and cannot be restored"
 msgstr "선택한 스냅샷은 삭제 표시가 있어서 복원할 수 없습니다"
 
@@ -2150,7 +2130,7 @@ msgstr "알싱크 출력을 봅니다(기본)"
 
 #: Console/AppConsole.vala:456 Console/AppConsole.vala:495
 #: Gtk/RestoreBox.vala:131 Gtk/BackupBox.vala:93 Gtk/SnapshotListBox.vala:174
-#: Gtk/BackupDeviceBox.vala:202 Gtk/RsyncLogBox.vala:385
+#: Gtk/BackupDeviceBox.vala:202 Gtk/RsyncLogBox.vala:392
 #: Utility/Device.vala:1804 Utility/Device.vala:1819
 #, c-format
 msgid "Size"
@@ -2177,7 +2157,7 @@ msgstr "GRUB2 재설치를 넘깁니다"
 msgid "Snapshot"
 msgstr "스냅샷"
 
-#: Gtk/MainWindow.vala:554
+#: Gtk/MainWindow.vala:564
 #, c-format
 msgid ""
 "Snapshot '%s' is being used by the system and cannot be deleted. Restart the "
@@ -2191,11 +2171,11 @@ msgid "Snapshot Created"
 msgstr "스냅샷이 만들어졌습니다"
 
 #: Gtk/SnapshotListBox.vala:276
-#, fuzzy, c-format
+#, c-format
 msgid "Snapshot Levels"
 msgstr "스냅샷 레벨 선택하기"
 
-#: Gtk/MainWindow.vala:751
+#: Gtk/MainWindow.vala:761
 msgid "Snapshot deletion in progress..."
 msgstr "스냅샷을 지우고 있습니다..."
 
@@ -2225,7 +2205,7 @@ msgstr "스냅샷이 성공적으로 저장되었습니다"
 msgid "Snapshot to restore not specified!"
 msgstr "복원할 스냅샷이 지정되지 않았습니다!"
 
-#: Core/Main.vala:2819
+#: Core/Main.vala:2824
 msgid "Snapshot will become active after system is rebooted."
 msgstr "스냅샷은 시스템을 다시 시작하고 난 후에 활성화됩니다."
 
@@ -2233,7 +2213,7 @@ msgstr "스냅샷은 시스템을 다시 시작하고 난 후에 활성화됩니
 msgid "Snapshot(s) Deleted"
 msgstr "스냅샷을 지웠습니다"
 
-#: Gtk/MainWindow.vala:302 Gtk/DeleteWindow.vala:87
+#: Gtk/MainWindow.vala:310 Gtk/DeleteWindow.vala:87
 msgid "Snapshots"
 msgstr "스냅샷"
 
@@ -2259,7 +2239,7 @@ msgid ""
 msgstr "스냅샷은 BTRFS 파일 시스템의 내장 기능을 사용해서 만들어집니다."
 
 #: Gtk/ScheduleBox.vala:151
-#, fuzzy, c-format
+#, c-format
 msgid "Snapshots are not scheduled at fixed times."
 msgstr "스냅샷 장치를 선택하지 않았습니다"
 
@@ -2302,7 +2282,7 @@ msgid ""
 "locations are not supported."
 msgstr ""
 
-#: Gtk/MainWindow.vala:1001
+#: Gtk/MainWindow.vala:1012
 msgid "Snapshots available for restore"
 msgstr "복원 가능한 스냅샷"
 
@@ -2320,7 +2300,7 @@ msgstr ""
 msgid "Snapshots cannot be created in Live CD mode"
 msgstr "라이브 CD 모드에서는 스냅샷이 만들어지지 않습니다"
 
-#: Gtk/MainWindow.vala:1048
+#: Gtk/MainWindow.vala:1059
 msgid "Snapshots will be created at selected intervals"
 msgstr "설정한 스케줄대로 스냅샷이 만들어지게 됩니다"
 
@@ -2329,10 +2309,12 @@ msgid ""
 "Snapshots will be created at selected intervals if snapshot disk has enough "
 "space (> 1 GB)"
 msgstr ""
+"디스크 공간이 충분하다면 설정한 스케줄대로 스냅샷이 만들어지게 됩니다 (> 1 "
+"GB)\n"
 "디스크 공간이 충분하다면 설정한 스케줄대로 스냅샷을 만들어지게 됩니다 (> 1 "
 "GB)"
 
-#: Gtk/MainWindow.vala:632
+#: Gtk/MainWindow.vala:642
 msgid "Snapshots will be removed during the next scheduled run"
 msgstr "다음 스케줄을 실행하는 동안 스냅샷이 지워집니다"
 
@@ -2352,7 +2334,7 @@ msgstr "복원할 스냅샷을 지정하십시오"
 msgid "Specify target device"
 msgstr "대상 장치를 지정하십시오"
 
-#: Core/SnapshotRepo.vala:462 Gtk/RsyncLogBox.vala:465
+#: Core/SnapshotRepo.vala:462 Gtk/RsyncLogBox.vala:472
 #, c-format
 msgid "Status"
 msgstr "상태"
@@ -2386,7 +2368,7 @@ msgstr "심볼릭 링크가 업데이트됐습니다"
 msgid "Synching file systems..."
 msgstr "파일 시스템을 동기화하는 중입니다..."
 
-#: Core/Main.vala:1323 Core/Main.vala:2483 Core/Main.vala:2719
+#: Core/Main.vala:1323 Core/Main.vala:2483 Core/Main.vala:2724
 msgid "Synching files with rsync..."
 msgstr "rsync와 동기화하고 있습니다..."
 
@@ -2399,7 +2381,7 @@ msgstr "구문"
 msgid "System"
 msgstr "시스템"
 
-#: Gtk/MainWindow.vala:946
+#: Gtk/MainWindow.vala:957
 msgid "System Restore Utility"
 msgstr "시스템 복원 도구"
 
@@ -2457,7 +2439,7 @@ msgstr ""
 msgid "The system partition has an unsupported subvolume layout."
 msgstr "시스템 파티션에 지원하지 않는 서브 볼륨 레이아웃이 있습니다."
 
-#: Core/Main.vala:3380
+#: Core/Main.vala:3385
 msgid "The target partition has an unsupported subvolume layout."
 msgstr "대상 파티션에 지원하지 않는 서브 볼륨 레이아웃 있습니다."
 
@@ -2478,17 +2460,17 @@ msgstr ""
 "이 소프트웨어는 아무런 보증기간이 없으며 개발자는 이 프로그램을 사용하며 발생"
 "하는 어떤 문제도 책임지지 않습니다."
 
-#: Gtk/MainWindow.vala:1036 Gtk/MainWindow.vala:1047
+#: Gtk/MainWindow.vala:1047 Gtk/MainWindow.vala:1058
 msgid "Timeshift is active"
 msgstr "타임시프트가 작동합니다"
 
-#: Gtk/MainWindow.vala:937
+#: Gtk/MainWindow.vala:948
 msgid ""
 "Timeshift is powered by the following tools and components. Please visit the "
 "links for more information."
 msgstr ""
 
-#: Gtk/RestoreBox.vala:132 Gtk/BackupBox.vala:94 Gtk/RsyncLogBox.vala:387
+#: Gtk/RestoreBox.vala:132 Gtk/BackupBox.vala:94 Gtk/RsyncLogBox.vala:394
 #, c-format
 msgid "Timestamp"
 msgstr "타임스탬프"
@@ -2499,7 +2481,6 @@ msgid "To restore with default options, press the ENTER key for all prompts!"
 msgstr "기본 옵션으로 복원하려면, 모든 프롬프트에서 ENTER키를 누르세요!"
 
 #: Utility/Gtk/AboutWindow.vala:436
-#, fuzzy
 msgid "Translations"
 msgstr "번역가"
 
@@ -2544,7 +2525,7 @@ msgstr "장치로부터 해제"
 msgid "Unshared"
 msgstr "공유 안 함"
 
-#: Core/Main.vala:3384 Gtk/RestoreDeviceBox.vala:522
+#: Core/Main.vala:3389 Gtk/RestoreDeviceBox.vala:522
 msgid "Unsupported Subvolume Layout"
 msgstr "지원하지 않는 서브 볼륨 레이아웃"
 
@@ -2612,16 +2593,14 @@ msgid "Vendor"
 msgstr "공급자"
 
 #: Gtk/SnapshotListBox.vala:323
-#, fuzzy
 msgid "View Rsync Log for Create"
 msgstr "만들기 로그 보기"
 
 #: Gtk/SnapshotListBox.vala:330
-#, fuzzy
 msgid "View Rsync Log for Restore"
 msgstr "복원 로그 보기"
 
-#: Gtk/MainWindow.vala:368
+#: Gtk/MainWindow.vala:378
 msgid "View TimeShift Logs"
 msgstr "타임시프트 로그 보기"
 
@@ -2710,8 +2689,8 @@ msgstr "[알림] 잘못된 잠금이 삭제되었습니다"
 msgid "all"
 msgstr "모두"
 
-#: Core/Main.vala:1440 Core/Main.vala:2802 Core/Main.vala:3805
-#: Core/Main.vala:3889 Core/Main.vala:3992 Core/Main.vala:4031
+#: Core/Main.vala:1440 Core/Main.vala:2807 Core/Main.vala:3810
+#: Core/Main.vala:3894 Core/Main.vala:3997 Core/Main.vala:4036
 msgid "btrfs returned an error"
 msgstr "btrfs가 오류를 보냈습니다"
 
@@ -2739,7 +2718,7 @@ msgstr "삭제 표시됨"
 msgid "mounted at path"
 msgstr "경로에 마운트 됨"
 
-#: Core/Snapshot.vala:474 Core/Main.vala:1355 Gtk/RestoreBox.vala:232
+#: Core/Snapshot.vala:474 Core/Main.vala:1355 Gtk/RestoreBox.vala:237
 #: Gtk/BackupBox.vala:234 Gtk/DeleteBox.vala:149
 msgid "remaining"
 msgstr "남음"
@@ -2752,50 +2731,6 @@ msgstr "알싱크가 오류를 실행했습니다"
 #: Core/SnapshotRepo.vala:813
 msgid "un-tagged"
 msgstr "태그 되지 않은"
-
-#, fuzzy
-#~ msgid "Restored"
-#~ msgstr "복원"
-
-#, fuzzy
-#~ msgid "Review Actions"
-#~ msgstr "개정"
-
-#, fuzzy
-#~ msgid "Filter:"
-#~ msgstr "필터"
-
-#~ msgid "Cloning System..."
-#~ msgstr "시스템을 복제하고 있습니다..."
-
-#~ msgid "View:"
-#~ msgstr "보기:"
-
-#, fuzzy
-#~ msgid "deleted"
-#~ msgstr "지워짐"
-
-#~ msgid "Include everything"
-#~ msgstr "모두 포함하기"
-
-#, fuzzy
-#~ msgid ""
-#~ "This program is free for personal and commercial use and comes with "
-#~ "absolutely no warranty. You use this program entirely at your own risk. "
-#~ "The author will not be liable for any damages arising from the use of "
-#~ "this program."
-#~ msgstr ""
-#~ "이 소프트웨어는 아무런 보증기간이 없으며 개발자는 이 프로그램을 사용하며 "
-#~ "발생하는 어떤 문제도 책임지지 않습니다."
-
-#~ msgid "Close Window"
-#~ msgstr "창 닫기"
-
-#~ msgid "Documenters"
-#~ msgstr "문서 작성자"
-
-#~ msgid "Third Party Tools"
-#~ msgstr "제삼자 도구"
 
 #~ msgid ""
 #~ "<b>Backup Levels</b>\n"
@@ -2816,5 +2751,68 @@ msgstr "태그 되지 않은"
 #~ "W\t매주\n"
 #~ "M\t매월"
 
+#~ msgid "Cloning System..."
+#~ msgstr "시스템을 복제하고 있습니다..."
+
+#~ msgid "Close Window"
+#~ msgstr "창 닫기"
+
+#~ msgid "Contributions"
+#~ msgstr "기여"
+
+#~ msgid "Documenters"
+#~ msgstr "문서 작성자"
+
+#~ msgid "Include everything"
+#~ msgstr "모두 포함하기"
+
+#~ msgid "Include hidden items"
+#~ msgstr "숨김 항목 포함하기"
+
+#~ msgid "Log Viewer"
+#~ msgstr "로그 뷰어"
+
+#~ msgid "Refresh Snapshot List"
+#~ msgstr "스냅샷 목록 새로 고침"
+
 #~ msgid "Scheduled task runs once every hour"
 #~ msgstr "스케줄 관리는 매 시간마다 한 번씩 실행합니다"
+
+#~ msgid "Third Party Tools"
+#~ msgstr "제삼자 도구"
+
+#~ msgid "Translators"
+#~ msgstr "번역가"
+
+#~ msgid "View Log for Create"
+#~ msgstr "만들기 로그 보기"
+
+#~ msgid "View Log for Restore"
+#~ msgstr "복원 로그 보기"
+
+#~ msgid "View:"
+#~ msgstr "보기:"
+
+#~ msgid "Change"
+#~ msgstr "변경됨"
+
+#~ msgid "Restored"
+#~ msgstr "복원"
+
+#~ msgid "Review Actions"
+#~ msgstr "개정"
+
+#~ msgid "Filter:"
+#~ msgstr "필터"
+
+#~ msgid "deleted"
+#~ msgstr "지워짐"
+
+#~ msgid ""
+#~ "This program is free for personal and commercial use and comes with "
+#~ "absolutely no warranty. You use this program entirely at your own risk. "
+#~ "The author will not be liable for any damages arising from the use of "
+#~ "this program."
+#~ msgstr ""
+#~ "이 소프트웨어는 아무런 보증기간이 없으며 개발자는 이 프로그램을 사용하며 "
+#~ "발생하는 어떤 문제도 책임지지 않습니다."

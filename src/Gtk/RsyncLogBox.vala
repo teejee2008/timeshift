@@ -51,6 +51,7 @@ public class RsyncLogBox : Gtk.Box {
 	private string status_filter = "";
 
 	public Gtk.Label lbl_header;
+	public Gtk.Label lbl_header_progress;
 	private Gtk.Spinner spinner;
 	public Gtk.Label lbl_msg;
 	public Gtk.Label lbl_status;
@@ -143,14 +144,16 @@ public class RsyncLogBox : Gtk.Box {
 			tmr_init = 0;
 		}
 
-		gtk_set_busy(true, window);
+		//gtk_set_busy(true, window);
 
 		parse_log_file();
 
-		lbl_header.set_no_show_all(false);
-		lbl_header.show_all();
+		if (App.dry_run){
+			lbl_header.set_no_show_all(false);
+			lbl_header.show();
+		}
 
-		gtk_set_busy(false, window);
+		//gtk_set_busy(false, window);
 
 		log_debug("init_delayed(): finish");
 		
@@ -216,7 +219,7 @@ public class RsyncLogBox : Gtk.Box {
 		vbox_progress = new Gtk.Box(Orientation.VERTICAL, 6);
 		this.add(vbox_progress);
 		
-		lbl_header = add_label_header(vbox_progress, _("Parsing log file..."), true);
+		lbl_header_progress = add_label_header(vbox_progress, _("Parsing log file..."), true);
 		
 		var hbox_status = new Gtk.Box(Orientation.HORIZONTAL, 6);
 		vbox_progress.add(hbox_status);

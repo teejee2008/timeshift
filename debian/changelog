@@ -1,3 +1,31 @@
+timeshift (18.2) xenial; urgency=medium
+
+  * Updated rsync log viewer
+
+  * Display preview of files to be restored for rsync snapshots
+
+  * Enable "View Log for Restore" menu item only if restore log exits
+
+  * Appdata: Install to both /appdata and /metainfo for compatibility
+
+  * Skip parsing log file after creating rsync snapshot
+
+  * Disable deleted count label while creating snapshot as this info
+  is not applicable while creating snapshots
+
+  * makefile: Remove rpath; Break commands over multiple lines;
+
+  * Removed menu item for "Refresh Snapshot List"
+
+  * Statusbar: DIsplay status items in separate frames
+
+  * Restore: Allow compare action to be cancelled
+
+  * Fixed: Unchanged files count was not displayed
+
+ -- Tony George <tony.george.kol@gmail.com>  Sat, 03 Feb 2018 10:00:00 +0530
+
+
 timeshift (18.1.1) xenial; urgency=medium
 
   * Fixed an issue where home directory would get deleted while
@@ -10,6 +38,7 @@ timeshift (18.1.1) xenial; urgency=medium
   exclude filters.
 
  -- Tony George <tony.george.kol@gmail.com>  Thu, 25 Jan 2018 10:00:00 +0530
+
 
 timeshift (18.1) xenial; urgency=medium
 

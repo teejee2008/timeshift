@@ -367,7 +367,7 @@ public class RsyncLogBox : Gtk.Box {
 
 		string txt = "";
 		if (App.dry_run){
-			txt = _("Change");
+			txt = _("Restore");
 		}
 		else if (is_restore_log){
 			txt = _("Changed");
@@ -540,8 +540,10 @@ public class RsyncLogBox : Gtk.Box {
 		var spath = "%s/localhost".printf(file_parent(rsync_log_file));
 		
 		foreach(var item in loglist) {
-			
-			//if (item.file_type == FileType.DIRECTORY){ continue; }
+
+			if (App.dry_run){
+				if (item.file_type == FileType.DIRECTORY){ continue; }
+			}
 
 			string status = "";
 			Gdk.Pixbuf status_icon = null;

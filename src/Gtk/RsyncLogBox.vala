@@ -84,6 +84,7 @@ public class RsyncLogBox : Gtk.Box {
 		// header
 		if (App.dry_run){
 			lbl_header = add_label_header(this, _("Confirm Actions"), true);
+			lbl_header.set_no_show_all(true);
 		}
 
 		create_progressbar();
@@ -145,6 +146,9 @@ public class RsyncLogBox : Gtk.Box {
 		gtk_set_busy(true, window);
 
 		parse_log_file();
+
+		lbl_header.set_no_show_all(false);
+		lbl_header.show_all();
 
 		gtk_set_busy(false, window);
 
@@ -557,7 +561,7 @@ public class RsyncLogBox : Gtk.Box {
 				case "permissions":
 				case "owner":
 				case "group":
-					status = App.dry_run ? _("Change") : _("Changed");
+					status = App.dry_run ? _("Restore") : _("Changed");
 					status_icon = IconManager.lookup("item-yellow",16);
 					break;
 				case "created":

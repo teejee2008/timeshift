@@ -2710,7 +2710,12 @@ public class Main : GLib.Object{
 			// run the scripts --------------------
 		
 			if (snapshot_to_restore != null){
-				log_msg(_("Restoring snapshot..."));
+				if (dry_run){
+					log_msg(_("Comparing Files (Dry Run)..."));
+				}
+				else{
+					log_msg(_("Restoring snapshot..."));
+				}
 			}
 			else{
 				log_msg(_("Cloning system..."));

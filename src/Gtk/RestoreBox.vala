@@ -179,7 +179,7 @@ class RestoreBox : Gtk.Box{
 
 		log_debug("RestoreBox: restore()");
 		
-		if (App.restore_current_system){
+		if (App.restore_current_system && !App.dry_run){
 			parent_window.hide();
 		}
 
@@ -205,16 +205,20 @@ class RestoreBox : Gtk.Box{
 		string status_line = "";
 		string last_status_line = "";
 		int remaining_counter = 10;
+		
 		while (thread_is_running){
 
 			status_line = escape_html(App.task.status_line);
+			
 			if (status_line != last_status_line){
+				
 				lbl_status.label = status_line;
 				last_status_line = status_line;
 				status_line_counter = status_line_counter_default;
 			}
 			else{
 				status_line_counter--;
+				
 				if (status_line_counter < 0){
 					status_line_counter = status_line_counter_default;
 					lbl_status.label = "";
@@ -227,14 +231,16 @@ class RestoreBox : Gtk.Box{
 
 			// time remaining
 			remaining_counter--;
+			
 			if (remaining_counter == 0){
-				lbl_remaining.label =
-					App.task.stat_time_remaining + " " + _("remaining");
+				
+				lbl_remaining.label = App.task.stat_time_remaining + " " + _("remaining");
 
 				remaining_counter = 10;
 			}	
 			
 			if (fraction < 0.99){
+				
 				progressbar.fraction = fraction;
 
 				#if XAPP
@@ -265,7 +271,7 @@ class RestoreBox : Gtk.Box{
 		XApp.set_window_progress(parent_window, 0);
 		#endif
 		
-		if (App.restore_current_system){
+		if (App.restore_current_system && !App.dry_run){
 			parent_window.show();
 		}
 

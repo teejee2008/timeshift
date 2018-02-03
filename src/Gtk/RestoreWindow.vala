@@ -127,6 +127,8 @@ class RestoreWindow : Gtk.Window{
 
 		show_all();
 
+		gtk_do_events();
+
 		tmr_init = Timeout.add(100, init_delayed);
 
 		log_debug("RestoreWindow: RestoreWindow(): exit");
@@ -203,19 +205,22 @@ class RestoreWindow : Gtk.Window{
 
         btn_cancel.clicked.connect(()=>{
 
-			var title = _("Cancel restore?");
+			if (!App.dry_run){
 				
-			var msg = _("Cancelling the restore process will leave the target system in an inconsistent state. The system may fail to boot or you may run into various issues. After cancelling, you need to restore another snapshot, to bring the system to a consistent state. Click Yes to confirm.");
-			
-			var type = Gtk.MessageType.ERROR;
-			var buttons_type = Gtk.ButtonsType.YES_NO;
-			
-			var dlg = new CustomMessageDialog(title, msg, type, this, buttons_type);
-			var response = dlg.run();
-			dlg.destroy();
-			
-			if (response != Gtk.ResponseType.YES){
-				return;
+				var title = _("Cancel restore?");
+					
+				var msg = _("Cancelling the restore process will leave the target system in an inconsistent state. The system may fail to boot or you may run into various issues. After cancelling, you need to restore another snapshot, to bring the system to a consistent state. Click Yes to confirm.");
+				
+				var type = Gtk.MessageType.ERROR;
+				var buttons_type = Gtk.ButtonsType.YES_NO;
+				
+				var dlg = new CustomMessageDialog(title, msg, type, this, buttons_type);
+				var response = dlg.run();
+				dlg.destroy();
+				
+				if (response != Gtk.ResponseType.YES){
+					return;
+				}
 			}
 			
 			if (App.task != null){
@@ -329,6 +334,8 @@ class RestoreWindow : Gtk.Window{
 			destroy();
 			break;
 		}
+
+		gtk_do_events();
 		
 		initialize_tab();
 	}
@@ -337,7 +344,7 @@ class RestoreWindow : Gtk.Window{
 
 		if (notebook.page < 0){ return; }
 
-		log_debug("page: %d".printf(notebook.page));
+		log_debug("initialize_tab: %d".printf(notebook.page));
 
 		// show/hide actions -----------------------------------
 
@@ -345,10 +352,28 @@ class RestoreWindow : Gtk.Window{
 		
 		switch(notebook.page){
 		case Tabs.RESTORE:
+		
 			btn_prev.hide();
 			btn_next.hide();
 			btn_close.hide();
+			
 			btn_cancel.show();
+			
+			#if GTK3_18
+			bbox_action.set_layout (Gtk.ButtonBoxStyle.CENTER);
+			#endif
+			
+			break;
+			
+		case Tabs.CHECK:
+		
+			btn_prev.hide();
+			btn_next.hide();
+			btn_close.hide();
+			
+			btn_cancel.show();
+			btn_cancel.sensitive = true;
+			
 			#if GTK3_18
 			bbox_action.set_layout (Gtk.ButtonBoxStyle.CENTER);
 			#endif
@@ -358,44 +383,55 @@ class RestoreWindow : Gtk.Window{
 		case Tabs.RESTORE_EXCLUDE:
 		case Tabs.EXCLUDE_APPS:
 		case Tabs.SUMMARY:
+		
 			btn_prev.show();
 			btn_next.show();
 			btn_close.show();
 			btn_cancel.hide();
+			
 			btn_prev.sensitive = false;
 			btn_next.sensitive = true;
 			btn_close.sensitive = true;
+			
 			#if GTK3_18
 			bbox_action.set_layout (Gtk.ButtonBoxStyle.EXPAND);
 			#endif
 			break;
 
 		case Tabs.SHOW_LOG:
+		
 			btn_prev.show();
 			btn_next.show();
 			btn_close.show();
 			btn_cancel.hide();
+			
 			btn_prev.sensitive = false;
 			btn_next.sensitive = true;
 			btn_close.sensitive = true;
+			
 			#if GTK3_18
 			bbox_action.set_layout (Gtk.ButtonBoxStyle.EXPAND);
 			#endif
 			break;
 			
 		case Tabs.FINISH:
+		
 			btn_prev.show();
 			btn_next.show();
 			btn_close.show();
 			btn_cancel.hide();
+			
 			btn_prev.sensitive = false;
 			btn_next.sensitive = false;
 			btn_close.sensitive = true;
+			
 			#if GTK3_18
 			bbox_action.set_layout (Gtk.ButtonBoxStyle.EXPAND);
 			#endif
 			break;
 		}
+
+		gtk_do_events();
 		
 		// actions ---------------------------------------------------
 		
@@ -444,6 +480,8 @@ class RestoreWindow : Gtk.Window{
 			//wait_and_close_window(1000, this); // do not auto-close restore window.
 			break;
 		}
+
+		gtk_do_events();
 	}
 
 	private bool validate_current_tab(){

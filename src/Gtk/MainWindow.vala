@@ -231,42 +231,49 @@ class MainWindow : Gtk.Window{
     }
 
 	private void init_ui_statusbar(){
+
+		// hbox_shield
+		var hbox_status = new Gtk.Box(Orientation.HORIZONTAL, 6);
+		hbox_status.margin = 6;
+		hbox_status.margin_top = 0;
+		vbox_main.add(hbox_status);
 		
 		// scrolled
-		var scrolled = new ScrolledWindow(null, null);
+		var scrolled = new Gtk.ScrolledWindow(null, null);
 		scrolled.set_shadow_type (ShadowType.ETCHED_IN);
-		scrolled.margin = 6;
-		scrolled.margin_top = 0;
+		//scrolled.margin = 6;
+		//scrolled.margin_top = 0;
 		scrolled.hscrollbar_policy = Gtk.PolicyType.NEVER;
 		scrolled.vscrollbar_policy = Gtk.PolicyType.NEVER;
-		vbox_main.add(scrolled);
+		hbox_status.add(scrolled);
 		statusbar = scrolled;
 		
 		// hbox_shield
 		var box = new Gtk.Box(Orientation.HORIZONTAL, 6);
 		box.margin = 6;
-        box.margin_right = 12;
+        //box.margin_right = 12;
 		scrolled.add (box);
 
         // img_shield
 		img_shield = new Gtk.Image();
 		img_shield.surface = IconManager.lookup_surface(IconManager.SHIELD_HIGH, IconManager.SHIELD_ICON_SIZE, img_shield.scale_factor);
-		img_shield.margin_bottom = 6;
+		//img_shield.margin_bottom = 6;
         box.add(img_shield);
 
+		// status text
 		var vbox = new Gtk.Box(Orientation.VERTICAL, 6);
-		vbox.margin_right = 6;
+		//vbox.margin_right = 6;
         box.add (vbox);
         
 		//lbl_shield
 		lbl_shield = add_label(vbox, "");
-		lbl_shield.margin_top = 6;
-        lbl_shield.yalign = (float) 0.5;
+		//lbl_shield.margin_top = 6;
+        lbl_shield.yalign = 0.5f;
 		lbl_shield.hexpand = true;
 		
         //lbl_shield_subnote
 		lbl_shield_subnote = add_label(vbox, "");
-		lbl_shield_subnote.yalign = (float) 0.5;
+		lbl_shield_subnote.yalign = 0.5f;
 		lbl_shield_subnote.wrap = true;
 		lbl_shield_subnote.wrap_mode = Pango.WrapMode.WORD_CHAR;
 		lbl_shield_subnote.max_width_chars = 50;
@@ -279,12 +286,13 @@ class MainWindow : Gtk.Window{
         //box.add (vbox);
         //vbox_snap_count = vbox;
 
-        scrolled = new ScrolledWindow(null, null);
+		// scrolled
+        scrolled = new Gtk.ScrolledWindow(null, null);
 		scrolled.set_shadow_type (ShadowType.ETCHED_IN);
 		scrolled.hscrollbar_policy = Gtk.PolicyType.NEVER;
 		scrolled.vscrollbar_policy = Gtk.PolicyType.NEVER;
 		scrolled.set_no_show_all(true);
-		box.add (scrolled);
+		hbox_status.add (scrolled);
 		
 		vbox = new Gtk.Box(Orientation.VERTICAL, 6);
 		vbox.margin = 6;
@@ -315,15 +323,17 @@ class MainWindow : Gtk.Window{
         //box.add(vbox);
         //vbox_free_space = vbox;
 
-        scrolled = new ScrolledWindow(null, null);
+        scrolled = new Gtk.ScrolledWindow(null, null);
 		scrolled.set_shadow_type (ShadowType.ETCHED_IN);
 		scrolled.hscrollbar_policy = Gtk.PolicyType.NEVER;
 		scrolled.vscrollbar_policy = Gtk.PolicyType.NEVER;
 		scrolled.set_no_show_all(true);
-		box.add (scrolled);
+		hbox_status.add (scrolled);
 		
 		vbox = new Gtk.Box(Orientation.VERTICAL, 6);
 		vbox.margin = 6;
+		vbox.margin_left = 12;
+		vbox.margin_right = 12;
         scrolled.add(vbox);
         scrolled_free_space = scrolled;
 
@@ -829,9 +839,10 @@ class MainWindow : Gtk.Window{
 
 		var window = new RestoreWindow();
 		window.set_transient_for (this);
-		window.show_all();
+		//window.show_all();
 
 		window.destroy.connect(()=>{
+			App.dry_run = false;
 			App.repo.load_snapshots();
 			refresh_all();
 		});

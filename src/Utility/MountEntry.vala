@@ -8,6 +8,7 @@ using TeeJee.Misc;
 using Json;
 
 public class MountEntry : GLib.Object{
+	
 	public Device device = null;
 	public string mount_point = "";
 	public string mount_options = "";
@@ -19,8 +20,16 @@ public class MountEntry : GLib.Object{
 	}
 
 	public string subvolume_name(){
+		
 		if (mount_options.contains("subvol=")){
-			return mount_options.split("subvol=")[1].split(",")[0].strip();
+			
+			string txt = mount_options.split("subvol=")[1].split(",")[0].strip();
+			
+			if (txt.has_prefix("/") && (txt.split("/").length == 2)){
+				txt = txt.split("/")[1];
+			}
+			
+			return txt;
 		}
 		else{
 			return "";

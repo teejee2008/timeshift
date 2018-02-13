@@ -149,8 +149,13 @@ public class FsTabEntry : GLib.Object{
 	}
 
 	public string subvolume_name(){
-		if (options.contains("subvol=")){
-			return options.split("subvol=")[1].split(",")[0].strip();
+		
+		if (options.down().contains("subvol=")){
+			string txt = options.split("subvol=")[1].split(",")[0].strip();
+			if (txt.has_prefix("/") && (txt.split("/").length == 2)){
+				txt = txt.split("/")[1];
+			}
+			return txt;
 		}
 		else{
 			return "";

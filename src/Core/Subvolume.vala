@@ -65,6 +65,12 @@ public class Subvolume : GLib.Object{
 		return Device.get_device_by_uuid(device_uuid);
 	}
 	
+	public bool exists_on_disk{
+		get {
+			return dir_exists(path);
+		}
+	}
+	
 	public static Gee.HashMap<string, Subvolume> detect_subvolumes_for_system_by_path(
 		string system_path, SnapshotRepo? repo, Gtk.Window? parent_window){
 

@@ -188,6 +188,9 @@ public class Snapshot : GLib.Object{
 	// control files
 	
 	public void read_control_file(){
+		
+		//log_debug("read_control_file()");
+		
 		string ctl_file = path + "/info.json";
 
 		var f = File.new_for_path(ctl_file);
@@ -226,15 +229,24 @@ public class Snapshot : GLib.Object{
 
 			distro = LinuxDistro.get_dist_info(path_combine(path, "localhost"));
 
+			//log_debug("repo.mount_path: %s".printf(repo.mount_path));
+
 			if (config.has_member("subvolumes")){
 
 				var subvols = (Json.Object) config.get_object_member("subvolumes");
 
 				foreach(string subvol_name in subvols.get_members()){
-
+					
+					if ((subvol_name != "@")&&(subvol_name != "@home")){ continue; }
+					
 					paths[subvol_name] = path.replace(repo.mount_path, repo.mount_paths[subvol_name]);
 					
 					var subvol_path = path_combine(paths[subvol_name], subvol_name);
+					
+					if (!dir_exists(subvol_path)){ continue; }
+
+					//log_debug("subvol_path: %s".printf(subvol_path));
+					
 					var subvolume = new Subvolume(subvol_name, subvol_path, "", repo); //subvolumes.get(subvol_name);
 					subvolumes.set(subvol_name, subvolume);
 					
@@ -272,6 +284,8 @@ public class Snapshot : GLib.Object{
 		else{
 			valid = false;
 		}
+		
+		//log_debug("read_control_file(): exit");
 	}
 
 	public void read_exclude_list(){
@@ -429,7 +443,7 @@ public class Snapshot : GLib.Object{
 		}
 		return false;
 	}
-
+	
 	// actions
 
 	public bool remove(bool wait){
@@ -547,5 +561,4 @@ public class Snapshot : GLib.Object{
 		var task = new RsyncTask();
 		task.parse_log(rsync_log_file);
 	}
-
 }

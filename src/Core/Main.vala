@@ -2060,12 +2060,14 @@ public class Main : GLib.Object{
 		int max_dev = _("Device").length;
 
 		foreach(var entry in mount_list){
+			
 			if (entry.device == null){ continue; }
 
 			if (btrfs_mode){
-				if (entry.subvolume_name().length == 0){
-					continue;
-				}
+				
+				if (entry.subvolume_name().length == 0){ continue; }
+				
+				if (!App.snapshot_to_restore.subvolumes.has_key(entry.subvolume_name())){ continue; }
 			}
 			
 			string dev_name = entry.device.full_name_with_parent;
@@ -2095,9 +2097,10 @@ public class Main : GLib.Object{
 			if (entry.device == null){ continue; }
 
 			if (btrfs_mode){
-				if (entry.subvolume_name().length == 0){
-					continue;
-				}
+
+				if (entry.subvolume_name().length == 0){ continue; }
+				
+				if (!App.snapshot_to_restore.subvolumes.has_key(entry.subvolume_name())){ continue; }
 			}
 			
 			string dev_name = entry.device.full_name_with_parent;
@@ -2785,17 +2788,19 @@ public class Main : GLib.Object{
 		// restore snapshot subvolumes by creating new subvolume snapshots
 
 		var subvol_names = new string[] { "@" };
-		if (include_btrfs_home){
+		if (include_btrfs_home && snapshot_to_restore.subvolumes.has_key("@home")){
 			subvol_names = new string[] { "@","@home" };
 		}
 
 		foreach(string subvol_name in subvol_names){
 			
 			string snapshot_path = path_combine(repo.mount_paths[subvol_name], "timeshift-btrfs/snapshots/%s".printf(snapshot_to_restore.name));
+			
+			string subvol_path = path_combine(snapshot_path, subvol_name);
  
-			if (dir_exists(snapshot_path)){
+			if (dir_exists(subvol_path)){
 				
-				string src_path = path_combine(snapshot_path, subvol_name);
+				string src_path = subvol_path;
 				string dst_path = path_combine(repo.mount_paths[subvol_name], subvol_name);
 				cmd = "btrfs subvolume snapshot '%s' '%s'".printf(src_path, dst_path);
 				log_debug(cmd);
@@ -2865,13 +2870,13 @@ public class Main : GLib.Object{
 
 			if (found){
 				//delete system subvolumes
-				sys_subvolumes["@"].remove();
-				if (include_btrfs_home && sys_subvolumes.has_key("@home")){
-					sys_subvolumes["@home"].remove();
-					log_msg(_("Deleted system subvolumes") + ": @, @home");
-				}
-				else{
+				if (sys_subvolumes.has_key("@")){
+					sys_subvolumes["@"].remove();
 					log_msg(_("Deleted system subvolumes") + ": @");
+				}
+				if (include_btrfs_home && sys_subvolumes.has_key("@home") && snapshot_to_restore.subvolumes.has_key("@home")){
+					sys_subvolumes["@home"].remove();
+					log_msg(_("Deleted system subvolumes") + ": @home");
 				}
 
 				//update description for pre-restore backup
@@ -3283,8 +3288,10 @@ public class Main : GLib.Object{
 		sys_efi = null;
 		sys_home = null;
 
-		foreach(Device pi in partitions){
+		foreach(var pi in partitions){
+			
 			foreach(var mp in pi.mount_points){
+				
 				// skip loop devices - Fedora Live uses loop devices containing ext4-formatted lvm volumes
 				if ((pi.type == "loop") || (pi.has_parent() && (pi.parent.type == "loop"))){
 					continue;

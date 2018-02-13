@@ -50,23 +50,27 @@ public class SnapshotRepo : GLib.Object{
 	private bool thr_running = false;
 	private string thr_args1 = "";
 
-	public SnapshotRepo.from_path(string path, Gtk.Window? parent_win, bool btrfs_repo){
+	public SnapshotRepo.from_path(string path, Gtk.Window? parent_win, bool _btrfs_mode){
 
 		log_debug("SnapshotRepo: from_path()");
 		
 		//this.snapshot_path_user = path;
 		//this.use_snapshot_path_custom = true;
+
+		this.mount_path = path;
 		this.parent_window = parent_win;
-		this.btrfs_mode = btrfs_repo;
+		this.btrfs_mode = _btrfs_mode;
 		
 		snapshots = new Gee.ArrayList<Snapshot>();
 		invalid_snapshots = new Gee.ArrayList<Snapshot>();
 		mount_paths = new Gee.HashMap<string,string>();
 		
-		log_debug(_("Selected snapshot path") + ": %s".printf(path));
+		//log_debug("Selected snapshot repo path: %s".printf(path));
 		
 		var list = Device.get_disk_space_using_df(path);
+		
 		if (list.size > 0){
+			
 			device = list[0];
 			
 			log_debug(_("Device") + ": %s".printf(device.device));
@@ -316,13 +320,16 @@ public class SnapshotRepo : GLib.Object{
 		}
 
 		try{
-			var dir = File.new_for_path (snapshots_path);
-			var enumerator = dir.enumerate_children ("*", 0);
+			var dir = File.new_for_path(snapshots_path);
+			var enumerator = dir.enumerate_children("*", 0);
 
 			var info = enumerator.next_file ();
 			while (info != null) {
 				if (info.get_file_type() == FileType.DIRECTORY) {
 					if (info.get_name() != ".sync") {
+						
+						//log_debug("load_snapshots():" + snapshots_path + "/" + info.get_name());
+						
 						Snapshot bak = new Snapshot(snapshots_path + "/" + info.get_name(), btrfs_mode, this);
 						if (bak.valid){
 							snapshots.add(bak);

@@ -443,6 +443,19 @@ public class Snapshot : GLib.Object{
 		}
 		return false;
 	}
+
+	public Gee.ArrayList<Subvolume> subvolumes_sorted {
+		owned get {
+			var list = new Gee.ArrayList<Subvolume>();
+			foreach(var subvol in subvolumes.values){
+				list.add(subvol);
+			}
+			list.sort((a,b)=>{
+				return strcmp(a.name, b.name);
+			});
+			return list;
+		}
+	}
 	
 	// actions
 

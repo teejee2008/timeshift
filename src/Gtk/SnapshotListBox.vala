@@ -250,24 +250,44 @@ class SnapshotListBox : Gtk.Box{
 		
 		//tooltips
 		treeview.query_tooltip.connect ((x, y, keyboard_tooltip, tooltip) => {
+			
 			TreeModel model;
 			TreePath path;
 			TreeIter iter;
 			TreeViewColumn column;
+			
 			if (treeview.get_tooltip_context (ref x, ref y, keyboard_tooltip, out model, out path, out iter)){
+				
 				int bx, by;
 				treeview.convert_widget_to_bin_window_coords(x, y, out bx, out by);
+				
 				if (treeview.get_path_at_pos (bx, by, null, out column, null, null)){
-					if (column == col_date){
-						tooltip.set_markup(_("<b>Snapshot Date:</b> Date on which snapshot was created"));
+					
+					if ((column == col_date) || (column == col_system)){
+
+						Snapshot bak;
+						model.get (iter, 0, out bak, -1);
+
+						string txt = "";
+
+						if (App.btrfs_mode){
+
+							txt += "<b>%s: %d</b>\n".printf(_("Subvolumes"), bak.subvolumes.values.size);
+							
+							foreach(var subvol in bak.subvolumes_sorted){
+								if (txt.length > 0) { txt += "\n"; }
+								txt += "%s".printf(subvol.path);
+							}
+						}
+						else{
+							txt = bak.path;
+						}
+						
+						tooltip.set_markup(txt);
 						return true;
 					}
 					else if (column == col_desc){
 						tooltip.set_markup(_("<b>Comments</b> (double-click to edit)"));
-						return true;
-					}
-					else if (column == col_system){
-						tooltip.set_markup(_("<b>System:</b> Installed Linux distribution"));
 						return true;
 					}
 					else if (column == col_tags){

@@ -46,6 +46,7 @@ class RestoreWindow : Gtk.Window{
 	private RestoreBox check_box;
 	private RsyncLogBox log_box;
 	private RestoreBox restore_box;
+	private UsersBox users_box;
 	private RestoreFinishBox restore_finish_box;
 
 	// actions
@@ -107,6 +108,12 @@ class RestoreWindow : Gtk.Window{
 		log_box = new RsyncLogBox(this);
 		log_box.margin = 0;
 		notebook.append_page (log_box, label);
+
+		label = new Gtk.Label(_("Users Home"));
+		var exclude_box = new ExcludeBox(this); // dummy - not used
+		users_box = new UsersBox(this, exclude_box, true);
+		users_box.margin = 0;
+		notebook.append_page (users_box, label);
 
 		label = new Gtk.Label(_("Summary"));
 		summary_box = new RestoreSummaryBox(this);
@@ -192,7 +199,7 @@ class RestoreWindow : Gtk.Window{
 
 		// close
 		
-		btn_close = add_button(hbox, _("Close"), "", size_group, null);
+		btn_close = add_button(hbox, _("Cancel"), "", size_group, null);
 
         btn_close.clicked.connect(()=>{
 			save_changes();
@@ -250,7 +257,12 @@ class RestoreWindow : Gtk.Window{
 		// set initial tab
 
 		if (App.btrfs_mode){
-			notebook.page = Tabs.SUMMARY;
+			if (App.snapshot_to_restore.subvolumes.has_key("@home")){
+				notebook.page = Tabs.USERS;
+			}
+			else {
+				notebook.page = Tabs.SUMMARY;
+			}
 		}
 		else{
 			notebook.page = Tabs.TARGET_DEVICE;
@@ -322,6 +334,10 @@ class RestoreWindow : Gtk.Window{
 			notebook.page = Tabs.SUMMARY;
 			break;
 
+		case Tabs.USERS:
+			notebook.page = Tabs.SUMMARY;
+			break;
+
 		case Tabs.SUMMARY:
 			notebook.page = Tabs.RESTORE;
 			break;
@@ -383,7 +399,9 @@ class RestoreWindow : Gtk.Window{
 		case Tabs.RESTORE_EXCLUDE:
 		case Tabs.EXCLUDE_APPS:
 		case Tabs.SUMMARY:
-		
+		case Tabs.USERS:
+
+			// cannot go back
 			btn_prev.show();
 			btn_next.show();
 			btn_close.show();
@@ -465,6 +483,10 @@ class RestoreWindow : Gtk.Window{
 			}
 			break;
 
+		case Tabs.USERS:
+			users_box.refresh();
+			break;
+
 		case Tabs.SUMMARY:
 			summary_box.refresh();
 			break;
@@ -513,9 +535,10 @@ class RestoreWindow : Gtk.Window{
 		EXCLUDE_APPS = 2,
 		CHECK = 3,
 		SHOW_LOG = 4,
-		SUMMARY = 5,
-		RESTORE = 6,
-		FINISH = 7
+		USERS = 5,
+		SUMMARY = 6,
+		RESTORE = 7,
+		FINISH = 8
 	}
 }
 

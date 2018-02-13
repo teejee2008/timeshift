@@ -40,8 +40,9 @@ class UsersBox : Gtk.Box{
 	private ExcludeBox exclude_box;
 	private Gtk.Label lbl_message;
 	private Gtk.CheckButton chk_include_btrfs_home;
+	private bool restore_mode = false;
 	
-	public UsersBox (Gtk.Window _parent_window, ExcludeBox _exclude_box) {
+	public UsersBox (Gtk.Window _parent_window, ExcludeBox _exclude_box, bool _restore_mode) {
 
 		log_debug("UsersBox: UsersBox()");
 		
@@ -49,6 +50,8 @@ class UsersBox : Gtk.Box{
 		Object(orientation: Gtk.Orientation.VERTICAL, spacing: 6); // work-around
 		parent_window = _parent_window;
 		margin = 12;
+
+		restore_mode = _restore_mode;
 
 		exclude_box = _exclude_box;
 
@@ -316,13 +319,28 @@ class UsersBox : Gtk.Box{
 	}
 
 	private void init_btrfs_home_option(){
-		
-		chk_include_btrfs_home = new Gtk.CheckButton.with_label(_("Include @home subvolume in backups"));
-		add(chk_include_btrfs_home);
 
-		chk_include_btrfs_home.toggled.connect(()=>{
-			App.include_btrfs_home = chk_include_btrfs_home.active; 
-		});
+		if (restore_mode){
+			
+			chk_include_btrfs_home = new Gtk.CheckButton.with_label(_("Restore @home subvolume"));
+
+			add(chk_include_btrfs_home);
+
+			chk_include_btrfs_home.toggled.connect(()=>{
+				App.include_btrfs_home_for_restore = chk_include_btrfs_home.active; 
+			});
+		
+		}
+		else {
+
+			chk_include_btrfs_home = new Gtk.CheckButton.with_label(_("Include @home subvolume in backups"));
+			
+			add(chk_include_btrfs_home);
+
+			chk_include_btrfs_home.toggled.connect(()=>{
+				App.include_btrfs_home_for_backup = chk_include_btrfs_home.active; 
+			});
+		}
 	}
 	
 	// helpers
@@ -340,7 +358,12 @@ class UsersBox : Gtk.Box{
 			chk_include_btrfs_home.show();
 			chk_include_btrfs_home.set_no_show_all(false);
 
-			chk_include_btrfs_home.active = App.include_btrfs_home;
+			if (restore_mode){
+				chk_include_btrfs_home.active = App.include_btrfs_home_for_restore;
+			}
+			else{
+				chk_include_btrfs_home.active = App.include_btrfs_home_for_backup;
+			}
 		}
 		else{
 			lbl_message.show();

@@ -103,7 +103,7 @@ class SettingsWindow : Gtk.Window{
 		stack.add_titled (schedule_box, "schedule", _("Schedule"));
 
 		exclude_box = new ExcludeBox(this);
-		users_box = new UsersBox(this, exclude_box);
+		users_box = new UsersBox(this, exclude_box, false);
 		exclude_box.set_users_box(users_box);
 		
 		stack.add_titled (users_box, "users", _("Users"));

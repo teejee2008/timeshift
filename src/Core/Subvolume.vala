@@ -38,14 +38,21 @@ public class Subvolume : GLib.Object{
 	public int64 total_bytes = 0;
 	public int64 unshared_bytes = 0;
 
+	public string mount_path = "";
+
 	//parent
 	public SnapshotRepo? repo;
 	
 	public Subvolume(string name, string path, string parent_dev_uuid, SnapshotRepo? parent_repo){
+		
 		this.name = name;
 		this.path = path;
 		this.device_uuid = parent_dev_uuid;
 		this.repo = parent_repo;
+
+		if (repo != null){
+			this.mount_path = repo.mount_paths[name];
+		}
 	}
 
 	public string total_formatted{
@@ -68,6 +75,12 @@ public class Subvolume : GLib.Object{
 	public bool exists_on_disk{
 		get {
 			return dir_exists(path);
+		}
+	}
+
+	public bool is_system_subvolume{
+		get {
+			return (repo == null);
 		}
 	}
 	
@@ -106,21 +119,17 @@ public class Subvolume : GLib.Object{
 		log_debug("name=%s, uuid=%s, id=%ld, path=%s".printf(name, device_uuid, id, path));
 	}
 
+	// actions ----------------------------------
+	
 	public bool remove(){
 		
 		string cmd = "";
-		string std_out;
-		string std_err;
+		string std_out, std_err;
 		int ret_val;
 
-		print_info();
-		
-		if (!dir_exists(path)){
-			return true; // ok, item does not exist
-		}
+		if (!dir_exists(path)){ return true; } // ok, item does not exist
 
-		App.progress_text = _("Deleting subvolume")+ ": %s".printf(name);
-		log_debug(App.progress_text);
+		log_msg("%s: %s (Id:%ld)".printf(_("Deleting subvolume"), name, id));
 
 		string options = App.use_option_raw ? "--commit-after" : "";
 		
@@ -128,15 +137,16 @@ public class Subvolume : GLib.Object{
 		log_debug(cmd);
 		ret_val = exec_sync(cmd, out std_out, out std_err);
 		if (ret_val != 0){
+			log_error(std_err);
 			log_error(_("Failed to delete snapshot subvolume") + ": '%s'".printf(path));
 			return false;
 		}
 
-		log_msg(_("Deleted subvolume") + ": %s (id %ld)".printf(name, id));
-
+		log_msg("%s: %s (Id:%ld)\n".printf(_("Deleted subvolume"), name, id));
+		
 		if ((id > 0) && (repo != null)){
 
-			log_debug(_("Destroying qgroup")+ ": 0/%ld".printf(id));
+			log_msg("%s: 0/%ld".printf(_("Destroying qgroup"), id));
 			
 			cmd = "btrfs qgroup destroy 0/%ld '%s'".printf(id, repo.mount_paths[name]);
 			log_debug(cmd);
@@ -146,9 +156,46 @@ public class Subvolume : GLib.Object{
 				return false;
 			}
 
-			log_msg(_("Destroyed qgroup") + ": 0/%ld".printf(id));
+			log_msg("%s: 0/%ld\n".printf(_("Destroyed qgroup"), id));
 		}
 
+		return true;
+	}
+
+	public bool restore(){
+
+		if (is_system_subvolume) { return false; }
+
+		// restore snapshot subvolume by creating new subvolume snapshots ----------------------
+		
+		string src_path = path;
+		string dst_path = path_combine(mount_path, name);
+
+		if (!dir_exists(src_path)){
+			log_error("%s: %s".printf(_("Not Found"), src_path));
+			return false;
+		}
+
+		if (dir_exists(dst_path)){
+			log_error("%s: %s".printf(_("Subvolume exists at destination"), dst_path));
+			return false;
+		}
+		
+		string cmd = "btrfs subvolume snapshot '%s' '%s'".printf(src_path, dst_path);
+		log_debug(cmd);
+
+		string std_out, std_err;
+		int status = exec_sync(cmd, out std_out, out std_err);
+		
+		if (status != 0){
+			log_error(std_err);
+			log_error(_("btrfs returned an error") + ": %d".printf(status));
+			log_error(_("Failed to restore system subvolume") + ": %s".printf(name));
+			return false;
+		}
+
+		log_msg(_("Restored system subvolume") + ": %s".printf(name));
+		
 		return true;
 	}
 }

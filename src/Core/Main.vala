@@ -49,7 +49,8 @@ public class Main : GLib.Object{
 	public string backup_parent_uuid = "";
 
 	public bool btrfs_mode = true;
-	public bool include_btrfs_home = false;
+	public bool include_btrfs_home_for_backup = false;
+	public bool include_btrfs_home_for_restore = false;
 	
 	public bool stop_cron_emails = true;
 	
@@ -365,7 +366,7 @@ public class Main : GLib.Object{
 		log_debug("check_btrfs_layout_system()");
 
 		bool supported = sys_subvolumes.has_key("@");
-		if (include_btrfs_home){
+		if (include_btrfs_home_for_backup){
 			supported =  supported && sys_subvolumes.has_key("@home");
 		}
 
@@ -399,12 +400,12 @@ public class Main : GLib.Object{
 					
 					supported = supported && check_btrfs_volume(dev_root, "@", unlock);
 
-					if (include_btrfs_home){
+					if (include_btrfs_home_for_backup){
 						supported = supported && check_btrfs_volume(dev_home, "@home", unlock);
 					}
 				}
 				else{
-					if (include_btrfs_home){
+					if (include_btrfs_home_for_backup){
 						supported = supported && check_btrfs_volume(dev_root, "@,@home", unlock);
 					}
 					else{
@@ -1418,7 +1419,7 @@ public class Main : GLib.Object{
 		// create subvolume snapshots
 
 		var subvol_names = new string[] { "@" };
-		if (include_btrfs_home){
+		if (include_btrfs_home_for_backup){
 			subvol_names = new string[] { "@","@home" };
 		}
 		
@@ -1987,7 +1988,7 @@ public class Main : GLib.Object{
 				log_error(_("BTRFS device is not mounted") + ": @");
 				return false;
 			}
-			if (include_btrfs_home && (repo.mount_paths["@home"].length == 0)){
+			if (include_btrfs_home_for_restore && (repo.mount_paths["@home"].length == 0)){
 				log_error(_("BTRFS device is not mounted") + ": @home");
 				return false;
 			}
@@ -2771,10 +2772,6 @@ public class Main : GLib.Object{
 
 		log_debug("Main: restore_execute_btrfs()");
 		
-		string cmd, std_out, std_err;
-		
-		//query_subvolume_info();
-
 		bool ok = create_pre_restore_snapshot_btrfs();
 
 		log_msg(string.nfill(78, '-'));
@@ -2787,39 +2784,9 @@ public class Main : GLib.Object{
 		
 		// restore snapshot subvolumes by creating new subvolume snapshots
 
-		var subvol_names = new string[] { "@" };
-		if (include_btrfs_home && snapshot_to_restore.subvolumes.has_key("@home")){
-			subvol_names = new string[] { "@","@home" };
-		}
-
-		foreach(string subvol_name in subvol_names){
+		foreach(var subvol in snapshot_to_restore.subvolumes.values){
 			
-			string snapshot_path = path_combine(repo.mount_paths[subvol_name], "timeshift-btrfs/snapshots/%s".printf(snapshot_to_restore.name));
-			
-			string subvol_path = path_combine(snapshot_path, subvol_name);
- 
-			if (dir_exists(subvol_path)){
-				
-				string src_path = subvol_path;
-				string dst_path = path_combine(repo.mount_paths[subvol_name], subvol_name);
-				cmd = "btrfs subvolume snapshot '%s' '%s'".printf(src_path, dst_path);
-				log_debug(cmd);
-				
-				int status = exec_sync(cmd, out std_out, out std_err);
-				
-				if (status != 0){
-					log_error (std_err);
-					log_error(_("btrfs returned an error") + ": %d".printf(status));
-					log_error(_("Failed to restore system subvolume") + ": %s".printf(subvol_name));
-					
-					thread_restore_running = false;
-					thr_success = false;
-					return thr_success;
-				}
-				else{
-					log_msg(_("Restored system subvolume") + ": %s".printf(subvol_name));
-				}
-			}
+			subvol.restore();
 		}
 
 		log_msg(_("Restore completed"));
@@ -2870,11 +2837,11 @@ public class Main : GLib.Object{
 
 			if (found){
 				//delete system subvolumes
-				if (sys_subvolumes.has_key("@")){
+				if (sys_subvolumes.has_key("@") && snapshot_to_restore.subvolumes.has_key("@")){
 					sys_subvolumes["@"].remove();
 					log_msg(_("Deleted system subvolumes") + ": @");
 				}
-				if (include_btrfs_home && sys_subvolumes.has_key("@home") && snapshot_to_restore.subvolumes.has_key("@home")){
+				if (include_btrfs_home_for_restore && sys_subvolumes.has_key("@home") && snapshot_to_restore.subvolumes.has_key("@home")){
 					sys_subvolumes["@home"].remove();
 					log_msg(_("Deleted system subvolumes") + ": @home");
 				}
@@ -2904,7 +2871,7 @@ public class Main : GLib.Object{
 			var subvol_list = new Gee.ArrayList<Subvolume>();
 
 			var subvol_names = new string[] { "@" };
-			if (include_btrfs_home){
+			if (include_btrfs_home_for_restore){
 				subvol_names = new string[] { "@","@home" };
 			}
 			
@@ -2999,7 +2966,8 @@ public class Main : GLib.Object{
 
 		config.set_string_member("do_first_run", false.to_string());
 		config.set_string_member("btrfs_mode", btrfs_mode.to_string());
-		config.set_string_member("include_btrfs_home", include_btrfs_home.to_string());
+		config.set_string_member("include_btrfs_home_for_backup", include_btrfs_home_for_backup.to_string());
+		config.set_string_member("include_btrfs_home_for_restore", include_btrfs_home_for_restore.to_string());
 		config.set_string_member("stop_cron_emails", stop_cron_emails.to_string());
 		
 		config.set_string_member("schedule_monthly", schedule_monthly.to_string());
@@ -3080,7 +3048,15 @@ public class Main : GLib.Object{
 		}
 
 		btrfs_mode = json_get_bool(config, "btrfs_mode", false); // false as default
-		include_btrfs_home = json_get_bool(config, "include_btrfs_home", include_btrfs_home);
+
+		if (config.has_member("include_btrfs_home")){
+			include_btrfs_home_for_backup = json_get_bool(config, "include_btrfs_home", include_btrfs_home_for_backup);
+		}
+		else{
+			include_btrfs_home_for_backup = json_get_bool(config, "include_btrfs_home_for_backup", include_btrfs_home_for_backup);
+		}
+		
+		include_btrfs_home_for_restore = json_get_bool(config, "include_btrfs_home_for_restore", include_btrfs_home_for_restore);
 		stop_cron_emails = json_get_bool(config, "stop_cron_emails", stop_cron_emails);
 
 		if (cmd_btrfs_mode != null){
@@ -3441,7 +3417,7 @@ public class Main : GLib.Object{
 				if (mnt.mount_point == "/"){
 					mount_options = "subvol=@";
 				}
-				if (include_btrfs_home){
+				if (include_btrfs_home_for_restore){
 					if (mnt.mount_point == "/home"){
 						mount_options = "subvol=@home";
 					}

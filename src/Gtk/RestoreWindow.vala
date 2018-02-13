@@ -257,7 +257,9 @@ class RestoreWindow : Gtk.Window{
 		// set initial tab
 
 		if (App.btrfs_mode){
+			
 			if (App.snapshot_to_restore.subvolumes.has_key("@home")){
+				
 				notebook.page = Tabs.USERS;
 			}
 			else {
@@ -499,6 +501,7 @@ class RestoreWindow : Gtk.Window{
 			
 		case Tabs.FINISH:
 			restore_finish_box.update_message(success,"","");
+			btn_close.label = _("Close");
 			//wait_and_close_window(1000, this); // do not auto-close restore window.
 			break;
 		}

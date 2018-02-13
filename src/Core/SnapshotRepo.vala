@@ -171,8 +171,8 @@ public class SnapshotRepo : GLib.Object{
 			return path_combine(timeshift_path, "snapshots");
 		}
 	}
-
-	// load
+ 
+	// load ---------------------------------------
 
 	public bool unlock_and_mount_devices(){
 
@@ -386,7 +386,7 @@ public class SnapshotRepo : GLib.Object{
 		return true;
 	}
 
-	// get tagged snapshots
+	// get tagged snapshots ----------------------------------
 	
 	public Gee.ArrayList<Snapshot?> get_snapshots_by_tag(string tag = ""){
 		
@@ -434,7 +434,7 @@ public class SnapshotRepo : GLib.Object{
 		return null;
 	}
 
-	// status check
+	// status check ---------------------------
 
 	public void check_status(){
 
@@ -683,7 +683,7 @@ public class SnapshotRepo : GLib.Object{
 		log_msg("");
 	}
 	
-	// actions
+	// actions -------------------------------------
 
 	public void auto_remove(){
 
@@ -914,7 +914,7 @@ public class SnapshotRepo : GLib.Object{
 		return true;
 	}
 
-	// private
+	// private -------------------------------------------
 	
 	private bool delete_directory(string dir_path){
 		thr_args1 = dir_path;
@@ -981,7 +981,7 @@ public class SnapshotRepo : GLib.Object{
 		}
 	}
 
-	// symlinks
+	// symlinks ----------------------------------------
 	
 	public void create_symlinks(){
 		string cmd = "";

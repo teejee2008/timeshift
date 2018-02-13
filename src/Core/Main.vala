@@ -2069,6 +2069,8 @@ public class Main : GLib.Object{
 				if (entry.subvolume_name().length == 0){ continue; }
 				
 				if (!App.snapshot_to_restore.subvolumes.has_key(entry.subvolume_name())){ continue; }
+
+				if ((entry.subvolume_name() == "@home") && !include_btrfs_home_for_restore){ continue; }
 			}
 			
 			string dev_name = entry.device.full_name_with_parent;
@@ -2095,6 +2097,7 @@ public class Main : GLib.Object{
 		txt += "\n";
 		
 		foreach(var entry in mount_list){
+			
 			if (entry.device == null){ continue; }
 
 			if (btrfs_mode){
@@ -2102,6 +2105,8 @@ public class Main : GLib.Object{
 				if (entry.subvolume_name().length == 0){ continue; }
 				
 				if (!App.snapshot_to_restore.subvolumes.has_key(entry.subvolume_name())){ continue; }
+
+				if ((entry.subvolume_name() == "@home") && !include_btrfs_home_for_restore){ continue; }
 			}
 			
 			string dev_name = entry.device.full_name_with_parent;
@@ -2112,8 +2117,7 @@ public class Main : GLib.Object{
 				dev_name = dev_name + "(%s)".printf(entry.lvm_name());
 			}
 			
-			txt += ("%%-%ds  %%-%ds".printf(max_dev, max_mount)).printf(
-				dev_name, entry.mount_point);
+			txt += ("%%-%ds  %%-%ds".printf(max_dev, max_mount)).printf(dev_name, entry.mount_point);
 
 			txt += "\n";
 		}
@@ -2785,6 +2789,8 @@ public class Main : GLib.Object{
 		// restore snapshot subvolumes by creating new subvolume snapshots
 
 		foreach(var subvol in snapshot_to_restore.subvolumes.values){
+
+			if ((subvol.name == "@home") && !include_btrfs_home_for_restore){ continue; }
 			
 			subvol.restore();
 		}
@@ -2797,6 +2803,8 @@ public class Main : GLib.Object{
 		}
 
 		log_msg(string.nfill(78, '-'));
+
+		query_subvolume_quotas();
 
 		thread_restore_running = false;
 		return thr_success;
@@ -2839,11 +2847,11 @@ public class Main : GLib.Object{
 				//delete system subvolumes
 				if (sys_subvolumes.has_key("@") && snapshot_to_restore.subvolumes.has_key("@")){
 					sys_subvolumes["@"].remove();
-					log_msg(_("Deleted system subvolumes") + ": @");
+					log_msg(_("Deleted subvolume") + ": @");
 				}
 				if (include_btrfs_home_for_restore && sys_subvolumes.has_key("@home") && snapshot_to_restore.subvolumes.has_key("@home")){
 					sys_subvolumes["@home"].remove();
-					log_msg(_("Deleted system subvolumes") + ": @home");
+					log_msg(_("Deleted subvolume") + ": @home");
 				}
 
 				//update description for pre-restore backup
@@ -3901,6 +3909,7 @@ public class Main : GLib.Object{
 			Subvolume subvol = null;
 
 			if ((sys_subvolumes.size > 0) && (sys_subvolumes["@"].id == subvol_id)){
+				
 				subvol = sys_subvolumes["@"];
 			}
 			else if ((sys_subvolumes.size > 0)

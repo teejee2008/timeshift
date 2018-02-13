@@ -122,6 +122,15 @@ public class Subvolume : GLib.Object{
 	// actions ----------------------------------
 	
 	public bool remove(){
+
+		if (is_system_subvolume){
+			if (name == "@"){
+				path = path_combine("/mnt/timeshift/backup", "@");
+			}
+			else if (name == "@home"){
+				path = path_combine("/mnt/timeshift/backup-home", "@home");
+			}
+		}
 		
 		string cmd = "";
 		string std_out, std_err;

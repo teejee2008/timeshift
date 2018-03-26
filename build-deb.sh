@@ -1,5 +1,9 @@
 #!/bin/bash
 
+for prog in pbuilder-dist make dpkg-source ; do
+	if sh -c "which $prog 2> /dev/null"; then true ; else echo "You don\'t have $prog, install it" ; exit ; fi
+done
+
 backup=`pwd`
 DIR="$( cd "$( dirname "$0" )" && pwd )"
 cd $DIR

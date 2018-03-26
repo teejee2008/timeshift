@@ -1,5 +1,7 @@
 SHELL=/bin/bash
 CFLAGS=--std=c99
+EXECUTABLES = find msgmerge msgfmt install rm mkdir cp chmod valac
+CHECKEXECS := $(foreach exec,$(EXECUTABLES), $(if $(shell which $(exec)),,$(error No $(exec) found, install it)))
 
 prefix=/usr
 sysconfdir=/etc

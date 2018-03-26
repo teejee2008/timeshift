@@ -322,6 +322,11 @@ public class AboutWindow : Dialog {
 		btn_credits.image = IconManager.lookup_image("help-about-symbolic", 16);
 		hbox_action.add(btn_credits);
 
+		//btn_close
+		btn_close = new Gtk.Button.with_label("  " + _("Close"));
+		btn_close.image = IconManager.lookup_image("help-about-symbolic", 16);
+		hbox_action.add(btn_close);
+
 		// handlers
 		
         btn_license.clicked.connect(()=>{

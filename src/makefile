@@ -2,6 +2,7 @@ SHELL=/bin/bash
 CFLAGS=--std=c99
 EXECUTABLES = find msgmerge msgfmt install rm mkdir cp chmod valac pkg-config
 CHECKEXECS := $(foreach exec,$(EXECUTABLES), $(if $(shell which $(exec)),,$(error No $(exec) found, install it)))
+LIBS = gee-0.8 vte-2.91 gtk+-3.0
 
 prefix=/usr
 sysconfdir=/etc
@@ -23,11 +24,13 @@ xapp_symbol=$(shell { ((pkg-config --exists 'xapp >= 1.0.4') >/dev/null && echo 
 
 ifneq ($(MAKECMDGOALS),clean)
 
-gtk3_version=$(shell { (pkg-config --modversion gtk+-3.0 2> /dev/null | cut -d. -f2); } )
+MISSINGLIBS := $(shell for LIB in $(LIBS) ; do pkg-config --exists $${LIB} || MISLIBS=$${MISLIBS}\ $${LIB} ; done ; echo $$MISLIBS )
 
-ifeq ($(gtk3_version),)
-$(error gtk+-3.0 library not found, install it)
+ifneq ($(MISSINGLIBS), )
+$(error Install the libs: $(MISSINGLIBS) )
 endif
+
+gtk3_version=$(shell { (pkg-config --modversion gtk+-3.0 2> /dev/null | cut -d. -f2); } )
 
 ifeq ($(shell { test ${gtk3_version} -gt 17 ; echo $$? ; } ), 0)
 gtk3_symbol=$(shell echo '-D GTK3_18')

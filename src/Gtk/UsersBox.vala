@@ -65,7 +65,7 @@ class UsersBox : Gtk.Box{
 
 		// ------------------------
 		
-		var label = add_label(this, _("User home directories are excluded by default unless you enable them here"));
+		var label = add_label(this, _("User home directories are excluded by default unless you enable them here"), false, true);
 		lbl_message = label;
 
 		init_treeview();

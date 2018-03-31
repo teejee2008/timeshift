@@ -56,7 +56,7 @@ class ExcludeBox : Gtk.Box{
 		var buffer = add_label(box, "");
 		buffer.hexpand = true;
 
-		var label = add_label(this, _("Click an item to edit the pattern.\nDrag and drop items with mouse to re-order."));
+		var label = add_label(box, _("Click to edit. Drag-drop to re-order."), false, true);
 		lbl_message = label;
 
 		init_treeview();

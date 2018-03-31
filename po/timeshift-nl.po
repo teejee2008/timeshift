@@ -50,7 +50,7 @@ msgstr "(Her)installeer GRUB2 op:"
 
 #: Core/Main.vala:359
 msgid "** Uninstalled Timeshift BTRFS **"
-msgstr "** Tijdreis BTRFS verwijderd **"
+msgstr "** Timeshift BTRFS verwijderd **"
 
 #: Core/Main.vala:3296
 msgid "/ is mapped to device"
@@ -84,6 +84,7 @@ msgstr "<b>Systeem:</b> Geïnstalleerde Linuxdistributie"
 msgid ""
 "A maintenance task runs once every hour and creates snapshots as needed."
 msgstr ""
+"Een onderhoudstaak draait elk uur en maakt de nodig momentopnames."
 
 #: Console/AppConsole.vala:698 Console/AppConsole.vala:762
 #: Console/AppConsole.vala:894 Console/AppConsole.vala:989
@@ -179,8 +180,7 @@ msgstr ""
 
 #: Core/Main.vala:246
 msgid "Another instance of Timeshift is creating a snapshot."
-msgstr ""
-"Een andere instantie van Tijdreis is reeds bezig met het maken van een "
+msgstr "Een andere instantie van Timeshift is reeds bezig met het maken van een "
 "momentopname."
 
 #: Utility/AppLock.vala:49
@@ -189,7 +189,7 @@ msgstr "Er draait reeds een andere instantie van deze toepassing"
 
 #: Core/Main.vala:250
 msgid "Another instance of timeshift is currently running!"
-msgstr "Er draait nu al een andere instantie van Tijdreis."
+msgstr "Er draait nu al een andere instantie van Timeshift."
 
 #: Console/AppConsole.vala:376
 msgid "Answer YES to all confirmation prompts"
@@ -232,6 +232,8 @@ msgid ""
 "BRTFS snapshots are saved on system partition. Other partitions are not "
 "supported."
 msgstr ""
+"BTRFS momentopnames worden bewaard op de systeem partitie. Andere partities"
+"worden niet ondersteund."
 
 #: Gtk/SnapshotBackendBox.vala:94
 msgid "BTRFS"
@@ -375,7 +377,7 @@ msgstr "Gewijzigde elementen:"
 
 #: Gtk/RestoreWindow.vala:101
 msgid "Checking Restore Actions (Dry Run)"
-msgstr ""
+msgstr "Herstelacties worden gecontroleerd (nog niet uitgevoerd)"
 
 #: Core/Main.vala:2671
 msgid "Checking file systems for errors..."
@@ -444,7 +446,7 @@ msgstr "Opmerkingen"
 
 #: Core/Main.vala:2714 Gtk/RestoreBox.vala:74 Gtk/RestoreBox.vala:187
 msgid "Comparing Files (Dry Run)..."
-msgstr ""
+msgstr "Bestand worden vergeleken (niets wordt aangepast)..."
 
 #: Core/Main.vala:2480
 msgid "Comparing files with rsync..."
@@ -461,7 +463,7 @@ msgstr "Voltooid met fouten"
 
 #: Gtk/RestoreWindow.vala:106 Gtk/RsyncLogBox.vala:87
 msgid "Confirm Actions"
-msgstr ""
+msgstr "Bevestig Acties"
 
 #: Console/AppConsole.vala:1068
 #, c-format
@@ -728,7 +730,7 @@ msgstr "Apparaten met Linux-bestandssystemen"
 
 #: Gtk/BackupDeviceBox.vala:105
 msgid "Devices with Windows file systems are not supported (NTFS, FAT, etc)."
-msgstr ""
+msgstr "Opslagmedia met Windows bestandssystemen zijn niet ondersteund. (NTFS, FAT, enz)."
 
 #: Utility/Gtk/DonationWindow.vala:61
 msgid ""
@@ -850,7 +852,7 @@ msgstr "Fout"
 
 #: Gtk/RestoreWindow.vala:464
 msgid "Error running Rsync"
-msgstr ""
+msgstr "Fout bij het draaien van Rsync"
 
 #: Gtk/SetupWizardWindow.vala:95 Gtk/BackupWindow.vala:79
 msgid "Estimate"
@@ -1083,8 +1085,7 @@ msgstr ""
 
 #: Gtk/SnapshotBackendBox.vala:187
 msgid "Files and directories can be excluded to save disk space."
-msgstr ""
-"Bestanden en mappen kunnen worden uitgesloten om schijfruimte te besparen."
+msgstr "Bestanden en mappen kunnen worden uitgesloten om schijfruimte te besparen."
 
 #: Gtk/RestoreBox.vala:119
 msgid "Files and directory counts:"
@@ -1092,8 +1093,7 @@ msgstr "Aantallen bestanden en mappen:"
 
 #: Gtk/ExcludeMessageWindow.vala:76
 msgid "Files matching the following patterns will be excluded"
-msgstr ""
-"Bestanden die overeenkomen met de volgende patronen zullen worden uitgesloten"
+msgstr "Bestanden die overeenkomen met de volgende patronen zullen worden uitgesloten"
 
 #: Utility/Device.vala:1816
 #, c-format
@@ -1204,7 +1204,7 @@ msgstr "Uurlijkse momentopnamen zijn ingeschakeld"
 
 #: Utility/Gtk/AboutWindow.vala:452
 msgid "Icon Themes & Utilities"
-msgstr ""
+msgstr "Icoon themas & tools"
 
 #: Gtk/RestoreFinishBox.vala:102
 msgid ""
@@ -1258,8 +1258,7 @@ msgstr "Ongeldige momentopname"
 
 #: Utility/Gtk/DonationWindow.vala:97
 msgid "Issue Tracker ~ Report Issues, Request Features, Ask Questions"
-msgstr ""
-"Probleemregister ~ Meld problemen, vraag om nieuwe mogelijkheden, stel vragen"
+msgstr "Probleemregister ~ Meld problemen, vraag om nieuwe mogelijkheden, stel vragen"
 
 #: Gtk/ExcludeBox.vala:281
 msgid "Items Not Selected"
@@ -1313,8 +1312,7 @@ msgstr "Nieuwste opstart-momentopname is %d uur oud"
 
 #: Core/Main.vala:967
 msgid "Last boot snapshot is older than system start time"
-msgstr ""
-"Nieuwste opstart-momentopname is ouder dan de opstarttijd van het systeem"
+msgstr "Nieuwste opstart-momentopname is ouder dan de opstarttijd van het systeem"
 
 #: Core/Main.vala:963
 msgid "Last boot snapshot not found"
@@ -1379,7 +1377,7 @@ msgstr "Nieuwste momentopname"
 
 #: Utility/Gtk/AboutWindow.vala:316 Utility/Gtk/AboutWindow.vala:351
 msgid "License"
-msgstr ""
+msgstr "Licentie"
 
 #: Core/Main.vala:1306
 #, c-format
@@ -1575,7 +1573,7 @@ msgstr "Oudste momentopname"
 
 #: Gtk/SnapshotListBox.vala:277
 msgid "On demand (manual)"
-msgstr ""
+msgstr "Op vraag (handmatig)"
 
 #: Core/Main.vala:374 Core/Main.vala:3386 Gtk/RestoreDeviceBox.vala:525
 msgid ""
@@ -1647,7 +1645,7 @@ msgstr "Onderbreek a.u.b. het terugzetproces niet."
 #: Core/Main.vala:345
 msgid "Please install required packages and try running TimeShift again"
 msgstr ""
-"Installeer a.u.b. de vereiste pakketten en probeer dan om Tijdreis opnieuw "
+"Installeer a.u.b. de vereiste pakketten en probeer dan om Timeshift opnieuw "
 "te draaien"
 
 #: Gtk/AppGtk.vala:127
@@ -1658,8 +1656,7 @@ msgstr ""
 
 #: Console/AppConsole.vala:103
 msgid "Please run the application as admin (using 'sudo' or 'su')"
-msgstr ""
-"Draai a.u.b. de toepassing als beheerder (met gebruik van 'sudo' of 'su')"
+msgstr "Draai a.u.b. de toepassing als beheerder (met gebruik van 'sudo' of 'su')"
 
 #: Core/Main.vala:2133
 msgid "Please save your work and close all applications."
@@ -1683,7 +1680,7 @@ msgstr "Wacht a.u.b. op het verwijderen van momentopnamen."
 
 #: Gtk/EstimateBox.vala:66
 msgid "Please wait..."
-msgstr ""
+msgstr "Even geduld..."
 
 #: Gtk/RsyncLogBox.vala:188
 msgid "Populating list..."
@@ -1832,8 +1829,7 @@ msgstr "Momentopname terugzetten"
 
 #: Gtk/RestoreFinishBox.vala:96
 msgid "Restored subvolumes will become active after system is restarted."
-msgstr ""
-"Teruggezette subvolumes zullen actief worden nadat het systeem is herstart."
+msgstr "Teruggezette subvolumes zullen actief worden nadat het systeem is herstart."
 
 #: Core/Main.vala:2815
 msgid "Restored system subvolume"
@@ -2327,13 +2323,15 @@ msgstr ""
 msgid ""
 "Snapshots are saved to /timeshift on selected partition. Other locations are "
 "not supported."
-msgstr ""
+msgstr "Momentopnamen worden bewaard in /timeshift op de gekozen partitie. "
+"Andere locaties zijn niet ondersteund."
 
 #: Gtk/BackupDeviceBox.vala:99
 msgid ""
 "Snapshots are saved to /timeshift-btrfs on selected partition. Other "
 "locations are not supported."
-msgstr ""
+msgstr "Momentopnamen worden bewaard in /timeshift-btrfs op de gekozen partitie. "
+"Andere locaties zijn niet ondersteund."
 
 #: Gtk/MainWindow.vala:1012
 msgid "Snapshots available for restore"
@@ -2490,7 +2488,7 @@ msgid ""
 msgstr ""
 "De crondienst verzendt de uitvoer van geagendeerde taken als een e-mail naar "
 "de huidige gebruiker. Kies deze optie om de e-mails te onderdrukken voor "
-"crontaken die door Tijdreis zijn gemaakt."
+"crontaken die door Timeshift zijn gemaakt."
 
 #: Core/Main.vala:373
 msgid "The system partition has an unsupported subvolume layout."
@@ -2520,13 +2518,15 @@ msgstr ""
 
 #: Gtk/MainWindow.vala:1047 Gtk/MainWindow.vala:1058
 msgid "Timeshift is active"
-msgstr "Tijdreis is actief"
+msgstr "Timeshift is actief"
 
 #: Gtk/MainWindow.vala:948
 msgid ""
 "Timeshift is powered by the following tools and components. Please visit the "
 "links for more information."
 msgstr ""
+"Timeshift gebruikt de volgende tools en componenten. Gelieve de links te bekijken "
+"voor meer informatie."
 
 #: Gtk/RestoreBox.vala:132 Gtk/BackupBox.vala:94 Gtk/RsyncLogBox.vala:394
 #, c-format
@@ -2664,7 +2664,7 @@ msgstr "Bekijk logboek voor terugzetten"
 
 #: Gtk/MainWindow.vala:378
 msgid "View TimeShift Logs"
-msgstr "Bekijk de logboeken van Tijdreis"
+msgstr "Bekijk de logboeken van Timeshift"
 
 #: Gtk/RestoreDeviceBox.vala:101
 msgid "Volume"

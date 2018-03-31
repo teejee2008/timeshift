@@ -38,8 +38,10 @@ class UsersBox : Gtk.Box{
 	private Gtk.ScrolledWindow scrolled_treeview;
 	private Gtk.Window parent_window;
 	private ExcludeBox exclude_box;
+	private Gtk.Box box_btrfs;
 	private Gtk.Label lbl_message;
 	private Gtk.CheckButton chk_include_btrfs_home;
+	private Gtk.CheckButton chk_enable_qgroups;
 	private bool restore_mode = false;
 	
 	public UsersBox (Gtk.Window _parent_window, ExcludeBox _exclude_box, bool _restore_mode) {
@@ -55,13 +57,10 @@ class UsersBox : Gtk.Box{
 
 		exclude_box = _exclude_box;
 
-		var box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
+		var box = new Gtk.Box(Gtk.Orientation.VERTICAL, 6);
 		add(box);
 		
-		add_label_header(box, _("User Home Directories"), true);
-
-		var buffer = add_label(box, "");
-		buffer.hexpand = true;
+		add_label_header(this, _("User Home Directories"), true);
 
 		// ------------------------
 		
@@ -70,8 +69,13 @@ class UsersBox : Gtk.Box{
 
 		init_treeview();
 
-		init_btrfs_home_option();
+		box_btrfs = new Gtk.Box(Gtk.Orientation.VERTICAL, 6);
+		add(box_btrfs);
 
+		init_btrfs_home_option(box_btrfs);
+
+		init_btrfs_qgroup_option(box_btrfs);
+		
 		refresh();
 
 		log_debug("UsersBox: UsersBox(): exit");
@@ -318,13 +322,13 @@ class UsersBox : Gtk.Box{
 		treeview.append_column(col);
 	}
 
-	private void init_btrfs_home_option(){
+	private void init_btrfs_home_option(Gtk.Box box){
 
 		if (restore_mode){
 			
 			chk_include_btrfs_home = new Gtk.CheckButton.with_label(_("Restore @home subvolume"));
 
-			add(chk_include_btrfs_home);
+			box.add(chk_include_btrfs_home);
 
 			chk_include_btrfs_home.toggled.connect(()=>{
 				App.include_btrfs_home_for_restore = chk_include_btrfs_home.active; 
@@ -335,10 +339,30 @@ class UsersBox : Gtk.Box{
 
 			chk_include_btrfs_home = new Gtk.CheckButton.with_label(_("Include @home subvolume in backups"));
 			
-			add(chk_include_btrfs_home);
+			box.add(chk_include_btrfs_home);
 
 			chk_include_btrfs_home.toggled.connect(()=>{
 				App.include_btrfs_home_for_backup = chk_include_btrfs_home.active; 
+			});
+		}
+	}
+
+	private void init_btrfs_qgroup_option(Gtk.Box box){
+
+		if (!restore_mode){
+
+			var label = add_label_header(box, _("Miscellaneous"), true);
+			label.margin_top = 12;
+			
+			chk_enable_qgroups = new Gtk.CheckButton.with_label(_("Enable BTRFS qgroups (recommended)"));
+			box.add(chk_enable_qgroups);
+
+			chk_enable_qgroups.set_tooltip_text(_("Required for displaying shared and unshared size for snapshots in the main window"));
+
+			chk_enable_qgroups.active = App.btrfs_use_qgroup;
+
+			chk_enable_qgroups.toggled.connect(()=>{
+				App.btrfs_use_qgroup = chk_enable_qgroups.active; 
 			});
 		}
 	}
@@ -355,9 +379,9 @@ class UsersBox : Gtk.Box{
 			scrolled_treeview.hide();
 			scrolled_treeview.set_no_show_all(true);
 
-			chk_include_btrfs_home.show();
-			chk_include_btrfs_home.set_no_show_all(false);
-
+			box_btrfs.set_no_show_all(false);
+			box_btrfs.show_all();
+			
 			if (restore_mode){
 				chk_include_btrfs_home.active = App.include_btrfs_home_for_restore;
 			}
@@ -373,9 +397,9 @@ class UsersBox : Gtk.Box{
 			scrolled_treeview.set_no_show_all(false);
 
 			refresh_treeview();
-
-			chk_include_btrfs_home.hide();
-			chk_include_btrfs_home.set_no_show_all(true);
+			
+			box_btrfs.hide();
+			box_btrfs.set_no_show_all(true);
 		}
 
 		show_all();

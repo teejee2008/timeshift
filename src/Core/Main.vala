@@ -93,6 +93,8 @@ public class Main : GLib.Object{
 	public int count_hourly = 6;
 	public int count_boot = 5;
 
+	public bool btrfs_use_qgroup = true;
+
 	public string app_mode = "";
 
 	public bool dry_run = false;
@@ -2977,7 +2979,8 @@ public class Main : GLib.Object{
 		config.set_string_member("include_btrfs_home_for_backup", include_btrfs_home_for_backup.to_string());
 		config.set_string_member("include_btrfs_home_for_restore", include_btrfs_home_for_restore.to_string());
 		config.set_string_member("stop_cron_emails", stop_cron_emails.to_string());
-		
+		config.set_string_member("btrfs_use_qgroup", btrfs_use_qgroup.to_string());
+
 		config.set_string_member("schedule_monthly", schedule_monthly.to_string());
 		config.set_string_member("schedule_weekly", schedule_weekly.to_string());
 		config.set_string_member("schedule_daily", schedule_daily.to_string());
@@ -3066,7 +3069,8 @@ public class Main : GLib.Object{
 		
 		include_btrfs_home_for_restore = json_get_bool(config, "include_btrfs_home_for_restore", include_btrfs_home_for_restore);
 		stop_cron_emails = json_get_bool(config, "stop_cron_emails", stop_cron_emails);
-
+		btrfs_use_qgroup = json_get_bool(config, "btrfs_use_qgroup", btrfs_use_qgroup);
+		
 		if (cmd_btrfs_mode != null){
 			btrfs_mode = cmd_btrfs_mode; //override
 		}
@@ -3745,6 +3749,7 @@ public class Main : GLib.Object{
 
 		//query IDs
 		bool ok = query_subvolume_ids();
+		
 		if (!ok){
 			thread_subvol_info_success = false;
 			thread_subvol_info_running = false;
@@ -3753,21 +3758,26 @@ public class Main : GLib.Object{
 
 		//query quota
 		ok = query_subvolume_quotas();
+		
 		if (!ok){
-			//try enabling quota
-			ok = enable_subvolume_quotas();
-			if (!ok){
-				thread_subvol_info_success = false;
-				thread_subvol_info_running = false;
-				return;
-			}
 
-			//query quota again
-			ok = query_subvolume_quotas();
-			if (!ok){
-				thread_subvol_info_success = false;
-				thread_subvol_info_running = false;
-				return;
+			if (btrfs_use_qgroup){
+				
+				//try enabling quota
+				ok = enable_subvolume_quotas();
+				if (!ok){
+					thread_subvol_info_success = false;
+					thread_subvol_info_running = false;
+					return;
+				}
+
+				//query quota again
+				ok = query_subvolume_quotas();
+				if (!ok){
+					thread_subvol_info_success = false;
+					thread_subvol_info_running = false;
+					return;
+				}
 			}
 		}
 
@@ -3846,7 +3856,7 @@ public class Main : GLib.Object{
 	}
 
 	public bool query_subvolume_quotas(){
-		
+
 		bool ok = query_subvolume_quota("@");
 		if (repo.device.uuid != repo.device_home.uuid){
 			ok = ok && query_subvolume_quota("@home");
@@ -3957,6 +3967,8 @@ public class Main : GLib.Object{
 	}
 
 	public bool enable_subvolume_quotas(){
+
+		if (!btrfs_use_qgroup){ return false; }
 		
 		bool ok = enable_subvolume_quota("@");
 		
@@ -3972,6 +3984,8 @@ public class Main : GLib.Object{
 	
 	public bool enable_subvolume_quota(string subvol_name){
 
+		if (!btrfs_use_qgroup){ return false; }
+		
 		log_debug("enable_subvolume_quota():%s".printf(subvol_name));
 		
 		string cmd = "";

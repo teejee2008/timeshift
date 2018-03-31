@@ -37,6 +37,7 @@ class ExcludeBox : Gtk.Box{
 	private Gtk.TreeView treeview;
 	private Gtk.Window parent_window;
 	private UsersBox users_box;
+	private Gtk.Label lbl_message;
 	
 	public ExcludeBox (Gtk.Window _parent_window) {
 
@@ -55,7 +56,8 @@ class ExcludeBox : Gtk.Box{
 		var buffer = add_label(box, "");
 		buffer.hexpand = true;
 
-		init_exclude_summary_link(box);
+		var label = add_label(this, _("Click an item to edit the pattern.\nDrag and drop items with mouse to re-order."));
+		lbl_message = label;
 
 		init_treeview();
 
@@ -207,15 +209,6 @@ class ExcludeBox : Gtk.Box{
 		});
 	}
 
-    private void init_exclude_summary_link(Gtk.Box box){
-		
-		var size_group = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
-		var button = add_button(box, _("Summary"), "", size_group, null);
-        button.clicked.connect(()=>{
-			new ExcludeListSummaryWindow(false);
-		});
-	}
-
 	private void init_actions(){
 
 
@@ -262,11 +255,9 @@ class ExcludeBox : Gtk.Box{
 			remove_clicked();
 		});
 
-		button = add_button(hbox, _("Info"), "", size_group, null);
+		button = add_button(hbox, _("Summary"), "", size_group, null);
         button.clicked.connect(()=>{
-			string title = _("Editing and Re-Ordering");
-			string msg = _("Click an item to edit the pattern.\nDrag and drop items with mouse to re-order.");
-			gtk_messagebox(title, msg, parent_window, false);
+			new ExcludeListSummaryWindow(false);
 		});
 	}
 	

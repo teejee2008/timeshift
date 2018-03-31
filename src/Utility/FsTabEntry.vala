@@ -56,13 +56,17 @@ public class FsTabEntry : GLib.Object{
 	}
 
 	public static Gee.ArrayList<FsTabEntry> read_file(string file_path){
+		
 		var list = new Gee.ArrayList<FsTabEntry>();
 
 		if (!file_exists(file_path)){ return list; }
 
 		string text = file_read(file_path);
+		
 		string[] lines = text.split("\n");
+		
 		foreach(string line in lines){
+			
 			var entry = new FsTabEntry();
 			list.add(entry);
 
@@ -70,18 +74,24 @@ public class FsTabEntry : GLib.Object{
 			entry.is_empty_line = (line.strip().length == 0);
 
 			if (entry.is_comment){
+				
 				entry.line = line;
 			}
 			else if (entry.is_empty_line){
+				
 				entry.line = "";
 			}
 			else{
 				entry.line = line;
 
 				string[] parts = line.replace("\t"," ").split(" ");
+				
 				int part_num = -1;
+				
 				foreach(string part in parts){
+					
 					if (part.strip().length == 0) { continue; }
+					
 					switch (++part_num){
 						case 0:
 							entry.device_string = part.strip();

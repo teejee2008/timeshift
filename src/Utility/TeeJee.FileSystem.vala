@@ -211,6 +211,27 @@ namespace TeeJee.FileSystem{
 		}
 	}
 
+	public bool file_is_symlink(string file_path){
+
+		try {
+			var file = File.new_for_path (file_path);
+			
+			if (file.query_exists()) {
+
+				var info = file.query_info("%s".printf(FileAttribute.STANDARD_TYPE), FileQueryInfoFlags.NOFOLLOW_SYMLINKS); // don't follow symlinks
+
+				var file_type = info.get_file_type();
+
+				return (file_type == FileType.SYMBOLIC_LINK);
+			}
+		}
+		catch (Error e) {
+	        log_error (e.message);
+	    }
+	    
+		return false;
+	}
+
 	public bool file_gzip (string src_file){
 		
 		string dst_file = src_file + ".gz";
@@ -257,11 +278,16 @@ namespace TeeJee.FileSystem{
 	// file info -----------------
 
 	public int64 file_get_size(string file_path){
+		
 		try{
+			
 			File file = File.parse_name (file_path);
+			
 			if (FileUtils.test(file_path, GLib.FileTest.EXISTS)){
+				
 				if (FileUtils.test(file_path, GLib.FileTest.IS_REGULAR)
 					&& !FileUtils.test(file_path, GLib.FileTest.IS_SYMLINK)){
+						
 					return file.query_info("standard::size",0).get_size();
 				}
 			}

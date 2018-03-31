@@ -239,7 +239,7 @@ public class Device : GLib.Object{
 			//get used space for mounted filesystems
 			var list_df = get_disk_space_using_df();
 			foreach(var dev_df in list_df){
-				var dev = find_device_in_list_by_uuid(list, dev_df.uuid);
+				var dev = find_device_in_list(list, dev_df.uuid);
 				if (dev != null){
 					dev.size_bytes = dev_df.size_bytes;
 					dev.used_bytes = dev_df.used_bytes;
@@ -253,7 +253,7 @@ public class Device : GLib.Object{
 			//get mount points
 			var list_mtab = get_mounted_filesystems_using_mtab();
 			foreach(var dev_mtab in list_mtab){
-				var dev = find_device_in_list_by_uuid(list, dev_mtab.uuid);
+				var dev = find_device_in_list(list, dev_mtab.uuid);
 				if (dev != null){
 					dev.mount_points = dev_mtab.mount_points;
 				}
@@ -915,7 +915,7 @@ public class Device : GLib.Object{
 			// add to map -------------------------
 
 			if (pi.uuid.length > 0){
-				var dev = find_device_in_list_by_uuid(list, pi.uuid);
+				var dev = find_device_in_list(list, pi.uuid);
 				if (dev == null){
 					list.add(pi);
 				}
@@ -934,28 +934,6 @@ public class Device : GLib.Object{
 	}
 
 	// helpers ----------------------------------
-
-	public static Device? find_device_in_list_by_name(Gee.ArrayList<Device> list, string dev_name){
-
-		foreach(var dev in list){
-			if (dev.device == dev_name){
-				return dev;
-			}
-		}
-		
-		return null;
-	}
-
-	public static Device? find_device_in_list_by_uuid(Gee.ArrayList<Device> list, string dev_uuid){
-
-		foreach(var dev in list){
-			if (dev.uuid == dev_uuid){
-				return dev;
-			}
-		}
-		
-		return null;
-	}
 
 	public static Device? get_device_by_uuid(string uuid){
 		foreach(var dev in device_list){
@@ -1016,7 +994,7 @@ public class Device : GLib.Object{
 
 		var list_mtab = get_mounted_filesystems_using_mtab();
 		
-		var dev = find_device_in_list_by_uuid(list_mtab, uuid);
+		var dev = find_device_in_list(list_mtab, uuid);
 
 		if (dev != null){
 			return dev.mount_points;
@@ -1051,29 +1029,71 @@ public class Device : GLib.Object{
 
 	public static string resolve_device_name(string dev_alias){
 
-		string resolved = dev_alias;
-		
-		if (dev_alias.has_prefix("/dev/mapper/")){
-			var link_path = file_get_symlink_target(dev_alias);
-			if (link_path.has_prefix("../")){
-				resolved = link_path.replace("../","/dev/");
-			}
-		}
+		var dev = find_device_in_list(device_list, dev_alias);
 
-		if (dev_alias.has_prefix("/dev/disk/")){
-			var link_path = file_get_symlink_target(dev_alias);
-			if (link_path.has_prefix("../../")){
-				resolved = link_path.replace("../../","/dev/");
-			}
+		if (dev != null){
+			return dev.device;
 		}
-
-		if (dev_alias != resolved){
-			//log_msg("resolved '%s' to '%s'".printf(dev_alias, resolved));
+		else{
+			return dev_alias;
 		}
-
-		return resolved;
 	}
 
+	public static Device? find_device_in_list(Gee.ArrayList<Device> list, string _dev_alias){
+
+		string dev_alias = _dev_alias;
+		
+		if (dev_alias.down().has_prefix("uuid=")){
+			
+			dev_alias = dev_alias.split("=",2)[1].strip().down();
+		}
+		else if (file_exists(dev_alias) && file_is_symlink(dev_alias)){
+
+			var link_path = file_get_symlink_target(dev_alias);
+			
+			dev_alias = link_path.replace("../../../","/dev/").replace("../../","/dev/").replace("../","/dev/");
+		}
+
+		foreach(var dev in list){
+			
+			if (dev.device == dev_alias){
+				return dev;
+			}
+			else if (dev.uuid == dev_alias){
+				return dev;
+			}
+			else if (dev.label == dev_alias){
+				return dev;
+			}
+			else if (dev.partuuid == dev_alias){
+				return dev;
+			}
+			else if (dev.partlabel == dev_alias){
+				return dev;
+			}
+			else if (dev.device_by_uuid == dev_alias){
+				return dev;
+			}
+			else if (dev.device_by_label == dev_alias){
+				return dev;
+			}
+			else if (dev.device_by_partuuid == dev_alias){
+				return dev;
+			}
+			else if (dev.device_by_partlabel == dev_alias){
+				return dev;
+			}
+			else if (dev.device_mapper == dev_alias){
+				return dev;
+			}
+			else if (dev.mapped_name == dev_alias){ // check last
+				return dev;
+			}
+		}
+
+		return null;
+	}
+	
 	public void copy_fields_from(Device dev2){
 		
 		this.device = dev2.device;
@@ -1133,7 +1153,7 @@ public class Device : GLib.Object{
 
 		var list_df = get_disk_space_using_df(device);
 		
-		var dev_df = find_device_in_list_by_uuid(list_df, uuid);
+		var dev_df = find_device_in_list(list_df, uuid);
 		
 		if (dev_df != null){
 			// update dev fields
@@ -1534,7 +1554,7 @@ public class Device : GLib.Object{
 		// check if already mounted and return mount point -------------
 
 		var list = Device.get_block_devices_using_lsblk();
-		var dev = find_device_in_list_by_uuid(list, uuid);
+		var dev = find_device_in_list(list, uuid);
 		if (dev != null){
 			return dev.mount_points[0].mount_point;
 		}

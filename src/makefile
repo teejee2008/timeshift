@@ -21,7 +21,13 @@ vte_symbol = -D VTE_291
 xapp_pkg=$(shell { ((pkg-config --exists 'xapp >= 1.0.4') >/dev/null && echo '--pkg xapp') || echo ''; } )
 xapp_symbol=$(shell { ((pkg-config --exists 'xapp >= 1.0.4') >/dev/null && echo '-D XAPP') || echo ''; } )
 
-gtk3_version=$(shell { (pkg-config --modversion gtk+-3.0 | cut -d. -f2); } )
+ifneq ($(MAKECMDGOALS),clean)
+
+gtk3_version=$(shell { (pkg-config --modversion gtk+-3.0 2> /dev/null | cut -d. -f2); } )
+
+ifeq ($(gtk3_version),)
+$(error gtk+-3.0 library not found, install it)
+endif
 
 ifeq ($(shell { test ${gtk3_version} -gt 17 ; echo $$? ; } ), 0)
 gtk3_symbol=$(shell echo '-D GTK3_18')
@@ -30,6 +36,8 @@ gtk3_symbol=$(shell echo '')
 endif
 
 symbols=$(shell echo "${vte_symbol} ${gtk3_symbol} ${xapp_symbol}")
+
+endif
 
 all:
 

@@ -137,16 +137,19 @@ public class SnapshotRepo : GLib.Object{
 		log_debug("SnapshotRepo: init_from_device()");
 		
 		if ((device != null) && (device.uuid.length > 0) && (Device.get_device_by_uuid(device.uuid) != null)){
+			
 			log_debug("");
 			unlock_and_mount_devices();
 
 			if ((device != null) && (device.device.length > 0)){
+				
 				log_debug(_("Selected snapshot device") + ": %s".printf(device.device));
 				log_debug(_("Free space") + ": %s".printf(format_file_size(device.free_bytes)));
 			}
 		}
 
 		if ((device != null) && (device.device.length > 0)){
+			
 			check_status();
 		}
 
@@ -186,6 +189,7 @@ public class SnapshotRepo : GLib.Object{
 		}
 
 		mount_path = unlock_and_mount_device(device, "/mnt/timeshift/backup");
+		
 		if (mount_path.length == 0){
 			return false;
 		}
@@ -195,6 +199,7 @@ public class SnapshotRepo : GLib.Object{
 		mount_paths["@home"] = "";
 			
 		if (btrfs_mode){
+			
 			mount_paths["@"] = mount_path;
 			mount_paths["@home"] = mount_path; //default
 			device_home = device; //default
@@ -202,12 +207,18 @@ public class SnapshotRepo : GLib.Object{
 			// mount @home if on different disk -------
 		
 			var repo_subvolumes = Subvolume.detect_subvolumes_for_system_by_path(path_combine(mount_path,"@"), this, parent_window);
+			
 			if (repo_subvolumes.has_key("@home")){
+				
 				var subvol = repo_subvolumes["@home"];
+				
 				if (subvol.device_uuid != device.uuid){
+					
 					// @home is on a separate device
 					device_home = subvol.get_device();
+					
 					mount_paths["@home"] = unlock_and_mount_device(device_home, "/mnt/timeshift/backup-home");
+					
 					if (mount_paths["@home"].length == 0){
 						return false;
 					}

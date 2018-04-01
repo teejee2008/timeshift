@@ -1421,24 +1421,40 @@ public class Main : GLib.Object{
 		// create subvolume snapshots
 
 		var subvol_names = new string[] { "@" };
+		
 		if (include_btrfs_home_for_backup){
+			
 			subvol_names = new string[] { "@","@home" };
 		}
 		
 		foreach(var subvol_name in subvol_names){
 
 			snapshot_path = path_combine(repo.mount_paths[subvol_name], "timeshift-btrfs/snapshots/%s".printf(snapshot_name));
+			
 			dir_create(snapshot_path, true);
 			
 			string src_path = path_combine(repo.mount_paths[subvol_name], subvol_name);
+			
 			string dst_path = path_combine(snapshot_path, subvol_name);
+
+			// Dirty hack to fix the nested subvilumes issue (cause of issue is unknown)
+			if (dst_path.has_suffix("/@/@")){
+				dst_path = dst_path.replace("/@/@", "/@");
+			}
+			else if (dst_path.has_suffix("/@home/@home")){
+				dst_path = dst_path.replace("/@home/@home", "/@home");
+			}
 			
 			string cmd = "btrfs subvolume snapshot '%s' '%s' \n".printf(src_path, dst_path);
+			
 			if (LOG_COMMANDS) { log_debug(cmd); }
 
 			string std_out, std_err;
+			
 			int ret_val = exec_sync(cmd, out std_out, out std_err);
+			
 			if (ret_val != 0){
+				
 				log_error (std_err);
 				log_error(_("btrfs returned an error") + ": %d".printf(ret_val));
 				log_error(_("Failed to create subvolume snapshot") + ": %s".printf(subvol_name));

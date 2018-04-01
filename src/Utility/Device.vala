@@ -936,37 +936,28 @@ public class Device : GLib.Object{
 	// helpers ----------------------------------
 
 	public static Device? get_device_by_uuid(string uuid){
-		foreach(var dev in device_list){
-			if (dev.uuid == uuid){
-				return dev;
-			}
-		}
-		
-		return null;
+
+		return find_device_in_list(device_list, uuid);
 	}
 
 	public static Device? get_device_by_name(string file_name){
 
-		var device_name = resolve_device_name(file_name);
-		
-		foreach(var dev in device_list){
-			if (dev.device == device_name){
-				return dev;
-			}
-		}
-		
-		return null;
+		return find_device_in_list(device_list, file_name);
 	}
 
 	public static Device? get_device_by_path(string path_to_check){
+		
 		var list = Device.get_disk_space_using_df(path_to_check);
+		
 		if (list.size > 0){
 			return list[0];
 		}
+		
 		return null;
 	}
 	
 	public static string get_device_uuid(string device){
+		
 		if (device_list == null){
 			device_list = get_block_devices_using_lsblk();
 		}
@@ -975,6 +966,7 @@ public class Device : GLib.Object{
 				return dev.uuid;
 			}
 		}
+		
 		return "";
 	}
 

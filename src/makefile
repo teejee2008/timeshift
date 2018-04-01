@@ -2,7 +2,7 @@ SHELL=/bin/bash
 CFLAGS=--std=c99
 EXECUTABLES = find msgmerge msgfmt install rm mkdir cp chmod valac pkg-config
 CHECKEXECS := $(foreach exec,$(EXECUTABLES), $(if $(shell which $(exec)),,$(error No $(exec) found, install it)))
-LIBS = gee-0.8 vte-2.91 gtk+-3.0
+LIBS = gee-0.8 gtk+-3.0 json-glib-1.0 vte-2.91
 
 prefix=/usr
 sysconfdir=/etc

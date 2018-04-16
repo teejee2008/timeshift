@@ -76,6 +76,8 @@ msgstr "<b>Комментарии</b> (дважды кликните для из
 msgid ""
 "A maintenance task runs once every hour and creates snapshots as needed."
 msgstr ""
+"Задача по расписанию запускается каждый час и при необходимости создает "
+"снимок."
 
 #: Console/AppConsole.vala:698 Console/AppConsole.vala:762
 #: Console/AppConsole.vala:894 Console/AppConsole.vala:989
@@ -383,9 +385,8 @@ msgid "Click to edit. Drag and drop to re-order."
 msgstr "Щёлкните для изменения. Перетащите для изменения порядка."
 
 #: Gtk/ExcludeBox.vala:59
-#, fuzzy
 msgid "Click to edit. Drag-drop to re-order."
-msgstr "Щёлкните для изменения. Перетащите для изменения порядка."
+msgstr "Щёлкните для редактирования. Перетащите для изменения порядка."
 
 #: Gtk/RestoreWindow.vala:69
 msgid "Clone System"
@@ -695,12 +696,12 @@ msgstr "Устройство не найдено"
 #: Gtk/BackupDeviceBox.vala:97
 #, c-format
 msgid "Devices displayed above have BTRFS file systems."
-msgstr "Устройства с файловыми системами Linux"
+msgstr "Устройства с файловыми системами BTRFS."
 
 #: Gtk/BackupDeviceBox.vala:104
 #, c-format
 msgid "Devices displayed above have Linux file systems."
-msgstr "Устройства с файловыми системами Linux"
+msgstr "Устройства с файловыми системами Linux."
 
 #: Gtk/RestoreDeviceBox.vala:84
 msgid "Devices from which snapshot was created are pre-selected."
@@ -713,6 +714,7 @@ msgstr "Устройства с файловыми системами Linux"
 #: Gtk/BackupDeviceBox.vala:105
 msgid "Devices with Windows file systems are not supported (NTFS, FAT, etc)."
 msgstr ""
+"Устройства с файловыми системами Windows (NTFS, FAT и т.п.) не поддерживаются."
 
 #: Utility/Gtk/DonationWindow.vala:61
 msgid ""
@@ -1063,7 +1065,7 @@ msgid ""
 "Patterns starting with a + will include the item instead of excluding."
 msgstr ""
 "Файлы и каталоги, соответствующие шаблонам ниже, будут исключены. Шаблоны, "
-"начинающиеся с + будут включать объекты, независимо от исключений."
+"начинающиеся с \"+\", будут включать объекты независимо от исключений."
 
 #: Gtk/SnapshotBackendBox.vala:187
 msgid "Files and directories can be excluded to save disk space."
@@ -1188,7 +1190,7 @@ msgstr "Создание ежечасных снимков включено"
 
 #: Utility/Gtk/AboutWindow.vala:457
 msgid "Icon Themes & Utilities"
-msgstr ""
+msgstr "Темы ярлыков и программы"
 
 #: Gtk/RestoreFinishBox.vala:102
 msgid ""
@@ -1359,7 +1361,7 @@ msgstr "Последний снимок"
 
 #: Utility/Gtk/AboutWindow.vala:316 Utility/Gtk/AboutWindow.vala:356
 msgid "License"
-msgstr ""
+msgstr "Лицензия"
 
 #: Core/Main.vala:1309
 #, c-format
@@ -1973,15 +1975,15 @@ msgstr "Выберите снимок"
 
 #: Gtk/ScheduleBox.vala:55
 msgid "Select Snapshot Levels"
-msgstr "Выберите уровни снимка"
+msgstr "Выберите уровни создания снимков"
 
 #: Gtk/BackupDeviceBox.vala:56
 msgid "Select Snapshot Location"
-msgstr "Выберите место для снимка"
+msgstr "Выберите место снимков"
 
 #: Gtk/SnapshotBackendBox.vala:62
 msgid "Select Snapshot Type"
-msgstr "Выберите тип снимка"
+msgstr "Выберите тип снимков"
 
 #: Gtk/DeleteWindow.vala:83
 msgid "Select Snapshots"
@@ -1994,7 +1996,7 @@ msgstr "Выберите целевое устройство"
 #: Gtk/BackupDeviceBox.vala:377
 #, c-format
 msgid "Select a partition on this disk"
-msgstr "Выбероите раздел на этом диске"
+msgstr "Выберите раздел на этом диске"
 
 #: Gtk/MainWindow.vala:801
 msgid "Select a single snapshot to restore"
@@ -2264,7 +2266,7 @@ msgid ""
 "Snapshots are created by creating copies of system files using rsync, and "
 "hard-linking unchanged files from previous snapshot."
 msgstr ""
-"Снимки создаются путем создания копий системных файлов с использованием "
+"Снимки создаются с использованием копирования системных файлов при помощи "
 "rsync и создания жёстких ссылок на неизменённые файлы из предыдущего снимка."
 
 #: Gtk/SnapshotBackendBox.vala:162
@@ -2283,7 +2285,7 @@ msgid ""
 "Snapshots are perfect, byte-for-byte copies of the system. Nothing is "
 "excluded."
 msgstr ""
-"Снимки - идеальное средство, копирование системы байт в байт. Ничего не "
+"Снимки - идеальное средство, копирование системы байт в байт. Ничто не "
 "будет пропущено."
 
 #: Gtk/SnapshotBackendBox.vala:166
@@ -2312,12 +2314,16 @@ msgid ""
 "Snapshots are saved to /timeshift on selected partition. Other locations are "
 "not supported."
 msgstr ""
+"Снимки сохраняются в папку /timeshift на выбранном разделе. Другие пути "
+"не поддерживаются."
 
 #: Gtk/BackupDeviceBox.vala:99
 msgid ""
 "Snapshots are saved to /timeshift-btrfs on selected partition. Other "
 "locations are not supported."
 msgstr ""
+"Снимки сохраняются в папку /timeshift-btrfs на выбранном разделе. Другие "
+"пути не поддерживаются."
 
 #: Gtk/MainWindow.vala:1012
 msgid "Snapshots available for restore"
@@ -2429,9 +2435,7 @@ msgstr "Система"
 
 #: Gtk/MainWindow.vala:957
 msgid "System Restore Utility"
-msgstr ""
-"Утилита восстановления системы\n"
-"Программа восстановления системы"
+msgstr "Программа восстановления системы"
 
 #: Gtk/FinishBox.vala:82
 msgid "System can be rolled-back to a previous date by restoring a snapshot."
@@ -2449,7 +2453,7 @@ msgstr "Система будет перезагружена после восс
 
 #: Core/Main.vala:1186 Core/Main.vala:1227
 msgid "Tagged snapshot"
-msgstr "Помеченный снимок"
+msgstr "Отмеченный снимок"
 
 #: Console/AppConsole.vala:426 Gtk/SnapshotListBox.vala:151
 msgid "Tags"
@@ -2792,119 +2796,4 @@ msgstr "rsync вернуло ошибку"
 #: Core/SnapshotRepo.vala:714 Core/SnapshotRepo.vala:752
 #: Core/SnapshotRepo.vala:831
 msgid "un-tagged"
-msgstr "не помечено"
-
-#, fuzzy
-#~ msgid "Click to edit and drag-drop to re-order"
-#~ msgstr "Щёлкните для изменения. Перетащите для изменения порядка."
-
-#~ msgid ""
-#~ "Click an item to edit the pattern.\n"
-#~ "Drag and drop items with mouse to re-order."
-#~ msgstr ""
-#~ "Щёлкните на элементе для изменения шаблона.\n"
-#~ "Перетаскивайте элементы мышью для изменения порядка."
-
-#~ msgid "Editing and Re-Ordering"
-#~ msgstr "Редактирование и изменение порядка"
-
-#~ msgid "Info"
-#~ msgstr "Информация"
-
-#~ msgid "Deleted system subvolumes"
-#~ msgstr "Системные подразделы удалены"
-
-#~ msgid "<b>System:</b> Installed Linux distribution"
-#~ msgstr "<b>Система:</b> Установленный дистрибутив Linux"
-
-#~ msgid "<b>Snapshot Date:</b> Date on which snapshot was created"
-#~ msgstr "<b>Дата снимка:</b> Дата создания снимка"
-
-#~ msgid "Selected snapshot path"
-#~ msgstr "Путь для снимка выбран"
-
-#~ msgid ""
-#~ "<b>Backup Levels</b>\n"
-#~ "\n"
-#~ "O\tOn demand (manual)\n"
-#~ "B\tBoot\n"
-#~ "H\tHourly\n"
-#~ "D\tDaily\n"
-#~ "W\tWeekly\n"
-#~ "M\tMonthly"
-#~ msgstr ""
-#~ "<b>Периодичность резервного копирования</b>\n"
-#~ "\n"
-#~ "O\tПо запросу (ручной режим)\n"
-#~ "B\tПри загрузке\n"
-#~ "H\tЕжечасно\n"
-#~ "D\tЕжедневно\n"
-#~ "W\tЕженедельно\n"
-#~ "M\tЕжемесячно"
-
-#~ msgid "Cloning System..."
-#~ msgstr "Клонирование системы..."
-
-#~ msgid "Close Window"
-#~ msgstr "Закрыть окно"
-
-#~ msgid "Contributions"
-#~ msgstr "Благодарности"
-
-#~ msgid "Documenters"
-#~ msgstr "Составители документации"
-
-#~ msgid "Include everything"
-#~ msgstr "Включить всё"
-
-#~ msgid "Include hidden items"
-#~ msgstr "Включить скрытые объекты"
-
-#~ msgid "Log Viewer"
-#~ msgstr "Просмотр журналов"
-
-#~ msgid "Refresh Snapshot List"
-#~ msgstr "Обновить список снимков"
-
-#~ msgid "Scheduled task runs once every hour"
-#~ msgstr "Запланированная задача выполняется каждый час"
-
-#~ msgid "Third Party Tools"
-#~ msgstr "Сторонние инструменты"
-
-#~ msgid "Translators"
-#~ msgstr "Переводчики"
-
-#~ msgid "View Log for Create"
-#~ msgstr "Просмотреть журнал создания"
-
-#~ msgid "View Log for Restore"
-#~ msgstr "Просмотреть журнал восстановления"
-
-#~ msgid "View:"
-#~ msgstr "Вид:"
-
-#~ msgid "Change"
-#~ msgstr "Изменено"
-
-#~ msgid "Restored"
-#~ msgstr "Восстановить"
-
-#~ msgid "Review Actions"
-#~ msgstr "Ревизия"
-
-#~ msgid "Filter:"
-#~ msgstr "Фильтры"
-
-#~ msgid "deleted"
-#~ msgstr "Удалено"
-
-#~ msgid ""
-#~ "This program is free for personal and commercial use and comes with "
-#~ "absolutely no warranty. You use this program entirely at your own risk. "
-#~ "The author will not be liable for any damages arising from the use of "
-#~ "this program."
-#~ msgstr ""
-#~ "Это программное обеспечение поставляется БЕЗ каких-либо гарантий и автор "
-#~ "не несет никакой ответственности за любой ущерб, возникший в результате "
-#~ "использования этой программы."
+msgstr "не отмечено"

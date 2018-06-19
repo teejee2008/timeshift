@@ -92,7 +92,7 @@ class SnapshotBackendBox : Gtk.Box{
 	private void add_opt_btrfs(Gtk.Box hbox){
 
 		var opt = new RadioButton.with_label_from_widget(opt_rsync, _("BTRFS"));
-		opt.set_tooltip_markup(_("Create snapshots using RSYNC"));
+		opt.set_tooltip_markup(_("Create snapshots using BTRFS"));
 		hbox.add (opt);
 		opt_btrfs = opt;
 

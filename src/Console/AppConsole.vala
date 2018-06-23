@@ -1079,6 +1079,7 @@ public class AppConsole : GLib.Object {
 	}
 	
 	private Device? read_stdin_device(Gee.ArrayList<Device> device_list, string device_default){
+		
 		var counter = new TimeoutCounter();
 		counter.exit_on_timeout();
 		string? line = stdin.read_line();

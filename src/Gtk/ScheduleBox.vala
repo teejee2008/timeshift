@@ -147,15 +147,15 @@ class ScheduleBox : Gtk.Box{
 			App.count_boot = (int) spin_b.get_value();
 		});
 
-		var msg = "◈ %s\n◈ %s\n◈ %s".printf(
+		var msg = "<i>%s\n%s\n%s</i>".printf(
 			_("Snapshots are not scheduled at fixed times."),
 			_("A maintenance task runs once every hour and creates snapshots as needed."),
 			_("Boot snapshots are created with a delay of 10 minutes after system startup."));
 		
 		var label = add_label(this, msg);
 		label.xalign = (float) 0.0;
+		label.margin = 6;
 		label.margin_top = 20;
-		//label.margin_left = 6;
 		label.set_use_markup(true);
 		//add(label);
 		

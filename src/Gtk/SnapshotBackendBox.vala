@@ -154,7 +154,7 @@ class SnapshotBackendBox : Gtk.Box{
 
 	private void update_description(){
 
-		string bullet = "▰ ";
+		string bullet = "▸ ";
 		
 		if (opt_btrfs.active){
 			string txt = "<b>" + _("BTRFS Snapshots") + "</b>\n\n";

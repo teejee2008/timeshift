@@ -76,6 +76,7 @@ msgstr "<b>Komentáře</b> (upravte dvojklikem)"
 msgid ""
 "A maintenance task runs once every hour and creates snapshots as needed."
 msgstr ""
+"Úloha údržby je spouštěna každou hodinu a v případě potřeby pořizuje zachycené stavy."
 
 #: Console/AppConsole.vala:698 Console/AppConsole.vala:762
 #: Console/AppConsole.vala:894 Console/AppConsole.vala:989
@@ -222,6 +223,8 @@ msgid ""
 "BRTFS snapshots are saved on system partition. Other partitions are not "
 "supported."
 msgstr ""
+"BTRFS zachycené stavy jsou ukládány na systémový oddíl. Jiné oddíly "
+"nejsou podporované."
 
 #: Gtk/SnapshotBackendBox.vala:94
 msgid "BTRFS"
@@ -363,7 +366,7 @@ msgstr "Změněné položky:"
 
 #: Gtk/RestoreWindow.vala:102
 msgid "Checking Restore Actions (Dry Run)"
-msgstr ""
+msgstr "Kontrola akcí obnovení (chod naprázdno)"
 
 #: Core/Main.vala:2697
 msgid "Checking file systems for errors..."
@@ -383,7 +386,6 @@ msgid "Click to edit. Drag and drop to re-order."
 msgstr "Upravte kliknutím. Pořadí změňte přetažením."
 
 #: Gtk/ExcludeBox.vala:59
-#, fuzzy
 msgid "Click to edit. Drag-drop to re-order."
 msgstr "Upravte kliknutím. Pořadí změňte přetažením."
 
@@ -429,7 +431,7 @@ msgstr "Komentáře"
 
 #: Core/Main.vala:2740 Gtk/RestoreBox.vala:74 Gtk/RestoreBox.vala:187
 msgid "Comparing Files (Dry Run)..."
-msgstr ""
+msgstr "Porovnávání souborů (chod naprázdno)…"
 
 #: Core/Main.vala:2506
 msgid "Comparing files with rsync..."
@@ -446,7 +448,7 @@ msgstr "Dokončeno s chybami"
 
 #: Gtk/RestoreWindow.vala:107 Gtk/RsyncLogBox.vala:87
 msgid "Confirm Actions"
-msgstr ""
+msgstr "Potvrďte akce"
 
 #: Console/AppConsole.vala:1068
 #, c-format
@@ -716,7 +718,7 @@ msgstr "Zařízení s linuxovými souborovými systémy"
 
 #: Gtk/BackupDeviceBox.vala:105
 msgid "Devices with Windows file systems are not supported (NTFS, FAT, etc)."
-msgstr ""
+msgstr "Zařízení s Windows souborovými systémy nejsou podporované (NTFS, FAT, atp.)."
 
 #: Utility/Gtk/DonationWindow.vala:61
 msgid ""
@@ -787,7 +789,7 @@ msgstr "Finančně podpořili"
 
 #: Gtk/UsersBox.vala:357
 msgid "Enable BTRFS qgroups (recommended)"
-msgstr ""
+msgstr "Zapnout BTRFS qgroups (doporučeno)"
 
 #: Gtk/MainWindow.vala:1068
 msgid "Enable scheduled snapshots to protect your system"
@@ -843,7 +845,7 @@ msgstr "Chyba"
 
 #: Gtk/RestoreWindow.vala:484
 msgid "Error running Rsync"
-msgstr ""
+msgstr "Chyba při spouštění Rsync"
 
 #: Gtk/SetupWizardWindow.vala:95 Gtk/BackupWindow.vala:79
 msgid "Estimate"
@@ -1201,7 +1203,7 @@ msgstr "Hodinové zachycené stavy zapnuty"
 
 #: Utility/Gtk/AboutWindow.vala:457
 msgid "Icon Themes & Utilities"
-msgstr ""
+msgstr "Motivy vzhledu ikon a nástroje"
 
 #: Gtk/RestoreFinishBox.vala:102
 msgid ""
@@ -1376,7 +1378,7 @@ msgstr "Nejnovější zachycený stav"
 
 #: Utility/Gtk/AboutWindow.vala:316 Utility/Gtk/AboutWindow.vala:356
 msgid "License"
-msgstr ""
+msgstr "Licence"
 
 #: Core/Main.vala:1309
 #, c-format
@@ -1426,7 +1428,7 @@ msgstr "Nabídka"
 
 #: Gtk/UsersBox.vala:354
 msgid "Miscellaneous"
-msgstr ""
+msgstr "Různé"
 
 #: Core/Main.vala:235
 msgid "Missing Dependencies"
@@ -1518,9 +1520,9 @@ msgid "None"
 msgstr "Žádné"
 
 #: Core/Subvolume.vala:184
-#, fuzzy, c-format
+#, c-format
 msgid "Not Found"
-msgstr "Složka nebyla nalezena"
+msgstr "Nenalezeno"
 
 #: Core/SnapshotRepo.vala:683
 msgid "Not Selected"
@@ -1580,7 +1582,7 @@ msgstr "Nejstarší zachycený stav"
 
 #: Gtk/SnapshotListBox.vala:297
 msgid "On demand (manual)"
-msgstr ""
+msgstr "Na vyžádání (ruční)"
 
 #: Core/Main.vala:377 Core/Main.vala:3397 Gtk/RestoreDeviceBox.vala:525
 msgid ""
@@ -1688,7 +1690,7 @@ msgstr "Počkejte než budou zachycené stavy smazány."
 
 #: Gtk/EstimateBox.vala:66
 msgid "Please wait..."
-msgstr ""
+msgstr "Čekejte…"
 
 #: Gtk/RsyncLogBox.vala:188
 msgid "Populating list..."
@@ -1810,6 +1812,8 @@ msgid ""
 "Required for displaying shared and unshared size for snapshots in the main "
 "window"
 msgstr ""
+"Potřebné pro zobrazení sdílené a nesdílené velikosti zachycených stavů v "
+"hlavní okně aplikace"
 
 #: Console/AppConsole.vala:362 Gtk/MainWindow.vala:151
 #: Gtk/RestoreWindow.vala:123 Gtk/RestoreFinishBox.vala:71
@@ -1818,9 +1822,8 @@ msgid "Restore"
 msgstr "Obnovit"
 
 #: Gtk/UsersBox.vala:329
-#, fuzzy
 msgid "Restore @home subvolume"
-msgstr "Obnovený systémový vnořený svazek"
+msgstr "Obnovit vnořený svazek @home"
 
 #: Gtk/RestoreWindow.vala:87
 msgid "Restore Device"
@@ -2333,12 +2336,16 @@ msgid ""
 "Snapshots are saved to /timeshift on selected partition. Other locations are "
 "not supported."
 msgstr ""
+"Zachycené stavy jsou na zvoleném oddílu ukládány v /timeshift. Jiná umístění "
+"nejsou podporovaná."
 
 #: Gtk/BackupDeviceBox.vala:99
 msgid ""
 "Snapshots are saved to /timeshift-btrfs on selected partition. Other "
 "locations are not supported."
 msgstr ""
+"Zachycené stavy jsou na zvoleném oddílu ukládány v /timeshift-btrfs. Jiná umístění "
+"nejsou podporovaná."
 
 #: Gtk/MainWindow.vala:1012
 msgid "Snapshots available for restore"
@@ -2409,12 +2416,12 @@ msgstr "Zastaveno"
 #: Core/Subvolume.vala:189
 #, c-format
 msgid "Subvolume exists at destination"
-msgstr ""
+msgstr "Na cíli existuje podřízený svazek"
 
 #: Gtk/SnapshotListBox.vala:275
-#, fuzzy, c-format
+#, c-format
 msgid "Subvolumes"
-msgstr "Svazek"
+msgstr "Dílčí svazky"
 
 #: Gtk/RestoreWindow.vala:118 Gtk/ExcludeAppsBox.vala:135
 #: Gtk/ExcludeBox.vala:258
@@ -2543,6 +2550,8 @@ msgid ""
 "Timeshift is powered by the following tools and components. Please visit the "
 "links for more information."
 msgstr ""
+"Timeshift je poháněn následujícími nástroji a součástmi. Další informace "
+"jsou k dispozici prostřednictvím následujících odkazů."
 
 #: Gtk/RestoreBox.vala:132 Gtk/BackupBox.vala:94 Gtk/RsyncLogBox.vala:394
 #, c-format
@@ -2665,9 +2674,8 @@ msgid "Users"
 msgstr "Uživatelé"
 
 #: Gtk/RestoreWindow.vala:112
-#, fuzzy
 msgid "Users Home"
-msgstr "Uživatelé"
+msgstr "Domovské složky uživatelů"
 
 #: Utility/Device.vala:1811
 #, c-format

@@ -147,20 +147,41 @@ class ScheduleBox : Gtk.Box{
 			App.count_boot = (int) spin_b.get_value();
 		});
 
+		// cron emails --------------------------------------------------------------------
+		
+		chk_cron = add_checkbox(this, _("Stop cron emails for scheduled tasks"));
+		//chk_cron.hexpand = true;
+		chk_cron.set_tooltip_text(_("The cron service sends the output of scheduled tasks as an email to the current user. Select this option to suppress the emails for cron tasks created by Timeshift."));
+
+		chk_cron.margin = 6;
+		chk_cron.margin_top = 12;	
+		
+		chk_cron.active = App.stop_cron_emails;
+		chk_cron.toggled.connect(()=>{
+			App.stop_cron_emails = chk_cron.active;
+		});
+
 		var msg = "<i>• %s\n• %s\n• %s</i>".printf(
 			_("Snapshots are not scheduled at fixed times."),
 			_("A maintenance task runs once every hour and creates snapshots as needed."),
 			_("Boot snapshots are created with a delay of 10 minutes after system startup."));
 
-		// scrolled
+		// buffer
+		var label = new Gtk.Label("");
+		label.vexpand = true;
+		add(label);
+		
+		// message area -------------------------------------------------------------------
+		
 		var scrolled = new Gtk.ScrolledWindow(null, null);
 		scrolled.set_shadow_type (ShadowType.ETCHED_IN);
 		scrolled.hscrollbar_policy = Gtk.PolicyType.NEVER;
 		scrolled.vscrollbar_policy = Gtk.PolicyType.NEVER;
 		scrolled.margin_top = 12;
+		scrolled.margin_bottom = 6;
 		this.add(scrolled);
 
-		var label = new Gtk.Label(msg);
+		label = new Gtk.Label(msg);
 		label.set_use_markup(true);
 		label.xalign = 0.0f;
 		label.wrap = true;
@@ -168,23 +189,8 @@ class ScheduleBox : Gtk.Box{
 		label.margin = 6;
 		scrolled.add(label);
 
-		// buffer
-		label = new Gtk.Label("");
-		label.vexpand = true;
-		add(label);
+		// status area --------------------------------------------------------------------
 		
-		// cron emails
-		chk_cron = add_checkbox(this, _("Stop cron emails for scheduled tasks"));
-		//chk_cron.hexpand = true;
-		chk_cron.set_tooltip_text(_("The cron service sends the output of scheduled tasks as an email to the current user. Select this option to suppress the emails for cron tasks created by Timeshift."));
-		//chk_cron.margin_bottom = 12;	
-		
-		chk_cron.active = App.stop_cron_emails;
-		chk_cron.toggled.connect(()=>{
-			App.stop_cron_emails = chk_cron.active;
-		});
-
-		// scrolled
 		scrolled = new ScrolledWindow(null, null);
 		scrolled.set_shadow_type (ShadowType.ETCHED_IN);
 		scrolled.hscrollbar_policy = Gtk.PolicyType.NEVER;

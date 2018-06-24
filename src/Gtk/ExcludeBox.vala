@@ -399,6 +399,8 @@ class ExcludeBox : Gtk.Box{
 	}
 	
 	private SList<string> browse_files(){
+
+		var list = new SList<string>();
 		
 		var dialog = new Gtk.FileChooserDialog(
 			_("Select file(s)"), parent_window,
@@ -412,14 +414,20 @@ class ExcludeBox : Gtk.Box{
  		dialog.set_modal (true);
  		dialog.set_select_multiple (true);
 
-		dialog.run();
-		var list = dialog.get_filenames();
-	 	dialog.destroy ();
+		var resp = dialog.run();
+
+		if (resp != Gtk.ResponseType.CANCEL){
+			list = dialog.get_filenames();
+		}
+		
+		dialog.destroy();
 
 	 	return list;
 	}
 
 	private SList<string> browse_folder(){
+
+		var list = new SList<string>();
 		
 		var dialog = new Gtk.FileChooserDialog(
 			_("Select directory"), parent_window,
@@ -433,9 +441,13 @@ class ExcludeBox : Gtk.Box{
  		dialog.set_modal (true);
  		dialog.set_select_multiple (false);
 
-		dialog.run();
-		var list = dialog.get_filenames();
-	 	dialog.destroy ();
+		var resp = dialog.run();
+
+		if (resp != Gtk.ResponseType.CANCEL){
+			list = dialog.get_filenames();
+		}
+		
+		dialog.destroy();
 
 	 	return list;
 	}

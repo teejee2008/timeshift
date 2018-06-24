@@ -555,7 +555,41 @@ public class Main : GLib.Object{
 		exclude_list_default.add("/var/log/timeshift/*");
 		exclude_list_default.add("/var/log/timeshift-btrfs/*");
 		exclude_list_default.add("/swapfile");
-		
+
+		foreach(var entry in FsTabEntry.read_file("/etc/fstab")){
+
+			if (!entry.mount_point.has_prefix("/")){ continue; }
+
+			// ignore standard system folders
+			if (entry.mount_point == "/"){ continue; }
+			if (entry.mount_point.has_prefix("/bin")){ continue; }
+			if (entry.mount_point.has_prefix("/boot")){ continue; }
+			if (entry.mount_point.has_prefix("/cdrom")){ continue; }
+			if (entry.mount_point.has_prefix("/dev")){ continue; }
+			if (entry.mount_point.has_prefix("/etc")){ continue; }
+			if (entry.mount_point.has_prefix("/home")){ continue; }
+			if (entry.mount_point.has_prefix("/lib")){ continue; }
+			if (entry.mount_point.has_prefix("/lib64")){ continue; }
+			if (entry.mount_point.has_prefix("/media")){ continue; }
+			if (entry.mount_point.has_prefix("/mnt")){ continue; }
+			if (entry.mount_point.has_prefix("/opt")){ continue; }
+			if (entry.mount_point.has_prefix("/proc")){ continue; }
+			if (entry.mount_point.has_prefix("/root")){ continue; }
+			if (entry.mount_point.has_prefix("/run")){ continue; }
+			if (entry.mount_point.has_prefix("/sbin")){ continue; }
+			if (entry.mount_point.has_prefix("/snap")){ continue; }
+			if (entry.mount_point.has_prefix("/srv")){ continue; }
+			if (entry.mount_point.has_prefix("/sys")){ continue; }
+			if (entry.mount_point.has_prefix("/system")){ continue; }
+			if (entry.mount_point.has_prefix("/tmp")){ continue; }
+			if (entry.mount_point.has_prefix("/usr")){ continue; }
+			if (entry.mount_point.has_prefix("/var")){ continue; }
+
+			// add exclude entry for devices mounted to non-standard locations
+
+			exclude_list_default_extra.add(entry.mount_point + "/*");
+		}
+
 		exclude_list_default.add("/root/.thumbnails");
 		exclude_list_default.add("/root/.cache");
 		exclude_list_default.add("/root/.dbus");

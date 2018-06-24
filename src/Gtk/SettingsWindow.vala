@@ -64,6 +64,8 @@ class SettingsWindow : Gtk.Window{
         vbox_main.set_size_request(def_width, def_height);
         add(vbox_main);
 
+        this.resize(def_width, def_height);
+
 		var hbox = new Gtk.ButtonBox (Gtk.Orientation.HORIZONTAL);
 		hbox.set_layout (Gtk.ButtonBoxStyle.CENTER);
 		hbox.get_style_context().add_class(Gtk.STYLE_CLASS_PRIMARY_TOOLBAR);
@@ -121,7 +123,9 @@ class SettingsWindow : Gtk.Window{
 
 		backend_box.refresh();
 		stack.set_visible_child_name("type");
-		//vbox_main.set_size_request(def_width, def_height);
+		
+		this.resize(def_width, def_height);
+		
 		//backup_dev_box.refresh(); //will be triggerred indirectly
 		
 		return false;

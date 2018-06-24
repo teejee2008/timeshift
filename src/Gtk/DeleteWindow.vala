@@ -51,7 +51,7 @@ class DeleteWindow : Gtk.Window{
 	private Gtk.Button btn_close;
 
 	private uint tmr_init;
-	private int def_width = 450;
+	private int def_width = 500;
 	private int def_height = 500;
 	private bool success = false;
 	
@@ -66,6 +66,8 @@ class DeleteWindow : Gtk.Window{
 		this.icon = IconManager.lookup("timeshift",16);
 
 		this.delete_event.connect(on_delete_event);
+
+		this.resize(def_width, def_height);
 		
 	    // vbox_main
         vbox_main = new Gtk.Box(Orientation.VERTICAL, 6);

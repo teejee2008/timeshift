@@ -75,6 +75,8 @@ class SetupWizardWindow : Gtk.Window{
         vbox_main.set_size_request(def_width, def_height);
         add(vbox_main);
 
+        this.resize(def_width, def_height);
+
         if (App.first_run && !schedule_accepted){
 			App.schedule_boot = false;
 			App.schedule_hourly = false;
@@ -137,6 +139,8 @@ class SetupWizardWindow : Gtk.Window{
 			Source.remove(tmr_init);
 			tmr_init = 0;
 		}
+
+		this.resize(def_width, def_height);
 
 		go_first();
 

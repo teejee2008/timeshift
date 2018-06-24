@@ -72,6 +72,8 @@ class RestoreWindow : Gtk.Window{
         this.set_default_size (def_width, def_height);
 		this.icon = IconManager.lookup("timeshift",16);
 
+		this.resize(def_width, def_height);
+
 		this.delete_event.connect(on_delete_event);
 
 	    // vbox_main
@@ -147,6 +149,8 @@ class RestoreWindow : Gtk.Window{
 			Source.remove(tmr_init);
 			tmr_init = 0;
 		}
+
+		this.resize(def_width, def_height);
 
 		go_first();
 

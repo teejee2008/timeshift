@@ -43,6 +43,7 @@ class SetupWizardWindow : Gtk.Window{
 	private BackupDeviceBox backup_dev_box;
 	private FinishBox finish_box;
 	private ScheduleBox schedule_box;
+	private UsersBox users_box;
 
 	// actions
 	private Gtk.Button btn_prev;
@@ -107,6 +108,12 @@ class SetupWizardWindow : Gtk.Window{
 		schedule_box.margin = 0;
 		notebook.append_page (schedule_box, label);
 
+		label = new Gtk.Label(_("User"));
+		var exclude_box = new ExcludeBox(this);
+		users_box = new UsersBox(this, exclude_box, false);
+		users_box.margin = 0;
+		notebook.append_page (users_box, label);
+
 		label = new Gtk.Label(_("Finished"));
 		finish_box = new FinishBox(this, false);
 		finish_box.margin = 0;
@@ -163,8 +170,6 @@ class SetupWizardWindow : Gtk.Window{
 		
 		var hbox = new Gtk.ButtonBox (Gtk.Orientation.HORIZONTAL);
 		hbox.margin = 0;
-		hbox.margin_left = 24;
-		hbox.margin_right = 24;
 		hbox.margin_top = 6;
         vbox_main.add(hbox);
         
@@ -263,8 +268,11 @@ class SetupWizardWindow : Gtk.Window{
 		case Tabs.SCHEDULE:
 			notebook.page = Tabs.BACKUP_DEVICE;
 			break;
-		case Tabs.FINISH:
+		case Tabs.USERS:
 			notebook.page = Tabs.SCHEDULE;
+			break;
+		case Tabs.FINISH:
+			notebook.page = Tabs.USERS;
 			break;
 		}
 		
@@ -286,9 +294,11 @@ class SetupWizardWindow : Gtk.Window{
 				notebook.page = Tabs.ESTIMATE; // rsync mode only
 			}
 			break;
+			
 		case Tabs.ESTIMATE:
 			notebook.page = Tabs.BACKUP_DEVICE;
 			break;
+			
 		case Tabs.BACKUP_DEVICE:
 			if (App.live_system()){
 				destroy();
@@ -297,10 +307,16 @@ class SetupWizardWindow : Gtk.Window{
 				notebook.page = Tabs.SCHEDULE;
 			}
 			break;
+			
 		case Tabs.SCHEDULE:
-			notebook.page = Tabs.FINISH;
+			notebook.page = Tabs.USERS;
 			schedule_accepted = true;
 			break;
+
+		case Tabs.USERS:
+			notebook.page = Tabs.FINISH;
+			break;
+			
 		case Tabs.FINISH:
 			// btn_next is disabled for this page
 			break;
@@ -345,6 +361,7 @@ class SetupWizardWindow : Gtk.Window{
 			btn_close.sensitive = true;
 			break;
 		case Tabs.SCHEDULE:
+		case Tabs.USERS:
 			btn_prev.sensitive = true;
 			btn_next.sensitive = true;
 			btn_close.sensitive = true;
@@ -377,6 +394,9 @@ class SetupWizardWindow : Gtk.Window{
 		case Tabs.SCHEDULE:
 			schedule_box.update_statusbar();
 			break;
+		case Tabs.USERS:
+			users_box.refresh();
+			break;
 		case Tabs.FINISH:
 			finish_box.refresh();
 			break;
@@ -406,7 +426,8 @@ class SetupWizardWindow : Gtk.Window{
 		ESTIMATE = 1,
 		BACKUP_DEVICE = 2,
 		SCHEDULE = 3,
-		FINISH = 4
+		USERS = 4,
+		FINISH = 5
 	}
 }
 

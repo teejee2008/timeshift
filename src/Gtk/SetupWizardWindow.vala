@@ -54,7 +54,7 @@ class SetupWizardWindow : Gtk.Window{
 	private bool schedule_accepted = false;
 
 	private uint tmr_init;
-	private int def_width = 450;
+	private int def_width = 500;
 	private int def_height = 500;
 	
 	public SetupWizardWindow() {
@@ -64,7 +64,7 @@ class SetupWizardWindow : Gtk.Window{
 		this.title = _("Setup Wizard");
         this.window_position = WindowPosition.CENTER;
         this.modal = true;
-        this.set_default_size (def_width, def_height);
+        //this.set_default_size (def_width, def_height);
 		this.icon = IconManager.lookup("timeshift",16);
 
 		this.delete_event.connect(on_delete_event);
@@ -72,6 +72,7 @@ class SetupWizardWindow : Gtk.Window{
 	    // vbox_main
         vbox_main = new Gtk.Box(Orientation.VERTICAL, 6);
         vbox_main.margin = 12;
+        vbox_main.set_size_request(def_width, def_height);
         add(vbox_main);
 
         if (App.first_run && !schedule_accepted){

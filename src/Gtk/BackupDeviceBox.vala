@@ -337,7 +337,7 @@ class BackupDeviceBox : Gtk.Box{
 		var scrolled = new Gtk.ScrolledWindow(null, null);
 		scrolled.set_shadow_type (ShadowType.ETCHED_IN);
 		scrolled.hscrollbar_policy = Gtk.PolicyType.NEVER;
-		scrolled.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
+		scrolled.vscrollbar_policy = Gtk.PolicyType.NEVER;
 		scrolled.set_size_request(-1, 100);
 		this.add(scrolled);
 		

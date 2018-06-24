@@ -79,7 +79,7 @@ class ExcludeBox : Gtk.Box{
 		treeview = new TreeView();
 		treeview.get_selection().mode = SelectionMode.MULTIPLE;
 		treeview.headers_visible = true;
-		treeview.rules_hint = true;
+		//treeview.rules_hint = true;
 		treeview.reorderable = true;
 		treeview.set_tooltip_text(_("Click to edit. Drag and drop to re-order."));
 		//treeview.row_activated.connect(treeview_row_activated);

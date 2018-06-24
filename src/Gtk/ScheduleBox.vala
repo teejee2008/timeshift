@@ -147,18 +147,27 @@ class ScheduleBox : Gtk.Box{
 			App.count_boot = (int) spin_b.get_value();
 		});
 
-		var msg = "<i>%s\n%s\n%s</i>".printf(
+		var msg = "<i>• %s\n• %s\n• %s</i>".printf(
 			_("Snapshots are not scheduled at fixed times."),
 			_("A maintenance task runs once every hour and creates snapshots as needed."),
 			_("Boot snapshots are created with a delay of 10 minutes after system startup."));
-		
-		var label = add_label(this, msg);
-		label.xalign = (float) 0.0;
-		label.margin = 6;
-		label.margin_top = 20;
+
+		// scrolled
+		var scrolled = new Gtk.ScrolledWindow(null, null);
+		scrolled.set_shadow_type (ShadowType.ETCHED_IN);
+		scrolled.hscrollbar_policy = Gtk.PolicyType.NEVER;
+		scrolled.vscrollbar_policy = Gtk.PolicyType.NEVER;
+		scrolled.margin_top = 12;
+		this.add(scrolled);
+
+		var label = new Gtk.Label(msg);
 		label.set_use_markup(true);
-		//add(label);
-		
+		label.xalign = 0.0f;
+		label.wrap = true;
+		label.wrap_mode = Pango.WrapMode.WORD;
+		label.margin = 6;
+		scrolled.add(label);
+
 		// buffer
 		label = new Gtk.Label("");
 		label.vexpand = true;
@@ -176,10 +185,8 @@ class ScheduleBox : Gtk.Box{
 		});
 
 		// scrolled
-		var scrolled = new ScrolledWindow(null, null);
+		scrolled = new ScrolledWindow(null, null);
 		scrolled.set_shadow_type (ShadowType.ETCHED_IN);
-		//scrolled.margin = 6;
-		//scrolled.margin_top = 0;
 		scrolled.hscrollbar_policy = Gtk.PolicyType.NEVER;
 		scrolled.vscrollbar_policy = Gtk.PolicyType.NEVER;
 		add(scrolled);
@@ -202,12 +209,12 @@ class ScheduleBox : Gtk.Box{
 		// lbl_shield
 		lbl_shield = add_label(vbox, "");
         //lbl_shield.margin_bottom = 0;
-        lbl_shield.yalign = (float) 0.5;
+        lbl_shield.yalign = 0.5f;
         lbl_shield.hexpand = true;
 
         // lbl_shield_subnote
 		lbl_shield_subnote = add_label(vbox, "");
-		lbl_shield_subnote.yalign = (float) 0.5;
+		lbl_shield_subnote.yalign = 0.5f;
 		lbl_shield_subnote.hexpand = true;
 		//lbl_shield_subnote.margin_bottom = 6;
 		

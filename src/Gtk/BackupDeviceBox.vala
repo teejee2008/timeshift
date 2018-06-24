@@ -93,14 +93,14 @@ class BackupDeviceBox : Gtk.Box{
 
 		if (App.btrfs_mode){
 			
-			lbl_common.label = "◈ %s\n◈ %s\n◈ %s".printf(
+			lbl_common.label = "<i>• %s\n• %s\n• %s</i>".printf(
 				_("Devices displayed above have BTRFS file systems."),
 				_("BRTFS snapshots are saved on system partition. Other partitions are not supported."),
 				_("Snapshots are saved to /timeshift-btrfs on selected partition. Other locations are not supported.")
 			);
 		}
 		else {
-			lbl_common.label = "◈ %s\n◈ %s\n◈ %s\n◈ %s".printf(
+			lbl_common.label = "<i>• %s\n• %s\n• %s\n• %s</i>".printf(
 				_("Devices displayed above have Linux file systems."),
 				_("Devices with Windows file systems are not supported (NTFS, FAT, etc)."),
 				_("Remote and network locations are not supported."),
@@ -114,7 +114,7 @@ class BackupDeviceBox : Gtk.Box{
 		tv_devices = add_treeview(this);
 		tv_devices.vexpand = true;
 		tv_devices.headers_clickable = true;
-		tv_devices.rules_hint = true;
+		//tv_devices.rules_hint = true;
 		tv_devices.activate_on_single_click = true;
 		//tv_devices.headers_clickable  = true;
 		
@@ -329,11 +329,26 @@ class BackupDeviceBox : Gtk.Box{
 		add(infobar);
 		infobar_location = infobar;
 		
-		var content = (Gtk.Box) infobar.get_content_area ();
+		var content = (Gtk.Box) infobar.get_content_area();
 		var label = add_label(content, "");
 		lbl_infobar_location = label;
 
-		lbl_common = add_label(this, "");
+		// scrolled
+		var scrolled = new Gtk.ScrolledWindow(null, null);
+		scrolled.set_shadow_type (ShadowType.ETCHED_IN);
+		scrolled.hscrollbar_policy = Gtk.PolicyType.NEVER;
+		scrolled.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
+		scrolled.set_size_request(-1, 100);
+		this.add(scrolled);
+		
+		label = new Gtk.Label("");
+		label.set_use_markup(true);
+		label.xalign = (float) 0.0;
+		label.wrap = true;
+		label.wrap_mode = Pango.WrapMode.WORD;
+		label.margin = 6;
+		scrolled.add(label);
+		lbl_common = label;
 	}
 
 	private void try_change_device(Device dev){

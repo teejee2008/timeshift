@@ -1,13 +1,8 @@
-# Dutch translation for timeshift
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the timeshift package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: timeshift\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2018-06-24 17:21+0530\n"
+"POT-Creation-Date: 2018-06-24 17:55+0530\n"
 "PO-Revision-Date: 2017-11-03 14:49+0000\n"
 "Last-Translator: Pjotr12345 <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
@@ -15,10 +10,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2018-02-03 14:28+0000\n"
-"X-Generator: Launchpad (build 18544)\n"
-"X-Launchpad-Export-Date: 2017-11-23 10:47+0000\n"
-"X-Generator: Launchpad (build 18509)\n"
+"X-Launchpad-Export-Date: 2018-06-29 08:01+0000\n"
+"X-Generator: Launchpad (build 18704)\n"
 
 #: Console/AppConsole.vala:613
 #, c-format
@@ -50,7 +43,7 @@ msgstr "(Her)installeer GRUB2 op:"
 
 #: Core/Main.vala:362
 msgid "** Uninstalled Timeshift BTRFS **"
-msgstr "** Timeshift BTRFS verwijderd **"
+msgstr "** Tijdreis BTRFS verwijderd **"
 
 #: Core/Main.vala:3342
 msgid "/ is mapped to device"
@@ -172,7 +165,7 @@ msgstr ""
 #: Core/Main.vala:249
 msgid "Another instance of Timeshift is creating a snapshot."
 msgstr ""
-"Een andere instantie van Timeshift is reeds bezig met het maken van een "
+"Een andere instantie van Tijdreis is reeds bezig met het maken van een "
 "momentopname."
 
 #: Utility/AppLock.vala:49
@@ -181,7 +174,7 @@ msgstr "Er draait reeds een andere instantie van deze toepassing"
 
 #: Core/Main.vala:253
 msgid "Another instance of timeshift is currently running!"
-msgstr "Er draait nu al een andere instantie van Timeshift."
+msgstr "Er draait nu al een andere instantie van Tijdreis."
 
 #: Console/AppConsole.vala:376
 msgid "Answer YES to all confirmation prompts"
@@ -219,14 +212,6 @@ msgstr "Auteurs"
 msgid "Available"
 msgstr "Beschikbaar"
 
-#: Gtk/BackupDeviceBox.vala:98
-msgid ""
-"BRTFS snapshots are saved on system partition. Other partitions are not "
-"supported."
-msgstr ""
-"BTRFS momentopnames worden bewaard op de systeem partitie. Andere "
-"partitiesworden niet ondersteund."
-
 #: Gtk/SnapshotBackendBox.vala:94
 msgid "BTRFS"
 msgstr "BTRFS"
@@ -242,6 +227,15 @@ msgstr "BTRFS-gereedschap niet aangetroffen"
 #: Core/Main.vala:2041 Core/Main.vala:2045
 msgid "BTRFS device is not mounted"
 msgstr "BTRFS-apparaat is niet aangekoppeld"
+
+#: Gtk/BackupDeviceBox.vala:98
+#, fuzzy
+msgid ""
+"BTRFS snapshots are saved on system partition. Other partitions are not "
+"supported."
+msgstr ""
+"BTRFS momentopnames worden bewaard op de systeem partitie. Andere "
+"partitiesworden niet ondersteund."
 
 #: Gtk/FinishBox.vala:92
 msgid ""
@@ -1647,7 +1641,7 @@ msgstr "Onderbreek a.u.b. het terugzetproces niet."
 #: Core/Main.vala:348
 msgid "Please install required packages and try running TimeShift again"
 msgstr ""
-"Installeer a.u.b. de vereiste pakketten en probeer dan om Timeshift opnieuw "
+"Installeer a.u.b. de vereiste pakketten en probeer dan om Tijdreis opnieuw "
 "te draaien"
 
 #: Gtk/AppGtk.vala:127
@@ -2512,7 +2506,7 @@ msgid ""
 msgstr ""
 "De crondienst verzendt de uitvoer van geagendeerde taken als een e-mail naar "
 "de huidige gebruiker. Kies deze optie om de e-mails te onderdrukken voor "
-"crontaken die door Timeshift zijn gemaakt."
+"crontaken die door Tijdreis zijn gemaakt."
 
 #: Core/Main.vala:376
 msgid "The system partition has an unsupported subvolume layout."
@@ -2542,7 +2536,7 @@ msgstr ""
 
 #: Gtk/MainWindow.vala:1047 Gtk/MainWindow.vala:1058
 msgid "Timeshift is active"
-msgstr "Timeshift is actief"
+msgstr "Tijdreis is actief"
 
 #: Gtk/MainWindow.vala:948
 msgid ""
@@ -2693,7 +2687,7 @@ msgstr "Bekijk logboek voor terugzetten"
 
 #: Gtk/MainWindow.vala:378
 msgid "View TimeShift Logs"
-msgstr "Bekijk de logboeken van Timeshift"
+msgstr "Bekijk de logboeken van Tijdreis"
 
 #: Gtk/RestoreDeviceBox.vala:101
 msgid "Volume"
@@ -2824,36 +2818,6 @@ msgstr "rsync meldde een fout"
 msgid "un-tagged"
 msgstr "ontmarkeerd"
 
-#, fuzzy
-#~ msgid "Click to edit and drag-drop to re-order"
-#~ msgstr "Klik om te bewerken. Versleep om te herschikken."
-
-#~ msgid ""
-#~ "Click an item to edit the pattern.\n"
-#~ "Drag and drop items with mouse to re-order."
-#~ msgstr ""
-#~ "Klik op een element om het patroon te bewerken.\n"
-#~ "Versleep elementen met de muis, om hen te herschikken."
-
-#~ msgid "Editing and Re-Ordering"
-#~ msgstr "Bewerken en herschikken"
-
-#~ msgid "Info"
-#~ msgstr "Informatie"
-
-#~ msgid "Deleted system subvolumes"
-#~ msgstr "Verwijderde systeemsubvolumes"
-
-#~ msgid "<b>System:</b> Installed Linux distribution"
-#~ msgstr "<b>Systeem:</b> Geïnstalleerde Linuxdistributie"
-
-#~ msgid "<b>Snapshot Date:</b> Date on which snapshot was created"
-#~ msgstr ""
-#~ "<b>Datum momentopname:</b> Datum waarop de momentopname werd gemaakt"
-
-#~ msgid "Selected snapshot path"
-#~ msgstr "Gekozen pad voor momentopnamen"
-
 #~ msgid ""
 #~ "<b>Backup Levels</b>\n"
 #~ "\n"
@@ -2873,6 +2837,20 @@ msgstr "ontmarkeerd"
 #~ "W\tWekelijks\n"
 #~ "M\tMaandelijks"
 
+#~ msgid "<b>Snapshot Date:</b> Date on which snapshot was created"
+#~ msgstr ""
+#~ "<b>Datum momentopname:</b> Datum waarop de momentopname werd gemaakt"
+
+#~ msgid "<b>System:</b> Installed Linux distribution"
+#~ msgstr "<b>Systeem:</b> Geïnstalleerde Linuxdistributie"
+
+#~ msgid ""
+#~ "Click an item to edit the pattern.\n"
+#~ "Drag and drop items with mouse to re-order."
+#~ msgstr ""
+#~ "Klik op een element om het patroon te bewerken.\n"
+#~ "Versleep elementen met de muis, om hen te herschikken."
+
 #~ msgid "Cloning System..."
 #~ msgstr "Systeem klonen..."
 
@@ -2882,14 +2860,26 @@ msgstr "ontmarkeerd"
 #~ msgid "Contributions"
 #~ msgstr "Bijdragen"
 
+#~ msgid "Create snapshots using RSYNC"
+#~ msgstr "Maak momentopnamen met RSYNC"
+
+#~ msgid "Deleted system subvolumes"
+#~ msgstr "Verwijderde systeemsubvolumes"
+
 #~ msgid "Documenters"
 #~ msgstr "Documentalisten"
+
+#~ msgid "Editing and Re-Ordering"
+#~ msgstr "Bewerken en herschikken"
 
 #~ msgid "Include everything"
 #~ msgstr "Alles opnemen"
 
 #~ msgid "Include hidden items"
 #~ msgstr "Verborgen elementen opnemen"
+
+#~ msgid "Info"
+#~ msgstr "Informatie"
 
 #~ msgid "Log Viewer"
 #~ msgstr "Logboekweergave"
@@ -2899,6 +2889,9 @@ msgstr "ontmarkeerd"
 
 #~ msgid "Scheduled task runs once every hour"
 #~ msgstr "Geagendeerde taak draait elk uur"
+
+#~ msgid "Selected snapshot path"
+#~ msgstr "Gekozen pad voor momentopnamen"
 
 #~ msgid "Third Party Tools"
 #~ msgstr "Hulpmiddelen van derden"
@@ -2914,6 +2907,10 @@ msgstr "ontmarkeerd"
 
 #~ msgid "View:"
 #~ msgstr "Weergeven:"
+
+#, fuzzy
+#~ msgid "Click to edit and drag-drop to re-order"
+#~ msgstr "Klik om te bewerken. Versleep om te herschikken."
 
 #~ msgid "Change"
 #~ msgstr "Gewijzigd"

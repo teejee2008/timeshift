@@ -1,13 +1,8 @@
-# Russian translation for timeshift
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the timeshift package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: timeshift\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2018-06-24 17:21+0530\n"
+"POT-Creation-Date: 2018-06-24 17:55+0530\n"
 "PO-Revision-Date: 2017-11-03 18:57+0000\n"
 "Last-Translator: Dmitriy Kulikov <Unknown>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -15,10 +10,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2018-02-03 14:28+0000\n"
-"X-Generator: Launchpad (build 18544)\n"
-"X-Launchpad-Export-Date: 2017-11-23 10:47+0000\n"
-"X-Generator: Launchpad (build 18509)\n"
+"X-Launchpad-Export-Date: 2018-06-29 08:01+0000\n"
+"X-Generator: Launchpad (build 18704)\n"
 
 #: Console/AppConsole.vala:613
 #, c-format
@@ -218,12 +211,6 @@ msgstr "Авторы"
 msgid "Available"
 msgstr "Доступно"
 
-#: Gtk/BackupDeviceBox.vala:98
-msgid ""
-"BRTFS snapshots are saved on system partition. Other partitions are not "
-"supported."
-msgstr ""
-
 #: Gtk/SnapshotBackendBox.vala:94
 msgid "BTRFS"
 msgstr "BTRFS"
@@ -239,6 +226,15 @@ msgstr "Инструменты BTRFS не найдены"
 #: Core/Main.vala:2041 Core/Main.vala:2045
 msgid "BTRFS device is not mounted"
 msgstr "Устройство BTRFS не смонтировано"
+
+#: Gtk/BackupDeviceBox.vala:98
+#, fuzzy
+msgid ""
+"BTRFS snapshots are saved on system partition. Other partitions are not "
+"supported."
+msgstr ""
+"Снимки сохраняются в папку /timeshift на выбранном разделе. Другие пути не "
+"поддерживаются."
 
 #: Gtk/FinishBox.vala:92
 msgid ""
@@ -1067,7 +1063,7 @@ msgid ""
 "Patterns starting with a + will include the item instead of excluding."
 msgstr ""
 "Файлы и каталоги, соответствующие шаблонам ниже, будут исключены. Шаблоны, "
-"начинающиеся с \"+\", будут включать объекты независимо от исключений."
+"начинающиеся с + будут включать объекты, независимо от исключений."
 
 #: Gtk/SnapshotBackendBox.vala:192
 msgid "Files and directories can be excluded to save disk space."
@@ -1977,15 +1973,15 @@ msgstr "Выберите снимок"
 
 #: Gtk/ScheduleBox.vala:57
 msgid "Select Snapshot Levels"
-msgstr "Выберите уровни создания снимков"
+msgstr "Выберите уровни снимка"
 
 #: Gtk/BackupDeviceBox.vala:56
 msgid "Select Snapshot Location"
-msgstr "Выберите место снимков"
+msgstr "Выберите место для снимка"
 
 #: Gtk/SnapshotBackendBox.vala:62
 msgid "Select Snapshot Type"
-msgstr "Выберите тип снимков"
+msgstr "Выберите тип снимка"
 
 #: Gtk/DeleteWindow.vala:85
 msgid "Select Snapshots"
@@ -1998,7 +1994,7 @@ msgstr "Выберите целевое устройство"
 #: Gtk/BackupDeviceBox.vala:392
 #, c-format
 msgid "Select a partition on this disk"
-msgstr "Выберите раздел на этом диске"
+msgstr "Выбероите раздел на этом диске"
 
 #: Gtk/MainWindow.vala:801
 msgid "Select a single snapshot to restore"
@@ -2269,7 +2265,7 @@ msgid ""
 "Snapshots are created by creating copies of system files using rsync, and "
 "hard-linking unchanged files from previous snapshot."
 msgstr ""
-"Снимки создаются с использованием копирования системных файлов при помощи "
+"Снимки создаются путем создания копий системных файлов с использованием "
 "rsync и создания жёстких ссылок на неизменённые файлы из предыдущего снимка."
 
 #: Gtk/SnapshotBackendBox.vala:167
@@ -2288,8 +2284,8 @@ msgid ""
 "Snapshots are perfect, byte-for-byte copies of the system. Nothing is "
 "excluded."
 msgstr ""
-"Снимки - идеальное средство, копирование системы байт в байт. Ничто не будет "
-"пропущено."
+"Снимки - идеальное средство, копирование системы байт в байт. Ничего не "
+"будет пропущено."
 
 #: Gtk/SnapshotBackendBox.vala:171
 msgid ""
@@ -2438,7 +2434,7 @@ msgstr "Система"
 
 #: Gtk/MainWindow.vala:957
 msgid "System Restore Utility"
-msgstr "Программа восстановления системы"
+msgstr "Утилита восстановления системы"
 
 #: Gtk/FinishBox.vala:82
 msgid "System can be rolled-back to a previous date by restoring a snapshot."
@@ -2456,7 +2452,7 @@ msgstr "Система будет перезагружена после восс
 
 #: Core/Main.vala:1221 Core/Main.vala:1262
 msgid "Tagged snapshot"
-msgstr "Отмеченный снимок"
+msgstr "Помеченный снимок"
 
 #: Console/AppConsole.vala:426 Gtk/SnapshotListBox.vala:151
 msgid "Tags"
@@ -2799,4 +2795,93 @@ msgstr "rsync вернуло ошибку"
 #: Core/SnapshotRepo.vala:714 Core/SnapshotRepo.vala:752
 #: Core/SnapshotRepo.vala:831
 msgid "un-tagged"
-msgstr "не отмечено"
+msgstr "не помечено"
+
+#~ msgid ""
+#~ "<b>Backup Levels</b>\n"
+#~ "\n"
+#~ "O\tOn demand (manual)\n"
+#~ "B\tBoot\n"
+#~ "H\tHourly\n"
+#~ "D\tDaily\n"
+#~ "W\tWeekly\n"
+#~ "M\tMonthly"
+#~ msgstr ""
+#~ "<b>Периодичность резервного копирования</b>\n"
+#~ "\n"
+#~ "O\tПо запросу (ручной режим)\n"
+#~ "B\tПри загрузке\n"
+#~ "H\tЕжечасно\n"
+#~ "D\tЕжедневно\n"
+#~ "W\tЕженедельно\n"
+#~ "M\tЕжемесячно"
+
+#~ msgid "<b>Snapshot Date:</b> Date on which snapshot was created"
+#~ msgstr "<b>Дата снимка:</b> Дата создания снимка"
+
+#~ msgid "<b>System:</b> Installed Linux distribution"
+#~ msgstr "<b>Система:</b> Установленный дистрибутив Linux"
+
+#~ msgid ""
+#~ "Click an item to edit the pattern.\n"
+#~ "Drag and drop items with mouse to re-order."
+#~ msgstr ""
+#~ "Щёлкните на элементе для изменения шаблона.\n"
+#~ "Перетаскивайте элементы мышью для изменения порядка."
+
+#~ msgid "Cloning System..."
+#~ msgstr "Клонирование системы..."
+
+#~ msgid "Close Window"
+#~ msgstr "Закрыть окно"
+
+#~ msgid "Contributions"
+#~ msgstr "Благодарности"
+
+#~ msgid "Create snapshots using RSYNC"
+#~ msgstr "Создавать снимки с помощью RSYNC"
+
+#~ msgid "Deleted system subvolumes"
+#~ msgstr "Системные подразделы удалены"
+
+#~ msgid "Documenters"
+#~ msgstr "Составители документации"
+
+#~ msgid "Editing and Re-Ordering"
+#~ msgstr "Редактирование и изменение порядка"
+
+#~ msgid "Include everything"
+#~ msgstr "Включить всё"
+
+#~ msgid "Include hidden items"
+#~ msgstr "Включить скрытые объекты"
+
+#~ msgid "Info"
+#~ msgstr "Информация"
+
+#~ msgid "Log Viewer"
+#~ msgstr "Просмотр журналов"
+
+#~ msgid "Refresh Snapshot List"
+#~ msgstr "Обновить список снимков"
+
+#~ msgid "Scheduled task runs once every hour"
+#~ msgstr "Запланированная задача выполняется каждый час"
+
+#~ msgid "Selected snapshot path"
+#~ msgstr "Путь для снимка выбран"
+
+#~ msgid "Third Party Tools"
+#~ msgstr "Сторонние инструменты"
+
+#~ msgid "Translators"
+#~ msgstr "Переводчики"
+
+#~ msgid "View Log for Create"
+#~ msgstr "Просмотреть журнал создания"
+
+#~ msgid "View Log for Restore"
+#~ msgstr "Просмотреть журнал восстановления"
+
+#~ msgid "View:"
+#~ msgstr "Вид:"

@@ -6,7 +6,7 @@ cd "$DIR"
 
 . ./BUILD_CONFIG
 
-languages="am ar az bg ca cs da de el en_GB es et eu fi fr he hi hr hu ia id is it ko lt nb ne nl pl pt pt_BR ro ru sk sr sv tr uk vi zh_CN"
+languages="am ar az bg ca ca@valencia cs da de el en_GB es et eu fi fr he hi hr hu ia id is it ko lt nb ne nl pl pt pt_BR ro ru sk sr sv tr uk vi zh_CN zh_TW"
 
 echo ""
 echo "=========================================================================="
@@ -17,9 +17,7 @@ echo ""
 for lang in $languages; do
 	# remove headers in po-lp/*.po so that msgcat does not create malformed headers
 	sed -i '/^#/d' po-lp/${app_name}-$lang.po
-	msgcat -o po/${app_name}-$lang.po po-lp/${app_name}-$lang.po po/${app_name}-$lang.po
-	sed -i '/#-#-#-#-#/d' po/${app_name}-$lang.po
-	sed -i '/#, fuzzy/d' po/${app_name}-$lang.po
+	msgcat -o po/${app_name}-$lang.po po-lp/${app_name}-$lang.po po/${app_name}-$lang.po --use-first
 done
 
 echo ""

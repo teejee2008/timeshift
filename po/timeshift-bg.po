@@ -1,13 +1,8 @@
-# Bulgarian translation for linuxmint
-# Copyright (c) 2017 Rosetta Contributors and Canonical Ltd 2017
-# This file is distributed under the same license as the linuxmint package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2017.
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: linuxmint\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2018-06-24 17:21+0530\n"
+"POT-Creation-Date: 2018-06-24 17:55+0530\n"
 "PO-Revision-Date: 2017-11-03 18:52+0000\n"
 "Last-Translator: spacy01 <Unknown>\n"
 "Language-Team: Bulgarian <bg@li.org>\n"
@@ -15,10 +10,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2018-02-03 14:28+0000\n"
-"X-Generator: Launchpad (build 18544)\n"
-"X-Launchpad-Export-Date: 2017-11-23 10:47+0000\n"
-"X-Generator: Launchpad (build 18509)\n"
+"X-Launchpad-Export-Date: 2018-06-29 08:01+0000\n"
+"X-Generator: Launchpad (build 18704)\n"
 
 #: Console/AppConsole.vala:613
 #, c-format
@@ -216,12 +209,6 @@ msgstr "Автори"
 msgid "Available"
 msgstr "Наличен"
 
-#: Gtk/BackupDeviceBox.vala:98
-msgid ""
-"BRTFS snapshots are saved on system partition. Other partitions are not "
-"supported."
-msgstr ""
-
 #: Gtk/SnapshotBackendBox.vala:94
 msgid "BTRFS"
 msgstr "BTRFS"
@@ -237,6 +224,13 @@ msgstr "BTRFS инструментите не са намерени"
 #: Core/Main.vala:2041 Core/Main.vala:2045
 msgid "BTRFS device is not mounted"
 msgstr "BTRFS устройството не е монтирано"
+
+#: Gtk/BackupDeviceBox.vala:98
+#, fuzzy
+msgid ""
+"BTRFS snapshots are saved on system partition. Other partitions are not "
+"supported."
+msgstr "Други приложение (следваща страница)"
 
 #: Gtk/FinishBox.vala:92
 msgid ""
@@ -2784,35 +2778,6 @@ msgstr "rsync върна грешка"
 msgid "un-tagged"
 msgstr "без-таг"
 
-#, fuzzy
-#~ msgid "Click to edit and drag-drop to re-order"
-#~ msgstr "Щракнете за редакция. Влачете за пренареждане."
-
-#~ msgid ""
-#~ "Click an item to edit the pattern.\n"
-#~ "Drag and drop items with mouse to re-order."
-#~ msgstr ""
-#~ "Щракнете на елемента за редакция на шаблона.\n"
-#~ "Влачете елементи с мишката за пренареждане."
-
-#~ msgid "Editing and Re-Ordering"
-#~ msgstr "Редакция и пренареждане"
-
-#~ msgid "Info"
-#~ msgstr "Данни"
-
-#~ msgid "Deleted system subvolumes"
-#~ msgstr "Изтрити системни подустройства"
-
-#~ msgid "<b>System:</b> Installed Linux distribution"
-#~ msgstr "<b>Система:</b> Инсталирана Линукс дистрибуция"
-
-#~ msgid "<b>Snapshot Date:</b> Date on which snapshot was created"
-#~ msgstr "<b>Дата на моментната снимка:</b> Дата на всяка създадена снимка"
-
-#~ msgid "Selected snapshot path"
-#~ msgstr "Избран път за снимка"
-
 #~ msgid ""
 #~ "<b>Backup Levels</b>\n"
 #~ "\n"
@@ -2831,6 +2796,19 @@ msgstr "без-таг"
 #~ "W\tСедмично\n"
 #~ "M\tМесечно"
 
+#~ msgid "<b>Snapshot Date:</b> Date on which snapshot was created"
+#~ msgstr "<b>Дата на моментната снимка:</b> Дата на всяка създадена снимка"
+
+#~ msgid "<b>System:</b> Installed Linux distribution"
+#~ msgstr "<b>Система:</b> Инсталирана Линукс дистрибуция"
+
+#~ msgid ""
+#~ "Click an item to edit the pattern.\n"
+#~ "Drag and drop items with mouse to re-order."
+#~ msgstr ""
+#~ "Щракнете на елемента за редакция на шаблона.\n"
+#~ "Влачете елементи с мишката за пренареждане."
+
 #~ msgid "Cloning System..."
 #~ msgstr "Клониране на система"
 
@@ -2840,14 +2818,26 @@ msgstr "без-таг"
 #~ msgid "Contributions"
 #~ msgstr "Приноси"
 
+#~ msgid "Create snapshots using RSYNC"
+#~ msgstr "Създавай снимки с RSYNC"
+
+#~ msgid "Deleted system subvolumes"
+#~ msgstr "Изтрити системни подустройства"
+
 #~ msgid "Documenters"
 #~ msgstr "Документатори"
+
+#~ msgid "Editing and Re-Ordering"
+#~ msgstr "Редакция и пренареждане"
 
 #~ msgid "Include everything"
 #~ msgstr "Включи всичко"
 
 #~ msgid "Include hidden items"
 #~ msgstr "Включване на скрити елементи"
+
+#~ msgid "Info"
+#~ msgstr "Данни"
 
 #~ msgid "Log Viewer"
 #~ msgstr "Преглед на журналите"
@@ -2857,6 +2847,9 @@ msgstr "без-таг"
 
 #~ msgid "Scheduled task runs once every hour"
 #~ msgstr "Задача по график ще се изпълнява на всеки час"
+
+#~ msgid "Selected snapshot path"
+#~ msgstr "Избран път за снимка"
 
 #~ msgid "Third Party Tools"
 #~ msgstr "Инструменти от трети страни"
@@ -2872,6 +2865,10 @@ msgstr "без-таг"
 
 #~ msgid "View:"
 #~ msgstr "Преглед:"
+
+#, fuzzy
+#~ msgid "Click to edit and drag-drop to re-order"
+#~ msgstr "Щракнете за редакция. Влачете за пренареждане."
 
 #~ msgid "Change"
 #~ msgstr "Променено"

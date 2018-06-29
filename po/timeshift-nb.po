@@ -1,24 +1,17 @@
-# Norwegian Bokmal translation for linuxmint
-# Copyright (c) 2017 Rosetta Contributors and Canonical Ltd 2017
-# This file is distributed under the same license as the linuxmint package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2017.
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: linuxmint\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2018-06-24 17:21+0530\n"
-"PO-Revision-Date: 2017-09-26 15:28+0000\n"
+"POT-Creation-Date: 2018-06-24 17:55+0530\n"
+"PO-Revision-Date: 2018-04-11 12:06+0000\n"
 "Last-Translator: Emil Våge <Unknown>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "Language: nb\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2018-02-03 14:28+0000\n"
-"X-Generator: Launchpad (build 18544)\n"
-"X-Launchpad-Export-Date: 2017-11-23 10:47+0000\n"
-"X-Generator: Launchpad (build 18509)\n"
+"X-Launchpad-Export-Date: 2018-06-29 08:00+0000\n"
+"X-Generator: Launchpad (build 18704)\n"
 
 #: Console/AppConsole.vala:613
 #, c-format
@@ -32,7 +25,7 @@ msgstr ""
 #: Core/SnapshotRepo.vala:641
 #, c-format
 msgid "%d snapshots, %s free"
-msgstr ""
+msgstr "%d øyeblikksbilder, %s ledig"
 
 #: Console/AppConsole.vala:914
 #, c-format
@@ -106,7 +99,7 @@ msgstr "Legg til mapper"
 
 #: Gtk/ExcludeBox.vala:219
 msgid "Add custom pattern"
-msgstr "Legg til mønster"
+msgstr "Legg til egenopprettet mønster"
 
 #: Gtk/ExcludeBox.vala:239
 msgid "Add directories"
@@ -118,7 +111,7 @@ msgstr "Legg til filer"
 
 #: Console/AppConsole.vala:360
 msgid "Add tags to snapshot (default: O)"
-msgstr ""
+msgstr "Legg til merkelapper"
 
 #: Utility/CronTab.vala:312
 msgid "Added cron task"
@@ -126,12 +119,13 @@ msgstr "La til cronoppgave"
 
 #: Gtk/AppGtk.vala:131
 msgid "Admin Access Required"
-msgstr "Admintilgang påkrevd"
+msgstr "Krever administratortilgang"
 
 #: Gtk/AppGtk.vala:126
 msgid "Admin access is required to backup and restore system files."
 msgstr ""
-"Admintilgang er påkrevd for å ta backup eller gjennopprette systemfiler."
+"Administratortilgang er påkrevd for å ta backup eller gjennopprette "
+"systemfiler."
 
 #: Gtk/RsyncLogBox.vala:363
 msgid "All Files"
@@ -143,9 +137,9 @@ msgid ""
 "are incremental. Unchanged files will be hard-linked from the previous "
 "snapshot if available."
 msgstr ""
-"Alle filer er kopiert når første øyeblikksbildet er opprettet. Senere "
-"øyeblikksbilder er trinnvis. Uendrede filer vil bli hard-linket fra forrige "
-"øyeblikksbilde hvis tilgjengelig."
+"Alle filer er kopiert når første øyeblikksbildet blir opprettet. Senere "
+"øyeblikksbilder bygger trinnvis på det første bildet. Uendrede filer vil bli "
+"direktelenket fra forrige øyeblikksbilde hvis tilgjengelig."
 
 #: Gtk/ExcludeMessageWindow.vala:130
 msgid "All other files and folders are excluded."
@@ -160,12 +154,11 @@ msgid ""
 "Either select a non-encrypted device for boot directory or select a non-"
 "encrypted device for root filesystem."
 msgstr ""
-"En kryptert enhet er valgt for rootfilsystem (/). Bootmappa (/boot) må "
-"monteres på en ikke-kryptert enhet for at systemet skal starte uten "
-"problemer.\n"
+"En kryptert enhet er valgt som root-filsystem (/). Bootmappa (/boot) må "
+"monteres på en ukryptert enhet for at systemet skal starte uten problemer.\n"
 "\n"
-"Velg enten en ikke-kryptert enhet for bootmappa, eller velg ikke-kryptert "
-"enhet for for rootfilsystemet."
+"Velg enten en ukryptert enhet for bootmappa, eller velg ukryptert enhet for "
+"for root-filsystemet."
 
 #: Core/Main.vala:249
 msgid "Another instance of Timeshift is creating a snapshot."
@@ -213,28 +206,28 @@ msgstr "Forfattere"
 
 #: Gtk/MainWindow.vala:346
 msgid "Available"
-msgstr ""
-
-#: Gtk/BackupDeviceBox.vala:98
-msgid ""
-"BRTFS snapshots are saved on system partition. Other partitions are not "
-"supported."
-msgstr ""
+msgstr "Tilgjengelig"
 
 #: Gtk/SnapshotBackendBox.vala:94
 msgid "BTRFS"
-msgstr ""
+msgstr "BTRFS"
 
 #: Gtk/SnapshotBackendBox.vala:165
 msgid "BTRFS Snapshots"
-msgstr ""
+msgstr "BTRFS øyeblikksbilder"
 
 #: Gtk/SnapshotBackendBox.vala:119
 msgid "BTRFS Tools Not Found"
-msgstr ""
+msgstr "Fant ikke BTRFS verktøy"
 
 #: Core/Main.vala:2041 Core/Main.vala:2045
 msgid "BTRFS device is not mounted"
+msgstr "BTRFS enheten er ikke mounted"
+
+#: Gtk/BackupDeviceBox.vala:98
+msgid ""
+"BTRFS snapshots are saved on system partition. Other partitions are not "
+"supported."
 msgstr ""
 
 #: Gtk/FinishBox.vala:92
@@ -244,26 +237,30 @@ msgid ""
 "snapshots to an external non-system disk in RSYNC mode to guard against disk "
 "failures."
 msgstr ""
+"BTRFS øyeblikksbilder er lagret på samme disken som den er laget fra. Hvis "
+"systemet får diskfeil vil øyeblikksbildene gå tapt med systemet. Lagre "
+"øyeblikksbilder til en ekstern enhet som ikke er en del av systemdisken, i "
+"RSYNC modus, for å beskytte mot diskfeil."
 
 #: Utility/Gtk/AboutWindow.vala:349 Utility/Gtk/AboutWindow.vala:381
 msgid "Back"
-msgstr ""
+msgstr "Tilbake"
 
 #: Gtk/SetupWizardWindow.vala:94
 msgid "Backend"
-msgstr ""
+msgstr "Backend"
 
 #: Console/AppConsole.vala:356 Gtk/BackupWindow.vala:91
 msgid "Backup"
-msgstr ""
+msgstr "Sikkerhetskopi"
 
 #: Core/Main.vala:2017
 msgid "Backup Device"
-msgstr ""
+msgstr "Enhet for sikkerhetskopi"
 
 #: Core/Main.vala:2012
 msgid "Backup device not specified!"
-msgstr ""
+msgstr "Du har ikke valgt enhet til backup!"
 
 #: Utility/Gtk/DonationWindow.vala:89
 msgid "Become a Patron"
@@ -271,11 +268,11 @@ msgstr ""
 
 #: Gtk/RestoreExcludeBox.vala:91
 msgid "Bittorrent Clients"
-msgstr ""
+msgstr "Bittorrentklienter"
 
 #: Gtk/ScheduleBox.vala:136 Gtk/SnapshotListBox.vala:298
 msgid "Boot"
-msgstr ""
+msgstr "Oppstart"
 
 #: Gtk/RestoreDeviceBox.vala:499
 msgid "Boot device not selected"
@@ -2656,12 +2653,6 @@ msgstr ""
 msgid "un-tagged"
 msgstr ""
 
-#~ msgid "<b>System:</b> Installed Linux distribution"
-#~ msgstr "<b>System:</b> Innstallerte Linuxdistribusjon"
-
-#~ msgid "<b>Snapshot Date:</b> Date on which snapshot was created"
-#~ msgstr "<b>Øyeblikksbilde dato:</b> Dato når øyeblikksbildet ble tatt"
-
 #~ msgid ""
 #~ "<b>Backup Levels</b>\n"
 #~ "\n"
@@ -2680,3 +2671,9 @@ msgstr ""
 #~ "D\tDaglig\n"
 #~ "W\tUkentlig\n"
 #~ "M\tMånedlig"
+
+#~ msgid "<b>Snapshot Date:</b> Date on which snapshot was created"
+#~ msgstr "<b>Øyeblikksbilde dato:</b> Dato da øyeblikksbildet ble tatt"
+
+#~ msgid "<b>System:</b> Installed Linux distribution"
+#~ msgstr "<b>System:</b> Installert Linuxdistribusjon"

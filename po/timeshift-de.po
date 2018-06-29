@@ -1,24 +1,17 @@
-# German translation for linuxmint
-# Copyright (c) 2017 Rosetta Contributors and Canonical Ltd 2017
-# This file is distributed under the same license as the linuxmint package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2017.
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: linuxmint\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2018-06-24 17:21+0530\n"
-"PO-Revision-Date: 2018-04-16 23:51+0200\n"
-"Last-Translator: Tobias Bannert <tobannert@gmail.com>\n"
+"POT-Creation-Date: 2018-06-24 17:55+0530\n"
+"PO-Revision-Date: 2018-04-14 13:32+0000\n"
+"Last-Translator: Niko Krause <nikokrause@gmx.de>\n"
 "Language-Team: German <de@li.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2018-02-03 14:28+0000\n"
-"X-Generator: Poedit 2.0.4\n"
-"X-Launchpad-Export-Date: 2017-11-23 10:47+0000\n"
-"X-Generator: Launchpad (build 18509)\n"
+"X-Launchpad-Export-Date: 2018-06-29 08:01+0000\n"
+"X-Generator: Launchpad (build 18704)\n"
 
 #: Console/AppConsole.vala:613
 #, c-format
@@ -70,7 +63,7 @@ msgstr "/home wurde dem Gerät zugeordnet"
 
 #: Gtk/SnapshotListBox.vala:290
 msgid "<b>Comments</b> (double-click to edit)"
-msgstr "<b>Kommentare</b> (Doppelklicken zum Bearbeiten)"
+msgstr "<b>Kommentare</b> (Doppeklicken zum Bearbeiten)"
 
 #: Gtk/ScheduleBox.vala:168
 msgid ""
@@ -147,8 +140,9 @@ msgid ""
 "snapshot if available."
 msgstr ""
 "Alle Dateien werden beim Erstellen des ersten Schnappschusses kopiert. "
-"Nachfolgende Schnappschüsse sind inkrementell. Unveränderte Dateien werden "
-"aus dem vorherigen Schnappschuss, falls verfügbar, direkt verknüpft."
+"Nachfolgende Schnappschüsse sind schrittweise zunehmend. Unveränderte "
+"Dateien werden aus dem vorherigen Schnappschuss, falls verfügbar, direkt "
+"verknüpft."
 
 #: Gtk/ExcludeMessageWindow.vala:130
 msgid "All other files and folders are excluded."
@@ -176,7 +170,7 @@ msgstr "Eine andere Instanz von Timeshift erstellt einen Schnappschuss."
 
 #: Utility/AppLock.vala:49
 msgid "Another instance of this application is running"
-msgstr "Eine andere Instanz dieser Anwendung läuft gerade"
+msgstr "Eine andere Instanz dieser Anwendung läuft gerade!"
 
 #: Core/Main.vala:253
 msgid "Another instance of timeshift is currently running!"
@@ -196,7 +190,7 @@ msgstr "Anwendungskonfiguration gespeichert"
 
 #: Console/AppConsole.vala:102
 msgid "Application needs admin access."
-msgstr "Anwendung benötigt Systemverwaltungszugriff."
+msgstr "Anwendung benötigt Systemverwaltungszugriff"
 
 #: Core/Main.vala:3519
 msgid "Application will exit"
@@ -218,14 +212,6 @@ msgstr "Autoren"
 msgid "Available"
 msgstr "Verfügbar"
 
-#: Gtk/BackupDeviceBox.vala:98
-msgid ""
-"BRTFS snapshots are saved on system partition. Other partitions are not "
-"supported."
-msgstr ""
-"BRTFS-Snapshots werden auf der Systempartition gespeichert. Andere "
-"Partitionen werden nicht unterstützt."
-
 #: Gtk/SnapshotBackendBox.vala:94
 msgid "BTRFS"
 msgstr "BTRFS"
@@ -241,6 +227,15 @@ msgstr "BTRFS-Werkzeuge nicht gefunden"
 #: Core/Main.vala:2041 Core/Main.vala:2045
 msgid "BTRFS device is not mounted"
 msgstr "BTRFS-Gerät ist nicht eingehängt"
+
+#: Gtk/BackupDeviceBox.vala:98
+#, fuzzy
+msgid ""
+"BTRFS snapshots are saved on system partition. Other partitions are not "
+"supported."
+msgstr ""
+"BRTFS-Snapshots werden auf der Systempartition gespeichert. Andere "
+"Partitionen werden nicht unterstützt."
 
 #: Gtk/FinishBox.vala:92
 msgid ""
@@ -396,19 +391,19 @@ msgstr "Zum Bearbeiten klicken. Zum Neuordnen ziehen und verschieben."
 
 #: Gtk/RestoreWindow.vala:69
 msgid "Clone System"
-msgstr "System klonen"
+msgstr "System nachbilden"
 
 #: Console/AppConsole.vala:364
 msgid "Clone current system"
-msgstr "Aktuelles System klonen"
+msgstr "Aktuelles System nachbilden"
 
 #: Gtk/RestoreFinishBox.vala:68
 msgid "Cloning"
-msgstr "Klonen"
+msgstr "wird nachgebildet"
 
 #: Core/Main.vala:2782
 msgid "Cloning system..."
-msgstr "System wird geklont …"
+msgstr "System wird nachgebildet …"
 
 #: Utility/Gtk/AboutWindow.vala:326 Utility/Gtk/DonationWindow.vala:121
 #: Gtk/RsyncLogBox.vala:266 Gtk/BackupWindow.vala:168
@@ -428,7 +423,7 @@ msgstr "Beitragende"
 
 #: Core/Main.vala:347
 msgid "Commands listed below are not available on this system"
-msgstr "Unten aufgelisteten Befehle sind auf diesem System nicht verfügbar"
+msgstr "Unten aufgelisteten Befehle sind nicht verfügbar auf diesem System"
 
 #: Gtk/SnapshotListBox.vala:224
 msgid "Comments"
@@ -696,7 +691,7 @@ msgstr "Gerät ist entsperrt"
 
 #: Utility/Device.vala:1164 Utility/Device.vala:1226
 msgid "Device name is empty!"
-msgstr "Gerätename ist leer!"
+msgstr "Gerätname ist leer!"
 
 #: Console/AppConsole.vala:663 Core/SnapshotRepo.vala:560 Core/Main.vala:3232
 msgid "Device not found"
@@ -714,11 +709,11 @@ msgstr "Oben angezeigte Geräte haben ein Linux-Dateisystem."
 
 #: Gtk/RestoreDeviceBox.vala:84
 msgid "Devices from which snapshot was created are pre-selected."
-msgstr "Geräte, von denen der Schnappschuss erstellt wurde, sind ausgewählt."
+msgstr "Geräte von denen der Schnappschuss erstellt wurde sind ausgewählt."
 
 #: Console/AppConsole.vala:326
 msgid "Devices with Linux file systems"
-msgstr "Geräte mit Linux-Dateisystemen"
+msgstr "Geräte mit Linuxdateisystem"
 
 #: Gtk/BackupDeviceBox.vala:105
 msgid "Devices with Windows file systems are not supported (NTFS, FAT, etc)."
@@ -774,7 +769,7 @@ msgstr "Datenträger"
 
 #: Core/Main.vala:226
 msgid "Distribution"
-msgstr "Vertrieb"
+msgstr "Distribution"
 
 #: Utility/Gtk/AboutWindow.vala:449
 msgid "Documentation"
@@ -854,11 +849,11 @@ msgstr "Schätzen"
 
 #: Gtk/EstimateBox.vala:56
 msgid "Estimating System Size..."
-msgstr "Abschätzen der Systemgröße …"
+msgstr "Systemgröße wird geschätzt …"
 
 #: Core/Main.vala:1279
 msgid "Estimating system size..."
-msgstr "Abschätzen der Systemgröße …"
+msgstr "Systemgröße wird geschätzt …"
 
 #: Console/AppConsole.vala:386
 msgid "Examples"
@@ -960,7 +955,7 @@ msgstr "Exportieren der Crontab-Datei ist fehlgeschlagen"
 #: Console/AppConsole.vala:893 Console/AppConsole.vala:988
 #: Console/AppConsole.vala:1033 Console/AppConsole.vala:1074
 msgid "Failed to get input from user in 3 attempts"
-msgstr "Keine Benutzereingabe nach 3 Versuchen erhalten"
+msgstr "Keine Benutzereingabe in 3 Versuchen erhalten"
 
 #: Utility/Device.vala:615
 msgid "Failed to get partition list"
@@ -1091,7 +1086,7 @@ msgstr "Datei- und Verzeichniszählungen:"
 
 #: Gtk/ExcludeMessageWindow.vala:76
 msgid "Files matching the following patterns will be excluded"
-msgstr "Dateien, welche folgendem Muster entsprechen, werden ausgeschlossen"
+msgstr "Dateien welche folgendem Muster entsprechen werden ausgeschlossen"
 
 #: Utility/Device.vala:1828
 #, c-format
@@ -1194,7 +1189,7 @@ msgstr "Stündlich"
 
 #: Core/Main.vala:1047
 msgid "Hourly snapshot failed!"
-msgstr "Stündlicher Schnappschuss ist fehlgeschlagen!"
+msgstr "Stündlicher Schnappschuss ist fehlgeschlagen"
 
 #: Core/Main.vala:1028
 msgid "Hourly snapshots are enabled"
@@ -1209,7 +1204,7 @@ msgid ""
 "If the restored system fails to boot, then boot from the Live CD/USB, "
 "install Timeshift, and try restoring another snapshot."
 msgstr ""
-"Wenn das wiederhergestellte System nicht startet, bitte ein Livesystem "
+"Wenn das wiederhergestellte Systems fehlschlägt, bitte ein Livesystem "
 "starten, Timeshift installieren und versuchen einen anderen Schnappschuss "
 "wiederherzustellen."
 
@@ -1281,7 +1276,7 @@ msgid ""
 msgstr ""
 "Konfigurationsdateien für Internet-Browser wie Firefox und Chrome behalten. "
 "Wenn nicht ausgewählt, werden die vorherigen Konfigurationsdateien aus dem "
-"Schnappschuss wiederhergestellt"
+"Schnappschuss wiederhergestellt."
 
 #: Gtk/RestoreDeviceBox.vala:244
 msgid "Keep on Root Device"
@@ -1394,7 +1389,7 @@ msgstr "Schnappschüsse auflisten"
 
 #: Gtk/MainWindow.vala:1000
 msgid "Live USB Mode (Restore Only)"
-msgstr "Live-USB-Modus (nur Wiederherstellung)"
+msgstr "Live-USB-Modus (nue Wiederherstellung)"
 
 #: Gtk/SetupWizardWindow.vala:104 Gtk/BackupWindow.vala:86
 #: Gtk/SettingsWindow.vala:89
@@ -1449,7 +1444,7 @@ msgstr "Monatlicher Schnappschuss aktiviert"
 
 #: Core/Main.vala:1137
 msgid "Monthly snapshot failed!"
-msgstr "Monatlicher Schnappschuss ist fehlgeschlagen!"
+msgstr "Monatlischer Schnappschuss ist fehlgeschlagen"
 
 #: Core/Main.vala:2113 Core/Main.vala:2146
 msgid "Mount"
@@ -1512,7 +1507,7 @@ msgstr "Keine Schnappschüsse ausgewählt"
 
 #: Gtk/MainWindow.vala:1050 Gtk/MainWindow.vala:1052
 msgid "None"
-msgstr "Keine"
+msgstr "keine"
 
 #: Core/Subvolume.vala:184
 #, fuzzy, c-format
@@ -1537,7 +1532,7 @@ msgstr "Bemerkungen"
 
 #: Core/Main.vala:1147
 msgid "Nothing to do!"
-msgstr "Nichts zu tun!"
+msgstr "Nichts zu erledigen!"
 
 #: Console/AppConsole.vala:423 Console/AppConsole.vala:452
 #: Console/AppConsole.vala:491 Console/AppConsole.vala:539
@@ -1640,7 +1635,7 @@ msgstr "Zugriffsrechte"
 
 #: Core/Main.vala:254
 msgid "Please check if you have multiple windows open."
-msgstr "Bitte überprüfen Sie, ob Sie mehrere Fenster geöffnet haben."
+msgstr "Bitte überprüfen Sie, ob Sie mehrere Fenstere geöffnet haben."
 
 #: Core/Main.vala:2244
 msgid "Please do not interrupt the restore process!"
@@ -1650,7 +1645,7 @@ msgstr "Bitte unterbrechen Sie den Wiederherstellungsprozess nicht!"
 msgid "Please install required packages and try running TimeShift again"
 msgstr ""
 "Bitte installieren Sie die erforderlichen Pakete und starten Sie TimeShift "
-"erneut"
+"erneut."
 
 #: Gtk/AppGtk.vala:127
 msgid "Please re-run the application as admin (using 'sudo' or 'su')"
@@ -1704,7 +1699,7 @@ msgstr "Zurück"
 
 #: Gtk/AppGtk.vala:116
 msgid "Print debug information"
-msgstr "Debug-Informationen anzeigen"
+msgstr "Fehlersuchinformationen anzeigen"
 
 #: Core/Main.vala:3794
 msgid "Query completed"
@@ -1904,7 +1899,7 @@ msgstr "Protokollbetrachter"
 #, c-format
 msgid "Run 'timeshift' for the command-line version of this tool"
 msgstr ""
-"Für die Befehlszeilenversion dieses Programms bitte »timeshift« ausführen"
+"Für die Befehlszeilenversion dieses Programms bitte »timeshift« ausführen."
 
 #: Console/AppConsole.vala:382
 msgid "Run in non-interactive mode"
@@ -2034,7 +2029,7 @@ msgstr "Ein anderes Gerät auswählen, um Schnappschüsse zu löschen"
 
 #: Gtk/MainWindow.vala:481
 msgid "Select another device?"
-msgstr "Ein anderes Gerät auswählen?"
+msgstr "Ein anderes Gerät auswählen"
 
 #: Gtk/RestoreExcludeBox.vala:57
 msgid "Select applications to exclude from restore"
@@ -2071,7 +2066,7 @@ msgstr ""
 
 #: Gtk/ScheduleBox.vala:313
 msgid "Select the intervals for creating snapshots"
-msgstr "Wählen Sie die Intervalle für die Erstellung von Snapshots aus"
+msgstr "Den Abstand in dem Schnappschüsse gemacht werden sollen auswählen"
 
 #: Gtk/ExcludeBox.vala:273
 msgid "Select the items to be removed from the list"
@@ -2079,7 +2074,7 @@ msgstr "Einträge auswählen, welche aus der Liste entfernt werden sollen"
 
 #: Core/SnapshotRepo.vala:553
 msgid "Select the snapshot device"
-msgstr "Schnappschussgerät auswählen"
+msgstr "Schnappschuss auswählen"
 
 #: Gtk/MainWindow.vala:794
 msgid "Select the snapshot to restore"
@@ -2095,15 +2090,15 @@ msgstr "Schnappschüsse zum Löschen markieren"
 
 #: Gtk/RestoreDeviceBox.vala:79
 msgid "Select the target devices where system will be cloned."
-msgstr "Bitte Zielgerät für die Kopie des Systems auswählen."
+msgstr "Bitte Zielgerät für die Nachbildung des Systems auswählen."
 
 #: Core/Main.vala:3242
 msgid "Selected default snapshot device"
-msgstr "Standard Schnappschussgerät auswählen"
+msgstr "Vorgegebenes Schnappschussgerät auswählen"
 
 #: Core/Main.vala:3193 Core/Main.vala:3197
 msgid "Selected default snapshot type"
-msgstr "Standard Schnappschusstyp auswählen"
+msgstr "Vorgegebenen Schnappschusstyp auswählen"
 
 #: Gtk/BackupDeviceBox.vala:373
 msgid "Selected device does not have BTRFS partition"
@@ -2170,7 +2165,7 @@ msgstr "Einrichtungsassistent"
 
 #: Console/AppConsole.vala:379
 msgid "Show additional debug messages"
-msgstr "Zusätzliche Debug-Informationen anzeigen"
+msgstr "Zusätzliche Fehlersuchinformationen anzeigen"
 
 #: Console/AppConsole.vala:383 Gtk/AppGtk.vala:117
 msgid "Show all options"
@@ -2182,7 +2177,7 @@ msgstr "Mehr Anwendungen zum Ausschließen auf der nächsten Seite anzeigen"
 
 #: Console/AppConsole.vala:380
 msgid "Show rsync output (default)"
-msgstr "rsync-Ausgabe anzeigen (Standard)"
+msgstr "rsync-Ausgabe anzeigen (Vorgabe)"
 
 #: Utility/Device.vala:1816 Utility/Device.vala:1831
 #: Console/AppConsole.vala:456 Console/AppConsole.vala:495
@@ -2407,7 +2402,7 @@ msgstr "Bitte Zielgerät festlegen"
 #: Core/SnapshotRepo.vala:480 Gtk/RsyncLogBox.vala:472
 #, c-format
 msgid "Status"
-msgstr "Status"
+msgstr "Zustand"
 
 #: Gtk/ScheduleBox.vala:154
 msgid "Stop cron emails for scheduled tasks"
@@ -2474,7 +2469,7 @@ msgstr ""
 #: Core/Main.vala:2245
 msgid "System will reboot after files are restored"
 msgstr ""
-"Das System wird neu gestartet, nachdem die Dateien wiederhergestellt wurden"
+"Das System wird neu gestartet, nachdem die Dateien wiederhergestellt wurden."
 
 #: Core/Main.vala:2195
 msgid "System will reboot after files are restored."
@@ -2567,7 +2562,7 @@ msgstr "Zeitstempel"
 msgid "To restore with default options, press the ENTER key for all prompts!"
 msgstr ""
 "Um mit den vorgegebenen Optionen wiederherzustellen, bitte bei jeder "
-"Rückfrage die EINGABETASTE betätigen!"
+"Rückfrage die EINGABETASTE betätigen."
 
 #: Utility/Gtk/AboutWindow.vala:441
 msgid "Translations"
@@ -2672,7 +2667,7 @@ msgid ""
 "User home directories are excluded by default unless you enable them here"
 msgstr ""
 "Die persönlichen Ordner sind standardmäßig ausgeschlossen, sofern sie hier "
-"nicht aktiviert werden"
+"nicht aktiviert werden."
 
 #: Gtk/SettingsWindow.vala:98
 msgid "Users"
@@ -2723,7 +2718,7 @@ msgstr "Wöchentlich"
 
 #: Core/Main.vala:1107
 msgid "Weekly snapshot failed!"
-msgstr "Wöchentlicher Schnappschuss ist fehlgeschlagen"
+msgstr "Wöchentlischer Schnappschuss ist fehlgeschlagen"
 
 #: Core/Main.vala:1088
 msgid "Weekly snapshots are enabled"
@@ -2829,36 +2824,6 @@ msgstr "rsync lieferte einen Fehler zurück"
 msgid "un-tagged"
 msgstr "Nicht verschlagwortet"
 
-#, fuzzy
-#~ msgid "Click to edit and drag-drop to re-order"
-#~ msgstr "Zum Bearbeiten klicken. Zum Neuordnen ziehen und verschieben."
-
-#~ msgid ""
-#~ "Click an item to edit the pattern.\n"
-#~ "Drag and drop items with mouse to re-order."
-#~ msgstr ""
-#~ "Bitte Einträge auswählen, um das Muster zu ändern.\n"
-#~ "Einträge mit der Maus ziehen und ablegen, um sie neu anzuordnen."
-
-#~ msgid "Editing and Re-Ordering"
-#~ msgstr "Bearbeiten und Umsortieren"
-
-#~ msgid "Info"
-#~ msgstr "Information"
-
-#~ msgid "Deleted system subvolumes"
-#~ msgstr "Gelöschtes Systemunterlaufwerk"
-
-#~ msgid "<b>System:</b> Installed Linux distribution"
-#~ msgstr "<b>System:</b> Installierte Linux-Distribution"
-
-#~ msgid "<b>Snapshot Date:</b> Date on which snapshot was created"
-#~ msgstr ""
-#~ "<b>Schnappschussdatum:</b> Datum, an dem der Schnappschuss erstellt wurde"
-
-#~ msgid "Selected snapshot path"
-#~ msgstr "Ausgewählter Schnappschusspfad"
-
 #~ msgid ""
 #~ "<b>Backup Levels</b>\n"
 #~ "\n"
@@ -2878,8 +2843,22 @@ msgstr "Nicht verschlagwortet"
 #~ "W\tWöchentlich\n"
 #~ "M\tMonatlich"
 
+#~ msgid "<b>Snapshot Date:</b> Date on which snapshot was created"
+#~ msgstr ""
+#~ "<b>Schnappschussdatum:</b> Datum, an dem der Schnappschuss erstellt wurde"
+
+#~ msgid "<b>System:</b> Installed Linux distribution"
+#~ msgstr "<b>System:</b> Installierte Linux-Distribution"
+
+#~ msgid ""
+#~ "Click an item to edit the pattern.\n"
+#~ "Drag and drop items with mouse to re-order."
+#~ msgstr ""
+#~ "Bitte Einträge auswählen, um das Muster zu ändern.\n"
+#~ "Einträge mit der Maus ziehen und ablegen, um sie neu anzuordnen."
+
 #~ msgid "Cloning System..."
-#~ msgstr "System wird geklont …"
+#~ msgstr "System wird nachgebildet …"
 
 #~ msgid "Close Window"
 #~ msgstr "Fenster schließen"
@@ -2887,14 +2866,26 @@ msgstr "Nicht verschlagwortet"
 #~ msgid "Contributions"
 #~ msgstr "Beitragende"
 
+#~ msgid "Create snapshots using RSYNC"
+#~ msgstr "Schnappschüsse mit rsync erstellen"
+
+#~ msgid "Deleted system subvolumes"
+#~ msgstr "Gelöschtes Systemunterlaufwerk"
+
 #~ msgid "Documenters"
 #~ msgstr "Dokumentatoren"
+
+#~ msgid "Editing and Re-Ordering"
+#~ msgstr "Bearbeiten und Umsortieren"
 
 #~ msgid "Include everything"
 #~ msgstr "Alles einschließen"
 
 #~ msgid "Include hidden items"
 #~ msgstr "Versteckte Einträge einschließen"
+
+#~ msgid "Info"
+#~ msgstr "Information"
 
 #~ msgid "Log Viewer"
 #~ msgstr "Protokollbetrachter"
@@ -2904,6 +2895,9 @@ msgstr "Nicht verschlagwortet"
 
 #~ msgid "Scheduled task runs once every hour"
 #~ msgstr "Die geplante Aufgabe läuft einmal pro Stunde"
+
+#~ msgid "Selected snapshot path"
+#~ msgstr "Ausgewählter Schnappschusspfad"
 
 #~ msgid "Third Party Tools"
 #~ msgstr "Programme von Dritten"
@@ -2919,6 +2913,10 @@ msgstr "Nicht verschlagwortet"
 
 #~ msgid "View:"
 #~ msgstr "Ansicht:"
+
+#, fuzzy
+#~ msgid "Click to edit and drag-drop to re-order"
+#~ msgstr "Zum Bearbeiten klicken. Zum Neuordnen ziehen und verschieben."
 
 #~ msgid "Change"
 #~ msgstr "Geändert"

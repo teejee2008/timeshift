@@ -1,24 +1,17 @@
-# Ukrainian translation for timeshift
-# Copyright (c) 2016 Rosetta Contributors and Canonical Ltd 2016
-# This file is distributed under the same license as the timeshift package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2016.
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: timeshift\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2018-06-24 17:21+0530\n"
-"PO-Revision-Date: 2017-11-03 18:39+0000\n"
-"Last-Translator: Oliver Star <ewqstar@gmail.com>\n"
+"POT-Creation-Date: 2018-06-24 17:55+0530\n"
+"PO-Revision-Date: 2018-05-12 07:20+0000\n"
+"Last-Translator: Fedik <Unknown>\n"
 "Language-Team: Launchpad Ukrainian Translators <uk@li.org>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2018-02-03 14:28+0000\n"
-"X-Generator: Launchpad (build 18544)\n"
-"X-Launchpad-Export-Date: 2017-11-23 10:47+0000\n"
-"X-Generator: Launchpad (build 18509)\n"
+"X-Launchpad-Export-Date: 2018-06-29 08:01+0000\n"
+"X-Generator: Launchpad (build 18704)\n"
 
 #: Console/AppConsole.vala:613
 #, c-format
@@ -215,12 +208,6 @@ msgstr "Автори"
 msgid "Available"
 msgstr "Доступно"
 
-#: Gtk/BackupDeviceBox.vala:98
-msgid ""
-"BRTFS snapshots are saved on system partition. Other partitions are not "
-"supported."
-msgstr ""
-
 #: Gtk/SnapshotBackendBox.vala:94
 msgid "BTRFS"
 msgstr "BTRFS"
@@ -236,6 +223,13 @@ msgstr "Інструментарію BTRFS не знайдено"
 #: Core/Main.vala:2041 Core/Main.vala:2045
 msgid "BTRFS device is not mounted"
 msgstr "Пристрій BTRFS не підключено"
+
+#: Gtk/BackupDeviceBox.vala:98
+#, fuzzy
+msgid ""
+"BTRFS snapshots are saved on system partition. Other partitions are not "
+"supported."
+msgstr "Інші застосунки (наступна сторінка)"
 
 #: Gtk/FinishBox.vala:92
 msgid ""
@@ -1204,7 +1198,7 @@ msgstr ""
 
 #: Gtk/ExcludeBox.vala:54
 msgid "Include / Exclude Patterns"
-msgstr "Включити / Виключити шаблони"
+msgstr "Шаблони:  Додати / Виключити"
 
 #: Gtk/UsersBox.vala:340
 msgid "Include @home subvolume in backups"
@@ -2116,7 +2110,7 @@ msgstr "Встановіть опис знімку"
 
 #: Gtk/MainWindow.vala:181 Gtk/MainWindow.vala:182 Gtk/SettingsWindow.vala:55
 msgid "Settings"
-msgstr "Налаштування"
+msgstr "Параметри"
 
 #: Gtk/MainWindow.vala:192
 msgid "Settings wizard"
@@ -2773,36 +2767,6 @@ msgstr "rsync повернув помилку"
 msgid "un-tagged"
 msgstr "не позначене"
 
-#, fuzzy
-#~ msgid "Click to edit and drag-drop to re-order"
-#~ msgstr ""
-#~ "Клацніть для редагування. Перетягніть і скиньте для перепорядкування."
-
-#~ msgid ""
-#~ "Click an item to edit the pattern.\n"
-#~ "Drag and drop items with mouse to re-order."
-#~ msgstr ""
-#~ "Клацніть на елементі для редагування шаблону.\n"
-#~ "Перетягніть і скиньте елементи мишкою для перепорядкування."
-
-#~ msgid "Editing and Re-Ordering"
-#~ msgstr "Редагування та перепорядкування"
-
-#~ msgid "Info"
-#~ msgstr "Інфо"
-
-#~ msgid "Deleted system subvolumes"
-#~ msgstr "Вилучені системні підтоми"
-
-#~ msgid "<b>System:</b> Installed Linux distribution"
-#~ msgstr "<b>Система:</b> Встановлений дистрибутив Linux"
-
-#~ msgid "<b>Snapshot Date:</b> Date on which snapshot was created"
-#~ msgstr "<b>Дата знімку:</b>Вказує дату створення знімку"
-
-#~ msgid "Selected snapshot path"
-#~ msgstr "Шлях до обраного знімку"
-
 #~ msgid ""
 #~ "<b>Backup Levels</b>\n"
 #~ "\n"
@@ -2822,6 +2786,19 @@ msgstr "не позначене"
 #~ "W\tЩотижнево\n"
 #~ "M\tЩомісячно"
 
+#~ msgid "<b>Snapshot Date:</b> Date on which snapshot was created"
+#~ msgstr "<b>Дата знімку:</b>Вказує дату створення знімку"
+
+#~ msgid "<b>System:</b> Installed Linux distribution"
+#~ msgstr "<b>Система:</b> Встановлений дистрибутив Linux"
+
+#~ msgid ""
+#~ "Click an item to edit the pattern.\n"
+#~ "Drag and drop items with mouse to re-order."
+#~ msgstr ""
+#~ "Клацніть на елементі для редагування шаблону.\n"
+#~ "Перетягніть і скиньте елементи мишкою для перепорядкування."
+
 #~ msgid "Cloning System..."
 #~ msgstr "Клонування Системи..."
 
@@ -2831,14 +2808,26 @@ msgstr "не позначене"
 #~ msgid "Contributions"
 #~ msgstr "Внески"
 
+#~ msgid "Create snapshots using RSYNC"
+#~ msgstr "Створити знімок з використанням режиму RSYNC"
+
+#~ msgid "Deleted system subvolumes"
+#~ msgstr "Вилучені системні підтоми"
+
 #~ msgid "Documenters"
 #~ msgstr "Автори документації"
+
+#~ msgid "Editing and Re-Ordering"
+#~ msgstr "Редагування та перепорядкування"
 
 #~ msgid "Include everything"
 #~ msgstr "Включити все"
 
 #~ msgid "Include hidden items"
 #~ msgstr "Включити приховані елементи"
+
+#~ msgid "Info"
+#~ msgstr "Інфо"
 
 #~ msgid "Log Viewer"
 #~ msgstr "Перегляд журналу"
@@ -2848,6 +2837,9 @@ msgstr "не позначене"
 
 #~ msgid "Scheduled task runs once every hour"
 #~ msgstr "Завдання за розкладом виконується раз в годину"
+
+#~ msgid "Selected snapshot path"
+#~ msgstr "Шлях до обраного знімку"
 
 #~ msgid "Third Party Tools"
 #~ msgstr "Інші інструменти"
@@ -2863,6 +2855,11 @@ msgstr "не позначене"
 
 #~ msgid "View:"
 #~ msgstr "Перегляд:"
+
+#, fuzzy
+#~ msgid "Click to edit and drag-drop to re-order"
+#~ msgstr ""
+#~ "Клацніть для редагування. Перетягніть і скиньте для перепорядкування."
 
 #~ msgid "Change"
 #~ msgstr "Змінено"

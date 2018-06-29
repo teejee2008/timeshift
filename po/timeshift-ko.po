@@ -1,24 +1,17 @@
-# Korean translation for timeshift
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
-# This file is distributed under the same license as the timeshift package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: timeshift\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2018-06-24 17:21+0530\n"
-"PO-Revision-Date: 2017-11-17 14:25+0000\n"
+"POT-Creation-Date: 2018-06-24 17:55+0530\n"
+"PO-Revision-Date: 2017-12-08 16:26+0000\n"
 "Last-Translator: Jung-Kyu Park <bagjunggyu@gmail.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2018-02-03 14:28+0000\n"
-"X-Generator: Launchpad (build 18544)\n"
-"X-Launchpad-Export-Date: 2017-11-23 10:47+0000\n"
-"X-Generator: Launchpad (build 18509)\n"
+"X-Launchpad-Export-Date: 2018-06-29 08:01+0000\n"
+"X-Generator: Launchpad (build 18704)\n"
 
 #: Console/AppConsole.vala:613
 #, c-format
@@ -212,12 +205,6 @@ msgstr "저자"
 msgid "Available"
 msgstr "사용 가능"
 
-#: Gtk/BackupDeviceBox.vala:98
-msgid ""
-"BRTFS snapshots are saved on system partition. Other partitions are not "
-"supported."
-msgstr ""
-
 #: Gtk/SnapshotBackendBox.vala:94
 msgid "BTRFS"
 msgstr "BTRFS"
@@ -233,6 +220,13 @@ msgstr "BTRFS 도구가 없습니다"
 #: Core/Main.vala:2041 Core/Main.vala:2045
 msgid "BTRFS device is not mounted"
 msgstr "BTRFS 장치가 마운트 되지 않았습니다"
+
+#: Gtk/BackupDeviceBox.vala:98
+#, fuzzy
+msgid ""
+"BTRFS snapshots are saved on system partition. Other partitions are not "
+"supported."
+msgstr "다른 애플리케이션 (다음 페이지)"
 
 #: Gtk/FinishBox.vala:92
 msgid ""
@@ -2314,8 +2308,6 @@ msgid ""
 "space (> 1 GB)"
 msgstr ""
 "디스크 공간이 충분하다면 설정한 스케줄대로 스냅샷이 만들어지게 됩니다 (> 1 "
-"GB)\n"
-"디스크 공간이 충분하다면 설정한 스케줄대로 스냅샷을 만들어지게 됩니다 (> 1 "
 "GB)"
 
 #: Gtk/MainWindow.vala:642
@@ -2751,35 +2743,6 @@ msgstr "알싱크가 오류를 실행했습니다"
 msgid "un-tagged"
 msgstr "태그 되지 않은"
 
-#, fuzzy
-#~ msgid "Click to edit and drag-drop to re-order"
-#~ msgstr "클릭해서 편집하기. 드래그 앤 드롭해서 다시 정렬하기."
-
-#~ msgid ""
-#~ "Click an item to edit the pattern.\n"
-#~ "Drag and drop items with mouse to re-order."
-#~ msgstr ""
-#~ "항목을 클릭해서 패턴을 편집하세요.\n"
-#~ "항목을 드래그 앤 드롭해서 다시 정렬하세요."
-
-#~ msgid "Editing and Re-Ordering"
-#~ msgstr "편집 및 다시 정렬하기"
-
-#~ msgid "Info"
-#~ msgstr "정보"
-
-#~ msgid "Deleted system subvolumes"
-#~ msgstr "지워진 시스템 서브 볼륨"
-
-#~ msgid "<b>System:</b> Installed Linux distribution"
-#~ msgstr "<b>시스템:</b> 설치된 리눅스 배포판입니다"
-
-#~ msgid "<b>Snapshot Date:</b> Date on which snapshot was created"
-#~ msgstr "<b>스냅샷 날짜:</b> 스냅샷이 만들어진 날짜입니다"
-
-#~ msgid "Selected snapshot path"
-#~ msgstr "선택한 스냅샷 경로"
-
 #~ msgid ""
 #~ "<b>Backup Levels</b>\n"
 #~ "\n"
@@ -2799,6 +2762,19 @@ msgstr "태그 되지 않은"
 #~ "W\t매주\n"
 #~ "M\t매월"
 
+#~ msgid "<b>Snapshot Date:</b> Date on which snapshot was created"
+#~ msgstr "<b>스냅샷 날짜:</b> 스냅샷이 만들어진 날짜입니다"
+
+#~ msgid "<b>System:</b> Installed Linux distribution"
+#~ msgstr "<b>시스템:</b> 설치된 리눅스 배포판입니다"
+
+#~ msgid ""
+#~ "Click an item to edit the pattern.\n"
+#~ "Drag and drop items with mouse to re-order."
+#~ msgstr ""
+#~ "항목을 클릭해서 패턴을 편집하세요.\n"
+#~ "항목을 드래그 앤 드롭해서 다시 정렬하세요."
+
 #~ msgid "Cloning System..."
 #~ msgstr "시스템을 복제하고 있습니다..."
 
@@ -2808,14 +2784,26 @@ msgstr "태그 되지 않은"
 #~ msgid "Contributions"
 #~ msgstr "기여"
 
+#~ msgid "Create snapshots using RSYNC"
+#~ msgstr "RSYNC를 써서 스냅샷 만들기"
+
+#~ msgid "Deleted system subvolumes"
+#~ msgstr "지워진 시스템 서브 볼륨"
+
 #~ msgid "Documenters"
 #~ msgstr "문서 작성자"
+
+#~ msgid "Editing and Re-Ordering"
+#~ msgstr "편집 및 다시 정렬하기"
 
 #~ msgid "Include everything"
 #~ msgstr "모두 포함하기"
 
 #~ msgid "Include hidden items"
 #~ msgstr "숨김 항목 포함하기"
+
+#~ msgid "Info"
+#~ msgstr "정보"
 
 #~ msgid "Log Viewer"
 #~ msgstr "로그 뷰어"
@@ -2825,6 +2813,9 @@ msgstr "태그 되지 않은"
 
 #~ msgid "Scheduled task runs once every hour"
 #~ msgstr "스케줄 관리는 매 시간마다 한 번씩 실행합니다"
+
+#~ msgid "Selected snapshot path"
+#~ msgstr "선택한 스냅샷 경로"
 
 #~ msgid "Third Party Tools"
 #~ msgstr "제삼자 도구"
@@ -2840,6 +2831,10 @@ msgstr "태그 되지 않은"
 
 #~ msgid "View:"
 #~ msgstr "보기:"
+
+#, fuzzy
+#~ msgid "Click to edit and drag-drop to re-order"
+#~ msgstr "클릭해서 편집하기. 드래그 앤 드롭해서 다시 정렬하기."
 
 #~ msgid "Change"
 #~ msgstr "변경됨"

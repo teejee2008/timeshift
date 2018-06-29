@@ -1,24 +1,17 @@
-# French translation for timeshift
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
-# This file is distributed under the same license as the timeshift package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: timeshift\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2018-06-24 17:21+0530\n"
-"PO-Revision-Date: 2017-11-10 17:05+0000\n"
-"Last-Translator: Fr-coord <Unknown>\n"
+"POT-Creation-Date: 2018-06-24 17:55+0530\n"
+"PO-Revision-Date: 2018-02-21 18:43+0000\n"
+"Last-Translator: Jean-Marc <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2018-02-03 14:28+0000\n"
-"X-Generator: Launchpad (build 18544)\n"
-"X-Launchpad-Export-Date: 2017-11-23 10:47+0000\n"
-"X-Generator: Launchpad (build 18509)\n"
+"X-Launchpad-Export-Date: 2018-06-29 08:00+0000\n"
+"X-Generator: Launchpad (build 18704)\n"
 
 #: Console/AppConsole.vala:613
 #, c-format
@@ -212,12 +205,6 @@ msgstr "Auteurs"
 msgid "Available"
 msgstr "Disponible"
 
-#: Gtk/BackupDeviceBox.vala:98
-msgid ""
-"BRTFS snapshots are saved on system partition. Other partitions are not "
-"supported."
-msgstr ""
-
 #: Gtk/SnapshotBackendBox.vala:94
 msgid "BTRFS"
 msgstr "BTRFS"
@@ -233,6 +220,13 @@ msgstr "Outils BTRFS non trouvés"
 #: Core/Main.vala:2041 Core/Main.vala:2045
 msgid "BTRFS device is not mounted"
 msgstr "Le périphérique BTRFS n'est pas monté"
+
+#: Gtk/BackupDeviceBox.vala:98
+#, fuzzy
+msgid ""
+"BTRFS snapshots are saved on system partition. Other partitions are not "
+"supported."
+msgstr "Autres applications (page suivante)"
 
 #: Gtk/FinishBox.vala:92
 msgid ""
@@ -799,7 +793,7 @@ msgstr "Prise en charge des quotas de sous-volumes activée"
 
 #: Utility/Device.vala:1333
 msgid "Encrypted Device"
-msgstr "Périphérique crypté"
+msgstr "Périphérique chiffré"
 
 #: Gtk/UsersBox.vala:236
 msgid "Encrypted Home Directory"
@@ -2724,7 +2718,7 @@ msgstr "Assistant"
 
 #: Utility/Device.vala:1313 Utility/Device.vala:1359
 msgid "Wrong password"
-msgstr "Mauvais mot de passe"
+msgstr "Mot de passe incorrect"
 
 #: Utility/Gtk/CustomMessageDialog.vala:176
 msgid "Yes"
@@ -2810,36 +2804,6 @@ msgstr "rsync a retourné une erreur"
 msgid "un-tagged"
 msgstr "non marqué"
 
-#, fuzzy
-#~ msgid "Click to edit and drag-drop to re-order"
-#~ msgstr "Cliquez pour modifier. Glissez-déposez pour réordonner."
-
-#~ msgid ""
-#~ "Click an item to edit the pattern.\n"
-#~ "Drag and drop items with mouse to re-order."
-#~ msgstr ""
-#~ "Cliquez pour modifier le pattern.\n"
-#~ "Glissez-déposez pour réordonner."
-
-#~ msgid "Editing and Re-Ordering"
-#~ msgstr "Modification et tri"
-
-#~ msgid "Info"
-#~ msgstr "Info"
-
-#~ msgid "Deleted system subvolumes"
-#~ msgstr "Sous-volumes système supprimés"
-
-#~ msgid "<b>System:</b> Installed Linux distribution"
-#~ msgstr "<b>Système :</b> Distribution Linux installée"
-
-#~ msgid "<b>Snapshot Date:</b> Date on which snapshot was created"
-#~ msgstr ""
-#~ "<b>Date de l'instantané:</b> Date à laquelle l'instantané a été créé"
-
-#~ msgid "Selected snapshot path"
-#~ msgstr "Chemin sélectionné pour les instantanés"
-
 #~ msgid ""
 #~ "<b>Backup Levels</b>\n"
 #~ "\n"
@@ -2859,6 +2823,20 @@ msgstr "non marqué"
 #~ "W\tHebdomadaire\n"
 #~ "M\tMensuel"
 
+#~ msgid "<b>Snapshot Date:</b> Date on which snapshot was created"
+#~ msgstr ""
+#~ "<b>Date de l'instantané:</b> Date à laquelle l'instantané a été créé"
+
+#~ msgid "<b>System:</b> Installed Linux distribution"
+#~ msgstr "<b>Système :</b> Distribution Linux installée"
+
+#~ msgid ""
+#~ "Click an item to edit the pattern.\n"
+#~ "Drag and drop items with mouse to re-order."
+#~ msgstr ""
+#~ "Cliquez pour modifier le pattern.\n"
+#~ "Glissez-déposez pour réordonner."
+
 #~ msgid "Cloning System..."
 #~ msgstr "Clonage du système..."
 
@@ -2868,14 +2846,26 @@ msgstr "non marqué"
 #~ msgid "Contributions"
 #~ msgstr "Contributions"
 
+#~ msgid "Create snapshots using RSYNC"
+#~ msgstr "Créer un instantané en utilisant RSYNC"
+
+#~ msgid "Deleted system subvolumes"
+#~ msgstr "Sous-volumes système supprimés"
+
 #~ msgid "Documenters"
 #~ msgstr "Documentalistes"
+
+#~ msgid "Editing and Re-Ordering"
+#~ msgstr "Modification et tri"
 
 #~ msgid "Include everything"
 #~ msgstr "Inclure tout"
 
 #~ msgid "Include hidden items"
 #~ msgstr "Inclure les éléments cachés"
+
+#~ msgid "Info"
+#~ msgstr "Info"
 
 #~ msgid "Log Viewer"
 #~ msgstr "Visionneur de journaux"
@@ -2885,6 +2875,9 @@ msgstr "non marqué"
 
 #~ msgid "Scheduled task runs once every hour"
 #~ msgstr "La tâche programmée se lance une fois toutes les heures."
+
+#~ msgid "Selected snapshot path"
+#~ msgstr "Chemin sélectionné pour les instantanés"
 
 #~ msgid "Third Party Tools"
 #~ msgstr "Outils tiers"
@@ -2900,6 +2893,10 @@ msgstr "non marqué"
 
 #~ msgid "View:"
 #~ msgstr "Vue :"
+
+#, fuzzy
+#~ msgid "Click to edit and drag-drop to re-order"
+#~ msgstr "Cliquez pour modifier. Glissez-déposez pour réordonner."
 
 #~ msgid "Change"
 #~ msgstr "Modifié"

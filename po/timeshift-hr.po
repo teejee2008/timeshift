@@ -1,24 +1,17 @@
-# Croatian translation for linuxmint
-# Copyright (c) 2017 Rosetta Contributors and Canonical Ltd 2017
-# This file is distributed under the same license as the linuxmint package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2017.
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: linuxmint\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2018-06-24 17:21+0530\n"
-"PO-Revision-Date: 2017-11-06 15:36+0000\n"
+"POT-Creation-Date: 2018-06-24 17:55+0530\n"
+"PO-Revision-Date: 2018-06-12 08:10+0000\n"
 "Last-Translator: gogo <trebelnik2@gmail.com>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2018-02-03 14:28+0000\n"
-"X-Generator: Launchpad (build 18544)\n"
-"X-Launchpad-Export-Date: 2017-11-23 10:47+0000\n"
-"X-Generator: Launchpad (build 18509)\n"
+"X-Launchpad-Export-Date: 2018-06-29 08:01+0000\n"
+"X-Generator: Launchpad (build 18704)\n"
 
 #: Console/AppConsole.vala:613
 #, c-format
@@ -215,12 +208,6 @@ msgstr "Autor"
 msgid "Available"
 msgstr "Dostupno"
 
-#: Gtk/BackupDeviceBox.vala:98
-msgid ""
-"BRTFS snapshots are saved on system partition. Other partitions are not "
-"supported."
-msgstr ""
-
 #: Gtk/SnapshotBackendBox.vala:94
 msgid "BTRFS"
 msgstr "BTRFS"
@@ -236,6 +223,13 @@ msgstr "BTRFS alati nisu pronađeni"
 #: Core/Main.vala:2041 Core/Main.vala:2045
 msgid "BTRFS device is not mounted"
 msgstr "BTRFS uređaj nije pronađen"
+
+#: Gtk/BackupDeviceBox.vala:98
+#, fuzzy
+msgid ""
+"BTRFS snapshots are saved on system partition. Other partitions are not "
+"supported."
+msgstr "Ostale aplikacije (sljedeća stranica)"
 
 #: Gtk/FinishBox.vala:92
 msgid ""
@@ -520,7 +514,7 @@ msgid ""
 "Create snapshots manually or enable scheduled snapshots to protect your "
 "system"
 msgstr ""
-"Stvori snimku sustava ručno ili omogući raspored snimaka sustava kako bi "
+"Stvorite snimku sustava ručno ili omogućite raspored snimaka sustava kako bi "
 "zaštitili svoj sustav"
 
 #: Gtk/SnapshotBackendBox.vala:95
@@ -732,10 +726,10 @@ msgid ""
 msgstr ""
 "Je li vam ovaj softver bio koristan?\n"
 "\n"
-"Možete mi kupiti kavu ili donirati putem PayPala kako bi me podržali. Ili mi "
-"jednostavno pošaljite e-poštu i recite mi Bok. Ova aplikacija je u "
-"potpunosti besplatna i takva će i ostati. Vaš doprinos će pomoći održati "
-"ovaj projekt živim i poboljšanim u budućnosti.\n"
+"Možete mi kupiti kavu ili donirati putem PayPala kako bi podržali moj rad. "
+"Ili mi jednostavno pošaljite e-poštu i recite mi Bok. Ova aplikacija je u "
+"potpunosti besplatna i takva će ubuduće ostati. Vaš doprinos će pomoći "
+"održati ovaj projekt živim i poboljšanim u budućnosti.\n"
 "\n"
 "Slobodno mi pošaljite e-poštu ako imate bilo kakav problem s ovom "
 "aplikacijom ili želite neku promjenu. Prijedlozi i povratne informacije su "
@@ -1401,9 +1395,7 @@ msgstr "Označeno za brisanje"
 
 #: Core/SnapshotRepo.vala:711 Core/SnapshotRepo.vala:748
 msgid "Maximum backups exceeded for backup level"
-msgstr ""
-"Premašen je broj sigurnosnih kopija za raspored sigurnosnog kopiranja\n"
-"Premašen je broj sigurnosnih kopija za razinu sigurnosnog kopiranja"
+msgstr "Premašen je broj sigurnosnih kopija za raspored sigurnosnog kopiranja"
 
 #: Gtk/MainWindow.vala:208
 msgid "Menu"
@@ -1895,8 +1887,6 @@ msgid ""
 "against drive failures."
 msgstr ""
 "Spremite snimke sustava na vanjski disk umjesto na disk sustava kako bi "
-"spriječili gubitak podataka uslijed kvara diska.\n"
-"Spremi snimke sustava na vanjski disk umjesto na disk sustava kako bi "
 "spriječili gubitak podataka uslijed kvara diska."
 
 #: Gtk/FinishBox.vala:97
@@ -1909,11 +1899,7 @@ msgstr ""
 "Spremanje snimaka sustava na nesustavski disk omogućuje vam formatiranje i "
 "ponovnu instalaciju OS-a bez gubitka snimaka sustava spremljenih na njemu. "
 "Možete čak instalirati drugu Linux distribuciju i zatim vratiti natrag "
-"prijašnju distribuciju obnovom iz snimke sustava.\n"
-"Spremanje snimaka sustava na nesustavski disk omogućuje vam formatiranje i "
-"reinstalaciju OS-a bez gubitka snimaka sustava spremljenih na njega. Možete "
-"čak instalirati drugu Linux distribuciju i zatim vratiti natrag prijašnju "
-"distribuciju obnovom iz snimke sustava."
+"prijašnju distribuciju obnovom iz snimke sustava."
 
 #: Core/Main.vala:1285 Core/Main.vala:1439 Core/Main.vala:1441
 msgid "Saving to device"
@@ -1929,26 +1915,24 @@ msgstr "Zakazivanje rasporeda snimanja sustava u tijeku..."
 
 #: Core/Main.vala:1147 Gtk/MainWindow.vala:1067 Gtk/ScheduleBox.vala:312
 msgid "Scheduled snapshots are disabled"
-msgstr "Raspored  snimanja sustava je onemogućen"
+msgstr "Raspored snimanja sustava je onemogućen"
 
 #: Gtk/FinishBox.vala:78
 msgid "Scheduled snapshots are disabled. It's recommended to enable it."
 msgstr ""
-"Raspored  snimanja sustava je onemogućen. Preporučljivo je da ga omogućite."
+"Raspored snimanja sustava je onemogućen. Preporučljivo je da ga omogućite."
 
 #: Gtk/ScheduleBox.vala:305
 msgid "Scheduled snapshots are enabled"
-msgstr "Raspored  snimanja sustava je omogućen"
+msgstr "Raspored snimanja sustava je omogućen"
 
 #: Gtk/FinishBox.vala:75
 msgid ""
 "Scheduled snapshots are enabled. Snapshots will be created automatically for "
 "selected levels."
 msgstr ""
-"Raspored  snimanja sustava je omogućen. Snimke sustava će biti automatski "
-"stvorene prema odabranom rasporedu.\n"
-"Raspored  snimanja sustava je omogućen. Snimke sustava će biti automatski "
-"stvorene za odabrane razine."
+"Raspored snimanja sustava je omogućen. Snimke sustava će biti automatski "
+"stvorene prema odabranom rasporedu."
 
 #: Console/AppConsole.vala:870
 #, c-format
@@ -1973,9 +1957,7 @@ msgstr "Odaberi snimku sustava"
 
 #: Gtk/ScheduleBox.vala:57
 msgid "Select Snapshot Levels"
-msgstr ""
-"Postavi raspored stvaranja snimke sustava\n"
-"Odaberi razinu snimke sustava"
+msgstr "Postavi raspored stvaranja snimke sustava"
 
 #: Gtk/BackupDeviceBox.vala:56
 msgid "Select Snapshot Location"
@@ -2052,7 +2034,7 @@ msgstr "Odaberi uređaj gdje će se datoteke obnoviti."
 
 #: Gtk/ScheduleBox.vala:313
 msgid "Select the intervals for creating snapshots"
-msgstr "Odaberi razdoblje stvaranja snimaka sustava"
+msgstr "Odaberite razdoblje stvaranja snimaka sustava"
 
 #: Gtk/ExcludeBox.vala:273
 msgid "Select the items to be removed from the list"
@@ -2260,9 +2242,7 @@ msgid ""
 "transaction at the file system level."
 msgstr ""
 "Stvaranje i obnova snimaka sustava je trenutačna. Stvaranje snimke sustava "
-"je poput atomske reakcije na razini datotečnog sustava.\n"
-"Stvaranje i obnova snimka sustava je trenutačna. Stvaranje snimke sustava je "
-"atomska transakcija na razini datotečnog sustava."
+"je poput atomske reakcije na razini datotečnog sustava."
 
 #: Gtk/SnapshotBackendBox.vala:186
 msgid ""
@@ -2346,7 +2326,7 @@ msgstr "Snimke sustava se ne mogu stvoriti u Live CD načinu rada"
 
 #: Gtk/MainWindow.vala:1059
 msgid "Snapshots will be created at selected intervals"
-msgstr "Snimke sustava će biti stvorene u odabranom  razdoblju"
+msgstr "Snimke sustava će biti stvorene u odabranom razdoblju"
 
 #: Gtk/ScheduleBox.vala:306
 msgid ""
@@ -2792,36 +2772,6 @@ msgstr "rsync je vratio grešku"
 msgid "un-tagged"
 msgstr "odznačeno"
 
-#, fuzzy
-#~ msgid "Click to edit and drag-drop to re-order"
-#~ msgstr ""
-#~ "Kliknite za uređivanje. Povucite i ispustite za promjenu redoslijeda."
-
-#~ msgid ""
-#~ "Click an item to edit the pattern.\n"
-#~ "Drag and drop items with mouse to re-order."
-#~ msgstr ""
-#~ "Kliknite na stavku kako bi uredili uzorak.\n"
-#~ "Povucite i ispustite stavke miše za promjenu redoslijeda."
-
-#~ msgid "Editing and Re-Ordering"
-#~ msgstr "Uređivanje i promjena redoslijeda"
-
-#~ msgid "Info"
-#~ msgstr "Informacije"
-
-#~ msgid "Deleted system subvolumes"
-#~ msgstr "Obrisani poduređaji sustava"
-
-#~ msgid "<b>System:</b> Installed Linux distribution"
-#~ msgstr "<b>Sustav:</b> Instalirana Linux distribucija"
-
-#~ msgid "<b>Snapshot Date:</b> Date on which snapshot was created"
-#~ msgstr "<b>Datum snimke sustava:</b> Datum kada je snimka sustava stvorena"
-
-#~ msgid "Selected snapshot path"
-#~ msgstr "Putanja odabrane snimke sustava"
-
 #~ msgid ""
 #~ "<b>Backup Levels</b>\n"
 #~ "\n"
@@ -2839,15 +2789,20 @@ msgstr "odznačeno"
 #~ "H\tSvaki sat\n"
 #~ "D\tSvaki dan\n"
 #~ "W\tTjedno\n"
-#~ "M\tMjesečno\n"
-#~ "<b>Razine sigurnosnog pokretanja</b>\n"
-#~ "\n"
-#~ "O\tNa zahtjev (ručno)\n"
-#~ "B\tPri pokretanju\n"
-#~ "H\tSvaki sat\n"
-#~ "D\tSvaki dan\n"
-#~ "W\tTjedno\n"
 #~ "M\tMjesečno"
+
+#~ msgid "<b>Snapshot Date:</b> Date on which snapshot was created"
+#~ msgstr "<b>Datum snimke sustava:</b> Datum kada je snimka sustava stvorena"
+
+#~ msgid "<b>System:</b> Installed Linux distribution"
+#~ msgstr "<b>Sustav:</b> Instalirana Linux distribucija"
+
+#~ msgid ""
+#~ "Click an item to edit the pattern.\n"
+#~ "Drag and drop items with mouse to re-order."
+#~ msgstr ""
+#~ "Kliknite na stavku kako bi uredili uzorak.\n"
+#~ "Povucite i ispustite stavke miše za promjenu redoslijeda."
 
 #~ msgid "Cloning System..."
 #~ msgstr "Kloniranje sustava..."
@@ -2858,14 +2813,26 @@ msgstr "odznačeno"
 #~ msgid "Contributions"
 #~ msgstr "Doprinijeli"
 
+#~ msgid "Create snapshots using RSYNC"
+#~ msgstr "Stvori snimku sustava koristeći RSYNC"
+
+#~ msgid "Deleted system subvolumes"
+#~ msgstr "Obrisani poduređaji sustava"
+
 #~ msgid "Documenters"
 #~ msgstr "Autori dokumentacije"
+
+#~ msgid "Editing and Re-Ordering"
+#~ msgstr "Uređivanje i promjena redoslijeda"
 
 #~ msgid "Include everything"
 #~ msgstr "Obuhvati sve"
 
 #~ msgid "Include hidden items"
 #~ msgstr "Obuhvati skrivene datoteke"
+
+#~ msgid "Info"
+#~ msgstr "Informacije"
 
 #~ msgid "Log Viewer"
 #~ msgstr "Preglednik zaspisa"
@@ -2875,6 +2842,9 @@ msgstr "odznačeno"
 
 #~ msgid "Scheduled task runs once every hour"
 #~ msgstr "Zadaci rasporeda se pokreću svaki sat"
+
+#~ msgid "Selected snapshot path"
+#~ msgstr "Putanja odabrane snimke sustava"
 
 #~ msgid "Third Party Tools"
 #~ msgstr "Alati treće strane"
@@ -2890,6 +2860,11 @@ msgstr "odznačeno"
 
 #~ msgid "View:"
 #~ msgstr "Pogled:"
+
+#, fuzzy
+#~ msgid "Click to edit and drag-drop to re-order"
+#~ msgstr ""
+#~ "Kliknite za uređivanje. Povucite i ispustite za promjenu redoslijeda."
 
 #~ msgid "Change"
 #~ msgstr "Promijenjeno"

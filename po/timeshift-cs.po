@@ -1,13 +1,8 @@
-# Czech translation for timeshift
-# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
-# This file is distributed under the same license as the timeshift package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: timeshift\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2018-06-24 17:21+0530\n"
+"POT-Creation-Date: 2018-06-24 17:55+0530\n"
 "PO-Revision-Date: 2017-11-05 08:47+0000\n"
 "Last-Translator: Pavel Borecki <Unknown>\n"
 "Language-Team: Czech <cs@li.org>\n"
@@ -15,10 +10,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2018-02-03 14:28+0000\n"
-"X-Generator: Launchpad (build 18544)\n"
-"X-Launchpad-Export-Date: 2017-11-23 10:47+0000\n"
-"X-Generator: Launchpad (build 18509)\n"
+"X-Launchpad-Export-Date: 2018-06-29 08:01+0000\n"
+"X-Generator: Launchpad (build 18704)\n"
 
 #: Console/AppConsole.vala:613
 #, c-format
@@ -219,14 +212,6 @@ msgstr "Vývojáři"
 msgid "Available"
 msgstr "K dispozici"
 
-#: Gtk/BackupDeviceBox.vala:98
-msgid ""
-"BRTFS snapshots are saved on system partition. Other partitions are not "
-"supported."
-msgstr ""
-"BTRFS zachycené stavy jsou ukládány na systémový oddíl. Jiné oddíly nejsou "
-"podporované."
-
 #: Gtk/SnapshotBackendBox.vala:94
 msgid "BTRFS"
 msgstr "BTRFS"
@@ -242,6 +227,15 @@ msgstr "Nebyly nalezeny BTRFS nástroje"
 #: Core/Main.vala:2041 Core/Main.vala:2045
 msgid "BTRFS device is not mounted"
 msgstr "BTRFS zařízení není připojeno"
+
+#: Gtk/BackupDeviceBox.vala:98
+#, fuzzy
+msgid ""
+"BTRFS snapshots are saved on system partition. Other partitions are not "
+"supported."
+msgstr ""
+"BTRFS zachycené stavy jsou ukládány na systémový oddíl. Jiné oddíly nejsou "
+"podporované."
 
 #: Gtk/FinishBox.vala:92
 msgid ""
@@ -2826,35 +2820,6 @@ msgstr "nástroj rsync oznámil chybu"
 msgid "un-tagged"
 msgstr "bez příznaku"
 
-#, fuzzy
-#~ msgid "Click to edit and drag-drop to re-order"
-#~ msgstr "Upravte kliknutím. Pořadí změňte přetažením."
-
-#~ msgid ""
-#~ "Click an item to edit the pattern.\n"
-#~ "Drag and drop items with mouse to re-order."
-#~ msgstr ""
-#~ "Vzor upravíte kliknutím na položku.\n"
-#~ "Pořadí položek je možné změnit jejich přetažením."
-
-#~ msgid "Editing and Re-Ordering"
-#~ msgstr "Úprava a přeuspořádání"
-
-#~ msgid "Info"
-#~ msgstr "Informace"
-
-#~ msgid "Deleted system subvolumes"
-#~ msgstr "Smazané systémové dílčí svazky"
-
-#~ msgid "<b>System:</b> Installed Linux distribution"
-#~ msgstr "<b>Systém:</b> Nainstalovaná distribuce GNU/Linux"
-
-#~ msgid "<b>Snapshot Date:</b> Date on which snapshot was created"
-#~ msgstr "<b>Datum zachycení stavu:</b> Kdy byl daný zachycený stav pořízen"
-
-#~ msgid "Selected snapshot path"
-#~ msgstr "Popis umístění označeného zachyceného stavu"
-
 #~ msgid ""
 #~ "<b>Backup Levels</b>\n"
 #~ "\n"
@@ -2874,6 +2839,19 @@ msgstr "bez příznaku"
 #~ "W\ttýdenní\n"
 #~ "M\tměsíční"
 
+#~ msgid "<b>Snapshot Date:</b> Date on which snapshot was created"
+#~ msgstr "<b>Datum zachycení stavu:</b> Kdy byl daný zachycený stav pořízen"
+
+#~ msgid "<b>System:</b> Installed Linux distribution"
+#~ msgstr "<b>Systém:</b> Nainstalovaná distribuce GNU/Linux"
+
+#~ msgid ""
+#~ "Click an item to edit the pattern.\n"
+#~ "Drag and drop items with mouse to re-order."
+#~ msgstr ""
+#~ "Vzor upravíte kliknutím na položku.\n"
+#~ "Pořadí položek je možné změnit jejich přetažením."
+
 #~ msgid "Cloning System..."
 #~ msgstr "Klonování systému…"
 
@@ -2883,14 +2861,26 @@ msgstr "bez příznaku"
 #~ msgid "Contributions"
 #~ msgstr "Do vývoje se dále zapojili"
 
+#~ msgid "Create snapshots using RSYNC"
+#~ msgstr "Pořizovat zachycené stavy pomocí nástroje RSYNC"
+
+#~ msgid "Deleted system subvolumes"
+#~ msgstr "Smazané systémové dílčí svazky"
+
 #~ msgid "Documenters"
 #~ msgstr "Dokumentace"
+
+#~ msgid "Editing and Re-Ordering"
+#~ msgstr "Úprava a přeuspořádání"
 
 #~ msgid "Include everything"
 #~ msgstr "Zahrnout vše"
 
 #~ msgid "Include hidden items"
 #~ msgstr "Včetně skrytých položek"
+
+#~ msgid "Info"
+#~ msgstr "Informace"
 
 #~ msgid "Log Viewer"
 #~ msgstr "Prohlížeč záznamu událostí"
@@ -2900,6 +2890,9 @@ msgstr "bez příznaku"
 
 #~ msgid "Scheduled task runs once every hour"
 #~ msgstr "Naplánovaná úloha bude zkoušena každou hodinu"
+
+#~ msgid "Selected snapshot path"
+#~ msgstr "Popis umístění označeného zachyceného stavu"
 
 #~ msgid "Third Party Tools"
 #~ msgstr "Nástroje třetích stran"
@@ -2915,6 +2908,10 @@ msgstr "bez příznaku"
 
 #~ msgid "View:"
 #~ msgstr "Zobrazit:"
+
+#, fuzzy
+#~ msgid "Click to edit and drag-drop to re-order"
+#~ msgstr "Upravte kliknutím. Pořadí změňte přetažením."
 
 #~ msgid "Change"
 #~ msgstr "Změněno"

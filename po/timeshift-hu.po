@@ -1,25 +1,17 @@
-# Hungarian translation for linuxmint
-# Copyright (c) 2017 Rosetta Contributors and Canonical Ltd 2017
-# This file is distributed under the same license as the linuxmint package.
-#
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2017.
-# Kálmán szalai (KAMI) <kami911@gmail.com>, 2017.
 msgid ""
 msgstr ""
 "Project-Id-Version: linuxmint\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2018-06-24 17:21+0530\n"
-"PO-Revision-Date: 2017-11-20 14:15+0000\n"
+"POT-Creation-Date: 2018-06-24 17:55+0530\n"
+"PO-Revision-Date: 2018-05-01 08:48+0000\n"
 "Last-Translator: KAMI <kami911@gmail.com>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2018-02-03 14:28+0000\n"
-"X-Generator: Launchpad (build 18544)\n"
-"X-Launchpad-Export-Date: 2017-11-23 10:47+0000\n"
-"X-Generator: Launchpad (build 18509)\n"
+"X-Launchpad-Export-Date: 2018-06-29 08:00+0000\n"
+"X-Generator: Launchpad (build 18704)\n"
 
 #: Console/AppConsole.vala:613
 #, c-format
@@ -218,12 +210,6 @@ msgstr "Szerzők"
 msgid "Available"
 msgstr "Elérhető"
 
-#: Gtk/BackupDeviceBox.vala:98
-msgid ""
-"BRTFS snapshots are saved on system partition. Other partitions are not "
-"supported."
-msgstr ""
-
 #: Gtk/SnapshotBackendBox.vala:94
 msgid "BTRFS"
 msgstr "BTRFS"
@@ -239,6 +225,13 @@ msgstr "BTRFS eszközök nem találhatóak"
 #: Core/Main.vala:2041 Core/Main.vala:2045
 msgid "BTRFS device is not mounted"
 msgstr "A BTRFS eszköz nincs csatlakoztatva"
+
+#: Gtk/BackupDeviceBox.vala:98
+#, fuzzy
+msgid ""
+"BTRFS snapshots are saved on system partition. Other partitions are not "
+"supported."
+msgstr "Más alkalmazások (következő oldal)"
 
 #: Gtk/FinishBox.vala:92
 msgid ""
@@ -781,11 +774,11 @@ msgstr "Adományok"
 
 #: Utility/Gtk/DonationWindow.vala:42 Gtk/MainWindow.vala:388
 msgid "Donate"
-msgstr "Támogatás"
+msgstr "Adományozás"
 
 #: Utility/Gtk/DonationWindow.vala:81
 msgid "Donate with PayPal"
-msgstr "Támogatás PayPal segítségével"
+msgstr "Adományozás PayPal segítségével"
 
 #: Utility/Gtk/AboutWindow.vala:465
 msgid "Donations"
@@ -1910,7 +1903,7 @@ msgstr "Futtatás nem interaktív üzemmódban"
 
 #: Core/Main.vala:186
 msgid "Running"
-msgstr "Fut"
+msgstr "Folyamatban"
 
 #: Gtk/FinishBox.vala:95
 msgid ""
@@ -2811,36 +2804,6 @@ msgstr "rsync program hibát jelzett"
 msgid "un-tagged"
 msgstr "nem kijelölt"
 
-#, fuzzy
-#~ msgid "Click to edit and drag-drop to re-order"
-#~ msgstr ""
-#~ "Kattintson a szerkesztéshez. Az elemek sorrendjét húzással átrendezheti."
-
-#~ msgid ""
-#~ "Click an item to edit the pattern.\n"
-#~ "Drag and drop items with mouse to re-order."
-#~ msgstr ""
-#~ "Kattintson egy elemre a minta megváltoztatásához.\n"
-#~ "Az elemek sorrendjét húzással átrendezheti az egérrel."
-
-#~ msgid "Editing and Re-Ordering"
-#~ msgstr "Szerkesztés és átrendezés"
-
-#~ msgid "Info"
-#~ msgstr "Információ"
-
-#~ msgid "Deleted system subvolumes"
-#~ msgstr "Rendszer alkötetek törlése"
-
-#~ msgid "<b>System:</b> Installed Linux distribution"
-#~ msgstr "<b>Rendszer:</b> Telepített Linux terjesztés"
-
-#~ msgid "<b>Snapshot Date:</b> Date on which snapshot was created"
-#~ msgstr "<b>Pillanatkép dátuma:</b> A pillanatkép létrehozásának dátuma"
-
-#~ msgid "Selected snapshot path"
-#~ msgstr "Kiválasztott pillanatkép elérési út"
-
 #~ msgid ""
 #~ "<b>Backup Levels</b>\n"
 #~ "\n"
@@ -2860,6 +2823,19 @@ msgstr "nem kijelölt"
 #~ "W\tHetente\n"
 #~ "M\tHavonta"
 
+#~ msgid "<b>Snapshot Date:</b> Date on which snapshot was created"
+#~ msgstr "<b>Pillanatkép dátuma:</b> A pillanatkép létrehozásának dátuma"
+
+#~ msgid "<b>System:</b> Installed Linux distribution"
+#~ msgstr "<b>Rendszer:</b> Telepített Linux terjesztés"
+
+#~ msgid ""
+#~ "Click an item to edit the pattern.\n"
+#~ "Drag and drop items with mouse to re-order."
+#~ msgstr ""
+#~ "Kattintson egy elemre a minta megváltoztatásához.\n"
+#~ "Az elemek sorrendjét húzással átrendezheti az egérrel."
+
 #~ msgid "Cloning System..."
 #~ msgstr "A rendszer klónozása…"
 
@@ -2869,14 +2845,26 @@ msgstr "nem kijelölt"
 #~ msgid "Contributions"
 #~ msgstr "Közreműködők"
 
+#~ msgid "Create snapshots using RSYNC"
+#~ msgstr "Pillanatkép készítése RSYNC program használatával"
+
+#~ msgid "Deleted system subvolumes"
+#~ msgstr "Rendszer alkötetek törlése"
+
 #~ msgid "Documenters"
 #~ msgstr "Dokumentáció írói"
+
+#~ msgid "Editing and Re-Ordering"
+#~ msgstr "Szerkesztés és átrendezés"
 
 #~ msgid "Include everything"
 #~ msgstr "Összes felvétele"
 
 #~ msgid "Include hidden items"
 #~ msgstr "Rejtett elemek felvétele"
+
+#~ msgid "Info"
+#~ msgstr "Információ"
 
 #~ msgid "Log Viewer"
 #~ msgstr "Naplómegjelenítő"
@@ -2886,6 +2874,9 @@ msgstr "nem kijelölt"
 
 #~ msgid "Scheduled task runs once every hour"
 #~ msgstr "Az ütemezett feladat óránként fut le"
+
+#~ msgid "Selected snapshot path"
+#~ msgstr "Kiválasztott pillanatkép elérési út"
 
 #~ msgid "Third Party Tools"
 #~ msgstr "Harmadik féltől származó szoftverek"
@@ -2901,6 +2892,11 @@ msgstr "nem kijelölt"
 
 #~ msgid "View:"
 #~ msgstr "Nézet:"
+
+#, fuzzy
+#~ msgid "Click to edit and drag-drop to re-order"
+#~ msgstr ""
+#~ "Kattintson a szerkesztéshez. Az elemek sorrendjét húzással átrendezheti."
 
 #~ msgid "Change"
 #~ msgstr "Megváltozott"

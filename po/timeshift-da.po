@@ -1,24 +1,17 @@
-# Danish translation for linuxmint
-# Copyright (c) 2017 Rosetta Contributors and Canonical Ltd 2017
-# This file is distributed under the same license as the linuxmint package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2017.
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: linuxmint\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2018-06-24 17:21+0530\n"
-"PO-Revision-Date: 2017-11-03 17:47+0000\n"
+"POT-Creation-Date: 2018-06-24 17:55+0530\n"
+"PO-Revision-Date: 2017-12-02 14:47+0000\n"
 "Last-Translator: Alan Mortensen <alanmortensen.am@gmail.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2018-02-03 14:28+0000\n"
-"X-Generator: Launchpad (build 18544)\n"
-"X-Launchpad-Export-Date: 2017-11-23 10:47+0000\n"
-"X-Generator: Launchpad (build 18509)\n"
+"X-Launchpad-Export-Date: 2018-06-29 08:00+0000\n"
+"X-Generator: Launchpad (build 18704)\n"
 
 #: Console/AppConsole.vala:613
 #, c-format
@@ -215,12 +208,6 @@ msgstr "Forfattere"
 msgid "Available"
 msgstr "Tilgængelig"
 
-#: Gtk/BackupDeviceBox.vala:98
-msgid ""
-"BRTFS snapshots are saved on system partition. Other partitions are not "
-"supported."
-msgstr ""
-
 #: Gtk/SnapshotBackendBox.vala:94
 msgid "BTRFS"
 msgstr "BTRFS"
@@ -236,6 +223,13 @@ msgstr "BTRFS-værktøjer kunne ikke findes"
 #: Core/Main.vala:2041 Core/Main.vala:2045
 msgid "BTRFS device is not mounted"
 msgstr "BTRFS-enhed er ikke monteret"
+
+#: Gtk/BackupDeviceBox.vala:98
+#, fuzzy
+msgid ""
+"BTRFS snapshots are saved on system partition. Other partitions are not "
+"supported."
+msgstr "Andre programmer (næste side)"
 
 #: Gtk/FinishBox.vala:92
 msgid ""
@@ -595,9 +589,7 @@ msgstr "Cron-opgave findes"
 
 #: Gtk/ScheduleBox.vala:100 Gtk/SnapshotListBox.vala:300
 msgid "Daily"
-msgstr ""
-"Daglig\n"
-"Dagligt"
+msgstr "Daglig"
 
 #: Core/Main.vala:1077
 msgid "Daily snapshot failed!"
@@ -886,7 +878,6 @@ msgstr "Udeladelsesmønster"
 msgid "Excluded Directories"
 msgstr "Udeladte mapper"
 
-# Se streng, der begynder med <b>Backup Levels</b>
 #: Core/Main.vala:1567
 msgid "Expected values: O, B, H, D, W, M"
 msgstr "Forventede værdier: E, B, T, D, U, M"
@@ -1869,7 +1860,6 @@ msgstr ""
 "filer. Inkluderede filer vil blive sikkerhedskopieret, når øjebliksbilledet "
 "oprettes, og erstattet, når øjebliksbilledet gendannes."
 
-# Der er tale om en disk. Andre strenge relateret til denne er: "Device", "Vendor", "Model" og "Serial"
 #: Utility/Device.vala:1814
 #, c-format
 msgid "Revision"
@@ -2267,9 +2257,7 @@ msgid ""
 msgstr ""
 "Øjebliksbilleder oprettes ved at oprette kopier af systemfiler med brug af "
 "rsync og ved at lave hårde links til uændrede filer i tidligere "
-"øjebliksbilleder.\n"
-"Øjebliksbilleder oprettes ved at kopier af systemfiler med brug af rsync og "
-"ved at lave hårde links til uændrede filer i tidligere øjebliksbilleder."
+"øjebliksbilleder."
 
 #: Gtk/SnapshotBackendBox.vala:167
 msgid ""
@@ -2755,7 +2743,6 @@ msgstr "alle"
 msgid "btrfs returned an error"
 msgstr "btrfs returnerede en fejl"
 
-# Hvor langt programmet er i opgaven (i %)
 #: Core/Main.vala:1393 Core/Snapshot.vala:500
 msgid "complete"
 msgstr "færdigt"
@@ -2794,38 +2781,6 @@ msgstr "rsync returnerede en fejl"
 msgid "un-tagged"
 msgstr "umærket"
 
-#, fuzzy
-#~ msgid "Click to edit and drag-drop to re-order"
-#~ msgstr "Klik for at redigere. Træk-og-slip for at omarrangere."
-
-#~ msgid ""
-#~ "Click an item to edit the pattern.\n"
-#~ "Drag and drop items with mouse to re-order."
-#~ msgstr ""
-#~ "Klik på et element for at redigere mønsteret.\n"
-#~ "Træk-og-slip elementer med musen for at omarrangere."
-
-#~ msgid "Editing and Re-Ordering"
-#~ msgstr "Redigering og omarrangering"
-
-#~ msgid "Info"
-#~ msgstr "Info"
-
-#~ msgid "Deleted system subvolumes"
-#~ msgstr "Slettede systemets underdiskenheder"
-
-#~ msgid "<b>System:</b> Installed Linux distribution"
-#~ msgstr "<b>System:</b> Installeret Linux-distribution"
-
-#~ msgid "<b>Snapshot Date:</b> Date on which snapshot was created"
-#~ msgstr ""
-#~ "<b>Dato for øjebliksbillede:</b> Dato for oprettelse af øjebliksbilledet\n"
-#~ "<b>Dato for øjebliksbillede:</b> Datoen for oprettelsen af "
-#~ "øjebliksbilledet"
-
-#~ msgid "Selected snapshot path"
-#~ msgstr "Valgt sti til øjebliksbillede"
-
 #~ msgid ""
 #~ "<b>Backup Levels</b>\n"
 #~ "\n"
@@ -2843,15 +2798,21 @@ msgstr "umærket"
 #~ "T\tHver time\n"
 #~ "D\tDaglig\n"
 #~ "U\tUgentlig\n"
-#~ "M\tMånedlig\n"
-#~ "<b>Niveauer af sikkerhedskopiering</b>\n"
-#~ "\n"
-#~ "E\tEfter behov (manuelt)\n"
-#~ "B\tBoot\n"
-#~ "T\tHver time\n"
-#~ "D\tDagligt\n"
-#~ "U\tUgentligt\n"
-#~ "M\tMånedligt"
+#~ "M\tMånedlig"
+
+#~ msgid "<b>Snapshot Date:</b> Date on which snapshot was created"
+#~ msgstr ""
+#~ "<b>Dato for øjebliksbillede:</b> Dato for oprettelse af øjebliksbilledet"
+
+#~ msgid "<b>System:</b> Installed Linux distribution"
+#~ msgstr "<b>System:</b> Installeret Linux-distribution"
+
+#~ msgid ""
+#~ "Click an item to edit the pattern.\n"
+#~ "Drag and drop items with mouse to re-order."
+#~ msgstr ""
+#~ "Klik på et element for at redigere mønsteret.\n"
+#~ "Træk-og-slip elementer med musen for at omarrangere."
 
 #~ msgid "Cloning System..."
 #~ msgstr "Kloner systemet …"
@@ -2862,14 +2823,26 @@ msgstr "umærket"
 #~ msgid "Contributions"
 #~ msgstr "Bidrag"
 
+#~ msgid "Create snapshots using RSYNC"
+#~ msgstr "Opret øjebliksbilleder med brug af RSYNC"
+
+#~ msgid "Deleted system subvolumes"
+#~ msgstr "Slettede systemets underdiskenheder"
+
 #~ msgid "Documenters"
 #~ msgstr "Udarbejdelse af dokumentation"
+
+#~ msgid "Editing and Re-Ordering"
+#~ msgstr "Redigering og omarrangering"
 
 #~ msgid "Include everything"
 #~ msgstr "Medtag alt"
 
 #~ msgid "Include hidden items"
 #~ msgstr "Medtag skjulte elementer"
+
+#~ msgid "Info"
+#~ msgstr "Info"
 
 #~ msgid "Log Viewer"
 #~ msgstr "Logfremviser"
@@ -2879,6 +2852,9 @@ msgstr "umærket"
 
 #~ msgid "Scheduled task runs once every hour"
 #~ msgstr "Planlagte opgaver kører én gang i timen"
+
+#~ msgid "Selected snapshot path"
+#~ msgstr "Valgt sti til øjebliksbillede"
 
 #~ msgid "Third Party Tools"
 #~ msgstr "Tredjepartsværktøjer"
@@ -2894,6 +2870,10 @@ msgstr "umærket"
 
 #~ msgid "View:"
 #~ msgstr "Vis:"
+
+#, fuzzy
+#~ msgid "Click to edit and drag-drop to re-order"
+#~ msgstr "Klik for at redigere. Træk-og-slip for at omarrangere."
 
 #~ msgid "Change"
 #~ msgstr "Ændret"

@@ -68,7 +68,7 @@ msgstr "<b>注释</b> (双击以修改)"
 #: Gtk/ScheduleBox.vala:168
 msgid ""
 "A maintenance task runs once every hour and creates snapshots as needed."
-msgstr ""
+msgstr "维护任务每小时运行一次，并根据需要创建快照。"
 
 #: Console/AppConsole.vala:698 Console/AppConsole.vala:762
 #: Console/AppConsole.vala:894 Console/AppConsole.vala:989
@@ -224,7 +224,7 @@ msgstr "BTRFS设备未加载"
 msgid ""
 "BTRFS snapshots are saved on system partition. Other partitions are not "
 "supported."
-msgstr ""
+msgstr "BTRFS快照保存在系统分区上。不支持其他分区。"
 
 #: Gtk/FinishBox.vala:92
 msgid ""
@@ -233,7 +233,7 @@ msgid ""
 "snapshots to an external non-system disk in RSYNC mode to guard against disk "
 "failures."
 msgstr ""
-"BTRFS快照保存在它被创建时的同一个磁盘内。如果系统磁盘损坏，快照也会随此丢失。"
+"BTRFS快照保存在创建它的同一个磁盘内。如果系统磁盘损坏，快照也会随此丢失。"
 "因此建议使用RSYNC模式来把快照存贮在外部非系统磁盘。"
 
 #: Utility/Gtk/AboutWindow.vala:349 Utility/Gtk/AboutWindow.vala:381
@@ -279,7 +279,7 @@ msgstr "启动快照失败！"
 #: Gtk/ScheduleBox.vala:169
 msgid ""
 "Boot snapshots are created with a delay of 10 minutes after system startup."
-msgstr ""
+msgstr "启动快照在系统启动后延迟10分钟创建。"
 
 #: Core/Main.vala:998
 msgid "Boot snapshots are enabled"
@@ -346,7 +346,7 @@ msgstr "更改的项目："
 
 #: Gtk/RestoreWindow.vala:104
 msgid "Checking Restore Actions (Dry Run)"
-msgstr ""
+msgstr "正在检查还原操作（空运行）"
 
 #: Core/Main.vala:2732
 msgid "Checking file systems for errors..."
@@ -400,7 +400,7 @@ msgstr "关闭窗口以退出"
 
 #: Utility/Gtk/AboutWindow.vala:425
 msgid "Code Contributions"
-msgstr ""
+msgstr "代码贡献"
 
 #: Core/Main.vala:347
 msgid "Commands listed below are not available on this system"
@@ -412,11 +412,11 @@ msgstr "注释"
 
 #: Core/Main.vala:2775 Gtk/RestoreBox.vala:74 Gtk/RestoreBox.vala:187
 msgid "Comparing Files (Dry Run)..."
-msgstr ""
+msgstr "正在比较文件（空运行）..."
 
 #: Core/Main.vala:2541
 msgid "Comparing files with rsync..."
-msgstr "正在使用rsync同步文件..."
+msgstr "正在使用rsync比较文件..."
 
 #: Gtk/RestoreFinishBox.vala:50 Gtk/RestoreFinishBox.vala:75
 #: Gtk/BackupFinishBox.vala:50 Gtk/DeleteFinishBox.vala:50
@@ -429,7 +429,7 @@ msgstr "已完成，但有错误"
 
 #: Gtk/RsyncLogBox.vala:87 Gtk/RestoreWindow.vala:109
 msgid "Confirm Actions"
-msgstr ""
+msgstr "确认操作"
 
 #: Console/AppConsole.vala:1068
 #, c-format
@@ -676,12 +676,12 @@ msgstr "未找到设备"
 #: Gtk/BackupDeviceBox.vala:97
 #, c-format
 msgid "Devices displayed above have BTRFS file systems."
-msgstr ""
+msgstr "以上显示的设备有 BTRFS 文件系统。"
 
 #: Gtk/BackupDeviceBox.vala:104
 #, c-format
 msgid "Devices displayed above have Linux file systems."
-msgstr ""
+msgstr "以上显示的设备有 Linux 文件系统。"
 
 #: Gtk/RestoreDeviceBox.vala:84
 msgid "Devices from which snapshot was created are pre-selected."
@@ -689,11 +689,11 @@ msgstr "已经创建快照的设备是预选的。"
 
 #: Console/AppConsole.vala:326
 msgid "Devices with Linux file systems"
-msgstr "Linux 文件系统所在的设备"
+msgstr "Linux 文件系统的设备"
 
 #: Gtk/BackupDeviceBox.vala:105
 msgid "Devices with Windows file systems are not supported (NTFS, FAT, etc)."
-msgstr ""
+msgstr "不支持 Windows 文件系统的设备（NTFS、FAT等）"
 
 #: Utility/Gtk/DonationWindow.vala:61
 msgid ""
@@ -746,7 +746,8 @@ msgstr "发行版"
 
 #: Utility/Gtk/AboutWindow.vala:449
 msgid "Documentation"
-msgstr ""
+msgstr "文档
+"
 
 #: Utility/Gtk/DonationWindow.vala:42 Gtk/MainWindow.vala:388
 msgid "Donate"
@@ -762,7 +763,7 @@ msgstr "捐赠"
 
 #: Gtk/UsersBox.vala:357
 msgid "Enable BTRFS qgroups (recommended)"
-msgstr ""
+msgstr "启用 BTRFS 配额组（推荐）"
 
 #: Gtk/MainWindow.vala:1068
 msgid "Enable scheduled snapshots to protect your system"
@@ -814,7 +815,7 @@ msgstr "错误"
 
 #: Gtk/RestoreWindow.vala:488
 msgid "Error running Rsync"
-msgstr ""
+msgstr "运行 rsync 时出错"
 
 #: Gtk/SetupWizardWindow.vala:99 Gtk/BackupWindow.vala:81
 msgid "Estimate"
@@ -834,7 +835,7 @@ msgstr "示例"
 
 #: Gtk/UsersBox.vala:136
 msgid "Exclude All"
-msgstr ""
+msgstr "排除一切"
 
 #: Gtk/ExcludeAppsBox.vala:51 Gtk/RestoreExcludeBox.vala:55
 msgid "Exclude Application Settings"
@@ -1017,7 +1018,7 @@ msgstr "带标签的快照"
 
 #: Gtk/RsyncLogBox.vala:119
 msgid "File (system)"
-msgstr ""
+msgstr "文件（系统）"
 
 #: Gtk/ExcludeMessageWindow.vala:98
 msgid "File Pattern"
@@ -1062,7 +1063,7 @@ msgstr "文件系统"
 
 #: Gtk/RsyncLogBox.vala:302
 msgid "Filter by name or path"
-msgstr ""
+msgstr "通过文件或路径筛选"
 
 #: Gtk/SettingsWindow.vala:100
 msgid "Filters"
@@ -1162,7 +1163,7 @@ msgstr "已启用每日快照"
 
 #: Utility/Gtk/AboutWindow.vala:457
 msgid "Icon Themes & Utilities"
-msgstr ""
+msgstr "图标主题和实用程序"
 
 #: Gtk/RestoreFinishBox.vala:102
 msgid ""
@@ -1188,11 +1189,11 @@ msgstr "在备份中包含 @home 子卷"
 
 #: Gtk/UsersBox.vala:266
 msgid "Include All"
-msgstr ""
+msgstr "包含一切"
 
 #: Gtk/UsersBox.vala:194
 msgid "Include Hidden"
-msgstr ""
+msgstr "包含隐藏文件"
 
 #: Core/Main.vala:2026
 msgid "Invalid Snapshot"
@@ -1326,7 +1327,7 @@ msgstr "最新的快照"
 
 #: Utility/Gtk/AboutWindow.vala:316 Utility/Gtk/AboutWindow.vala:356
 msgid "License"
-msgstr ""
+msgstr "许可证"
 
 #: Core/Main.vala:1344
 #, c-format
@@ -1376,7 +1377,7 @@ msgstr "菜单"
 
 #: Gtk/UsersBox.vala:354
 msgid "Miscellaneous"
-msgstr ""
+msgstr "杂项"
 
 #: Core/Main.vala:235
 msgid "Missing Dependencies"
@@ -1628,7 +1629,7 @@ msgstr "请等待快照被删除。"
 
 #: Gtk/EstimateBox.vala:66
 msgid "Please wait..."
-msgstr ""
+msgstr "请稍候..."
 
 #: Gtk/RsyncLogBox.vala:188
 msgid "Populating list..."
@@ -1705,7 +1706,7 @@ msgstr "刷新"
 
 #: Gtk/BackupDeviceBox.vala:106
 msgid "Remote and network locations are not supported."
-msgstr ""
+msgstr "不支持远程和网络位置。"
 
 #: Gtk/ExcludeBox.vala:253
 msgid "Remove"
@@ -1748,7 +1749,7 @@ msgstr "正在移除快照"
 msgid ""
 "Required for displaying shared and unshared size for snapshots in the main "
 "window"
-msgstr ""
+msgstr "在主窗口中显示快照的共享大小和未共享大小时需要"
 
 #: Console/AppConsole.vala:362 Gtk/RestoreFinishBox.vala:71
 #: Gtk/RsyncLogBox.vala:377 Gtk/RsyncLogBox.vala:567 Gtk/MainWindow.vala:151
@@ -1833,7 +1834,7 @@ msgstr "未选择根设备"
 
 #: Gtk/RsyncLogWindow.vala:49
 msgid "Rsync Log Viewer"
-msgstr ""
+msgstr "Rsync 日志查看器"
 
 #: Gtk/AppGtk.vala:119
 #, c-format
@@ -2213,7 +2214,7 @@ msgstr "快照是使用 BTRFS 文件系统的内置特性创建的。"
 #: Gtk/ScheduleBox.vala:167
 #, c-format
 msgid "Snapshots are not scheduled at fixed times."
-msgstr ""
+msgstr "快照不会在计划在固定的时间。"
 
 #: Gtk/SnapshotBackendBox.vala:173
 msgid ""
@@ -2243,13 +2244,13 @@ msgstr ""
 msgid ""
 "Snapshots are saved to /timeshift on selected partition. Other locations are "
 "not supported."
-msgstr ""
+msgstr "快照保存到选定分区上的/timeeshift。不支持其他地点。"
 
 #: Gtk/BackupDeviceBox.vala:99
 msgid ""
 "Snapshots are saved to /timeshift-btrfs on selected partition. Other "
 "locations are not supported."
-msgstr ""
+msgstr "快照保存到选定分区上的/timeeshift-btrfs。不支持其他地点。"
 
 #: Gtk/MainWindow.vala:1012
 msgid "Snapshots available for restore"
@@ -2314,12 +2315,12 @@ msgstr "已停止"
 #: Core/Subvolume.vala:189
 #, c-format
 msgid "Subvolume exists at destination"
-msgstr ""
+msgstr "目标位置存在子卷"
 
 #: Gtk/SnapshotListBox.vala:275
 #, c-format
 msgid "Subvolumes"
-msgstr ""
+msgstr "子卷"
 
 #: Gtk/ExcludeAppsBox.vala:135 Gtk/ExcludeBox.vala:258
 #: Gtk/RestoreWindow.vala:120
@@ -2438,7 +2439,7 @@ msgstr "Timeshift已开启"
 msgid ""
 "Timeshift is powered by the following tools and components. Please visit the "
 "links for more information."
-msgstr ""
+msgstr "Timeshift 由下列工具和组件提供支持。请访问链接以获得更多信息。"
 
 #: Gtk/RsyncLogBox.vala:394 Gtk/RestoreBox.vala:132 Gtk/BackupBox.vala:94
 #, c-format
@@ -2452,7 +2453,7 @@ msgstr "为了恢复默认设置，请按“回车键”来处理所有提示！
 
 #: Utility/Gtk/AboutWindow.vala:441
 msgid "Translations"
-msgstr ""
+msgstr "翻译"
 
 #: Utility/Device.vala:1827 Console/AppConsole.vala:457
 #: Console/AppConsole.vala:496 Gtk/BackupDeviceBox.vala:190
@@ -2557,7 +2558,7 @@ msgstr "用户"
 
 #: Gtk/RestoreWindow.vala:114
 msgid "Users Home"
-msgstr ""
+msgstr "用户主目录"
 
 #: Utility/Device.vala:1811
 #, c-format
@@ -2566,11 +2567,11 @@ msgstr "供应商"
 
 #: Gtk/SnapshotListBox.vala:343
 msgid "View Rsync Log for Create"
-msgstr ""
+msgstr "查看 Rsync 创建日志"
 
 #: Gtk/SnapshotListBox.vala:350
 msgid "View Rsync Log for Restore"
-msgstr ""
+msgstr "查看 Rsync 恢复日志"
 
 #: Gtk/MainWindow.vala:378
 msgid "View TimeShift Logs"

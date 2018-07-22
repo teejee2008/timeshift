@@ -136,21 +136,6 @@ public class TerminalWindow : Gtk.Window {
 		}
 	}
 
-	public void execute_command(string command){
-
-		string cmd = "%s\n".printf(command);
-		
-		#if VTE_291_OLD
-
-		term.feed_child(cmd, -1);
-
-		#else
-
-		term.feed_child(cmd.to_utf8());
-		
-		#endif
-	}
-
 	public void execute_script(string script_path, bool wait = false){
 		
 		string[] argv = new string[1];

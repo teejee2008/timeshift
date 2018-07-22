@@ -48,7 +48,7 @@ all:
 
 	#timeshift-gtk
 	valac -X -D'GETTEXT_PACKAGE="${app_name}"' \
-		--Xcc="-lm" ${symbols} --thread \
+		--Xcc="-lm" --Xcc="-O3" ${symbols} --thread \
 		Core/*.vala Gtk/*.vala Utility/*.vala Utility/Gtk/*.vala \
 		-o ${app_name}-gtk \
 		--pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix \
@@ -57,7 +57,7 @@ all:
 
 	#timeshift
 	valac -X -D'GETTEXT_PACKAGE="${app_name}"' \
-		--Xcc="-lm" ${symbols} --thread \
+		--Xcc="-lm" --Xcc="-O3" ${symbols} --thread \
 		Core/*.vala Utility/*.vala Utility/Gtk/*.vala Console/*.vala \
 		-o ${app_name} \
 		--pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix \

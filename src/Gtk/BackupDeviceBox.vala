@@ -356,22 +356,38 @@ class BackupDeviceBox : Gtk.Box{
 		log_debug("try_change_device: %s".printf(dev.device));
 		
 		if (dev.type == "disk"){
-			
-			// find first valid partition
+
 			bool found_child = false;
-			foreach (var child in dev.children){
-				if ((App.btrfs_mode && (child.fstype == "btrfs")) || (!App.btrfs_mode && child.has_linux_filesystem())){
-					change_backup_device(child);
-					found_child = true;
-					break;
+
+			if ((App.btrfs_mode && (dev.fstype == "btrfs")) || (!App.btrfs_mode && dev.has_linux_filesystem())){
+				
+				change_backup_device(dev);
+				found_child = true;
+			}
+
+			if (!found_child){
+
+				// find first valid partition
+				
+				foreach (var child in dev.children){
+					
+					if ((App.btrfs_mode && (child.fstype == "btrfs")) || (!App.btrfs_mode && child.has_linux_filesystem())){
+						
+						change_backup_device(child);
+						found_child = true;
+						break;
+					}
 				}
 			}
 			
 			if (!found_child){
+				
 				string msg = _("Selected device does not have Linux partition");
+				
 				if (App.btrfs_mode){
 					msg = _("Selected device does not have BTRFS partition");
 				}
+				
 				lbl_infobar_location.label = "<span weight=\"bold\">%s</span>".printf(msg);
 				infobar_location.message_type = Gtk.MessageType.ERROR;
 				infobar_location.no_show_all = false;
@@ -379,17 +395,19 @@ class BackupDeviceBox : Gtk.Box{
 			}
 		}
 		else if (dev.has_children()){
+			
 			// select the child instead of parent
 			change_backup_device(dev.children[0]);
 		}
 		else if (!dev.has_children()){
+			
 			// select the device
 			change_backup_device(dev);
 		}
 		else {
+			
 			// ask user to select
-			lbl_infobar_location.label = "<span weight=\"bold\">%s</span>".printf(
-				_("Select a partition on this disk"));
+			lbl_infobar_location.label = "<span weight=\"bold\">%s</span>".printf(_("Select a partition on this disk"));
 			infobar_location.message_type = Gtk.MessageType.ERROR;
 			infobar_location.no_show_all = false;
 			infobar_location.show_all();

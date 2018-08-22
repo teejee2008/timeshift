@@ -178,6 +178,7 @@ public class Device : GLib.Object{
 			case "ext2":
 			case "ext3":
 			case "ext4":
+			case "f2fs":
 			case "reiserfs":
 			case "reiser4":
 			case "xfs":

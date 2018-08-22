@@ -1,0 +1,6 @@
+find . -name "*.vala" > POTFILES
+
+xgettext --language=Vala --keyword=_ --output=timeshift.pot --files-from=POTFILES
+xgettext --output=timeshift.pot --join-existing src/share/polkit-1/actions/*.policy
+
+rm POTFILES

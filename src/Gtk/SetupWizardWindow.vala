@@ -54,7 +54,7 @@ class SetupWizardWindow : Gtk.Window{
 	private bool schedule_accepted = false;
 
 	private uint tmr_init;
-	private int def_width = 500;
+	private int def_width = 600;
 	private int def_height = 500;
 	
 	public SetupWizardWindow() {

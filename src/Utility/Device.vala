@@ -578,6 +578,8 @@ public class Device : GLib.Object{
 			find_toplevel_parent(list, part);
 		}
 
+		// Changes for "raid5" -------------------------------------------------------------------------
+
         // Cleanup for raid: remove member disks and double children
         for (int i = list.size - 1; i >= 0; --i) {
             if (list[i].type == "raid5") {
@@ -628,6 +630,8 @@ public class Device : GLib.Object{
                 }
             }
         }
+
+        // changes for "dmraid" -------------------------------------------------------------------------
 
 		// Cleanup for dmraid: remove member disks and double children
 		for (int i = list.size - 1; i >= 0; --i) {

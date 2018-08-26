@@ -183,6 +183,7 @@ public class Device : GLib.Object{
 			case "reiser4":
 			case "xfs":
 			case "jfs":
+			case "zfs":
 			case "btrfs":
 			case "lvm":
 			case "lvm2":

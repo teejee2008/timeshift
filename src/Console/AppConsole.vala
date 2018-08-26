@@ -444,6 +444,7 @@ public class AppConsole : GLib.Object {
 	}
 
 	private void list_devices(Gee.ArrayList<Device> device_list){
+		
 		string[,] grid = new string[device_list.size+1,6];
 		bool[] right_align = { false, false, false, true, true, false};
 

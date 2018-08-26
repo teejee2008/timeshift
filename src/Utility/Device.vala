@@ -870,6 +870,8 @@ public class Device : GLib.Object{
 
 		for (int i = lines.length - 1; i >= 0; i--){
 
+			bool ignoreEntry = false;
+
 			string line = lines[i].strip();
 			if (line.length == 0) { continue; }
 
@@ -882,12 +884,20 @@ public class Device : GLib.Object{
 			int k = 1;
 			foreach(string val in line.split(" ")){
 				if (val.strip().length == 0){ continue; }
+				if (ignoreEntry){ break; }
 				switch(k++){
 					case 1: //device
 						pi.device = val.strip();
 						break;
 					case 2: //mountpoint
 						mp.mount_point = val.strip().replace("""\040"""," "); // replace space. TODO: other chars?
+
+						// HACK: ignore Docker mounting(?) rootfs on /var/lib/docker
+						if (mp.mount_point.contains("/docker")){
+							ignoreEntry = true;
+							break;
+						}
+
 						if (!mount_list.contains(mp.mount_point)){
 							mount_list.add(mp.mount_point);
 							pi.mount_points.add(mp);
@@ -904,6 +914,8 @@ public class Device : GLib.Object{
 						break;
 				}
 			}
+
+			if (ignoreEntry) { continue; }
 
 			// resolve device names ----------------
 

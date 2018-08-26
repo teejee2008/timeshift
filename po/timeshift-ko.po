@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timeshift\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2018-06-24 17:21+0530\n"
+"POT-Creation-Date: 2018-08-26 21:06+0530\n"
 "PO-Revision-Date: 2017-11-17 14:25+0000\n"
 "Last-Translator: Jung-Kyu Park <bagjunggyu@gmail.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "X-Launchpad-Export-Date: 2017-11-23 10:47+0000\n"
 "X-Generator: Launchpad (build 18509)\n"
 
-#: Console/AppConsole.vala:613
+#: Console/AppConsole.vala:614
 #, c-format
 msgid ""
 "\n"
@@ -34,12 +34,12 @@ msgstr ""
 msgid "%d snapshots, %s free"
 msgstr "스냅샷 %d개, %s 여유"
 
-#: Console/AppConsole.vala:914
+#: Console/AppConsole.vala:915
 #, c-format
 msgid "'%s' will be on '%s'"
 msgstr "'%s'는 '%s'에 위치될 것입니다"
 
-#: Console/AppConsole.vala:911
+#: Console/AppConsole.vala:912
 #, c-format
 msgid "'%s' will be on root device"
 msgstr "'%s'는 루트 장치에 위치될 것입니다"
@@ -77,10 +77,10 @@ msgid ""
 "A maintenance task runs once every hour and creates snapshots as needed."
 msgstr ""
 
-#: Console/AppConsole.vala:698 Console/AppConsole.vala:762
-#: Console/AppConsole.vala:894 Console/AppConsole.vala:989
-#: Console/AppConsole.vala:1034 Console/AppConsole.vala:1075
-#: Console/AppConsole.vala:1093
+#: Console/AppConsole.vala:699 Console/AppConsole.vala:763
+#: Console/AppConsole.vala:895 Console/AppConsole.vala:990
+#: Console/AppConsole.vala:1035 Console/AppConsole.vala:1076
+#: Console/AppConsole.vala:1094
 msgid "Aborted."
 msgstr "중단되었습니다."
 
@@ -212,12 +212,6 @@ msgstr "저자"
 msgid "Available"
 msgstr "사용 가능"
 
-#: Gtk/BackupDeviceBox.vala:98
-msgid ""
-"BRTFS snapshots are saved on system partition. Other partitions are not "
-"supported."
-msgstr ""
-
 #: Gtk/SnapshotBackendBox.vala:94
 msgid "BTRFS"
 msgstr "BTRFS"
@@ -233,6 +227,13 @@ msgstr "BTRFS 도구가 없습니다"
 #: Core/Main.vala:2041 Core/Main.vala:2045
 msgid "BTRFS device is not mounted"
 msgstr "BTRFS 장치가 마운트 되지 않았습니다"
+
+#: Gtk/BackupDeviceBox.vala:98
+#, fuzzy
+msgid ""
+"BTRFS snapshots are saved on system partition. Other partitions are not "
+"supported."
+msgstr "다른 애플리케이션 (다음 페이지)"
 
 #: Gtk/FinishBox.vala:92
 msgid ""
@@ -408,10 +409,6 @@ msgstr "닫기"
 msgid "Close window to exit"
 msgstr "끝낼 땐 창을 닫으세요"
 
-#: Utility/Gtk/AboutWindow.vala:425
-msgid "Code Contributions"
-msgstr "기여"
-
 #: Core/Main.vala:347
 msgid "Commands listed below are not available on this system"
 msgstr "밑에 있는 명령어들은 이 시스템에 유효하지 않습니다"
@@ -441,21 +438,26 @@ msgstr "오류난 채로 마무리되었습니다"
 msgid "Confirm Actions"
 msgstr ""
 
-#: Console/AppConsole.vala:1068
+#: Console/AppConsole.vala:1069
 #, c-format
 msgid "Continue with restore? (y/n): "
 msgstr "복원과 함께 계속하시겠습니까? (y/n): "
 
-#: Console/AppConsole.vala:834 Console/AppConsole.vala:965
+#: Utility/Gtk/AboutWindow.vala:425
+#, fuzzy
+msgid "Contributors"
+msgstr "기여"
+
+#: Console/AppConsole.vala:835 Console/AppConsole.vala:966
 msgid "Could not find device"
 msgstr "장치를 찾을 수 없습니다"
 
-#: Utility/Device.vala:1187
+#: Utility/Device.vala:1307
 #, c-format
 msgid "Could not find file"
 msgstr "파일을 찾을 수 없습니다"
 
-#: Console/AppConsole.vala:731
+#: Console/AppConsole.vala:732
 msgid "Could not find snapshot"
 msgstr "스냅샷을 찾을 수 없습니다"
 
@@ -508,7 +510,7 @@ msgstr "계획된 스냅샷 만들기"
 msgid "Create snapshot of current system"
 msgstr "현재 시스템의 스냅샷 만들기"
 
-#: Gtk/MainWindow.vala:1074
+#: Gtk/MainWindow.vala:1068
 msgid ""
 "Create snapshots manually or enable scheduled snapshots to protect your "
 "system"
@@ -650,7 +652,7 @@ msgstr "서브 볼륨 지우기"
 msgid "Deluge, Transmission"
 msgstr "Deluge, Transmission"
 
-#: Console/AppConsole.vala:427 Console/AppConsole.vala:542
+#: Console/AppConsole.vala:427 Console/AppConsole.vala:543
 msgid "Description"
 msgstr "설명"
 
@@ -664,24 +666,24 @@ msgstr "해체된 그룹"
 msgid "Destroying qgroup"
 msgstr "그룹 해체"
 
-#: Utility/Device.vala:1810 Utility/Device.vala:1820
-#: Console/AppConsole.vala:454 Console/AppConsole.vala:493
-#: Console/AppConsole.vala:541 Core/SnapshotRepo.vala:76
+#: Utility/Device.vala:1930 Utility/Device.vala:1940
+#: Console/AppConsole.vala:455 Console/AppConsole.vala:494
+#: Console/AppConsole.vala:542 Core/SnapshotRepo.vala:76
 #: Core/SnapshotRepo.vala:683 Core/SnapshotRepo.vala:686 Core/Main.vala:2114
 #: Core/Main.vala:2146 Gtk/RestoreDeviceBox.vala:97
 #, c-format
 msgid "Device"
 msgstr "장치"
 
-#: Utility/Device.vala:1269
+#: Utility/Device.vala:1389
 msgid "Device is unlocked"
 msgstr "장치가 잠기지 않았습니다"
 
-#: Utility/Device.vala:1164 Utility/Device.vala:1226
+#: Utility/Device.vala:1284 Utility/Device.vala:1346
 msgid "Device name is empty!"
 msgstr "장치 이름이 없습니다!"
 
-#: Console/AppConsole.vala:663 Core/SnapshotRepo.vala:560 Core/Main.vala:3232
+#: Console/AppConsole.vala:664 Core/SnapshotRepo.vala:560 Core/Main.vala:3232
 msgid "Device not found"
 msgstr "장치가 없습니다"
 
@@ -777,7 +779,7 @@ msgstr "기부"
 msgid "Enable BTRFS qgroups (recommended)"
 msgstr ""
 
-#: Gtk/MainWindow.vala:1068
+#: Gtk/MainWindow.vala:1062
 msgid "Enable scheduled snapshots to protect your system"
 msgstr "여러분의 시스템 보호를 위해 스냅샷 스케줄을 실행하세요"
 
@@ -785,7 +787,7 @@ msgstr "여러분의 시스템 보호를 위해 스냅샷 스케줄을 실행하
 msgid "Enabled subvolume quota support"
 msgstr "서브 볼륨 할당량 지원을 실행합니다"
 
-#: Utility/Device.vala:1333
+#: Utility/Device.vala:1453
 msgid "Encrypted Device"
 msgstr "암호화된 장치"
 
@@ -793,17 +795,17 @@ msgstr "암호화된 장치"
 msgid "Encrypted Home Directory"
 msgstr "암호화된 홈 디렉토리"
 
-#: Console/AppConsole.vala:884
+#: Console/AppConsole.vala:885
 #, c-format
 msgid "Enter device name or number"
 msgstr "장치 이름 혹은 번호를 입력하십시오"
 
-#: Console/AppConsole.vala:682 Console/AppConsole.vala:1013
+#: Console/AppConsole.vala:683 Console/AppConsole.vala:1014
 #, c-format
 msgid "Enter device name or number (a=Abort)"
 msgstr "장치 이름 혹은 번호를 입력하십시오(a=중단)"
 
-#: Utility/Device.vala:1334
+#: Utility/Device.vala:1454
 #, c-format
 msgid "Enter passphrase to unlock '%s'"
 msgstr "암호문을 입력하셔서 '%s'를 잠금 해제하십시오"
@@ -812,7 +814,7 @@ msgstr "암호문을 입력하셔서 '%s'를 잠금 해제하십시오"
 msgid "Enter path or browse for directory"
 msgstr "경로를 입력하거나 디렉토리를 탐색해 보세요"
 
-#: Console/AppConsole.vala:754
+#: Console/AppConsole.vala:755
 #, c-format
 msgid "Enter snapshot number (a=Abort, p=Previous, n=Next)"
 msgstr "스냅샷 번호를 입력하십시오(a=중단, p=이전, n=다음)"
@@ -937,13 +939,13 @@ msgstr "시스템 크기 어림잡기에 실패했습니다"
 msgid "Failed to export crontab file"
 msgstr "crontab 파일 내보내기 실패했습니다"
 
-#: Console/AppConsole.vala:697 Console/AppConsole.vala:761
-#: Console/AppConsole.vala:893 Console/AppConsole.vala:988
-#: Console/AppConsole.vala:1033 Console/AppConsole.vala:1074
+#: Console/AppConsole.vala:698 Console/AppConsole.vala:762
+#: Console/AppConsole.vala:894 Console/AppConsole.vala:989
+#: Console/AppConsole.vala:1034 Console/AppConsole.vala:1075
 msgid "Failed to get input from user in 3 attempts"
 msgstr "사용자의 계정으로 3번 입력 시도를 실패했습니다"
 
-#: Utility/Device.vala:615
+#: Utility/Device.vala:723
 msgid "Failed to get partition list"
 msgstr "파티션 목록을 가져오는 데 실패했습니다"
 
@@ -1007,12 +1009,12 @@ msgstr "시스템 서브 볼륨 복원에 실패했습니다"
 msgid "Failed to save exclude list"
 msgstr "제외 목록 저장 실패했습니다"
 
-#: Utility/Device.vala:1260 Utility/Device.vala:1314 Utility/Device.vala:1339
-#: Utility/Device.vala:1360 Utility/Device.vala:1380
+#: Utility/Device.vala:1380 Utility/Device.vala:1434 Utility/Device.vala:1459
+#: Utility/Device.vala:1480 Utility/Device.vala:1500
 msgid "Failed to unlock device"
 msgstr "장치를 잠금 해제하는 걸 실패했습니다"
 
-#: Utility/Device.vala:1611
+#: Utility/Device.vala:1731
 msgid "Failed to unmount"
 msgstr "장치를 해제하는 걸 실패했습니다"
 
@@ -1069,7 +1071,7 @@ msgstr "파일 및 디렉토리 수:"
 msgid "Files matching the following patterns will be excluded"
 msgstr "다음 패턴에 부합되는 파일들은 제외됩니다"
 
-#: Utility/Device.vala:1828
+#: Utility/Device.vala:1948
 #, c-format
 msgid "Filesystem"
 msgstr "파일 시스템"
@@ -1111,7 +1113,7 @@ msgstr "남음"
 msgid "Free space"
 msgstr "남은 공간"
 
-#: Console/AppConsole.vala:1042
+#: Console/AppConsole.vala:1043
 msgid "GRUB Device"
 msgstr "GRUB 장치"
 
@@ -1119,7 +1121,7 @@ msgstr "GRUB 장치"
 msgid "GRUB device not selected"
 msgstr "GRUB 장치가 선택되지 않았습니다"
 
-#: Console/AppConsole.vala:1047
+#: Console/AppConsole.vala:1048
 msgid "GRUB will NOT be reinstalled"
 msgstr "GRUB은 재설치되지 않을 것입니다"
 
@@ -1174,10 +1176,6 @@ msgstr "매시간 스냅샷 만들기에 실패했습니다!"
 #: Core/Main.vala:1028
 msgid "Hourly snapshots are enabled"
 msgstr "매시간 스냅샷 만들기를 실행합니다"
-
-#: Utility/Gtk/AboutWindow.vala:457
-msgid "Icon Themes & Utilities"
-msgstr ""
 
 #: Gtk/RestoreFinishBox.vala:102
 msgid ""
@@ -1264,8 +1262,8 @@ msgstr "루트 파일 시스템에 이 마운트 경로 그대로 두기"
 msgid "LIVE"
 msgstr "라이브"
 
-#: Utility/Device.vala:1829 Console/AppConsole.vala:458
-#: Console/AppConsole.vala:497 Gtk/BackupDeviceBox.vala:254
+#: Utility/Device.vala:1949 Console/AppConsole.vala:459
+#: Console/AppConsole.vala:498 Gtk/BackupDeviceBox.vala:254
 #, c-format
 msgid "Label"
 msgstr "이름표"
@@ -1335,7 +1333,7 @@ msgstr "마지막 매주 스냅샷을 만든 지 일주일이 넘었습니다"
 msgid "Last weekly snapshot not found"
 msgstr "마지막 매주 스냅샷을 찾을 수 없습니다"
 
-#: Gtk/MainWindow.vala:1049
+#: Gtk/MainWindow.vala:1043
 #, c-format
 msgid "Latest snapshot"
 msgstr "최근 스냅샷"
@@ -1361,7 +1359,7 @@ msgstr "장치 목록을 봅니다"
 msgid "List snapshots"
 msgstr "스냅샷 목록을 봅니다"
 
-#: Gtk/MainWindow.vala:1000
+#: Gtk/MainWindow.vala:994
 msgid "Live USB Mode (Restore Only)"
 msgstr "라이브 USB 모드 (복원 전용)"
 
@@ -1403,7 +1401,7 @@ msgstr "없는 의존성"
 msgid "Mode"
 msgstr "모드"
 
-#: Utility/Device.vala:1812
+#: Utility/Device.vala:1932
 #, c-format
 msgid "Model"
 msgstr "모델"
@@ -1454,16 +1452,16 @@ msgstr "그대로 두기"
 msgid "No Snapshots Selected"
 msgstr "스냅샷을 선택하지 않으셨습니다"
 
-#: Gtk/MainWindow.vala:1073
+#: Gtk/MainWindow.vala:1067
 msgid "No snapshots available"
 msgstr "사용 가능한 스냅샷이 없습니다"
 
 #: Console/AppConsole.vala:320 Core/SnapshotRepo.vala:898
-#: Gtk/MainWindow.vala:1017
+#: Gtk/MainWindow.vala:1011
 msgid "No snapshots found"
 msgstr "스냅샷이 없습니다"
 
-#: Console/AppConsole.vala:740
+#: Console/AppConsole.vala:741
 msgid "No snapshots found on device"
 msgstr "이 장치에서 스냅샷을 찾을 수 없습니다"
 
@@ -1479,7 +1477,7 @@ msgstr "이 장치에는 스냅샷이 없습니다"
 msgid "No snapshots selected"
 msgstr "스냅샷이 선택되지 않았습니다"
 
-#: Gtk/MainWindow.vala:1050 Gtk/MainWindow.vala:1052
+#: Gtk/MainWindow.vala:1044 Gtk/MainWindow.vala:1046
 msgid "None"
 msgstr "없음"
 
@@ -1508,8 +1506,8 @@ msgstr "기록"
 msgid "Nothing to do!"
 msgstr "할 일이 없습니다!"
 
-#: Console/AppConsole.vala:423 Console/AppConsole.vala:452
-#: Console/AppConsole.vala:491 Console/AppConsole.vala:539
+#: Console/AppConsole.vala:423 Console/AppConsole.vala:453
+#: Console/AppConsole.vala:492 Console/AppConsole.vala:540
 msgid "Num"
 msgstr "번호"
 
@@ -1539,7 +1537,7 @@ msgstr ""
 msgid "Older log files removed"
 msgstr "오래된 로그파일들이 지워졌습니다"
 
-#: Gtk/MainWindow.vala:1051
+#: Gtk/MainWindow.vala:1045
 msgid "Oldest snapshot"
 msgstr "가장 오래된 스냅샷"
 
@@ -1577,7 +1575,7 @@ msgstr "다른 애플리케이션 (다음 페이지)"
 msgid "Owner"
 msgstr "소유자"
 
-#: Utility/Device.vala:1824
+#: Utility/Device.vala:1944
 #, c-format
 msgid "Parent Device"
 msgstr "상위 장치"
@@ -1691,7 +1689,7 @@ msgstr ""
 "설치된 모든 커널에 대해 initramfs를 다시 생성합니다. 일반적으로는 필요하지 않"
 "습니다. 복원된 시스템이 부팅되지 않는 경우에만이 옵션을 선택하세요."
 
-#: Console/AppConsole.vala:982
+#: Console/AppConsole.vala:983
 #, c-format
 msgid "Re-install GRUB2 bootloader?"
 msgstr "GRUB2 부트로더를 다시 설치할까요?"
@@ -1843,7 +1841,7 @@ msgstr ""
 "필터를 추가하여 변경할 수 있습니다. 포함된 파일은 스냅샷을 만들 때 백업되며, "
 "스냅샷을  복원할 때 교체됩니다."
 
-#: Utility/Device.vala:1814
+#: Utility/Device.vala:1934
 #, c-format
 msgid "Revision"
 msgstr "개정"
@@ -1900,7 +1898,7 @@ msgstr "일정 관리"
 msgid "Scheduled snapshot in progress..."
 msgstr "스냅샷 스케줄을 진행하고 있습니다..."
 
-#: Core/Main.vala:1147 Gtk/MainWindow.vala:1067 Gtk/ScheduleBox.vala:312
+#: Core/Main.vala:1147 Gtk/MainWindow.vala:1061 Gtk/ScheduleBox.vala:312
 msgid "Scheduled snapshots are disabled"
 msgstr "스냅샷 스케줄이 해제됐습니다"
 
@@ -1920,16 +1918,16 @@ msgstr ""
 "스냅샷 스케줄이 설정되었습니다. 선택한 레벨로 스냅샷이 자동으로 만들어지게 됩"
 "니다."
 
-#: Console/AppConsole.vala:870
+#: Console/AppConsole.vala:871
 #, c-format
 msgid "Select '%s' device (default = %s)"
 msgstr "'%s' 장치를 선택하십시오(기본 = %s)"
 
-#: Console/AppConsole.vala:689 Core/SnapshotRepo.vala:593
+#: Console/AppConsole.vala:690 Core/SnapshotRepo.vala:593
 msgid "Select BTRFS system disk with root subvolume (@)"
 msgstr "루트 서브 볼륨을 포함하는 BTRFS 시스템 디스크를 선택하세요"
 
-#: Console/AppConsole.vala:998
+#: Console/AppConsole.vala:999
 msgid "Select GRUB device"
 msgstr "GRUB 장치를 선택하십시오"
 
@@ -1961,7 +1959,7 @@ msgstr "스냅샷 선택하기"
 msgid "Select Target Device"
 msgstr "대상 장치 선택"
 
-#: Gtk/BackupDeviceBox.vala:392
+#: Gtk/BackupDeviceBox.vala:410
 #, c-format
 msgid "Select a partition on this disk"
 msgstr "이 디스크에서 파티션 선택하기"
@@ -1990,7 +1988,7 @@ msgstr "다른 장치를 선택하시겠습니까?"
 msgid "Select applications to exclude from restore"
 msgstr "복원에서 제외할 애플리케이션을 선택하세요"
 
-#: Console/AppConsole.vala:672
+#: Console/AppConsole.vala:673
 msgid "Select backup device"
 msgstr "백업 장치를 선택하십시오"
 
@@ -2002,7 +2000,7 @@ msgstr "디렉터리 선택"
 msgid "Select file(s)"
 msgstr "파일 선택"
 
-#: Console/AppConsole.vala:746
+#: Console/AppConsole.vala:747
 msgid "Select snapshot"
 msgstr "스냅샷 선택하기"
 
@@ -2054,11 +2052,11 @@ msgstr "선택한 기본 스냅샷 장치"
 msgid "Selected default snapshot type"
 msgstr "선택한 기본 스냅샷 형식"
 
-#: Gtk/BackupDeviceBox.vala:373
+#: Gtk/BackupDeviceBox.vala:388
 msgid "Selected device does not have BTRFS partition"
 msgstr "선택한 BTRFS 파티션이 없는 장치"
 
-#: Gtk/BackupDeviceBox.vala:371
+#: Gtk/BackupDeviceBox.vala:385
 msgid "Selected device does not have Linux partition"
 msgstr "선택한 리눅스 파티션이 없는 장치"
 
@@ -2066,7 +2064,7 @@ msgstr "선택한 리눅스 파티션이 없는 장치"
 msgid "Selected snapshot device"
 msgstr "선택한 스냅샷 장치"
 
-#: Console/AppConsole.vala:688 Core/SnapshotRepo.vala:592
+#: Console/AppConsole.vala:689 Core/SnapshotRepo.vala:592
 msgid "Selected snapshot device is not a system disk"
 msgstr "선택한 스냅샷 장치는 시스템 디스크가 아닙니다"
 
@@ -2086,7 +2084,7 @@ msgstr ""
 "선택한 사용자는 암호화된 홈 디렉토리를 가지고 있습니다. 숨김 파일만 포함할 수"
 "는 없습니다."
 
-#: Utility/Device.vala:1813
+#: Utility/Device.vala:1933
 #, c-format
 msgid "Serial"
 msgstr "일련번호"
@@ -2131,8 +2129,8 @@ msgstr "다음 페이지에서 제외할 추가 애플리케이션 보기"
 msgid "Show rsync output (default)"
 msgstr "알싱크 출력을 봅니다(기본)"
 
-#: Utility/Device.vala:1816 Utility/Device.vala:1831
-#: Console/AppConsole.vala:456 Console/AppConsole.vala:495
+#: Utility/Device.vala:1936 Utility/Device.vala:1951
+#: Console/AppConsole.vala:457 Console/AppConsole.vala:496
 #: Gtk/RsyncLogBox.vala:392 Gtk/RestoreBox.vala:131
 #: Gtk/BackupDeviceBox.vala:202 Gtk/BackupBox.vala:93
 #: Gtk/SnapshotListBox.vala:174
@@ -2188,11 +2186,11 @@ msgstr "스냅샷을 지우고 있습니다..."
 msgid "Snapshot device"
 msgstr "스냅샷 장치"
 
-#: Console/AppConsole.vala:662 Core/SnapshotRepo.vala:559
+#: Console/AppConsole.vala:663 Core/SnapshotRepo.vala:559
 msgid "Snapshot device not available"
 msgstr "스내샷 장치를 사용할 수 없습니다"
 
-#: Console/AppConsole.vala:658 Core/SnapshotRepo.vala:552
+#: Console/AppConsole.vala:659 Core/SnapshotRepo.vala:552
 msgid "Snapshot device not selected"
 msgstr "스냅샷 장치를 선택하지 않았습니다"
 
@@ -2286,7 +2284,7 @@ msgid ""
 "locations are not supported."
 msgstr ""
 
-#: Gtk/MainWindow.vala:1012
+#: Gtk/MainWindow.vala:1006
 msgid "Snapshots available for restore"
 msgstr "복원 가능한 스냅샷"
 
@@ -2304,7 +2302,7 @@ msgstr ""
 msgid "Snapshots cannot be created in Live CD mode"
 msgstr "라이브 CD 모드에서는 스냅샷이 만들어지지 않습니다"
 
-#: Gtk/MainWindow.vala:1059
+#: Gtk/MainWindow.vala:1053
 msgid "Snapshots will be created at selected intervals"
 msgstr "설정한 스케줄대로 스냅샷이 만들어지게 됩니다"
 
@@ -2390,12 +2388,12 @@ msgstr "rsync와 동기화하고 있습니다..."
 msgid "Syntax"
 msgstr "구문"
 
-#: Utility/Device.vala:1837 Gtk/SnapshotListBox.vala:127
+#: Utility/Device.vala:1957 Gtk/SnapshotListBox.vala:127
 #, c-format
 msgid "System"
 msgstr "시스템"
 
-#: Gtk/MainWindow.vala:957
+#: Gtk/MainWindow.vala:951
 msgid "System Restore Utility"
 msgstr "시스템 복원 도구"
 
@@ -2457,12 +2455,12 @@ msgstr "시스템 파티션에 지원하지 않는 서브 볼륨 레이아웃이
 msgid "The target partition has an unsupported subvolume layout."
 msgstr "대상 파티션에 지원하지 않는 서브 볼륨 레이아웃 있습니다."
 
-#: Gtk/BackupDeviceBox.vala:494
+#: Gtk/BackupDeviceBox.vala:512
 #, c-format
 msgid "There are no snapshots on this device"
 msgstr "이 장치에는 스냅샷이 없습니다"
 
-#: Utility/Device.vala:1259
+#: Utility/Device.vala:1379
 msgid "This device is not encrypted"
 msgstr "이 장치는 암호화되어있지 않습니다"
 
@@ -2474,38 +2472,36 @@ msgstr ""
 "이 소프트웨어는 아무런 보증기간이 없으며 개발자는 이 프로그램을 사용하며 발생"
 "하는 어떤 문제도 책임지지 않습니다."
 
-#: Gtk/MainWindow.vala:1047 Gtk/MainWindow.vala:1058
+#: Gtk/MainWindow.vala:1041 Gtk/MainWindow.vala:1052
 msgid "Timeshift is active"
 msgstr "타임시프트가 작동합니다"
-
-#: Gtk/MainWindow.vala:948
-msgid ""
-"Timeshift is powered by the following tools and components. Please visit the "
-"links for more information."
-msgstr ""
 
 #: Gtk/RsyncLogBox.vala:394 Gtk/RestoreBox.vala:132 Gtk/BackupBox.vala:94
 #, c-format
 msgid "Timestamp"
 msgstr "타임스탬프"
 
-#: Console/AppConsole.vala:611
+#: Console/AppConsole.vala:612
 #, c-format
 msgid "To restore with default options, press the ENTER key for all prompts!"
 msgstr "기본 옵션으로 복원하려면, 모든 프롬프트에서 ENTER키를 누르세요!"
+
+#: Utility/Gtk/AboutWindow.vala:457
+msgid "Tools"
+msgstr ""
 
 #: Utility/Gtk/AboutWindow.vala:441
 msgid "Translations"
 msgstr "번역가"
 
-#: Utility/Device.vala:1827 Console/AppConsole.vala:457
-#: Console/AppConsole.vala:496 Gtk/BackupDeviceBox.vala:190
+#: Utility/Device.vala:1947 Console/AppConsole.vala:458
+#: Console/AppConsole.vala:497 Gtk/BackupDeviceBox.vala:190
 #: Gtk/SettingsWindow.vala:86
 #, c-format
 msgid "Type"
 msgstr "형식"
 
-#: Utility/Device.vala:1826
+#: Utility/Device.vala:1946
 #, c-format
 msgid "UUID"
 msgstr "범용 단일 식별자(UUID)"
@@ -2522,16 +2518,16 @@ msgstr "알려지지 않은 스냅샷 형식입니다"
 msgid "Unknown value specified for option --tags"
 msgstr "option --tags에 알 수 없는 값이 지정되었습니다."
 
-#: Utility/Device.vala:1270 Utility/Device.vala:1386
+#: Utility/Device.vala:1390 Utility/Device.vala:1506
 #, c-format
 msgid "Unlocked device is mapped to '%s'"
 msgstr "잠금 해제된 장치는 '%s'로 맵핑되었습니다"
 
-#: Utility/Device.vala:1385
+#: Utility/Device.vala:1505
 msgid "Unlocked successfully"
 msgstr "잠금 해제됨"
 
-#: Utility/Device.vala:1600
+#: Utility/Device.vala:1720
 msgid "Unmounting from"
 msgstr "장치로부터 해제"
 
@@ -2575,7 +2571,7 @@ msgstr "GRUB 메뉴를 업데이트하고 있습니다..."
 msgid "Updating bootloader configuration..."
 msgstr "부트로더 설정을 업데이트하고 있습니다..."
 
-#: Utility/Device.vala:1834
+#: Utility/Device.vala:1954
 #, c-format
 msgid "Used"
 msgstr "사용된"
@@ -2588,7 +2584,7 @@ msgstr "사용자"
 msgid "User Home Directories"
 msgstr "사용자 홈 디렉토리"
 
-#: Utility/Device.vala:1340
+#: Utility/Device.vala:1460
 msgid "User cancelled the password prompt"
 msgstr "사용자가 패스워드 프롬프트를 취소했습니다"
 
@@ -2606,7 +2602,7 @@ msgstr "사용자"
 msgid "Users Home"
 msgstr "사용자"
 
-#: Utility/Device.vala:1811
+#: Utility/Device.vala:1931
 #, c-format
 msgid "Vendor"
 msgstr "공급자"
@@ -2664,7 +2660,7 @@ msgstr "오류 포함"
 msgid "Wizard"
 msgstr "마법사"
 
-#: Utility/Device.vala:1313 Utility/Device.vala:1359
+#: Utility/Device.vala:1433 Utility/Device.vala:1479
 msgid "Wrong password"
 msgstr "비밀번호가 틀립니다"
 
@@ -2690,12 +2686,12 @@ msgstr ""
 "[고급 사용자 전용] 이 설정은 복원된 시스템의 부팅에 실패하는 경우에만 바꾸세"
 "요."
 
-#: Console/AppConsole.vala:1010
+#: Console/AppConsole.vala:1011
 #, c-format
 msgid "[ENTER = Default (%s), a = Abort]"
 msgstr "[ENTER = 기본값 (%s), a = 취소]"
 
-#: Console/AppConsole.vala:881
+#: Console/AppConsole.vala:882
 #, c-format
 msgid "[ENTER = Default (%s), r = Root device, a = Abort]"
 msgstr "[ENTER = 기본값 (%s), r = 루트 장치, a = 취소]"
@@ -2751,6 +2747,9 @@ msgstr "알싱크가 오류를 실행했습니다"
 msgid "un-tagged"
 msgstr "태그 되지 않은"
 
+#~ msgid "Code Contributions"
+#~ msgstr "기여"
+
 #, fuzzy
 #~ msgid "Click to edit and drag-drop to re-order"
 #~ msgstr "클릭해서 편집하기. 드래그 앤 드롭해서 다시 정렬하기."
@@ -2804,9 +2803,6 @@ msgstr "태그 되지 않은"
 
 #~ msgid "Close Window"
 #~ msgstr "창 닫기"
-
-#~ msgid "Contributions"
-#~ msgstr "기여"
 
 #~ msgid "Documenters"
 #~ msgstr "문서 작성자"

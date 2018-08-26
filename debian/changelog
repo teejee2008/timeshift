@@ -1,3 +1,31 @@
+
+timeshift (18.8) xenial; urgency=medium
+
+  * #196 Fixed a typo
+
+  * #191 Don't exclude /var/spool
+
+  * Add makepot file
+  
+  * Launcher: Explicitly pass DISPLAY and XAUTHORITY to pkexec
+
+  * Use -O3 optimization when compiling with gcc
+
+  * #278 Increased the width of Setup Wizard window
+
+  * Fixed: Unencrypted partionless disk could not be used as backup device
+
+  * Added support for using F2FS and ZFS filesystems for RSYNC backups
+
+  * Workaround for Docker mounting rootfs on /var/lib/docker/plugins
+
+  * Added support for raid5 and dmraid
+
+  * Translation fixes
+
+ -- Tony George <tony.george.kol@gmail.com>  Sun, 26 Aug 2018 10:00:00 +0530
+
+
 timeshift (18.6.1) xenial; urgency=medium
 
   * Rsync: Read fstab to exclude devices mounted on non-standard locations

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: linuxmint\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2018-06-24 17:21+0530\n"
+"POT-Creation-Date: 2018-08-26 21:06+0530\n"
 "PO-Revision-Date: 2017-11-03 18:52+0000\n"
 "Last-Translator: spacy01 <Unknown>\n"
 "Language-Team: Bulgarian <bg@li.org>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "X-Launchpad-Export-Date: 2017-11-23 10:47+0000\n"
 "X-Generator: Launchpad (build 18509)\n"
 
-#: Console/AppConsole.vala:613
+#: Console/AppConsole.vala:614
 #, c-format
 msgid ""
 "\n"
@@ -34,12 +34,12 @@ msgstr ""
 msgid "%d snapshots, %s free"
 msgstr "%d  снимки, свободни %s"
 
-#: Console/AppConsole.vala:914
+#: Console/AppConsole.vala:915
 #, c-format
 msgid "'%s' will be on '%s'"
 msgstr "'%s' ще бъде на '%s'"
 
-#: Console/AppConsole.vala:911
+#: Console/AppConsole.vala:912
 #, c-format
 msgid "'%s' will be on root device"
 msgstr "'%s' ще бъде в root устройството"
@@ -77,10 +77,10 @@ msgid ""
 "A maintenance task runs once every hour and creates snapshots as needed."
 msgstr ""
 
-#: Console/AppConsole.vala:698 Console/AppConsole.vala:762
-#: Console/AppConsole.vala:894 Console/AppConsole.vala:989
-#: Console/AppConsole.vala:1034 Console/AppConsole.vala:1075
-#: Console/AppConsole.vala:1093
+#: Console/AppConsole.vala:699 Console/AppConsole.vala:763
+#: Console/AppConsole.vala:895 Console/AppConsole.vala:990
+#: Console/AppConsole.vala:1035 Console/AppConsole.vala:1076
+#: Console/AppConsole.vala:1094
 msgid "Aborted."
 msgstr "Прекъснато."
 
@@ -216,12 +216,6 @@ msgstr "Автори"
 msgid "Available"
 msgstr "Наличен"
 
-#: Gtk/BackupDeviceBox.vala:98
-msgid ""
-"BRTFS snapshots are saved on system partition. Other partitions are not "
-"supported."
-msgstr ""
-
 #: Gtk/SnapshotBackendBox.vala:94
 msgid "BTRFS"
 msgstr "BTRFS"
@@ -237,6 +231,13 @@ msgstr "BTRFS инструментите не са намерени"
 #: Core/Main.vala:2041 Core/Main.vala:2045
 msgid "BTRFS device is not mounted"
 msgstr "BTRFS устройството не е монтирано"
+
+#: Gtk/BackupDeviceBox.vala:98
+#, fuzzy
+msgid ""
+"BTRFS snapshots are saved on system partition. Other partitions are not "
+"supported."
+msgstr "Други приложение (следваща страница)"
 
 #: Gtk/FinishBox.vala:92
 msgid ""
@@ -415,10 +416,6 @@ msgstr "Затваряне"
 msgid "Close window to exit"
 msgstr "Затвори прозореца при излизане"
 
-#: Utility/Gtk/AboutWindow.vala:425
-msgid "Code Contributions"
-msgstr "Приноси"
-
 #: Core/Main.vala:347
 msgid "Commands listed below are not available on this system"
 msgstr "Списъка с командите по-долу не са налични за тази система"
@@ -448,21 +445,26 @@ msgstr "Завършено с грешки"
 msgid "Confirm Actions"
 msgstr ""
 
-#: Console/AppConsole.vala:1068
+#: Console/AppConsole.vala:1069
 #, c-format
 msgid "Continue with restore? (y/n): "
 msgstr "Продължаване на възстановяването (д/н): "
 
-#: Console/AppConsole.vala:834 Console/AppConsole.vala:965
+#: Utility/Gtk/AboutWindow.vala:425
+#, fuzzy
+msgid "Contributors"
+msgstr "Приноси"
+
+#: Console/AppConsole.vala:835 Console/AppConsole.vala:966
 msgid "Could not find device"
 msgstr "Устройството не е намерено"
 
-#: Utility/Device.vala:1187
+#: Utility/Device.vala:1307
 #, c-format
 msgid "Could not find file"
 msgstr "Файла не е намерен"
 
-#: Console/AppConsole.vala:731
+#: Console/AppConsole.vala:732
 msgid "Could not find snapshot"
 msgstr "Снимката не е намерена"
 
@@ -517,7 +519,7 @@ msgstr "Създай снимка ако е по график"
 msgid "Create snapshot of current system"
 msgstr "Създай снимка на текущата система"
 
-#: Gtk/MainWindow.vala:1074
+#: Gtk/MainWindow.vala:1068
 msgid ""
 "Create snapshots manually or enable scheduled snapshots to protect your "
 "system"
@@ -658,7 +660,7 @@ msgstr "Изтриване на подустройства"
 msgid "Deluge, Transmission"
 msgstr "Deluge, Transmission"
 
-#: Console/AppConsole.vala:427 Console/AppConsole.vala:542
+#: Console/AppConsole.vala:427 Console/AppConsole.vala:543
 msgid "Description"
 msgstr "Описание"
 
@@ -672,24 +674,24 @@ msgstr "Разрушена qgroup"
 msgid "Destroying qgroup"
 msgstr "Разрушаване на qgroup"
 
-#: Utility/Device.vala:1810 Utility/Device.vala:1820
-#: Console/AppConsole.vala:454 Console/AppConsole.vala:493
-#: Console/AppConsole.vala:541 Core/SnapshotRepo.vala:76
+#: Utility/Device.vala:1930 Utility/Device.vala:1940
+#: Console/AppConsole.vala:455 Console/AppConsole.vala:494
+#: Console/AppConsole.vala:542 Core/SnapshotRepo.vala:76
 #: Core/SnapshotRepo.vala:683 Core/SnapshotRepo.vala:686 Core/Main.vala:2114
 #: Core/Main.vala:2146 Gtk/RestoreDeviceBox.vala:97
 #, c-format
 msgid "Device"
 msgstr "Устройство"
 
-#: Utility/Device.vala:1269
+#: Utility/Device.vala:1389
 msgid "Device is unlocked"
 msgstr "Устройството е отключено"
 
-#: Utility/Device.vala:1164 Utility/Device.vala:1226
+#: Utility/Device.vala:1284 Utility/Device.vala:1346
 msgid "Device name is empty!"
 msgstr "Името на устройството е празно!"
 
-#: Console/AppConsole.vala:663 Core/SnapshotRepo.vala:560 Core/Main.vala:3232
+#: Console/AppConsole.vala:664 Core/SnapshotRepo.vala:560 Core/Main.vala:3232
 msgid "Device not found"
 msgstr "Устройството не е открито"
 
@@ -786,7 +788,7 @@ msgstr "Дарения"
 msgid "Enable BTRFS qgroups (recommended)"
 msgstr ""
 
-#: Gtk/MainWindow.vala:1068
+#: Gtk/MainWindow.vala:1062
 msgid "Enable scheduled snapshots to protect your system"
 msgstr "Включване на снимки по график, за да защитите системата си"
 
@@ -794,7 +796,7 @@ msgstr "Включване на снимки по график, за да защ
 msgid "Enabled subvolume quota support"
 msgstr "Включване поддръжката на квота на подустройства"
 
-#: Utility/Device.vala:1333
+#: Utility/Device.vala:1453
 msgid "Encrypted Device"
 msgstr "Криптирано устройство"
 
@@ -802,17 +804,17 @@ msgstr "Криптирано устройство"
 msgid "Encrypted Home Directory"
 msgstr "Криптирана домашна папка"
 
-#: Console/AppConsole.vala:884
+#: Console/AppConsole.vala:885
 #, c-format
 msgid "Enter device name or number"
 msgstr "Въведете име или номер на устройството"
 
-#: Console/AppConsole.vala:682 Console/AppConsole.vala:1013
+#: Console/AppConsole.vala:683 Console/AppConsole.vala:1014
 #, c-format
 msgid "Enter device name or number (a=Abort)"
 msgstr "Въведете име или номер на устройството (a=Отказ)"
 
-#: Utility/Device.vala:1334
+#: Utility/Device.vala:1454
 #, c-format
 msgid "Enter passphrase to unlock '%s'"
 msgstr "Въведете парола за отключване на '%s'"
@@ -821,7 +823,7 @@ msgstr "Въведете парола за отключване на '%s'"
 msgid "Enter path or browse for directory"
 msgstr "Въведете път или посочете директоия"
 
-#: Console/AppConsole.vala:754
+#: Console/AppConsole.vala:755
 #, c-format
 msgid "Enter snapshot number (a=Abort, p=Previous, n=Next)"
 msgstr "Въведете номер на снимка (a=Отказ, p=Предишна, n=Следваща)"
@@ -946,13 +948,13 @@ msgstr "Неуспешна оценка на размера на система�
 msgid "Failed to export crontab file"
 msgstr "Неуспешно експортиране на corntab файл"
 
-#: Console/AppConsole.vala:697 Console/AppConsole.vala:761
-#: Console/AppConsole.vala:893 Console/AppConsole.vala:988
-#: Console/AppConsole.vala:1033 Console/AppConsole.vala:1074
+#: Console/AppConsole.vala:698 Console/AppConsole.vala:762
+#: Console/AppConsole.vala:894 Console/AppConsole.vala:989
+#: Console/AppConsole.vala:1034 Console/AppConsole.vala:1075
 msgid "Failed to get input from user in 3 attempts"
 msgstr "Неуспешно получаване на потребителски данни в три опита"
 
-#: Utility/Device.vala:615
+#: Utility/Device.vala:723
 msgid "Failed to get partition list"
 msgstr "Неуспешно получаване на списъка с дялове"
 
@@ -1017,12 +1019,12 @@ msgstr "Неуспешно възстанивяване на подустрой�
 msgid "Failed to save exclude list"
 msgstr "Неуспешно запазване на списък с изключения"
 
-#: Utility/Device.vala:1260 Utility/Device.vala:1314 Utility/Device.vala:1339
-#: Utility/Device.vala:1360 Utility/Device.vala:1380
+#: Utility/Device.vala:1380 Utility/Device.vala:1434 Utility/Device.vala:1459
+#: Utility/Device.vala:1480 Utility/Device.vala:1500
 msgid "Failed to unlock device"
 msgstr "Неуспешно отключване на устройство"
 
-#: Utility/Device.vala:1611
+#: Utility/Device.vala:1731
 msgid "Failed to unmount"
 msgstr "Неуспешно демонтиране"
 
@@ -1081,7 +1083,7 @@ msgstr "Брой на файлове и директории:"
 msgid "Files matching the following patterns will be excluded"
 msgstr "Файлове, съвпадащи със следните шаблони, ще бъдат изключени"
 
-#: Utility/Device.vala:1828
+#: Utility/Device.vala:1948
 #, c-format
 msgid "Filesystem"
 msgstr "Файлова система"
@@ -1123,7 +1125,7 @@ msgstr "Свободно"
 msgid "Free space"
 msgstr "Свободно място"
 
-#: Console/AppConsole.vala:1042
+#: Console/AppConsole.vala:1043
 msgid "GRUB Device"
 msgstr "GRUB устройство"
 
@@ -1131,7 +1133,7 @@ msgstr "GRUB устройство"
 msgid "GRUB device not selected"
 msgstr "Не е избрано GRUB устройство"
 
-#: Console/AppConsole.vala:1047
+#: Console/AppConsole.vala:1048
 msgid "GRUB will NOT be reinstalled"
 msgstr "GRUB няма да бъде преинсталиран"
 
@@ -1187,10 +1189,6 @@ msgstr "Неуспешна ежечасна снимка"
 #: Core/Main.vala:1028
 msgid "Hourly snapshots are enabled"
 msgstr "Включена е ежечасна снимка"
-
-#: Utility/Gtk/AboutWindow.vala:457
-msgid "Icon Themes & Utilities"
-msgstr ""
 
 #: Gtk/RestoreFinishBox.vala:102
 msgid ""
@@ -1279,8 +1277,8 @@ msgstr "Запази този път за монтиране на коренов
 msgid "LIVE"
 msgstr "ЖИВ"
 
-#: Utility/Device.vala:1829 Console/AppConsole.vala:458
-#: Console/AppConsole.vala:497 Gtk/BackupDeviceBox.vala:254
+#: Utility/Device.vala:1949 Console/AppConsole.vala:459
+#: Console/AppConsole.vala:498 Gtk/BackupDeviceBox.vala:254
 #, c-format
 msgid "Label"
 msgstr "Етикет"
@@ -1350,7 +1348,7 @@ msgstr "Последната седмична снимка е отпреди п�
 msgid "Last weekly snapshot not found"
 msgstr "Последната седмична снимка не е намерена"
 
-#: Gtk/MainWindow.vala:1049
+#: Gtk/MainWindow.vala:1043
 #, c-format
 msgid "Latest snapshot"
 msgstr "Последна снимка"
@@ -1376,7 +1374,7 @@ msgstr "Списък на устройствата"
 msgid "List snapshots"
 msgstr "Списък на снимките"
 
-#: Gtk/MainWindow.vala:1000
+#: Gtk/MainWindow.vala:994
 msgid "Live USB Mode (Restore Only)"
 msgstr "Режим Live USB (Само за възстановяване)"
 
@@ -1418,7 +1416,7 @@ msgstr "Липсващи зависимости"
 msgid "Mode"
 msgstr "Режим"
 
-#: Utility/Device.vala:1812
+#: Utility/Device.vala:1932
 #, c-format
 msgid "Model"
 msgstr "Модел"
@@ -1469,16 +1467,16 @@ msgstr "Без промяна"
 msgid "No Snapshots Selected"
 msgstr "Няма избрана снимка"
 
-#: Gtk/MainWindow.vala:1073
+#: Gtk/MainWindow.vala:1067
 msgid "No snapshots available"
 msgstr "Няма налична снимка"
 
 #: Console/AppConsole.vala:320 Core/SnapshotRepo.vala:898
-#: Gtk/MainWindow.vala:1017
+#: Gtk/MainWindow.vala:1011
 msgid "No snapshots found"
 msgstr "Няма намерени снимки"
 
-#: Console/AppConsole.vala:740
+#: Console/AppConsole.vala:741
 msgid "No snapshots found on device"
 msgstr "Няма намерени снимки на устройството"
 
@@ -1494,7 +1492,7 @@ msgstr "Няма снимки на това устройство"
 msgid "No snapshots selected"
 msgstr "Няма избрани снимки"
 
-#: Gtk/MainWindow.vala:1050 Gtk/MainWindow.vala:1052
+#: Gtk/MainWindow.vala:1044 Gtk/MainWindow.vala:1046
 msgid "None"
 msgstr "Няма"
 
@@ -1523,8 +1521,8 @@ msgstr "Бележки"
 msgid "Nothing to do!"
 msgstr "Няма нищо за правене!"
 
-#: Console/AppConsole.vala:423 Console/AppConsole.vala:452
-#: Console/AppConsole.vala:491 Console/AppConsole.vala:539
+#: Console/AppConsole.vala:423 Console/AppConsole.vala:453
+#: Console/AppConsole.vala:492 Console/AppConsole.vala:540
 msgid "Num"
 msgstr "Num"
 
@@ -1554,7 +1552,7 @@ msgstr ""
 msgid "Older log files removed"
 msgstr "Старите файлове с отчети са премахнати"
 
-#: Gtk/MainWindow.vala:1051
+#: Gtk/MainWindow.vala:1045
 msgid "Oldest snapshot"
 msgstr "Стари снимки"
 
@@ -1592,7 +1590,7 @@ msgstr "Други приложение (следваща страница)"
 msgid "Owner"
 msgstr "Собственик"
 
-#: Utility/Device.vala:1824
+#: Utility/Device.vala:1944
 #, c-format
 msgid "Parent Device"
 msgstr "Родителско устройство"
@@ -1711,7 +1709,7 @@ msgstr ""
 "Регенериране на initramfs за всички инсталирани ядра. Това по принцип не е "
 "нужно. Изберете това, само ако възстановената система не може да стартира."
 
-#: Console/AppConsole.vala:982
+#: Console/AppConsole.vala:983
 #, c-format
 msgid "Re-install GRUB2 bootloader?"
 msgstr "Преинсталиране на програмата за начално стартиране GRUB2?"
@@ -1865,7 +1863,7 @@ msgstr ""
 "включва тези файлове. Включените файлове ще бъдат запазени при създаването "
 "на снимка и заменени, когато се възстанови от тази снимка."
 
-#: Utility/Device.vala:1814
+#: Utility/Device.vala:1934
 #, c-format
 msgid "Revision"
 msgstr "Ревизия"
@@ -1924,7 +1922,7 @@ msgstr "График"
 msgid "Scheduled snapshot in progress..."
 msgstr "Създава се снимка по график..."
 
-#: Core/Main.vala:1147 Gtk/MainWindow.vala:1067 Gtk/ScheduleBox.vala:312
+#: Core/Main.vala:1147 Gtk/MainWindow.vala:1061 Gtk/ScheduleBox.vala:312
 msgid "Scheduled snapshots are disabled"
 msgstr "Графика за снимки е изключен"
 
@@ -1944,16 +1942,16 @@ msgstr ""
 "Графика за снимки е включен. Снимки ще се създават автоматично по избраните "
 "елементи."
 
-#: Console/AppConsole.vala:870
+#: Console/AppConsole.vala:871
 #, c-format
 msgid "Select '%s' device (default = %s)"
 msgstr "Избрано устройство '%s' (по подразбиране = %s)"
 
-#: Console/AppConsole.vala:689 Core/SnapshotRepo.vala:593
+#: Console/AppConsole.vala:690 Core/SnapshotRepo.vala:593
 msgid "Select BTRFS system disk with root subvolume (@)"
 msgstr "Избор на BTRFS системен диск с кореново подустройство (@)"
 
-#: Console/AppConsole.vala:998
+#: Console/AppConsole.vala:999
 msgid "Select GRUB device"
 msgstr "Избор на GRUB устройство"
 
@@ -1985,7 +1983,7 @@ msgstr "Избор на снимки"
 msgid "Select Target Device"
 msgstr "Избор на целево устройство"
 
-#: Gtk/BackupDeviceBox.vala:392
+#: Gtk/BackupDeviceBox.vala:410
 #, c-format
 msgid "Select a partition on this disk"
 msgstr "Избор на дял от диска"
@@ -2014,7 +2012,7 @@ msgstr "Избор на друго устройство?"
 msgid "Select applications to exclude from restore"
 msgstr "Избор на приложения за изключване от възстановяване"
 
-#: Console/AppConsole.vala:672
+#: Console/AppConsole.vala:673
 msgid "Select backup device"
 msgstr "Избор на устройство за бекъп"
 
@@ -2026,7 +2024,7 @@ msgstr "Избор на директория"
 msgid "Select file(s)"
 msgstr "Избор на файл(ове)"
 
-#: Console/AppConsole.vala:746
+#: Console/AppConsole.vala:747
 msgid "Select snapshot"
 msgstr "Избор на снимка"
 
@@ -2078,11 +2076,11 @@ msgstr "Избрано е устройство за снимки по подра
 msgid "Selected default snapshot type"
 msgstr "Избран е тип на снимка по подразбиране"
 
-#: Gtk/BackupDeviceBox.vala:373
+#: Gtk/BackupDeviceBox.vala:388
 msgid "Selected device does not have BTRFS partition"
 msgstr "Избраното устройство няма BTRFS дял"
 
-#: Gtk/BackupDeviceBox.vala:371
+#: Gtk/BackupDeviceBox.vala:385
 msgid "Selected device does not have Linux partition"
 msgstr "Избраното устройство няма Линукс дял"
 
@@ -2090,7 +2088,7 @@ msgstr "Избраното устройство няма Линукс дял"
 msgid "Selected snapshot device"
 msgstr "Избрано устройство за снимка"
 
-#: Console/AppConsole.vala:688 Core/SnapshotRepo.vala:592
+#: Console/AppConsole.vala:689 Core/SnapshotRepo.vala:592
 msgid "Selected snapshot device is not a system disk"
 msgstr "Избраното устройство няма системен диск"
 
@@ -2111,7 +2109,7 @@ msgstr ""
 "Избрания потребител има криптирана домашна папка. Включването само на скрити "
 "файлове не е възможно."
 
-#: Utility/Device.vala:1813
+#: Utility/Device.vala:1933
 #, c-format
 msgid "Serial"
 msgstr "Номер"
@@ -2156,8 +2154,8 @@ msgstr "Покажи още приложения за изключване на 
 msgid "Show rsync output (default)"
 msgstr "Покажи rsync изхода (по подразбиране)"
 
-#: Utility/Device.vala:1816 Utility/Device.vala:1831
-#: Console/AppConsole.vala:456 Console/AppConsole.vala:495
+#: Utility/Device.vala:1936 Utility/Device.vala:1951
+#: Console/AppConsole.vala:457 Console/AppConsole.vala:496
 #: Gtk/RsyncLogBox.vala:392 Gtk/RestoreBox.vala:131
 #: Gtk/BackupDeviceBox.vala:202 Gtk/BackupBox.vala:93
 #: Gtk/SnapshotListBox.vala:174
@@ -2214,11 +2212,11 @@ msgstr "Снимката се изтрива..."
 msgid "Snapshot device"
 msgstr "Устройство със снимка"
 
-#: Console/AppConsole.vala:662 Core/SnapshotRepo.vala:559
+#: Console/AppConsole.vala:663 Core/SnapshotRepo.vala:559
 msgid "Snapshot device not available"
 msgstr "Устройството със снимка не е налично"
 
-#: Console/AppConsole.vala:658 Core/SnapshotRepo.vala:552
+#: Console/AppConsole.vala:659 Core/SnapshotRepo.vala:552
 msgid "Snapshot device not selected"
 msgstr "Не е избрано устройство за снимка"
 
@@ -2315,7 +2313,7 @@ msgid ""
 "locations are not supported."
 msgstr ""
 
-#: Gtk/MainWindow.vala:1012
+#: Gtk/MainWindow.vala:1006
 msgid "Snapshots available for restore"
 msgstr "Налични снимки за възстановяване"
 
@@ -2334,7 +2332,7 @@ msgstr ""
 msgid "Snapshots cannot be created in Live CD mode"
 msgstr "Снимки не могат да бъдат създавани в режим на Жив диск"
 
-#: Gtk/MainWindow.vala:1059
+#: Gtk/MainWindow.vala:1053
 msgid "Snapshots will be created at selected intervals"
 msgstr "Снимки ще бъдат създавани според избрания интервал"
 
@@ -2419,12 +2417,12 @@ msgstr "Синхронизиране на файлове с rsync..."
 msgid "Syntax"
 msgstr "Синтаксис"
 
-#: Utility/Device.vala:1837 Gtk/SnapshotListBox.vala:127
+#: Utility/Device.vala:1957 Gtk/SnapshotListBox.vala:127
 #, c-format
 msgid "System"
 msgstr "Система"
 
-#: Gtk/MainWindow.vala:957
+#: Gtk/MainWindow.vala:951
 msgid "System Restore Utility"
 msgstr "Инструмент за възстановяване на системата"
 
@@ -2486,12 +2484,12 @@ msgstr "Системния дял има неподдържана подредб
 msgid "The target partition has an unsupported subvolume layout."
 msgstr "Целевия дял има неподдържано разшпложение на поддяловете"
 
-#: Gtk/BackupDeviceBox.vala:494
+#: Gtk/BackupDeviceBox.vala:512
 #, c-format
 msgid "There are no snapshots on this device"
 msgstr "Няма снимки на това устройство"
 
-#: Utility/Device.vala:1259
+#: Utility/Device.vala:1379
 msgid "This device is not encrypted"
 msgstr "Устройството не е криптирано"
 
@@ -2503,40 +2501,38 @@ msgstr ""
 "Този софтуер идва без никакви гаранции и неговият автор не поема отговорност "
 "за каквито и да е нанесени щети при употребата на тази програма."
 
-#: Gtk/MainWindow.vala:1047 Gtk/MainWindow.vala:1058
+#: Gtk/MainWindow.vala:1041 Gtk/MainWindow.vala:1052
 msgid "Timeshift is active"
 msgstr "Timeshift е активен"
-
-#: Gtk/MainWindow.vala:948
-msgid ""
-"Timeshift is powered by the following tools and components. Please visit the "
-"links for more information."
-msgstr ""
 
 #: Gtk/RsyncLogBox.vala:394 Gtk/RestoreBox.vala:132 Gtk/BackupBox.vala:94
 #, c-format
 msgid "Timestamp"
 msgstr "Времеви индикатор"
 
-#: Console/AppConsole.vala:611
+#: Console/AppConsole.vala:612
 #, c-format
 msgid "To restore with default options, press the ENTER key for all prompts!"
 msgstr ""
 "За възстановяване със стандартни опции, моля натиснете ENTER на всички "
 "диалози!"
 
+#: Utility/Gtk/AboutWindow.vala:457
+msgid "Tools"
+msgstr ""
+
 #: Utility/Gtk/AboutWindow.vala:441
 msgid "Translations"
 msgstr "Преводачи"
 
-#: Utility/Device.vala:1827 Console/AppConsole.vala:457
-#: Console/AppConsole.vala:496 Gtk/BackupDeviceBox.vala:190
+#: Utility/Device.vala:1947 Console/AppConsole.vala:458
+#: Console/AppConsole.vala:497 Gtk/BackupDeviceBox.vala:190
 #: Gtk/SettingsWindow.vala:86
 #, c-format
 msgid "Type"
 msgstr "Тип"
 
-#: Utility/Device.vala:1826
+#: Utility/Device.vala:1946
 #, c-format
 msgid "UUID"
 msgstr "UUID"
@@ -2553,16 +2549,16 @@ msgstr "Непознат тип снимка"
 msgid "Unknown value specified for option --tags"
 msgstr "Непозната стойност за опция --tags"
 
-#: Utility/Device.vala:1270 Utility/Device.vala:1386
+#: Utility/Device.vala:1390 Utility/Device.vala:1506
 #, c-format
 msgid "Unlocked device is mapped to '%s'"
 msgstr "Отключено остройство е отбелязано на  '%s'"
 
-#: Utility/Device.vala:1385
+#: Utility/Device.vala:1505
 msgid "Unlocked successfully"
 msgstr "Успешно отключване"
 
-#: Utility/Device.vala:1600
+#: Utility/Device.vala:1720
 msgid "Unmounting from"
 msgstr "Демонтиране от"
 
@@ -2606,7 +2602,7 @@ msgstr "Обновяване на GRUB меню..."
 msgid "Updating bootloader configuration..."
 msgstr "Обновяване на конфигурацията за начално стартиране..."
 
-#: Utility/Device.vala:1834
+#: Utility/Device.vala:1954
 #, c-format
 msgid "Used"
 msgstr "Използвано"
@@ -2619,7 +2615,7 @@ msgstr "Потребител"
 msgid "User Home Directories"
 msgstr "Потребителски домашни директории"
 
-#: Utility/Device.vala:1340
+#: Utility/Device.vala:1460
 msgid "User cancelled the password prompt"
 msgstr "Потребителя отказа въпроса за парола"
 
@@ -2639,7 +2635,7 @@ msgstr "Потребители"
 msgid "Users Home"
 msgstr "Потребители"
 
-#: Utility/Device.vala:1811
+#: Utility/Device.vala:1931
 #, c-format
 msgid "Vendor"
 msgstr "Доставчик"
@@ -2697,7 +2693,7 @@ msgstr "С грешки"
 msgid "Wizard"
 msgstr "Помощник"
 
-#: Utility/Device.vala:1313 Utility/Device.vala:1359
+#: Utility/Device.vala:1433 Utility/Device.vala:1479
 msgid "Wrong password"
 msgstr "Грешна парола"
 
@@ -2723,12 +2719,12 @@ msgstr ""
 "[Само за напреднали потребители] Променяйте тези настройки само ако "
 "възстановената система отказва да стартира."
 
-#: Console/AppConsole.vala:1010
+#: Console/AppConsole.vala:1011
 #, c-format
 msgid "[ENTER = Default (%s), a = Abort]"
 msgstr "[ENTER = Стандартно (%s), a = Отказ]"
 
-#: Console/AppConsole.vala:881
+#: Console/AppConsole.vala:882
 #, c-format
 msgid "[ENTER = Default (%s), r = Root device, a = Abort]"
 msgstr "[ENTER = Стандартно (%s), r = Кореново устройство, a = Отказ]"
@@ -2784,6 +2780,9 @@ msgstr "rsync върна грешка"
 msgid "un-tagged"
 msgstr "без-таг"
 
+#~ msgid "Code Contributions"
+#~ msgstr "Приноси"
+
 #, fuzzy
 #~ msgid "Click to edit and drag-drop to re-order"
 #~ msgstr "Щракнете за редакция. Влачете за пренареждане."
@@ -2836,9 +2835,6 @@ msgstr "без-таг"
 
 #~ msgid "Close Window"
 #~ msgstr "Затвори прозореца"
-
-#~ msgid "Contributions"
-#~ msgstr "Приноси"
 
 #~ msgid "Documenters"
 #~ msgstr "Документатори"

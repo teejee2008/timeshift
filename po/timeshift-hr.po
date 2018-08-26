@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: linuxmint\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2018-06-24 17:21+0530\n"
+"POT-Creation-Date: 2018-08-26 21:06+0530\n"
 "PO-Revision-Date: 2017-11-06 15:36+0000\n"
 "Last-Translator: gogo <trebelnik2@gmail.com>\n"
 "Language-Team: Croatian <hr@li.org>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "X-Launchpad-Export-Date: 2017-11-23 10:47+0000\n"
 "X-Generator: Launchpad (build 18509)\n"
 
-#: Console/AppConsole.vala:613
+#: Console/AppConsole.vala:614
 #, c-format
 msgid ""
 "\n"
@@ -34,12 +34,12 @@ msgstr ""
 msgid "%d snapshots, %s free"
 msgstr "%d snimaka sustava, %s slobodno"
 
-#: Console/AppConsole.vala:914
+#: Console/AppConsole.vala:915
 #, c-format
 msgid "'%s' will be on '%s'"
 msgstr "'%s' biti će na '%s'"
 
-#: Console/AppConsole.vala:911
+#: Console/AppConsole.vala:912
 #, c-format
 msgid "'%s' will be on root device"
 msgstr "'%s' biti će na korijenskom uređaju"
@@ -77,10 +77,10 @@ msgid ""
 "A maintenance task runs once every hour and creates snapshots as needed."
 msgstr ""
 
-#: Console/AppConsole.vala:698 Console/AppConsole.vala:762
-#: Console/AppConsole.vala:894 Console/AppConsole.vala:989
-#: Console/AppConsole.vala:1034 Console/AppConsole.vala:1075
-#: Console/AppConsole.vala:1093
+#: Console/AppConsole.vala:699 Console/AppConsole.vala:763
+#: Console/AppConsole.vala:895 Console/AppConsole.vala:990
+#: Console/AppConsole.vala:1035 Console/AppConsole.vala:1076
+#: Console/AppConsole.vala:1094
 msgid "Aborted."
 msgstr "Prekinuto."
 
@@ -215,12 +215,6 @@ msgstr "Autor"
 msgid "Available"
 msgstr "Dostupno"
 
-#: Gtk/BackupDeviceBox.vala:98
-msgid ""
-"BRTFS snapshots are saved on system partition. Other partitions are not "
-"supported."
-msgstr ""
-
 #: Gtk/SnapshotBackendBox.vala:94
 msgid "BTRFS"
 msgstr "BTRFS"
@@ -236,6 +230,13 @@ msgstr "BTRFS alati nisu pronađeni"
 #: Core/Main.vala:2041 Core/Main.vala:2045
 msgid "BTRFS device is not mounted"
 msgstr "BTRFS uređaj nije pronađen"
+
+#: Gtk/BackupDeviceBox.vala:98
+#, fuzzy
+msgid ""
+"BTRFS snapshots are saved on system partition. Other partitions are not "
+"supported."
+msgstr "Ostale aplikacije (sljedeća stranica)"
 
 #: Gtk/FinishBox.vala:92
 msgid ""
@@ -414,10 +415,6 @@ msgstr "Zatvori"
 msgid "Close window to exit"
 msgstr "Zatvori prozor i izađi"
 
-#: Utility/Gtk/AboutWindow.vala:425
-msgid "Code Contributions"
-msgstr "Doprinijeli"
-
 #: Core/Main.vala:347
 msgid "Commands listed below are not available on this system"
 msgstr "Naredbe navedene ispod nisu dostupne na ovom sustavu"
@@ -447,21 +444,26 @@ msgstr "Završeno s greškama"
 msgid "Confirm Actions"
 msgstr ""
 
-#: Console/AppConsole.vala:1068
+#: Console/AppConsole.vala:1069
 #, c-format
 msgid "Continue with restore? (y/n): "
 msgstr "Nastavi obnovu? (d/n): "
 
-#: Console/AppConsole.vala:834 Console/AppConsole.vala:965
+#: Utility/Gtk/AboutWindow.vala:425
+#, fuzzy
+msgid "Contributors"
+msgstr "Doprinijeli"
+
+#: Console/AppConsole.vala:835 Console/AppConsole.vala:966
 msgid "Could not find device"
 msgstr "Nemoguć pronalazak uređaja"
 
-#: Utility/Device.vala:1187
+#: Utility/Device.vala:1307
 #, c-format
 msgid "Could not find file"
 msgstr "Nemoguć pronalazak datoteke"
 
-#: Console/AppConsole.vala:731
+#: Console/AppConsole.vala:732
 msgid "Could not find snapshot"
 msgstr "Nemoguć pronalazak snimke sustava"
 
@@ -515,7 +517,7 @@ msgstr "Stvori snimku sustava ako je na rasporedu"
 msgid "Create snapshot of current system"
 msgstr "Stvori snimku sustava trenutnog sustava"
 
-#: Gtk/MainWindow.vala:1074
+#: Gtk/MainWindow.vala:1068
 msgid ""
 "Create snapshots manually or enable scheduled snapshots to protect your "
 "system"
@@ -657,7 +659,7 @@ msgstr "Brisanje poduređaja"
 msgid "Deluge, Transmission"
 msgstr "Deluge, Transmission"
 
-#: Console/AppConsole.vala:427 Console/AppConsole.vala:542
+#: Console/AppConsole.vala:427 Console/AppConsole.vala:543
 msgid "Description"
 msgstr "Opis"
 
@@ -671,24 +673,24 @@ msgstr "Uništena qgroup"
 msgid "Destroying qgroup"
 msgstr "Uništavam qgroup"
 
-#: Utility/Device.vala:1810 Utility/Device.vala:1820
-#: Console/AppConsole.vala:454 Console/AppConsole.vala:493
-#: Console/AppConsole.vala:541 Core/SnapshotRepo.vala:76
+#: Utility/Device.vala:1930 Utility/Device.vala:1940
+#: Console/AppConsole.vala:455 Console/AppConsole.vala:494
+#: Console/AppConsole.vala:542 Core/SnapshotRepo.vala:76
 #: Core/SnapshotRepo.vala:683 Core/SnapshotRepo.vala:686 Core/Main.vala:2114
 #: Core/Main.vala:2146 Gtk/RestoreDeviceBox.vala:97
 #, c-format
 msgid "Device"
 msgstr "Uređaj"
 
-#: Utility/Device.vala:1269
+#: Utility/Device.vala:1389
 msgid "Device is unlocked"
 msgstr "Uređaj je otključan"
 
-#: Utility/Device.vala:1164 Utility/Device.vala:1226
+#: Utility/Device.vala:1284 Utility/Device.vala:1346
 msgid "Device name is empty!"
 msgstr "Naziv uređaja je prazan!"
 
-#: Console/AppConsole.vala:663 Core/SnapshotRepo.vala:560 Core/Main.vala:3232
+#: Console/AppConsole.vala:664 Core/SnapshotRepo.vala:560 Core/Main.vala:3232
 msgid "Device not found"
 msgstr "Uređaj nije pronađen"
 
@@ -785,7 +787,7 @@ msgstr "Donacije"
 msgid "Enable BTRFS qgroups (recommended)"
 msgstr ""
 
-#: Gtk/MainWindow.vala:1068
+#: Gtk/MainWindow.vala:1062
 msgid "Enable scheduled snapshots to protect your system"
 msgstr "Omogućite raspored snimanja sustava kako bi zaštitili svoj sustav"
 
@@ -793,7 +795,7 @@ msgstr "Omogućite raspored snimanja sustava kako bi zaštitili svoj sustav"
 msgid "Enabled subvolume quota support"
 msgstr "Omogućena je podrška quota poduređaja"
 
-#: Utility/Device.vala:1333
+#: Utility/Device.vala:1453
 msgid "Encrypted Device"
 msgstr "Šifrirani uređaj"
 
@@ -801,17 +803,17 @@ msgstr "Šifrirani uređaj"
 msgid "Encrypted Home Directory"
 msgstr "Šifrirana osobna mapa"
 
-#: Console/AppConsole.vala:884
+#: Console/AppConsole.vala:885
 #, c-format
 msgid "Enter device name or number"
 msgstr "Upišite naziv ili broj uređaja"
 
-#: Console/AppConsole.vala:682 Console/AppConsole.vala:1013
+#: Console/AppConsole.vala:683 Console/AppConsole.vala:1014
 #, c-format
 msgid "Enter device name or number (a=Abort)"
 msgstr "Upišite naziv ili broj uređaja (a=Prekidanje)"
 
-#: Utility/Device.vala:1334
+#: Utility/Device.vala:1454
 #, c-format
 msgid "Enter passphrase to unlock '%s'"
 msgstr "Upišite lozinku za otključavanje '%s'"
@@ -820,7 +822,7 @@ msgstr "Upišite lozinku za otključavanje '%s'"
 msgid "Enter path or browse for directory"
 msgstr "Upišite putanju ili odabrite direktorij"
 
-#: Console/AppConsole.vala:754
+#: Console/AppConsole.vala:755
 #, c-format
 msgid "Enter snapshot number (a=Abort, p=Previous, n=Next)"
 msgstr "Upišite broj snimke sustava (a=Prekidanje, p=Prijašnje, n=Sljedeće)"
@@ -945,13 +947,13 @@ msgstr "Neuspjela procjena veličine sustava"
 msgid "Failed to export crontab file"
 msgstr "Neuspjeli izvoz crontab datoteke"
 
-#: Console/AppConsole.vala:697 Console/AppConsole.vala:761
-#: Console/AppConsole.vala:893 Console/AppConsole.vala:988
-#: Console/AppConsole.vala:1033 Console/AppConsole.vala:1074
+#: Console/AppConsole.vala:698 Console/AppConsole.vala:762
+#: Console/AppConsole.vala:894 Console/AppConsole.vala:989
+#: Console/AppConsole.vala:1034 Console/AppConsole.vala:1075
 msgid "Failed to get input from user in 3 attempts"
 msgstr "Neuspjelo dobivanje ulaza od korinika u 3 pokušaja"
 
-#: Utility/Device.vala:615
+#: Utility/Device.vala:723
 msgid "Failed to get partition list"
 msgstr "Neuspjelo dobivanje popisa particija"
 
@@ -1015,12 +1017,12 @@ msgstr "Neuspjela obnova poduređaja sustava"
 msgid "Failed to save exclude list"
 msgstr "Neuspjelo spremanje popisa izuzimanja"
 
-#: Utility/Device.vala:1260 Utility/Device.vala:1314 Utility/Device.vala:1339
-#: Utility/Device.vala:1360 Utility/Device.vala:1380
+#: Utility/Device.vala:1380 Utility/Device.vala:1434 Utility/Device.vala:1459
+#: Utility/Device.vala:1480 Utility/Device.vala:1500
 msgid "Failed to unlock device"
 msgstr "Neuspjelo otključavanje uređaja"
 
-#: Utility/Device.vala:1611
+#: Utility/Device.vala:1731
 msgid "Failed to unmount"
 msgstr "Neuspjelo odmontiravanje"
 
@@ -1079,7 +1081,7 @@ msgstr "Broj datoteka i direktorija:"
 msgid "Files matching the following patterns will be excluded"
 msgstr "Datoteke koje se podudaraju sa sljedećim uzorcima će biti izuzete"
 
-#: Utility/Device.vala:1828
+#: Utility/Device.vala:1948
 #, c-format
 msgid "Filesystem"
 msgstr "Datotečni sustav"
@@ -1121,7 +1123,7 @@ msgstr "Slobodno"
 msgid "Free space"
 msgstr "Slobodan prostor"
 
-#: Console/AppConsole.vala:1042
+#: Console/AppConsole.vala:1043
 msgid "GRUB Device"
 msgstr "GRUB uređaj"
 
@@ -1129,7 +1131,7 @@ msgstr "GRUB uređaj"
 msgid "GRUB device not selected"
 msgstr "GRUB uređaj nije odabran"
 
-#: Console/AppConsole.vala:1047
+#: Console/AppConsole.vala:1048
 msgid "GRUB will NOT be reinstalled"
 msgstr "GRUB neće BITI ponovno instaliran"
 
@@ -1185,10 +1187,6 @@ msgstr "Neuspjelo snimanje sustava svakog sata!"
 #: Core/Main.vala:1028
 msgid "Hourly snapshots are enabled"
 msgstr "Snimanje sustava svakog sata omogućeno"
-
-#: Utility/Gtk/AboutWindow.vala:457
-msgid "Icon Themes & Utilities"
-msgstr ""
 
 #: Gtk/RestoreFinishBox.vala:102
 msgid ""
@@ -1279,8 +1277,8 @@ msgstr "Zadrži ove putanje montiranja na korijenskom datotečnom sustavu"
 msgid "LIVE"
 msgstr "LIVE"
 
-#: Utility/Device.vala:1829 Console/AppConsole.vala:458
-#: Console/AppConsole.vala:497 Gtk/BackupDeviceBox.vala:254
+#: Utility/Device.vala:1949 Console/AppConsole.vala:459
+#: Console/AppConsole.vala:498 Gtk/BackupDeviceBox.vala:254
 #, c-format
 msgid "Label"
 msgstr "Naziv"
@@ -1352,7 +1350,7 @@ msgstr "Posljednja tjedna snimka sustava je stara više od 1 tjedna"
 msgid "Last weekly snapshot not found"
 msgstr "Posljednja tjedna snimka sustava nije pronađena"
 
-#: Gtk/MainWindow.vala:1049
+#: Gtk/MainWindow.vala:1043
 #, c-format
 msgid "Latest snapshot"
 msgstr "Posljednja snimka sustava"
@@ -1378,7 +1376,7 @@ msgstr "Popis uređaja"
 msgid "List snapshots"
 msgstr "Popis snimaka sustava"
 
-#: Gtk/MainWindow.vala:1000
+#: Gtk/MainWindow.vala:994
 msgid "Live USB Mode (Restore Only)"
 msgstr "Live USB način (Samo za obnovu)"
 
@@ -1422,7 +1420,7 @@ msgstr "Zavisnosti nedostaju"
 msgid "Mode"
 msgstr "Način"
 
-#: Utility/Device.vala:1812
+#: Utility/Device.vala:1932
 #, c-format
 msgid "Model"
 msgstr "Model"
@@ -1473,16 +1471,16 @@ msgstr "Bez promjene"
 msgid "No Snapshots Selected"
 msgstr "Nema odabranih snimaka sustava"
 
-#: Gtk/MainWindow.vala:1073
+#: Gtk/MainWindow.vala:1067
 msgid "No snapshots available"
 msgstr "Nema dostupnih snimaka sustava"
 
 #: Console/AppConsole.vala:320 Core/SnapshotRepo.vala:898
-#: Gtk/MainWindow.vala:1017
+#: Gtk/MainWindow.vala:1011
 msgid "No snapshots found"
 msgstr "Nema pronađenih snimaka sustava"
 
-#: Console/AppConsole.vala:740
+#: Console/AppConsole.vala:741
 msgid "No snapshots found on device"
 msgstr "Nema pronađenih snimaka sustava na uređaju"
 
@@ -1498,7 +1496,7 @@ msgstr "Nema snimaka sustava na ovome uređaju"
 msgid "No snapshots selected"
 msgstr "Nema odabranih snimaka sustava"
 
-#: Gtk/MainWindow.vala:1050 Gtk/MainWindow.vala:1052
+#: Gtk/MainWindow.vala:1044 Gtk/MainWindow.vala:1046
 msgid "None"
 msgstr "Nepoznato"
 
@@ -1527,8 +1525,8 @@ msgstr "Bilješke"
 msgid "Nothing to do!"
 msgstr "Ništa za učiniti!"
 
-#: Console/AppConsole.vala:423 Console/AppConsole.vala:452
-#: Console/AppConsole.vala:491 Console/AppConsole.vala:539
+#: Console/AppConsole.vala:423 Console/AppConsole.vala:453
+#: Console/AppConsole.vala:492 Console/AppConsole.vala:540
 msgid "Num"
 msgstr "Broj"
 
@@ -1558,7 +1556,7 @@ msgstr ""
 msgid "Older log files removed"
 msgstr "Starije datoteke zapisa su uklonjene"
 
-#: Gtk/MainWindow.vala:1051
+#: Gtk/MainWindow.vala:1045
 msgid "Oldest snapshot"
 msgstr "Starija snimka sustava"
 
@@ -1596,7 +1594,7 @@ msgstr "Ostale aplikacije (sljedeća stranica)"
 msgid "Owner"
 msgstr "Vlasnik"
 
-#: Utility/Device.vala:1824
+#: Utility/Device.vala:1944
 #, c-format
 msgid "Parent Device"
 msgstr "Sadržajni uređaj"
@@ -1710,7 +1708,7 @@ msgstr ""
 "Ponovno stvara initramfs za sve instalirane kernele. To općenito nije "
 "potrebno. Ovo odaberite samo ako se obnovljeni sustav ne uspije pokrenuti."
 
-#: Console/AppConsole.vala:982
+#: Console/AppConsole.vala:983
 #, c-format
 msgid "Re-install GRUB2 bootloader?"
 msgstr "Ponovno instaliraj GRUB2 učitač pokretanja?"
@@ -1863,7 +1861,7 @@ msgstr ""
 "promijeniti dodavanjem filtra koji obuhvaća te datoteke. Obuhvaćene datoteke "
 "biti će sigurnosno kopirane kada se snimka sustava stvara."
 
-#: Utility/Device.vala:1814
+#: Utility/Device.vala:1934
 #, c-format
 msgid "Revision"
 msgstr "Promjena"
@@ -1927,7 +1925,7 @@ msgstr "Raspored"
 msgid "Scheduled snapshot in progress..."
 msgstr "Zakazivanje rasporeda snimanja sustava u tijeku..."
 
-#: Core/Main.vala:1147 Gtk/MainWindow.vala:1067 Gtk/ScheduleBox.vala:312
+#: Core/Main.vala:1147 Gtk/MainWindow.vala:1061 Gtk/ScheduleBox.vala:312
 msgid "Scheduled snapshots are disabled"
 msgstr "Raspored  snimanja sustava je onemogućen"
 
@@ -1950,16 +1948,16 @@ msgstr ""
 "Raspored  snimanja sustava je omogućen. Snimke sustava će biti automatski "
 "stvorene za odabrane razine."
 
-#: Console/AppConsole.vala:870
+#: Console/AppConsole.vala:871
 #, c-format
 msgid "Select '%s' device (default = %s)"
 msgstr "Odaberi '%s' uređaj (zadano = %s)"
 
-#: Console/AppConsole.vala:689 Core/SnapshotRepo.vala:593
+#: Console/AppConsole.vala:690 Core/SnapshotRepo.vala:593
 msgid "Select BTRFS system disk with root subvolume (@)"
 msgstr "Odaberi BTRFS disk sustava s korijenskim poduređajem (@)"
 
-#: Console/AppConsole.vala:998
+#: Console/AppConsole.vala:999
 msgid "Select GRUB device"
 msgstr "Odaberi GRUB uređaj"
 
@@ -1993,7 +1991,7 @@ msgstr "Odaberi snimku sustava"
 msgid "Select Target Device"
 msgstr "Odaberi odredišni uređaj"
 
-#: Gtk/BackupDeviceBox.vala:392
+#: Gtk/BackupDeviceBox.vala:410
 #, c-format
 msgid "Select a partition on this disk"
 msgstr "Odaberi particiju na ovom disku"
@@ -2022,7 +2020,7 @@ msgstr "Odaberi drugi uređaj?"
 msgid "Select applications to exclude from restore"
 msgstr "Odaberi aplikacije za izuzimanje iz obnove"
 
-#: Console/AppConsole.vala:672
+#: Console/AppConsole.vala:673
 msgid "Select backup device"
 msgstr "Odaberi uređaj sigurnosne kopije"
 
@@ -2034,7 +2032,7 @@ msgstr "Odaberi direktorij"
 msgid "Select file(s)"
 msgstr "Odaberi datoteku(e)"
 
-#: Console/AppConsole.vala:746
+#: Console/AppConsole.vala:747
 msgid "Select snapshot"
 msgstr "Odaberi snimku sustava"
 
@@ -2086,11 +2084,11 @@ msgstr "Odaberi zadani uređaj za stvaranje snimke uređaja"
 msgid "Selected default snapshot type"
 msgstr "Odaberi zadanu vrstu snimaka sustava"
 
-#: Gtk/BackupDeviceBox.vala:373
+#: Gtk/BackupDeviceBox.vala:388
 msgid "Selected device does not have BTRFS partition"
 msgstr "Odabrani uređaj ne sadrži BTRFS particiju"
 
-#: Gtk/BackupDeviceBox.vala:371
+#: Gtk/BackupDeviceBox.vala:385
 msgid "Selected device does not have Linux partition"
 msgstr "Odabrani uređaj ne sadrži Linux particiju"
 
@@ -2098,7 +2096,7 @@ msgstr "Odabrani uređaj ne sadrži Linux particiju"
 msgid "Selected snapshot device"
 msgstr "Odabrani uređaj snimke sustava"
 
-#: Console/AppConsole.vala:688 Core/SnapshotRepo.vala:592
+#: Console/AppConsole.vala:689 Core/SnapshotRepo.vala:592
 msgid "Selected snapshot device is not a system disk"
 msgstr "Odabrani uređaj snimke sustava nije disk sustava"
 
@@ -2118,7 +2116,7 @@ msgstr ""
 "Odabrani korisnik ima šifriranu osobnu mapu. Nemoguće je obuhvatiti samo "
 "skrivene datoteke."
 
-#: Utility/Device.vala:1813
+#: Utility/Device.vala:1933
 #, c-format
 msgid "Serial"
 msgstr "Serijski broj"
@@ -2163,8 +2161,8 @@ msgstr "Prikaži više aplikacija za izuzimanje na sljedećoj stranici"
 msgid "Show rsync output (default)"
 msgstr "Prikaži rsync izlaz (zadano)"
 
-#: Utility/Device.vala:1816 Utility/Device.vala:1831
-#: Console/AppConsole.vala:456 Console/AppConsole.vala:495
+#: Utility/Device.vala:1936 Utility/Device.vala:1951
+#: Console/AppConsole.vala:457 Console/AppConsole.vala:496
 #: Gtk/RsyncLogBox.vala:392 Gtk/RestoreBox.vala:131
 #: Gtk/BackupDeviceBox.vala:202 Gtk/BackupBox.vala:93
 #: Gtk/SnapshotListBox.vala:174
@@ -2221,11 +2219,11 @@ msgstr "Brisanje snimke sustava u tijeku..."
 msgid "Snapshot device"
 msgstr "Uređaj snimke sustava"
 
-#: Console/AppConsole.vala:662 Core/SnapshotRepo.vala:559
+#: Console/AppConsole.vala:663 Core/SnapshotRepo.vala:559
 msgid "Snapshot device not available"
 msgstr "Uređaj snimke sustava nedostupan"
 
-#: Console/AppConsole.vala:658 Core/SnapshotRepo.vala:552
+#: Console/AppConsole.vala:659 Core/SnapshotRepo.vala:552
 msgid "Snapshot device not selected"
 msgstr "Uređaj snimke sustava nije odabran"
 
@@ -2325,7 +2323,7 @@ msgid ""
 "locations are not supported."
 msgstr ""
 
-#: Gtk/MainWindow.vala:1012
+#: Gtk/MainWindow.vala:1006
 msgid "Snapshots available for restore"
 msgstr "Snimke sustava dostupne za obnovu"
 
@@ -2344,7 +2342,7 @@ msgstr ""
 msgid "Snapshots cannot be created in Live CD mode"
 msgstr "Snimke sustava se ne mogu stvoriti u Live CD načinu rada"
 
-#: Gtk/MainWindow.vala:1059
+#: Gtk/MainWindow.vala:1053
 msgid "Snapshots will be created at selected intervals"
 msgstr "Snimke sustava će biti stvorene u odabranom  razdoblju"
 
@@ -2428,12 +2426,12 @@ msgstr "Usklađivanje datoteka sa rsync..."
 msgid "Syntax"
 msgstr "Sintaksa"
 
-#: Utility/Device.vala:1837 Gtk/SnapshotListBox.vala:127
+#: Utility/Device.vala:1957 Gtk/SnapshotListBox.vala:127
 #, c-format
 msgid "System"
 msgstr "Sustav"
 
-#: Gtk/MainWindow.vala:957
+#: Gtk/MainWindow.vala:951
 msgid "System Restore Utility"
 msgstr "Alat obnove sustava"
 
@@ -2496,12 +2494,12 @@ msgstr "Particija sustava ima nepodržan izlaz poduređaja."
 msgid "The target partition has an unsupported subvolume layout."
 msgstr "Odredišna particija ima nepodržan izlaz poduređaja."
 
-#: Gtk/BackupDeviceBox.vala:494
+#: Gtk/BackupDeviceBox.vala:512
 #, c-format
 msgid "There are no snapshots on this device"
 msgstr "Nema snimaka sustava na ovom uređaju"
 
-#: Utility/Device.vala:1259
+#: Utility/Device.vala:1379
 msgid "This device is not encrypted"
 msgstr "Ovaj uređaj nije šifriran"
 
@@ -2513,39 +2511,37 @@ msgstr ""
 "Ovaj softver dolazi BEZ ikakovg jamstva i autor ne preuzima odgovornost za "
 "bilo kakve štete proizašle iz korištenja ovog programa."
 
-#: Gtk/MainWindow.vala:1047 Gtk/MainWindow.vala:1058
+#: Gtk/MainWindow.vala:1041 Gtk/MainWindow.vala:1052
 msgid "Timeshift is active"
 msgstr "Timeshift je aktivan"
-
-#: Gtk/MainWindow.vala:948
-msgid ""
-"Timeshift is powered by the following tools and components. Please visit the "
-"links for more information."
-msgstr ""
 
 #: Gtk/RsyncLogBox.vala:394 Gtk/RestoreBox.vala:132 Gtk/BackupBox.vala:94
 #, c-format
 msgid "Timestamp"
 msgstr "Vrijeme"
 
-#: Console/AppConsole.vala:611
+#: Console/AppConsole.vala:612
 #, c-format
 msgid "To restore with default options, press the ENTER key for all prompts!"
 msgstr ""
 "Za obnovu sa zadanim mogućnostima, pritisnite tipku ENTER za sve upite!"
 
+#: Utility/Gtk/AboutWindow.vala:457
+msgid "Tools"
+msgstr ""
+
 #: Utility/Gtk/AboutWindow.vala:441
 msgid "Translations"
 msgstr "Prevoditelji"
 
-#: Utility/Device.vala:1827 Console/AppConsole.vala:457
-#: Console/AppConsole.vala:496 Gtk/BackupDeviceBox.vala:190
+#: Utility/Device.vala:1947 Console/AppConsole.vala:458
+#: Console/AppConsole.vala:497 Gtk/BackupDeviceBox.vala:190
 #: Gtk/SettingsWindow.vala:86
 #, c-format
 msgid "Type"
 msgstr "Vrsta"
 
-#: Utility/Device.vala:1826
+#: Utility/Device.vala:1946
 #, c-format
 msgid "UUID"
 msgstr "UUID"
@@ -2562,16 +2558,16 @@ msgstr "Nepoznata vrsta sigurnosne snimke"
 msgid "Unknown value specified for option --tags"
 msgstr "Nepoznata vrijednost određena za mogućnost --tags"
 
-#: Utility/Device.vala:1270 Utility/Device.vala:1386
+#: Utility/Device.vala:1390 Utility/Device.vala:1506
 #, c-format
 msgid "Unlocked device is mapped to '%s'"
 msgstr "Otključani uređaj je mapiran na '%s'"
 
-#: Utility/Device.vala:1385
+#: Utility/Device.vala:1505
 msgid "Unlocked successfully"
 msgstr "Otključavanje uspješno"
 
-#: Utility/Device.vala:1600
+#: Utility/Device.vala:1720
 msgid "Unmounting from"
 msgstr "Odmoontiravanje od"
 
@@ -2615,7 +2611,7 @@ msgstr "Nadopuna GRUB izbornika..."
 msgid "Updating bootloader configuration..."
 msgstr "Nadopuna podešavanja učitača pokretanja..."
 
-#: Utility/Device.vala:1834
+#: Utility/Device.vala:1954
 #, c-format
 msgid "Used"
 msgstr "Iskorišteno"
@@ -2628,7 +2624,7 @@ msgstr "Korisnik"
 msgid "User Home Directories"
 msgstr "Osobne mape korisnika"
 
-#: Utility/Device.vala:1340
+#: Utility/Device.vala:1460
 msgid "User cancelled the password prompt"
 msgstr "Korisnik je prekinuo upit lozinke"
 
@@ -2647,7 +2643,7 @@ msgstr "Korisnici"
 msgid "Users Home"
 msgstr "Korisnici"
 
-#: Utility/Device.vala:1811
+#: Utility/Device.vala:1931
 #, c-format
 msgid "Vendor"
 msgstr "Dobavljač"
@@ -2705,7 +2701,7 @@ msgstr "Sa greškama"
 msgid "Wizard"
 msgstr "Čarobnjak"
 
-#: Utility/Device.vala:1313 Utility/Device.vala:1359
+#: Utility/Device.vala:1433 Utility/Device.vala:1479
 msgid "Wrong password"
 msgstr "Neispravna lozinka"
 
@@ -2731,12 +2727,12 @@ msgstr ""
 "[Samo za napredne korisnike] Promijenite ove postavke samo ako se obnovljeni "
 "sustav ne može pokrenuti."
 
-#: Console/AppConsole.vala:1010
+#: Console/AppConsole.vala:1011
 #, c-format
 msgid "[ENTER = Default (%s), a = Abort]"
 msgstr "[ENTER = Zadano (%s), a = Prekidanje]"
 
-#: Console/AppConsole.vala:881
+#: Console/AppConsole.vala:882
 #, c-format
 msgid "[ENTER = Default (%s), r = Root device, a = Abort]"
 msgstr "[ENTER = Zadano (%s), r = Korijenski uređaj, a = Prekidanje]"
@@ -2791,6 +2787,9 @@ msgstr "rsync je vratio grešku"
 #: Core/SnapshotRepo.vala:831
 msgid "un-tagged"
 msgstr "odznačeno"
+
+#~ msgid "Code Contributions"
+#~ msgstr "Doprinijeli"
 
 #, fuzzy
 #~ msgid "Click to edit and drag-drop to re-order"
@@ -2854,9 +2853,6 @@ msgstr "odznačeno"
 
 #~ msgid "Close Window"
 #~ msgstr "Zatvori prozor"
-
-#~ msgid "Contributions"
-#~ msgstr "Doprinijeli"
 
 #~ msgid "Documenters"
 #~ msgstr "Autori dokumentacije"

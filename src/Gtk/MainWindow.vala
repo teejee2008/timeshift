@@ -933,19 +933,13 @@ class MainWindow : Gtk.Window{
 			"Tony George:teejeetech@gmail.com"
 		};
 
-		dialog.translators = {
-			"Launchpad Translation Teams:https://translations.launchpad.net/linuxmint/latest/+pots/timeshift"
-		};
+		dialog.translators = null;
 
 		dialog.contributors = {
-			"Clement Lefebvre:https://github.com/clefebvre",
-			"Maxim Taranov:https://github.com/png2378",
-			"Peter Stevenson:https://github.com/2E0PGS",
-			"Giuseppe Pignataro:https://github.com/Fastbyte01"
+			"View on GitHub:https://github.com/teejee2008/timeshift/graphs/contributors"
 		};
 
 		dialog.third_party = {
-			_("Timeshift is powered by the following tools and components. Please visit the links for more information."),
 			"rsync by Andrew Tridgell, Wayne Davison, and others:http://rsync.samba.org/"
 		};
 

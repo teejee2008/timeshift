@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timeshift\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2018-06-24 17:21+0530\n"
+"POT-Creation-Date: 2018-08-26 21:06+0530\n"
 "PO-Revision-Date: 2017-11-03 14:49+0000\n"
 "Last-Translator: Pjotr12345 <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "X-Launchpad-Export-Date: 2017-11-23 10:47+0000\n"
 "X-Generator: Launchpad (build 18509)\n"
 
-#: Console/AppConsole.vala:613
+#: Console/AppConsole.vala:614
 #, c-format
 msgid ""
 "\n"
@@ -34,12 +34,12 @@ msgstr ""
 msgid "%d snapshots, %s free"
 msgstr "%d momentopnamen, %s vrij"
 
-#: Console/AppConsole.vala:914
+#: Console/AppConsole.vala:915
 #, c-format
 msgid "'%s' will be on '%s'"
 msgstr "'%s' zal op '%s' zijn"
 
-#: Console/AppConsole.vala:911
+#: Console/AppConsole.vala:912
 #, c-format
 msgid "'%s' will be on root device"
 msgstr "'%s' zal op het rootapparaat zijn"
@@ -77,10 +77,10 @@ msgid ""
 "A maintenance task runs once every hour and creates snapshots as needed."
 msgstr "Een onderhoudstaak draait elk uur en maakt de nodig momentopnames."
 
-#: Console/AppConsole.vala:698 Console/AppConsole.vala:762
-#: Console/AppConsole.vala:894 Console/AppConsole.vala:989
-#: Console/AppConsole.vala:1034 Console/AppConsole.vala:1075
-#: Console/AppConsole.vala:1093
+#: Console/AppConsole.vala:699 Console/AppConsole.vala:763
+#: Console/AppConsole.vala:895 Console/AppConsole.vala:990
+#: Console/AppConsole.vala:1035 Console/AppConsole.vala:1076
+#: Console/AppConsole.vala:1094
 msgid "Aborted."
 msgstr "Afgebroken."
 
@@ -219,14 +219,6 @@ msgstr "Auteurs"
 msgid "Available"
 msgstr "Beschikbaar"
 
-#: Gtk/BackupDeviceBox.vala:98
-msgid ""
-"BRTFS snapshots are saved on system partition. Other partitions are not "
-"supported."
-msgstr ""
-"BTRFS momentopnames worden bewaard op de systeem partitie. Andere "
-"partitiesworden niet ondersteund."
-
 #: Gtk/SnapshotBackendBox.vala:94
 msgid "BTRFS"
 msgstr "BTRFS"
@@ -242,6 +234,15 @@ msgstr "BTRFS-gereedschap niet aangetroffen"
 #: Core/Main.vala:2041 Core/Main.vala:2045
 msgid "BTRFS device is not mounted"
 msgstr "BTRFS-apparaat is niet aangekoppeld"
+
+#: Gtk/BackupDeviceBox.vala:98
+#, fuzzy
+msgid ""
+"BTRFS snapshots are saved on system partition. Other partitions are not "
+"supported."
+msgstr ""
+"BTRFS momentopnames worden bewaard op de systeem partitie. Andere "
+"partitiesworden niet ondersteund."
 
 #: Gtk/FinishBox.vala:92
 msgid ""
@@ -422,10 +423,6 @@ msgstr "Afsluiten"
 msgid "Close window to exit"
 msgstr "Sluit venster om af te sluiten"
 
-#: Utility/Gtk/AboutWindow.vala:425
-msgid "Code Contributions"
-msgstr "Bijdragen"
-
 #: Core/Main.vala:347
 msgid "Commands listed below are not available on this system"
 msgstr "Onderstaande opdrachten zijn op dit systeem niet beschikbaar"
@@ -455,21 +452,26 @@ msgstr "Voltooid met fouten"
 msgid "Confirm Actions"
 msgstr "Bevestig Acties"
 
-#: Console/AppConsole.vala:1068
+#: Console/AppConsole.vala:1069
 #, c-format
 msgid "Continue with restore? (y/n): "
 msgstr "Doorgaan met terugzetten? (j/n): "
 
-#: Console/AppConsole.vala:834 Console/AppConsole.vala:965
+#: Utility/Gtk/AboutWindow.vala:425
+#, fuzzy
+msgid "Contributors"
+msgstr "Bijdragen"
+
+#: Console/AppConsole.vala:835 Console/AppConsole.vala:966
 msgid "Could not find device"
 msgstr "Kon apparaat niet vinden"
 
-#: Utility/Device.vala:1187
+#: Utility/Device.vala:1307
 #, c-format
 msgid "Could not find file"
 msgstr "Kon bestand niet vinden"
 
-#: Console/AppConsole.vala:731
+#: Console/AppConsole.vala:732
 msgid "Could not find snapshot"
 msgstr "Kon momentopname niet vinden"
 
@@ -524,7 +526,7 @@ msgstr "Maak momentopname indien geagendeerd"
 msgid "Create snapshot of current system"
 msgstr "Maak momentopname van huidig systeem"
 
-#: Gtk/MainWindow.vala:1074
+#: Gtk/MainWindow.vala:1068
 msgid ""
 "Create snapshots manually or enable scheduled snapshots to protect your "
 "system"
@@ -666,7 +668,7 @@ msgstr "Subvolume verwijderen"
 msgid "Deluge, Transmission"
 msgstr "Deluge, Transmission"
 
-#: Console/AppConsole.vala:427 Console/AppConsole.vala:542
+#: Console/AppConsole.vala:427 Console/AppConsole.vala:543
 msgid "Description"
 msgstr "Beschrijving"
 
@@ -680,24 +682,24 @@ msgstr "qgroup vernietigd"
 msgid "Destroying qgroup"
 msgstr "qgroup vernietigen"
 
-#: Utility/Device.vala:1810 Utility/Device.vala:1820
-#: Console/AppConsole.vala:454 Console/AppConsole.vala:493
-#: Console/AppConsole.vala:541 Core/SnapshotRepo.vala:76
+#: Utility/Device.vala:1930 Utility/Device.vala:1940
+#: Console/AppConsole.vala:455 Console/AppConsole.vala:494
+#: Console/AppConsole.vala:542 Core/SnapshotRepo.vala:76
 #: Core/SnapshotRepo.vala:683 Core/SnapshotRepo.vala:686 Core/Main.vala:2114
 #: Core/Main.vala:2146 Gtk/RestoreDeviceBox.vala:97
 #, c-format
 msgid "Device"
 msgstr "Apparaat"
 
-#: Utility/Device.vala:1269
+#: Utility/Device.vala:1389
 msgid "Device is unlocked"
 msgstr "Apparaat is ontsloten"
 
-#: Utility/Device.vala:1164 Utility/Device.vala:1226
+#: Utility/Device.vala:1284 Utility/Device.vala:1346
 msgid "Device name is empty!"
 msgstr "Apparaatnaam is leeg."
 
-#: Console/AppConsole.vala:663 Core/SnapshotRepo.vala:560 Core/Main.vala:3232
+#: Console/AppConsole.vala:664 Core/SnapshotRepo.vala:560 Core/Main.vala:3232
 msgid "Device not found"
 msgstr "Apparaat niet gevonden"
 
@@ -795,7 +797,7 @@ msgstr "Giften"
 msgid "Enable BTRFS qgroups (recommended)"
 msgstr ""
 
-#: Gtk/MainWindow.vala:1068
+#: Gtk/MainWindow.vala:1062
 msgid "Enable scheduled snapshots to protect your system"
 msgstr "Schakel geagendeerde momentopnamen in om uw systeem te beschermen"
 
@@ -803,7 +805,7 @@ msgstr "Schakel geagendeerde momentopnamen in om uw systeem te beschermen"
 msgid "Enabled subvolume quota support"
 msgstr "Ingeschakelde quota-ondersteuning voor subvolumes"
 
-#: Utility/Device.vala:1333
+#: Utility/Device.vala:1453
 msgid "Encrypted Device"
 msgstr "Versleuteld apparaat"
 
@@ -811,17 +813,17 @@ msgstr "Versleuteld apparaat"
 msgid "Encrypted Home Directory"
 msgstr "Versleutelde persoonlijke map"
 
-#: Console/AppConsole.vala:884
+#: Console/AppConsole.vala:885
 #, c-format
 msgid "Enter device name or number"
 msgstr "Voer naam of nummer van apparaat in"
 
-#: Console/AppConsole.vala:682 Console/AppConsole.vala:1013
+#: Console/AppConsole.vala:683 Console/AppConsole.vala:1014
 #, c-format
 msgid "Enter device name or number (a=Abort)"
 msgstr "Voer naam of nummer van apparaat in (a=Afbreken)"
 
-#: Utility/Device.vala:1334
+#: Utility/Device.vala:1454
 #, c-format
 msgid "Enter passphrase to unlock '%s'"
 msgstr "Voer wachtwoordzin in om '%s' te ontsluiten"
@@ -830,7 +832,7 @@ msgstr "Voer wachtwoordzin in om '%s' te ontsluiten"
 msgid "Enter path or browse for directory"
 msgstr "Voer pad in of blader door naar map"
 
-#: Console/AppConsole.vala:754
+#: Console/AppConsole.vala:755
 #, c-format
 msgid "Enter snapshot number (a=Abort, p=Previous, n=Next)"
 msgstr "Voer nummer van momentopname in (a=Afbreken, p=Vorige, n=Volgende)"
@@ -955,13 +957,13 @@ msgstr "Kon systeemgrootte niet schatten"
 msgid "Failed to export crontab file"
 msgstr "Kon crontab-bestand niet exporteren"
 
-#: Console/AppConsole.vala:697 Console/AppConsole.vala:761
-#: Console/AppConsole.vala:893 Console/AppConsole.vala:988
-#: Console/AppConsole.vala:1033 Console/AppConsole.vala:1074
+#: Console/AppConsole.vala:698 Console/AppConsole.vala:762
+#: Console/AppConsole.vala:894 Console/AppConsole.vala:989
+#: Console/AppConsole.vala:1034 Console/AppConsole.vala:1075
 msgid "Failed to get input from user in 3 attempts"
 msgstr "Kon geen invoer verkrijgen van de gebruiker in drie pogingen"
 
-#: Utility/Device.vala:615
+#: Utility/Device.vala:723
 msgid "Failed to get partition list"
 msgstr "Kon partitielijst niet verkrijgen"
 
@@ -1025,12 +1027,12 @@ msgstr "Kon subvolume van systeem niet terugzetten"
 msgid "Failed to save exclude list"
 msgstr "Kon uitsluitingslijst niet opslaan"
 
-#: Utility/Device.vala:1260 Utility/Device.vala:1314 Utility/Device.vala:1339
-#: Utility/Device.vala:1360 Utility/Device.vala:1380
+#: Utility/Device.vala:1380 Utility/Device.vala:1434 Utility/Device.vala:1459
+#: Utility/Device.vala:1480 Utility/Device.vala:1500
 msgid "Failed to unlock device"
 msgstr "Kon apparaat niet ontsluiten"
 
-#: Utility/Device.vala:1611
+#: Utility/Device.vala:1731
 msgid "Failed to unmount"
 msgstr "Kon niet ontkoppelen"
 
@@ -1090,7 +1092,7 @@ msgid "Files matching the following patterns will be excluded"
 msgstr ""
 "Bestanden die overeenkomen met de volgende patronen zullen worden uitgesloten"
 
-#: Utility/Device.vala:1828
+#: Utility/Device.vala:1948
 #, c-format
 msgid "Filesystem"
 msgstr "Bestandssysteem"
@@ -1132,7 +1134,7 @@ msgstr "Vrij"
 msgid "Free space"
 msgstr "Vrije ruimte"
 
-#: Console/AppConsole.vala:1042
+#: Console/AppConsole.vala:1043
 msgid "GRUB Device"
 msgstr "GRUB-apparaat"
 
@@ -1140,7 +1142,7 @@ msgstr "GRUB-apparaat"
 msgid "GRUB device not selected"
 msgstr "Geen GRUB-apparaat gekozen"
 
-#: Console/AppConsole.vala:1047
+#: Console/AppConsole.vala:1048
 msgid "GRUB will NOT be reinstalled"
 msgstr "Grub zal niet worden geherinstalleerd"
 
@@ -1196,10 +1198,6 @@ msgstr "Uurlijkse momentopname is mislukt."
 #: Core/Main.vala:1028
 msgid "Hourly snapshots are enabled"
 msgstr "Uurlijkse momentopnamen zijn ingeschakeld"
-
-#: Utility/Gtk/AboutWindow.vala:457
-msgid "Icon Themes & Utilities"
-msgstr "Icoon themas & tools"
 
 #: Gtk/RestoreFinishBox.vala:102
 msgid ""
@@ -1291,8 +1289,8 @@ msgstr "Behoud dit aankoppelingspad op het root-bestandssysteem"
 msgid "LIVE"
 msgstr "ACTIEF"
 
-#: Utility/Device.vala:1829 Console/AppConsole.vala:458
-#: Console/AppConsole.vala:497 Gtk/BackupDeviceBox.vala:254
+#: Utility/Device.vala:1949 Console/AppConsole.vala:459
+#: Console/AppConsole.vala:498 Gtk/BackupDeviceBox.vala:254
 #, c-format
 msgid "Label"
 msgstr "Etiket"
@@ -1363,7 +1361,7 @@ msgstr "Nieuwste wekelijkse momentopname is meer dan een week oud"
 msgid "Last weekly snapshot not found"
 msgstr "Nieuwste wekelijkse momentopname niet aangetroffen"
 
-#: Gtk/MainWindow.vala:1049
+#: Gtk/MainWindow.vala:1043
 #, c-format
 msgid "Latest snapshot"
 msgstr "Nieuwste momentopname"
@@ -1389,7 +1387,7 @@ msgstr "Apparatenlijst maken"
 msgid "List snapshots"
 msgstr "Lijst van momentopnamen maken"
 
-#: Gtk/MainWindow.vala:1000
+#: Gtk/MainWindow.vala:994
 msgid "Live USB Mode (Restore Only)"
 msgstr "Live-USB-modus (alleen terugzetten)"
 
@@ -1431,7 +1429,7 @@ msgstr "Ontbrekende afhankelijkheden"
 msgid "Mode"
 msgstr "Modus"
 
-#: Utility/Device.vala:1812
+#: Utility/Device.vala:1932
 #, c-format
 msgid "Model"
 msgstr "Model"
@@ -1482,16 +1480,16 @@ msgstr "Geen wijziging"
 msgid "No Snapshots Selected"
 msgstr "Geen momentopnamen gekozen"
 
-#: Gtk/MainWindow.vala:1073
+#: Gtk/MainWindow.vala:1067
 msgid "No snapshots available"
 msgstr "Geen momentopnamen beschikbaar"
 
 #: Console/AppConsole.vala:320 Core/SnapshotRepo.vala:898
-#: Gtk/MainWindow.vala:1017
+#: Gtk/MainWindow.vala:1011
 msgid "No snapshots found"
 msgstr "Geen momentopnamen gevonden"
 
-#: Console/AppConsole.vala:740
+#: Console/AppConsole.vala:741
 msgid "No snapshots found on device"
 msgstr "Geen momentopnamen gevonden op apparaat"
 
@@ -1507,7 +1505,7 @@ msgstr "Geen momentopnamen op dit apparaat"
 msgid "No snapshots selected"
 msgstr "Geen momentopnamen gekozen"
 
-#: Gtk/MainWindow.vala:1050 Gtk/MainWindow.vala:1052
+#: Gtk/MainWindow.vala:1044 Gtk/MainWindow.vala:1046
 msgid "None"
 msgstr "Geen"
 
@@ -1536,8 +1534,8 @@ msgstr "Aantekeningen"
 msgid "Nothing to do!"
 msgstr "Niets te doen."
 
-#: Console/AppConsole.vala:423 Console/AppConsole.vala:452
-#: Console/AppConsole.vala:491 Console/AppConsole.vala:539
+#: Console/AppConsole.vala:423 Console/AppConsole.vala:453
+#: Console/AppConsole.vala:492 Console/AppConsole.vala:540
 msgid "Num"
 msgstr "Aant"
 
@@ -1569,7 +1567,7 @@ msgstr ""
 msgid "Older log files removed"
 msgstr "Oudere logboekbestanden verwijderd"
 
-#: Gtk/MainWindow.vala:1051
+#: Gtk/MainWindow.vala:1045
 msgid "Oldest snapshot"
 msgstr "Oudste momentopname"
 
@@ -1609,7 +1607,7 @@ msgstr "Andere toepassingen (volgende pagina)"
 msgid "Owner"
 msgstr "Eigenaar"
 
-#: Utility/Device.vala:1824
+#: Utility/Device.vala:1944
 #, c-format
 msgid "Parent Device"
 msgstr "Moederapparaat"
@@ -1728,7 +1726,7 @@ msgstr ""
 "gewoonlijk niet nodig. Kies dit alleen wanneer het teruggezette systeem niet "
 "kan opstarten."
 
-#: Console/AppConsole.vala:982
+#: Console/AppConsole.vala:983
 #, c-format
 msgid "Re-install GRUB2 bootloader?"
 msgstr "Opstartlader GRUB2 opnieuw installeren?"
@@ -1882,7 +1880,7 @@ msgstr ""
 "gebruikersmappen zullen niet worden aangeraakt. Dit gedrag kan worden "
 "veranderd door een filter toe te voegen om deze bestanden mee te nemen."
 
-#: Utility/Device.vala:1814
+#: Utility/Device.vala:1934
 #, c-format
 msgid "Revision"
 msgstr "Herziening"
@@ -1943,7 +1941,7 @@ msgstr "Rooster"
 msgid "Scheduled snapshot in progress..."
 msgstr "Geagendeerde momentopname actief..."
 
-#: Core/Main.vala:1147 Gtk/MainWindow.vala:1067 Gtk/ScheduleBox.vala:312
+#: Core/Main.vala:1147 Gtk/MainWindow.vala:1061 Gtk/ScheduleBox.vala:312
 msgid "Scheduled snapshots are disabled"
 msgstr "Geagendeerde momentopnamen zijn uitgeschakeld"
 
@@ -1965,16 +1963,16 @@ msgstr ""
 "Geagendeerde momentopnamen zijn ingeschakeld. Er zullen automatisch "
 "momentopnamen worden gemaakt voor gekozen niveaus."
 
-#: Console/AppConsole.vala:870
+#: Console/AppConsole.vala:871
 #, c-format
 msgid "Select '%s' device (default = %s)"
 msgstr "Kies '%s' apparaat (standaard = %s)"
 
-#: Console/AppConsole.vala:689 Core/SnapshotRepo.vala:593
+#: Console/AppConsole.vala:690 Core/SnapshotRepo.vala:593
 msgid "Select BTRFS system disk with root subvolume (@)"
 msgstr "Kies BTRFS-bestandssysteem met root-subvolume (@)"
 
-#: Console/AppConsole.vala:998
+#: Console/AppConsole.vala:999
 msgid "Select GRUB device"
 msgstr "Kies GRUB-apparaat"
 
@@ -2006,7 +2004,7 @@ msgstr "Momentopnamen kiezen"
 msgid "Select Target Device"
 msgstr "Doelapparaat kiezen"
 
-#: Gtk/BackupDeviceBox.vala:392
+#: Gtk/BackupDeviceBox.vala:410
 #, c-format
 msgid "Select a partition on this disk"
 msgstr "Kies een partitie op deze schijf"
@@ -2035,7 +2033,7 @@ msgstr "Een ander apparaat kiezen?"
 msgid "Select applications to exclude from restore"
 msgstr "Kies toepassingen om uit te sluiten van terugzetten"
 
-#: Console/AppConsole.vala:672
+#: Console/AppConsole.vala:673
 msgid "Select backup device"
 msgstr "Kies apparaat voor reservekopieën"
 
@@ -2047,7 +2045,7 @@ msgstr "Kies een map"
 msgid "Select file(s)"
 msgstr "Kies bestand(en)"
 
-#: Console/AppConsole.vala:746
+#: Console/AppConsole.vala:747
 msgid "Select snapshot"
 msgstr "Kies een momentopname"
 
@@ -2099,11 +2097,11 @@ msgstr "Gekozen standaardapparaat voor momentopnamen"
 msgid "Selected default snapshot type"
 msgstr "Gekozen standaardsoort voor momentopnamen"
 
-#: Gtk/BackupDeviceBox.vala:373
+#: Gtk/BackupDeviceBox.vala:388
 msgid "Selected device does not have BTRFS partition"
 msgstr "Gekozen apparaat heeft geen BTRFS-partitie"
 
-#: Gtk/BackupDeviceBox.vala:371
+#: Gtk/BackupDeviceBox.vala:385
 msgid "Selected device does not have Linux partition"
 msgstr "Gekozen apparaat heeft geen Linuxpartitie"
 
@@ -2111,7 +2109,7 @@ msgstr "Gekozen apparaat heeft geen Linuxpartitie"
 msgid "Selected snapshot device"
 msgstr "Gekozen momentopname-apparaat"
 
-#: Console/AppConsole.vala:688 Core/SnapshotRepo.vala:592
+#: Console/AppConsole.vala:689 Core/SnapshotRepo.vala:592
 msgid "Selected snapshot device is not a system disk"
 msgstr "Gekozen momentopname-apparaat is geen systeemschijf"
 
@@ -2133,7 +2131,7 @@ msgstr ""
 "Gekozen gebruiker heeft een versleutelde persoonlijke map. Het is niet "
 "mogelijk om uitsluitend verborgen bestanden op te nemen."
 
-#: Utility/Device.vala:1813
+#: Utility/Device.vala:1933
 #, c-format
 msgid "Serial"
 msgstr "Serienummer"
@@ -2178,8 +2176,8 @@ msgstr "Toon meer toepassingen om uit te sluiten op de volgende pagina"
 msgid "Show rsync output (default)"
 msgstr "Toon rsync-uitvoer (standaard)"
 
-#: Utility/Device.vala:1816 Utility/Device.vala:1831
-#: Console/AppConsole.vala:456 Console/AppConsole.vala:495
+#: Utility/Device.vala:1936 Utility/Device.vala:1951
+#: Console/AppConsole.vala:457 Console/AppConsole.vala:496
 #: Gtk/RsyncLogBox.vala:392 Gtk/RestoreBox.vala:131
 #: Gtk/BackupDeviceBox.vala:202 Gtk/BackupBox.vala:93
 #: Gtk/SnapshotListBox.vala:174
@@ -2238,11 +2236,11 @@ msgstr "Verwijdering van momentopname(n) aan de gang..."
 msgid "Snapshot device"
 msgstr "Momentopname-apparaat"
 
-#: Console/AppConsole.vala:662 Core/SnapshotRepo.vala:559
+#: Console/AppConsole.vala:663 Core/SnapshotRepo.vala:559
 msgid "Snapshot device not available"
 msgstr "Momentopname-apparaat niet beschikbaar"
 
-#: Console/AppConsole.vala:658 Core/SnapshotRepo.vala:552
+#: Console/AppConsole.vala:659 Core/SnapshotRepo.vala:552
 msgid "Snapshot device not selected"
 msgstr "Momentopname-apparaat niet gekozen"
 
@@ -2347,7 +2345,7 @@ msgstr ""
 "Momentopnamen worden bewaard in /timeshift-btrfs op de gekozen partitie. "
 "Andere locaties zijn niet ondersteund."
 
-#: Gtk/MainWindow.vala:1012
+#: Gtk/MainWindow.vala:1006
 msgid "Snapshots available for restore"
 msgstr "Beschikbare momentopnamen voor terugzetten"
 
@@ -2367,7 +2365,7 @@ msgstr ""
 msgid "Snapshots cannot be created in Live CD mode"
 msgstr "Momentopnamen kunnen niet worden gemaakt in de livesessie van de DVD"
 
-#: Gtk/MainWindow.vala:1059
+#: Gtk/MainWindow.vala:1053
 msgid "Snapshots will be created at selected intervals"
 msgstr "Momentopnamen zullen met gekozen tussenpozen worden gemaakt"
 
@@ -2453,12 +2451,12 @@ msgstr "Bestanden synchroniseren met rsync..."
 msgid "Syntax"
 msgstr "Schrijfwijze"
 
-#: Utility/Device.vala:1837 Gtk/SnapshotListBox.vala:127
+#: Utility/Device.vala:1957 Gtk/SnapshotListBox.vala:127
 #, c-format
 msgid "System"
 msgstr "Systeem"
 
-#: Gtk/MainWindow.vala:957
+#: Gtk/MainWindow.vala:951
 msgid "System Restore Utility"
 msgstr "Hulpmiddel voor systeemherstel"
 
@@ -2522,12 +2520,12 @@ msgstr "De systeempartitie heeft een niet-ondersteunde subvolume-indeling."
 msgid "The target partition has an unsupported subvolume layout."
 msgstr "De doelpartitie heeft een niet-ondersteunde subvolume-indeling."
 
-#: Gtk/BackupDeviceBox.vala:494
+#: Gtk/BackupDeviceBox.vala:512
 #, c-format
 msgid "There are no snapshots on this device"
 msgstr "Er zijn geen momentopnamen op dit apparaat"
 
-#: Utility/Device.vala:1259
+#: Utility/Device.vala:1379
 msgid "This device is not encrypted"
 msgstr "Dit apparaat is niet versleuteld"
 
@@ -2540,42 +2538,38 @@ msgstr ""
 "geen enkele verantwoordelijkheid voor welke schade dan ook, die mogelijk "
 "voortvloeit uit het gebruik van dit programma."
 
-#: Gtk/MainWindow.vala:1047 Gtk/MainWindow.vala:1058
+#: Gtk/MainWindow.vala:1041 Gtk/MainWindow.vala:1052
 msgid "Timeshift is active"
 msgstr "Timeshift is actief"
-
-#: Gtk/MainWindow.vala:948
-msgid ""
-"Timeshift is powered by the following tools and components. Please visit the "
-"links for more information."
-msgstr ""
-"Timeshift gebruikt de volgende tools en componenten. Gelieve de links te "
-"bekijken voor meer informatie."
 
 #: Gtk/RsyncLogBox.vala:394 Gtk/RestoreBox.vala:132 Gtk/BackupBox.vala:94
 #, c-format
 msgid "Timestamp"
 msgstr "Tijdstempel"
 
-#: Console/AppConsole.vala:611
+#: Console/AppConsole.vala:612
 #, c-format
 msgid "To restore with default options, press the ENTER key for all prompts!"
 msgstr ""
 "Om terug te zetten met de standaardopties, drukt u bij elke vraag op de "
 "Entertoets."
 
+#: Utility/Gtk/AboutWindow.vala:457
+msgid "Tools"
+msgstr ""
+
 #: Utility/Gtk/AboutWindow.vala:441
 msgid "Translations"
 msgstr "Vertalers"
 
-#: Utility/Device.vala:1827 Console/AppConsole.vala:457
-#: Console/AppConsole.vala:496 Gtk/BackupDeviceBox.vala:190
+#: Utility/Device.vala:1947 Console/AppConsole.vala:458
+#: Console/AppConsole.vala:497 Gtk/BackupDeviceBox.vala:190
 #: Gtk/SettingsWindow.vala:86
 #, c-format
 msgid "Type"
 msgstr "Soort"
 
-#: Utility/Device.vala:1826
+#: Utility/Device.vala:1946
 #, c-format
 msgid "UUID"
 msgstr "UUID"
@@ -2592,16 +2586,16 @@ msgstr "Onbekende soort momentopname"
 msgid "Unknown value specified for option --tags"
 msgstr "Onbekende waarde opgegeven voor optie --tags"
 
-#: Utility/Device.vala:1270 Utility/Device.vala:1386
+#: Utility/Device.vala:1390 Utility/Device.vala:1506
 #, c-format
 msgid "Unlocked device is mapped to '%s'"
 msgstr "Ontsloten apparaat is gekoppeld aan '%s'"
 
-#: Utility/Device.vala:1385
+#: Utility/Device.vala:1505
 msgid "Unlocked successfully"
 msgstr "Met succes ontsloten"
 
-#: Utility/Device.vala:1600
+#: Utility/Device.vala:1720
 msgid "Unmounting from"
 msgstr "Ontkoppelen van"
 
@@ -2645,7 +2639,7 @@ msgstr "GRUB-menu bijwerken..."
 msgid "Updating bootloader configuration..."
 msgstr "Instellingen van opstartlader bijwerken..."
 
-#: Utility/Device.vala:1834
+#: Utility/Device.vala:1954
 #, c-format
 msgid "Used"
 msgstr "Gebruikt"
@@ -2658,7 +2652,7 @@ msgstr "Gebruiker"
 msgid "User Home Directories"
 msgstr "Persoonlijke mappen van gebruikers"
 
-#: Utility/Device.vala:1340
+#: Utility/Device.vala:1460
 msgid "User cancelled the password prompt"
 msgstr "Gebruiker heeft de wachtwoordvraag afgebroken"
 
@@ -2678,7 +2672,7 @@ msgstr "Gebruikers"
 msgid "Users Home"
 msgstr "Gebruikers"
 
-#: Utility/Device.vala:1811
+#: Utility/Device.vala:1931
 #, c-format
 msgid "Vendor"
 msgstr "Leverancier"
@@ -2736,7 +2730,7 @@ msgstr "Met fouten"
 msgid "Wizard"
 msgstr "Instelhulp"
 
-#: Utility/Device.vala:1313 Utility/Device.vala:1359
+#: Utility/Device.vala:1433 Utility/Device.vala:1479
 msgid "Wrong password"
 msgstr "Verkeerd wachtwoord"
 
@@ -2763,12 +2757,12 @@ msgstr ""
 "[Uitsluitend voor geavanceerde gebruikers] Verander deze instellingen alleen "
 "indien het teruggezette systeem niet kan opstarten."
 
-#: Console/AppConsole.vala:1010
+#: Console/AppConsole.vala:1011
 #, c-format
 msgid "[ENTER = Default (%s), a = Abort]"
 msgstr "[ENTER = standaard (%s), a = afbreken]"
 
-#: Console/AppConsole.vala:881
+#: Console/AppConsole.vala:882
 #, c-format
 msgid "[ENTER = Default (%s), r = Root device, a = Abort]"
 msgstr "[ENTER = standaard (%s), r = rootapparaat, a = afbreken]"
@@ -2824,6 +2818,19 @@ msgstr "rsync meldde een fout"
 msgid "un-tagged"
 msgstr "ontmarkeerd"
 
+#~ msgid "Code Contributions"
+#~ msgstr "Bijdragen"
+
+#~ msgid "Icon Themes & Utilities"
+#~ msgstr "Icoon themas & tools"
+
+#~ msgid ""
+#~ "Timeshift is powered by the following tools and components. Please visit "
+#~ "the links for more information."
+#~ msgstr ""
+#~ "Timeshift gebruikt de volgende tools en componenten. Gelieve de links te "
+#~ "bekijken voor meer informatie."
+
 #, fuzzy
 #~ msgid "Click to edit and drag-drop to re-order"
 #~ msgstr "Klik om te bewerken. Versleep om te herschikken."
@@ -2878,9 +2885,6 @@ msgstr "ontmarkeerd"
 
 #~ msgid "Close Window"
 #~ msgstr "Venster sluiten"
-
-#~ msgid "Contributions"
-#~ msgstr "Bijdragen"
 
 #~ msgid "Documenters"
 #~ msgstr "Documentalisten"

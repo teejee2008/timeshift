@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: linuxmint\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2018-06-24 17:21+0530\n"
+"POT-Creation-Date: 2018-08-26 21:06+0530\n"
 "PO-Revision-Date: 2017-11-22 15:09+0000\n"
 "Last-Translator: samson <Unknown>\n"
 "Language-Team: Amharic <am@li.org>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "X-Launchpad-Export-Date: 2017-11-23 10:47+0000\n"
 "X-Generator: Launchpad (build 18509)\n"
 
-#: Console/AppConsole.vala:613
+#: Console/AppConsole.vala:614
 #, c-format
 msgid ""
 "\n"
@@ -34,12 +34,12 @@ msgstr ""
 msgid "%d snapshots, %s free"
 msgstr "%d የ መመልከቻ ፎቶ %s ነፃ"
 
-#: Console/AppConsole.vala:914
+#: Console/AppConsole.vala:915
 #, c-format
 msgid "'%s' will be on '%s'"
 msgstr "'%s' ይኖራል በ '%s'"
 
-#: Console/AppConsole.vala:911
+#: Console/AppConsole.vala:912
 #, c-format
 msgid "'%s' will be on root device"
 msgstr "'%s' ይኖራል በ root አካል ላይ"
@@ -77,10 +77,10 @@ msgid ""
 "A maintenance task runs once every hour and creates snapshots as needed."
 msgstr ""
 
-#: Console/AppConsole.vala:698 Console/AppConsole.vala:762
-#: Console/AppConsole.vala:894 Console/AppConsole.vala:989
-#: Console/AppConsole.vala:1034 Console/AppConsole.vala:1075
-#: Console/AppConsole.vala:1093
+#: Console/AppConsole.vala:699 Console/AppConsole.vala:763
+#: Console/AppConsole.vala:895 Console/AppConsole.vala:990
+#: Console/AppConsole.vala:1035 Console/AppConsole.vala:1076
+#: Console/AppConsole.vala:1094
 msgid "Aborted."
 msgstr "ተቋርጧል"
 
@@ -212,12 +212,6 @@ msgstr "ደራሲዎች"
 msgid "Available"
 msgstr "ዝግጁ"
 
-#: Gtk/BackupDeviceBox.vala:98
-msgid ""
-"BRTFS snapshots are saved on system partition. Other partitions are not "
-"supported."
-msgstr ""
-
 #: Gtk/SnapshotBackendBox.vala:94
 msgid "BTRFS"
 msgstr "BTRFS"
@@ -233,6 +227,13 @@ msgstr "የ BTRFS መሳሪያዎች አልተገኙም"
 #: Core/Main.vala:2041 Core/Main.vala:2045
 msgid "BTRFS device is not mounted"
 msgstr "የ BTRFS አካሎች አልተጫኑም"
+
+#: Gtk/BackupDeviceBox.vala:98
+#, fuzzy
+msgid ""
+"BTRFS snapshots are saved on system partition. Other partitions are not "
+"supported."
+msgstr "ሌሎች መተግበሪያዎች (የሚቀጥለው ገጽ)"
 
 #: Gtk/FinishBox.vala:92
 msgid ""
@@ -407,10 +408,6 @@ msgstr "መዝጊያ"
 msgid "Close window to exit"
 msgstr "ለ መውጣት መስኮቱን ይዝጉ"
 
-#: Utility/Gtk/AboutWindow.vala:425
-msgid "Code Contributions"
-msgstr "አበርካቾች"
-
 #: Core/Main.vala:347
 msgid "Commands listed below are not available on this system"
 msgstr "ከ ታች በኩል የ ተዘረዘሩት ትእዛዞች በዚህ ስርአት ውስጥ የሉም"
@@ -440,21 +437,26 @@ msgstr "ተፈጽሟል ከ ስህተት ጋር"
 msgid "Confirm Actions"
 msgstr ""
 
-#: Console/AppConsole.vala:1068
+#: Console/AppConsole.vala:1069
 #, c-format
 msgid "Continue with restore? (y/n): "
 msgstr "እንደ ነበር መመለስ ልቀጥል? (y/n): "
 
-#: Console/AppConsole.vala:834 Console/AppConsole.vala:965
+#: Utility/Gtk/AboutWindow.vala:425
+#, fuzzy
+msgid "Contributors"
+msgstr "አበርካቾች"
+
+#: Console/AppConsole.vala:835 Console/AppConsole.vala:966
 msgid "Could not find device"
 msgstr "አካሉን ማግኘት አልተቻለም"
 
-#: Utility/Device.vala:1187
+#: Utility/Device.vala:1307
 #, c-format
 msgid "Could not find file"
 msgstr "ፋይል ማግኘት አልተቻለም"
 
-#: Console/AppConsole.vala:731
+#: Console/AppConsole.vala:732
 msgid "Could not find snapshot"
 msgstr "የ መመልከቻ ፎቶ ማግኘት አልተቻለም"
 
@@ -507,7 +509,7 @@ msgstr "የ መመልከቻ ፎቶ መፍጠሪያ ከ ታቀደ"
 msgid "Create snapshot of current system"
 msgstr "ለ አሁኑ ስርአት የ መመልከቻ ፎቶ መፍጠሪያ"
 
-#: Gtk/MainWindow.vala:1074
+#: Gtk/MainWindow.vala:1068
 msgid ""
 "Create snapshots manually or enable scheduled snapshots to protect your "
 "system"
@@ -647,7 +649,7 @@ msgstr "ንዑስ መጠን ማጥፊያ"
 msgid "Deluge, Transmission"
 msgstr ""
 
-#: Console/AppConsole.vala:427 Console/AppConsole.vala:542
+#: Console/AppConsole.vala:427 Console/AppConsole.vala:543
 msgid "Description"
 msgstr "መግለጫ"
 
@@ -661,24 +663,24 @@ msgstr "የ ተደመሰሰ qgroup"
 msgid "Destroying qgroup"
 msgstr "በ መደምሰስ ላይ qgroup"
 
-#: Utility/Device.vala:1810 Utility/Device.vala:1820
-#: Console/AppConsole.vala:454 Console/AppConsole.vala:493
-#: Console/AppConsole.vala:541 Core/SnapshotRepo.vala:76
+#: Utility/Device.vala:1930 Utility/Device.vala:1940
+#: Console/AppConsole.vala:455 Console/AppConsole.vala:494
+#: Console/AppConsole.vala:542 Core/SnapshotRepo.vala:76
 #: Core/SnapshotRepo.vala:683 Core/SnapshotRepo.vala:686 Core/Main.vala:2114
 #: Core/Main.vala:2146 Gtk/RestoreDeviceBox.vala:97
 #, c-format
 msgid "Device"
 msgstr "አካል"
 
-#: Utility/Device.vala:1269
+#: Utility/Device.vala:1389
 msgid "Device is unlocked"
 msgstr "አካሉ ተከፍቷል"
 
-#: Utility/Device.vala:1164 Utility/Device.vala:1226
+#: Utility/Device.vala:1284 Utility/Device.vala:1346
 msgid "Device name is empty!"
 msgstr "የ አካሉ ስም ባዶ ነው!"
 
-#: Console/AppConsole.vala:663 Core/SnapshotRepo.vala:560 Core/Main.vala:3232
+#: Console/AppConsole.vala:664 Core/SnapshotRepo.vala:560 Core/Main.vala:3232
 msgid "Device not found"
 msgstr "አካሉ አልተገኘም"
 
@@ -761,7 +763,7 @@ msgstr "እርዳታ"
 msgid "Enable BTRFS qgroups (recommended)"
 msgstr ""
 
-#: Gtk/MainWindow.vala:1068
+#: Gtk/MainWindow.vala:1062
 msgid "Enable scheduled snapshots to protect your system"
 msgstr "የ እርስዎን ስርአት ለ መጠበቅ በ እቅድ የ መመልከቻ ፎቶ ይፍጠሩ"
 
@@ -769,7 +771,7 @@ msgstr "የ እርስዎን ስርአት ለ መጠበቅ በ እቅድ የ መ�
 msgid "Enabled subvolume quota support"
 msgstr "የ ንዑስ መጠን ድርሻ ድጋፍ ያስችሉ"
 
-#: Utility/Device.vala:1333
+#: Utility/Device.vala:1453
 msgid "Encrypted Device"
 msgstr "የ ተመሰጠረ አካል"
 
@@ -777,17 +779,17 @@ msgstr "የ ተመሰጠረ አካል"
 msgid "Encrypted Home Directory"
 msgstr "የ ተመሰጠረ የ ቤት ዳይሬክቶሪ"
 
-#: Console/AppConsole.vala:884
+#: Console/AppConsole.vala:885
 #, c-format
 msgid "Enter device name or number"
 msgstr "የ አካሉን ስም ወይንም ቁጥር ያስገቡ"
 
-#: Console/AppConsole.vala:682 Console/AppConsole.vala:1013
+#: Console/AppConsole.vala:683 Console/AppConsole.vala:1014
 #, c-format
 msgid "Enter device name or number (a=Abort)"
 msgstr "የ አካሉን ስም ወይንም ቁጥር ያስገቡ (a=Abort)"
 
-#: Utility/Device.vala:1334
+#: Utility/Device.vala:1454
 #, c-format
 msgid "Enter passphrase to unlock '%s'"
 msgstr "ለ መክፈት የ ማለፊያ ሀረግ ያስገቡ '%s'"
@@ -796,7 +798,7 @@ msgstr "ለ መክፈት የ ማለፊያ ሀረግ ያስገቡ '%s'"
 msgid "Enter path or browse for directory"
 msgstr "ለ ዳይሬክቶሪ መንገድ ወይንም መቃኛ ያስገቡ"
 
-#: Console/AppConsole.vala:754
+#: Console/AppConsole.vala:755
 #, c-format
 msgid "Enter snapshot number (a=Abort, p=Previous, n=Next)"
 msgstr "የ መመልከቻ ፎቶ ቁጥር ያስገቡ (a=Abort, p=Previous, n=Next)"
@@ -921,13 +923,13 @@ msgstr "የ ስርአቱን መጠን መገመት አልተቻለም"
 msgid "Failed to export crontab file"
 msgstr "ፋይል በ እቅድ መላክ አልተቻለም"
 
-#: Console/AppConsole.vala:697 Console/AppConsole.vala:761
-#: Console/AppConsole.vala:893 Console/AppConsole.vala:988
-#: Console/AppConsole.vala:1033 Console/AppConsole.vala:1074
+#: Console/AppConsole.vala:698 Console/AppConsole.vala:762
+#: Console/AppConsole.vala:894 Console/AppConsole.vala:989
+#: Console/AppConsole.vala:1034 Console/AppConsole.vala:1075
 msgid "Failed to get input from user in 3 attempts"
 msgstr "ከ ተጠቃሚው በ 3 ሙከራዎች ማስገቢያ ማግኘት አልተቻለም"
 
-#: Utility/Device.vala:615
+#: Utility/Device.vala:723
 msgid "Failed to get partition list"
 msgstr "የ ክፍልፋይ ዝርዝር ማግኘት አልተቻለም"
 
@@ -991,12 +993,12 @@ msgstr "የ ስርአቱን የ ንዑስ መጠን እንደ ነበር መመ�
 msgid "Failed to save exclude list"
 msgstr "የማይካተቱ ዝርዝር ማስቀመጥ አልተቻለም"
 
-#: Utility/Device.vala:1260 Utility/Device.vala:1314 Utility/Device.vala:1339
-#: Utility/Device.vala:1360 Utility/Device.vala:1380
+#: Utility/Device.vala:1380 Utility/Device.vala:1434 Utility/Device.vala:1459
+#: Utility/Device.vala:1480 Utility/Device.vala:1500
 msgid "Failed to unlock device"
 msgstr "አካሉን መክፈት አልተቻለም"
 
-#: Utility/Device.vala:1611
+#: Utility/Device.vala:1731
 msgid "Failed to unmount"
 msgstr "ማውረድ አልተቻለም"
 
@@ -1051,7 +1053,7 @@ msgstr "ፋይሎች እና ዳይሬክቶሪ መቁጠሪያ:"
 msgid "Files matching the following patterns will be excluded"
 msgstr "የሚቀጥለውን ንድፍ የሚመሳሰሉ ፋይሎች ይተዋሉ"
 
-#: Utility/Device.vala:1828
+#: Utility/Device.vala:1948
 #, c-format
 msgid "Filesystem"
 msgstr "የ ፋይል ስርአት"
@@ -1093,7 +1095,7 @@ msgstr "ነፃ"
 msgid "Free space"
 msgstr "ነፃ ቦታ"
 
-#: Console/AppConsole.vala:1042
+#: Console/AppConsole.vala:1043
 msgid "GRUB Device"
 msgstr ""
 
@@ -1101,7 +1103,7 @@ msgstr ""
 msgid "GRUB device not selected"
 msgstr "የ GRUB አካል አልተመረጠም"
 
-#: Console/AppConsole.vala:1047
+#: Console/AppConsole.vala:1048
 msgid "GRUB will NOT be reinstalled"
 msgstr "GRUB እንደገና አይገጠምም"
 
@@ -1155,10 +1157,6 @@ msgstr "በየሰአቱ መመልከቻ ፎቶ ማንሳት አልተቻለም!"
 #: Core/Main.vala:1028
 msgid "Hourly snapshots are enabled"
 msgstr "በየሰአቱ መመልከቻ ፎቶ ማንሳት አስችለዋል"
-
-#: Utility/Gtk/AboutWindow.vala:457
-msgid "Icon Themes & Utilities"
-msgstr ""
 
 #: Gtk/RestoreFinishBox.vala:102
 msgid ""
@@ -1240,8 +1238,8 @@ msgstr ""
 msgid "LIVE"
 msgstr "በ ቀጥታ"
 
-#: Utility/Device.vala:1829 Console/AppConsole.vala:458
-#: Console/AppConsole.vala:497 Gtk/BackupDeviceBox.vala:254
+#: Utility/Device.vala:1949 Console/AppConsole.vala:459
+#: Console/AppConsole.vala:498 Gtk/BackupDeviceBox.vala:254
 #, c-format
 msgid "Label"
 msgstr "ምልክት"
@@ -1311,7 +1309,7 @@ msgstr "የ መመልከቻ ፎቶ መጨረሻ በየ ሳምንቱ የ ተነ�
 msgid "Last weekly snapshot not found"
 msgstr "የ መመልከቻ ፎቶ መጨረሻ በየ ሳምንቱ የ ተነሳው አልተገኘም"
 
-#: Gtk/MainWindow.vala:1049
+#: Gtk/MainWindow.vala:1043
 #, c-format
 msgid "Latest snapshot"
 msgstr "ዘመናዊ የ መመልከቻ ፎቶ"
@@ -1337,7 +1335,7 @@ msgstr "የ ካሎች ዝርዝር"
 msgid "List snapshots"
 msgstr "የ መመልከቻ ፎቶ ዝርዝር"
 
-#: Gtk/MainWindow.vala:1000
+#: Gtk/MainWindow.vala:994
 msgid "Live USB Mode (Restore Only)"
 msgstr "በ ቀጥታ USB ዘዴ (እንደ ነበር ለ መመለስ ብቻ)"
 
@@ -1379,7 +1377,7 @@ msgstr "የ ጎደሉ ጥገኞች"
 msgid "Mode"
 msgstr "ዘዴ"
 
-#: Utility/Device.vala:1812
+#: Utility/Device.vala:1932
 #, c-format
 msgid "Model"
 msgstr "ሞዴል"
@@ -1430,16 +1428,16 @@ msgstr "ለውጥ የለም"
 msgid "No Snapshots Selected"
 msgstr "ምንም የ መመልከቻ ፎቶ አልተመረጠም"
 
-#: Gtk/MainWindow.vala:1073
+#: Gtk/MainWindow.vala:1067
 msgid "No snapshots available"
 msgstr "ምንም የ መመልከቻ ፎቶ አልተገኘም"
 
 #: Console/AppConsole.vala:320 Core/SnapshotRepo.vala:898
-#: Gtk/MainWindow.vala:1017
+#: Gtk/MainWindow.vala:1011
 msgid "No snapshots found"
 msgstr "ምንም የ መመልከቻ ፎቶ አልተገኘም"
 
-#: Console/AppConsole.vala:740
+#: Console/AppConsole.vala:741
 msgid "No snapshots found on device"
 msgstr "ምንም የ መመልከቻ ፎቶ በ አካሉ ላይ አልተገኘም"
 
@@ -1455,7 +1453,7 @@ msgstr "ምንም የ መመልከቻ ፎቶ በዚህ አካል ላይ የለ�
 msgid "No snapshots selected"
 msgstr "ምንም የ መመልከቻ ፎቶ አልተመረጠም"
 
-#: Gtk/MainWindow.vala:1050 Gtk/MainWindow.vala:1052
+#: Gtk/MainWindow.vala:1044 Gtk/MainWindow.vala:1046
 msgid "None"
 msgstr "ምንም"
 
@@ -1484,8 +1482,8 @@ msgstr "ማስታወሻዎች"
 msgid "Nothing to do!"
 msgstr "ምንም የሚሰራ የለም!"
 
-#: Console/AppConsole.vala:423 Console/AppConsole.vala:452
-#: Console/AppConsole.vala:491 Console/AppConsole.vala:539
+#: Console/AppConsole.vala:423 Console/AppConsole.vala:453
+#: Console/AppConsole.vala:492 Console/AppConsole.vala:540
 msgid "Num"
 msgstr "ቁጥር"
 
@@ -1513,7 +1511,7 @@ msgstr ""
 msgid "Older log files removed"
 msgstr "አሮጌ የ መግቢያ ፋይል ተወግዷል"
 
-#: Gtk/MainWindow.vala:1051
+#: Gtk/MainWindow.vala:1045
 msgid "Oldest snapshot"
 msgstr "አሮጌው የ መመልከቻ ፎቶ"
 
@@ -1549,7 +1547,7 @@ msgstr "ሌሎች መተግበሪያዎች (የሚቀጥለው ገጽ)"
 msgid "Owner"
 msgstr "ባለቤት"
 
-#: Utility/Device.vala:1824
+#: Utility/Device.vala:1944
 #, c-format
 msgid "Parent Device"
 msgstr "ወላጅ አካል"
@@ -1660,7 +1658,7 @@ msgid ""
 "needed. Select this only if the restored system fails to boot."
 msgstr ""
 
-#: Console/AppConsole.vala:982
+#: Console/AppConsole.vala:983
 #, c-format
 msgid "Re-install GRUB2 bootloader?"
 msgstr "እንደገና-መግጠሚያ የ GRUB2 ማስነሻ መጫኛ?"
@@ -1805,7 +1803,7 @@ msgid ""
 "is restored."
 msgstr ""
 
-#: Utility/Device.vala:1814
+#: Utility/Device.vala:1934
 #, c-format
 msgid "Revision"
 msgstr "ክለሳ"
@@ -1859,7 +1857,7 @@ msgstr "እቅድ"
 msgid "Scheduled snapshot in progress..."
 msgstr "የ ታቀደው የ መመልከቻ ፎቶ በ ሂደት ላይ..."
 
-#: Core/Main.vala:1147 Gtk/MainWindow.vala:1067 Gtk/ScheduleBox.vala:312
+#: Core/Main.vala:1147 Gtk/MainWindow.vala:1061 Gtk/ScheduleBox.vala:312
 msgid "Scheduled snapshots are disabled"
 msgstr "የ ታቀደው የ መመልከቻ ፎቶ ተሰናክሏል"
 
@@ -1877,16 +1875,16 @@ msgid ""
 "selected levels."
 msgstr "በ እቅድ መመልከቻ ፎቶ ማንሳት አስችለዋል: የ መመልከቻ ፎቶ ራሱ በራሱ ይፈጥራል ለ ተመረጠው ደረጃ"
 
-#: Console/AppConsole.vala:870
+#: Console/AppConsole.vala:871
 #, c-format
 msgid "Select '%s' device (default = %s)"
 msgstr "ይምረጡ '%s' አካል (ነባር = %s)"
 
-#: Console/AppConsole.vala:689 Core/SnapshotRepo.vala:593
+#: Console/AppConsole.vala:690 Core/SnapshotRepo.vala:593
 msgid "Select BTRFS system disk with root subvolume (@)"
 msgstr ""
 
-#: Console/AppConsole.vala:998
+#: Console/AppConsole.vala:999
 msgid "Select GRUB device"
 msgstr "የ GRUB አካል ይምረጡ"
 
@@ -1918,7 +1916,7 @@ msgstr "የ መመልከቻ ፎቶ ይምረጡ"
 msgid "Select Target Device"
 msgstr "የ ታለመውን አካል ይምረጡ"
 
-#: Gtk/BackupDeviceBox.vala:392
+#: Gtk/BackupDeviceBox.vala:410
 #, c-format
 msgid "Select a partition on this disk"
 msgstr "በዚህ ዲስክ ላይ ክፍልፋይ ይምረጡ"
@@ -1947,7 +1945,7 @@ msgstr "ሌላ አካል ልምረጥ?"
 msgid "Select applications to exclude from restore"
 msgstr "መተግበሪያ ይምረጡ ከ እንደ ነበር መመለሻ ውስጥ ለማስቀረት"
 
-#: Console/AppConsole.vala:672
+#: Console/AppConsole.vala:673
 msgid "Select backup device"
 msgstr "ተተኪ አካል ይምረጡ"
 
@@ -1959,7 +1957,7 @@ msgstr "ዳይሬክቶሪ ይምረጡ"
 msgid "Select file(s)"
 msgstr "ይምረጡ ፋይል(ሎች)"
 
-#: Console/AppConsole.vala:746
+#: Console/AppConsole.vala:747
 msgid "Select snapshot"
 msgstr "የ መመልከቻ ፎቶ ይምረጡ"
 
@@ -2011,11 +2009,11 @@ msgstr "ነባር የ መመልከቻ ፎቶ አካል ይምረጡ"
 msgid "Selected default snapshot type"
 msgstr "ነባር የ መመልከቻ ፎቶ አይነት ይምረጡ"
 
-#: Gtk/BackupDeviceBox.vala:373
+#: Gtk/BackupDeviceBox.vala:388
 msgid "Selected device does not have BTRFS partition"
 msgstr "የ ተመረጠው አካል የ BTRFS መከፋፈያ የለውም"
 
-#: Gtk/BackupDeviceBox.vala:371
+#: Gtk/BackupDeviceBox.vala:385
 msgid "Selected device does not have Linux partition"
 msgstr "የ ተመረጠው አካል የ ሊነክስ ክፍልፋይ አልያዘም"
 
@@ -2023,7 +2021,7 @@ msgstr "የ ተመረጠው አካል የ ሊነክስ ክፍልፋይ አልያ
 msgid "Selected snapshot device"
 msgstr "የ ተመረጠው የ መመልከቻ ፎቶ አካል"
 
-#: Console/AppConsole.vala:688 Core/SnapshotRepo.vala:592
+#: Console/AppConsole.vala:689 Core/SnapshotRepo.vala:592
 msgid "Selected snapshot device is not a system disk"
 msgstr "የ ተመረጠው የ መመልከቻ ፎቶ አካል የ ስርአት ዲስክ አይደለም"
 
@@ -2041,7 +2039,7 @@ msgid ""
 "only hidden files."
 msgstr "የ ተመረጠው ተጠቃሚ የ ተመሰጠረ የ ቤት ዳይሬክቶሪ አለው: ስለዚህ የ ተደበቁ ፋይሎችን ማካተት አይቻልም"
 
-#: Utility/Device.vala:1813
+#: Utility/Device.vala:1933
 #, c-format
 msgid "Serial"
 msgstr "ተከታታይ"
@@ -2086,8 +2084,8 @@ msgstr "ተጨማሪ መተግበሪያ ማሳያ ለ መተው በሚቀጥለ�
 msgid "Show rsync output (default)"
 msgstr ""
 
-#: Utility/Device.vala:1816 Utility/Device.vala:1831
-#: Console/AppConsole.vala:456 Console/AppConsole.vala:495
+#: Utility/Device.vala:1936 Utility/Device.vala:1951
+#: Console/AppConsole.vala:457 Console/AppConsole.vala:496
 #: Gtk/RsyncLogBox.vala:392 Gtk/RestoreBox.vala:131
 #: Gtk/BackupDeviceBox.vala:202 Gtk/BackupBox.vala:93
 #: Gtk/SnapshotListBox.vala:174
@@ -2140,11 +2138,11 @@ msgstr "የ መመልከቻ ፎቶ ማጥፋት በ ሂደት ላይ ነው..."
 msgid "Snapshot device"
 msgstr "የ መመልከቻ ፎቶአካል"
 
-#: Console/AppConsole.vala:662 Core/SnapshotRepo.vala:559
+#: Console/AppConsole.vala:663 Core/SnapshotRepo.vala:559
 msgid "Snapshot device not available"
 msgstr "የ መመልከቻ ፎቶአካል አልተገኘም"
 
-#: Console/AppConsole.vala:658 Core/SnapshotRepo.vala:552
+#: Console/AppConsole.vala:659 Core/SnapshotRepo.vala:552
 msgid "Snapshot device not selected"
 msgstr "የ መመልከቻ ፎቶአካል አልተመረጠም"
 
@@ -2227,7 +2225,7 @@ msgid ""
 "locations are not supported."
 msgstr ""
 
-#: Gtk/MainWindow.vala:1012
+#: Gtk/MainWindow.vala:1006
 msgid "Snapshots available for restore"
 msgstr "የ መመልከቻ ፎቶ ዝግጁ ነው እንደ ነበር ለ መመለስ"
 
@@ -2242,7 +2240,7 @@ msgstr ""
 msgid "Snapshots cannot be created in Live CD mode"
 msgstr "የ መመልከቻ ፎቶ በ ቀጥታ ሲዲ ዘዴ ውስጥ መፍጠር አይቻልም"
 
-#: Gtk/MainWindow.vala:1059
+#: Gtk/MainWindow.vala:1053
 msgid "Snapshots will be created at selected intervals"
 msgstr "የ መመልከቻ ፎቶ በ ተመረጠው ክፍተት መሰረት ይፈጠራል"
 
@@ -2325,12 +2323,12 @@ msgstr ""
 msgid "Syntax"
 msgstr "አገባብ"
 
-#: Utility/Device.vala:1837 Gtk/SnapshotListBox.vala:127
+#: Utility/Device.vala:1957 Gtk/SnapshotListBox.vala:127
 #, c-format
 msgid "System"
 msgstr "ስርአት"
 
-#: Gtk/MainWindow.vala:957
+#: Gtk/MainWindow.vala:951
 msgid "System Restore Utility"
 msgstr "ስርአት እንደ ነበር መመለሻ መሳሪያ"
 
@@ -2387,12 +2385,12 @@ msgstr "የ ስርአቱ ክፍልፋይ ያልተደገፈ ንዑስ መጠን 
 msgid "The target partition has an unsupported subvolume layout."
 msgstr "የታለመው ክፍልፋይ ያልተደገፈ ንዑስ መጠን እቅድ አለው"
 
-#: Gtk/BackupDeviceBox.vala:494
+#: Gtk/BackupDeviceBox.vala:512
 #, c-format
 msgid "There are no snapshots on this device"
 msgstr "የ መመልከቻ ፎቶ በዚህ አካል የለም"
 
-#: Utility/Device.vala:1259
+#: Utility/Device.vala:1379
 msgid "This device is not encrypted"
 msgstr "ይህ አካል አልተመሰጠረም"
 
@@ -2402,38 +2400,36 @@ msgid ""
 "responsibility for any damage arising from the use of this program."
 msgstr ""
 
-#: Gtk/MainWindow.vala:1047 Gtk/MainWindow.vala:1058
+#: Gtk/MainWindow.vala:1041 Gtk/MainWindow.vala:1052
 msgid "Timeshift is active"
 msgstr "Timeshift ንቁ ነው"
-
-#: Gtk/MainWindow.vala:948
-msgid ""
-"Timeshift is powered by the following tools and components. Please visit the "
-"links for more information."
-msgstr ""
 
 #: Gtk/RsyncLogBox.vala:394 Gtk/RestoreBox.vala:132 Gtk/BackupBox.vala:94
 #, c-format
 msgid "Timestamp"
 msgstr "የ ሰአት ማህተም"
 
-#: Console/AppConsole.vala:611
+#: Console/AppConsole.vala:612
 #, c-format
 msgid "To restore with default options, press the ENTER key for all prompts!"
 msgstr "እንደ ነበር ለ መመለስ ነባሩን ምርጫ: ይጫኑ የ ማስገቢያውን ቁልፍ ለሁሉም ሙከራዎች!"
+
+#: Utility/Gtk/AboutWindow.vala:457
+msgid "Tools"
+msgstr ""
 
 #: Utility/Gtk/AboutWindow.vala:441
 msgid "Translations"
 msgstr "እርዳታ"
 
-#: Utility/Device.vala:1827 Console/AppConsole.vala:457
-#: Console/AppConsole.vala:496 Gtk/BackupDeviceBox.vala:190
+#: Utility/Device.vala:1947 Console/AppConsole.vala:458
+#: Console/AppConsole.vala:497 Gtk/BackupDeviceBox.vala:190
 #: Gtk/SettingsWindow.vala:86
 #, c-format
 msgid "Type"
 msgstr "አይነት"
 
-#: Utility/Device.vala:1826
+#: Utility/Device.vala:1946
 #, c-format
 msgid "UUID"
 msgstr "UUID"
@@ -2450,16 +2446,16 @@ msgstr "ያልታወቀ የ መመልከቻ ፎቶ አይነት"
 msgid "Unknown value specified for option --tags"
 msgstr ""
 
-#: Utility/Device.vala:1270 Utility/Device.vala:1386
+#: Utility/Device.vala:1390 Utility/Device.vala:1506
 #, c-format
 msgid "Unlocked device is mapped to '%s'"
 msgstr ""
 
-#: Utility/Device.vala:1385
+#: Utility/Device.vala:1505
 msgid "Unlocked successfully"
 msgstr "ተሳክቶ ተከፍቷል"
 
-#: Utility/Device.vala:1600
+#: Utility/Device.vala:1720
 msgid "Unmounting from"
 msgstr "በ ማውረድ ላይ ከ"
 
@@ -2502,7 +2498,7 @@ msgstr "GRUB menu ማሻሻያ..."
 msgid "Updating bootloader configuration..."
 msgstr "የ bootloader ማሰናጅ በ ማሻሻል ላይ..."
 
-#: Utility/Device.vala:1834
+#: Utility/Device.vala:1954
 #, c-format
 msgid "Used"
 msgstr "የ ተጠቀሙት"
@@ -2515,7 +2511,7 @@ msgstr "ተጠቃሚ"
 msgid "User Home Directories"
 msgstr "የ ተጠቃሚ የ ቤት ዳይሬክቶሪዎች"
 
-#: Utility/Device.vala:1340
+#: Utility/Device.vala:1460
 msgid "User cancelled the password prompt"
 msgstr "ተጠቃሚው የ መግቢያ ቃል ማስገባቱን ሰርዟል"
 
@@ -2533,7 +2529,7 @@ msgstr "ተጠቃሚዎች"
 msgid "Users Home"
 msgstr "ተጠቃሚዎች"
 
-#: Utility/Device.vala:1811
+#: Utility/Device.vala:1931
 #, c-format
 msgid "Vendor"
 msgstr "ሻጭ"
@@ -2591,7 +2587,7 @@ msgstr "ከ ስህተት ጋር"
 msgid "Wizard"
 msgstr "እረዳት"
 
-#: Utility/Device.vala:1313 Utility/Device.vala:1359
+#: Utility/Device.vala:1433 Utility/Device.vala:1479
 msgid "Wrong password"
 msgstr "የ ተሳሳተ የ መግቢያ ቃል"
 
@@ -2613,12 +2609,12 @@ msgid ""
 msgstr ""
 "[የሚሰሩትን ለሚያውቁ ተጠቃሚዎች ብቻ] ይህን ማሰናጃ የሚቀይሩት እንደ ነበር የ ተመለሰው ስርአት መነሳት ካልቻለ ብቻ ነው"
 
-#: Console/AppConsole.vala:1010
+#: Console/AppConsole.vala:1011
 #, c-format
 msgid "[ENTER = Default (%s), a = Abort]"
 msgstr "[ማስገቢያ = ነባር (%s), a = ማቋረጫ]"
 
-#: Console/AppConsole.vala:881
+#: Console/AppConsole.vala:882
 #, c-format
 msgid "[ENTER = Default (%s), r = Root device, a = Abort]"
 msgstr "[ማስገቢያ = ነባር (%s), r = Root device, a = ማቋረጫ]"
@@ -2674,6 +2670,9 @@ msgstr "rsync ስህተት መልሷል"
 msgid "un-tagged"
 msgstr "ምልክት-ያልተደረገበት"
 
+#~ msgid "Code Contributions"
+#~ msgstr "አበርካቾች"
+
 #, fuzzy
 #~ msgid "Click to edit and drag-drop to re-order"
 #~ msgstr "ይጫኑ ለ ማረም: ይጎትቱ እና ይጣሉ እንደገና-ለማሰናዳት"
@@ -2727,9 +2726,6 @@ msgstr "ምልክት-ያልተደረገበት"
 
 #~ msgid "Close Window"
 #~ msgstr "መስኮቱን መዝጊያ"
-
-#~ msgid "Contributions"
-#~ msgstr "አበርካቾች"
 
 #~ msgid "Documenters"
 #~ msgstr "አዘጋጆች"

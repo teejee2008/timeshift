@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timeshift\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2018-06-24 17:21+0530\n"
+"POT-Creation-Date: 2018-08-26 21:06+0530\n"
 "PO-Revision-Date: 2018-08-20 20:10+0300\n"
 "Last-Translator: Gökhan Gökkaya <gokhanlnx@gmail.com>\n"
 "Language-Team: Linux Mint Turkey <linuxmint@linuxmint.net.tr>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "X-Launchpad-Export-Date: 2017-11-23 10:47+0000\n"
 "X-Generator: Launchpad (build 18509)\n"
 
-#: Console/AppConsole.vala:613
+#: Console/AppConsole.vala:614
 #, c-format
 msgid ""
 "\n"
@@ -34,12 +34,12 @@ msgstr ""
 msgid "%d snapshots, %s free"
 msgstr "%d anlık görüntü, %s boş"
 
-#: Console/AppConsole.vala:914
+#: Console/AppConsole.vala:915
 #, c-format
 msgid "'%s' will be on '%s'"
 msgstr "'%s' '%s' üstünde olacak"
 
-#: Console/AppConsole.vala:911
+#: Console/AppConsole.vala:912
 #, c-format
 msgid "'%s' will be on root device"
 msgstr "'%s' kök aygıt üstünde olacak"
@@ -79,10 +79,10 @@ msgstr ""
 "Bir bakım görevi saatte bir kez çalışır ve gerektiğinde anlık görüntüler "
 "oluşturur."
 
-#: Console/AppConsole.vala:698 Console/AppConsole.vala:762
-#: Console/AppConsole.vala:894 Console/AppConsole.vala:989
-#: Console/AppConsole.vala:1034 Console/AppConsole.vala:1075
-#: Console/AppConsole.vala:1093
+#: Console/AppConsole.vala:699 Console/AppConsole.vala:763
+#: Console/AppConsole.vala:895 Console/AppConsole.vala:990
+#: Console/AppConsole.vala:1035 Console/AppConsole.vala:1076
+#: Console/AppConsole.vala:1094
 msgid "Aborted."
 msgstr "İptal edildi."
 
@@ -218,14 +218,6 @@ msgstr "Geliştiriciler"
 msgid "Available"
 msgstr "Mevcut"
 
-#: Gtk/BackupDeviceBox.vala:98
-msgid ""
-"BRTFS snapshots are saved on system partition. Other partitions are not "
-"supported."
-msgstr ""
-"BTRFS anlık görüntüleri sistem disk bölümüne kaydedilir. Diğer disk "
-"bölümleri desteklenmez."
-
 #: Gtk/SnapshotBackendBox.vala:94
 msgid "BTRFS"
 msgstr "BTRFS"
@@ -241,6 +233,13 @@ msgstr "BTRFS Araçları Bulunamadı"
 #: Core/Main.vala:2041 Core/Main.vala:2045
 msgid "BTRFS device is not mounted"
 msgstr "BTRFS aygıt bağlanamadı"
+
+#: Gtk/BackupDeviceBox.vala:98
+#, fuzzy
+msgid ""
+"BTRFS snapshots are saved on system partition. Other partitions are not "
+"supported."
+msgstr "Diğer uygulamalar (sonraki sayfa)"
 
 #: Gtk/FinishBox.vala:92
 msgid ""
@@ -419,10 +418,6 @@ msgstr "Kapat"
 msgid "Close window to exit"
 msgstr "Çıkış için pencereyi kapat"
 
-#: Utility/Gtk/AboutWindow.vala:425
-msgid "Code Contributions"
-msgstr "Katkıda bulunanlar"
-
 #: Core/Main.vala:347
 msgid "Commands listed below are not available on this system"
 msgstr "Aşağıdaki komut listesi bu sistem için kullanılabilir değil"
@@ -452,21 +447,26 @@ msgstr "Hatalarla Tamamlandı"
 msgid "Confirm Actions"
 msgstr "İşlemleri Onayla"
 
-#: Console/AppConsole.vala:1068
+#: Console/AppConsole.vala:1069
 #, c-format
 msgid "Continue with restore? (y/n): "
 msgstr "Geri yüklemeye devam edin? (e/h): "
 
-#: Console/AppConsole.vala:834 Console/AppConsole.vala:965
+#: Utility/Gtk/AboutWindow.vala:425
+#, fuzzy
+msgid "Contributors"
+msgstr "Katkıda bulunanlar"
+
+#: Console/AppConsole.vala:835 Console/AppConsole.vala:966
 msgid "Could not find device"
 msgstr "Aygıt bulunamadı"
 
-#: Utility/Device.vala:1187
+#: Utility/Device.vala:1307
 #, c-format
 msgid "Could not find file"
 msgstr "Dosya bulunamadı"
 
-#: Console/AppConsole.vala:731
+#: Console/AppConsole.vala:732
 msgid "Could not find snapshot"
 msgstr "Anlık görüntü bulunamadı"
 
@@ -521,7 +521,7 @@ msgstr "Eğer zamanlanmışsa anlık görüntü oluştur"
 msgid "Create snapshot of current system"
 msgstr "Mevcut sistemin anlık görüntüsünü oluştur"
 
-#: Gtk/MainWindow.vala:1074
+#: Gtk/MainWindow.vala:1068
 msgid ""
 "Create snapshots manually or enable scheduled snapshots to protect your "
 "system"
@@ -664,7 +664,7 @@ msgstr "Altbölümler Siliniyor..."
 msgid "Deluge, Transmission"
 msgstr "Deluge, Transmission"
 
-#: Console/AppConsole.vala:427 Console/AppConsole.vala:542
+#: Console/AppConsole.vala:427 Console/AppConsole.vala:543
 msgid "Description"
 msgstr "Açıklama"
 
@@ -678,24 +678,24 @@ msgstr "Yokedilen qgroup"
 msgid "Destroying qgroup"
 msgstr "qgroup yokediliyor"
 
-#: Utility/Device.vala:1810 Utility/Device.vala:1820
-#: Console/AppConsole.vala:454 Console/AppConsole.vala:493
-#: Console/AppConsole.vala:541 Core/SnapshotRepo.vala:76
+#: Utility/Device.vala:1930 Utility/Device.vala:1940
+#: Console/AppConsole.vala:455 Console/AppConsole.vala:494
+#: Console/AppConsole.vala:542 Core/SnapshotRepo.vala:76
 #: Core/SnapshotRepo.vala:683 Core/SnapshotRepo.vala:686 Core/Main.vala:2114
 #: Core/Main.vala:2146 Gtk/RestoreDeviceBox.vala:97
 #, c-format
 msgid "Device"
 msgstr "Aygıt"
 
-#: Utility/Device.vala:1269
+#: Utility/Device.vala:1389
 msgid "Device is unlocked"
 msgstr "Aygıt kilidi açık"
 
-#: Utility/Device.vala:1164 Utility/Device.vala:1226
+#: Utility/Device.vala:1284 Utility/Device.vala:1346
 msgid "Device name is empty!"
 msgstr "Aygıt ismi boş!"
 
-#: Console/AppConsole.vala:663 Core/SnapshotRepo.vala:560 Core/Main.vala:3232
+#: Console/AppConsole.vala:664 Core/SnapshotRepo.vala:560 Core/Main.vala:3232
 msgid "Device not found"
 msgstr "Aygıt bulunamadı"
 
@@ -793,7 +793,7 @@ msgstr "Bağışlar"
 msgid "Enable BTRFS qgroups (recommended)"
 msgstr "BTRFS qgroup etkinleştir (önerilir)"
 
-#: Gtk/MainWindow.vala:1068
+#: Gtk/MainWindow.vala:1062
 msgid "Enable scheduled snapshots to protect your system"
 msgstr "Sisteminizi korumak için zamanlanmış anlık görüntüleri etkinleştirin"
 
@@ -801,7 +801,7 @@ msgstr "Sisteminizi korumak için zamanlanmış anlık görüntüleri etkinleşt
 msgid "Enabled subvolume quota support"
 msgstr "Altbölüm kota desteği etkin"
 
-#: Utility/Device.vala:1333
+#: Utility/Device.vala:1453
 msgid "Encrypted Device"
 msgstr "Şifrelenmiş Aygıt"
 
@@ -809,17 +809,17 @@ msgstr "Şifrelenmiş Aygıt"
 msgid "Encrypted Home Directory"
 msgstr "Şifreli Ev Dizini"
 
-#: Console/AppConsole.vala:884
+#: Console/AppConsole.vala:885
 #, c-format
 msgid "Enter device name or number"
 msgstr "Aygıt adı ya da numarası girin"
 
-#: Console/AppConsole.vala:682 Console/AppConsole.vala:1013
+#: Console/AppConsole.vala:683 Console/AppConsole.vala:1014
 #, c-format
 msgid "Enter device name or number (a=Abort)"
 msgstr "Aygıt adı ya da numarası girin (a=İptal)"
 
-#: Utility/Device.vala:1334
+#: Utility/Device.vala:1454
 #, c-format
 msgid "Enter passphrase to unlock '%s'"
 msgstr "'%s' kilidini açmak için parola giriniz"
@@ -828,7 +828,7 @@ msgstr "'%s' kilidini açmak için parola giriniz"
 msgid "Enter path or browse for directory"
 msgstr "Bir hedef girin ya da dizin için gözatın"
 
-#: Console/AppConsole.vala:754
+#: Console/AppConsole.vala:755
 #, c-format
 msgid "Enter snapshot number (a=Abort, p=Previous, n=Next)"
 msgstr "Anlık görüntü numarası giriniz (a=İptal, p=Önceki, n=Sonraki)"
@@ -953,13 +953,13 @@ msgstr "Sistem boyutu hesaplama başarısız"
 msgid "Failed to export crontab file"
 msgstr "Crontab dosyası dışa aktarma başarısız"
 
-#: Console/AppConsole.vala:697 Console/AppConsole.vala:761
-#: Console/AppConsole.vala:893 Console/AppConsole.vala:988
-#: Console/AppConsole.vala:1033 Console/AppConsole.vala:1074
+#: Console/AppConsole.vala:698 Console/AppConsole.vala:762
+#: Console/AppConsole.vala:894 Console/AppConsole.vala:989
+#: Console/AppConsole.vala:1034 Console/AppConsole.vala:1075
 msgid "Failed to get input from user in 3 attempts"
 msgstr "Kullanıcı girdisi alınması 3 denemede başarısız"
 
-#: Utility/Device.vala:615
+#: Utility/Device.vala:723
 msgid "Failed to get partition list"
 msgstr "Disk bölümleme listesini alma başarısız"
 
@@ -1023,12 +1023,12 @@ msgstr "Sistem altbölümünü geri yükleme başarısız"
 msgid "Failed to save exclude list"
 msgstr "Hariç tutma listesini kaydetme başarısız"
 
-#: Utility/Device.vala:1260 Utility/Device.vala:1314 Utility/Device.vala:1339
-#: Utility/Device.vala:1360 Utility/Device.vala:1380
+#: Utility/Device.vala:1380 Utility/Device.vala:1434 Utility/Device.vala:1459
+#: Utility/Device.vala:1480 Utility/Device.vala:1500
 msgid "Failed to unlock device"
 msgstr "Aygıt kilidi açma başarısız"
 
-#: Utility/Device.vala:1611
+#: Utility/Device.vala:1731
 msgid "Failed to unmount"
 msgstr "Ayırma başarısız"
 
@@ -1086,7 +1086,7 @@ msgstr "Dosyalar ve dizin sayıları:"
 msgid "Files matching the following patterns will be excluded"
 msgstr "Aşağıdaki şablonlarla eşleşen dosyalar hariç tutuluyor"
 
-#: Utility/Device.vala:1828
+#: Utility/Device.vala:1948
 #, c-format
 msgid "Filesystem"
 msgstr "Dosya Sistemi"
@@ -1128,7 +1128,7 @@ msgstr "Boş"
 msgid "Free space"
 msgstr "Boş alan"
 
-#: Console/AppConsole.vala:1042
+#: Console/AppConsole.vala:1043
 msgid "GRUB Device"
 msgstr "GRUB Aygıtı"
 
@@ -1136,7 +1136,7 @@ msgstr "GRUB Aygıtı"
 msgid "GRUB device not selected"
 msgstr "GRUB aygıtı seçilmedi"
 
-#: Console/AppConsole.vala:1047
+#: Console/AppConsole.vala:1048
 msgid "GRUB will NOT be reinstalled"
 msgstr "GRUB yeniden kurulmayacak"
 
@@ -1192,10 +1192,6 @@ msgstr "Saatlik anlık görüntü başarısız!"
 #: Core/Main.vala:1028
 msgid "Hourly snapshots are enabled"
 msgstr "Saatlik anlık görüntüler etkinleştirildi"
-
-#: Utility/Gtk/AboutWindow.vala:457
-msgid "Icon Themes & Utilities"
-msgstr "Simge Temaları & Araçlar"
 
 #: Gtk/RestoreFinishBox.vala:102
 msgid ""
@@ -1285,8 +1281,8 @@ msgstr "Bu bağlama yolunu kök dizin dosya sisteminde koru"
 msgid "LIVE"
 msgstr "ÇALIŞAN"
 
-#: Utility/Device.vala:1829 Console/AppConsole.vala:458
-#: Console/AppConsole.vala:497 Gtk/BackupDeviceBox.vala:254
+#: Utility/Device.vala:1949 Console/AppConsole.vala:459
+#: Console/AppConsole.vala:498 Gtk/BackupDeviceBox.vala:254
 #, c-format
 msgid "Label"
 msgstr "Etiket"
@@ -1356,7 +1352,7 @@ msgstr "Son haftalık anlık görüntü 1 haftadan eski"
 msgid "Last weekly snapshot not found"
 msgstr "Son haftalık anlık görüntü bulunamadı"
 
-#: Gtk/MainWindow.vala:1049
+#: Gtk/MainWindow.vala:1043
 #, c-format
 msgid "Latest snapshot"
 msgstr "En son anlık görüntü"
@@ -1382,7 +1378,7 @@ msgstr "Aygıtları listele"
 msgid "List snapshots"
 msgstr "Anlık görüntüleri listele"
 
-#: Gtk/MainWindow.vala:1000
+#: Gtk/MainWindow.vala:994
 msgid "Live USB Mode (Restore Only)"
 msgstr "Çalışan USB Kipi (Sadece Geri Yükleme)"
 
@@ -1424,7 +1420,7 @@ msgstr "Eksik Bağımlılıklar"
 msgid "Mode"
 msgstr "Kip"
 
-#: Utility/Device.vala:1812
+#: Utility/Device.vala:1932
 #, c-format
 msgid "Model"
 msgstr "Model"
@@ -1475,16 +1471,16 @@ msgstr "Değişiklik Yok"
 msgid "No Snapshots Selected"
 msgstr "Seçili anlık görüntü yok"
 
-#: Gtk/MainWindow.vala:1073
+#: Gtk/MainWindow.vala:1067
 msgid "No snapshots available"
 msgstr "Anlık görüntü mevcut değil"
 
 #: Console/AppConsole.vala:320 Core/SnapshotRepo.vala:898
-#: Gtk/MainWindow.vala:1017
+#: Gtk/MainWindow.vala:1011
 msgid "No snapshots found"
 msgstr "Anlık görüntü bulunamadı"
 
-#: Console/AppConsole.vala:740
+#: Console/AppConsole.vala:741
 msgid "No snapshots found on device"
 msgstr "Aygıt üstünde anlık görüntü bulunamadı"
 
@@ -1500,7 +1496,7 @@ msgstr "Bu aygıtta anlık görüntü yok"
 msgid "No snapshots selected"
 msgstr "Seçilen anlık görüntü yok"
 
-#: Gtk/MainWindow.vala:1050 Gtk/MainWindow.vala:1052
+#: Gtk/MainWindow.vala:1044 Gtk/MainWindow.vala:1046
 msgid "None"
 msgstr "Hiçbiri"
 
@@ -1529,8 +1525,8 @@ msgstr "Notlar"
 msgid "Nothing to do!"
 msgstr "Yapılacak bir şey yok!"
 
-#: Console/AppConsole.vala:423 Console/AppConsole.vala:452
-#: Console/AppConsole.vala:491 Console/AppConsole.vala:539
+#: Console/AppConsole.vala:423 Console/AppConsole.vala:453
+#: Console/AppConsole.vala:492 Console/AppConsole.vala:540
 msgid "Num"
 msgstr "Sayı"
 
@@ -1560,7 +1556,7 @@ msgstr ""
 msgid "Older log files removed"
 msgstr "Eski günlük dosyaları silindi"
 
-#: Gtk/MainWindow.vala:1051
+#: Gtk/MainWindow.vala:1045
 msgid "Oldest snapshot"
 msgstr "En eski anlık görüntü"
 
@@ -1600,7 +1596,7 @@ msgstr "Diğer uygulamalar (sonraki sayfa)"
 msgid "Owner"
 msgstr "Sahibi"
 
-#: Utility/Device.vala:1824
+#: Utility/Device.vala:1944
 #, c-format
 msgid "Parent Device"
 msgstr "Ana Aygıt"
@@ -1719,7 +1715,7 @@ msgstr ""
 "gerekli değildir. Bunu sadece eğer geri yüklenen sistemde önyükleme "
 "başarısız olursa seçin."
 
-#: Console/AppConsole.vala:982
+#: Console/AppConsole.vala:983
 #, c-format
 msgid "Re-install GRUB2 bootloader?"
 msgstr "GRUB2 önyükleyiciyi yeniden kur?"
@@ -1875,7 +1871,7 @@ msgstr ""
 "değiştirilebilir. Dahil edilen dosyalar, anlık görüntü oluşturulduğunda "
 "yedeklenir ve anlık görüntü geri yüklendiğinde değiştirilir."
 
-#: Utility/Device.vala:1814
+#: Utility/Device.vala:1934
 #, c-format
 msgid "Revision"
 msgstr "Revizyon"
@@ -1934,7 +1930,7 @@ msgstr "Zamanlama"
 msgid "Scheduled snapshot in progress..."
 msgstr "Zamanlanmış anlık görüntü devam ediyor..."
 
-#: Core/Main.vala:1147 Gtk/MainWindow.vala:1067 Gtk/ScheduleBox.vala:312
+#: Core/Main.vala:1147 Gtk/MainWindow.vala:1061 Gtk/ScheduleBox.vala:312
 msgid "Scheduled snapshots are disabled"
 msgstr "Zamanlanmış anlık görüntüler pasif"
 
@@ -1954,16 +1950,16 @@ msgstr ""
 "Zamanlanmış anlık görüntüler etkin. Anlık görüntüler seçilen seviyeler için "
 "kendiliğinden oluşturulacak."
 
-#: Console/AppConsole.vala:870
+#: Console/AppConsole.vala:871
 #, c-format
 msgid "Select '%s' device (default = %s)"
 msgstr "'%s' aygıtı seç (varsayılan = %s)"
 
-#: Console/AppConsole.vala:689 Core/SnapshotRepo.vala:593
+#: Console/AppConsole.vala:690 Core/SnapshotRepo.vala:593
 msgid "Select BTRFS system disk with root subvolume (@)"
 msgstr "Kök dizin altbölümü (@) ile BTRFS sistem diski seç"
 
-#: Console/AppConsole.vala:998
+#: Console/AppConsole.vala:999
 msgid "Select GRUB device"
 msgstr "GRUB aygıtını seç"
 
@@ -1995,7 +1991,7 @@ msgstr "Anlık Görüntü Seçin"
 msgid "Select Target Device"
 msgstr "Hedef Aygıtı Seçin"
 
-#: Gtk/BackupDeviceBox.vala:392
+#: Gtk/BackupDeviceBox.vala:410
 #, c-format
 msgid "Select a partition on this disk"
 msgstr "Bu diskte bir disk bölümü seçin"
@@ -2024,7 +2020,7 @@ msgstr "Başka bir aygıt seç?"
 msgid "Select applications to exclude from restore"
 msgstr "Geri yüklemeden hariç tutulacak uygulamaları seçin"
 
-#: Console/AppConsole.vala:672
+#: Console/AppConsole.vala:673
 msgid "Select backup device"
 msgstr "Yedekleme aygıtını seç"
 
@@ -2036,7 +2032,7 @@ msgstr "Dizin seçin"
 msgid "Select file(s)"
 msgstr "Dosya(ları) seçin"
 
-#: Console/AppConsole.vala:746
+#: Console/AppConsole.vala:747
 msgid "Select snapshot"
 msgstr "Anlık görüntü seçin"
 
@@ -2088,11 +2084,11 @@ msgstr "Varsayılan anlık görüntü aygıtı seçildi"
 msgid "Selected default snapshot type"
 msgstr "Varsayılan anlık görüntü türü seçildi"
 
-#: Gtk/BackupDeviceBox.vala:373
+#: Gtk/BackupDeviceBox.vala:388
 msgid "Selected device does not have BTRFS partition"
 msgstr "Seçilen aygıt BTRFS dosya sistemine sahip değil"
 
-#: Gtk/BackupDeviceBox.vala:371
+#: Gtk/BackupDeviceBox.vala:385
 msgid "Selected device does not have Linux partition"
 msgstr "Seçilen aygıt Linux disk bölümüne sahip değil"
 
@@ -2100,7 +2096,7 @@ msgstr "Seçilen aygıt Linux disk bölümüne sahip değil"
 msgid "Selected snapshot device"
 msgstr "Anlık görüntü aygıtı seçildi"
 
-#: Console/AppConsole.vala:688 Core/SnapshotRepo.vala:592
+#: Console/AppConsole.vala:689 Core/SnapshotRepo.vala:592
 msgid "Selected snapshot device is not a system disk"
 msgstr "Seçilen anlık görüntü bir sistem diski değildir"
 
@@ -2120,7 +2116,7 @@ msgstr ""
 "Seçilen kullanıcı şifreli ev dizinine sahip. Sadece gizli dosyalar dahil "
 "edilemez."
 
-#: Utility/Device.vala:1813
+#: Utility/Device.vala:1933
 #, c-format
 msgid "Serial"
 msgstr "Seri numarası"
@@ -2165,8 +2161,8 @@ msgstr "Daha fazla hariç bırakılacak uygulamalar sonraki sayfada"
 msgid "Show rsync output (default)"
 msgstr "Rsynec çıktısını göster (varsayılan)"
 
-#: Utility/Device.vala:1816 Utility/Device.vala:1831
-#: Console/AppConsole.vala:456 Console/AppConsole.vala:495
+#: Utility/Device.vala:1936 Utility/Device.vala:1951
+#: Console/AppConsole.vala:457 Console/AppConsole.vala:496
 #: Gtk/RsyncLogBox.vala:392 Gtk/RestoreBox.vala:131
 #: Gtk/BackupDeviceBox.vala:202 Gtk/BackupBox.vala:93
 #: Gtk/SnapshotListBox.vala:174
@@ -2223,11 +2219,11 @@ msgstr "Anlık görüntü silme devam ediyor..."
 msgid "Snapshot device"
 msgstr "Anlık görüntü aygıtı"
 
-#: Console/AppConsole.vala:662 Core/SnapshotRepo.vala:559
+#: Console/AppConsole.vala:663 Core/SnapshotRepo.vala:559
 msgid "Snapshot device not available"
 msgstr "Anlık görüntü aygıtı mevcut değil"
 
-#: Console/AppConsole.vala:658 Core/SnapshotRepo.vala:552
+#: Console/AppConsole.vala:659 Core/SnapshotRepo.vala:552
 msgid "Snapshot device not selected"
 msgstr "Anlık görüntü aygıtı seçilmedi"
 
@@ -2329,7 +2325,7 @@ msgstr ""
 "Anlık görüntüler seçilen disk bölümünde /timeshift-btrfs altına kaydedilir. "
 "Diğer yerler desteklenmez."
 
-#: Gtk/MainWindow.vala:1012
+#: Gtk/MainWindow.vala:1006
 msgid "Snapshots available for restore"
 msgstr "Geri yükleme için anlık görüntüler mevcut"
 
@@ -2348,7 +2344,7 @@ msgstr ""
 msgid "Snapshots cannot be created in Live CD mode"
 msgstr "Çalışan CD/DVD/USB kipinde anlık görüntü oluşturulamaz"
 
-#: Gtk/MainWindow.vala:1059
+#: Gtk/MainWindow.vala:1053
 msgid "Snapshots will be created at selected intervals"
 msgstr "Anlık görüntüler seçilen aralıklarla oluşturulacak"
 
@@ -2433,12 +2429,12 @@ msgstr "Dosyalar rsync ile eşitleniyor..."
 msgid "Syntax"
 msgstr "Sözdizimi"
 
-#: Utility/Device.vala:1837 Gtk/SnapshotListBox.vala:127
+#: Utility/Device.vala:1957 Gtk/SnapshotListBox.vala:127
 #, c-format
 msgid "System"
 msgstr "Sistem"
 
-#: Gtk/MainWindow.vala:957
+#: Gtk/MainWindow.vala:951
 msgid "System Restore Utility"
 msgstr "Sistem Geri Yükleme Aracı"
 
@@ -2502,12 +2498,12 @@ msgstr "Sistem disk bölümü desteklenmeyen bir altbölüm düzenine sahip."
 msgid "The target partition has an unsupported subvolume layout."
 msgstr "Bu aygıt desteklenmeyen bir altbölüm düzenine sahip."
 
-#: Gtk/BackupDeviceBox.vala:494
+#: Gtk/BackupDeviceBox.vala:512
 #, c-format
 msgid "There are no snapshots on this device"
 msgstr "Bu aygıtta anlık görüntü yok"
 
-#: Utility/Device.vala:1259
+#: Utility/Device.vala:1379
 msgid "This device is not encrypted"
 msgstr "Bu aygıt şifrelenmedi"
 
@@ -2519,42 +2515,38 @@ msgstr ""
 "Bu yazılım için kesinlikle garanti verilmemektedir ve yazar bu programın "
 "kullanımından kaynaklanan hasarlardan sorumlu değildir."
 
-#: Gtk/MainWindow.vala:1047 Gtk/MainWindow.vala:1058
+#: Gtk/MainWindow.vala:1041 Gtk/MainWindow.vala:1052
 msgid "Timeshift is active"
 msgstr "Timeshift etkin"
-
-#: Gtk/MainWindow.vala:948
-msgid ""
-"Timeshift is powered by the following tools and components. Please visit the "
-"links for more information."
-msgstr ""
-"Timeshift, aşağıdaki araçlar ve bileşenler tarafından desteklenmektedir. "
-"Daha fazla bilgi için lütfen bağlantıları ziyaret edin."
 
 #: Gtk/RsyncLogBox.vala:394 Gtk/RestoreBox.vala:132 Gtk/BackupBox.vala:94
 #, c-format
 msgid "Timestamp"
 msgstr "Zaman etiketi"
 
-#: Console/AppConsole.vala:611
+#: Console/AppConsole.vala:612
 #, c-format
 msgid "To restore with default options, press the ENTER key for all prompts!"
 msgstr ""
 "Varsayılan seçeneklerle geri yüklemek için, tüm uyarılarda GİRİŞ tuşuna "
 "basın!"
 
+#: Utility/Gtk/AboutWindow.vala:457
+msgid "Tools"
+msgstr ""
+
 #: Utility/Gtk/AboutWindow.vala:441
 msgid "Translations"
 msgstr "Çevirenler"
 
-#: Utility/Device.vala:1827 Console/AppConsole.vala:457
-#: Console/AppConsole.vala:496 Gtk/BackupDeviceBox.vala:190
+#: Utility/Device.vala:1947 Console/AppConsole.vala:458
+#: Console/AppConsole.vala:497 Gtk/BackupDeviceBox.vala:190
 #: Gtk/SettingsWindow.vala:86
 #, c-format
 msgid "Type"
 msgstr "Tür"
 
-#: Utility/Device.vala:1826
+#: Utility/Device.vala:1946
 #, c-format
 msgid "UUID"
 msgstr "UUID"
@@ -2571,16 +2563,16 @@ msgstr "Bilinmeyen anlık görüntü türü"
 msgid "Unknown value specified for option --tags"
 msgstr "--tags seçeneği için bilinmeyen bir değer belirtildi"
 
-#: Utility/Device.vala:1270 Utility/Device.vala:1386
+#: Utility/Device.vala:1390 Utility/Device.vala:1506
 #, c-format
 msgid "Unlocked device is mapped to '%s'"
 msgstr "Kilidi açılan aygıt '%s' için eşleştirildi"
 
-#: Utility/Device.vala:1385
+#: Utility/Device.vala:1505
 msgid "Unlocked successfully"
 msgstr "Kilit açma başarılı"
 
-#: Utility/Device.vala:1600
+#: Utility/Device.vala:1720
 msgid "Unmounting from"
 msgstr "Şuradan ayrılıyor"
 
@@ -2624,7 +2616,7 @@ msgstr "GRUB menüsü güncelleniyor..."
 msgid "Updating bootloader configuration..."
 msgstr "Önyükleyici yapılandırması güncelleniyor..."
 
-#: Utility/Device.vala:1834
+#: Utility/Device.vala:1954
 #, c-format
 msgid "Used"
 msgstr "Kullanımda"
@@ -2637,7 +2629,7 @@ msgstr "Kullanıcı"
 msgid "User Home Directories"
 msgstr "Kullanıcı Ev Dizinleri"
 
-#: Utility/Device.vala:1340
+#: Utility/Device.vala:1460
 msgid "User cancelled the password prompt"
 msgstr "Kullanıcı parola isteğini iptal etti"
 
@@ -2656,7 +2648,7 @@ msgstr "Kullanıcılar"
 msgid "Users Home"
 msgstr "Kullanıcıların na Dizini"
 
-#: Utility/Device.vala:1811
+#: Utility/Device.vala:1931
 #, c-format
 msgid "Vendor"
 msgstr "Üretici"
@@ -2714,7 +2706,7 @@ msgstr "Hata ile"
 msgid "Wizard"
 msgstr "Sihirbaz"
 
-#: Utility/Device.vala:1313 Utility/Device.vala:1359
+#: Utility/Device.vala:1433 Utility/Device.vala:1479
 msgid "Wrong password"
 msgstr "Yanlış parola"
 
@@ -2741,12 +2733,12 @@ msgstr ""
 "[Sadece İleri Düzey Kullanıcılar] Bu ayarları sadece geri yüklenen sistem "
 "önyükleme başarısız olursa değiştirin."
 
-#: Console/AppConsole.vala:1010
+#: Console/AppConsole.vala:1011
 #, c-format
 msgid "[ENTER = Default (%s), a = Abort]"
 msgstr "[GİRİŞ = Varsayılan (%s), a = İptal]"
 
-#: Console/AppConsole.vala:881
+#: Console/AppConsole.vala:882
 #, c-format
 msgid "[ENTER = Default (%s), r = Root device, a = Abort]"
 msgstr "[GİRİŞ = Varsayılan (%s), r = Kök dizin aygıtı, a = İptal]"
@@ -2802,6 +2794,26 @@ msgstr "rsync bir hata döndürdü"
 msgid "un-tagged"
 msgstr "etiketsizleşti"
 
+#~ msgid "Code Contributions"
+#~ msgstr "Katkıda bulunanlar"
+
+#~ msgid "Icon Themes & Utilities"
+#~ msgstr "Simge Temaları & Araçlar"
+
+#~ msgid ""
+#~ "Timeshift is powered by the following tools and components. Please visit "
+#~ "the links for more information."
+#~ msgstr ""
+#~ "Timeshift, aşağıdaki araçlar ve bileşenler tarafından desteklenmektedir. "
+#~ "Daha fazla bilgi için lütfen bağlantıları ziyaret edin."
+
+#~ msgid ""
+#~ "BRTFS snapshots are saved on system partition. Other partitions are not "
+#~ "supported."
+#~ msgstr ""
+#~ "BTRFS anlık görüntüleri sistem disk bölümüne kaydedilir. Diğer disk "
+#~ "bölümleri desteklenmez."
+
 #, fuzzy
 #~ msgid "Click to edit and drag-drop to re-order"
 #~ msgstr ""
@@ -2856,9 +2868,6 @@ msgstr "etiketsizleşti"
 
 #~ msgid "Close Window"
 #~ msgstr "Pencereyi Kapat"
-
-#~ msgid "Contributions"
-#~ msgstr "Katkıda bulunanlar"
 
 #~ msgid "Documenters"
 #~ msgstr "Belgeleyenler"

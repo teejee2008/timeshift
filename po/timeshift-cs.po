@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timeshift\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2018-06-24 17:21+0530\n"
+"POT-Creation-Date: 2018-08-26 21:06+0530\n"
 "PO-Revision-Date: 2018-08-15 15:02+0200\n"
 "Last-Translator: Pavel Borecki <Unknown>\n"
 "Language-Team: Czech\n"
@@ -21,7 +21,7 @@ msgstr ""
 "X-Generator: Launchpad (build 18509)\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
-#: Console/AppConsole.vala:613
+#: Console/AppConsole.vala:614
 #, c-format
 msgid ""
 "\n"
@@ -35,12 +35,12 @@ msgstr ""
 msgid "%d snapshots, %s free"
 msgstr "%d zachycených stavů, %s volného místa"
 
-#: Console/AppConsole.vala:914
+#: Console/AppConsole.vala:915
 #, c-format
 msgid "'%s' will be on '%s'"
 msgstr "„%s“ bude na „%s“"
 
-#: Console/AppConsole.vala:911
+#: Console/AppConsole.vala:912
 #, c-format
 msgid "'%s' will be on root device"
 msgstr "„%s“ bude na zařízení s kořenovou složkou"
@@ -80,10 +80,10 @@ msgstr ""
 "Úloha údržby je spouštěna každou hodinu a v případě potřeby pořizuje "
 "zachycené stavy."
 
-#: Console/AppConsole.vala:698 Console/AppConsole.vala:762
-#: Console/AppConsole.vala:894 Console/AppConsole.vala:989
-#: Console/AppConsole.vala:1034 Console/AppConsole.vala:1075
-#: Console/AppConsole.vala:1093
+#: Console/AppConsole.vala:699 Console/AppConsole.vala:763
+#: Console/AppConsole.vala:895 Console/AppConsole.vala:990
+#: Console/AppConsole.vala:1035 Console/AppConsole.vala:1076
+#: Console/AppConsole.vala:1094
 msgid "Aborted."
 msgstr "Přerušeno."
 
@@ -220,14 +220,6 @@ msgstr "Vývojáři"
 msgid "Available"
 msgstr "K dispozici"
 
-#: Gtk/BackupDeviceBox.vala:98
-msgid ""
-"BRTFS snapshots are saved on system partition. Other partitions are not "
-"supported."
-msgstr ""
-"BTRFS zachycené stavy jsou ukládány na systémový oddíl. Jiné oddíly nejsou "
-"podporované."
-
 #: Gtk/SnapshotBackendBox.vala:94
 msgid "BTRFS"
 msgstr "BTRFS"
@@ -243,6 +235,15 @@ msgstr "Nebyly nalezeny BTRFS nástroje"
 #: Core/Main.vala:2041 Core/Main.vala:2045
 msgid "BTRFS device is not mounted"
 msgstr "BTRFS zařízení není připojeno"
+
+#: Gtk/BackupDeviceBox.vala:98
+#, fuzzy
+msgid ""
+"BTRFS snapshots are saved on system partition. Other partitions are not "
+"supported."
+msgstr ""
+"BTRFS zachycené stavy jsou ukládány na systémový oddíl. Jiné oddíly nejsou "
+"podporované."
 
 #: Gtk/FinishBox.vala:92
 msgid ""
@@ -420,10 +421,6 @@ msgstr "Zavřít"
 msgid "Close window to exit"
 msgstr "Ukončíte zavřením okna"
 
-#: Utility/Gtk/AboutWindow.vala:425
-msgid "Code Contributions"
-msgstr "Do vývoje se dále zapojili"
-
 #: Core/Main.vala:347
 msgid "Commands listed below are not available on this system"
 msgstr "Níže uvedené příkazy nejsou na tomto systému k dispozici"
@@ -453,21 +450,26 @@ msgstr "Dokončeno s chybami"
 msgid "Confirm Actions"
 msgstr "Potvrďte akce"
 
-#: Console/AppConsole.vala:1068
+#: Console/AppConsole.vala:1069
 #, c-format
 msgid "Continue with restore? (y/n): "
 msgstr "Pokračovat v obnovování (y/n): "
 
-#: Console/AppConsole.vala:834 Console/AppConsole.vala:965
+#: Utility/Gtk/AboutWindow.vala:425
+#, fuzzy
+msgid "Contributors"
+msgstr "Do vývoje se dále zapojili"
+
+#: Console/AppConsole.vala:835 Console/AppConsole.vala:966
 msgid "Could not find device"
 msgstr "Zařízení se nedaří najít"
 
-#: Utility/Device.vala:1187
+#: Utility/Device.vala:1307
 #, c-format
 msgid "Could not find file"
 msgstr "Soubor se nedaří najít"
 
-#: Console/AppConsole.vala:731
+#: Console/AppConsole.vala:732
 msgid "Could not find snapshot"
 msgstr "Zachycený stav se nedaří najít"
 
@@ -522,7 +524,7 @@ msgstr "Zachytit stav pokud je naplánovaný"
 msgid "Create snapshot of current system"
 msgstr "Zachytit stávající stav systému"
 
-#: Gtk/MainWindow.vala:1074
+#: Gtk/MainWindow.vala:1068
 msgid ""
 "Create snapshots manually or enable scheduled snapshots to protect your "
 "system"
@@ -666,7 +668,7 @@ msgstr "Mazání vnořeného svazku"
 msgid "Deluge, Transmission"
 msgstr "Deluge a Transmission"
 
-#: Console/AppConsole.vala:427 Console/AppConsole.vala:542
+#: Console/AppConsole.vala:427 Console/AppConsole.vala:543
 msgid "Description"
 msgstr "Popis"
 
@@ -680,24 +682,24 @@ msgstr "Skupina kvóty (qgroup) odstraněna"
 msgid "Destroying qgroup"
 msgstr "Odstraňování skupiny kvóty (qgroup)"
 
-#: Utility/Device.vala:1810 Utility/Device.vala:1820
-#: Console/AppConsole.vala:454 Console/AppConsole.vala:493
-#: Console/AppConsole.vala:541 Core/SnapshotRepo.vala:76
+#: Utility/Device.vala:1930 Utility/Device.vala:1940
+#: Console/AppConsole.vala:455 Console/AppConsole.vala:494
+#: Console/AppConsole.vala:542 Core/SnapshotRepo.vala:76
 #: Core/SnapshotRepo.vala:683 Core/SnapshotRepo.vala:686 Core/Main.vala:2114
 #: Core/Main.vala:2146 Gtk/RestoreDeviceBox.vala:97
 #, c-format
 msgid "Device"
 msgstr "Zařízení"
 
-#: Utility/Device.vala:1269
+#: Utility/Device.vala:1389
 msgid "Device is unlocked"
 msgstr "Zařízení je odemčeno"
 
-#: Utility/Device.vala:1164 Utility/Device.vala:1226
+#: Utility/Device.vala:1284 Utility/Device.vala:1346
 msgid "Device name is empty!"
 msgstr "Není vyplněn název zařízení!"
 
-#: Console/AppConsole.vala:663 Core/SnapshotRepo.vala:560 Core/Main.vala:3232
+#: Console/AppConsole.vala:664 Core/SnapshotRepo.vala:560 Core/Main.vala:3232
 msgid "Device not found"
 msgstr "Zařízení nebylo nalezeno"
 
@@ -795,7 +797,7 @@ msgstr "Finančně podpořili"
 msgid "Enable BTRFS qgroups (recommended)"
 msgstr "Zapnout BTRFS qgroups (doporučeno)"
 
-#: Gtk/MainWindow.vala:1068
+#: Gtk/MainWindow.vala:1062
 msgid "Enable scheduled snapshots to protect your system"
 msgstr "Chraňte systém zapnutím pravidelného pořizování zachycených stavů"
 
@@ -803,7 +805,7 @@ msgstr "Chraňte systém zapnutím pravidelného pořizování zachycených stav
 msgid "Enabled subvolume quota support"
 msgstr "Zapnout podporu pro kvóty na vnořených svazcích"
 
-#: Utility/Device.vala:1333
+#: Utility/Device.vala:1453
 msgid "Encrypted Device"
 msgstr "Šifrované zařízení"
 
@@ -811,19 +813,19 @@ msgstr "Šifrované zařízení"
 msgid "Encrypted Home Directory"
 msgstr "Šifrovaná domovská složka"
 
-#: Console/AppConsole.vala:884
+#: Console/AppConsole.vala:885
 #, c-format
 msgid "Enter device name or number"
 msgstr "Zadejte název zařízení nebo číslo"
 
-#: Console/AppConsole.vala:682 Console/AppConsole.vala:1013
+#: Console/AppConsole.vala:683 Console/AppConsole.vala:1014
 #, c-format
 msgid "Enter device name or number (a=Abort)"
 msgstr ""
 "Zadejte název zařízení nebo číslo (nebo přerušte stisknutím klávesy A – "
 "abort)"
 
-#: Utility/Device.vala:1334
+#: Utility/Device.vala:1454
 #, c-format
 msgid "Enter passphrase to unlock '%s'"
 msgstr "Zadejte heslovou frázi pro odemčení „%s“"
@@ -832,7 +834,7 @@ msgstr "Zadejte heslovou frázi pro odemčení „%s“"
 msgid "Enter path or browse for directory"
 msgstr "Zadejte popis umístění nebo složku nalistujte"
 
-#: Console/AppConsole.vala:754
+#: Console/AppConsole.vala:755
 #, c-format
 msgid "Enter snapshot number (a=Abort, p=Previous, n=Next)"
 msgstr ""
@@ -959,13 +961,13 @@ msgstr "Stanovení přibližné velikosti systému se nezdařilo"
 msgid "Failed to export crontab file"
 msgstr "Export souboru s naplánovanými úlohami (crontab) se nezdařil"
 
-#: Console/AppConsole.vala:697 Console/AppConsole.vala:761
-#: Console/AppConsole.vala:893 Console/AppConsole.vala:988
-#: Console/AppConsole.vala:1033 Console/AppConsole.vala:1074
+#: Console/AppConsole.vala:698 Console/AppConsole.vala:762
+#: Console/AppConsole.vala:894 Console/AppConsole.vala:989
+#: Console/AppConsole.vala:1034 Console/AppConsole.vala:1075
 msgid "Failed to get input from user in 3 attempts"
 msgstr "Ani na třetí pokus se nepodařilo získat vstup od uživatele"
 
-#: Utility/Device.vala:615
+#: Utility/Device.vala:723
 msgid "Failed to get partition list"
 msgstr "Získání seznamu diskových oddílů se nezdařilo"
 
@@ -1031,12 +1033,12 @@ msgstr "Obnova systémového vnořeného svazku se nezdařila"
 msgid "Failed to save exclude list"
 msgstr "Uložení seznamu položek k vynechání se nezdařilo"
 
-#: Utility/Device.vala:1260 Utility/Device.vala:1314 Utility/Device.vala:1339
-#: Utility/Device.vala:1360 Utility/Device.vala:1380
+#: Utility/Device.vala:1380 Utility/Device.vala:1434 Utility/Device.vala:1459
+#: Utility/Device.vala:1480 Utility/Device.vala:1500
 msgid "Failed to unlock device"
 msgstr "Odemknutí zařízení se nezdařilo"
 
-#: Utility/Device.vala:1611
+#: Utility/Device.vala:1731
 msgid "Failed to unmount"
 msgstr "Odpojení se nezdařilo"
 
@@ -1096,7 +1098,7 @@ msgstr "Počty souborů a složek:"
 msgid "Files matching the following patterns will be excluded"
 msgstr "Soubory odpovídající následujícím vzorům budou vynechány"
 
-#: Utility/Device.vala:1828
+#: Utility/Device.vala:1948
 #, c-format
 msgid "Filesystem"
 msgstr "Souborový systém"
@@ -1138,7 +1140,7 @@ msgstr "Volno"
 msgid "Free space"
 msgstr "Volné místo"
 
-#: Console/AppConsole.vala:1042
+#: Console/AppConsole.vala:1043
 msgid "GRUB Device"
 msgstr "Zařízení zavaděče GRUB"
 
@@ -1146,7 +1148,7 @@ msgstr "Zařízení zavaděče GRUB"
 msgid "GRUB device not selected"
 msgstr "Není zvoleno zařízení pro zavaděč GRUB"
 
-#: Console/AppConsole.vala:1047
+#: Console/AppConsole.vala:1048
 msgid "GRUB will NOT be reinstalled"
 msgstr "Zavaděč GRUB NEbude přeinstalován"
 
@@ -1204,10 +1206,6 @@ msgstr "Pořízení hodinového zachyceného stavu se nezdařilo!"
 #: Core/Main.vala:1028
 msgid "Hourly snapshots are enabled"
 msgstr "Hodinové zachycené stavy zapnuty"
-
-#: Utility/Gtk/AboutWindow.vala:457
-msgid "Icon Themes & Utilities"
-msgstr "Motivy vzhledu ikon a nástroje"
 
 #: Gtk/RestoreFinishBox.vala:102
 msgid ""
@@ -1300,8 +1298,8 @@ msgstr "Ponechat tento přípojný bod na kořenovém souborovém systému"
 msgid "LIVE"
 msgstr "Právě používané"
 
-#: Utility/Device.vala:1829 Console/AppConsole.vala:458
-#: Console/AppConsole.vala:497 Gtk/BackupDeviceBox.vala:254
+#: Utility/Device.vala:1949 Console/AppConsole.vala:459
+#: Console/AppConsole.vala:498 Gtk/BackupDeviceBox.vala:254
 #, c-format
 msgid "Label"
 msgstr "Štítek"
@@ -1375,7 +1373,7 @@ msgstr "Nejnovější týdenní zachycený stav je více než týden starý"
 msgid "Last weekly snapshot not found"
 msgstr "Nejnovější týdenní zachycený stav nenalezen"
 
-#: Gtk/MainWindow.vala:1049
+#: Gtk/MainWindow.vala:1043
 #, c-format
 msgid "Latest snapshot"
 msgstr "Nejnovější zachycený stav"
@@ -1401,7 +1399,7 @@ msgstr "Vypsat zařízení"
 msgid "List snapshots"
 msgstr "Vypsat zachycené stavy"
 
-#: Gtk/MainWindow.vala:1000
+#: Gtk/MainWindow.vala:994
 msgid "Live USB Mode (Restore Only)"
 msgstr "Režim fungování z instalačního média (pouze obnova)"
 
@@ -1443,7 +1441,7 @@ msgstr "V systému chybějí některé součásti potřebné pro chod aplikace"
 msgid "Mode"
 msgstr "Režim"
 
-#: Utility/Device.vala:1812
+#: Utility/Device.vala:1932
 #, c-format
 msgid "Model"
 msgstr "Model"
@@ -1494,16 +1492,16 @@ msgstr "Beze změny"
 msgid "No Snapshots Selected"
 msgstr "Nevybrány žádné zachycené stavy"
 
-#: Gtk/MainWindow.vala:1073
+#: Gtk/MainWindow.vala:1067
 msgid "No snapshots available"
 msgstr "Nejsou k dispozici žádné zachycené stavy"
 
 #: Console/AppConsole.vala:320 Core/SnapshotRepo.vala:898
-#: Gtk/MainWindow.vala:1017
+#: Gtk/MainWindow.vala:1011
 msgid "No snapshots found"
 msgstr "Nenalezeny žádné zachycené stavy"
 
-#: Console/AppConsole.vala:740
+#: Console/AppConsole.vala:741
 msgid "No snapshots found on device"
 msgstr "Na zařízení nenalezeny žádné zachycené stavy"
 
@@ -1519,7 +1517,7 @@ msgstr "Na tomto zařízení se nenacházejí žádné zachycené stavy"
 msgid "No snapshots selected"
 msgstr "Nevybrány žádné zachycené stavy"
 
-#: Gtk/MainWindow.vala:1050 Gtk/MainWindow.vala:1052
+#: Gtk/MainWindow.vala:1044 Gtk/MainWindow.vala:1046
 msgid "None"
 msgstr "Žádné"
 
@@ -1548,8 +1546,8 @@ msgstr "Poznámky"
 msgid "Nothing to do!"
 msgstr "Není co dělat!"
 
-#: Console/AppConsole.vala:423 Console/AppConsole.vala:452
-#: Console/AppConsole.vala:491 Console/AppConsole.vala:539
+#: Console/AppConsole.vala:423 Console/AppConsole.vala:453
+#: Console/AppConsole.vala:492 Console/AppConsole.vala:540
 msgid "Num"
 msgstr "Číslo"
 
@@ -1580,7 +1578,7 @@ msgstr ""
 msgid "Older log files removed"
 msgstr "Soubory se záznamem starších událostí odstraněny"
 
-#: Gtk/MainWindow.vala:1051
+#: Gtk/MainWindow.vala:1045
 msgid "Oldest snapshot"
 msgstr "Nejstarší zachycený stav"
 
@@ -1620,7 +1618,7 @@ msgstr "Ostatní aplikace (následující stránka)"
 msgid "Owner"
 msgstr "Vlastník"
 
-#: Utility/Device.vala:1824
+#: Utility/Device.vala:1944
 #, c-format
 msgid "Parent Device"
 msgstr "Nadřazené zařízení"
@@ -1739,7 +1737,7 @@ msgstr ""
 "(initramfs) pro veškerá nainstalovaná jádra. Toto obecně není potřebné. "
 "Zaškrtněte pouze v případě, že se obnovený systém nepodařilo spustit."
 
-#: Console/AppConsole.vala:982
+#: Console/AppConsole.vala:983
 #, c-format
 msgid "Re-install GRUB2 bootloader?"
 msgstr "Přeinstalovat zavaděč GRUB2?"
@@ -1894,7 +1892,7 @@ msgstr ""
 "budou zazálohovány při pořízení zachyceného stavu a nahrazeny při obnově z "
 "něho."
 
-#: Utility/Device.vala:1814
+#: Utility/Device.vala:1934
 #, c-format
 msgid "Revision"
 msgstr "Verze"
@@ -1954,7 +1952,7 @@ msgstr "Plánovač"
 msgid "Scheduled snapshot in progress..."
 msgstr "Pořizování naplánovaného zachyceného stavu…"
 
-#: Core/Main.vala:1147 Gtk/MainWindow.vala:1067 Gtk/ScheduleBox.vala:312
+#: Core/Main.vala:1147 Gtk/MainWindow.vala:1061 Gtk/ScheduleBox.vala:312
 msgid "Scheduled snapshots are disabled"
 msgstr "Naplánovaná pořizování zachycených stavů jsou vypnutá"
 
@@ -1976,16 +1974,16 @@ msgstr ""
 "Naplánované pořizování zachycených stavů je zapnuté. Budou automaticky "
 "pořizovány ve zvolených intervalech."
 
-#: Console/AppConsole.vala:870
+#: Console/AppConsole.vala:871
 #, c-format
 msgid "Select '%s' device (default = %s)"
 msgstr "Vyberte zařízení pro „%s“ (výchozí = %s)"
 
-#: Console/AppConsole.vala:689 Core/SnapshotRepo.vala:593
+#: Console/AppConsole.vala:690 Core/SnapshotRepo.vala:593
 msgid "Select BTRFS system disk with root subvolume (@)"
 msgstr "Vyberte BTRFS systémový disk s kořenovým vnořeným svazkem (@)"
 
-#: Console/AppConsole.vala:998
+#: Console/AppConsole.vala:999
 msgid "Select GRUB device"
 msgstr "Vyberte zařízení pro zavaděč GRUB"
 
@@ -2017,7 +2015,7 @@ msgstr "Vyberte zachycené stavy"
 msgid "Select Target Device"
 msgstr "Vyberte cílové zařízení"
 
-#: Gtk/BackupDeviceBox.vala:392
+#: Gtk/BackupDeviceBox.vala:410
 #, c-format
 msgid "Select a partition on this disk"
 msgstr "Vyberte oddíl na tomto datovém úložišti"
@@ -2046,7 +2044,7 @@ msgstr "Vybrat jiné zařízení?"
 msgid "Select applications to exclude from restore"
 msgstr "Vyberte aplikace které vynechat z obnovy"
 
-#: Console/AppConsole.vala:672
+#: Console/AppConsole.vala:673
 msgid "Select backup device"
 msgstr "Vyberte zálohovací zařízení"
 
@@ -2058,7 +2056,7 @@ msgstr "Vyberte složku"
 msgid "Select file(s)"
 msgstr "Vyberte soubory"
 
-#: Console/AppConsole.vala:746
+#: Console/AppConsole.vala:747
 msgid "Select snapshot"
 msgstr "Vyberte zachycený stav"
 
@@ -2110,11 +2108,11 @@ msgstr "Vyberte výchozí zařízení pro zachycené stavy"
 msgid "Selected default snapshot type"
 msgstr "Vyberte výchozí typ zachycených stavů"
 
-#: Gtk/BackupDeviceBox.vala:373
+#: Gtk/BackupDeviceBox.vala:388
 msgid "Selected device does not have BTRFS partition"
 msgstr "Vybrané zařízení neobsahuje oddíl s BTRFS"
 
-#: Gtk/BackupDeviceBox.vala:371
+#: Gtk/BackupDeviceBox.vala:385
 msgid "Selected device does not have Linux partition"
 msgstr "Vybrané zařízení neobsahuje Linuxový oddíl"
 
@@ -2122,7 +2120,7 @@ msgstr "Vybrané zařízení neobsahuje Linuxový oddíl"
 msgid "Selected snapshot device"
 msgstr "Zařízení vybrané pro zachycené stavy"
 
-#: Console/AppConsole.vala:688 Core/SnapshotRepo.vala:592
+#: Console/AppConsole.vala:689 Core/SnapshotRepo.vala:592
 msgid "Selected snapshot device is not a system disk"
 msgstr "Vybrané zařízení pro zachycené stavy není systémový disk"
 
@@ -2144,7 +2142,7 @@ msgstr ""
 "Domovská složka zvoleného uživatele je šifrovaná. Není možné zahrnout pouze "
 "skryté soubory."
 
-#: Utility/Device.vala:1813
+#: Utility/Device.vala:1933
 #, c-format
 msgid "Serial"
 msgstr "Sériové číslo"
@@ -2189,8 +2187,8 @@ msgstr "Na další stránce zobrazit více aplikací které vynechat"
 msgid "Show rsync output (default)"
 msgstr "Zobrazit výstup z nástroje rsync (výchozí)"
 
-#: Utility/Device.vala:1816 Utility/Device.vala:1831
-#: Console/AppConsole.vala:456 Console/AppConsole.vala:495
+#: Utility/Device.vala:1936 Utility/Device.vala:1951
+#: Console/AppConsole.vala:457 Console/AppConsole.vala:496
 #: Gtk/RsyncLogBox.vala:392 Gtk/RestoreBox.vala:131
 #: Gtk/BackupDeviceBox.vala:202 Gtk/BackupBox.vala:93
 #: Gtk/SnapshotListBox.vala:174
@@ -2247,11 +2245,11 @@ msgstr "Mazání zachyceného stavu…"
 msgid "Snapshot device"
 msgstr "Zařízení pro zachycené stavy"
 
-#: Console/AppConsole.vala:662 Core/SnapshotRepo.vala:559
+#: Console/AppConsole.vala:663 Core/SnapshotRepo.vala:559
 msgid "Snapshot device not available"
 msgstr "Zařízení pro zachycené stavy není k dispozici"
 
-#: Console/AppConsole.vala:658 Core/SnapshotRepo.vala:552
+#: Console/AppConsole.vala:659 Core/SnapshotRepo.vala:552
 msgid "Snapshot device not selected"
 msgstr "Nebylo zvoleno zařízení pro zachycené stavy"
 
@@ -2352,7 +2350,7 @@ msgstr ""
 "Zachycené stavy jsou na zvoleném oddílu ukládány v /timeshift-btrfs. Jiná "
 "umístění nejsou podporovaná."
 
-#: Gtk/MainWindow.vala:1012
+#: Gtk/MainWindow.vala:1006
 msgid "Snapshots available for restore"
 msgstr "Zachycené stavy, ze kterých je možné obnovit"
 
@@ -2372,7 +2370,7 @@ msgid "Snapshots cannot be created in Live CD mode"
 msgstr ""
 "Při provozu systému z instalačního média nelze pořizovat zachycené stavy"
 
-#: Gtk/MainWindow.vala:1059
+#: Gtk/MainWindow.vala:1053
 msgid "Snapshots will be created at selected intervals"
 msgstr "Zachycené stavy budou pořizovány ve zvolených intervalech"
 
@@ -2457,12 +2455,12 @@ msgstr "Synchronizace souborů pomocí nástroje rsync…"
 msgid "Syntax"
 msgstr "Syntaxe"
 
-#: Utility/Device.vala:1837 Gtk/SnapshotListBox.vala:127
+#: Utility/Device.vala:1957 Gtk/SnapshotListBox.vala:127
 #, c-format
 msgid "System"
 msgstr "Systém"
 
-#: Gtk/MainWindow.vala:957
+#: Gtk/MainWindow.vala:951
 msgid "System Restore Utility"
 msgstr "Nástroj pro obnovu systému"
 
@@ -2529,12 +2527,12 @@ msgid "The target partition has an unsupported subvolume layout."
 msgstr ""
 "Cílový oddíl datového úložiště má nepodporované rozvržení vnořených svazků."
 
-#: Gtk/BackupDeviceBox.vala:494
+#: Gtk/BackupDeviceBox.vala:512
 #, c-format
 msgid "There are no snapshots on this device"
 msgstr "Na tomto zařízení se nenacházejí žádné zachycené stavy"
 
-#: Utility/Device.vala:1259
+#: Utility/Device.vala:1379
 msgid "This device is not encrypted"
 msgstr "Toto zařízení není šifrované"
 
@@ -2546,41 +2544,37 @@ msgstr ""
 "Tato aplikace je poskytována BEZ jakýchkoli záruk a autoři nenesou "
 "odpovědnost za žádné škody, vzniklé v důsledku jejího použití."
 
-#: Gtk/MainWindow.vala:1047 Gtk/MainWindow.vala:1058
+#: Gtk/MainWindow.vala:1041 Gtk/MainWindow.vala:1052
 msgid "Timeshift is active"
 msgstr "Pravidelné zálohování zapnuto"
-
-#: Gtk/MainWindow.vala:948
-msgid ""
-"Timeshift is powered by the following tools and components. Please visit the "
-"links for more information."
-msgstr ""
-"Timeshift je poháněn následujícími nástroji a součástmi. Další informace "
-"jsou k dispozici prostřednictvím následujících odkazů."
 
 #: Gtk/RsyncLogBox.vala:394 Gtk/RestoreBox.vala:132 Gtk/BackupBox.vala:94
 #, c-format
 msgid "Timestamp"
 msgstr "Časové razítko"
 
-#: Console/AppConsole.vala:611
+#: Console/AppConsole.vala:612
 #, c-format
 msgid "To restore with default options, press the ENTER key for all prompts!"
 msgstr ""
 "Pro obnovení s výchozími předvolbami, stiskněte u všech dotazů klávesu ENTER!"
 
+#: Utility/Gtk/AboutWindow.vala:457
+msgid "Tools"
+msgstr ""
+
 #: Utility/Gtk/AboutWindow.vala:441
 msgid "Translations"
 msgstr "Překladatelé"
 
-#: Utility/Device.vala:1827 Console/AppConsole.vala:457
-#: Console/AppConsole.vala:496 Gtk/BackupDeviceBox.vala:190
+#: Utility/Device.vala:1947 Console/AppConsole.vala:458
+#: Console/AppConsole.vala:497 Gtk/BackupDeviceBox.vala:190
 #: Gtk/SettingsWindow.vala:86
 #, c-format
 msgid "Type"
 msgstr "Typ"
 
-#: Utility/Device.vala:1826
+#: Utility/Device.vala:1946
 #, c-format
 msgid "UUID"
 msgstr "Nikde se neopakující identifikátor (UUID)"
@@ -2597,16 +2591,16 @@ msgstr "Neznámý typ zachyceného stavu"
 msgid "Unknown value specified for option --tags"
 msgstr "Neznámá hodnota, zadaná pro předvolbu --tags"
 
-#: Utility/Device.vala:1270 Utility/Device.vala:1386
+#: Utility/Device.vala:1390 Utility/Device.vala:1506
 #, c-format
 msgid "Unlocked device is mapped to '%s'"
 msgstr "Odemčené zařízení je namapováno na „%s“"
 
-#: Utility/Device.vala:1385
+#: Utility/Device.vala:1505
 msgid "Unlocked successfully"
 msgstr "Úspěšně odemčeno"
 
-#: Utility/Device.vala:1600
+#: Utility/Device.vala:1720
 msgid "Unmounting from"
 msgstr "Odpojování od"
 
@@ -2650,7 +2644,7 @@ msgstr "Aktualizace nabídky zavaděče GRUB…"
 msgid "Updating bootloader configuration..."
 msgstr "Aktualizace nastavení zavaděče…"
 
-#: Utility/Device.vala:1834
+#: Utility/Device.vala:1954
 #, c-format
 msgid "Used"
 msgstr "Využito"
@@ -2663,7 +2657,7 @@ msgstr "Uživatel"
 msgid "User Home Directories"
 msgstr "Domovské složky uživatelů"
 
-#: Utility/Device.vala:1340
+#: Utility/Device.vala:1460
 msgid "User cancelled the password prompt"
 msgstr "Uživatel zrušil výzvu na heslo"
 
@@ -2682,7 +2676,7 @@ msgstr "Uživatelé"
 msgid "Users Home"
 msgstr "Domovské složky uživatelů"
 
-#: Utility/Device.vala:1811
+#: Utility/Device.vala:1931
 #, c-format
 msgid "Vendor"
 msgstr "Výrobce"
@@ -2740,7 +2734,7 @@ msgstr "S chybami"
 msgid "Wizard"
 msgstr "Průvodce"
 
-#: Utility/Device.vala:1313 Utility/Device.vala:1359
+#: Utility/Device.vala:1433 Utility/Device.vala:1479
 msgid "Wrong password"
 msgstr "Nesprávné heslo"
 
@@ -2766,12 +2760,12 @@ msgstr ""
 "[Pouze pro pokročilé uživatele] Tato nastavení měňte pouze pokud se obnovený "
 "systém nedaří spustit."
 
-#: Console/AppConsole.vala:1010
+#: Console/AppConsole.vala:1011
 #, c-format
 msgid "[ENTER = Default (%s), a = Abort]"
 msgstr "[ENTER = výchozí (%s), A = přerušit]"
 
-#: Console/AppConsole.vala:881
+#: Console/AppConsole.vala:882
 #, c-format
 msgid "[ENTER = Default (%s), r = Root device, a = Abort]"
 msgstr "[ENTER = výchozí (%s), R = zařízení s kořenovou složkou, A = přerušit]"
@@ -2827,6 +2821,19 @@ msgstr "nástroj rsync oznámil chybu"
 msgid "un-tagged"
 msgstr "bez příznaku"
 
+#~ msgid "Code Contributions"
+#~ msgstr "Do vývoje se dále zapojili"
+
+#~ msgid "Icon Themes & Utilities"
+#~ msgstr "Motivy vzhledu ikon a nástroje"
+
+#~ msgid ""
+#~ "Timeshift is powered by the following tools and components. Please visit "
+#~ "the links for more information."
+#~ msgstr ""
+#~ "Timeshift je poháněn následujícími nástroji a součástmi. Další informace "
+#~ "jsou k dispozici prostřednictvím následujících odkazů."
+
 #, fuzzy
 #~ msgid "Click to edit and drag-drop to re-order"
 #~ msgstr "Upravte kliknutím. Pořadí změňte přetažením."
@@ -2880,9 +2887,6 @@ msgstr "bez příznaku"
 
 #~ msgid "Close Window"
 #~ msgstr "Zavřít okno"
-
-#~ msgid "Contributions"
-#~ msgstr "Do vývoje se dále zapojili"
 
 #~ msgid "Documenters"
 #~ msgstr "Dokumentace"

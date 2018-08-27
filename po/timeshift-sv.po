@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: timeshift\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
 "POT-Creation-Date: 2018-08-26 21:06+0530\n"
-"PO-Revision-Date: 2018-01-14 12:11+0100\n"
+"PO-Revision-Date: 2018-08-27 06:34+0200\n"
 "Last-Translator: Åke Engelbrektson <eson@svenskasprakfiler.se>\n"
 "Language-Team: Svenska Språkfiler <eson@svenskasprakfiler.se>\n"
 "Language: sv\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2018-02-03 14:28+0000\n"
-"X-Generator: Launchpad (build 18544)\n"
+"X-Generator: Poedit 1.8.7.1\n"
 "X-Launchpad-Export-Date: 2017-09-18 16:44+0000\n"
 "X-Generator: Poedit 1.8.7.1\n"
 
@@ -232,7 +232,6 @@ msgid "BTRFS device is not mounted"
 msgstr "Ingen BTRFS-enhet monterad"
 
 #: Gtk/BackupDeviceBox.vala:98
-#, fuzzy
 msgid ""
 "BTRFS snapshots are saved on system partition. Other partitions are not "
 "supported."
@@ -366,7 +365,7 @@ msgstr "Ändrade objekt:"
 
 #: Gtk/RestoreWindow.vala:104
 msgid "Checking Restore Actions (Dry Run)"
-msgstr ""
+msgstr "Kontrollerar återställningsåtgärder (Torrkörning)"
 
 #: Core/Main.vala:2732
 msgid "Checking file systems for errors..."
@@ -386,7 +385,6 @@ msgid "Click to edit. Drag and drop to re-order."
 msgstr "Klicka för att redigera. Dra och släpp för att sortera."
 
 #: Gtk/ExcludeBox.vala:59
-#, fuzzy
 msgid "Click to edit. Drag-drop to re-order."
 msgstr "Klicka för att redigera. Dra och släpp för att sortera."
 
@@ -428,7 +426,7 @@ msgstr "Kommentarer"
 
 #: Core/Main.vala:2775 Gtk/RestoreBox.vala:74 Gtk/RestoreBox.vala:187
 msgid "Comparing Files (Dry Run)..."
-msgstr ""
+msgstr "Jämför filer (Torrkörning)"
 
 #: Core/Main.vala:2541
 msgid "Comparing files with rsync..."
@@ -453,9 +451,8 @@ msgid "Continue with restore? (y/n): "
 msgstr "Vill du fortsätta med återställningen? (y/n): "
 
 #: Utility/Gtk/AboutWindow.vala:425
-#, fuzzy
 msgid "Contributors"
-msgstr "Bidrag"
+msgstr "Bidragsgivare"
 
 #: Console/AppConsole.vala:835 Console/AppConsole.vala:966
 msgid "Could not find device"
@@ -530,9 +527,8 @@ msgstr ""
 "skydda ditt system"
 
 #: Gtk/SnapshotBackendBox.vala:95
-#, fuzzy
 msgid "Create snapshots using BTRFS"
-msgstr "Skapa avbilder med RSYNC"
+msgstr "Skapa ögonblicksbilder med BTRFS"
 
 #: Gtk/SnapshotBackendBox.vala:78
 msgid "Create snapshots using RSYNC tool and hard-links"
@@ -792,7 +788,7 @@ msgstr "Donationer"
 
 #: Gtk/UsersBox.vala:357
 msgid "Enable BTRFS qgroups (recommended)"
-msgstr ""
+msgstr "Aktivera BTRFS qgroups (rekommenderas)"
 
 #: Gtk/MainWindow.vala:1062
 msgid "Enable scheduled snapshots to protect your system"
@@ -844,7 +840,7 @@ msgstr "Fel"
 
 #: Gtk/RestoreWindow.vala:488
 msgid "Error running Rsync"
-msgstr ""
+msgstr "Kunde inte köra Rsync"
 
 #: Gtk/SetupWizardWindow.vala:99 Gtk/BackupWindow.vala:81
 msgid "Estimate"
@@ -1098,7 +1094,7 @@ msgstr "Filsystem"
 
 #: Gtk/RsyncLogBox.vala:302
 msgid "Filter by name or path"
-msgstr ""
+msgstr "Filtrera efter namn eller sökväg"
 
 #: Gtk/SettingsWindow.vala:100
 msgid "Filters"
@@ -1415,7 +1411,7 @@ msgstr "Meny"
 
 #: Gtk/UsersBox.vala:354
 msgid "Miscellaneous"
-msgstr ""
+msgstr "Diverse"
 
 #: Core/Main.vala:235
 msgid "Missing Dependencies"
@@ -1507,11 +1503,9 @@ msgid "None"
 msgstr "Ingen"
 
 #: Core/Subvolume.vala:184
-#, fuzzy, c-format
+#, c-format
 msgid "Not Found"
-msgstr ""
-"Mapp kan inte hittas\n"
-"Mapp hittas inte"
+msgstr "Kan inte hittas"
 
 #: Core/SnapshotRepo.vala:683
 msgid "Not Selected"
@@ -1795,6 +1789,8 @@ msgid ""
 "Required for displaying shared and unshared size for snapshots in the main "
 "window"
 msgstr ""
+"Krävs för visning av delad eller odelad storlek på ögonblicksbilder i "
+"huvudfönstret"
 
 #: Console/AppConsole.vala:362 Gtk/RestoreFinishBox.vala:71
 #: Gtk/RsyncLogBox.vala:377 Gtk/RsyncLogBox.vala:567 Gtk/MainWindow.vala:151
@@ -1803,9 +1799,8 @@ msgid "Restore"
 msgstr "Återställ"
 
 #: Gtk/UsersBox.vala:329
-#, fuzzy
 msgid "Restore @home subvolume"
-msgstr "Återställde systemvolym"
+msgstr "Återställ @home undervolym"
 
 #: Gtk/RestoreWindow.vala:89
 msgid "Restore Device"
@@ -2320,6 +2315,8 @@ msgid ""
 "Snapshots are saved to /timeshift-btrfs on selected partition. Other "
 "locations are not supported."
 msgstr ""
+"Ögonblicksbilder sparas i /timeshift-btrfs på vald partition. Andra platser "
+"stöds inte."
 
 #: Gtk/MainWindow.vala:1006
 msgid "Snapshots available for restore"
@@ -2387,12 +2384,12 @@ msgstr "Stoppad"
 #: Core/Subvolume.vala:189
 #, c-format
 msgid "Subvolume exists at destination"
-msgstr ""
+msgstr "Undervolym finns på målplatsen"
 
 #: Gtk/SnapshotListBox.vala:275
-#, fuzzy, c-format
+#, c-format
 msgid "Subvolumes"
-msgstr "Volym"
+msgstr "Undervolymer"
 
 #: Gtk/ExcludeAppsBox.vala:135 Gtk/ExcludeBox.vala:258
 #: Gtk/RestoreWindow.vala:120
@@ -2530,7 +2527,7 @@ msgstr ""
 
 #: Utility/Gtk/AboutWindow.vala:457
 msgid "Tools"
-msgstr ""
+msgstr "Verktyg"
 
 #: Utility/Gtk/AboutWindow.vala:441
 msgid "Translations"
@@ -2643,9 +2640,8 @@ msgid "Users"
 msgstr "Användare"
 
 #: Gtk/RestoreWindow.vala:114
-#, fuzzy
 msgid "Users Home"
-msgstr "Användare"
+msgstr "Användares hemkatalog"
 
 #: Utility/Device.vala:1931
 #, c-format

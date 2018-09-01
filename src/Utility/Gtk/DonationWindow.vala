@@ -75,7 +75,7 @@ public class DonationWindow : Gtk.Window {
 			"https://www.patreon.com/bePatron?u=3059450");
 
 		
-		msg = _("This application was created for my personal use. It is being distributed as a free, open-source project in the hope that it may be useful. It is not practical for me to spend additional time providing free support and free work for individual users. See sections below if you need support or changes for this application.");
+		msg = _("This application was created for my personal use. I work on it during my free time based on my requirements and interest. It is distributed in the hope that it may be useful. Since this is a free application, it is not possible for me to spend additional time providing free support to individual users. If you need changes in this application, consider making a donation to sponsor the work, or get involved with the development and contribute. Simply complaining that someone is not doing your work for you is not constructive. See sections below for more info.");
 		
 		var label = add_label(msg);
 

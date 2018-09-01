@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timeshift\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2018-08-26 21:06+0530\n"
+"POT-Creation-Date: 2018-09-01 14:27+0530\n"
 "PO-Revision-Date: 2017-11-03 14:49+0000\n"
 "Last-Translator: Pjotr12345 <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
@@ -84,7 +84,7 @@ msgstr "Een onderhoudstaak draait elk uur en maakt de nodig momentopnames."
 msgid "Aborted."
 msgstr "Afgebroken."
 
-#: Gtk/MainWindow.vala:393
+#: Gtk/MainWindow.vala:386
 msgid "About"
 msgstr "Over"
 
@@ -215,7 +215,7 @@ msgstr "Kunstenaars"
 msgid "Authors"
 msgstr "Auteurs"
 
-#: Gtk/MainWindow.vala:346
+#: Gtk/MainWindow.vala:356
 msgid "Available"
 msgstr "Beschikbaar"
 
@@ -277,7 +277,7 @@ msgstr "Reservekopie-apparaat"
 msgid "Backup device not specified!"
 msgstr "Reservekopie-apparaat niet opgegeven."
 
-#: Utility/Gtk/DonationWindow.vala:89
+#: Utility/Gtk/DonationWindow.vala:74
 msgid "Become a Patron"
 msgstr "Word een bijdrager"
 
@@ -356,7 +356,7 @@ msgstr ""
 "een andere momentopname terugzetten, om het systeem in een samenhangende "
 "toestand te brengen. Klik op 'Ja' om te bevestigen."
 
-#: Gtk/MainWindow.vala:563
+#: Gtk/MainWindow.vala:556
 msgid "Cannot Delete Live Snapshot"
 msgstr "Kan een actieve momentopname niet verwijderen"
 
@@ -411,7 +411,7 @@ msgstr "Klonen"
 msgid "Cloning system..."
 msgstr "Systeem klonen..."
 
-#: Utility/Gtk/AboutWindow.vala:326 Utility/Gtk/DonationWindow.vala:121
+#: Utility/Gtk/AboutWindow.vala:326 Utility/Gtk/DonationWindow.vala:143
 #: Gtk/RsyncLogBox.vala:266 Gtk/BackupWindow.vala:168
 #: Gtk/BootOptionsWindow.vala:106 Gtk/DeleteWindow.vala:170
 #: Gtk/RestoreWindow.vala:508
@@ -526,7 +526,7 @@ msgstr "Maak momentopname indien geagendeerd"
 msgid "Create snapshot of current system"
 msgstr "Maak momentopname van huidig systeem"
 
-#: Gtk/MainWindow.vala:1068
+#: Gtk/MainWindow.vala:1058
 msgid ""
 "Create snapshots manually or enable scheduled snapshots to protect your "
 "system"
@@ -727,36 +727,6 @@ msgstr ""
 "Opslagmedia met Windows bestandssystemen zijn niet ondersteund. (NTFS, FAT, "
 "enz)."
 
-#: Utility/Gtk/DonationWindow.vala:61
-msgid ""
-"Did you find this software useful?\n"
-"\n"
-"You can buy me a coffee or make a donation via PayPal to show your support. "
-"Or just drop me an email and say Hi. This application is completely free and "
-"will continue to remain that way. Your contributions will help in keeping "
-"this project alive and improving it further.\n"
-"\n"
-"Feel free to send me an email if you find any issues in this application or "
-"if you need any changes. Suggestions and feedback are always welcome.\n"
-"\n"
-"Thanks,\n"
-"Tony George\n"
-"(teejeetech@gmail.com)"
-msgstr ""
-"Vindt u deze programmatuur nuttig?\n"
-"\n"
-"U kunt me trakteren op een kop koffie of een gift doen via PayPal, om uw "
-"ondersteuning te tonen. Of stuur me gewoon een e-mail en zeg Hoi. Deze "
-"toepassing is volledig vrij en gratis, en zal dat ook blijven. Uw bijdragen "
-"helpen om dit project in leven te houden en het verder te verbeteren.\n"
-"\n"
-"Stuur me gerust een e-mail als u fouten vindt in deze toepassing of indien u "
-"wijzigingen nodig hebt. Suggesties en terugkoppeling zijn altijd welkom.\n"
-"\n"
-"Bedankt,\n"
-"Tony George\n"
-"teejeetech@gmail.com"
-
 #: Utility/TeeJee.FileSystem.vala:518
 msgid "Dir not found"
 msgstr "Map niet gevonden"
@@ -781,13 +751,19 @@ msgstr "Distributie"
 msgid "Documentation"
 msgstr "Giften"
 
-#: Utility/Gtk/DonationWindow.vala:42 Gtk/MainWindow.vala:388
+#: Gtk/MainWindow.vala:209 Gtk/MainWindow.vala:210
 msgid "Donate"
 msgstr "Doneren"
 
-#: Utility/Gtk/DonationWindow.vala:81
-msgid "Donate with PayPal"
-msgstr "Doneren met PayPal"
+#: Utility/Gtk/DonationWindow.vala:71
+#, fuzzy
+msgid "Donate (5$)"
+msgstr "Doneren"
+
+#: Utility/Gtk/DonationWindow.vala:124 Utility/Gtk/DonationWindow.vala:132
+#, fuzzy
+msgid "Donation Plugins"
+msgstr "Giften"
 
 #: Utility/Gtk/AboutWindow.vala:465
 msgid "Donations"
@@ -797,7 +773,7 @@ msgstr "Giften"
 msgid "Enable BTRFS qgroups (recommended)"
 msgstr ""
 
-#: Gtk/MainWindow.vala:1062
+#: Gtk/MainWindow.vala:1052
 msgid "Enable scheduled snapshots to protect your system"
 msgstr "Schakel geagendeerde momentopnamen in om uw systeem te beschermen"
 
@@ -1044,6 +1020,10 @@ msgstr "Kon apparaat niet ontkoppelen."
 msgid "Failed to write file"
 msgstr "Kon bestand niet schrijven"
 
+#: Utility/Gtk/DonationWindow.vala:106
+msgid "Feature Requests"
+msgstr ""
+
 #: Gtk/RsyncLogBox.vala:122
 msgid "File (snapshot)"
 msgstr "Momentopname verwijderen"
@@ -1150,6 +1130,15 @@ msgstr "Grub zal niet worden geherinstalleerd"
 msgid "Generating initramfs..."
 msgstr "initramfs maken..."
 
+#: Utility/Gtk/DonationWindow.vala:135
+msgid "Get Donation Plugins ($10)"
+msgstr ""
+
+#: Utility/Gtk/DonationWindow.vala:92
+#, fuzzy
+msgid "Get Support ($10)"
+msgstr "Niet ondersteund"
+
 #: Console/AppConsole.vala:374
 msgid "Global"
 msgstr "Systeembreed"
@@ -1199,6 +1188,16 @@ msgstr "Uurlijkse momentopname is mislukt."
 msgid "Hourly snapshots are enabled"
 msgstr "Uurlijkse momentopnamen zijn ingeschakeld"
 
+#: Utility/Gtk/DonationWindow.vala:126
+msgid ""
+"I sometimes create exclusive plugins to encourage people to contribute. You "
+"can make a contribution by translating the application to other languages, "
+"by submitting code changes, or by making a donation for $10 with PayPal. "
+"Contributors are added to an email distribution list, and plugins are sent "
+"by email. These plugins are open-source. You can request the source code "
+"after receiving the plugins."
+msgstr ""
+
 #: Gtk/RestoreFinishBox.vala:102
 msgid ""
 "If the restored system fails to boot, then boot from the Live CD/USB, "
@@ -1215,6 +1214,23 @@ msgid ""
 msgstr ""
 "Indien deze voorwaarden niet aanvaardbaar voor u zijn, ga dan a.u.b. niet "
 "verder."
+
+#: Utility/Gtk/DonationWindow.vala:65
+msgid ""
+"If you find this application useful, and wish to support its development, "
+"use the button below to make a donation with PayPal."
+msgstr ""
+
+#: Utility/Gtk/DonationWindow.vala:108
+msgid ""
+"If you need changes to this application, add your requirements to the issue "
+"tracker. You can sponsor the work for your own request, or sponsor an "
+"existing request by making a donation with PayPal. Items available for "
+"sponsorship are labelled as <i>\"OpenForSponsorship\"</i>, along with an "
+"amount for the work involved. You can make a donation for that amount with "
+"PayPal, and send me an email with the issue number. Sponsored changes will "
+"be implemented in the next release of the application."
+msgstr ""
 
 #: Gtk/ExcludeBox.vala:54
 msgid "Include / Exclude Patterns"
@@ -1241,18 +1257,21 @@ msgstr "Ongeldige momentopname"
 msgid "Invalid command line arguments"
 msgstr "Ongeldige argumenten voor de opdrachtregel"
 
-#: Gtk/MainWindow.vala:824
+#: Gtk/MainWindow.vala:817
 msgid "Invalid snapshot"
 msgstr "Ongeldige momentopname"
 
-#: Utility/Gtk/DonationWindow.vala:97
-msgid "Issue Tracker ~ Report Issues, Request Features, Ask Questions"
+#: Utility/Gtk/DonationWindow.vala:95
+msgid "Issue Tracker"
 msgstr ""
-"Probleemregister ~ Meld problemen, vraag om nieuwe mogelijkheden, stel vragen"
 
 #: Gtk/ExcludeBox.vala:272
 msgid "Items Not Selected"
 msgstr "Niet-geselecteerde elementen"
+
+#: Utility/Gtk/DonationWindow.vala:114
+msgid "Items for Sponsorship"
+msgstr ""
 
 #: Gtk/ScheduleBox.vala:283
 msgid "Keep"
@@ -1361,7 +1380,7 @@ msgstr "Nieuwste wekelijkse momentopname is meer dan een week oud"
 msgid "Last weekly snapshot not found"
 msgstr "Nieuwste wekelijkse momentopname niet aangetroffen"
 
-#: Gtk/MainWindow.vala:1043
+#: Gtk/MainWindow.vala:1033
 #, c-format
 msgid "Latest snapshot"
 msgstr "Nieuwste momentopname"
@@ -1387,7 +1406,7 @@ msgstr "Apparatenlijst maken"
 msgid "List snapshots"
 msgstr "Lijst van momentopnamen maken"
 
-#: Gtk/MainWindow.vala:994
+#: Gtk/MainWindow.vala:984
 msgid "Live USB Mode (Restore Only)"
 msgstr "Live-USB-modus (alleen terugzetten)"
 
@@ -1396,7 +1415,7 @@ msgstr "Live-USB-modus (alleen terugzetten)"
 msgid "Location"
 msgstr "Locatie"
 
-#: Gtk/MainWindow.vala:459
+#: Gtk/MainWindow.vala:452
 msgid "Main window closed by user"
 msgstr "Hoofdvenster door gebruiker gesloten"
 
@@ -1404,7 +1423,7 @@ msgstr "Hoofdvenster door gebruiker gesloten"
 msgid "Mark for Deletion"
 msgstr "Markeren voor verwijderen"
 
-#: Gtk/MainWindow.vala:641
+#: Gtk/MainWindow.vala:634
 msgid "Marked for deletion"
 msgstr "Gemarkeerd voor verwijdering"
 
@@ -1412,7 +1431,7 @@ msgstr "Gemarkeerd voor verwijdering"
 msgid "Maximum backups exceeded for backup level"
 msgstr "Maximale aantal reservekopieën overschreden voor reservekopieniveau"
 
-#: Gtk/MainWindow.vala:208
+#: Gtk/MainWindow.vala:218
 msgid "Menu"
 msgstr "Menu"
 
@@ -1454,7 +1473,7 @@ msgstr "Aankoppelen"
 msgid "Moved system subvolume to snapshot directory"
 msgstr "Subvolume van systeem verplaatst naar momentopname-map"
 
-#: Gtk/MainWindow.vala:800
+#: Gtk/MainWindow.vala:793
 msgid "Multiple snapshots selected"
 msgstr "Meerdere momentopnamen gekozen"
 
@@ -1476,16 +1495,16 @@ msgstr "Nee"
 msgid "No Change"
 msgstr "Geen wijziging"
 
-#: Gtk/MainWindow.vala:615 Gtk/DeleteWindow.vala:341
+#: Gtk/MainWindow.vala:608 Gtk/DeleteWindow.vala:341
 msgid "No Snapshots Selected"
 msgstr "Geen momentopnamen gekozen"
 
-#: Gtk/MainWindow.vala:1067
+#: Gtk/MainWindow.vala:1057
 msgid "No snapshots available"
 msgstr "Geen momentopnamen beschikbaar"
 
 #: Console/AppConsole.vala:320 Core/SnapshotRepo.vala:898
-#: Gtk/MainWindow.vala:1011
+#: Gtk/MainWindow.vala:1001
 msgid "No snapshots found"
 msgstr "Geen momentopnamen gevonden"
 
@@ -1493,7 +1512,7 @@ msgstr "Geen momentopnamen gevonden"
 msgid "No snapshots found on device"
 msgstr "Geen momentopnamen gevonden op apparaat"
 
-#: Gtk/MainWindow.vala:553
+#: Gtk/MainWindow.vala:546
 msgid "No snapshots on device"
 msgstr "Geen momentopnamen op apparaat"
 
@@ -1501,11 +1520,11 @@ msgstr "Geen momentopnamen op apparaat"
 msgid "No snapshots on this device"
 msgstr "Geen momentopnamen op dit apparaat"
 
-#: Gtk/MainWindow.vala:793
+#: Gtk/MainWindow.vala:786
 msgid "No snapshots selected"
 msgstr "Geen momentopnamen gekozen"
 
-#: Gtk/MainWindow.vala:1044 Gtk/MainWindow.vala:1046
+#: Gtk/MainWindow.vala:1034 Gtk/MainWindow.vala:1036
 msgid "None"
 msgstr "Geen"
 
@@ -1567,7 +1586,7 @@ msgstr ""
 msgid "Older log files removed"
 msgstr "Oudere logboekbestanden verwijderd"
 
-#: Gtk/MainWindow.vala:1045
+#: Gtk/MainWindow.vala:1035
 msgid "Oldest snapshot"
 msgstr "Oudste momentopname"
 
@@ -1582,7 +1601,7 @@ msgstr ""
 "Alleen Ubuntu-achtige subvolume-indelingen met @ en @home subvolumes worden "
 "thans ondersteund."
 
-#: Gtk/MainWindow.vala:209
+#: Gtk/MainWindow.vala:219
 msgid "Open Menu"
 msgstr "Menu openen"
 
@@ -1663,7 +1682,7 @@ msgstr ""
 msgid "Please save your work and close all applications."
 msgstr "Sla a.u.b. uw werk op en sluit alle toepassingen."
 
-#: Gtk/MainWindow.vala:695
+#: Gtk/MainWindow.vala:688
 msgid "Please select a snapshot to view the log!"
 msgstr "Kies a.u.b. een momentopname om het logboekbestand te lezen."
 
@@ -1675,7 +1694,7 @@ msgstr "Kies a.u.b. het GRUB-apparaat"
 msgid "Please wait a few minutes and try again."
 msgstr "Wacht a.u.b. een paar minuten en probeer het dan opnieuw."
 
-#: Gtk/MainWindow.vala:762
+#: Gtk/MainWindow.vala:755
 msgid "Please wait for snapshots to be deleted."
 msgstr "Wacht a.u.b. op het verwijderen van momentopnamen."
 
@@ -1941,7 +1960,7 @@ msgstr "Rooster"
 msgid "Scheduled snapshot in progress..."
 msgstr "Geagendeerde momentopname actief..."
 
-#: Core/Main.vala:1147 Gtk/MainWindow.vala:1061 Gtk/ScheduleBox.vala:312
+#: Core/Main.vala:1147 Gtk/MainWindow.vala:1051 Gtk/ScheduleBox.vala:312
 msgid "Scheduled snapshots are disabled"
 msgstr "Geagendeerde momentopnamen zijn uitgeschakeld"
 
@@ -1980,7 +1999,7 @@ msgstr "Kies GRUB-apparaat"
 msgid "Select Path"
 msgstr "Pad kiezen"
 
-#: Gtk/MainWindow.vala:694
+#: Gtk/MainWindow.vala:687
 msgid "Select Snapshot"
 msgstr "Momentopname kiezen"
 
@@ -2009,7 +2028,7 @@ msgstr "Doelapparaat kiezen"
 msgid "Select a partition on this disk"
 msgstr "Kies een partitie op deze schijf"
 
-#: Gtk/MainWindow.vala:801
+#: Gtk/MainWindow.vala:794
 msgid "Select a single snapshot to restore"
 msgstr "Kies een enkele momentopname om terug te zetten"
 
@@ -2021,11 +2040,11 @@ msgstr "Kies een ander apparaat voor het root-bestandssysteem (/)"
 msgid "Select another device or free up some space"
 msgstr "Kies een ander apparaat of maak wat ruimte vrij"
 
-#: Gtk/MainWindow.vala:547 Gtk/MainWindow.vala:554
+#: Gtk/MainWindow.vala:540 Gtk/MainWindow.vala:547
 msgid "Select another device to delete snasphots"
 msgstr "Kies een ander apparaat om momentopnamen te verwijderen"
 
-#: Gtk/MainWindow.vala:481
+#: Gtk/MainWindow.vala:474
 msgid "Select another device?"
 msgstr "Een ander apparaat kiezen?"
 
@@ -2073,7 +2092,7 @@ msgstr "Kies de elementen die van de lijst moeten worden verwijderd"
 msgid "Select the snapshot device"
 msgstr "Kies het momentopname-apparaat"
 
-#: Gtk/MainWindow.vala:794
+#: Gtk/MainWindow.vala:787
 msgid "Select the snapshot to restore"
 msgstr "Kies de terug te zetten momentopname"
 
@@ -2081,7 +2100,7 @@ msgstr "Kies de terug te zetten momentopname"
 msgid "Select the snapshots to be deleted"
 msgstr "Kies de te verwijderen momentopnamen"
 
-#: Gtk/MainWindow.vala:616
+#: Gtk/MainWindow.vala:609
 msgid "Select the snapshots to mark for deletion"
 msgstr "Kies de momentopnamen die moeten worden gemarkeerd voor verwijdering"
 
@@ -2117,7 +2136,7 @@ msgstr "Gekozen momentopname-apparaat is geen systeemschijf"
 msgid "Selected snapshot is marked for deletion"
 msgstr "Gekozen momentopname is gemarkeerd voor verwijdering"
 
-#: Gtk/MainWindow.vala:825
+#: Gtk/MainWindow.vala:818
 msgid "Selected snapshot is marked for deletion and cannot be restored"
 msgstr ""
 "Gekozen momentopname is gemarkeerd voor verwijdering en kan niet worden "
@@ -2208,7 +2227,7 @@ msgstr "Herinstallatie van GRUB2 overslaan"
 msgid "Snapshot"
 msgstr "Momentopname"
 
-#: Gtk/MainWindow.vala:564
+#: Gtk/MainWindow.vala:557
 #, c-format
 msgid ""
 "Snapshot '%s' is being used by the system and cannot be deleted. Restart the "
@@ -2227,7 +2246,7 @@ msgstr "Momentopname gemaakt"
 msgid "Snapshot Levels"
 msgstr "Niveaus kiezen voor momentopnamen"
 
-#: Gtk/MainWindow.vala:761
+#: Gtk/MainWindow.vala:754
 msgid "Snapshot deletion in progress..."
 msgstr "Verwijdering van momentopname(n) aan de gang..."
 
@@ -2265,7 +2284,7 @@ msgstr "Momentopname zal actief worden na herstart van het systeem."
 msgid "Snapshot(s) Deleted"
 msgstr "Verwijderde momentopname(n)"
 
-#: Gtk/MainWindow.vala:310 Gtk/DeleteWindow.vala:89
+#: Gtk/MainWindow.vala:320 Gtk/DeleteWindow.vala:89
 msgid "Snapshots"
 msgstr "Momentopnamen"
 
@@ -2345,7 +2364,7 @@ msgstr ""
 "Momentopnamen worden bewaard in /timeshift-btrfs op de gekozen partitie. "
 "Andere locaties zijn niet ondersteund."
 
-#: Gtk/MainWindow.vala:1006
+#: Gtk/MainWindow.vala:996
 msgid "Snapshots available for restore"
 msgstr "Beschikbare momentopnamen voor terugzetten"
 
@@ -2365,7 +2384,7 @@ msgstr ""
 msgid "Snapshots cannot be created in Live CD mode"
 msgstr "Momentopnamen kunnen niet worden gemaakt in de livesessie van de DVD"
 
-#: Gtk/MainWindow.vala:1053
+#: Gtk/MainWindow.vala:1043
 msgid "Snapshots will be created at selected intervals"
 msgstr "Momentopnamen zullen met gekozen tussenpozen worden gemaakt"
 
@@ -2377,7 +2396,7 @@ msgstr ""
 "Momentopnamen zullen met gekozen tussenpozen worden gemaakt, indien de "
 "momentopname-schijf voldoende ruimte heeft (> 1 GB)"
 
-#: Gtk/MainWindow.vala:642
+#: Gtk/MainWindow.vala:635
 msgid "Snapshots will be removed during the next scheduled run"
 msgstr ""
 "Momentopnamen zullen worden verwijderd gedurende het eerstvolgende "
@@ -2398,6 +2417,10 @@ msgstr "Geef terug te zetten momentopname op"
 #: Console/AppConsole.vala:366
 msgid "Specify target device"
 msgstr "Geef doelapparaat op"
+
+#: Utility/Gtk/DonationWindow.vala:117
+msgid "Sponsor a Feature"
+msgstr ""
 
 #: Core/SnapshotRepo.vala:480 Gtk/RsyncLogBox.vala:472
 #, c-format
@@ -2426,6 +2449,11 @@ msgstr "Volume"
 #: Gtk/RestoreWindow.vala:120
 msgid "Summary"
 msgstr "Samenvatting"
+
+#: Utility/Gtk/DonationWindow.vala:84
+#, fuzzy
+msgid "Support"
+msgstr "Niet ondersteund"
 
 #: Console/AppConsole.vala:377
 msgid "Switch to BTRFS mode (default: config)"
@@ -2456,7 +2484,7 @@ msgstr "Schrijfwijze"
 msgid "System"
 msgstr "Systeem"
 
-#: Gtk/MainWindow.vala:951
+#: Gtk/MainWindow.vala:941
 msgid "System Restore Utility"
 msgstr "Hulpmiddel voor systeemherstel"
 
@@ -2525,6 +2553,15 @@ msgstr "De doelpartitie heeft een niet-ondersteunde subvolume-indeling."
 msgid "There are no snapshots on this device"
 msgstr "Er zijn geen momentopnamen op dit apparaat"
 
+#: Utility/Gtk/DonationWindow.vala:78
+msgid ""
+"This application was created for my personal use. It is being distributed as "
+"a free, open-source project in the hope that it may be useful. It is not "
+"practical for me to spend additional time providing free support and free "
+"work for individual users. See sections below if you need support or changes "
+"for this application."
+msgstr ""
+
 #: Utility/Device.vala:1379
 msgid "This device is not encrypted"
 msgstr "Dit apparaat is niet versleuteld"
@@ -2538,7 +2575,7 @@ msgstr ""
 "geen enkele verantwoordelijkheid voor welke schade dan ook, die mogelijk "
 "voortvloeit uit het gebruik van dit programma."
 
-#: Gtk/MainWindow.vala:1041 Gtk/MainWindow.vala:1052
+#: Gtk/MainWindow.vala:1031 Gtk/MainWindow.vala:1042
 msgid "Timeshift is active"
 msgstr "Timeshift is actief"
 
@@ -2639,6 +2676,16 @@ msgstr "GRUB-menu bijwerken..."
 msgid "Updating bootloader configuration..."
 msgstr "Instellingen van opstartlader bijwerken..."
 
+#: Utility/Gtk/DonationWindow.vala:86
+msgid ""
+"Use the issue tracker for reporting issues, asking questions, and requesting "
+"features. If you need an immediate response, use the button below to make a "
+"donation for $10 with PayPal. Add your questions to the tracker and send me "
+"an email with the issue number (teejeetech@gmail.com). This option is for "
+"questions you may have about the application, and for help with issues. This "
+"does not cover development work for fixing issues and adding features."
+msgstr ""
+
 #: Utility/Device.vala:1954
 #, c-format
 msgid "Used"
@@ -2685,7 +2732,7 @@ msgstr "Bekijk logboek voor maken"
 msgid "View Rsync Log for Restore"
 msgstr "Bekijk logboek voor terugzetten"
 
-#: Gtk/MainWindow.vala:378
+#: Gtk/MainWindow.vala:380
 msgid "View TimeShift Logs"
 msgstr "Bekijk de logboeken van Timeshift"
 
@@ -2701,11 +2748,6 @@ msgstr "Waarschuwing"
 msgid "Web Browsers"
 msgstr "Webbrowsers"
 
-#: Utility/Gtk/DonationWindow.vala:113
-#, c-format
-msgid "Website"
-msgstr "Website"
-
 #: Gtk/ScheduleBox.vala:82 Gtk/SnapshotListBox.vala:301
 msgid "Weekly"
 msgstr "Wekelijks"
@@ -2718,9 +2760,9 @@ msgstr "Wekelijkse momentopname is mislukt."
 msgid "Weekly snapshots are enabled"
 msgstr "Wekelijkse momentopnamen zijn ingeschakeld"
 
-#: Utility/Gtk/DonationWindow.vala:105
-msgid "Wiki ~ Documentation & Help"
-msgstr "Wiki ~ Documentatie en hulp"
+#: Utility/Gtk/DonationWindow.vala:100
+msgid "Wiki"
+msgstr ""
 
 #: Gtk/BackupFinishBox.vala:63 Gtk/DeleteFinishBox.vala:63
 msgid "With Errors"
@@ -2817,6 +2859,51 @@ msgstr "rsync meldde een fout"
 #: Core/SnapshotRepo.vala:831
 msgid "un-tagged"
 msgstr "ontmarkeerd"
+
+#~ msgid ""
+#~ "Did you find this software useful?\n"
+#~ "\n"
+#~ "You can buy me a coffee or make a donation via PayPal to show your "
+#~ "support. Or just drop me an email and say Hi. This application is "
+#~ "completely free and will continue to remain that way. Your contributions "
+#~ "will help in keeping this project alive and improving it further.\n"
+#~ "\n"
+#~ "Feel free to send me an email if you find any issues in this application "
+#~ "or if you need any changes. Suggestions and feedback are always welcome.\n"
+#~ "\n"
+#~ "Thanks,\n"
+#~ "Tony George\n"
+#~ "(teejeetech@gmail.com)"
+#~ msgstr ""
+#~ "Vindt u deze programmatuur nuttig?\n"
+#~ "\n"
+#~ "U kunt me trakteren op een kop koffie of een gift doen via PayPal, om uw "
+#~ "ondersteuning te tonen. Of stuur me gewoon een e-mail en zeg Hoi. Deze "
+#~ "toepassing is volledig vrij en gratis, en zal dat ook blijven. Uw "
+#~ "bijdragen helpen om dit project in leven te houden en het verder te "
+#~ "verbeteren.\n"
+#~ "\n"
+#~ "Stuur me gerust een e-mail als u fouten vindt in deze toepassing of "
+#~ "indien u wijzigingen nodig hebt. Suggesties en terugkoppeling zijn altijd "
+#~ "welkom.\n"
+#~ "\n"
+#~ "Bedankt,\n"
+#~ "Tony George\n"
+#~ "teejeetech@gmail.com"
+
+#~ msgid "Donate with PayPal"
+#~ msgstr "Doneren met PayPal"
+
+#~ msgid "Issue Tracker ~ Report Issues, Request Features, Ask Questions"
+#~ msgstr ""
+#~ "Probleemregister ~ Meld problemen, vraag om nieuwe mogelijkheden, stel "
+#~ "vragen"
+
+#~ msgid "Website"
+#~ msgstr "Website"
+
+#~ msgid "Wiki ~ Documentation & Help"
+#~ msgstr "Wiki ~ Documentatie en hulp"
 
 #~ msgid "Code Contributions"
 #~ msgstr "Bijdragen"

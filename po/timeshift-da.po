@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: linuxmint\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2018-08-26 21:06+0530\n"
+"POT-Creation-Date: 2018-09-01 14:27+0530\n"
 "PO-Revision-Date: 2017-11-03 17:47+0000\n"
 "Last-Translator: Alan Mortensen <alanmortensen.am@gmail.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
@@ -84,7 +84,7 @@ msgstr ""
 msgid "Aborted."
 msgstr "Afbrudt."
 
-#: Gtk/MainWindow.vala:393
+#: Gtk/MainWindow.vala:386
 msgid "About"
 msgstr "Om"
 
@@ -211,7 +211,7 @@ msgstr "Kunstnere"
 msgid "Authors"
 msgstr "Forfattere"
 
-#: Gtk/MainWindow.vala:346
+#: Gtk/MainWindow.vala:356
 msgid "Available"
 msgstr "Tilgængelig"
 
@@ -270,7 +270,7 @@ msgstr "Enhed til sikkerhedskopiering"
 msgid "Backup device not specified!"
 msgstr "En enhed til sikkerhedskopiering er ikke angivet!"
 
-#: Utility/Gtk/DonationWindow.vala:89
+#: Utility/Gtk/DonationWindow.vala:74
 msgid "Become a Patron"
 msgstr "Bliv protektor"
 
@@ -349,7 +349,7 @@ msgstr ""
 "øjebliksbillede for at bringe systemet i en konsistent tilstand. Tryk Ja for "
 "at bekræfte."
 
-#: Gtk/MainWindow.vala:563
+#: Gtk/MainWindow.vala:556
 msgid "Cannot Delete Live Snapshot"
 msgstr "Kan ikke slette live-øjebliksbillede"
 
@@ -404,7 +404,7 @@ msgstr "Kloner"
 msgid "Cloning system..."
 msgstr "Kloner systemet …"
 
-#: Utility/Gtk/AboutWindow.vala:326 Utility/Gtk/DonationWindow.vala:121
+#: Utility/Gtk/AboutWindow.vala:326 Utility/Gtk/DonationWindow.vala:143
 #: Gtk/RsyncLogBox.vala:266 Gtk/BackupWindow.vala:168
 #: Gtk/BootOptionsWindow.vala:106 Gtk/DeleteWindow.vala:170
 #: Gtk/RestoreWindow.vala:508
@@ -519,7 +519,7 @@ msgstr "Opret øjebliksbillede hvis det er planlagt"
 msgid "Create snapshot of current system"
 msgstr "Opret øjebliksbillede af det aktuelle system"
 
-#: Gtk/MainWindow.vala:1068
+#: Gtk/MainWindow.vala:1058
 msgid ""
 "Create snapshots manually or enable scheduled snapshots to protect your "
 "system"
@@ -721,37 +721,6 @@ msgstr "Enheder med Linux-filsystemer"
 msgid "Devices with Windows file systems are not supported (NTFS, FAT, etc)."
 msgstr ""
 
-#: Utility/Gtk/DonationWindow.vala:61
-msgid ""
-"Did you find this software useful?\n"
-"\n"
-"You can buy me a coffee or make a donation via PayPal to show your support. "
-"Or just drop me an email and say Hi. This application is completely free and "
-"will continue to remain that way. Your contributions will help in keeping "
-"this project alive and improving it further.\n"
-"\n"
-"Feel free to send me an email if you find any issues in this application or "
-"if you need any changes. Suggestions and feedback are always welcome.\n"
-"\n"
-"Thanks,\n"
-"Tony George\n"
-"(teejeetech@gmail.com)"
-msgstr ""
-"Synes du, programmet er nyttigt?\n"
-"\n"
-"Du kan give mig en kop kaffe, give mig et bidrag via PayPal for at vise din "
-"støtte, eller bare sende mig en e-mail og sige hej. Programmet er helt "
-"gratis og vil vedblive med at være det. Dine bidrag vil hjælpe med at holde "
-"liv i og forbedre projektet.\n"
-"\n"
-"Du er velkommen til at sende mig en e-mail, hvis du støder på problemer "
-"eller har bruger for ændringer. Forslag og tilbagemeldinger er altid "
-"velkomne.\n"
-"\n"
-"Tak,\n"
-"Tony George\n"
-"(teejeetech@gmail.com)"
-
 #: Utility/TeeJee.FileSystem.vala:518
 msgid "Dir not found"
 msgstr "Mappen blev ikke fundet"
@@ -776,13 +745,19 @@ msgstr "Distribution"
 msgid "Documentation"
 msgstr "Donationer"
 
-#: Utility/Gtk/DonationWindow.vala:42 Gtk/MainWindow.vala:388
+#: Gtk/MainWindow.vala:209 Gtk/MainWindow.vala:210
 msgid "Donate"
 msgstr "Donér"
 
-#: Utility/Gtk/DonationWindow.vala:81
-msgid "Donate with PayPal"
-msgstr "Donér med PayPal"
+#: Utility/Gtk/DonationWindow.vala:71
+#, fuzzy
+msgid "Donate (5$)"
+msgstr "Donér"
+
+#: Utility/Gtk/DonationWindow.vala:124 Utility/Gtk/DonationWindow.vala:132
+#, fuzzy
+msgid "Donation Plugins"
+msgstr "Donationer"
 
 #: Utility/Gtk/AboutWindow.vala:465
 msgid "Donations"
@@ -792,7 +767,7 @@ msgstr "Donationer"
 msgid "Enable BTRFS qgroups (recommended)"
 msgstr ""
 
-#: Gtk/MainWindow.vala:1062
+#: Gtk/MainWindow.vala:1052
 msgid "Enable scheduled snapshots to protect your system"
 msgstr "Aktivér planlagte øjebliksbilleder for at beskytte dit system"
 
@@ -1040,6 +1015,10 @@ msgstr "Kunne ikke afmontere enheden!"
 msgid "Failed to write file"
 msgstr "Kunne ikke skrive filen"
 
+#: Utility/Gtk/DonationWindow.vala:106
+msgid "Feature Requests"
+msgstr ""
+
 #: Gtk/RsyncLogBox.vala:122
 msgid "File (snapshot)"
 msgstr "Slet øjebliksbilledet"
@@ -1143,6 +1122,15 @@ msgstr "GRUB vil IKKE blive geninstalleret"
 msgid "Generating initramfs..."
 msgstr "Danner initramfs …"
 
+#: Utility/Gtk/DonationWindow.vala:135
+msgid "Get Donation Plugins ($10)"
+msgstr ""
+
+#: Utility/Gtk/DonationWindow.vala:92
+#, fuzzy
+msgid "Get Support ($10)"
+msgstr "Ikke understøttet"
+
 #: Console/AppConsole.vala:374
 msgid "Global"
 msgstr "Global"
@@ -1192,6 +1180,16 @@ msgstr "Øjebliksbillede hver time mislykkedes!"
 msgid "Hourly snapshots are enabled"
 msgstr "Øjebliksbillede hver time er aktiveret"
 
+#: Utility/Gtk/DonationWindow.vala:126
+msgid ""
+"I sometimes create exclusive plugins to encourage people to contribute. You "
+"can make a contribution by translating the application to other languages, "
+"by submitting code changes, or by making a donation for $10 with PayPal. "
+"Contributors are added to an email distribution list, and plugins are sent "
+"by email. These plugins are open-source. You can request the source code "
+"after receiving the plugins."
+msgstr ""
+
 #: Gtk/RestoreFinishBox.vala:102
 msgid ""
 "If the restored system fails to boot, then boot from the Live CD/USB, "
@@ -1205,6 +1203,23 @@ msgid ""
 "If these terms are not acceptable to you, please do not proceed beyond this "
 "point!"
 msgstr "Fortsæt ikke videre, hvis du ikke finder disse betingelser acceptable!"
+
+#: Utility/Gtk/DonationWindow.vala:65
+msgid ""
+"If you find this application useful, and wish to support its development, "
+"use the button below to make a donation with PayPal."
+msgstr ""
+
+#: Utility/Gtk/DonationWindow.vala:108
+msgid ""
+"If you need changes to this application, add your requirements to the issue "
+"tracker. You can sponsor the work for your own request, or sponsor an "
+"existing request by making a donation with PayPal. Items available for "
+"sponsorship are labelled as <i>\"OpenForSponsorship\"</i>, along with an "
+"amount for the work involved. You can make a donation for that amount with "
+"PayPal, and send me an email with the issue number. Sponsored changes will "
+"be implemented in the next release of the application."
+msgstr ""
 
 #: Gtk/ExcludeBox.vala:54
 msgid "Include / Exclude Patterns"
@@ -1231,18 +1246,21 @@ msgstr "Ugyldigt øjebliksbillede"
 msgid "Invalid command line arguments"
 msgstr "Ugyldige kommandolinjeargumenter"
 
-#: Gtk/MainWindow.vala:824
+#: Gtk/MainWindow.vala:817
 msgid "Invalid snapshot"
 msgstr "Ugyldigt øjebliksbillede"
 
-#: Utility/Gtk/DonationWindow.vala:97
-msgid "Issue Tracker ~ Report Issues, Request Features, Ask Questions"
+#: Utility/Gtk/DonationWindow.vala:95
+msgid "Issue Tracker"
 msgstr ""
-"Problemsporing ~ Rapportér problemer, bed om funktioner, stil spørgsmål"
 
 #: Gtk/ExcludeBox.vala:272
 msgid "Items Not Selected"
 msgstr "Elementer er ikke valgt"
+
+#: Utility/Gtk/DonationWindow.vala:114
+msgid "Items for Sponsorship"
+msgstr ""
 
 #: Gtk/ScheduleBox.vala:283
 msgid "Keep"
@@ -1351,7 +1369,7 @@ msgstr "Seneste ugentlige øjebliksbillede er mere end en uge gammelt"
 msgid "Last weekly snapshot not found"
 msgstr "Seneste ugentlige øjebliksbillede blev ikke fundet"
 
-#: Gtk/MainWindow.vala:1043
+#: Gtk/MainWindow.vala:1033
 #, c-format
 msgid "Latest snapshot"
 msgstr "Seneste øjebliksbillede"
@@ -1377,7 +1395,7 @@ msgstr "Oplist enheder"
 msgid "List snapshots"
 msgstr "Oplist øjebliksbilleder"
 
-#: Gtk/MainWindow.vala:994
+#: Gtk/MainWindow.vala:984
 msgid "Live USB Mode (Restore Only)"
 msgstr "Live-USB-tilstand (kun gendannelse)"
 
@@ -1386,7 +1404,7 @@ msgstr "Live-USB-tilstand (kun gendannelse)"
 msgid "Location"
 msgstr "Placering"
 
-#: Gtk/MainWindow.vala:459
+#: Gtk/MainWindow.vala:452
 msgid "Main window closed by user"
 msgstr "Hovedvinduet blev lukket af brugeren"
 
@@ -1394,7 +1412,7 @@ msgstr "Hovedvinduet blev lukket af brugeren"
 msgid "Mark for Deletion"
 msgstr "Markér til sletning"
 
-#: Gtk/MainWindow.vala:641
+#: Gtk/MainWindow.vala:634
 msgid "Marked for deletion"
 msgstr "Markeret til sletning"
 
@@ -1403,7 +1421,7 @@ msgid "Maximum backups exceeded for backup level"
 msgstr ""
 "Maksimalt antal sikkerhedskopier overskredet for sikkerhedskopiniveauet"
 
-#: Gtk/MainWindow.vala:208
+#: Gtk/MainWindow.vala:218
 msgid "Menu"
 msgstr "Menu"
 
@@ -1445,7 +1463,7 @@ msgstr "Montér"
 msgid "Moved system subvolume to snapshot directory"
 msgstr "Flyttede systemets underdiskenhed til mappen med øjebliksbilleder"
 
-#: Gtk/MainWindow.vala:800
+#: Gtk/MainWindow.vala:793
 msgid "Multiple snapshots selected"
 msgstr "Flere øjebliksbilleder er valgt"
 
@@ -1467,16 +1485,16 @@ msgstr "Nej"
 msgid "No Change"
 msgstr "Ingen ændring"
 
-#: Gtk/MainWindow.vala:615 Gtk/DeleteWindow.vala:341
+#: Gtk/MainWindow.vala:608 Gtk/DeleteWindow.vala:341
 msgid "No Snapshots Selected"
 msgstr "Ingen øjebliksbilleder valgt"
 
-#: Gtk/MainWindow.vala:1067
+#: Gtk/MainWindow.vala:1057
 msgid "No snapshots available"
 msgstr "Ingen tilgængelige øjebliksbilleder"
 
 #: Console/AppConsole.vala:320 Core/SnapshotRepo.vala:898
-#: Gtk/MainWindow.vala:1011
+#: Gtk/MainWindow.vala:1001
 msgid "No snapshots found"
 msgstr "Fandt ingen øjebliksbilleder"
 
@@ -1484,7 +1502,7 @@ msgstr "Fandt ingen øjebliksbilleder"
 msgid "No snapshots found on device"
 msgstr "Fandt ingen øjebliksbilleder på enheden"
 
-#: Gtk/MainWindow.vala:553
+#: Gtk/MainWindow.vala:546
 msgid "No snapshots on device"
 msgstr "Der er ingen øjebliksbilleder på enheden"
 
@@ -1492,11 +1510,11 @@ msgstr "Der er ingen øjebliksbilleder på enheden"
 msgid "No snapshots on this device"
 msgstr "Der er ingen øjebliksbilleder på denne enhed"
 
-#: Gtk/MainWindow.vala:793
+#: Gtk/MainWindow.vala:786
 msgid "No snapshots selected"
 msgstr "Ingen øjebliksbilleder valgt"
 
-#: Gtk/MainWindow.vala:1044 Gtk/MainWindow.vala:1046
+#: Gtk/MainWindow.vala:1034 Gtk/MainWindow.vala:1036
 msgid "None"
 msgstr "Ingen"
 
@@ -1557,7 +1575,7 @@ msgstr ""
 msgid "Older log files removed"
 msgstr "Ældre logfiler blev fjernet"
 
-#: Gtk/MainWindow.vala:1045
+#: Gtk/MainWindow.vala:1035
 msgid "Oldest snapshot"
 msgstr "Ældste øjebliksbillede"
 
@@ -1570,7 +1588,7 @@ msgid ""
 "Only ubuntu-type layouts with @ and @home subvolumes are currently supported."
 msgstr "Kun layout som i Ubuntu med @ og @home underdiskenheder understøttes."
 
-#: Gtk/MainWindow.vala:209
+#: Gtk/MainWindow.vala:219
 msgid "Open Menu"
 msgstr "Åbn menuen"
 
@@ -1650,7 +1668,7 @@ msgstr ""
 msgid "Please save your work and close all applications."
 msgstr "Gem dit arbejde og luk alle programmer."
 
-#: Gtk/MainWindow.vala:695
+#: Gtk/MainWindow.vala:688
 msgid "Please select a snapshot to view the log!"
 msgstr "Vælg et øjebliksbillede for at se loggen!"
 
@@ -1662,7 +1680,7 @@ msgstr "Vælg GRUB-enheden"
 msgid "Please wait a few minutes and try again."
 msgstr "Vent et par minutter og prøv så igen."
 
-#: Gtk/MainWindow.vala:762
+#: Gtk/MainWindow.vala:755
 msgid "Please wait for snapshots to be deleted."
 msgstr "Vent på, at øjebliksbillederne bliver slettet."
 
@@ -1926,7 +1944,7 @@ msgstr "Planlægning"
 msgid "Scheduled snapshot in progress..."
 msgstr "Planlagt øjebliksbillede er ved at blive oprettet …"
 
-#: Core/Main.vala:1147 Gtk/MainWindow.vala:1061 Gtk/ScheduleBox.vala:312
+#: Core/Main.vala:1147 Gtk/MainWindow.vala:1051 Gtk/ScheduleBox.vala:312
 msgid "Scheduled snapshots are disabled"
 msgstr "Planlagte øjebliksbilleder er deaktiverede"
 
@@ -1964,7 +1982,7 @@ msgstr "Vælg GRUB-enhed"
 msgid "Select Path"
 msgstr "Vælg sti"
 
-#: Gtk/MainWindow.vala:694
+#: Gtk/MainWindow.vala:687
 msgid "Select Snapshot"
 msgstr "Vælg øjebliksbillede"
 
@@ -1993,7 +2011,7 @@ msgstr "Vælg målenhed"
 msgid "Select a partition on this disk"
 msgstr "Vælg en partition på denne disk"
 
-#: Gtk/MainWindow.vala:801
+#: Gtk/MainWindow.vala:794
 msgid "Select a single snapshot to restore"
 msgstr "Vælg et enkelt øjebliksbillede, som skal gendannes"
 
@@ -2005,11 +2023,11 @@ msgstr "Vælg en anden enhed til rodfilsystemet (/)"
 msgid "Select another device or free up some space"
 msgstr "Vælg en anden enhed eller frigør noget plads"
 
-#: Gtk/MainWindow.vala:547 Gtk/MainWindow.vala:554
+#: Gtk/MainWindow.vala:540 Gtk/MainWindow.vala:547
 msgid "Select another device to delete snasphots"
 msgstr "Vælg en anden enhed for at slette øjebliksbilleder"
 
-#: Gtk/MainWindow.vala:481
+#: Gtk/MainWindow.vala:474
 msgid "Select another device?"
 msgstr "Vælg en anden enhed?"
 
@@ -2057,7 +2075,7 @@ msgstr "Vælg de elementer, som skal fjernes fra listen"
 msgid "Select the snapshot device"
 msgstr "Vælg enheden til øjebliksbilleder"
 
-#: Gtk/MainWindow.vala:794
+#: Gtk/MainWindow.vala:787
 msgid "Select the snapshot to restore"
 msgstr "Vælg det øjebliksbillede, som skal gendannes"
 
@@ -2065,7 +2083,7 @@ msgstr "Vælg det øjebliksbillede, som skal gendannes"
 msgid "Select the snapshots to be deleted"
 msgstr "Vælg de øjebliksbilleder, som skal slettes"
 
-#: Gtk/MainWindow.vala:616
+#: Gtk/MainWindow.vala:609
 msgid "Select the snapshots to mark for deletion"
 msgstr "Vælg de øjebliksbilleder, som skal markeres til sletning"
 
@@ -2101,7 +2119,7 @@ msgstr "Den valgte enhed til øjebliksbillede er ikke en systemdisk"
 msgid "Selected snapshot is marked for deletion"
 msgstr "Det valgte øjebliksbillede er markeret til sletning"
 
-#: Gtk/MainWindow.vala:825
+#: Gtk/MainWindow.vala:818
 msgid "Selected snapshot is marked for deletion and cannot be restored"
 msgstr ""
 "Det valgte øjebliksbillede er markeret til sletning og kan ikke gendannes"
@@ -2190,7 +2208,7 @@ msgstr "Spring geninstalleringen af GRUB2 over"
 msgid "Snapshot"
 msgstr "Øjebliksbillede"
 
-#: Gtk/MainWindow.vala:564
+#: Gtk/MainWindow.vala:557
 #, c-format
 msgid ""
 "Snapshot '%s' is being used by the system and cannot be deleted. Restart the "
@@ -2208,7 +2226,7 @@ msgstr "Øjebliksbilledet blev oprettet"
 msgid "Snapshot Levels"
 msgstr "Vælg niveau for øjebliksbillede"
 
-#: Gtk/MainWindow.vala:761
+#: Gtk/MainWindow.vala:754
 msgid "Snapshot deletion in progress..."
 msgstr "Øjebliksbilledet er ved at blive slettet …"
 
@@ -2246,7 +2264,7 @@ msgstr "Øjebliksbilledet vil blive aktiveret efter genstart af systemet."
 msgid "Snapshot(s) Deleted"
 msgstr "Øjebliksbillede(r) blev slettet"
 
-#: Gtk/MainWindow.vala:310 Gtk/DeleteWindow.vala:89
+#: Gtk/MainWindow.vala:320 Gtk/DeleteWindow.vala:89
 msgid "Snapshots"
 msgstr "Øjebliksbilleder"
 
@@ -2321,7 +2339,7 @@ msgid ""
 "locations are not supported."
 msgstr ""
 
-#: Gtk/MainWindow.vala:1006
+#: Gtk/MainWindow.vala:996
 msgid "Snapshots available for restore"
 msgstr "Øjebliksbilleder tilgængelige til gendannelse"
 
@@ -2339,7 +2357,7 @@ msgstr ""
 msgid "Snapshots cannot be created in Live CD mode"
 msgstr "Øjebliksbilleder kan ikke oprettes i tilstanden Live CD"
 
-#: Gtk/MainWindow.vala:1053
+#: Gtk/MainWindow.vala:1043
 msgid "Snapshots will be created at selected intervals"
 msgstr "Øjebliksbilleder vil blive oprettet med de valgte intervaller"
 
@@ -2351,7 +2369,7 @@ msgstr ""
 "Øjebliksbilleder vil blive oprettet med de valgte intervaller, hvis der er "
 "plads nok på disken (> 1 GB)"
 
-#: Gtk/MainWindow.vala:642
+#: Gtk/MainWindow.vala:635
 msgid "Snapshots will be removed during the next scheduled run"
 msgstr "Øjebliksbilleder vil blive fjernet under den næste planlagte kørsel"
 
@@ -2370,6 +2388,10 @@ msgstr "Angiv det øjebliksbillede, som skal gendannes"
 #: Console/AppConsole.vala:366
 msgid "Specify target device"
 msgstr "Angiv målenheden"
+
+#: Utility/Gtk/DonationWindow.vala:117
+msgid "Sponsor a Feature"
+msgstr ""
 
 #: Core/SnapshotRepo.vala:480 Gtk/RsyncLogBox.vala:472
 #, c-format
@@ -2398,6 +2420,11 @@ msgstr "Diskenhed"
 #: Gtk/RestoreWindow.vala:120
 msgid "Summary"
 msgstr "Sammendrag"
+
+#: Utility/Gtk/DonationWindow.vala:84
+#, fuzzy
+msgid "Support"
+msgstr "Ikke understøttet"
 
 #: Console/AppConsole.vala:377
 msgid "Switch to BTRFS mode (default: config)"
@@ -2428,7 +2455,7 @@ msgstr "Syntaks"
 msgid "System"
 msgstr "System"
 
-#: Gtk/MainWindow.vala:951
+#: Gtk/MainWindow.vala:941
 msgid "System Restore Utility"
 msgstr "Værktøj til systemgendannelse"
 
@@ -2497,6 +2524,15 @@ msgstr "Målpartitionens layout af underdiskenhed understøttes ikke."
 msgid "There are no snapshots on this device"
 msgstr "Der er ikke nogen øjebliksbilleder på denne enhed"
 
+#: Utility/Gtk/DonationWindow.vala:78
+msgid ""
+"This application was created for my personal use. It is being distributed as "
+"a free, open-source project in the hope that it may be useful. It is not "
+"practical for me to spend additional time providing free support and free "
+"work for individual users. See sections below if you need support or changes "
+"for this application."
+msgstr ""
+
 #: Utility/Device.vala:1379
 msgid "This device is not encrypted"
 msgstr "Denne enhed er ikke krypteret"
@@ -2509,7 +2545,7 @@ msgstr ""
 "Der følger INGEN garanti med dette program, og forfatteren påtager sig ikke "
 "noget ansvar for skader, som dette program måtte forvolde."
 
-#: Gtk/MainWindow.vala:1041 Gtk/MainWindow.vala:1052
+#: Gtk/MainWindow.vala:1031 Gtk/MainWindow.vala:1042
 msgid "Timeshift is active"
 msgstr "Timeshift er aktiv"
 
@@ -2610,6 +2646,16 @@ msgstr "Opdaterer GRUB-menuen …"
 msgid "Updating bootloader configuration..."
 msgstr "Opdaterer bootloader-konfigurationen …"
 
+#: Utility/Gtk/DonationWindow.vala:86
+msgid ""
+"Use the issue tracker for reporting issues, asking questions, and requesting "
+"features. If you need an immediate response, use the button below to make a "
+"donation for $10 with PayPal. Add your questions to the tracker and send me "
+"an email with the issue number (teejeetech@gmail.com). This option is for "
+"questions you may have about the application, and for help with issues. This "
+"does not cover development work for fixing issues and adding features."
+msgstr ""
+
 #: Utility/Device.vala:1954
 #, c-format
 msgid "Used"
@@ -2656,7 +2702,7 @@ msgstr "Vis loggen for oprettelse"
 msgid "View Rsync Log for Restore"
 msgstr "Vis loggen for gendannelse"
 
-#: Gtk/MainWindow.vala:378
+#: Gtk/MainWindow.vala:380
 msgid "View TimeShift Logs"
 msgstr "Vis Timeshift-logger"
 
@@ -2672,11 +2718,6 @@ msgstr "Advarsel"
 msgid "Web Browsers"
 msgstr "Webbrowsere"
 
-#: Utility/Gtk/DonationWindow.vala:113
-#, c-format
-msgid "Website"
-msgstr "Websted"
-
 #: Gtk/ScheduleBox.vala:82 Gtk/SnapshotListBox.vala:301
 msgid "Weekly"
 msgstr "Ugentlig"
@@ -2689,9 +2730,9 @@ msgstr "Ugentligt øjebliksbillede mislykkedes!"
 msgid "Weekly snapshots are enabled"
 msgstr "Ugentlige øjebliksbilleder er aktiveret"
 
-#: Utility/Gtk/DonationWindow.vala:105
-msgid "Wiki ~ Documentation & Help"
-msgstr "Wiki ~ Dokumentation og hjælp"
+#: Utility/Gtk/DonationWindow.vala:100
+msgid "Wiki"
+msgstr ""
 
 #: Gtk/BackupFinishBox.vala:63 Gtk/DeleteFinishBox.vala:63
 msgid "With Errors"
@@ -2789,6 +2830,49 @@ msgstr "rsync returnerede en fejl"
 #: Core/SnapshotRepo.vala:831
 msgid "un-tagged"
 msgstr "umærket"
+
+#~ msgid ""
+#~ "Did you find this software useful?\n"
+#~ "\n"
+#~ "You can buy me a coffee or make a donation via PayPal to show your "
+#~ "support. Or just drop me an email and say Hi. This application is "
+#~ "completely free and will continue to remain that way. Your contributions "
+#~ "will help in keeping this project alive and improving it further.\n"
+#~ "\n"
+#~ "Feel free to send me an email if you find any issues in this application "
+#~ "or if you need any changes. Suggestions and feedback are always welcome.\n"
+#~ "\n"
+#~ "Thanks,\n"
+#~ "Tony George\n"
+#~ "(teejeetech@gmail.com)"
+#~ msgstr ""
+#~ "Synes du, programmet er nyttigt?\n"
+#~ "\n"
+#~ "Du kan give mig en kop kaffe, give mig et bidrag via PayPal for at vise "
+#~ "din støtte, eller bare sende mig en e-mail og sige hej. Programmet er "
+#~ "helt gratis og vil vedblive med at være det. Dine bidrag vil hjælpe med "
+#~ "at holde liv i og forbedre projektet.\n"
+#~ "\n"
+#~ "Du er velkommen til at sende mig en e-mail, hvis du støder på problemer "
+#~ "eller har bruger for ændringer. Forslag og tilbagemeldinger er altid "
+#~ "velkomne.\n"
+#~ "\n"
+#~ "Tak,\n"
+#~ "Tony George\n"
+#~ "(teejeetech@gmail.com)"
+
+#~ msgid "Donate with PayPal"
+#~ msgstr "Donér med PayPal"
+
+#~ msgid "Issue Tracker ~ Report Issues, Request Features, Ask Questions"
+#~ msgstr ""
+#~ "Problemsporing ~ Rapportér problemer, bed om funktioner, stil spørgsmål"
+
+#~ msgid "Website"
+#~ msgstr "Websted"
+
+#~ msgid "Wiki ~ Documentation & Help"
+#~ msgstr "Wiki ~ Dokumentation og hjælp"
 
 #~ msgid "Code Contributions"
 #~ msgstr "Bidrag"

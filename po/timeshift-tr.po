@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timeshift\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2018-08-26 21:06+0530\n"
+"POT-Creation-Date: 2018-09-01 14:27+0530\n"
 "PO-Revision-Date: 2018-08-20 20:10+0300\n"
 "Last-Translator: Gökhan Gökkaya <gokhanlnx@gmail.com>\n"
 "Language-Team: Linux Mint Turkey <linuxmint@linuxmint.net.tr>\n"
@@ -86,7 +86,7 @@ msgstr ""
 msgid "Aborted."
 msgstr "İptal edildi."
 
-#: Gtk/MainWindow.vala:393
+#: Gtk/MainWindow.vala:386
 msgid "About"
 msgstr "Hakkında"
 
@@ -214,7 +214,7 @@ msgstr "Sanatçılar"
 msgid "Authors"
 msgstr "Geliştiriciler"
 
-#: Gtk/MainWindow.vala:346
+#: Gtk/MainWindow.vala:356
 msgid "Available"
 msgstr "Mevcut"
 
@@ -273,7 +273,7 @@ msgstr "Yedek Aygıtı"
 msgid "Backup device not specified!"
 msgstr "Yedekleme aygıtı belirtilmedi!"
 
-#: Utility/Gtk/DonationWindow.vala:89
+#: Utility/Gtk/DonationWindow.vala:74
 msgid "Become a Patron"
 msgstr "Patron Ol"
 
@@ -352,7 +352,7 @@ msgstr ""
 "getirilebilmesi için, bir başka anlık görüntüyü geri yüklemeye ihtiyacınız "
 "olur. Onaylamak için Evet'e tıklayın."
 
-#: Gtk/MainWindow.vala:563
+#: Gtk/MainWindow.vala:556
 msgid "Cannot Delete Live Snapshot"
 msgstr "Çalışan Anlık Görüntü Silinemedi"
 
@@ -406,7 +406,7 @@ msgstr "Klonlanıyor"
 msgid "Cloning system..."
 msgstr "Sistem klonlanıyor..."
 
-#: Utility/Gtk/AboutWindow.vala:326 Utility/Gtk/DonationWindow.vala:121
+#: Utility/Gtk/AboutWindow.vala:326 Utility/Gtk/DonationWindow.vala:143
 #: Gtk/RsyncLogBox.vala:266 Gtk/BackupWindow.vala:168
 #: Gtk/BootOptionsWindow.vala:106 Gtk/DeleteWindow.vala:170
 #: Gtk/RestoreWindow.vala:508
@@ -521,7 +521,7 @@ msgstr "Eğer zamanlanmışsa anlık görüntü oluştur"
 msgid "Create snapshot of current system"
 msgstr "Mevcut sistemin anlık görüntüsünü oluştur"
 
-#: Gtk/MainWindow.vala:1068
+#: Gtk/MainWindow.vala:1058
 msgid ""
 "Create snapshots manually or enable scheduled snapshots to protect your "
 "system"
@@ -722,37 +722,6 @@ msgid "Devices with Windows file systems are not supported (NTFS, FAT, etc)."
 msgstr ""
 "Windows dosya sistemlerine sahip cihazlar desteklenmez (NTFS, FAT vb.)."
 
-#: Utility/Gtk/DonationWindow.vala:61
-msgid ""
-"Did you find this software useful?\n"
-"\n"
-"You can buy me a coffee or make a donation via PayPal to show your support. "
-"Or just drop me an email and say Hi. This application is completely free and "
-"will continue to remain that way. Your contributions will help in keeping "
-"this project alive and improving it further.\n"
-"\n"
-"Feel free to send me an email if you find any issues in this application or "
-"if you need any changes. Suggestions and feedback are always welcome.\n"
-"\n"
-"Thanks,\n"
-"Tony George\n"
-"(teejeetech@gmail.com)"
-msgstr ""
-"Bu yazılımı faydalı buldunuz mu?\n"
-"\n"
-"Bana bir kahve ısmarlayabilir ya da PayPal ile bağışta bulunarak desteğinizi "
-"gösterebilirsiniz. Ya da bana bir e posta bırakıp Merhaba (Hi) "
-"diyebilirsiniz. Bu yazılım tamamen özgürdür ve öyle kalmaya devam edecktir. "
-"Katkılarınız bu projeyi canlı tutmak ve daha da geliştirmek için yardımcı "
-"olacaktır.\n"
-"\n"
-"Eğer bir sorun bulursanız veya bir değişikliğe ihtiyaç duyuyorsanız bana bir "
-"e-posta göndermekten çekinmeyin. Öneri ve geribildirim her zaman açığız.\n"
-"\n"
-"Teşekkürler,\n"
-"Tony George\n"
-"(teejeetech@gmail.com)"
-
 #: Utility/TeeJee.FileSystem.vala:518
 msgid "Dir not found"
 msgstr "Dizin bulunamadı"
@@ -777,13 +746,19 @@ msgstr "Dağıtım"
 msgid "Documentation"
 msgstr "Bağışlar"
 
-#: Utility/Gtk/DonationWindow.vala:42 Gtk/MainWindow.vala:388
+#: Gtk/MainWindow.vala:209 Gtk/MainWindow.vala:210
 msgid "Donate"
 msgstr "Bağış Yap"
 
-#: Utility/Gtk/DonationWindow.vala:81
-msgid "Donate with PayPal"
-msgstr "PayPal ile bağış"
+#: Utility/Gtk/DonationWindow.vala:71
+#, fuzzy
+msgid "Donate (5$)"
+msgstr "Bağış Yap"
+
+#: Utility/Gtk/DonationWindow.vala:124 Utility/Gtk/DonationWindow.vala:132
+#, fuzzy
+msgid "Donation Plugins"
+msgstr "Bağışlar"
 
 #: Utility/Gtk/AboutWindow.vala:465
 msgid "Donations"
@@ -793,7 +768,7 @@ msgstr "Bağışlar"
 msgid "Enable BTRFS qgroups (recommended)"
 msgstr "BTRFS qgroup etkinleştir (önerilir)"
 
-#: Gtk/MainWindow.vala:1062
+#: Gtk/MainWindow.vala:1052
 msgid "Enable scheduled snapshots to protect your system"
 msgstr "Sisteminizi korumak için zamanlanmış anlık görüntüleri etkinleştirin"
 
@@ -1040,6 +1015,10 @@ msgstr "Aygıt ayırma başarısız!"
 msgid "Failed to write file"
 msgstr "Dosya yazma başarısız"
 
+#: Utility/Gtk/DonationWindow.vala:106
+msgid "Feature Requests"
+msgstr ""
+
 #: Gtk/RsyncLogBox.vala:122
 msgid "File (snapshot)"
 msgstr "Anlık görüntü sil"
@@ -1144,6 +1123,15 @@ msgstr "GRUB yeniden kurulmayacak"
 msgid "Generating initramfs..."
 msgstr "initramfs oluşturuluyor..."
 
+#: Utility/Gtk/DonationWindow.vala:135
+msgid "Get Donation Plugins ($10)"
+msgstr ""
+
+#: Utility/Gtk/DonationWindow.vala:92
+#, fuzzy
+msgid "Get Support ($10)"
+msgstr "Desteklenmiyor"
+
 #: Console/AppConsole.vala:374
 msgid "Global"
 msgstr "Genel"
@@ -1193,6 +1181,16 @@ msgstr "Saatlik anlık görüntü başarısız!"
 msgid "Hourly snapshots are enabled"
 msgstr "Saatlik anlık görüntüler etkinleştirildi"
 
+#: Utility/Gtk/DonationWindow.vala:126
+msgid ""
+"I sometimes create exclusive plugins to encourage people to contribute. You "
+"can make a contribution by translating the application to other languages, "
+"by submitting code changes, or by making a donation for $10 with PayPal. "
+"Contributors are added to an email distribution list, and plugins are sent "
+"by email. These plugins are open-source. You can request the source code "
+"after receiving the plugins."
+msgstr ""
+
 #: Gtk/RestoreFinishBox.vala:102
 msgid ""
 "If the restored system fails to boot, then boot from the Live CD/USB, "
@@ -1208,6 +1206,23 @@ msgid ""
 msgstr ""
 "Bu koşullar sizin için kabul edilebilir değilse, lütfen bu noktadan sonra "
 "devam etmeyin!"
+
+#: Utility/Gtk/DonationWindow.vala:65
+msgid ""
+"If you find this application useful, and wish to support its development, "
+"use the button below to make a donation with PayPal."
+msgstr ""
+
+#: Utility/Gtk/DonationWindow.vala:108
+msgid ""
+"If you need changes to this application, add your requirements to the issue "
+"tracker. You can sponsor the work for your own request, or sponsor an "
+"existing request by making a donation with PayPal. Items available for "
+"sponsorship are labelled as <i>\"OpenForSponsorship\"</i>, along with an "
+"amount for the work involved. You can make a donation for that amount with "
+"PayPal, and send me an email with the issue number. Sponsored changes will "
+"be implemented in the next release of the application."
+msgstr ""
 
 #: Gtk/ExcludeBox.vala:54
 msgid "Include / Exclude Patterns"
@@ -1234,17 +1249,21 @@ msgstr "Geçersiz Anlık Görüntü"
 msgid "Invalid command line arguments"
 msgstr "Geçersiz komut satırı değişkeni"
 
-#: Gtk/MainWindow.vala:824
+#: Gtk/MainWindow.vala:817
 msgid "Invalid snapshot"
 msgstr "Geçersiz anlık görüntü"
 
-#: Utility/Gtk/DonationWindow.vala:97
-msgid "Issue Tracker ~ Report Issues, Request Features, Ask Questions"
-msgstr "Sorun Takibi ~ Sorun Raporlama, Özellik İsteği, Soru Sorma"
+#: Utility/Gtk/DonationWindow.vala:95
+msgid "Issue Tracker"
+msgstr ""
 
 #: Gtk/ExcludeBox.vala:272
 msgid "Items Not Selected"
 msgstr "Öğeler Seçilmedi"
+
+#: Utility/Gtk/DonationWindow.vala:114
+msgid "Items for Sponsorship"
+msgstr ""
 
 #: Gtk/ScheduleBox.vala:283
 msgid "Keep"
@@ -1352,7 +1371,7 @@ msgstr "Son haftalık anlık görüntü 1 haftadan eski"
 msgid "Last weekly snapshot not found"
 msgstr "Son haftalık anlık görüntü bulunamadı"
 
-#: Gtk/MainWindow.vala:1043
+#: Gtk/MainWindow.vala:1033
 #, c-format
 msgid "Latest snapshot"
 msgstr "En son anlık görüntü"
@@ -1378,7 +1397,7 @@ msgstr "Aygıtları listele"
 msgid "List snapshots"
 msgstr "Anlık görüntüleri listele"
 
-#: Gtk/MainWindow.vala:994
+#: Gtk/MainWindow.vala:984
 msgid "Live USB Mode (Restore Only)"
 msgstr "Çalışan USB Kipi (Sadece Geri Yükleme)"
 
@@ -1387,7 +1406,7 @@ msgstr "Çalışan USB Kipi (Sadece Geri Yükleme)"
 msgid "Location"
 msgstr "Konum"
 
-#: Gtk/MainWindow.vala:459
+#: Gtk/MainWindow.vala:452
 msgid "Main window closed by user"
 msgstr "Ana pencere kullanıcı tarafından kapatıldı"
 
@@ -1395,7 +1414,7 @@ msgstr "Ana pencere kullanıcı tarafından kapatıldı"
 msgid "Mark for Deletion"
 msgstr "Silme için İşaretle"
 
-#: Gtk/MainWindow.vala:641
+#: Gtk/MainWindow.vala:634
 msgid "Marked for deletion"
 msgstr "Silme için işaretlendi"
 
@@ -1403,7 +1422,7 @@ msgstr "Silme için işaretlendi"
 msgid "Maximum backups exceeded for backup level"
 msgstr "Yedekleme seviyesi için maksimum yedekler aşıldı"
 
-#: Gtk/MainWindow.vala:208
+#: Gtk/MainWindow.vala:218
 msgid "Menu"
 msgstr "Menü"
 
@@ -1445,7 +1464,7 @@ msgstr "Bağla"
 msgid "Moved system subvolume to snapshot directory"
 msgstr "Sistem altbölümü, anlık görüntü dizinine taşındı"
 
-#: Gtk/MainWindow.vala:800
+#: Gtk/MainWindow.vala:793
 msgid "Multiple snapshots selected"
 msgstr "Çoklu anlık görüntü seçildi"
 
@@ -1467,16 +1486,16 @@ msgstr "Hayır"
 msgid "No Change"
 msgstr "Değişiklik Yok"
 
-#: Gtk/MainWindow.vala:615 Gtk/DeleteWindow.vala:341
+#: Gtk/MainWindow.vala:608 Gtk/DeleteWindow.vala:341
 msgid "No Snapshots Selected"
 msgstr "Seçili anlık görüntü yok"
 
-#: Gtk/MainWindow.vala:1067
+#: Gtk/MainWindow.vala:1057
 msgid "No snapshots available"
 msgstr "Anlık görüntü mevcut değil"
 
 #: Console/AppConsole.vala:320 Core/SnapshotRepo.vala:898
-#: Gtk/MainWindow.vala:1011
+#: Gtk/MainWindow.vala:1001
 msgid "No snapshots found"
 msgstr "Anlık görüntü bulunamadı"
 
@@ -1484,7 +1503,7 @@ msgstr "Anlık görüntü bulunamadı"
 msgid "No snapshots found on device"
 msgstr "Aygıt üstünde anlık görüntü bulunamadı"
 
-#: Gtk/MainWindow.vala:553
+#: Gtk/MainWindow.vala:546
 msgid "No snapshots on device"
 msgstr "Aygıt üstünde anlık görüntü yok"
 
@@ -1492,11 +1511,11 @@ msgstr "Aygıt üstünde anlık görüntü yok"
 msgid "No snapshots on this device"
 msgstr "Bu aygıtta anlık görüntü yok"
 
-#: Gtk/MainWindow.vala:793
+#: Gtk/MainWindow.vala:786
 msgid "No snapshots selected"
 msgstr "Seçilen anlık görüntü yok"
 
-#: Gtk/MainWindow.vala:1044 Gtk/MainWindow.vala:1046
+#: Gtk/MainWindow.vala:1034 Gtk/MainWindow.vala:1036
 msgid "None"
 msgstr "Hiçbiri"
 
@@ -1556,7 +1575,7 @@ msgstr ""
 msgid "Older log files removed"
 msgstr "Eski günlük dosyaları silindi"
 
-#: Gtk/MainWindow.vala:1045
+#: Gtk/MainWindow.vala:1035
 msgid "Oldest snapshot"
 msgstr "En eski anlık görüntü"
 
@@ -1571,7 +1590,7 @@ msgstr ""
 "Şu an sadece @ and @home altbölümleri ile Ubuntu tipi  düzenler "
 "desteklenmektedir."
 
-#: Gtk/MainWindow.vala:209
+#: Gtk/MainWindow.vala:219
 msgid "Open Menu"
 msgstr "Menüyü Aç"
 
@@ -1652,7 +1671,7 @@ msgstr ""
 msgid "Please save your work and close all applications."
 msgstr "Lütfen tüm çalışmanızı kaydedin ve tüm programları kapatın."
 
-#: Gtk/MainWindow.vala:695
+#: Gtk/MainWindow.vala:688
 msgid "Please select a snapshot to view the log!"
 msgstr "Lütfen günlüğe bakmak için bir anlık görüntü seçin."
 
@@ -1664,7 +1683,7 @@ msgstr "Lütfen GRUB aygıtını seçin"
 msgid "Please wait a few minutes and try again."
 msgstr "Lütfen bir kaç dakika bekleyip yeniden deneyin."
 
-#: Gtk/MainWindow.vala:762
+#: Gtk/MainWindow.vala:755
 msgid "Please wait for snapshots to be deleted."
 msgstr "Lütfen anlık görüntülerin silinmesini bekleyin."
 
@@ -1930,7 +1949,7 @@ msgstr "Zamanlama"
 msgid "Scheduled snapshot in progress..."
 msgstr "Zamanlanmış anlık görüntü devam ediyor..."
 
-#: Core/Main.vala:1147 Gtk/MainWindow.vala:1061 Gtk/ScheduleBox.vala:312
+#: Core/Main.vala:1147 Gtk/MainWindow.vala:1051 Gtk/ScheduleBox.vala:312
 msgid "Scheduled snapshots are disabled"
 msgstr "Zamanlanmış anlık görüntüler pasif"
 
@@ -1967,7 +1986,7 @@ msgstr "GRUB aygıtını seç"
 msgid "Select Path"
 msgstr "Yolu Seç"
 
-#: Gtk/MainWindow.vala:694
+#: Gtk/MainWindow.vala:687
 msgid "Select Snapshot"
 msgstr "Anlık Görüntü Seç"
 
@@ -1996,7 +2015,7 @@ msgstr "Hedef Aygıtı Seçin"
 msgid "Select a partition on this disk"
 msgstr "Bu diskte bir disk bölümü seçin"
 
-#: Gtk/MainWindow.vala:801
+#: Gtk/MainWindow.vala:794
 msgid "Select a single snapshot to restore"
 msgstr "Geri yükleme için tek anlık görüntü seçiniz"
 
@@ -2008,11 +2027,11 @@ msgstr "Kök dizin dosya sistemi (/) için başka bir aygıt seçin"
 msgid "Select another device or free up some space"
 msgstr "Bir başka aygıt seçin ya da boş alanı artırın"
 
-#: Gtk/MainWindow.vala:547 Gtk/MainWindow.vala:554
+#: Gtk/MainWindow.vala:540 Gtk/MainWindow.vala:547
 msgid "Select another device to delete snasphots"
 msgstr "Anlık görüntüleri silmek için başka bir aygıt seçin"
 
-#: Gtk/MainWindow.vala:481
+#: Gtk/MainWindow.vala:474
 msgid "Select another device?"
 msgstr "Başka bir aygıt seç?"
 
@@ -2060,7 +2079,7 @@ msgstr "Listeden silinecek öğeleri seçin"
 msgid "Select the snapshot device"
 msgstr "Anlık görüntü aygıtını seçin"
 
-#: Gtk/MainWindow.vala:794
+#: Gtk/MainWindow.vala:787
 msgid "Select the snapshot to restore"
 msgstr "Geri yükleme için anlık görüntü seçin"
 
@@ -2068,7 +2087,7 @@ msgstr "Geri yükleme için anlık görüntü seçin"
 msgid "Select the snapshots to be deleted"
 msgstr "Silinecek anlık görüntüleri seçin"
 
-#: Gtk/MainWindow.vala:616
+#: Gtk/MainWindow.vala:609
 msgid "Select the snapshots to mark for deletion"
 msgstr "Silme işaretlemesi için anlık görüntüleri seçin"
 
@@ -2104,7 +2123,7 @@ msgstr "Seçilen anlık görüntü bir sistem diski değildir"
 msgid "Selected snapshot is marked for deletion"
 msgstr "Seçilen anlık görüntü silme işlemi için işaretlendi"
 
-#: Gtk/MainWindow.vala:825
+#: Gtk/MainWindow.vala:818
 msgid "Selected snapshot is marked for deletion and cannot be restored"
 msgstr "Seçilen anlık görüntü silinme için işaretlendi ve geri yüklenemeyecek"
 
@@ -2192,7 +2211,7 @@ msgstr "GRUB2 yeniden kurulumu atla"
 msgid "Snapshot"
 msgstr "Anlık görüntü"
 
-#: Gtk/MainWindow.vala:564
+#: Gtk/MainWindow.vala:557
 #, c-format
 msgid ""
 "Snapshot '%s' is being used by the system and cannot be deleted. Restart the "
@@ -2210,7 +2229,7 @@ msgstr "Anlık Görüntü Oluşturuldu"
 msgid "Snapshot Levels"
 msgstr "Anlık Görüntü Seviyesini Seçin"
 
-#: Gtk/MainWindow.vala:761
+#: Gtk/MainWindow.vala:754
 msgid "Snapshot deletion in progress..."
 msgstr "Anlık görüntü silme devam ediyor..."
 
@@ -2248,7 +2267,7 @@ msgstr "Anlık görüntü sistem yeniden başlatıldıktan sonra etkin olacaktı
 msgid "Snapshot(s) Deleted"
 msgstr "Anlık Görüntü(ler) Silindi"
 
-#: Gtk/MainWindow.vala:310 Gtk/DeleteWindow.vala:89
+#: Gtk/MainWindow.vala:320 Gtk/DeleteWindow.vala:89
 msgid "Snapshots"
 msgstr "Anlık Görüntüler"
 
@@ -2325,7 +2344,7 @@ msgstr ""
 "Anlık görüntüler seçilen disk bölümünde /timeshift-btrfs altına kaydedilir. "
 "Diğer yerler desteklenmez."
 
-#: Gtk/MainWindow.vala:1006
+#: Gtk/MainWindow.vala:996
 msgid "Snapshots available for restore"
 msgstr "Geri yükleme için anlık görüntüler mevcut"
 
@@ -2344,7 +2363,7 @@ msgstr ""
 msgid "Snapshots cannot be created in Live CD mode"
 msgstr "Çalışan CD/DVD/USB kipinde anlık görüntü oluşturulamaz"
 
-#: Gtk/MainWindow.vala:1053
+#: Gtk/MainWindow.vala:1043
 msgid "Snapshots will be created at selected intervals"
 msgstr "Anlık görüntüler seçilen aralıklarla oluşturulacak"
 
@@ -2356,7 +2375,7 @@ msgstr ""
 "Anlık görüntü diskinde yeterli alan varsa (> 1 GB), seçilen aralıklarla "
 "anlık görüntüler oluşturulur"
 
-#: Gtk/MainWindow.vala:642
+#: Gtk/MainWindow.vala:635
 msgid "Snapshots will be removed during the next scheduled run"
 msgstr ""
 "Anlık görüntüler bir sonraki zamanlanmış yürütme sırasında kaldırılacak"
@@ -2376,6 +2395,10 @@ msgstr "Geri yükleme için aygıt belirtin"
 #: Console/AppConsole.vala:366
 msgid "Specify target device"
 msgstr "Hedef aygıt belirtin"
+
+#: Utility/Gtk/DonationWindow.vala:117
+msgid "Sponsor a Feature"
+msgstr ""
 
 #: Core/SnapshotRepo.vala:480 Gtk/RsyncLogBox.vala:472
 #, c-format
@@ -2404,6 +2427,11 @@ msgstr "Altbölümler"
 #: Gtk/RestoreWindow.vala:120
 msgid "Summary"
 msgstr "Özet"
+
+#: Utility/Gtk/DonationWindow.vala:84
+#, fuzzy
+msgid "Support"
+msgstr "Desteklenmiyor"
 
 #: Console/AppConsole.vala:377
 msgid "Switch to BTRFS mode (default: config)"
@@ -2434,7 +2462,7 @@ msgstr "Sözdizimi"
 msgid "System"
 msgstr "Sistem"
 
-#: Gtk/MainWindow.vala:951
+#: Gtk/MainWindow.vala:941
 msgid "System Restore Utility"
 msgstr "Sistem Geri Yükleme Aracı"
 
@@ -2503,6 +2531,15 @@ msgstr "Bu aygıt desteklenmeyen bir altbölüm düzenine sahip."
 msgid "There are no snapshots on this device"
 msgstr "Bu aygıtta anlık görüntü yok"
 
+#: Utility/Gtk/DonationWindow.vala:78
+msgid ""
+"This application was created for my personal use. It is being distributed as "
+"a free, open-source project in the hope that it may be useful. It is not "
+"practical for me to spend additional time providing free support and free "
+"work for individual users. See sections below if you need support or changes "
+"for this application."
+msgstr ""
+
 #: Utility/Device.vala:1379
 msgid "This device is not encrypted"
 msgstr "Bu aygıt şifrelenmedi"
@@ -2515,7 +2552,7 @@ msgstr ""
 "Bu yazılım için kesinlikle garanti verilmemektedir ve yazar bu programın "
 "kullanımından kaynaklanan hasarlardan sorumlu değildir."
 
-#: Gtk/MainWindow.vala:1041 Gtk/MainWindow.vala:1052
+#: Gtk/MainWindow.vala:1031 Gtk/MainWindow.vala:1042
 msgid "Timeshift is active"
 msgstr "Timeshift etkin"
 
@@ -2616,6 +2653,16 @@ msgstr "GRUB menüsü güncelleniyor..."
 msgid "Updating bootloader configuration..."
 msgstr "Önyükleyici yapılandırması güncelleniyor..."
 
+#: Utility/Gtk/DonationWindow.vala:86
+msgid ""
+"Use the issue tracker for reporting issues, asking questions, and requesting "
+"features. If you need an immediate response, use the button below to make a "
+"donation for $10 with PayPal. Add your questions to the tracker and send me "
+"an email with the issue number (teejeetech@gmail.com). This option is for "
+"questions you may have about the application, and for help with issues. This "
+"does not cover development work for fixing issues and adding features."
+msgstr ""
+
 #: Utility/Device.vala:1954
 #, c-format
 msgid "Used"
@@ -2661,7 +2708,7 @@ msgstr "Oluşturma için Günlük Göster"
 msgid "View Rsync Log for Restore"
 msgstr "Geri Yükleme için Günlük Göster"
 
-#: Gtk/MainWindow.vala:378
+#: Gtk/MainWindow.vala:380
 msgid "View TimeShift Logs"
 msgstr "TimeShift Günlüklerini Göster"
 
@@ -2677,11 +2724,6 @@ msgstr "Uyarı"
 msgid "Web Browsers"
 msgstr "Web Tarayıcıları"
 
-#: Utility/Gtk/DonationWindow.vala:113
-#, c-format
-msgid "Website"
-msgstr "Websitesi"
-
 #: Gtk/ScheduleBox.vala:82 Gtk/SnapshotListBox.vala:301
 msgid "Weekly"
 msgstr "Haftalık"
@@ -2694,9 +2736,9 @@ msgstr "Haftalık anlık görüntü başarısız!"
 msgid "Weekly snapshots are enabled"
 msgstr "Haftalık anlık görüntü etkin"
 
-#: Utility/Gtk/DonationWindow.vala:105
-msgid "Wiki ~ Documentation & Help"
-msgstr "Wiki ~ Belgelendirme & Yardım"
+#: Utility/Gtk/DonationWindow.vala:100
+msgid "Wiki"
+msgstr ""
 
 #: Gtk/BackupFinishBox.vala:63 Gtk/DeleteFinishBox.vala:63
 msgid "With Errors"
@@ -2793,6 +2835,49 @@ msgstr "rsync bir hata döndürdü"
 #: Core/SnapshotRepo.vala:831
 msgid "un-tagged"
 msgstr "etiketsizleşti"
+
+#~ msgid ""
+#~ "Did you find this software useful?\n"
+#~ "\n"
+#~ "You can buy me a coffee or make a donation via PayPal to show your "
+#~ "support. Or just drop me an email and say Hi. This application is "
+#~ "completely free and will continue to remain that way. Your contributions "
+#~ "will help in keeping this project alive and improving it further.\n"
+#~ "\n"
+#~ "Feel free to send me an email if you find any issues in this application "
+#~ "or if you need any changes. Suggestions and feedback are always welcome.\n"
+#~ "\n"
+#~ "Thanks,\n"
+#~ "Tony George\n"
+#~ "(teejeetech@gmail.com)"
+#~ msgstr ""
+#~ "Bu yazılımı faydalı buldunuz mu?\n"
+#~ "\n"
+#~ "Bana bir kahve ısmarlayabilir ya da PayPal ile bağışta bulunarak "
+#~ "desteğinizi gösterebilirsiniz. Ya da bana bir e posta bırakıp Merhaba "
+#~ "(Hi) diyebilirsiniz. Bu yazılım tamamen özgürdür ve öyle kalmaya devam "
+#~ "edecktir. Katkılarınız bu projeyi canlı tutmak ve daha da geliştirmek "
+#~ "için yardımcı olacaktır.\n"
+#~ "\n"
+#~ "Eğer bir sorun bulursanız veya bir değişikliğe ihtiyaç duyuyorsanız bana "
+#~ "bir e-posta göndermekten çekinmeyin. Öneri ve geribildirim her zaman "
+#~ "açığız.\n"
+#~ "\n"
+#~ "Teşekkürler,\n"
+#~ "Tony George\n"
+#~ "(teejeetech@gmail.com)"
+
+#~ msgid "Donate with PayPal"
+#~ msgstr "PayPal ile bağış"
+
+#~ msgid "Issue Tracker ~ Report Issues, Request Features, Ask Questions"
+#~ msgstr "Sorun Takibi ~ Sorun Raporlama, Özellik İsteği, Soru Sorma"
+
+#~ msgid "Website"
+#~ msgstr "Websitesi"
+
+#~ msgid "Wiki ~ Documentation & Help"
+#~ msgstr "Wiki ~ Belgelendirme & Yardım"
 
 #~ msgid "Code Contributions"
 #~ msgstr "Katkıda bulunanlar"

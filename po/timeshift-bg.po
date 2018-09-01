@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: linuxmint\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2018-08-26 21:06+0530\n"
+"POT-Creation-Date: 2018-09-01 14:27+0530\n"
 "PO-Revision-Date: 2017-11-03 18:52+0000\n"
 "Last-Translator: spacy01 <Unknown>\n"
 "Language-Team: Bulgarian <bg@li.org>\n"
@@ -84,7 +84,7 @@ msgstr ""
 msgid "Aborted."
 msgstr "Прекъснато."
 
-#: Gtk/MainWindow.vala:393
+#: Gtk/MainWindow.vala:386
 msgid "About"
 msgstr "Относно"
 
@@ -212,7 +212,7 @@ msgstr "Изпълнители"
 msgid "Authors"
 msgstr "Автори"
 
-#: Gtk/MainWindow.vala:346
+#: Gtk/MainWindow.vala:356
 msgid "Available"
 msgstr "Наличен"
 
@@ -271,7 +271,7 @@ msgstr "Устройство за бекъп"
 msgid "Backup device not specified!"
 msgstr "Не е посочено устройство за бекъп!"
 
-#: Utility/Gtk/DonationWindow.vala:89
+#: Utility/Gtk/DonationWindow.vala:74
 msgid "Become a Patron"
 msgstr "Стани дарител"
 
@@ -349,7 +349,7 @@ msgstr ""
 "След отказа, трябва да възстановите от друга снимка, за да доведете "
 "системата до стабилно състояние. Натиснете Да за потвърждение."
 
-#: Gtk/MainWindow.vala:563
+#: Gtk/MainWindow.vala:556
 msgid "Cannot Delete Live Snapshot"
 msgstr "Не може да се изтрие живата снимка"
 
@@ -404,7 +404,7 @@ msgstr "Клониране"
 msgid "Cloning system..."
 msgstr "Клониране на система..."
 
-#: Utility/Gtk/AboutWindow.vala:326 Utility/Gtk/DonationWindow.vala:121
+#: Utility/Gtk/AboutWindow.vala:326 Utility/Gtk/DonationWindow.vala:143
 #: Gtk/RsyncLogBox.vala:266 Gtk/BackupWindow.vala:168
 #: Gtk/BootOptionsWindow.vala:106 Gtk/DeleteWindow.vala:170
 #: Gtk/RestoreWindow.vala:508
@@ -519,7 +519,7 @@ msgstr "Създай снимка ако е по график"
 msgid "Create snapshot of current system"
 msgstr "Създай снимка на текущата система"
 
-#: Gtk/MainWindow.vala:1068
+#: Gtk/MainWindow.vala:1058
 msgid ""
 "Create snapshots manually or enable scheduled snapshots to protect your "
 "system"
@@ -717,37 +717,6 @@ msgstr "Устройства с Линукс файлова система"
 msgid "Devices with Windows file systems are not supported (NTFS, FAT, etc)."
 msgstr ""
 
-#: Utility/Gtk/DonationWindow.vala:61
-msgid ""
-"Did you find this software useful?\n"
-"\n"
-"You can buy me a coffee or make a donation via PayPal to show your support. "
-"Or just drop me an email and say Hi. This application is completely free and "
-"will continue to remain that way. Your contributions will help in keeping "
-"this project alive and improving it further.\n"
-"\n"
-"Feel free to send me an email if you find any issues in this application or "
-"if you need any changes. Suggestions and feedback are always welcome.\n"
-"\n"
-"Thanks,\n"
-"Tony George\n"
-"(teejeetech@gmail.com)"
-msgstr ""
-"Намирате ли този софтуер за полезен?\n"
-"\n"
-"Може да ми купите кафе, или да направите дарение чрез PeyPal, за да покажете "
-"подкрепата си. Или просто да ми пратите имейл и да кажете \"Здравей\". Това "
-"приложение е напълно безплатно и ще остане такова. Вашето съдействие ще "
-"помогне за поддръжката на проекта и бъдещото му подобрение.\n"
-"\n"
-"Чувствайте се свободни да ми изпратите имейл, ако откриете проблеми с "
-"приложението или ако имате нужда от някаква промяна. Предложенията и "
-"обратната връзка са винаги добре дошли.\n"
-"\n"
-"Благодаря,\n"
-"Тони Джордж\n"
-"(teejeetech@gmail.com)"
-
 #: Utility/TeeJee.FileSystem.vala:518
 msgid "Dir not found"
 msgstr "Дир не е открита"
@@ -772,13 +741,19 @@ msgstr "Дистрибуция"
 msgid "Documentation"
 msgstr "Дарения"
 
-#: Utility/Gtk/DonationWindow.vala:42 Gtk/MainWindow.vala:388
+#: Gtk/MainWindow.vala:209 Gtk/MainWindow.vala:210
 msgid "Donate"
 msgstr "Дарение"
 
-#: Utility/Gtk/DonationWindow.vala:81
-msgid "Donate with PayPal"
-msgstr "Дарение чрез PayPal"
+#: Utility/Gtk/DonationWindow.vala:71
+#, fuzzy
+msgid "Donate (5$)"
+msgstr "Дарение"
+
+#: Utility/Gtk/DonationWindow.vala:124 Utility/Gtk/DonationWindow.vala:132
+#, fuzzy
+msgid "Donation Plugins"
+msgstr "Дарения"
 
 #: Utility/Gtk/AboutWindow.vala:465
 msgid "Donations"
@@ -788,7 +763,7 @@ msgstr "Дарения"
 msgid "Enable BTRFS qgroups (recommended)"
 msgstr ""
 
-#: Gtk/MainWindow.vala:1062
+#: Gtk/MainWindow.vala:1052
 msgid "Enable scheduled snapshots to protect your system"
 msgstr "Включване на снимки по график, за да защитите системата си"
 
@@ -1036,6 +1011,10 @@ msgstr "Неуспешно демонтиране на устройство!"
 msgid "Failed to write file"
 msgstr "Неуспешно запазване на файл"
 
+#: Utility/Gtk/DonationWindow.vala:106
+msgid "Feature Requests"
+msgstr ""
+
 #: Gtk/RsyncLogBox.vala:122
 msgid "File (snapshot)"
 msgstr "Изтриване на снимка"
@@ -1141,6 +1120,15 @@ msgstr "GRUB няма да бъде преинсталиран"
 msgid "Generating initramfs..."
 msgstr "Генериране на initramfs..."
 
+#: Utility/Gtk/DonationWindow.vala:135
+msgid "Get Donation Plugins ($10)"
+msgstr ""
+
+#: Utility/Gtk/DonationWindow.vala:92
+#, fuzzy
+msgid "Get Support ($10)"
+msgstr "Не се поддържа"
+
 #: Console/AppConsole.vala:374
 msgid "Global"
 msgstr "Глобално"
@@ -1190,6 +1178,16 @@ msgstr "Неуспешна ежечасна снимка"
 msgid "Hourly snapshots are enabled"
 msgstr "Включена е ежечасна снимка"
 
+#: Utility/Gtk/DonationWindow.vala:126
+msgid ""
+"I sometimes create exclusive plugins to encourage people to contribute. You "
+"can make a contribution by translating the application to other languages, "
+"by submitting code changes, or by making a donation for $10 with PayPal. "
+"Contributors are added to an email distribution list, and plugins are sent "
+"by email. These plugins are open-source. You can request the source code "
+"after receiving the plugins."
+msgstr ""
+
 #: Gtk/RestoreFinishBox.vala:102
 msgid ""
 "If the restored system fails to boot, then boot from the Live CD/USB, "
@@ -1203,6 +1201,23 @@ msgid ""
 "If these terms are not acceptable to you, please do not proceed beyond this "
 "point!"
 msgstr "Ако тези условия са неприемливи за вас, моля не продължавайте нататък!"
+
+#: Utility/Gtk/DonationWindow.vala:65
+msgid ""
+"If you find this application useful, and wish to support its development, "
+"use the button below to make a donation with PayPal."
+msgstr ""
+
+#: Utility/Gtk/DonationWindow.vala:108
+msgid ""
+"If you need changes to this application, add your requirements to the issue "
+"tracker. You can sponsor the work for your own request, or sponsor an "
+"existing request by making a donation with PayPal. Items available for "
+"sponsorship are labelled as <i>\"OpenForSponsorship\"</i>, along with an "
+"amount for the work involved. You can make a donation for that amount with "
+"PayPal, and send me an email with the issue number. Sponsored changes will "
+"be implemented in the next release of the application."
+msgstr ""
 
 #: Gtk/ExcludeBox.vala:54
 msgid "Include / Exclude Patterns"
@@ -1229,18 +1244,21 @@ msgstr "Невалидна снимка"
 msgid "Invalid command line arguments"
 msgstr "Невалидни аргументи на командния ред"
 
-#: Gtk/MainWindow.vala:824
+#: Gtk/MainWindow.vala:817
 msgid "Invalid snapshot"
 msgstr "Невалидна снимка"
 
-#: Utility/Gtk/DonationWindow.vala:97
-msgid "Issue Tracker ~ Report Issues, Request Features, Ask Questions"
+#: Utility/Gtk/DonationWindow.vala:95
+msgid "Issue Tracker"
 msgstr ""
-"Проследяване на проблеми ~ Докладвай проблем, поискай функции, задай въпроси"
 
 #: Gtk/ExcludeBox.vala:272
 msgid "Items Not Selected"
 msgstr "Няма избрани елементи"
+
+#: Utility/Gtk/DonationWindow.vala:114
+msgid "Items for Sponsorship"
+msgstr ""
 
 #: Gtk/ScheduleBox.vala:283
 msgid "Keep"
@@ -1348,7 +1366,7 @@ msgstr "Последната седмична снимка е отпреди п�
 msgid "Last weekly snapshot not found"
 msgstr "Последната седмична снимка не е намерена"
 
-#: Gtk/MainWindow.vala:1043
+#: Gtk/MainWindow.vala:1033
 #, c-format
 msgid "Latest snapshot"
 msgstr "Последна снимка"
@@ -1374,7 +1392,7 @@ msgstr "Списък на устройствата"
 msgid "List snapshots"
 msgstr "Списък на снимките"
 
-#: Gtk/MainWindow.vala:994
+#: Gtk/MainWindow.vala:984
 msgid "Live USB Mode (Restore Only)"
 msgstr "Режим Live USB (Само за възстановяване)"
 
@@ -1383,7 +1401,7 @@ msgstr "Режим Live USB (Само за възстановяване)"
 msgid "Location"
 msgstr "Местоположение"
 
-#: Gtk/MainWindow.vala:459
+#: Gtk/MainWindow.vala:452
 msgid "Main window closed by user"
 msgstr "Основният прозорец е затворен от потребителя"
 
@@ -1391,7 +1409,7 @@ msgstr "Основният прозорец е затворен от потре�
 msgid "Mark for Deletion"
 msgstr "Отбележи за изтриване"
 
-#: Gtk/MainWindow.vala:641
+#: Gtk/MainWindow.vala:634
 msgid "Marked for deletion"
 msgstr "Отбелязано за изтриване"
 
@@ -1399,7 +1417,7 @@ msgstr "Отбелязано за изтриване"
 msgid "Maximum backups exceeded for backup level"
 msgstr "Максималния брой бекъпи е надвишен"
 
-#: Gtk/MainWindow.vala:208
+#: Gtk/MainWindow.vala:218
 msgid "Menu"
 msgstr "Меню"
 
@@ -1441,7 +1459,7 @@ msgstr "Монтиране"
 msgid "Moved system subvolume to snapshot directory"
 msgstr "Преместено системно подустройство в директорията на снимката"
 
-#: Gtk/MainWindow.vala:800
+#: Gtk/MainWindow.vala:793
 msgid "Multiple snapshots selected"
 msgstr "Множество снимки са избрани"
 
@@ -1463,16 +1481,16 @@ msgstr "Не"
 msgid "No Change"
 msgstr "Без промяна"
 
-#: Gtk/MainWindow.vala:615 Gtk/DeleteWindow.vala:341
+#: Gtk/MainWindow.vala:608 Gtk/DeleteWindow.vala:341
 msgid "No Snapshots Selected"
 msgstr "Няма избрана снимка"
 
-#: Gtk/MainWindow.vala:1067
+#: Gtk/MainWindow.vala:1057
 msgid "No snapshots available"
 msgstr "Няма налична снимка"
 
 #: Console/AppConsole.vala:320 Core/SnapshotRepo.vala:898
-#: Gtk/MainWindow.vala:1011
+#: Gtk/MainWindow.vala:1001
 msgid "No snapshots found"
 msgstr "Няма намерени снимки"
 
@@ -1480,7 +1498,7 @@ msgstr "Няма намерени снимки"
 msgid "No snapshots found on device"
 msgstr "Няма намерени снимки на устройството"
 
-#: Gtk/MainWindow.vala:553
+#: Gtk/MainWindow.vala:546
 msgid "No snapshots on device"
 msgstr "Няма снимки на устройството"
 
@@ -1488,11 +1506,11 @@ msgstr "Няма снимки на устройството"
 msgid "No snapshots on this device"
 msgstr "Няма снимки на това устройство"
 
-#: Gtk/MainWindow.vala:793
+#: Gtk/MainWindow.vala:786
 msgid "No snapshots selected"
 msgstr "Няма избрани снимки"
 
-#: Gtk/MainWindow.vala:1044 Gtk/MainWindow.vala:1046
+#: Gtk/MainWindow.vala:1034 Gtk/MainWindow.vala:1036
 msgid "None"
 msgstr "Няма"
 
@@ -1552,7 +1570,7 @@ msgstr ""
 msgid "Older log files removed"
 msgstr "Старите файлове с отчети са премахнати"
 
-#: Gtk/MainWindow.vala:1045
+#: Gtk/MainWindow.vala:1035
 msgid "Oldest snapshot"
 msgstr "Стари снимки"
 
@@ -1565,7 +1583,7 @@ msgid ""
 "Only ubuntu-type layouts with @ and @home subvolumes are currently supported."
 msgstr "Поддържа се само ubuntu тип подредба с @ и @home под дялове."
 
-#: Gtk/MainWindow.vala:209
+#: Gtk/MainWindow.vala:219
 msgid "Open Menu"
 msgstr "Отвори меню"
 
@@ -1647,7 +1665,7 @@ msgstr ""
 msgid "Please save your work and close all applications."
 msgstr "Моля запазете работата си и затворете всички приложения."
 
-#: Gtk/MainWindow.vala:695
+#: Gtk/MainWindow.vala:688
 msgid "Please select a snapshot to view the log!"
 msgstr "Моля изберете снимка, за да видите отчета!"
 
@@ -1659,7 +1677,7 @@ msgstr "Моля изберете GRUB устройство"
 msgid "Please wait a few minutes and try again."
 msgstr "Моля изчакайте няколко минути и опитайте пак."
 
-#: Gtk/MainWindow.vala:762
+#: Gtk/MainWindow.vala:755
 msgid "Please wait for snapshots to be deleted."
 msgstr "Моля изчакайте снимката да бъде изтрита."
 
@@ -1922,7 +1940,7 @@ msgstr "График"
 msgid "Scheduled snapshot in progress..."
 msgstr "Създава се снимка по график..."
 
-#: Core/Main.vala:1147 Gtk/MainWindow.vala:1061 Gtk/ScheduleBox.vala:312
+#: Core/Main.vala:1147 Gtk/MainWindow.vala:1051 Gtk/ScheduleBox.vala:312
 msgid "Scheduled snapshots are disabled"
 msgstr "Графика за снимки е изключен"
 
@@ -1959,7 +1977,7 @@ msgstr "Избор на GRUB устройство"
 msgid "Select Path"
 msgstr "Избор на път"
 
-#: Gtk/MainWindow.vala:694
+#: Gtk/MainWindow.vala:687
 msgid "Select Snapshot"
 msgstr "Избор на снимка"
 
@@ -1988,7 +2006,7 @@ msgstr "Избор на целево устройство"
 msgid "Select a partition on this disk"
 msgstr "Избор на дял от диска"
 
-#: Gtk/MainWindow.vala:801
+#: Gtk/MainWindow.vala:794
 msgid "Select a single snapshot to restore"
 msgstr "Избор на единична снимка за възстановяване"
 
@@ -2000,11 +2018,11 @@ msgstr "Избор на друго устройство за коренова ф
 msgid "Select another device or free up some space"
 msgstr "Избор на друго устройство за освобождаване на място"
 
-#: Gtk/MainWindow.vala:547 Gtk/MainWindow.vala:554
+#: Gtk/MainWindow.vala:540 Gtk/MainWindow.vala:547
 msgid "Select another device to delete snasphots"
 msgstr "Избор на друго устройство за изтриване на снимки"
 
-#: Gtk/MainWindow.vala:481
+#: Gtk/MainWindow.vala:474
 msgid "Select another device?"
 msgstr "Избор на друго устройство?"
 
@@ -2052,7 +2070,7 @@ msgstr "Избор на елементи, които да бъдат према�
 msgid "Select the snapshot device"
 msgstr "Избор на устройство със снимка"
 
-#: Gtk/MainWindow.vala:794
+#: Gtk/MainWindow.vala:787
 msgid "Select the snapshot to restore"
 msgstr "Избор на снимка за възстановяване"
 
@@ -2060,7 +2078,7 @@ msgstr "Избор на снимка за възстановяване"
 msgid "Select the snapshots to be deleted"
 msgstr "Избор на снимки за изтриване"
 
-#: Gtk/MainWindow.vala:616
+#: Gtk/MainWindow.vala:609
 msgid "Select the snapshots to mark for deletion"
 msgstr "Избор на снимки, маркирани за изтриване"
 
@@ -2096,7 +2114,7 @@ msgstr "Избраното устройство няма системен дис
 msgid "Selected snapshot is marked for deletion"
 msgstr "Избраната снимка е маркирана за изтриване"
 
-#: Gtk/MainWindow.vala:825
+#: Gtk/MainWindow.vala:818
 msgid "Selected snapshot is marked for deletion and cannot be restored"
 msgstr ""
 "Избраната снимка е маркирана за изтриване и не може да бъде възстановена"
@@ -2185,7 +2203,7 @@ msgstr "Пропусни преинсталацията на GRUB2"
 msgid "Snapshot"
 msgstr "Снимка"
 
-#: Gtk/MainWindow.vala:564
+#: Gtk/MainWindow.vala:557
 #, c-format
 msgid ""
 "Snapshot '%s' is being used by the system and cannot be deleted. Restart the "
@@ -2203,7 +2221,7 @@ msgstr "Снимката е създадена"
 msgid "Snapshot Levels"
 msgstr "Избор на елементи на снимка"
 
-#: Gtk/MainWindow.vala:761
+#: Gtk/MainWindow.vala:754
 msgid "Snapshot deletion in progress..."
 msgstr "Снимката се изтрива..."
 
@@ -2241,7 +2259,7 @@ msgstr "Снимката ще бъде активна след рестарт н
 msgid "Snapshot(s) Deleted"
 msgstr "Снимките са изтрити"
 
-#: Gtk/MainWindow.vala:310 Gtk/DeleteWindow.vala:89
+#: Gtk/MainWindow.vala:320 Gtk/DeleteWindow.vala:89
 msgid "Snapshots"
 msgstr "Снимки"
 
@@ -2313,7 +2331,7 @@ msgid ""
 "locations are not supported."
 msgstr ""
 
-#: Gtk/MainWindow.vala:1006
+#: Gtk/MainWindow.vala:996
 msgid "Snapshots available for restore"
 msgstr "Налични снимки за възстановяване"
 
@@ -2332,7 +2350,7 @@ msgstr ""
 msgid "Snapshots cannot be created in Live CD mode"
 msgstr "Снимки не могат да бъдат създавани в режим на Жив диск"
 
-#: Gtk/MainWindow.vala:1053
+#: Gtk/MainWindow.vala:1043
 msgid "Snapshots will be created at selected intervals"
 msgstr "Снимки ще бъдат създавани според избрания интервал"
 
@@ -2344,7 +2362,7 @@ msgstr ""
 "Снимки ще бъдат създавани според избрания интервал, ако на диска за снимки "
 "има достатъчно място (> 1 ГБ)"
 
-#: Gtk/MainWindow.vala:642
+#: Gtk/MainWindow.vala:635
 msgid "Snapshots will be removed during the next scheduled run"
 msgstr ""
 "Снимките ще бъдат премахнати по време на следващото стартиране по график"
@@ -2364,6 +2382,10 @@ msgstr "Посочете снимка за възстановяване"
 #: Console/AppConsole.vala:366
 msgid "Specify target device"
 msgstr "Посочете целево устройство"
+
+#: Utility/Gtk/DonationWindow.vala:117
+msgid "Sponsor a Feature"
+msgstr ""
 
 #: Core/SnapshotRepo.vala:480 Gtk/RsyncLogBox.vala:472
 #, c-format
@@ -2392,6 +2414,11 @@ msgstr "Устройство"
 #: Gtk/RestoreWindow.vala:120
 msgid "Summary"
 msgstr "Обобщение"
+
+#: Utility/Gtk/DonationWindow.vala:84
+#, fuzzy
+msgid "Support"
+msgstr "Не се поддържа"
 
 #: Console/AppConsole.vala:377
 msgid "Switch to BTRFS mode (default: config)"
@@ -2422,7 +2449,7 @@ msgstr "Синтаксис"
 msgid "System"
 msgstr "Система"
 
-#: Gtk/MainWindow.vala:951
+#: Gtk/MainWindow.vala:941
 msgid "System Restore Utility"
 msgstr "Инструмент за възстановяване на системата"
 
@@ -2489,6 +2516,15 @@ msgstr "Целевия дял има неподдържано разшпложе
 msgid "There are no snapshots on this device"
 msgstr "Няма снимки на това устройство"
 
+#: Utility/Gtk/DonationWindow.vala:78
+msgid ""
+"This application was created for my personal use. It is being distributed as "
+"a free, open-source project in the hope that it may be useful. It is not "
+"practical for me to spend additional time providing free support and free "
+"work for individual users. See sections below if you need support or changes "
+"for this application."
+msgstr ""
+
 #: Utility/Device.vala:1379
 msgid "This device is not encrypted"
 msgstr "Устройството не е криптирано"
@@ -2501,7 +2537,7 @@ msgstr ""
 "Този софтуер идва без никакви гаранции и неговият автор не поема отговорност "
 "за каквито и да е нанесени щети при употребата на тази програма."
 
-#: Gtk/MainWindow.vala:1041 Gtk/MainWindow.vala:1052
+#: Gtk/MainWindow.vala:1031 Gtk/MainWindow.vala:1042
 msgid "Timeshift is active"
 msgstr "Timeshift е активен"
 
@@ -2602,6 +2638,16 @@ msgstr "Обновяване на GRUB меню..."
 msgid "Updating bootloader configuration..."
 msgstr "Обновяване на конфигурацията за начално стартиране..."
 
+#: Utility/Gtk/DonationWindow.vala:86
+msgid ""
+"Use the issue tracker for reporting issues, asking questions, and requesting "
+"features. If you need an immediate response, use the button below to make a "
+"donation for $10 with PayPal. Add your questions to the tracker and send me "
+"an email with the issue number (teejeetech@gmail.com). This option is for "
+"questions you may have about the application, and for help with issues. This "
+"does not cover development work for fixing issues and adding features."
+msgstr ""
+
 #: Utility/Device.vala:1954
 #, c-format
 msgid "Used"
@@ -2648,7 +2694,7 @@ msgstr "Преглед на лога за създаване"
 msgid "View Rsync Log for Restore"
 msgstr "Преглед на лога за възстановяване"
 
-#: Gtk/MainWindow.vala:378
+#: Gtk/MainWindow.vala:380
 msgid "View TimeShift Logs"
 msgstr "Преглед на TimeShift лога"
 
@@ -2664,11 +2710,6 @@ msgstr "Внимание"
 msgid "Web Browsers"
 msgstr "Браузъри"
 
-#: Utility/Gtk/DonationWindow.vala:113
-#, c-format
-msgid "Website"
-msgstr "Уеб сайт"
-
 #: Gtk/ScheduleBox.vala:82 Gtk/SnapshotListBox.vala:301
 msgid "Weekly"
 msgstr "Ежеседмично"
@@ -2681,9 +2722,9 @@ msgstr "Неуспешна седмична снимка!"
 msgid "Weekly snapshots are enabled"
 msgstr "Седмична снимка е включена"
 
-#: Utility/Gtk/DonationWindow.vala:105
-msgid "Wiki ~ Documentation & Help"
-msgstr "Wiki ~ Документация и помощ"
+#: Utility/Gtk/DonationWindow.vala:100
+msgid "Wiki"
+msgstr ""
 
 #: Gtk/BackupFinishBox.vala:63 Gtk/DeleteFinishBox.vala:63
 msgid "With Errors"
@@ -2779,6 +2820,51 @@ msgstr "rsync върна грешка"
 #: Core/SnapshotRepo.vala:831
 msgid "un-tagged"
 msgstr "без-таг"
+
+#~ msgid ""
+#~ "Did you find this software useful?\n"
+#~ "\n"
+#~ "You can buy me a coffee or make a donation via PayPal to show your "
+#~ "support. Or just drop me an email and say Hi. This application is "
+#~ "completely free and will continue to remain that way. Your contributions "
+#~ "will help in keeping this project alive and improving it further.\n"
+#~ "\n"
+#~ "Feel free to send me an email if you find any issues in this application "
+#~ "or if you need any changes. Suggestions and feedback are always welcome.\n"
+#~ "\n"
+#~ "Thanks,\n"
+#~ "Tony George\n"
+#~ "(teejeetech@gmail.com)"
+#~ msgstr ""
+#~ "Намирате ли този софтуер за полезен?\n"
+#~ "\n"
+#~ "Може да ми купите кафе, или да направите дарение чрез PeyPal, за да "
+#~ "покажете подкрепата си. Или просто да ми пратите имейл и да кажете "
+#~ "\"Здравей\". Това приложение е напълно безплатно и ще остане такова. "
+#~ "Вашето съдействие ще помогне за поддръжката на проекта и бъдещото му "
+#~ "подобрение.\n"
+#~ "\n"
+#~ "Чувствайте се свободни да ми изпратите имейл, ако откриете проблеми с "
+#~ "приложението или ако имате нужда от някаква промяна. Предложенията и "
+#~ "обратната връзка са винаги добре дошли.\n"
+#~ "\n"
+#~ "Благодаря,\n"
+#~ "Тони Джордж\n"
+#~ "(teejeetech@gmail.com)"
+
+#~ msgid "Donate with PayPal"
+#~ msgstr "Дарение чрез PayPal"
+
+#~ msgid "Issue Tracker ~ Report Issues, Request Features, Ask Questions"
+#~ msgstr ""
+#~ "Проследяване на проблеми ~ Докладвай проблем, поискай функции, задай "
+#~ "въпроси"
+
+#~ msgid "Website"
+#~ msgstr "Уеб сайт"
+
+#~ msgid "Wiki ~ Documentation & Help"
+#~ msgstr "Wiki ~ Документация и помощ"
 
 #~ msgid "Code Contributions"
 #~ msgstr "Приноси"

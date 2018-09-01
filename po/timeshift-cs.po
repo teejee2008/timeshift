@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timeshift\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2018-08-26 21:06+0530\n"
+"POT-Creation-Date: 2018-09-01 14:27+0530\n"
 "PO-Revision-Date: 2018-08-15 15:02+0200\n"
 "Last-Translator: Pavel Borecki <Unknown>\n"
 "Language-Team: Czech\n"
@@ -87,7 +87,7 @@ msgstr ""
 msgid "Aborted."
 msgstr "Přerušeno."
 
-#: Gtk/MainWindow.vala:393
+#: Gtk/MainWindow.vala:386
 msgid "About"
 msgstr "O aplikaci"
 
@@ -216,7 +216,7 @@ msgstr "Grafika"
 msgid "Authors"
 msgstr "Vývojáři"
 
-#: Gtk/MainWindow.vala:346
+#: Gtk/MainWindow.vala:356
 msgid "Available"
 msgstr "K dispozici"
 
@@ -277,7 +277,7 @@ msgstr "Zálohovací zařízení"
 msgid "Backup device not specified!"
 msgstr "Není zadáno zálohovací zařízení!"
 
-#: Utility/Gtk/DonationWindow.vala:89
+#: Utility/Gtk/DonationWindow.vala:74
 msgid "Become a Patron"
 msgstr "Stát se patronem"
 
@@ -355,7 +355,7 @@ msgstr ""
 "Proto je třeba ihned obnovit z jiného zachyceného stavu a uvést tak systém "
 "opět do soudržného stavu. Potvrďte kliknutím na Ano."
 
-#: Gtk/MainWindow.vala:563
+#: Gtk/MainWindow.vala:556
 msgid "Cannot Delete Live Snapshot"
 msgstr "Zachycený stav, ze kterého je systém právě provozován, nelze smazat"
 
@@ -409,7 +409,7 @@ msgstr "Klonování"
 msgid "Cloning system..."
 msgstr "Klonování systému…"
 
-#: Utility/Gtk/AboutWindow.vala:326 Utility/Gtk/DonationWindow.vala:121
+#: Utility/Gtk/AboutWindow.vala:326 Utility/Gtk/DonationWindow.vala:143
 #: Gtk/RsyncLogBox.vala:266 Gtk/BackupWindow.vala:168
 #: Gtk/BootOptionsWindow.vala:106 Gtk/DeleteWindow.vala:170
 #: Gtk/RestoreWindow.vala:508
@@ -524,7 +524,7 @@ msgstr "Zachytit stav pokud je naplánovaný"
 msgid "Create snapshot of current system"
 msgstr "Zachytit stávající stav systému"
 
-#: Gtk/MainWindow.vala:1068
+#: Gtk/MainWindow.vala:1058
 msgid ""
 "Create snapshots manually or enable scheduled snapshots to protect your "
 "system"
@@ -726,37 +726,6 @@ msgid "Devices with Windows file systems are not supported (NTFS, FAT, etc)."
 msgstr ""
 "Zařízení s Windows souborovými systémy nejsou podporované (NTFS, FAT, atp.)."
 
-#: Utility/Gtk/DonationWindow.vala:61
-msgid ""
-"Did you find this software useful?\n"
-"\n"
-"You can buy me a coffee or make a donation via PayPal to show your support. "
-"Or just drop me an email and say Hi. This application is completely free and "
-"will continue to remain that way. Your contributions will help in keeping "
-"this project alive and improving it further.\n"
-"\n"
-"Feel free to send me an email if you find any issues in this application or "
-"if you need any changes. Suggestions and feedback are always welcome.\n"
-"\n"
-"Thanks,\n"
-"Tony George\n"
-"(teejeetech@gmail.com)"
-msgstr ""
-"Shledali jste tento software užitečným?\n"
-"\n"
-"Pak mi třeba můžete koupit kávu nebo svou podporu projevit příspěvkem, "
-"zaslaným prostřednictvím služeb PayPal nebo Google Wallet. A nebo mi prostě "
-"jen pošlete e-mail s pozdravem :-) Tato aplikace je poskytována zcela zdarma "
-"a zůstane tomu tak i v budoucnu. Váš případný příspěvek ovšem pomůže tento "
-"projekt udržet při životě a je důležitý také pro jeho budoucí rozvoj.\n"
-"\n"
-"Pokud v aplikaci naleznete chybu, nebo máte námět na vylepšení, napište mi e-"
-"mail. Nápady a zpětná vazba od uživatelů jsou vždy vítány.\n"
-"\n"
-"Díky,\n"
-"Tony George\n"
-"teejeetech@gmail.com"
-
 #: Utility/TeeJee.FileSystem.vala:518
 msgid "Dir not found"
 msgstr "Složka nenalezena"
@@ -781,13 +750,19 @@ msgstr "Distribuce"
 msgid "Documentation"
 msgstr "Dokumentace"
 
-#: Utility/Gtk/DonationWindow.vala:42 Gtk/MainWindow.vala:388
+#: Gtk/MainWindow.vala:209 Gtk/MainWindow.vala:210
 msgid "Donate"
 msgstr "Podpořit vývoj aplikace"
 
-#: Utility/Gtk/DonationWindow.vala:81
-msgid "Donate with PayPal"
-msgstr "Darovat přes PayPal"
+#: Utility/Gtk/DonationWindow.vala:71
+#, fuzzy
+msgid "Donate (5$)"
+msgstr "Podpořit vývoj aplikace"
+
+#: Utility/Gtk/DonationWindow.vala:124 Utility/Gtk/DonationWindow.vala:132
+#, fuzzy
+msgid "Donation Plugins"
+msgstr "Finančně podpořili"
 
 #: Utility/Gtk/AboutWindow.vala:465
 msgid "Donations"
@@ -797,7 +772,7 @@ msgstr "Finančně podpořili"
 msgid "Enable BTRFS qgroups (recommended)"
 msgstr "Zapnout BTRFS qgroups (doporučeno)"
 
-#: Gtk/MainWindow.vala:1062
+#: Gtk/MainWindow.vala:1052
 msgid "Enable scheduled snapshots to protect your system"
 msgstr "Chraňte systém zapnutím pravidelného pořizování zachycených stavů"
 
@@ -1050,6 +1025,10 @@ msgstr "Odpojení zařízení se nezdařilo!"
 msgid "Failed to write file"
 msgstr "Zapsání souboru se nezdařilo"
 
+#: Utility/Gtk/DonationWindow.vala:106
+msgid "Feature Requests"
+msgstr ""
+
 #: Gtk/RsyncLogBox.vala:122
 msgid "File (snapshot)"
 msgstr "Soubor (zachycený stav)"
@@ -1158,6 +1137,15 @@ msgstr ""
 "Vytváření obrazu pomocného zaváděcího kořenového souborového systému "
 "(initramfs)…"
 
+#: Utility/Gtk/DonationWindow.vala:135
+msgid "Get Donation Plugins ($10)"
+msgstr ""
+
+#: Utility/Gtk/DonationWindow.vala:92
+#, fuzzy
+msgid "Get Support ($10)"
+msgstr "Nepodporováno"
+
 #: Console/AppConsole.vala:374
 msgid "Global"
 msgstr "Společné"
@@ -1207,6 +1195,16 @@ msgstr "Pořízení hodinového zachyceného stavu se nezdařilo!"
 msgid "Hourly snapshots are enabled"
 msgstr "Hodinové zachycené stavy zapnuty"
 
+#: Utility/Gtk/DonationWindow.vala:126
+msgid ""
+"I sometimes create exclusive plugins to encourage people to contribute. You "
+"can make a contribution by translating the application to other languages, "
+"by submitting code changes, or by making a donation for $10 with PayPal. "
+"Contributors are added to an email distribution list, and plugins are sent "
+"by email. These plugins are open-source. You can request the source code "
+"after receiving the plugins."
+msgstr ""
+
 #: Gtk/RestoreFinishBox.vala:102
 msgid ""
 "If the restored system fails to boot, then boot from the Live CD/USB, "
@@ -1223,6 +1221,23 @@ msgid ""
 msgstr ""
 "Pokud jsou pro vás tyto podmínky nepřijatelné, nepokračujte v používání "
 "aplikace!"
+
+#: Utility/Gtk/DonationWindow.vala:65
+msgid ""
+"If you find this application useful, and wish to support its development, "
+"use the button below to make a donation with PayPal."
+msgstr ""
+
+#: Utility/Gtk/DonationWindow.vala:108
+msgid ""
+"If you need changes to this application, add your requirements to the issue "
+"tracker. You can sponsor the work for your own request, or sponsor an "
+"existing request by making a donation with PayPal. Items available for "
+"sponsorship are labelled as <i>\"OpenForSponsorship\"</i>, along with an "
+"amount for the work involved. You can make a donation for that amount with "
+"PayPal, and send me an email with the issue number. Sponsored changes will "
+"be implemented in the next release of the application."
+msgstr ""
 
 #: Gtk/ExcludeBox.vala:54
 msgid "Include / Exclude Patterns"
@@ -1249,19 +1264,21 @@ msgstr "Neplatný zachycený stav"
 msgid "Invalid command line arguments"
 msgstr "Neplatné argumenty příkazového řádku"
 
-#: Gtk/MainWindow.vala:824
+#: Gtk/MainWindow.vala:817
 msgid "Invalid snapshot"
 msgstr "Neplatný zachycený stav"
 
-#: Utility/Gtk/DonationWindow.vala:97
-msgid "Issue Tracker ~ Report Issues, Request Features, Ask Questions"
+#: Utility/Gtk/DonationWindow.vala:95
+msgid "Issue Tracker"
 msgstr ""
-"Systém správy hlášení chyb ~ hlaste problémy, požadavky na funkce, "
-"pokládejte dotazy"
 
 #: Gtk/ExcludeBox.vala:272
 msgid "Items Not Selected"
 msgstr "Nejsou označené žádné položky"
+
+#: Utility/Gtk/DonationWindow.vala:114
+msgid "Items for Sponsorship"
+msgstr ""
 
 #: Gtk/ScheduleBox.vala:283
 msgid "Keep"
@@ -1373,7 +1390,7 @@ msgstr "Nejnovější týdenní zachycený stav je více než týden starý"
 msgid "Last weekly snapshot not found"
 msgstr "Nejnovější týdenní zachycený stav nenalezen"
 
-#: Gtk/MainWindow.vala:1043
+#: Gtk/MainWindow.vala:1033
 #, c-format
 msgid "Latest snapshot"
 msgstr "Nejnovější zachycený stav"
@@ -1399,7 +1416,7 @@ msgstr "Vypsat zařízení"
 msgid "List snapshots"
 msgstr "Vypsat zachycené stavy"
 
-#: Gtk/MainWindow.vala:994
+#: Gtk/MainWindow.vala:984
 msgid "Live USB Mode (Restore Only)"
 msgstr "Režim fungování z instalačního média (pouze obnova)"
 
@@ -1408,7 +1425,7 @@ msgstr "Režim fungování z instalačního média (pouze obnova)"
 msgid "Location"
 msgstr "Umístění"
 
-#: Gtk/MainWindow.vala:459
+#: Gtk/MainWindow.vala:452
 msgid "Main window closed by user"
 msgstr "Hlavní okno aplikace bylo zavřeno uživatelem"
 
@@ -1416,7 +1433,7 @@ msgstr "Hlavní okno aplikace bylo zavřeno uživatelem"
 msgid "Mark for Deletion"
 msgstr "Označit ke smazání"
 
-#: Gtk/MainWindow.vala:641
+#: Gtk/MainWindow.vala:634
 msgid "Marked for deletion"
 msgstr "Označeno ke smazání"
 
@@ -1424,7 +1441,7 @@ msgstr "Označeno ke smazání"
 msgid "Maximum backups exceeded for backup level"
 msgstr "Překročen nastavený počet uchovávaných pro danou úroveň záloh"
 
-#: Gtk/MainWindow.vala:208
+#: Gtk/MainWindow.vala:218
 msgid "Menu"
 msgstr "Nabídka"
 
@@ -1466,7 +1483,7 @@ msgstr "Připojit (mount)"
 msgid "Moved system subvolume to snapshot directory"
 msgstr "Vnořený systémový svazek přesunut do složky se zachycenými stavy"
 
-#: Gtk/MainWindow.vala:800
+#: Gtk/MainWindow.vala:793
 msgid "Multiple snapshots selected"
 msgstr "Vybráno vícero zachycených stavů naráz"
 
@@ -1488,16 +1505,16 @@ msgstr "Ne"
 msgid "No Change"
 msgstr "Beze změny"
 
-#: Gtk/MainWindow.vala:615 Gtk/DeleteWindow.vala:341
+#: Gtk/MainWindow.vala:608 Gtk/DeleteWindow.vala:341
 msgid "No Snapshots Selected"
 msgstr "Nevybrány žádné zachycené stavy"
 
-#: Gtk/MainWindow.vala:1067
+#: Gtk/MainWindow.vala:1057
 msgid "No snapshots available"
 msgstr "Nejsou k dispozici žádné zachycené stavy"
 
 #: Console/AppConsole.vala:320 Core/SnapshotRepo.vala:898
-#: Gtk/MainWindow.vala:1011
+#: Gtk/MainWindow.vala:1001
 msgid "No snapshots found"
 msgstr "Nenalezeny žádné zachycené stavy"
 
@@ -1505,7 +1522,7 @@ msgstr "Nenalezeny žádné zachycené stavy"
 msgid "No snapshots found on device"
 msgstr "Na zařízení nenalezeny žádné zachycené stavy"
 
-#: Gtk/MainWindow.vala:553
+#: Gtk/MainWindow.vala:546
 msgid "No snapshots on device"
 msgstr "Na zařízení nejsou žádné zachycené stavy"
 
@@ -1513,11 +1530,11 @@ msgstr "Na zařízení nejsou žádné zachycené stavy"
 msgid "No snapshots on this device"
 msgstr "Na tomto zařízení se nenacházejí žádné zachycené stavy"
 
-#: Gtk/MainWindow.vala:793
+#: Gtk/MainWindow.vala:786
 msgid "No snapshots selected"
 msgstr "Nevybrány žádné zachycené stavy"
 
-#: Gtk/MainWindow.vala:1044 Gtk/MainWindow.vala:1046
+#: Gtk/MainWindow.vala:1034 Gtk/MainWindow.vala:1036
 msgid "None"
 msgstr "Žádné"
 
@@ -1578,7 +1595,7 @@ msgstr ""
 msgid "Older log files removed"
 msgstr "Soubory se záznamem starších událostí odstraněny"
 
-#: Gtk/MainWindow.vala:1045
+#: Gtk/MainWindow.vala:1035
 msgid "Oldest snapshot"
 msgstr "Nejstarší zachycený stav"
 
@@ -1593,7 +1610,7 @@ msgstr ""
 "V současnosti je podporováno pouze rozvržení vnořených svazků s @ a @home, "
 "jaké se používá v distribuci Ubuntu."
 
-#: Gtk/MainWindow.vala:209
+#: Gtk/MainWindow.vala:219
 msgid "Open Menu"
 msgstr "Otevřít nabídku"
 
@@ -1672,7 +1689,7 @@ msgstr "Spusťte aplikaci jako správce systému (pomocí „sudo“ nebo „su�
 msgid "Please save your work and close all applications."
 msgstr "Uložte svou práci a ukončete všechny aplikace."
 
-#: Gtk/MainWindow.vala:695
+#: Gtk/MainWindow.vala:688
 msgid "Please select a snapshot to view the log!"
 msgstr ""
 "Nejprve je třeba vybrat zachycený stav a až pak půjde zobrazit záznam "
@@ -1686,7 +1703,7 @@ msgstr "Vyberte zařízení pro zavaděč GRUB"
 msgid "Please wait a few minutes and try again."
 msgstr "Počkejte několik minut a zkuste to znovu."
 
-#: Gtk/MainWindow.vala:762
+#: Gtk/MainWindow.vala:755
 msgid "Please wait for snapshots to be deleted."
 msgstr "Počkejte než budou zachycené stavy smazány."
 
@@ -1952,7 +1969,7 @@ msgstr "Plánovač"
 msgid "Scheduled snapshot in progress..."
 msgstr "Pořizování naplánovaného zachyceného stavu…"
 
-#: Core/Main.vala:1147 Gtk/MainWindow.vala:1061 Gtk/ScheduleBox.vala:312
+#: Core/Main.vala:1147 Gtk/MainWindow.vala:1051 Gtk/ScheduleBox.vala:312
 msgid "Scheduled snapshots are disabled"
 msgstr "Naplánovaná pořizování zachycených stavů jsou vypnutá"
 
@@ -1991,7 +2008,7 @@ msgstr "Vyberte zařízení pro zavaděč GRUB"
 msgid "Select Path"
 msgstr "Vyberte umístění"
 
-#: Gtk/MainWindow.vala:694
+#: Gtk/MainWindow.vala:687
 msgid "Select Snapshot"
 msgstr "Vyberte zachycený stav"
 
@@ -2020,7 +2037,7 @@ msgstr "Vyberte cílové zařízení"
 msgid "Select a partition on this disk"
 msgstr "Vyberte oddíl na tomto datovém úložišti"
 
-#: Gtk/MainWindow.vala:801
+#: Gtk/MainWindow.vala:794
 msgid "Select a single snapshot to restore"
 msgstr "Vyberte jeden zachycený stav, do podoby kterého obnovit"
 
@@ -2032,11 +2049,11 @@ msgstr "Vyberte jiné zařízení pro kořenový souborový systém (/)"
 msgid "Select another device or free up some space"
 msgstr "Vyberte jiné zařízení nebo uvolněte nějaký prostor"
 
-#: Gtk/MainWindow.vala:547 Gtk/MainWindow.vala:554
+#: Gtk/MainWindow.vala:540 Gtk/MainWindow.vala:547
 msgid "Select another device to delete snasphots"
 msgstr "Vyberte jiné zařízení pro smazání zachycených stavů"
 
-#: Gtk/MainWindow.vala:481
+#: Gtk/MainWindow.vala:474
 msgid "Select another device?"
 msgstr "Vybrat jiné zařízení?"
 
@@ -2084,7 +2101,7 @@ msgstr "Vyberte položky které odebrat ze seznamu"
 msgid "Select the snapshot device"
 msgstr "Vyberte zařízení se zachycenými stavy"
 
-#: Gtk/MainWindow.vala:794
+#: Gtk/MainWindow.vala:787
 msgid "Select the snapshot to restore"
 msgstr "Vyberte zachycený stav ze kterého obnovit"
 
@@ -2092,7 +2109,7 @@ msgstr "Vyberte zachycený stav ze kterého obnovit"
 msgid "Select the snapshots to be deleted"
 msgstr "Vyberte zachycené stavy ke smazání"
 
-#: Gtk/MainWindow.vala:616
+#: Gtk/MainWindow.vala:609
 msgid "Select the snapshots to mark for deletion"
 msgstr "Vyberte zachycené stavy, které označit ke smazání"
 
@@ -2128,7 +2145,7 @@ msgstr "Vybrané zařízení pro zachycené stavy není systémový disk"
 msgid "Selected snapshot is marked for deletion"
 msgstr "Zvolený zachycený stav je označen ke smazání"
 
-#: Gtk/MainWindow.vala:825
+#: Gtk/MainWindow.vala:818
 msgid "Selected snapshot is marked for deletion and cannot be restored"
 msgstr ""
 "Zvolený zachycený stav je označen ke smazání a není proto možné z něho "
@@ -2218,7 +2235,7 @@ msgstr "Přeskočit přeinstalaci zavaděče GRUB2"
 msgid "Snapshot"
 msgstr "Zachycený stav"
 
-#: Gtk/MainWindow.vala:564
+#: Gtk/MainWindow.vala:557
 #, c-format
 msgid ""
 "Snapshot '%s' is being used by the system and cannot be deleted. Restart the "
@@ -2236,7 +2253,7 @@ msgstr "Zachycený stav pořízen"
 msgid "Snapshot Levels"
 msgstr "Vyberte jak často zálohovat"
 
-#: Gtk/MainWindow.vala:761
+#: Gtk/MainWindow.vala:754
 msgid "Snapshot deletion in progress..."
 msgstr "Mazání zachyceného stavu…"
 
@@ -2274,7 +2291,7 @@ msgstr "Zachycený stav bude použit po restartu systému."
 msgid "Snapshot(s) Deleted"
 msgstr "Zachycené stavy smazány"
 
-#: Gtk/MainWindow.vala:310 Gtk/DeleteWindow.vala:89
+#: Gtk/MainWindow.vala:320 Gtk/DeleteWindow.vala:89
 msgid "Snapshots"
 msgstr "Zachycených stavů"
 
@@ -2350,7 +2367,7 @@ msgstr ""
 "Zachycené stavy jsou na zvoleném oddílu ukládány v /timeshift-btrfs. Jiná "
 "umístění nejsou podporovaná."
 
-#: Gtk/MainWindow.vala:1006
+#: Gtk/MainWindow.vala:996
 msgid "Snapshots available for restore"
 msgstr "Zachycené stavy, ze kterých je možné obnovit"
 
@@ -2370,7 +2387,7 @@ msgid "Snapshots cannot be created in Live CD mode"
 msgstr ""
 "Při provozu systému z instalačního média nelze pořizovat zachycené stavy"
 
-#: Gtk/MainWindow.vala:1053
+#: Gtk/MainWindow.vala:1043
 msgid "Snapshots will be created at selected intervals"
 msgstr "Zachycené stavy budou pořizovány ve zvolených intervalech"
 
@@ -2382,7 +2399,7 @@ msgstr ""
 "Zachycené stavy budou pořizovány ve zvolených intervalech, pokud je na "
 "úložišti dostatek prostoru (> 1GB)"
 
-#: Gtk/MainWindow.vala:642
+#: Gtk/MainWindow.vala:635
 msgid "Snapshots will be removed during the next scheduled run"
 msgstr ""
 "Zachycené stavy budou odebrány v průběhu příštího naplánovaného spuštění"
@@ -2402,6 +2419,10 @@ msgstr "Zadejte zachycený stav, který má být obnoven"
 #: Console/AppConsole.vala:366
 msgid "Specify target device"
 msgstr "Zadejte cílové zařízení"
+
+#: Utility/Gtk/DonationWindow.vala:117
+msgid "Sponsor a Feature"
+msgstr ""
 
 #: Core/SnapshotRepo.vala:480 Gtk/RsyncLogBox.vala:472
 #, c-format
@@ -2430,6 +2451,11 @@ msgstr "Vnořené svazky"
 #: Gtk/RestoreWindow.vala:120
 msgid "Summary"
 msgstr "Souhrn"
+
+#: Utility/Gtk/DonationWindow.vala:84
+#, fuzzy
+msgid "Support"
+msgstr "Nepodporováno"
 
 #: Console/AppConsole.vala:377
 msgid "Switch to BTRFS mode (default: config)"
@@ -2460,7 +2486,7 @@ msgstr "Syntaxe"
 msgid "System"
 msgstr "Systém"
 
-#: Gtk/MainWindow.vala:951
+#: Gtk/MainWindow.vala:941
 msgid "System Restore Utility"
 msgstr "Nástroj pro obnovu systému"
 
@@ -2532,6 +2558,15 @@ msgstr ""
 msgid "There are no snapshots on this device"
 msgstr "Na tomto zařízení se nenacházejí žádné zachycené stavy"
 
+#: Utility/Gtk/DonationWindow.vala:78
+msgid ""
+"This application was created for my personal use. It is being distributed as "
+"a free, open-source project in the hope that it may be useful. It is not "
+"practical for me to spend additional time providing free support and free "
+"work for individual users. See sections below if you need support or changes "
+"for this application."
+msgstr ""
+
 #: Utility/Device.vala:1379
 msgid "This device is not encrypted"
 msgstr "Toto zařízení není šifrované"
@@ -2544,7 +2579,7 @@ msgstr ""
 "Tato aplikace je poskytována BEZ jakýchkoli záruk a autoři nenesou "
 "odpovědnost za žádné škody, vzniklé v důsledku jejího použití."
 
-#: Gtk/MainWindow.vala:1041 Gtk/MainWindow.vala:1052
+#: Gtk/MainWindow.vala:1031 Gtk/MainWindow.vala:1042
 msgid "Timeshift is active"
 msgstr "Pravidelné zálohování zapnuto"
 
@@ -2644,6 +2679,16 @@ msgstr "Aktualizace nabídky zavaděče GRUB…"
 msgid "Updating bootloader configuration..."
 msgstr "Aktualizace nastavení zavaděče…"
 
+#: Utility/Gtk/DonationWindow.vala:86
+msgid ""
+"Use the issue tracker for reporting issues, asking questions, and requesting "
+"features. If you need an immediate response, use the button below to make a "
+"donation for $10 with PayPal. Add your questions to the tracker and send me "
+"an email with the issue number (teejeetech@gmail.com). This option is for "
+"questions you may have about the application, and for help with issues. This "
+"does not cover development work for fixing issues and adding features."
+msgstr ""
+
 #: Utility/Device.vala:1954
 #, c-format
 msgid "Used"
@@ -2689,7 +2734,7 @@ msgstr "Zobrazit záznam událostí v Rsync z pořízení"
 msgid "View Rsync Log for Restore"
 msgstr "Zobrazit záznam událostí v Rsync z obnovení"
 
-#: Gtk/MainWindow.vala:378
+#: Gtk/MainWindow.vala:380
 msgid "View TimeShift Logs"
 msgstr "Zobrazit záznamy událostí v aplikaci"
 
@@ -2705,11 +2750,6 @@ msgstr "Varování"
 msgid "Web Browsers"
 msgstr "Webové prohlížeče"
 
-#: Utility/Gtk/DonationWindow.vala:113
-#, c-format
-msgid "Website"
-msgstr "Webové stránky"
-
 #: Gtk/ScheduleBox.vala:82 Gtk/SnapshotListBox.vala:301
 msgid "Weekly"
 msgstr "Každý týden"
@@ -2722,9 +2762,9 @@ msgstr "Pořízení týdenního zachyceného stavu se nezdařilo!"
 msgid "Weekly snapshots are enabled"
 msgstr "Pořizování týdenních zachycených stavů je zapnuto"
 
-#: Utility/Gtk/DonationWindow.vala:105
-msgid "Wiki ~ Documentation & Help"
-msgstr "Wiki ~ dokumentace a nápověda"
+#: Utility/Gtk/DonationWindow.vala:100
+msgid "Wiki"
+msgstr ""
 
 #: Gtk/BackupFinishBox.vala:63 Gtk/DeleteFinishBox.vala:63
 msgid "With Errors"
@@ -2820,6 +2860,51 @@ msgstr "nástroj rsync oznámil chybu"
 #: Core/SnapshotRepo.vala:831
 msgid "un-tagged"
 msgstr "bez příznaku"
+
+#~ msgid ""
+#~ "Did you find this software useful?\n"
+#~ "\n"
+#~ "You can buy me a coffee or make a donation via PayPal to show your "
+#~ "support. Or just drop me an email and say Hi. This application is "
+#~ "completely free and will continue to remain that way. Your contributions "
+#~ "will help in keeping this project alive and improving it further.\n"
+#~ "\n"
+#~ "Feel free to send me an email if you find any issues in this application "
+#~ "or if you need any changes. Suggestions and feedback are always welcome.\n"
+#~ "\n"
+#~ "Thanks,\n"
+#~ "Tony George\n"
+#~ "(teejeetech@gmail.com)"
+#~ msgstr ""
+#~ "Shledali jste tento software užitečným?\n"
+#~ "\n"
+#~ "Pak mi třeba můžete koupit kávu nebo svou podporu projevit příspěvkem, "
+#~ "zaslaným prostřednictvím služeb PayPal nebo Google Wallet. A nebo mi "
+#~ "prostě jen pošlete e-mail s pozdravem :-) Tato aplikace je poskytována "
+#~ "zcela zdarma a zůstane tomu tak i v budoucnu. Váš případný příspěvek "
+#~ "ovšem pomůže tento projekt udržet při životě a je důležitý také pro jeho "
+#~ "budoucí rozvoj.\n"
+#~ "\n"
+#~ "Pokud v aplikaci naleznete chybu, nebo máte námět na vylepšení, napište "
+#~ "mi e-mail. Nápady a zpětná vazba od uživatelů jsou vždy vítány.\n"
+#~ "\n"
+#~ "Díky,\n"
+#~ "Tony George\n"
+#~ "teejeetech@gmail.com"
+
+#~ msgid "Donate with PayPal"
+#~ msgstr "Darovat přes PayPal"
+
+#~ msgid "Issue Tracker ~ Report Issues, Request Features, Ask Questions"
+#~ msgstr ""
+#~ "Systém správy hlášení chyb ~ hlaste problémy, požadavky na funkce, "
+#~ "pokládejte dotazy"
+
+#~ msgid "Website"
+#~ msgstr "Webové stránky"
+
+#~ msgid "Wiki ~ Documentation & Help"
+#~ msgstr "Wiki ~ dokumentace a nápověda"
 
 #~ msgid "Code Contributions"
 #~ msgstr "Do vývoje se dále zapojili"

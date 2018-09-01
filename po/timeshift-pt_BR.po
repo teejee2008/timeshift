@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timeshift\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2018-08-26 21:06+0530\n"
+"POT-Creation-Date: 2018-09-01 14:27+0530\n"
 "PO-Revision-Date: 2017-11-21 17:49+0000\n"
 "Last-Translator: Sitonir de Oliveira <sitonir@outlook.com>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
@@ -92,7 +92,7 @@ msgstr ""
 msgid "Aborted."
 msgstr "Abortado."
 
-#: Gtk/MainWindow.vala:393
+#: Gtk/MainWindow.vala:386
 msgid "About"
 msgstr "Sobre"
 
@@ -226,7 +226,7 @@ msgstr "Artistas"
 msgid "Authors"
 msgstr "Autores"
 
-#: Gtk/MainWindow.vala:346
+#: Gtk/MainWindow.vala:356
 msgid "Available"
 msgstr "Disponível"
 
@@ -291,7 +291,7 @@ msgstr "Dispositivo de backup"
 msgid "Backup device not specified!"
 msgstr "Dispositivo de backup não especificado!"
 
-#: Utility/Gtk/DonationWindow.vala:89
+#: Utility/Gtk/DonationWindow.vala:74
 msgid "Become a Patron"
 msgstr "Torne-se um Patreon"
 
@@ -378,7 +378,7 @@ msgstr ""
 "backup, para trazer o sistema para um estado consistente. Clique em Sim para "
 "confirmar."
 
-#: Gtk/MainWindow.vala:563
+#: Gtk/MainWindow.vala:556
 msgid "Cannot Delete Live Snapshot"
 msgstr "Não é possível excluir backup live"
 
@@ -433,7 +433,7 @@ msgstr "Clonando"
 msgid "Cloning system..."
 msgstr "Clonando sistema..."
 
-#: Utility/Gtk/AboutWindow.vala:326 Utility/Gtk/DonationWindow.vala:121
+#: Utility/Gtk/AboutWindow.vala:326 Utility/Gtk/DonationWindow.vala:143
 #: Gtk/RsyncLogBox.vala:266 Gtk/BackupWindow.vala:168
 #: Gtk/BootOptionsWindow.vala:106 Gtk/DeleteWindow.vala:170
 #: Gtk/RestoreWindow.vala:508
@@ -550,7 +550,7 @@ msgstr "Criar Backup se agendado"
 msgid "Create snapshot of current system"
 msgstr "Criar backup do sistema atual"
 
-#: Gtk/MainWindow.vala:1068
+#: Gtk/MainWindow.vala:1058
 msgid ""
 "Create snapshots manually or enable scheduled snapshots to protect your "
 "system"
@@ -765,37 +765,6 @@ msgstr "Dispositivos com sistemas de arquivos Linux"
 msgid "Devices with Windows file systems are not supported (NTFS, FAT, etc)."
 msgstr ""
 
-#: Utility/Gtk/DonationWindow.vala:61
-msgid ""
-"Did you find this software useful?\n"
-"\n"
-"You can buy me a coffee or make a donation via PayPal to show your support. "
-"Or just drop me an email and say Hi. This application is completely free and "
-"will continue to remain that way. Your contributions will help in keeping "
-"this project alive and improving it further.\n"
-"\n"
-"Feel free to send me an email if you find any issues in this application or "
-"if you need any changes. Suggestions and feedback are always welcome.\n"
-"\n"
-"Thanks,\n"
-"Tony George\n"
-"(teejeetech@gmail.com)"
-msgstr ""
-"Considera que este software útil?\n"
-"\n"
-"Você pode me comprar um café ou fazer uma doação via PayPal para mostrar seu "
-"apoio. Ou apenas deixe-me um email e dizer um oi. Este aplicativo é "
-"totalmente gratuito e continuará a ser assim. Suas contribuições vão ajudar "
-"a manter este projeto vivo e melhorá-la ainda mais.\n"
-"\n"
-"Sinta-se livre para me enviar um e-mail se você encontrar quaisquer "
-"problemas nesta aplicação ou se você precisa de quaisquer mudanças. "
-"Sugestões e comentários são sempre bem-vindos.\n"
-"\n"
-"Obrigado,\n"
-"Tony George\n"
-"(teejeetech@gmail.com)"
-
 #: Utility/TeeJee.FileSystem.vala:518
 msgid "Dir not found"
 msgstr "Diretório não encontrado"
@@ -820,13 +789,19 @@ msgstr "Distribuição"
 msgid "Documentation"
 msgstr "Doações"
 
-#: Utility/Gtk/DonationWindow.vala:42 Gtk/MainWindow.vala:388
+#: Gtk/MainWindow.vala:209 Gtk/MainWindow.vala:210
 msgid "Donate"
 msgstr "Doar"
 
-#: Utility/Gtk/DonationWindow.vala:81
-msgid "Donate with PayPal"
-msgstr "Doar com PayPal"
+#: Utility/Gtk/DonationWindow.vala:71
+#, fuzzy
+msgid "Donate (5$)"
+msgstr "Doar"
+
+#: Utility/Gtk/DonationWindow.vala:124 Utility/Gtk/DonationWindow.vala:132
+#, fuzzy
+msgid "Donation Plugins"
+msgstr "Doações"
 
 #: Utility/Gtk/AboutWindow.vala:465
 msgid "Donations"
@@ -836,7 +811,7 @@ msgstr "Doações"
 msgid "Enable BTRFS qgroups (recommended)"
 msgstr ""
 
-#: Gtk/MainWindow.vala:1062
+#: Gtk/MainWindow.vala:1052
 msgid "Enable scheduled snapshots to protect your system"
 msgstr "Ativar backups agendados para proteger o seu sistema"
 
@@ -1083,6 +1058,10 @@ msgstr "Falha ao desmontar dispositivo"
 msgid "Failed to write file"
 msgstr "Falha ao gravar arquivo"
 
+#: Utility/Gtk/DonationWindow.vala:106
+msgid "Feature Requests"
+msgstr ""
+
 #: Gtk/RsyncLogBox.vala:122
 msgid "File (snapshot)"
 msgstr "Apagar backup"
@@ -1189,6 +1168,15 @@ msgstr "GRUB não será reinstalado"
 msgid "Generating initramfs..."
 msgstr "Gerando initramfs..."
 
+#: Utility/Gtk/DonationWindow.vala:135
+msgid "Get Donation Plugins ($10)"
+msgstr ""
+
+#: Utility/Gtk/DonationWindow.vala:92
+#, fuzzy
+msgid "Get Support ($10)"
+msgstr "Não Suportado"
+
 #: Console/AppConsole.vala:374
 msgid "Global"
 msgstr "Global"
@@ -1238,6 +1226,16 @@ msgstr "Backups por hora falhou!"
 msgid "Hourly snapshots are enabled"
 msgstr "Backups horárias estão habilitados"
 
+#: Utility/Gtk/DonationWindow.vala:126
+msgid ""
+"I sometimes create exclusive plugins to encourage people to contribute. You "
+"can make a contribution by translating the application to other languages, "
+"by submitting code changes, or by making a donation for $10 with PayPal. "
+"Contributors are added to an email distribution list, and plugins are sent "
+"by email. These plugins are open-source. You can request the source code "
+"after receiving the plugins."
+msgstr ""
+
 #: Gtk/RestoreFinishBox.vala:102
 msgid ""
 "If the restored system fails to boot, then boot from the Live CD/USB, "
@@ -1255,6 +1253,23 @@ msgid ""
 msgstr ""
 "Se estes termos não são aceitáveis para você, por favor, não vá além deste "
 "ponto!"
+
+#: Utility/Gtk/DonationWindow.vala:65
+msgid ""
+"If you find this application useful, and wish to support its development, "
+"use the button below to make a donation with PayPal."
+msgstr ""
+
+#: Utility/Gtk/DonationWindow.vala:108
+msgid ""
+"If you need changes to this application, add your requirements to the issue "
+"tracker. You can sponsor the work for your own request, or sponsor an "
+"existing request by making a donation with PayPal. Items available for "
+"sponsorship are labelled as <i>\"OpenForSponsorship\"</i>, along with an "
+"amount for the work involved. You can make a donation for that amount with "
+"PayPal, and send me an email with the issue number. Sponsored changes will "
+"be implemented in the next release of the application."
+msgstr ""
 
 #: Gtk/ExcludeBox.vala:54
 msgid "Include / Exclude Patterns"
@@ -1283,18 +1298,21 @@ msgstr "Backup Inválido"
 msgid "Invalid command line arguments"
 msgstr "Linha de comando argumentos inválidos"
 
-#: Gtk/MainWindow.vala:824
+#: Gtk/MainWindow.vala:817
 msgid "Invalid snapshot"
 msgstr "Backup inválido"
 
-#: Utility/Gtk/DonationWindow.vala:97
-msgid "Issue Tracker ~ Report Issues, Request Features, Ask Questions"
+#: Utility/Gtk/DonationWindow.vala:95
+msgid "Issue Tracker"
 msgstr ""
-"Localizador de Erros ~ Reporte problemas, peça melhorias e faça perguntas."
 
 #: Gtk/ExcludeBox.vala:272
 msgid "Items Not Selected"
 msgstr "Nenhum ítem selecionado"
+
+#: Utility/Gtk/DonationWindow.vala:114
+msgid "Items for Sponsorship"
+msgstr ""
 
 #: Gtk/ScheduleBox.vala:283
 msgid "Keep"
@@ -1428,7 +1446,7 @@ msgstr "Último backup semanal é de mais de 1 semana"
 msgid "Last weekly snapshot not found"
 msgstr "Último backup semanal não encontrado"
 
-#: Gtk/MainWindow.vala:1043
+#: Gtk/MainWindow.vala:1033
 #, c-format
 msgid "Latest snapshot"
 msgstr ""
@@ -1456,7 +1474,7 @@ msgstr "Listar dispositivos"
 msgid "List snapshots"
 msgstr "Listar backups"
 
-#: Gtk/MainWindow.vala:994
+#: Gtk/MainWindow.vala:984
 msgid "Live USB Mode (Restore Only)"
 msgstr "Modo Live USB (Somente Restauração)"
 
@@ -1465,7 +1483,7 @@ msgstr "Modo Live USB (Somente Restauração)"
 msgid "Location"
 msgstr "Localização"
 
-#: Gtk/MainWindow.vala:459
+#: Gtk/MainWindow.vala:452
 msgid "Main window closed by user"
 msgstr "Janela principal fechada pelo usuário"
 
@@ -1473,7 +1491,7 @@ msgstr "Janela principal fechada pelo usuário"
 msgid "Mark for Deletion"
 msgstr "Marcar para remoção"
 
-#: Gtk/MainWindow.vala:641
+#: Gtk/MainWindow.vala:634
 msgid "Marked for deletion"
 msgstr "Marcado para remoção"
 
@@ -1481,7 +1499,7 @@ msgstr "Marcado para remoção"
 msgid "Maximum backups exceeded for backup level"
 msgstr "Backups máximos excedidos para o nível de backup"
 
-#: Gtk/MainWindow.vala:208
+#: Gtk/MainWindow.vala:218
 msgid "Menu"
 msgstr "Menu"
 
@@ -1525,7 +1543,7 @@ msgstr "Montar"
 msgid "Moved system subvolume to snapshot directory"
 msgstr "Subvolume de sistema movido para o diretório de backup"
 
-#: Gtk/MainWindow.vala:800
+#: Gtk/MainWindow.vala:793
 msgid "Multiple snapshots selected"
 msgstr "Vários backups selecionados"
 
@@ -1547,18 +1565,18 @@ msgstr "Não"
 msgid "No Change"
 msgstr "Sem alterações"
 
-#: Gtk/MainWindow.vala:615 Gtk/DeleteWindow.vala:341
+#: Gtk/MainWindow.vala:608 Gtk/DeleteWindow.vala:341
 msgid "No Snapshots Selected"
 msgstr "Nenhum Backup Selecionado"
 
-#: Gtk/MainWindow.vala:1067
+#: Gtk/MainWindow.vala:1057
 msgid "No snapshots available"
 msgstr ""
 "Nenhum backup disponível\n"
 "Nenhum backups disponíveis"
 
 #: Console/AppConsole.vala:320 Core/SnapshotRepo.vala:898
-#: Gtk/MainWindow.vala:1011
+#: Gtk/MainWindow.vala:1001
 msgid "No snapshots found"
 msgstr "Nenhum backup encontrado"
 
@@ -1568,7 +1586,7 @@ msgstr ""
 "Nenhum backup encontrado no dispositivo\n"
 "Nenhum snapshot encontrado no dispositivo"
 
-#: Gtk/MainWindow.vala:553
+#: Gtk/MainWindow.vala:546
 msgid "No snapshots on device"
 msgstr "Nenhum backup em dispositivo"
 
@@ -1576,11 +1594,11 @@ msgstr "Nenhum backup em dispositivo"
 msgid "No snapshots on this device"
 msgstr "Nenhum backup neste dispositivo"
 
-#: Gtk/MainWindow.vala:793
+#: Gtk/MainWindow.vala:786
 msgid "No snapshots selected"
 msgstr "Nenhum backup selecionado"
 
-#: Gtk/MainWindow.vala:1044 Gtk/MainWindow.vala:1046
+#: Gtk/MainWindow.vala:1034 Gtk/MainWindow.vala:1036
 msgid "None"
 msgstr "Nenhum"
 
@@ -1641,7 +1659,7 @@ msgstr ""
 msgid "Older log files removed"
 msgstr "Arquivos de log mais antigos removidos"
 
-#: Gtk/MainWindow.vala:1045
+#: Gtk/MainWindow.vala:1035
 msgid "Oldest snapshot"
 msgstr ""
 "Backup mais antigo\n"
@@ -1658,7 +1676,7 @@ msgstr ""
 "Somente layouts de ubuntu-tipo com @ e @Home multivolumes são suportadas "
 "atualmente."
 
-#: Gtk/MainWindow.vala:209
+#: Gtk/MainWindow.vala:219
 msgid "Open Menu"
 msgstr "Abrir Menu"
 
@@ -1738,7 +1756,7 @@ msgstr ""
 msgid "Please save your work and close all applications."
 msgstr "Por favor, salve seu trabalho e feche todas as aplicações."
 
-#: Gtk/MainWindow.vala:695
+#: Gtk/MainWindow.vala:688
 msgid "Please select a snapshot to view the log!"
 msgstr ""
 "Por favor selecione um backup para visualizar o log!\n"
@@ -1752,7 +1770,7 @@ msgstr "Por favor selecione o dispositivo de GRUB"
 msgid "Please wait a few minutes and try again."
 msgstr "Por favor aguarde alguns minutos e tente novamente."
 
-#: Gtk/MainWindow.vala:762
+#: Gtk/MainWindow.vala:755
 msgid "Please wait for snapshots to be deleted."
 msgstr ""
 "Por favor aguarde que os backups serem apagados.\n"
@@ -2043,7 +2061,7 @@ msgstr ""
 "Backup agendado em curso...\n"
 "Backup agendado em curso ..."
 
-#: Core/Main.vala:1147 Gtk/MainWindow.vala:1061 Gtk/ScheduleBox.vala:312
+#: Core/Main.vala:1147 Gtk/MainWindow.vala:1051 Gtk/ScheduleBox.vala:312
 msgid "Scheduled snapshots are disabled"
 msgstr ""
 "Backups agendados estão desativados\n"
@@ -2086,7 +2104,7 @@ msgstr "Selecionar dispositivo GRUB"
 msgid "Select Path"
 msgstr "Selecione o Caminho"
 
-#: Gtk/MainWindow.vala:694
+#: Gtk/MainWindow.vala:687
 msgid "Select Snapshot"
 msgstr "Selecionar Backup"
 
@@ -2115,7 +2133,7 @@ msgstr "Selecionar Dispositivo Alvo"
 msgid "Select a partition on this disk"
 msgstr "Selecionar uma partição neste disco"
 
-#: Gtk/MainWindow.vala:801
+#: Gtk/MainWindow.vala:794
 msgid "Select a single snapshot to restore"
 msgstr "Selecionar um backup único para restaurar"
 
@@ -2127,11 +2145,11 @@ msgstr "Selecionar outro dispositivo para o sistema de arquivos Raiz (/)"
 msgid "Select another device or free up some space"
 msgstr "Selecionar outro dispositivo ou algum espaço livre"
 
-#: Gtk/MainWindow.vala:547 Gtk/MainWindow.vala:554
+#: Gtk/MainWindow.vala:540 Gtk/MainWindow.vala:547
 msgid "Select another device to delete snasphots"
 msgstr "Selecionar outro dispositivo para deletar backups"
 
-#: Gtk/MainWindow.vala:481
+#: Gtk/MainWindow.vala:474
 msgid "Select another device?"
 msgstr "Selecionar outro dispositivo?"
 
@@ -2181,7 +2199,7 @@ msgstr "Selecionar os itens para remover da lista"
 msgid "Select the snapshot device"
 msgstr "Selecionar o backup do dispositivo"
 
-#: Gtk/MainWindow.vala:794
+#: Gtk/MainWindow.vala:787
 msgid "Select the snapshot to restore"
 msgstr "Selecionar o backup para restaurar"
 
@@ -2191,7 +2209,7 @@ msgstr ""
 "Selecionar o backup a ser apagado\n"
 "selecionar o backup para apagar"
 
-#: Gtk/MainWindow.vala:616
+#: Gtk/MainWindow.vala:609
 msgid "Select the snapshots to mark for deletion"
 msgstr "Selecione os backups a serem marcados para exclusão"
 
@@ -2227,7 +2245,7 @@ msgstr "O dispositivo de backup selecionado não é um disco do sistema"
 msgid "Selected snapshot is marked for deletion"
 msgstr "O backup selecionado está marcado para exclusão"
 
-#: Gtk/MainWindow.vala:825
+#: Gtk/MainWindow.vala:818
 msgid "Selected snapshot is marked for deletion and cannot be restored"
 msgstr ""
 "O backup selecionado está marcado para exclusão e não pode ser restaurado"
@@ -2316,7 +2334,7 @@ msgstr "Pular reinstalação do GRUB2"
 msgid "Snapshot"
 msgstr "Backup"
 
-#: Gtk/MainWindow.vala:564
+#: Gtk/MainWindow.vala:557
 #, fuzzy, c-format
 msgid ""
 "Snapshot '%s' is being used by the system and cannot be deleted. Restart the "
@@ -2336,7 +2354,7 @@ msgstr "Backup Criado"
 msgid "Snapshot Levels"
 msgstr "Selecionar Níveis de Backups"
 
-#: Gtk/MainWindow.vala:761
+#: Gtk/MainWindow.vala:754
 msgid "Snapshot deletion in progress..."
 msgstr ""
 "Exclusão do backup em progresso...\n"
@@ -2380,7 +2398,7 @@ msgstr "O backup ficará ativo após a reinicialização do sistema."
 msgid "Snapshot(s) Deleted"
 msgstr "Backup(s) Excluído"
 
-#: Gtk/MainWindow.vala:310 Gtk/DeleteWindow.vala:89
+#: Gtk/MainWindow.vala:320 Gtk/DeleteWindow.vala:89
 msgid "Snapshots"
 msgstr ""
 "Backup(s)\n"
@@ -2457,7 +2475,7 @@ msgid ""
 "locations are not supported."
 msgstr ""
 
-#: Gtk/MainWindow.vala:1006
+#: Gtk/MainWindow.vala:996
 msgid "Snapshots available for restore"
 msgstr ""
 "Backups disponíveis para ser restaurados\n"
@@ -2478,7 +2496,7 @@ msgstr ""
 msgid "Snapshots cannot be created in Live CD mode"
 msgstr "Os backups não podem ser criados no modo Live CD"
 
-#: Gtk/MainWindow.vala:1053
+#: Gtk/MainWindow.vala:1043
 msgid "Snapshots will be created at selected intervals"
 msgstr ""
 "Os backups serão criados nos intervalos selecionados\n"
@@ -2492,7 +2510,7 @@ msgstr ""
 "Os backups serão criados em intervalos selecionados se o disco de backup "
 "tiver espaço suficiente (> 1GB)"
 
-#: Gtk/MainWindow.vala:642
+#: Gtk/MainWindow.vala:635
 msgid "Snapshots will be removed during the next scheduled run"
 msgstr "Os backups serão removidos durante a próxima execução agendada"
 
@@ -2513,6 +2531,10 @@ msgstr ""
 #: Console/AppConsole.vala:366
 msgid "Specify target device"
 msgstr "Especificar dispositivo de destino"
+
+#: Utility/Gtk/DonationWindow.vala:117
+msgid "Sponsor a Feature"
+msgstr ""
 
 #: Core/SnapshotRepo.vala:480 Gtk/RsyncLogBox.vala:472
 #, c-format
@@ -2543,6 +2565,11 @@ msgstr "Volume"
 #: Gtk/RestoreWindow.vala:120
 msgid "Summary"
 msgstr "Sumário"
+
+#: Utility/Gtk/DonationWindow.vala:84
+#, fuzzy
+msgid "Support"
+msgstr "Não Suportado"
 
 #: Console/AppConsole.vala:377
 msgid "Switch to BTRFS mode (default: config)"
@@ -2575,7 +2602,7 @@ msgstr "Sintaxe"
 msgid "System"
 msgstr "Sistema"
 
-#: Gtk/MainWindow.vala:951
+#: Gtk/MainWindow.vala:941
 msgid "System Restore Utility"
 msgstr "Utilitário de Restauração do Sistema"
 
@@ -2646,6 +2673,15 @@ msgstr "A partição de destino tem um layout desubvolume não suportado."
 msgid "There are no snapshots on this device"
 msgstr "Não há backups neste dispositivo"
 
+#: Utility/Gtk/DonationWindow.vala:78
+msgid ""
+"This application was created for my personal use. It is being distributed as "
+"a free, open-source project in the hope that it may be useful. It is not "
+"practical for me to spend additional time providing free support and free "
+"work for individual users. See sections below if you need support or changes "
+"for this application."
+msgstr ""
+
 #: Utility/Device.vala:1379
 msgid "This device is not encrypted"
 msgstr "Este dispositivo não está criptografado"
@@ -2659,7 +2695,7 @@ msgstr ""
 "nenhuma responsabilidade por quaisquer danos decorrentes do uso deste "
 "programa."
 
-#: Gtk/MainWindow.vala:1041 Gtk/MainWindow.vala:1052
+#: Gtk/MainWindow.vala:1031 Gtk/MainWindow.vala:1042
 msgid "Timeshift is active"
 msgstr "TimeShift está ativo"
 
@@ -2762,6 +2798,16 @@ msgstr "Atualizando menu GRUB"
 msgid "Updating bootloader configuration..."
 msgstr "Atualizando a configuração do bootloader..."
 
+#: Utility/Gtk/DonationWindow.vala:86
+msgid ""
+"Use the issue tracker for reporting issues, asking questions, and requesting "
+"features. If you need an immediate response, use the button below to make a "
+"donation for $10 with PayPal. Add your questions to the tracker and send me "
+"an email with the issue number (teejeetech@gmail.com). This option is for "
+"questions you may have about the application, and for help with issues. This "
+"does not cover development work for fixing issues and adding features."
+msgstr ""
+
 #: Utility/Device.vala:1954
 #, c-format
 msgid "Used"
@@ -2812,7 +2858,7 @@ msgstr "Ver registo para Criar"
 msgid "View Rsync Log for Restore"
 msgstr "Ver registro para Restaurar"
 
-#: Gtk/MainWindow.vala:378
+#: Gtk/MainWindow.vala:380
 msgid "View TimeShift Logs"
 msgstr "Visualizar registros do TimeShift"
 
@@ -2827,11 +2873,6 @@ msgstr "Aviso"
 #: Gtk/RestoreExcludeBox.vala:61
 msgid "Web Browsers"
 msgstr "Navegadores web"
-
-#: Utility/Gtk/DonationWindow.vala:113
-#, c-format
-msgid "Website"
-msgstr "Página Web"
 
 #: Gtk/ScheduleBox.vala:82 Gtk/SnapshotListBox.vala:301
 msgid "Weekly"
@@ -2849,9 +2890,9 @@ msgstr ""
 "Backups semanais estão habilitados\n"
 "Snapshots semanais estão habilitados"
 
-#: Utility/Gtk/DonationWindow.vala:105
-msgid "Wiki ~ Documentation & Help"
-msgstr "Wiki ~ Documentação e Ajuda"
+#: Utility/Gtk/DonationWindow.vala:100
+msgid "Wiki"
+msgstr ""
 
 #: Gtk/BackupFinishBox.vala:63 Gtk/DeleteFinishBox.vala:63
 msgid "With Errors"
@@ -2951,6 +2992,49 @@ msgstr "rsync retornou um erro"
 #: Core/SnapshotRepo.vala:831
 msgid "un-tagged"
 msgstr "Desmarcado"
+
+#~ msgid ""
+#~ "Did you find this software useful?\n"
+#~ "\n"
+#~ "You can buy me a coffee or make a donation via PayPal to show your "
+#~ "support. Or just drop me an email and say Hi. This application is "
+#~ "completely free and will continue to remain that way. Your contributions "
+#~ "will help in keeping this project alive and improving it further.\n"
+#~ "\n"
+#~ "Feel free to send me an email if you find any issues in this application "
+#~ "or if you need any changes. Suggestions and feedback are always welcome.\n"
+#~ "\n"
+#~ "Thanks,\n"
+#~ "Tony George\n"
+#~ "(teejeetech@gmail.com)"
+#~ msgstr ""
+#~ "Considera que este software útil?\n"
+#~ "\n"
+#~ "Você pode me comprar um café ou fazer uma doação via PayPal para mostrar "
+#~ "seu apoio. Ou apenas deixe-me um email e dizer um oi. Este aplicativo é "
+#~ "totalmente gratuito e continuará a ser assim. Suas contribuições vão "
+#~ "ajudar a manter este projeto vivo e melhorá-la ainda mais.\n"
+#~ "\n"
+#~ "Sinta-se livre para me enviar um e-mail se você encontrar quaisquer "
+#~ "problemas nesta aplicação ou se você precisa de quaisquer mudanças. "
+#~ "Sugestões e comentários são sempre bem-vindos.\n"
+#~ "\n"
+#~ "Obrigado,\n"
+#~ "Tony George\n"
+#~ "(teejeetech@gmail.com)"
+
+#~ msgid "Donate with PayPal"
+#~ msgstr "Doar com PayPal"
+
+#~ msgid "Issue Tracker ~ Report Issues, Request Features, Ask Questions"
+#~ msgstr ""
+#~ "Localizador de Erros ~ Reporte problemas, peça melhorias e faça perguntas."
+
+#~ msgid "Website"
+#~ msgstr "Página Web"
+
+#~ msgid "Wiki ~ Documentation & Help"
+#~ msgstr "Wiki ~ Documentação e Ajuda"
 
 #~ msgid "Code Contributions"
 #~ msgstr "Contribuidores"

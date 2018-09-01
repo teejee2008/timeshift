@@ -1,7 +1,7 @@
 /*
  * DonationWindow.vala
  *
- * Copyright 2012-2018 Tony George <teejeetech@gmail.com>
+ * Copyright 2012-18 Tony George <teejeetech@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,99 +31,191 @@ using TeeJee.System;
 using TeeJee.Misc;
 using TeeJee.GtkHelper;
 
-public class DonationWindow : Dialog {
+public class DonationWindow : Gtk.Window {
 
+	private Gtk.Box vbox_main;
 	private string username = "";
-	private Box hbox_action;
-	private Button btn_close;
+	private string appname = "Timeshift";
+	private bool has_donation_plugins = false;
+	private bool has_wiki = false;
 
-	public DonationWindow() {
+	public DonationWindow(Gtk.Window window) {
 
-		this.set_title(_("Donate"));
-		this.window_position = WindowPosition.CENTER_ON_PARENT;
-		this.set_destroy_with_parent (true);
-		this.set_modal (true);
-		this.set_deletable(true);
-		this.set_skip_taskbar_hint(false);
-		this.set_default_size (500, 20);
-		this.icon = IconManager.lookup("timeshift",16);
+		set_title("");
+		set_transient_for(window);
+		window_position = WindowPosition.CENTER_ON_PARENT;
+		set_destroy_with_parent (true);
+		set_modal (true);
+		set_deletable(true);
+		set_skip_taskbar_hint(false);
+		set_default_size (500, 400);
 
 		//vbox_main
-		var vbox_main = get_content_area();
+		vbox_main = new Gtk.Box(Orientation.VERTICAL, 0);
 		vbox_main.margin = 6;
 		vbox_main.spacing = 6;
-		//vbox_main.homogeneous = false;
-
-		//get_action_area().visible = false;
-		
-		hbox_action = (Box) get_action_area();
-
-		string msg = _("Did you find this software useful?\n\nYou can buy me a coffee or make a donation via PayPal to show your support. Or just drop me an email and say Hi. This application is completely free and will continue to remain that way. Your contributions will help in keeping this project alive and improving it further.\n\nFeel free to send me an email if you find any issues in this application or if you need any changes. Suggestions and feedback are always welcome.\n\nThanks,\nTony George\n(teejeetech@gmail.com)");
-		
-		var label = new Gtk.Label(msg);
-		label.wrap = true;
-		label.wrap_mode = Pango.WrapMode.WORD;
-		label.max_width_chars = 50;
-		label.xalign = 0.0f;
-		label.margin_bottom = 6;
-
-		var scrolled = new Gtk.ScrolledWindow(null, null);
-		scrolled.hscrollbar_policy = PolicyType.NEVER;
-		scrolled.vscrollbar_policy = PolicyType.NEVER;
-		scrolled.add (label);
-		vbox_main.add(scrolled);
+		this.add(vbox_main);
 		
 		if (get_user_id_effective() == 0){
 			username = get_username();
 		}
 
-		// donate paypal
-		var button = new Gtk.LinkButton.with_label("", _("Donate with PayPal"));
-		button.set_tooltip_text("Donate to: teejeetech@gmail.com");
-		vbox_main.add(button);
+		// -----------------------------
+
+		string msg = _("If you find this application useful, and wish to support its development, use the button below to make a donation with PayPal.");
+		
+		add_label(msg);
+
+		var hbox = add_hbox();
+		
+		add_button(hbox, _("Donate (5$)"),
+			"https://www.paypal.com/cgi-bin/webscr?business=teejeetech@gmail.com&cmd=_xclick&currency_code=USD&amount=5.00&item_name=%s+Donation".printf(appname));
+
+		add_button(hbox, _("Become a Patron"),
+			"https://www.patreon.com/bePatron?u=3059450");
+
+		
+		msg = _("This application was created for my personal use. It is being distributed as a free, open-source project in the hope that it may be useful. It is not practical for me to spend additional time providing free support and free work for individual users. See sections below if you need support or changes for this application.");
+		
+		var label = add_label(msg);
+
+		// -----------------------------
+
+		msg = format_heading(_("Support")) + "   ";
+		
+		msg += _("Use the issue tracker for reporting issues, asking questions, and requesting features. If you need an immediate response, use the button below to make a donation for $10 with PayPal. Add your questions to the tracker and send me an email with the issue number (teejeetech@gmail.com). This option is for questions you may have about the application, and for help with issues. This does not cover development work for fixing issues and adding features.");
+		
+		add_label(msg);
+
+		hbox = add_hbox();
+
+		add_button(hbox, _("Get Support ($10)"),
+			"https://www.paypal.com/cgi-bin/webscr?business=teejeetech@gmail.com&cmd=_xclick&currency_code=USD&amount=10.00&item_name=%s+Support".printf(appname));
+
+		add_button(hbox, _("Issue Tracker"),
+			"https://github.com/teejee2008/%s/issues".printf(appname.down()));
+
+		if (has_wiki){
+			
+			add_button(hbox, _("Wiki"),
+				"https://github.com/teejee2008/%s/wiki".printf(appname.down()));
+		}
+
+		// -----------------------------
+
+		msg = format_heading(_("Feature Requests")) + "   ";
+		
+		msg += _("If you need changes to this application, add your requirements to the issue tracker. You can sponsor the work for your own request, or sponsor an existing request by making a donation with PayPal. Items available for sponsorship are labelled as <i>\"OpenForSponsorship\"</i>, along with an amount for the work involved. You can make a donation for that amount with PayPal, and send me an email with the issue number. Sponsored changes will be implemented in the next release of the application.");
+
+		add_label(msg);
+
+		hbox = add_hbox();
+		
+		add_button(hbox, _("Items for Sponsorship"),
+			"https://github.com/teejee2008/" + appname.down() + "/issues?q=is%3Aissue+is%3Aopen+label%3AOpenForSponsorship");
+			
+		add_button(hbox, _("Sponsor a Feature"),
+			"https://www.paypal.com/cgi-bin/webscr?business=teejeetech@gmail.com&cmd=_xclick&currency_code=USD&item_name=%s+Sponsor".printf(appname));
+
+		// -----------------------------
+
+		if (has_donation_plugins){
+			
+			msg = format_heading(_("Donation Plugins")) + "   ";
+			
+			msg += _("I sometimes create exclusive plugins to encourage people to contribute. You can make a contribution by translating the application to other languages, by submitting code changes, or by making a donation for $10 with PayPal. Contributors are added to an email distribution list, and plugins are sent by email. These plugins are open-source. You can request the source code after receiving the plugins.");
+
+			add_label(msg);
+
+			hbox = add_hbox();
+			
+			add_button(hbox, _("Donation Plugins"),
+				"https://github.com/teejee2008/%s/wiki/Donation-Features".printf(appname.down()));
+
+			add_button(hbox, _("Get Donation Plugins ($10)"),
+				"https://www.paypal.com/cgi-bin/webscr?business=teejeetech@gmail.com&cmd=_xclick&currency_code=USD&amount=10.00&item_name=%s+Donation+Plugins".printf(appname));
+		}
+		
+		// close window ---------------------------------------------------------
+
+		hbox = add_hbox();
+		
+		var button = new Gtk.Button.with_label(_("Close"));
+		button.margin_top = 12;
+		hbox.add(button);
+		
 		button.clicked.connect(() => {
-			xdg_open("https://www.paypal.com/cgi-bin/webscr?business=teejeetech@gmail.com&cmd=_xclick&currency_code=USD&amount=10&item_name=Polo%20Donation", username);
+			this.destroy();
 		});
-
-		// patreon
-		button = new Gtk.LinkButton.with_label("", _("Become a Patron"));
-		button.set_tooltip_text("https://www.patreon.com/teejeetech");
-		vbox_main.add(button);
-		button.clicked.connect(() => {
-			xdg_open("https://www.patreon.com/teejeetech", username);
-		});
-
-		// issue tracker
-		button = new Gtk.LinkButton.with_label("", _("Issue Tracker ~ Report Issues, Request Features, Ask Questions"));
-		button.set_tooltip_text("https://github.com/teejee2008/timeshift/issues");
-		vbox_main.add(button);
-		button.clicked.connect(() => {
-			xdg_open("https://github.com/teejee2008/timeshift/issues", username);
-		});
-
-		// wiki
-		button = new Gtk.LinkButton.with_label("", _("Wiki ~ Documentation & Help"));
-		button.set_tooltip_text("https://github.com/teejee2008/timeshift/wiki");
-		vbox_main.add(button);
-		button.clicked.connect(() => {
-			xdg_open("https://github.com/teejee2008/timeshift/wiki", username);
-		});
-
-		// website
-		button = new Gtk.LinkButton.with_label("", "%s ~ %s".printf(_("Website"), "teejeetech.in"));
-		button.set_tooltip_text("http://www.teejeetech.in");
-		vbox_main.add(button);
-		button.clicked.connect(() => {
-			xdg_open("http://www.teejeetech.in", username);
-		});
-
-		//btn_close
-		btn_close = new Button.with_label("  " + _("Close"));
-		hbox_action.add(btn_close);
-
-		btn_close.clicked.connect(()=>{ this.destroy(); });
 
 		this.show_all();
+	}
+
+	private void add_heading(string msg){
+		
+		var label = new Gtk.Label("<span weight=\"bold\" size=\"large\" style=\"italic\">%s</span>".printf(msg));
+		label.wrap = true;
+		label.wrap_mode = Pango.WrapMode.WORD;
+		label.set_use_markup(true);
+		label.max_width_chars = 50;
+		label.xalign = 0.0f;
+		label.margin_top = 12;
+		vbox_main.add(label);
+	}
+	
+	private string format_heading(string msg){
+
+		return "<span weight=\"bold\" size=\"large\" style=\"italic\">%s</span>".printf(msg);
+	}
+
+	private Gtk.Label add_label(string msg){
+
+		var label = new Gtk.Label(msg);
+		label.wrap = true;
+		label.wrap_mode = Pango.WrapMode.WORD;
+		label.set_use_markup(true);
+		label.max_width_chars = 50;
+		label.xalign = 0.0f;
+		//label.margin_bottom = 6;
+
+		var scrolled = new Gtk.ScrolledWindow(null, null);
+		scrolled.hscrollbar_policy = PolicyType.NEVER;
+		scrolled.vscrollbar_policy = PolicyType.NEVER;
+		scrolled.add(label);
+		vbox_main.add(scrolled);
+
+		return label;
+	}
+
+	private Gtk.ButtonBox add_hbox(){
+
+		var hbox = new Gtk.ButtonBox(Orientation.HORIZONTAL);
+		hbox.set_layout(Gtk.ButtonBoxStyle.CENTER);
+		hbox.set_spacing(6);
+		vbox_main.add(hbox);
+		return hbox;
+	}
+
+	private void add_button(Gtk.Box box, string text, string url){
+
+		var button = new Gtk.Button.with_label(text);
+		button.set_tooltip_text(url);
+		box.add(button);
+		
+		button.clicked.connect(() => {
+			xdg_open(url, username);
+		});
+	}
+
+	private void add_link_button(Gtk.Box box, string text, string url){
+
+		var button = new Gtk.LinkButton.with_label("", text);
+		button.set_tooltip_text(url);
+		box.add(button);
+		
+		button.clicked.connect(() => {
+			xdg_open(url, username);
+		});
 	}
 }
 

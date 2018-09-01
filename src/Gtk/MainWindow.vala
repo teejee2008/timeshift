@@ -917,11 +917,8 @@ class MainWindow : Gtk.Window{
 
 	public void btn_donate_clicked(){
 		
-		var dialog = new DonationWindow();
-		dialog.set_transient_for(this);
+		var dialog = new DonationWindow(this);
 		dialog.show_all();
-		dialog.run();
-		dialog.destroy();
 	}
 
 	private void btn_about_clicked (){

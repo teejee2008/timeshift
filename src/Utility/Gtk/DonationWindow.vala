@@ -36,24 +36,26 @@ public class DonationWindow : Gtk.Window {
 	private Gtk.Box vbox_main;
 	private string username = "";
 	private string appname = "Timeshift";
-	private bool has_donation_plugins = false;
+	private bool has_donation_plugins = true;
 	private bool has_wiki = false;
 
 	public DonationWindow(Gtk.Window window) {
 
-		set_title("");
+		set_title(_("Donate"));
+		
 		set_transient_for(window);
+		set_destroy_with_parent(true);
+		
 		window_position = WindowPosition.CENTER_ON_PARENT;
-		set_destroy_with_parent (true);
-		set_modal (true);
-		set_deletable(true);
-		set_skip_taskbar_hint(false);
-		set_default_size (500, 400);
 
-		//vbox_main
-		vbox_main = new Gtk.Box(Orientation.VERTICAL, 0);
-		vbox_main.margin = 6;
-		vbox_main.spacing = 6;
+		set_modal(true);
+		set_resizable(false);
+		set_deletable(true);
+
+		// vbox_main
+		vbox_main = new Gtk.Box(Orientation.VERTICAL, 12);
+		vbox_main.margin = 12;
+
 		this.add(vbox_main);
 		
 		if (get_user_id_effective() == 0){
@@ -68,16 +70,19 @@ public class DonationWindow : Gtk.Window {
 
 		var hbox = add_hbox();
 		
-		add_button(hbox, _("Donate (5$)"),
+		add_button(hbox, _("Donate ($5)"),
 			"https://www.paypal.com/cgi-bin/webscr?business=teejeetech@gmail.com&cmd=_xclick&currency_code=USD&amount=5.00&item_name=%s+Donation".printf(appname));
 
 		add_button(hbox, _("Become a Patron"),
 			"https://www.patreon.com/bePatron?u=3059450");
 
+		msg = _("This application was created for my personal use. I work on it during my free time based on my requirements and interest. It is distributed in the hope that it may be useful, but without any warranty.");
 		
-		msg = _("This application was created for my personal use. I work on it during my free time based on my requirements and interest. It is distributed in the hope that it may be useful. Since this is a free application, it is not possible for me to spend additional time providing free support to individual users. If you need changes in this application, consider making a donation to sponsor the work, or get involved with the development and contribute. See sections below for more info.");
+		add_label(msg);
+
+		msg = _("Since this is a free application, it is not possible for me to spend additional time providing free support to individual users. If you need changes in this application, consider making a donation to sponsor the work, or get involved with the development and contribute. See sections below for more info.");
 		
-		var label = add_label(msg);
+		add_label(msg);
 
 		// -----------------------------
 
@@ -105,7 +110,7 @@ public class DonationWindow : Gtk.Window {
 
 		msg = format_heading(_("Feature Requests")) + "   ";
 		
-		msg += _("If you need changes to this application, add your requirements to the issue tracker. You can sponsor the work for your own request, or sponsor an existing request by making a donation with PayPal. Items available for sponsorship are labelled as <i>\"OpenForSponsorship\"</i>, along with an amount for the work involved. You can make a donation for that amount with PayPal, and send me an email with the issue number. Sponsored changes will be implemented in the next release of the application.");
+		msg += _("If you need changes to this application, add your requirements to the issue tracker. You can sponsor the work for your own request, or sponsor an existing request by making a donation with PayPal. Items available for sponsorship are labelled with an amount for the work involved. You can make a donation for that amount, and send me an email with the issue number. Sponsored changes will be implemented in the next release of the application.");
 
 		add_label(msg);
 
@@ -135,13 +140,13 @@ public class DonationWindow : Gtk.Window {
 			add_button(hbox, _("Get Donation Plugins ($10)"),
 				"https://www.paypal.com/cgi-bin/webscr?business=teejeetech@gmail.com&cmd=_xclick&currency_code=USD&amount=10.00&item_name=%s+Donation+Plugins".printf(appname));
 		}
-		
+
 		// close window ---------------------------------------------------------
 
 		hbox = add_hbox();
 		
 		var button = new Gtk.Button.with_label(_("Close"));
-		button.margin_top = 12;
+		button.margin_top = 24;
 		hbox.add(button);
 		
 		button.clicked.connect(() => {
@@ -154,10 +159,13 @@ public class DonationWindow : Gtk.Window {
 	private void add_heading(string msg){
 		
 		var label = new Gtk.Label("<span weight=\"bold\" size=\"large\" style=\"italic\">%s</span>".printf(msg));
+
+		label.set_use_markup(true);
+		
 		label.wrap = true;
 		label.wrap_mode = Pango.WrapMode.WORD;
-		label.set_use_markup(true);
-		label.max_width_chars = 50;
+		label.max_width_chars = 80;
+		
 		label.xalign = 0.0f;
 		label.margin_top = 12;
 		vbox_main.add(label);
@@ -171,19 +179,17 @@ public class DonationWindow : Gtk.Window {
 	private Gtk.Label add_label(string msg){
 
 		var label = new Gtk.Label(msg);
+		
+		label.set_use_markup(true);
+		
 		label.wrap = true;
 		label.wrap_mode = Pango.WrapMode.WORD;
-		label.set_use_markup(true);
-		label.max_width_chars = 50;
+		label.max_width_chars = 80;
+		
 		label.xalign = 0.0f;
-		//label.margin_bottom = 6;
 
-		var scrolled = new Gtk.ScrolledWindow(null, null);
-		scrolled.hscrollbar_policy = PolicyType.NEVER;
-		scrolled.vscrollbar_policy = PolicyType.NEVER;
-		scrolled.add(label);
-		vbox_main.add(scrolled);
-
+		vbox_main.add(label);
+		
 		return label;
 	}
 
@@ -201,6 +207,8 @@ public class DonationWindow : Gtk.Window {
 		var button = new Gtk.Button.with_label(text);
 		button.set_tooltip_text(url);
 		box.add(button);
+
+		button.set_size_request(200,-1);
 		
 		button.clicked.connect(() => {
 			xdg_open(url, username);

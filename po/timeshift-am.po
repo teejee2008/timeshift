@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: linuxmint\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2018-09-01 16:27+0530\n"
+"POT-Creation-Date: 2018-09-05 21:57+0530\n"
 "PO-Revision-Date: 2017-11-22 15:09+0000\n"
 "Last-Translator: samson <Unknown>\n"
 "Language-Team: Amharic <am@li.org>\n"
@@ -266,7 +266,7 @@ msgstr "ተተኪ አካል"
 msgid "Backup device not specified!"
 msgstr "ተተኪ አካል አልተገለጸም"
 
-#: Utility/Gtk/DonationWindow.vala:74
+#: Utility/Gtk/DonationWindow.vala:79
 msgid "Become a Patron"
 msgstr ""
 
@@ -396,7 +396,7 @@ msgstr "በ ማባዛት ላይ"
 msgid "Cloning system..."
 msgstr "ስርአቱን በ ማባዛት ላይ..."
 
-#: Utility/Gtk/AboutWindow.vala:326 Utility/Gtk/DonationWindow.vala:143
+#: Utility/Gtk/AboutWindow.vala:326 Utility/Gtk/DonationWindow.vala:117
 #: Gtk/RsyncLogBox.vala:266 Gtk/BackupWindow.vala:169
 #: Gtk/BootOptionsWindow.vala:106 Gtk/DeleteWindow.vala:170
 #: Gtk/RestoreWindow.vala:508
@@ -730,19 +730,10 @@ msgstr "ስርጭት"
 msgid "Documentation"
 msgstr "እርዳታ"
 
+#: Utility/Gtk/DonationWindow.vala:43 Utility/Gtk/DonationWindow.vala:76
 #: Gtk/MainWindow.vala:209 Gtk/MainWindow.vala:210
 msgid "Donate"
 msgstr "ይለግሱ"
-
-#: Utility/Gtk/DonationWindow.vala:71
-#, fuzzy
-msgid "Donate (5$)"
-msgstr "ይለግሱ"
-
-#: Utility/Gtk/DonationWindow.vala:124 Utility/Gtk/DonationWindow.vala:132
-#, fuzzy
-msgid "Donation Plugins"
-msgstr "እርዳታ"
 
 #: Utility/Gtk/AboutWindow.vala:465
 msgid "Donations"
@@ -999,7 +990,7 @@ msgstr "አካሉን ማውረድ አልተቻለም"
 msgid "Failed to write file"
 msgstr "ፋይል ላይ መጻፍ አልተቻለም"
 
-#: Utility/Gtk/DonationWindow.vala:106
+#: Utility/Gtk/DonationWindow.vala:105
 msgid "Feature Requests"
 msgstr ""
 
@@ -1104,15 +1095,6 @@ msgstr "GRUB እንደገና አይገጠምም"
 msgid "Generating initramfs..."
 msgstr "initramfs በማመንጨት ላይ..."
 
-#: Utility/Gtk/DonationWindow.vala:135
-msgid "Get Donation Plugins ($10)"
-msgstr ""
-
-#: Utility/Gtk/DonationWindow.vala:92
-#, fuzzy
-msgid "Get Support ($10)"
-msgstr "የ ተደገፈ አይደለም"
-
 #: Console/AppConsole.vala:374
 msgid "Global"
 msgstr "አለም አቀፍ"
@@ -1160,16 +1142,6 @@ msgstr "በየሰአቱ መመልከቻ ፎቶ ማንሳት አልተቻለም!"
 msgid "Hourly snapshots are enabled"
 msgstr "በየሰአቱ መመልከቻ ፎቶ ማንሳት አስችለዋል"
 
-#: Utility/Gtk/DonationWindow.vala:126
-msgid ""
-"I sometimes create exclusive plugins to encourage people to contribute. You "
-"can make a contribution by translating the application to other languages, "
-"by submitting code changes, or by making a donation for $10 with PayPal. "
-"Contributors are added to an email distribution list, and plugins are sent "
-"by email. These plugins are open-source. You can request the source code "
-"after receiving the plugins."
-msgstr ""
-
 #: Gtk/RestoreFinishBox.vala:102
 msgid ""
 "If the restored system fails to boot, then boot from the Live CD/USB, "
@@ -1184,21 +1156,10 @@ msgid ""
 "point!"
 msgstr "እርስዎ እነዚህን ደንቦች የማይቀበሉ ከሆነ: እባክዎን ከዚህ ነጥብ በኋላ አይቀጥሉ!"
 
-#: Utility/Gtk/DonationWindow.vala:65
+#: Utility/Gtk/DonationWindow.vala:70
 msgid ""
-"If you find this application useful, and wish to support its development, "
-"use the button below to make a donation with PayPal."
-msgstr ""
-
-#: Utility/Gtk/DonationWindow.vala:108
-msgid ""
-"If you need changes to this application, add your requirements to the issue "
-"tracker. You can sponsor the work for your own request, or sponsor an "
-"existing request by making a donation with PayPal. Items available for "
-"sponsorship are labelled as <i>\"OpenForSponsorship\"</i>, along with an "
-"amount for the work involved. You can make a donation for that amount with "
-"PayPal, and send me an email with the issue number. Sponsored changes will "
-"be implemented in the next release of the application."
+"If you find this application useful, consider making a donation to support "
+"the development."
 msgstr ""
 
 #: Gtk/ExcludeBox.vala:54
@@ -1230,17 +1191,13 @@ msgstr "ዋጋ የሌለው የ ትእዛዝ መስመር ክርክርክ"
 msgid "Invalid snapshot"
 msgstr "ዋጋ የሌለው የ መመልከቻ ፎቶ"
 
-#: Utility/Gtk/DonationWindow.vala:95
+#: Utility/Gtk/DonationWindow.vala:94
 msgid "Issue Tracker"
 msgstr ""
 
 #: Gtk/ExcludeBox.vala:272
 msgid "Items Not Selected"
 msgstr "እቃዎች አልተመረጡም"
-
-#: Utility/Gtk/DonationWindow.vala:114
-msgid "Items for Sponsorship"
-msgstr ""
 
 #: Gtk/ScheduleBox.vala:283
 msgid "Keep"
@@ -2304,10 +2261,6 @@ msgstr "እንደ ነበር የሚመለሰውን የ መመልከቻ ፎቶ ይ
 msgid "Specify target device"
 msgstr "የታለመውን አካል ይወስኑ"
 
-#: Utility/Gtk/DonationWindow.vala:117
-msgid "Sponsor a Feature"
-msgstr ""
-
 #: Core/SnapshotRepo.vala:480 Gtk/RsyncLogBox.vala:472
 #, c-format
 msgid "Status"
@@ -2432,16 +2385,14 @@ msgstr "የታለመው ክፍልፋይ ያልተደገፈ ንዑስ መጠን �
 msgid "There are no snapshots on this device"
 msgstr "የ መመልከቻ ፎቶ በዚህ አካል የለም"
 
-#: Utility/Gtk/DonationWindow.vala:78
+#: Utility/Gtk/DonationWindow.vala:109
 msgid ""
-"This application was created for my personal use. I work on it during my "
-"free time based on my requirements and interest. It is distributed in the "
-"hope that it may be useful. Since this is a free application, it is not "
-"possible for me to spend additional time providing free support to "
-"individual users. If you need changes in this application, consider making a "
-"donation to sponsor the work, or get involved with the development and "
-"contribute. Simply complaining that someone is not doing your work for you "
-"is not constructive. See sections below for more info."
+"This application was created for my own use in my spare time, and it's not "
+"practical for me to work for free, on every change that is requested. If you "
+"need new features or changes to the application, consider making a donation "
+"to sponsor the work. If you are a developer, consider contributing to the "
+"project, by submitting code changes for issues and features in the issue "
+"tracker."
 msgstr ""
 
 #: Utility/Device.vala:1379
@@ -2452,6 +2403,13 @@ msgstr "ይህ አካል አልተመሰጠረም"
 msgid ""
 "This software comes without absolutely NO warranty and the author takes no "
 "responsibility for any damage arising from the use of this program."
+msgstr ""
+
+#: Utility/Gtk/DonationWindow.vala:66
+msgid ""
+"This software is free for personal and commercial use. It is distributed in "
+"the hope that it is useful but without any warranty. See the GNU General "
+"Public License v2 or later for more information"
 msgstr ""
 
 #: Gtk/MainWindow.vala:1031 Gtk/MainWindow.vala:1042
@@ -2552,14 +2510,10 @@ msgstr "GRUB menu ማሻሻያ..."
 msgid "Updating bootloader configuration..."
 msgstr "የ bootloader ማሰናጅ በ ማሻሻል ላይ..."
 
-#: Utility/Gtk/DonationWindow.vala:86
+#: Utility/Gtk/DonationWindow.vala:88
 msgid ""
 "Use the issue tracker for reporting issues, asking questions, and requesting "
-"features. If you need an immediate response, use the button below to make a "
-"donation for $10 with PayPal. Add your questions to the tracker and send me "
-"an email with the issue number (teejeetech@gmail.com). This option is for "
-"questions you may have about the application, and for help with issues. This "
-"does not cover development work for fixing issues and adding features."
+"features. Please avoid reporting issues by email."
 msgstr ""
 
 #: Utility/Device.vala:1954
@@ -2634,7 +2588,7 @@ msgstr "የ መመልከቻ ፎቶ በየ ሳምንቱ ማንሳት አልተቻ
 msgid "Weekly snapshots are enabled"
 msgstr "የ መመልከቻ ፎቶ በየ ሳምንቱ ማንሳት አስችለዋል"
 
-#: Utility/Gtk/DonationWindow.vala:100
+#: Utility/Gtk/DonationWindow.vala:99
 msgid "Wiki"
 msgstr ""
 
@@ -2728,6 +2682,18 @@ msgstr "rsync ስህተት መልሷል"
 #: Core/SnapshotRepo.vala:831
 msgid "un-tagged"
 msgstr "ምልክት-ያልተደረገበት"
+
+#, fuzzy
+#~ msgid "Donation Plugins"
+#~ msgstr "እርዳታ"
+
+#, fuzzy
+#~ msgid "Donate ($5)"
+#~ msgstr "ይለግሱ"
+
+#, fuzzy
+#~ msgid "Get Support ($10)"
+#~ msgstr "የ ተደገፈ አይደለም"
 
 #~ msgid "Donate with PayPal"
 #~ msgstr "በ PayPal ይለግሱ"

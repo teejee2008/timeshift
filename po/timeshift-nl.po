@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timeshift\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2018-09-01 16:27+0530\n"
+"POT-Creation-Date: 2018-09-05 21:57+0530\n"
 "PO-Revision-Date: 2017-11-03 14:49+0000\n"
 "Last-Translator: Pjotr12345 <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
@@ -277,7 +277,7 @@ msgstr "Reservekopie-apparaat"
 msgid "Backup device not specified!"
 msgstr "Reservekopie-apparaat niet opgegeven."
 
-#: Utility/Gtk/DonationWindow.vala:74
+#: Utility/Gtk/DonationWindow.vala:79
 msgid "Become a Patron"
 msgstr "Word een bijdrager"
 
@@ -411,7 +411,7 @@ msgstr "Klonen"
 msgid "Cloning system..."
 msgstr "Systeem klonen..."
 
-#: Utility/Gtk/AboutWindow.vala:326 Utility/Gtk/DonationWindow.vala:143
+#: Utility/Gtk/AboutWindow.vala:326 Utility/Gtk/DonationWindow.vala:117
 #: Gtk/RsyncLogBox.vala:266 Gtk/BackupWindow.vala:169
 #: Gtk/BootOptionsWindow.vala:106 Gtk/DeleteWindow.vala:170
 #: Gtk/RestoreWindow.vala:508
@@ -751,19 +751,10 @@ msgstr "Distributie"
 msgid "Documentation"
 msgstr "Giften"
 
+#: Utility/Gtk/DonationWindow.vala:43 Utility/Gtk/DonationWindow.vala:76
 #: Gtk/MainWindow.vala:209 Gtk/MainWindow.vala:210
 msgid "Donate"
 msgstr "Doneren"
-
-#: Utility/Gtk/DonationWindow.vala:71
-#, fuzzy
-msgid "Donate (5$)"
-msgstr "Doneren"
-
-#: Utility/Gtk/DonationWindow.vala:124 Utility/Gtk/DonationWindow.vala:132
-#, fuzzy
-msgid "Donation Plugins"
-msgstr "Giften"
 
 #: Utility/Gtk/AboutWindow.vala:465
 msgid "Donations"
@@ -1020,7 +1011,7 @@ msgstr "Kon apparaat niet ontkoppelen."
 msgid "Failed to write file"
 msgstr "Kon bestand niet schrijven"
 
-#: Utility/Gtk/DonationWindow.vala:106
+#: Utility/Gtk/DonationWindow.vala:105
 msgid "Feature Requests"
 msgstr ""
 
@@ -1130,15 +1121,6 @@ msgstr "Grub zal niet worden geherinstalleerd"
 msgid "Generating initramfs..."
 msgstr "initramfs maken..."
 
-#: Utility/Gtk/DonationWindow.vala:135
-msgid "Get Donation Plugins ($10)"
-msgstr ""
-
-#: Utility/Gtk/DonationWindow.vala:92
-#, fuzzy
-msgid "Get Support ($10)"
-msgstr "Niet ondersteund"
-
 #: Console/AppConsole.vala:374
 msgid "Global"
 msgstr "Systeembreed"
@@ -1188,16 +1170,6 @@ msgstr "Uurlijkse momentopname is mislukt."
 msgid "Hourly snapshots are enabled"
 msgstr "Uurlijkse momentopnamen zijn ingeschakeld"
 
-#: Utility/Gtk/DonationWindow.vala:126
-msgid ""
-"I sometimes create exclusive plugins to encourage people to contribute. You "
-"can make a contribution by translating the application to other languages, "
-"by submitting code changes, or by making a donation for $10 with PayPal. "
-"Contributors are added to an email distribution list, and plugins are sent "
-"by email. These plugins are open-source. You can request the source code "
-"after receiving the plugins."
-msgstr ""
-
 #: Gtk/RestoreFinishBox.vala:102
 msgid ""
 "If the restored system fails to boot, then boot from the Live CD/USB, "
@@ -1215,21 +1187,10 @@ msgstr ""
 "Indien deze voorwaarden niet aanvaardbaar voor u zijn, ga dan a.u.b. niet "
 "verder."
 
-#: Utility/Gtk/DonationWindow.vala:65
+#: Utility/Gtk/DonationWindow.vala:70
 msgid ""
-"If you find this application useful, and wish to support its development, "
-"use the button below to make a donation with PayPal."
-msgstr ""
-
-#: Utility/Gtk/DonationWindow.vala:108
-msgid ""
-"If you need changes to this application, add your requirements to the issue "
-"tracker. You can sponsor the work for your own request, or sponsor an "
-"existing request by making a donation with PayPal. Items available for "
-"sponsorship are labelled as <i>\"OpenForSponsorship\"</i>, along with an "
-"amount for the work involved. You can make a donation for that amount with "
-"PayPal, and send me an email with the issue number. Sponsored changes will "
-"be implemented in the next release of the application."
+"If you find this application useful, consider making a donation to support "
+"the development."
 msgstr ""
 
 #: Gtk/ExcludeBox.vala:54
@@ -1261,17 +1222,13 @@ msgstr "Ongeldige argumenten voor de opdrachtregel"
 msgid "Invalid snapshot"
 msgstr "Ongeldige momentopname"
 
-#: Utility/Gtk/DonationWindow.vala:95
+#: Utility/Gtk/DonationWindow.vala:94
 msgid "Issue Tracker"
 msgstr ""
 
 #: Gtk/ExcludeBox.vala:272
 msgid "Items Not Selected"
 msgstr "Niet-geselecteerde elementen"
-
-#: Utility/Gtk/DonationWindow.vala:114
-msgid "Items for Sponsorship"
-msgstr ""
 
 #: Gtk/ScheduleBox.vala:283
 msgid "Keep"
@@ -2418,10 +2375,6 @@ msgstr "Geef terug te zetten momentopname op"
 msgid "Specify target device"
 msgstr "Geef doelapparaat op"
 
-#: Utility/Gtk/DonationWindow.vala:117
-msgid "Sponsor a Feature"
-msgstr ""
-
 #: Core/SnapshotRepo.vala:480 Gtk/RsyncLogBox.vala:472
 #, c-format
 msgid "Status"
@@ -2553,16 +2506,14 @@ msgstr "De doelpartitie heeft een niet-ondersteunde subvolume-indeling."
 msgid "There are no snapshots on this device"
 msgstr "Er zijn geen momentopnamen op dit apparaat"
 
-#: Utility/Gtk/DonationWindow.vala:78
+#: Utility/Gtk/DonationWindow.vala:109
 msgid ""
-"This application was created for my personal use. I work on it during my "
-"free time based on my requirements and interest. It is distributed in the "
-"hope that it may be useful. Since this is a free application, it is not "
-"possible for me to spend additional time providing free support to "
-"individual users. If you need changes in this application, consider making a "
-"donation to sponsor the work, or get involved with the development and "
-"contribute. Simply complaining that someone is not doing your work for you "
-"is not constructive. See sections below for more info."
+"This application was created for my own use in my spare time, and it's not "
+"practical for me to work for free, on every change that is requested. If you "
+"need new features or changes to the application, consider making a donation "
+"to sponsor the work. If you are a developer, consider contributing to the "
+"project, by submitting code changes for issues and features in the issue "
+"tracker."
 msgstr ""
 
 #: Utility/Device.vala:1379
@@ -2577,6 +2528,13 @@ msgstr ""
 "Op deze programmatuur zit beslist geen enkele garantie en de maker aanvaardt "
 "geen enkele verantwoordelijkheid voor welke schade dan ook, die mogelijk "
 "voortvloeit uit het gebruik van dit programma."
+
+#: Utility/Gtk/DonationWindow.vala:66
+msgid ""
+"This software is free for personal and commercial use. It is distributed in "
+"the hope that it is useful but without any warranty. See the GNU General "
+"Public License v2 or later for more information"
+msgstr ""
 
 #: Gtk/MainWindow.vala:1031 Gtk/MainWindow.vala:1042
 msgid "Timeshift is active"
@@ -2679,14 +2637,10 @@ msgstr "GRUB-menu bijwerken..."
 msgid "Updating bootloader configuration..."
 msgstr "Instellingen van opstartlader bijwerken..."
 
-#: Utility/Gtk/DonationWindow.vala:86
+#: Utility/Gtk/DonationWindow.vala:88
 msgid ""
 "Use the issue tracker for reporting issues, asking questions, and requesting "
-"features. If you need an immediate response, use the button below to make a "
-"donation for $10 with PayPal. Add your questions to the tracker and send me "
-"an email with the issue number (teejeetech@gmail.com). This option is for "
-"questions you may have about the application, and for help with issues. This "
-"does not cover development work for fixing issues and adding features."
+"features. Please avoid reporting issues by email."
 msgstr ""
 
 #: Utility/Device.vala:1954
@@ -2763,7 +2717,7 @@ msgstr "Wekelijkse momentopname is mislukt."
 msgid "Weekly snapshots are enabled"
 msgstr "Wekelijkse momentopnamen zijn ingeschakeld"
 
-#: Utility/Gtk/DonationWindow.vala:100
+#: Utility/Gtk/DonationWindow.vala:99
 msgid "Wiki"
 msgstr ""
 
@@ -2862,6 +2816,18 @@ msgstr "rsync meldde een fout"
 #: Core/SnapshotRepo.vala:831
 msgid "un-tagged"
 msgstr "ontmarkeerd"
+
+#, fuzzy
+#~ msgid "Donation Plugins"
+#~ msgstr "Giften"
+
+#, fuzzy
+#~ msgid "Donate ($5)"
+#~ msgstr "Doneren"
+
+#, fuzzy
+#~ msgid "Get Support ($10)"
+#~ msgstr "Niet ondersteund"
 
 #~ msgid ""
 #~ "Did you find this software useful?\n"

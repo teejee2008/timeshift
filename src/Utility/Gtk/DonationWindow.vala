@@ -106,7 +106,7 @@ public class DonationWindow : Gtk.Window {
 
 		add_label(msg);
 		
-		msg = _("If you need changes to this application, consider making a donation to sponsor the work. This application was created for my own use in my spare time, and it's not practical for me to work for free, on changes that you may require. If you are developer, consider contributing to the project by submitting code changes for an issue or feature from the issue tracker.");
+		msg = _("This application was created for my own use in my spare time, and it's not practical for me to work for free, on every change that is requested. If you need new features or changes to the application, consider making a donation to sponsor the work. If you are a developer, consider contributing to the project, by submitting code changes for issues and features in the issue tracker.");
 
 		add_label(msg);
 
@@ -177,7 +177,7 @@ public class DonationWindow : Gtk.Window {
 		button.set_tooltip_text(url);
 		box.add(button);
 
-		button.set_size_request(200,-1);
+		//button.set_size_request(200,-1);
 		
 		button.clicked.connect(() => {
 			xdg_open(url, username);

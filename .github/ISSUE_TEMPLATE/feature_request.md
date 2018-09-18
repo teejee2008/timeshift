@@ -16,6 +16,6 @@ A clear and concise description of any alternative solutions or features you've 
 **Additional context**
 Add any other context or screenshots about the feature request here.
 
-***Consider making a donation to support this project***
+***This is a free application created in my spare time. Consider making a donation to sponsor the work for your request.***
 
 [![](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?business=teejeetech@gmail.com&cmd=_xclick&currency_code=USD&item_name=Timeshift%20Donation)

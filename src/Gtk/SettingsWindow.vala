@@ -45,7 +45,7 @@ class SettingsWindow : Gtk.Window{
 	private UsersBox users_box;
 
 	private uint tmr_init;
-	private int def_width = 500;
+	private int def_width = 640;
 	private int def_height = 500;
 	
 	public SettingsWindow() {

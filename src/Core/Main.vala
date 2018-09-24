@@ -3328,12 +3328,29 @@ public class Main : GLib.Object{
 		sys_home = null;
 
 		foreach(var pi in partitions){
+			if ((app_mode == "")||(LOG_DEBUG)){
+				log_debug("Partition \"%s\" on device \"%s\" : read-only = %s.".printf(
+					pi.name,
+					pi.device, 
+					pi.read_only.to_string()
+				));
+			}
+
+			if ( pi.read_only ) { 
+				continue;
+			}
 			
 			foreach(var mp in pi.mount_points){
 				
 				// skip loop devices - Fedora Live uses loop devices containing ext4-formatted lvm volumes
 				if ((pi.type == "loop") || (pi.has_parent() && (pi.parent.type == "loop"))){
-					continue;
+					if ((app_mode == "")||(LOG_DEBUG)){
+						log_debug("Mount point \"%s\" : read-only = %s.".printf(mp.mount_point, mp.read_only.to_string()));
+					}
+
+					if ( mp.read_only ) { 
+						continue;
+					}
 				}
 
 				if (mp.mount_point == "/"){

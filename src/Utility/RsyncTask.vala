@@ -180,7 +180,7 @@ public class RsyncTask : AsyncTask{
 			//cmd += "ionice -c2 -n7 ";
 		}
 
-		cmd += "rsync -aii";
+		cmd += "ionice -c idle rsync -aii";
 
 		//if (!dry_run){
 		//	cmd += "i";

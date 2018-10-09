@@ -372,7 +372,7 @@ namespace TeeJee.FileSystem{
 			return true;
 		}
 		
-		string cmd = "rm -rf '%s'".printf(escape_single_quote(dir_path));
+		string cmd = "ionice -c idle rm -rf '%s'".printf(escape_single_quote(dir_path));
 		log_debug(cmd);
 		string std_out, std_err;
 		int status = exec_sync(cmd, out std_out, out std_err);
@@ -619,7 +619,7 @@ namespace TeeJee.FileSystem{
 				escape_single_quote(dst_file),
 				escape_single_quote(tar_file));
 				
-			cmd += "rm -f '%s'\n".printf(escape_single_quote(tar_file));
+			cmd += "ionice -c idle rm -f '%s'\n".printf(escape_single_quote(tar_file));
 
 			log_debug(cmd);
 			
@@ -689,7 +689,7 @@ namespace TeeJee.FileSystem{
 			string cmd = "";
 			
 			// gpg cannot overwrite - remove tar file if it exists
-			cmd += "rm -f '%s'\n".printf(escape_single_quote(tar_file));
+			cmd += "ionice -c idle rm -f '%s'\n".printf(escape_single_quote(tar_file));
 			
 			cmd += "gpg --passphrase '%s' -o '%s' --decrypt '%s'\n".printf(
 				password,
@@ -702,7 +702,7 @@ namespace TeeJee.FileSystem{
 				escape_single_quote(tar_file),
 				escape_single_quote(file_parent(dst_file)));
 				
-			cmd += "rm -f '%s'\n".printf(escape_single_quote(tar_file));
+			cmd += "ionice -c idle rm -f '%s'\n".printf(escape_single_quote(tar_file));
 
 			log_debug(cmd);
 			
@@ -834,7 +834,7 @@ namespace TeeJee.FileSystem{
 
 		/* Sync files with rsync */
 
-		string cmd = "rsync -avh";
+		string cmd = "ionice -c idle rsync -avh";
 		cmd += updateExisting ? "" : " --ignore-existing";
 		cmd += deleteExtra ? " --delete" : "";
 		cmd += " '%s'".printf(escape_single_quote(sourceDirectory) + "//");

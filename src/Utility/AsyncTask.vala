@@ -470,7 +470,7 @@ public class RsyncTask : AsyncTask{
 	private string build_script() {
 		var script = new StringBuilder();
 
-		var cmd = "rsync -ai";
+		var cmd = "ionice -c idle rsync -ai";
 
 		if (verbose){
 			cmd += " --verbose";

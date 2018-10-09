@@ -959,7 +959,7 @@ public class SnapshotRepo : GLib.Object{
 		try{
 			var f = File.new_for_path(thr_args1);
 			if(f.query_exists()){
-				cmd = "rm -rf \"%s\"".printf(thr_args1);
+				cmd = "ionice -c idle rm -rf \"%s\"".printf(thr_args1);
 
 				if (LOG_COMMANDS) { log_debug(cmd); }
 
@@ -1039,7 +1039,7 @@ public class SnapshotRepo : GLib.Object{
 			string path = "%s-%s".printf(snapshots_path, tag);
 			var f = File.new_for_path(path);
 			if (f.query_exists()){
-				cmd = "rm -rf \"%s\"".printf(path + "/");
+				cmd = "ionice -c idle rm -rf \"%s\"".printf(path + "/");
 
 				if (LOG_COMMANDS) { log_debug(cmd); }
 

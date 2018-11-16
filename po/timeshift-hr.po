@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: linuxmint\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
 "POT-Creation-Date: 2018-09-05 21:57+0530\n"
-"PO-Revision-Date: 2017-11-06 15:36+0000\n"
+"PO-Revision-Date: 2018-11-16 15:22+0100\n"
 "Last-Translator: gogo <trebelnik2@gmail.com>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "Language: hr\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2018-02-03 14:28+0000\n"
-"X-Generator: Launchpad (build 18544)\n"
+"X-Generator: Poedit 2.0.6\n"
 "X-Launchpad-Export-Date: 2017-11-23 10:47+0000\n"
 "X-Generator: Launchpad (build 18509)\n"
 
@@ -76,6 +76,8 @@ msgstr "<b>Komentari</b> (dvostruko kliknite za uređivanje)"
 msgid ""
 "A maintenance task runs once every hour and creates snapshots as needed."
 msgstr ""
+"Zadatak održavanja pokreće se jednom svakih sat vremena i stvara snimke "
+"sustava po potrebi."
 
 #: Console/AppConsole.vala:699 Console/AppConsole.vala:763
 #: Console/AppConsole.vala:895 Console/AppConsole.vala:990
@@ -177,7 +179,7 @@ msgstr "Drugi primjerak ove aplikacije je pokrenut"
 
 #: Core/Main.vala:253
 msgid "Another instance of timeshift is currently running!"
-msgstr "Drugi primjerak timeshifta je pokrenut"
+msgstr "Drugi primjerak timeshifta je pokrenut!"
 
 #: Console/AppConsole.vala:376
 msgid "Answer YES to all confirmation prompts"
@@ -232,11 +234,12 @@ msgid "BTRFS device is not mounted"
 msgstr "BTRFS uređaj nije pronađen"
 
 #: Gtk/BackupDeviceBox.vala:98
-#, fuzzy
 msgid ""
 "BTRFS snapshots are saved on system partition. Other partitions are not "
 "supported."
-msgstr "Ostale aplikacije (sljedeća stranica)"
+msgstr ""
+"BTRFS snimke sustava su spremljene na vašu particiju sustava. Ostale "
+"particije nisu podržane."
 
 #: Gtk/FinishBox.vala:92
 msgid ""
@@ -363,7 +366,7 @@ msgstr "Promijenjene stavke:"
 
 #: Gtk/RestoreWindow.vala:104
 msgid "Checking Restore Actions (Dry Run)"
-msgstr ""
+msgstr "Provjera radnji obnove (Dry Run)"
 
 #: Core/Main.vala:2732
 msgid "Checking file systems for errors..."
@@ -383,7 +386,6 @@ msgid "Click to edit. Drag and drop to re-order."
 msgstr "Kliknite za uređivanje. Povucite i ispustite za promjenu redoslijeda."
 
 #: Gtk/ExcludeBox.vala:59
-#, fuzzy
 msgid "Click to edit. Drag-drop to re-order."
 msgstr "Kliknite za uređivanje. Povucite i ispustite za promjenu redoslijeda."
 
@@ -425,7 +427,7 @@ msgstr "Komentari"
 
 #: Core/Main.vala:2775 Gtk/RestoreBox.vala:74 Gtk/RestoreBox.vala:187
 msgid "Comparing Files (Dry Run)..."
-msgstr ""
+msgstr "Usklađivanje datoteka (Dry Run)..."
 
 #: Core/Main.vala:2541
 msgid "Comparing files with rsync..."
@@ -442,7 +444,7 @@ msgstr "Završeno s greškama"
 
 #: Gtk/RsyncLogBox.vala:87 Gtk/RestoreWindow.vala:109
 msgid "Confirm Actions"
-msgstr ""
+msgstr "Potvrdi radnje"
 
 #: Console/AppConsole.vala:1069
 #, c-format
@@ -450,7 +452,6 @@ msgid "Continue with restore? (y/n): "
 msgstr "Nastavi obnovu? (d/n): "
 
 #: Utility/Gtk/AboutWindow.vala:425
-#, fuzzy
 msgid "Contributors"
 msgstr "Doprinijeli"
 
@@ -526,9 +527,8 @@ msgstr ""
 "zaštitili svoj sustav"
 
 #: Gtk/SnapshotBackendBox.vala:95
-#, fuzzy
 msgid "Create snapshots using BTRFS"
-msgstr "Stvori snimku sustava koristeći RSYNC"
+msgstr "Stvori snimku sustava koristeći BTRFS"
 
 #: Gtk/SnapshotBackendBox.vala:78
 msgid "Create snapshots using RSYNC tool and hard-links"
@@ -697,12 +697,12 @@ msgstr "Uređaj nije pronađen"
 #: Gtk/BackupDeviceBox.vala:97
 #, c-format
 msgid "Devices displayed above have BTRFS file systems."
-msgstr "Uređaji s Linux datotečnim sustavom"
+msgstr "Uređaji s Linux datotečnim sustavom."
 
 #: Gtk/BackupDeviceBox.vala:104
 #, c-format
 msgid "Devices displayed above have Linux file systems."
-msgstr "Uređaji s Linux datotečnim sustavom"
+msgstr "Uređaji s Linux datotečnim sustavom."
 
 #: Gtk/RestoreDeviceBox.vala:84
 msgid "Devices from which snapshot was created are pre-selected."
@@ -715,6 +715,7 @@ msgstr "Uređaji s Linux datotečnim sustavom"
 #: Gtk/BackupDeviceBox.vala:105
 msgid "Devices with Windows file systems are not supported (NTFS, FAT, etc)."
 msgstr ""
+"Uređaji s Windows datotečnim sustavima nisu podržani (NTFS, FAT, itd.)."
 
 #: Utility/TeeJee.FileSystem.vala:518
 msgid "Dir not found"
@@ -751,7 +752,7 @@ msgstr "Donacije"
 
 #: Gtk/UsersBox.vala:357
 msgid "Enable BTRFS qgroups (recommended)"
-msgstr ""
+msgstr "Omogući BTRFS qgroups (preporučljivo)"
 
 #: Gtk/MainWindow.vala:1052
 msgid "Enable scheduled snapshots to protect your system"
@@ -803,7 +804,7 @@ msgstr "Greška"
 
 #: Gtk/RestoreWindow.vala:488
 msgid "Error running Rsync"
-msgstr ""
+msgstr "Greška Rsync pokretanja"
 
 #: Gtk/SetupWizardWindow.vala:99 Gtk/BackupWindow.vala:82
 msgid "Estimate"
@@ -1002,7 +1003,7 @@ msgstr "Neuspjelo zapisivanje datoteke"
 
 #: Utility/Gtk/DonationWindow.vala:105
 msgid "Feature Requests"
-msgstr ""
+msgstr "Zahtijevane značajke"
 
 #: Gtk/RsyncLogBox.vala:122
 msgid "File (snapshot)"
@@ -1178,6 +1179,8 @@ msgid ""
 "If you find this application useful, consider making a donation to support "
 "the development."
 msgstr ""
+"Ako vam je ova aplikacija korisna, probajte donirati kako bi podržali njen "
+"razvoj."
 
 #: Gtk/ExcludeBox.vala:54
 msgid "Include / Exclude Patterns"
@@ -1210,7 +1213,7 @@ msgstr "Neispravna snimka sustava"
 
 #: Utility/Gtk/DonationWindow.vala:94
 msgid "Issue Tracker"
-msgstr ""
+msgstr "Pratitelj grešaka"
 
 #: Gtk/ExcludeBox.vala:272
 msgid "Items Not Selected"
@@ -1331,7 +1334,7 @@ msgstr "Posljednja snimka sustava"
 
 #: Utility/Gtk/AboutWindow.vala:316 Utility/Gtk/AboutWindow.vala:356
 msgid "License"
-msgstr ""
+msgstr "Licenca"
 
 #: Core/Main.vala:1344
 #, c-format
@@ -1383,7 +1386,7 @@ msgstr "Izbornik"
 
 #: Gtk/UsersBox.vala:354
 msgid "Miscellaneous"
-msgstr ""
+msgstr "Ostalo"
 
 #: Core/Main.vala:235
 msgid "Missing Dependencies"
@@ -1409,7 +1412,7 @@ msgstr "Mjesečno snimanje sustava je omogućeno"
 
 #: Core/Main.vala:1137
 msgid "Monthly snapshot failed!"
-msgstr "Mjesečno snimanje sustava nije uspjelo"
+msgstr "Mjesečno snimanje sustava nije uspjelo!"
 
 #: Core/Main.vala:2113 Core/Main.vala:2146
 msgid "Mount"
@@ -1475,9 +1478,9 @@ msgid "None"
 msgstr "Nepoznato"
 
 #: Core/Subvolume.vala:184
-#, fuzzy, c-format
+#, c-format
 msgid "Not Found"
-msgstr "Direktorij nije pronađen"
+msgstr "Nije pronađeno"
 
 #: Core/SnapshotRepo.vala:683
 msgid "Not Selected"
@@ -1536,7 +1539,7 @@ msgstr "Starija snimka sustava"
 
 #: Gtk/SnapshotListBox.vala:297
 msgid "On demand (manual)"
-msgstr ""
+msgstr "Na zahtjev (ručno)"
 
 #: Core/Main.vala:377 Core/Main.vala:3432 Gtk/RestoreDeviceBox.vala:525
 msgid ""
@@ -1638,7 +1641,7 @@ msgstr "Pričekajte da se snimke sustava obrišu."
 
 #: Gtk/EstimateBox.vala:66
 msgid "Please wait..."
-msgstr ""
+msgstr "Malo pričekajte..."
 
 #: Gtk/RsyncLogBox.vala:188
 msgid "Populating list..."
@@ -1759,6 +1762,8 @@ msgid ""
 "Required for displaying shared and unshared size for snapshots in the main "
 "window"
 msgstr ""
+"Potrebno za prikaz dijeljenih i nedijeljenih veličina za snimke sustava u "
+"glavnom prozoru"
 
 #: Console/AppConsole.vala:362 Gtk/RestoreFinishBox.vala:71
 #: Gtk/RsyncLogBox.vala:377 Gtk/RsyncLogBox.vala:567 Gtk/MainWindow.vala:151
@@ -1767,9 +1772,8 @@ msgid "Restore"
 msgstr "Obnovi"
 
 #: Gtk/UsersBox.vala:329
-#, fuzzy
 msgid "Restore @home subvolume"
-msgstr "Obnovljeni poduređaj sustava"
+msgstr "Obnovi @home poduređaj"
 
 #: Gtk/RestoreWindow.vala:89
 msgid "Restore Device"
@@ -2255,7 +2259,7 @@ msgstr ""
 #: Gtk/ScheduleBox.vala:167
 #, c-format
 msgid "Snapshots are not scheduled at fixed times."
-msgstr "Uređaj snimke sustava nije odabran"
+msgstr "Uređaj snimke sustava nije odabran."
 
 #: Gtk/SnapshotBackendBox.vala:173
 msgid ""
@@ -2290,12 +2294,16 @@ msgid ""
 "Snapshots are saved to /timeshift on selected partition. Other locations are "
 "not supported."
 msgstr ""
+"Snimke sustava su spremljene u /timeshift na odabranoj particiji. Ostale "
+"lokacije nisu podržane."
 
 #: Gtk/BackupDeviceBox.vala:99
 msgid ""
 "Snapshots are saved to /timeshift-btrfs on selected partition. Other "
 "locations are not supported."
 msgstr ""
+"Snimke sustava su spremljene u /timeshift-btrfs na odabranoj particiji. "
+"Ostale lokacije nisu podržane."
 
 #: Gtk/MainWindow.vala:996
 msgid "Snapshots available for restore"
@@ -2364,12 +2372,12 @@ msgstr "Zaustavljeno"
 #: Core/Subvolume.vala:189
 #, c-format
 msgid "Subvolume exists at destination"
-msgstr ""
+msgstr "Poduređaj postoji na odredištu"
 
 #: Gtk/SnapshotListBox.vala:275
-#, fuzzy, c-format
+#, c-format
 msgid "Subvolumes"
-msgstr "Uređaj"
+msgstr "Poduređaji"
 
 #: Gtk/ExcludeAppsBox.vala:135 Gtk/ExcludeBox.vala:258
 #: Gtk/RestoreWindow.vala:120
@@ -2377,9 +2385,8 @@ msgid "Summary"
 msgstr "Sažetak"
 
 #: Utility/Gtk/DonationWindow.vala:84
-#, fuzzy
 msgid "Support"
-msgstr "Nije podržano"
+msgstr "Podržano"
 
 #: Console/AppConsole.vala:377
 msgid "Switch to BTRFS mode (default: config)"
@@ -2445,7 +2452,7 @@ msgstr "Odredišni uređaj je isti kao i uređaj sustava"
 
 #: Core/Main.vala:2051
 msgid "Target device not specified!"
-msgstr "Odredišni uređaj nije odabran"
+msgstr "Odredišni uređaj nije odabran!"
 
 #: Gtk/SnapshotBackendBox.vala:118
 msgid ""
@@ -2487,6 +2494,11 @@ msgid ""
 "project, by submitting code changes for issues and features in the issue "
 "tracker."
 msgstr ""
+"Ova aplikacija je stvorena u moje slobodno vrijeme za vlastitu upotrebu i ne "
+"radi mi se baš besplatno na svaku zahtijevanu promjenu. Ako vam je potrebna "
+"nova značajaka ili promjena u aplikaciji, razmislite o donaciji kako bi "
+"sponzorirali rad. Ako ste razvijatelj, razmislite o doprinosu projektu, "
+"prijavom promjena u kôdu za probleme i nove značajke na pratitelju grešaka."
 
 #: Utility/Device.vala:1379
 msgid "This device is not encrypted"
@@ -2506,6 +2518,9 @@ msgid ""
 "the hope that it is useful but without any warranty. See the GNU General "
 "Public License v2 or later for more information"
 msgstr ""
+"Ova j softver je besplatan za osobnu i komercijalnu upotrebu. Distribuiran "
+"je u nadi da će biti koristan ali bez ikakvog jamstva. Pogledajte GNU Opću "
+"Javnu Licencu inačice 2 ili noviju za više informacija"
 
 #: Gtk/MainWindow.vala:1031 Gtk/MainWindow.vala:1042
 msgid "Timeshift is active"
@@ -2524,7 +2539,7 @@ msgstr ""
 
 #: Utility/Gtk/AboutWindow.vala:457
 msgid "Tools"
-msgstr ""
+msgstr "Alati"
 
 #: Utility/Gtk/AboutWindow.vala:441
 msgid "Translations"
@@ -2612,6 +2627,8 @@ msgid ""
 "Use the issue tracker for reporting issues, asking questions, and requesting "
 "features. Please avoid reporting issues by email."
 msgstr ""
+"Koristite pratitelj grešaka za prijavu problema, pitanja i zahtjeva novih "
+"značajki. Molim vas da izbjegavate prijavu grešaka putem e-pošte."
 
 #: Utility/Device.vala:1954
 #, c-format
@@ -2641,9 +2658,8 @@ msgid "Users"
 msgstr "Korisnici"
 
 #: Gtk/RestoreWindow.vala:114
-#, fuzzy
 msgid "Users Home"
-msgstr "Korisnici"
+msgstr "Osobne mapa"
 
 #: Utility/Device.vala:1931
 #, c-format
@@ -2688,7 +2704,7 @@ msgstr "Tjedno snimanje sustava je omogućeno!"
 
 #: Utility/Gtk/DonationWindow.vala:99
 msgid "Wiki"
-msgstr ""
+msgstr "Wiki"
 
 #: Gtk/BackupFinishBox.vala:63 Gtk/DeleteFinishBox.vala:63
 msgid "With Errors"

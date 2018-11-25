@@ -44,7 +44,9 @@ endif
 
 symbols=$(shell echo "${vte_symbol} ${gtk3_symbol} ${xapp_symbol}")
 
-all:
+all: app-gtk app-console pot
+
+app-gtk:
 
 	#timeshift-gtk
 	valac -X -D'GETTEXT_PACKAGE="${app_name}"' \
@@ -55,6 +57,8 @@ all:
 		--pkg gee-0.8 --pkg json-glib-1.0 \
 		--pkg gtk+-3.0 --pkg vte-2.91 $(xapp_pkg)
 
+app-console:
+
 	#timeshift
 	valac -X -D'GETTEXT_PACKAGE="${app_name}"' \
 		--Xcc="-lm" --Xcc="-O3" ${symbols} --thread \
@@ -63,6 +67,8 @@ all:
 		--pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix \
 		--pkg gee-0.8 --pkg json-glib-1.0 \
 		--pkg gtk+-3.0 --pkg vte-2.91 $(xapp_pkg)
+
+pot:
 
 	# update translation template
 	find . -iname "*.vala" | xargs xgettext \

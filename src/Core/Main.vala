@@ -555,6 +555,7 @@ public class Main : GLib.Object{
 		exclude_list_default.add("/var/log/timeshift/*");
 		exclude_list_default.add("/var/log/timeshift-btrfs/*");
 		exclude_list_default.add("/swapfile");
+		exclude_list_default.add("/snap/*");
 
 		foreach(var entry in FsTabEntry.read_file("/etc/fstab")){
 
@@ -1019,6 +1020,7 @@ public class Main : GLib.Object{
 						}
 						else{
 							update_symlinks = true;
+							repo.load_snapshots();
 						}
 					}
 				}
@@ -1049,6 +1051,7 @@ public class Main : GLib.Object{
 						}
 						else{
 							update_symlinks = true;
+							repo.load_snapshots();
 						}
 					}
 				}
@@ -1079,6 +1082,7 @@ public class Main : GLib.Object{
 						}
 						else{
 							update_symlinks = true;
+							repo.load_snapshots();
 						}
 					}
 				}
@@ -1109,6 +1113,7 @@ public class Main : GLib.Object{
 						}
 						else{
 							update_symlinks = true;
+							repo.load_snapshots();
 						}
 					}
 				}
@@ -1139,6 +1144,7 @@ public class Main : GLib.Object{
 						}
 						else{
 							update_symlinks = true;
+							repo.load_snapshots();
 						}
 					}
 				}

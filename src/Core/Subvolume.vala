@@ -133,7 +133,7 @@ public class Subvolume : GLib.Object{
 		}
 		
 		string cmd = "";
-		string std_out, std_err;
+		string std_out, std_err, subpath;
 		int ret_val;
 
 		if (!dir_exists(path)){ return true; } // ok, item does not exist
@@ -141,6 +141,19 @@ public class Subvolume : GLib.Object{
 		log_msg("%s: %s (Id:%ld)".printf(_("Deleting subvolume"), name, id));
 
 		string options = App.use_option_raw ? "--commit-after" : "";
+		
+		subpath = path_combine(path, name);
+		if (dir_exists(subpath)) { // there is a nested subvol to remove first
+			cmd = "btrfs subvolume delete %s '%s'".printf(options, subpath);
+			log_debug("Deleting nested subvolume in snapshot");
+			log_debug(cmd);
+			ret_val = exec_sync(cmd, out std_out, out std_err);
+			if (ret_val != 0){
+				log_error(std_err);
+				log_error(_("Failed to delete snapshot nested subvolume") + ": '%s'".printf(path));
+				return false;
+			}
+		}
 		
 		cmd = "btrfs subvolume delete %s '%s'".printf(options, path);
 		log_debug(cmd);

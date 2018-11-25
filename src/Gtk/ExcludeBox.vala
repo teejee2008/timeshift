@@ -227,6 +227,7 @@ class ExcludeBox : Gtk.Box{
 
 			if ((pattern != null) && (pattern.strip().length > 0)){
 				treeview_add_item(treeview, pattern); // don't strip
+				Main.first_snapshot_size = 0; //re-calculate
 			}
 		});
 		

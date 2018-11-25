@@ -1020,6 +1020,7 @@ public class Main : GLib.Object{
 						}
 						else{
 							update_symlinks = true;
+							repo.load_snapshots();
 						}
 					}
 				}
@@ -1050,6 +1051,7 @@ public class Main : GLib.Object{
 						}
 						else{
 							update_symlinks = true;
+							repo.load_snapshots();
 						}
 					}
 				}
@@ -1080,6 +1082,7 @@ public class Main : GLib.Object{
 						}
 						else{
 							update_symlinks = true;
+							repo.load_snapshots();
 						}
 					}
 				}
@@ -1110,6 +1113,7 @@ public class Main : GLib.Object{
 						}
 						else{
 							update_symlinks = true;
+							repo.load_snapshots();
 						}
 					}
 				}
@@ -1140,6 +1144,7 @@ public class Main : GLib.Object{
 						}
 						else{
 							update_symlinks = true;
+							repo.load_snapshots();
 						}
 					}
 				}

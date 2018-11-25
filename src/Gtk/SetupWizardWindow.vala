@@ -149,7 +149,7 @@ class SetupWizardWindow : Gtk.Window{
 
 	private bool on_delete_event(Gdk.EventAny event){
 
-		if (!schedule_accepted){
+		if (App.first_run && !schedule_accepted){
 			App.schedule_boot = false;
 			App.schedule_hourly = false;
 			App.schedule_daily = false; // unset
@@ -165,6 +165,8 @@ class SetupWizardWindow : Gtk.Window{
 	private void save_changes(){
 		
 		App.cron_job_update();
+
+		App.first_run = false;
 		
 		//App.check_encrypted_home(this);
 

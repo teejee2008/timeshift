@@ -106,7 +106,7 @@ public class DonationWindow : Gtk.Window {
 
 		add_label(msg);
 		
-		msg = _("This application was created for my own use in my spare time, and it's not practical for me to work for free, on every change that is requested. If you need new features or changes to the application, consider making a donation to sponsor the work. If you are a developer, consider contributing to the project, by submitting code changes for issues and features in the issue tracker.");
+		msg = _("This application was created for my own use in my spare time. It's not practical for me to work for free, on every change that is requested. If you need new features or changes to the application, consider making a donation to sponsor the work. If you are a developer, consider contributing to the project by submitting code changes.");
 
 		add_label(msg);
 

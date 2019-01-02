@@ -702,7 +702,8 @@ public class SnapshotRepo : GLib.Object{
 		
 		DateTime now = new DateTime.now_local();
 		DateTime dt_limit;
-
+		int count_limit;
+		
 		// remove tags from older backups - boot ---------------
 
 		var list = get_snapshots_by_tag("boot");
@@ -721,6 +722,7 @@ public class SnapshotRepo : GLib.Object{
 		string[] levels = { "hourly","daily","weekly","monthly" };
 
 		foreach(string level in levels){
+			
 			list = get_snapshots_by_tag(level);
 
 			if (list.size == 0) { continue; }
@@ -728,26 +730,31 @@ public class SnapshotRepo : GLib.Object{
 			switch (level){
 				case "hourly":
 					dt_limit = now.add_hours(-1 * App.count_hourly);
+					count_limit = App.count_hourly;
 					break;
 				case "daily":
 					dt_limit = now.add_days(-1 * App.count_daily);
+					count_limit = App.count_daily;
 					break;
 				case "weekly":
 					dt_limit = now.add_weeks(-1 * App.count_weekly);
+					count_limit = App.count_weekly;
 					break;
 				case "monthly":
 					dt_limit = now.add_months(-1 * App.count_monthly);
+					count_limit = App.count_monthly;
 					break;
 				default:
 					dt_limit = now.add_years(-1 * 10);
+					count_limit = 100000;
 					break;
 			}
 
-			if (list[0].date.compare(dt_limit) < 0){
+			if ((list[0].date.compare(dt_limit) < 0) && (list.size > count_limit)){
 
 				log_msg(_("Maximum backups exceeded for backup level") + " '%s'".printf(level));
 
-				while (list[0].date.compare(dt_limit) < 0){
+				while ((list[0].date.compare(dt_limit) < 0) && (list.size > count_limit)){
 					list[0].remove_tag(level);
 					log_msg(_("Snapshot") + " '%s' ".printf(list[0].name) + _("un-tagged") + " '%s'".printf(level));
 					list = get_snapshots_by_tag(level);

@@ -750,14 +750,23 @@ public class SnapshotRepo : GLib.Object{
 					break;
 			}
 
-			if ((list[0].date.compare(dt_limit) < 0) && (list.size > count_limit)){
+			if (list.size > count_limit){
 
 				log_msg(_("Maximum backups exceeded for backup level") + " '%s'".printf(level));
 
-				while ((list[0].date.compare(dt_limit) < 0) && (list.size > count_limit)){
-					list[0].remove_tag(level);
-					log_msg(_("Snapshot") + " '%s' ".printf(list[0].name) + _("un-tagged") + " '%s'".printf(level));
-					list = get_snapshots_by_tag(level);
+				int snaps_count = list.size;
+				
+				foreach(var snap in list){
+
+					if (snap.description.strip().length > 0){ continue; } // don't delete snapshots with comments
+					
+					if ((snap.date.compare(dt_limit) < 0) && (snaps_count > count_limit)){
+
+						snap.remove_tag(level);
+						snaps_count--;
+					
+						log_msg(_("Snapshot") + " '%s' ".printf(list[0].name) + _("un-tagged") + " '%s'".printf(level));
+					}
 				}
 			}
 		}

@@ -38,7 +38,7 @@ using TeeJee.Misc;
 public Main App;
 public const string AppName = "Timeshift";
 public const string AppShortName = "timeshift";
-public const string AppVersion = "18.9.1";
+public const string AppVersion = "19.01";
 public const string AppAuthor = "Tony George";
 public const string AppAuthorEmail = "teejeetech@gmail.com";
 

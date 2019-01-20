@@ -76,9 +76,6 @@ public class DonationWindow : Gtk.Window {
 		add_button(hbox, _("Donate"),
 			"https://www.paypal.com/cgi-bin/webscr?business=teejeetech@gmail.com&cmd=_xclick&currency_code=USD&item_name=%s+Donation".printf(appname));
 
-		add_button(hbox, _("Become a Patron"),
-			"https://www.patreon.com/bePatron?u=3059450");
-			
 		// -----------------------------
 
 		msg = format_heading(_("Support")) + "   ";
@@ -99,16 +96,6 @@ public class DonationWindow : Gtk.Window {
 			add_button(hbox, _("Wiki"),
 				"https://github.com/teejee2008/%s/wiki".printf(appname.down()));
 		}
-
-		// -----------------------------
-
-		msg = format_heading(_("Feature Requests")) + "   ";
-
-		add_label(msg);
-		
-		msg = _("This application was created for my own use in my spare time. It's not practical for me to work for free, on every change that is requested. If you need new features or changes to the application, consider making a donation to sponsor the work. If you are a developer, consider contributing to the project by submitting code changes.");
-
-		add_label(msg);
 
 		// close window ---------------------------------------------------------
 

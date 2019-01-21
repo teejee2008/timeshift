@@ -90,7 +90,7 @@ class RestoreFinishBox : Gtk.Box{
 		}
 		else {
 			
-			string bullet = "▰ ";
+			string bullet = "• ";
 
 			if (App.btrfs_mode && App.restore_current_system){
 				msg += bullet + _("Restored subvolumes will become active after system is restarted.") + "\n";

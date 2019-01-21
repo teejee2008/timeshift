@@ -68,7 +68,7 @@ class FinishBox : Gtk.Box{
 	public void refresh(){
 
 		var msg = "";
-		string bullet = "▰ ";
+		string bullet = "• ";
 		
 		if (!show_notes){
 			if (App.scheduled){

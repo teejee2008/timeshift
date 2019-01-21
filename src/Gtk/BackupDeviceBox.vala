@@ -93,14 +93,14 @@ class BackupDeviceBox : Gtk.Box{
 
 		if (App.btrfs_mode){
 			
-			lbl_common.label = "◈ %s\n◈ %s\n◈ %s".printf(
+			lbl_common.label = "<i>• %s\n• %s\n• %s</i>".printf(
 				_("Devices displayed above have BTRFS file systems."),
-				_("BRTFS snapshots are saved on system partition. Other partitions are not supported."),
+				_("BTRFS snapshots are saved on system partition. Other partitions are not supported."),
 				_("Snapshots are saved to /timeshift-btrfs on selected partition. Other locations are not supported.")
 			);
 		}
 		else {
-			lbl_common.label = "◈ %s\n◈ %s\n◈ %s\n◈ %s".printf(
+			lbl_common.label = "<i>• %s\n• %s\n• %s\n• %s</i>".printf(
 				_("Devices displayed above have Linux file systems."),
 				_("Devices with Windows file systems are not supported (NTFS, FAT, etc)."),
 				_("Remote and network locations are not supported."),
@@ -114,7 +114,7 @@ class BackupDeviceBox : Gtk.Box{
 		tv_devices = add_treeview(this);
 		tv_devices.vexpand = true;
 		tv_devices.headers_clickable = true;
-		tv_devices.rules_hint = true;
+		//tv_devices.rules_hint = true;
 		tv_devices.activate_on_single_click = true;
 		//tv_devices.headers_clickable  = true;
 		
@@ -329,11 +329,26 @@ class BackupDeviceBox : Gtk.Box{
 		add(infobar);
 		infobar_location = infobar;
 		
-		var content = (Gtk.Box) infobar.get_content_area ();
+		var content = (Gtk.Box) infobar.get_content_area();
 		var label = add_label(content, "");
 		lbl_infobar_location = label;
 
-		lbl_common = add_label(this, "");
+		// scrolled
+		var scrolled = new Gtk.ScrolledWindow(null, null);
+		scrolled.set_shadow_type (ShadowType.ETCHED_IN);
+		scrolled.hscrollbar_policy = Gtk.PolicyType.NEVER;
+		scrolled.vscrollbar_policy = Gtk.PolicyType.NEVER;
+		scrolled.set_size_request(-1, 100);
+		this.add(scrolled);
+		
+		label = new Gtk.Label("");
+		label.set_use_markup(true);
+		label.xalign = (float) 0.0;
+		label.wrap = true;
+		label.wrap_mode = Pango.WrapMode.WORD;
+		label.margin = 6;
+		scrolled.add(label);
+		lbl_common = label;
 	}
 
 	private void try_change_device(Device dev){
@@ -341,22 +356,38 @@ class BackupDeviceBox : Gtk.Box{
 		log_debug("try_change_device: %s".printf(dev.device));
 		
 		if (dev.type == "disk"){
-			
-			// find first valid partition
+
 			bool found_child = false;
-			foreach (var child in dev.children){
-				if ((App.btrfs_mode && (child.fstype == "btrfs")) || (!App.btrfs_mode && child.has_linux_filesystem())){
-					change_backup_device(child);
-					found_child = true;
-					break;
+
+			if ((App.btrfs_mode && (dev.fstype == "btrfs")) || (!App.btrfs_mode && dev.has_linux_filesystem())){
+				
+				change_backup_device(dev);
+				found_child = true;
+			}
+
+			if (!found_child){
+
+				// find first valid partition
+				
+				foreach (var child in dev.children){
+					
+					if ((App.btrfs_mode && (child.fstype == "btrfs")) || (!App.btrfs_mode && child.has_linux_filesystem())){
+						
+						change_backup_device(child);
+						found_child = true;
+						break;
+					}
 				}
 			}
 			
 			if (!found_child){
+				
 				string msg = _("Selected device does not have Linux partition");
+				
 				if (App.btrfs_mode){
 					msg = _("Selected device does not have BTRFS partition");
 				}
+				
 				lbl_infobar_location.label = "<span weight=\"bold\">%s</span>".printf(msg);
 				infobar_location.message_type = Gtk.MessageType.ERROR;
 				infobar_location.no_show_all = false;
@@ -364,17 +395,19 @@ class BackupDeviceBox : Gtk.Box{
 			}
 		}
 		else if (dev.has_children()){
+			
 			// select the child instead of parent
 			change_backup_device(dev.children[0]);
 		}
 		else if (!dev.has_children()){
+			
 			// select the device
 			change_backup_device(dev);
 		}
 		else {
+			
 			// ask user to select
-			lbl_infobar_location.label = "<span weight=\"bold\">%s</span>".printf(
-				_("Select a partition on this disk"));
+			lbl_infobar_location.label = "<span weight=\"bold\">%s</span>".printf(_("Select a partition on this disk"));
 			infobar_location.message_type = Gtk.MessageType.ERROR;
 			infobar_location.no_show_all = false;
 			infobar_location.show_all();

@@ -178,10 +178,12 @@ public class Device : GLib.Object{
 			case "ext2":
 			case "ext3":
 			case "ext4":
+			case "f2fs":
 			case "reiserfs":
 			case "reiser4":
 			case "xfs":
 			case "jfs":
+			case "zfs":
 			case "btrfs":
 			case "lvm":
 			case "lvm2":
@@ -576,6 +578,112 @@ public class Device : GLib.Object{
 			find_toplevel_parent(list, part);
 		}
 
+		// Changes for "raid5" -------------------------------------------------------------------------
+
+        // Cleanup for raid: remove member disks and double children
+        for (int i = list.size - 1; i >= 0; --i) {
+            if (list[i].type == "raid5") {
+                // This is a raid5 device, lsblk shows one member disk and a partition
+                // as parents and we remove them
+
+                for (int j = i - 1; j >= 0; --j) {
+                    if (list[j].kname == list[i].pkname) {
+                        list.remove_at(j);
+                        list.remove_at(j-1);
+                        --i; // we are removing 2 elements before i
+                        break;
+                    }
+                }
+
+                // Does not have a parent anymore
+                list[i].pkname = "";
+
+                // Its children have to be unique (e.g. when mirroring,
+                // lsblk shows each member partition twice)
+                for (int j = list.size - 1; j > i; --j) {
+                    if (list[j].pkname == list[i].kname) {
+                        for (int k = j - 1; k >= 0; --k) {
+                            if (list[k].kname == list[j].kname) {
+                                list.remove_at(k);
+                                --j; // we are removing an element between i and j
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Some more cleanup: raid are to be seen as disks and need deduplication
+        for (int i = list.size - 1; i >= 0; --i) {
+            if (list[i].type == "raid5") {
+                // It's now a disk
+                list[i].type  = "disk";
+                list[i].model = list[i].name;
+
+                // We remove other copies of the same raid device
+                for (int j = list.size - 1; j >= 0; --j) {
+                    if ((i != j) && (list[j].type == "raid5") && (list[j].kname == list[i].kname)) {
+                        list.remove_at(j);
+                        if (j < i)
+                            --i; // we are removing an element before i
+                    }
+                }
+            }
+        }
+
+        // changes for "dmraid" -------------------------------------------------------------------------
+
+		// Cleanup for dmraid: remove member disks and double children
+		for (int i = list.size - 1; i >= 0; --i) {
+			if (list[i].type == "dmraid") {
+				// This is a dmraid device, lsblk shows one member disk
+				// as parent and we remove it
+
+				for (int j = i - 1; j >= 0; --j) {
+					if (list[j].kname == list[i].pkname) {
+						list.remove_at(j);
+						--i; // we are removing an element before i
+						break;
+					}
+				}
+
+				// Does not have a parent anymore
+				list[i].pkname = "";
+
+				// Its children have to be unique (e.g. when mirroring,
+				// lsblk shows each member partition twice)
+				for (int j = list.size - 1; j > i; --j) {
+					if (list[j].pkname == list[i].kname) {
+						for (int k = j - 1; k >= 0; --k) {
+							if (list[k].kname == list[j].kname) {
+								list.remove_at(k);
+								--j; // we are removing an element between i and j
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// Some more cleanup: dmraid are to be seen as disks and need deduplication
+		for (int i = list.size - 1; i >= 0; --i) {
+			if (list[i].type == "dmraid") {
+				// It's now a disk
+				list[i].type  = "disk";
+				list[i].model = list[i].name;
+
+				// We remove other copies of the same dmraid device
+				for (int j = list.size - 1; j >= 0; --j) {
+					if ((i != j) && (list[j].type == "dmraid") && (list[j].kname == list[i].kname)) {
+						list.remove_at(j);
+						if (j < i)
+							--i; // we are removing an element before i
+					}
+				}
+			}
+		}
+
+
 		//find_toplevel_parent();
 
 		if (lsblk_is_ancient){
@@ -869,6 +977,8 @@ public class Device : GLib.Object{
 
 		for (int i = lines.length - 1; i >= 0; i--){
 
+			bool ignoreEntry = false;
+
 			string line = lines[i].strip();
 			if (line.length == 0) { continue; }
 
@@ -881,12 +991,20 @@ public class Device : GLib.Object{
 			int k = 1;
 			foreach(string val in line.split(" ")){
 				if (val.strip().length == 0){ continue; }
+				if (ignoreEntry){ break; }
 				switch(k++){
 					case 1: //device
 						pi.device = val.strip();
 						break;
 					case 2: //mountpoint
 						mp.mount_point = val.strip().replace("""\040"""," "); // replace space. TODO: other chars?
+
+						// HACK: ignore Docker mounting(?) rootfs on /var/lib/docker
+						if (mp.mount_point.contains("/docker")){
+							ignoreEntry = true;
+							break;
+						}
+
 						if (!mount_list.contains(mp.mount_point)){
 							mount_list.add(mp.mount_point);
 							pi.mount_points.add(mp);
@@ -903,6 +1021,8 @@ public class Device : GLib.Object{
 						break;
 				}
 			}
+
+			if (ignoreEntry) { continue; }
 
 			// resolve device names ----------------
 

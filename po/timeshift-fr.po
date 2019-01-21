@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timeshift\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2018-04-01 13:06+0530\n"
-"PO-Revision-Date: 2017-11-10 17:05+0000\n"
+"POT-Creation-Date: 2018-09-05 21:57+0530\n"
+"PO-Revision-Date: 2018-12-13 12:15+0100\n"
 "Last-Translator: Fr-coord <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "Language: fr\n"
@@ -16,11 +16,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2018-02-03 14:28+0000\n"
-"X-Generator: Launchpad (build 18544)\n"
+"X-Generator: Poedit 2.2\n"
 "X-Launchpad-Export-Date: 2017-11-23 10:47+0000\n"
 "X-Generator: Launchpad (build 18509)\n"
 
-#: Console/AppConsole.vala:613
+#: Console/AppConsole.vala:614
 #, c-format
 msgid ""
 "\n"
@@ -34,12 +34,12 @@ msgstr ""
 msgid "%d snapshots, %s free"
 msgstr "%d instantanés, %s libre"
 
-#: Console/AppConsole.vala:914
+#: Console/AppConsole.vala:915
 #, c-format
 msgid "'%s' will be on '%s'"
 msgstr "'%s' sera sur '%s'"
 
-#: Console/AppConsole.vala:911
+#: Console/AppConsole.vala:912
 #, c-format
 msgid "'%s' will be on root device"
 msgstr "'%s' sera sur le périphérique racine"
@@ -52,19 +52,19 @@ msgstr "(Ré)installer GRUB2 sur :"
 msgid "** Uninstalled Timeshift BTRFS **"
 msgstr "** Timeshift BTRFS supprimé **"
 
-#: Core/Main.vala:3307
+#: Core/Main.vala:3342
 msgid "/ is mapped to device"
 msgstr "/ est mappé au périphérique"
 
-#: Core/Main.vala:3329
+#: Core/Main.vala:3364
 msgid "/boot is mapped to device"
 msgstr "/boot est mappé au périphérique"
 
-#: Core/Main.vala:3340
+#: Core/Main.vala:3375
 msgid "/boot/efi is mapped to device"
 msgstr "/boot/efi est mappé au périphérique"
 
-#: Core/Main.vala:3318
+#: Core/Main.vala:3353
 msgid "/home is mapped to device"
 msgstr "/home est mappé au périphérique"
 
@@ -72,19 +72,17 @@ msgstr "/home est mappé au périphérique"
 msgid "<b>Comments</b> (double-click to edit)"
 msgstr "<b>Commentaires</b> (double-cliquez pour modifier)"
 
-#: Gtk/ScheduleBox.vala:152
-msgid ""
-"A maintenance task runs once every hour and creates snapshots as needed."
+#: Gtk/ScheduleBox.vala:168
+msgid "A maintenance task runs once every hour and creates snapshots as needed."
 msgstr ""
 
-#: Console/AppConsole.vala:698 Console/AppConsole.vala:762
-#: Console/AppConsole.vala:894 Console/AppConsole.vala:989
-#: Console/AppConsole.vala:1034 Console/AppConsole.vala:1075
-#: Console/AppConsole.vala:1092
+#: Console/AppConsole.vala:699 Console/AppConsole.vala:763 Console/AppConsole.vala:895
+#: Console/AppConsole.vala:990 Console/AppConsole.vala:1035 Console/AppConsole.vala:1076
+#: Console/AppConsole.vala:1094
 msgid "Aborted."
 msgstr "Abandon."
 
-#: Gtk/MainWindow.vala:393
+#: Gtk/MainWindow.vala:386
 msgid "About"
 msgstr "À Propos"
 
@@ -130,22 +128,20 @@ msgstr "Un accès administrateur est requis"
 
 #: Gtk/AppGtk.vala:126
 msgid "Admin access is required to backup and restore system files."
-msgstr ""
-"Un accès administrateur est requis pour créer et restaurer des instantanés."
+msgstr "Un accès administrateur est requis pour créer et restaurer des instantanés."
 
 #: Gtk/RsyncLogBox.vala:363
 msgid "All Files"
 msgstr "Ajouter des fichiers"
 
-#: Gtk/SnapshotBackendBox.vala:183
+#: Gtk/SnapshotBackendBox.vala:188
 msgid ""
-"All files are copied when first snapshot is created. Subsequent snapshots "
-"are incremental. Unchanged files will be hard-linked from the previous "
-"snapshot if available."
+"All files are copied when first snapshot is created. Subsequent snapshots are incremental. Unchanged "
+"files will be hard-linked from the previous snapshot if available."
 msgstr ""
-"Tous les fichiers sont copiés quand le premier instantané est créé. Les "
-"instantanés suivants sont incrémentaux. Les fichiers non-modifiés sont "
-"référencés par des liens durs à partir des instantanés précédents."
+"Tous les fichiers sont copiés quand le premier instantané est créé. Les instantanés suivants sont "
+"incrémentaux. Les fichiers non-modifiés sont référencés par des liens durs à partir des instantanés "
+"précédents."
 
 #: Gtk/ExcludeMessageWindow.vala:130
 msgid "All other files and folders are excluded."
@@ -153,16 +149,14 @@ msgstr "Tous les autres fichiers et dossiers sont exclus"
 
 #: Gtk/RestoreDeviceBox.vala:500
 msgid ""
-"An encrypted device is selected for root file system (/). The boot directory "
-"(/boot) must be mounted on a non-encrypted device for the system to boot "
-"successfully.\n"
+"An encrypted device is selected for root file system (/). The boot directory (/boot) must be mounted "
+"on a non-encrypted device for the system to boot successfully.\n"
 "\n"
-"Either select a non-encrypted device for boot directory or select a non-"
-"encrypted device for root filesystem."
+"Either select a non-encrypted device for boot directory or select a non-encrypted device for root "
+"filesystem."
 msgstr ""
-"Un périphérique crypté est sélectionné pour le système de fichier racine "
-"(/). Le dossier de boot (/boot) doit être monté sur un périphérique non "
-"crypté pour que le système puisse démarrer avec succès."
+"Un périphérique crypté est sélectionné pour le système de fichier racine (/). Le dossier de boot (/"
+"boot) doit être monté sur un périphérique non crypté pour que le système puisse démarrer avec succès."
 
 #: Core/Main.vala:249
 msgid "Another instance of Timeshift is creating a snapshot."
@@ -180,11 +174,11 @@ msgstr "Une autre instance de timeshift est déjà en cours !"
 msgid "Answer YES to all confirmation prompts"
 msgstr "Répondre « OUI » à tous les messages de confirmation"
 
-#: Core/Main.vala:3144
+#: Core/Main.vala:3179
 msgid "App config loaded"
 msgstr "Configuration chargée"
 
-#: Core/Main.vala:3041
+#: Core/Main.vala:3076
 msgid "App config saved"
 msgstr "Configuration sauvegardée"
 
@@ -192,7 +186,7 @@ msgstr "Configuration sauvegardée"
 msgid "Application needs admin access."
 msgstr "Cette application requiert un accès administrateur."
 
-#: Core/Main.vala:3484
+#: Core/Main.vala:3519
 msgid "Application will exit"
 msgstr "Le programme va être fermé"
 
@@ -208,21 +202,15 @@ msgstr "Artistes"
 msgid "Authors"
 msgstr "Auteurs"
 
-#: Gtk/MainWindow.vala:346
+#: Gtk/MainWindow.vala:356
 msgid "Available"
 msgstr "Disponible"
-
-#: Gtk/BackupDeviceBox.vala:98
-msgid ""
-"BRTFS snapshots are saved on system partition. Other partitions are not "
-"supported."
-msgstr ""
 
 #: Gtk/SnapshotBackendBox.vala:94
 msgid "BTRFS"
 msgstr "BTRFS"
 
-#: Gtk/SnapshotBackendBox.vala:160
+#: Gtk/SnapshotBackendBox.vala:165
 msgid "BTRFS Snapshots"
 msgstr "Instantanés BTRFS"
 
@@ -230,44 +218,46 @@ msgstr "Instantanés BTRFS"
 msgid "BTRFS Tools Not Found"
 msgstr "Outils BTRFS non trouvés"
 
-#: Core/Main.vala:2006 Core/Main.vala:2010
+#: Core/Main.vala:2041 Core/Main.vala:2045
 msgid "BTRFS device is not mounted"
 msgstr "Le périphérique BTRFS n'est pas monté"
 
+#: Gtk/BackupDeviceBox.vala:98
+#, fuzzy
+msgid "BTRFS snapshots are saved on system partition. Other partitions are not supported."
+msgstr "Autres applications (page suivante)"
+
 #: Gtk/FinishBox.vala:92
 msgid ""
-"BTRFS snapshots are saved on the same disk from which it is created. If the "
-"system disk fails, snapshots will be lost along with the system. Save "
-"snapshots to an external non-system disk in RSYNC mode to guard against disk "
-"failures."
+"BTRFS snapshots are saved on the same disk from which it is created. If the system disk fails, "
+"snapshots will be lost along with the system. Save snapshots to an external non-system disk in RSYNC "
+"mode to guard against disk failures."
 msgstr ""
-"Les instantanés BTRFS sont enregistrés sur le même disque que celui sur "
-"lequel ils sont créés. Si le disque système plante, les  instantanés seront "
-"perdus en même temps que le système. Enregistrez les  instantanés sur un "
-"disque non système externe en mode RSYNC pour vous protéger des pannes de "
-"disque."
+"Les instantanés BTRFS sont enregistrés sur le même disque que celui sur lequel ils sont créés. Si le "
+"disque système plante, les  instantanés seront perdus en même temps que le système. Enregistrez les  "
+"instantanés sur un disque non système externe en mode RSYNC pour vous protéger des pannes de disque."
 
 #: Utility/Gtk/AboutWindow.vala:349 Utility/Gtk/AboutWindow.vala:381
 msgid "Back"
 msgstr "Retour"
 
-#: Gtk/SetupWizardWindow.vala:90
+#: Gtk/SetupWizardWindow.vala:94
 msgid "Backend"
 msgstr "Backend"
 
-#: Console/AppConsole.vala:356 Gtk/BackupWindow.vala:89
+#: Console/AppConsole.vala:356 Gtk/BackupWindow.vala:92
 msgid "Backup"
 msgstr "Sauvegarder"
 
-#: Core/Main.vala:1982
+#: Core/Main.vala:2017
 msgid "Backup Device"
 msgstr "Périphérique de sauvegarde"
 
-#: Core/Main.vala:1977
+#: Core/Main.vala:2012
 msgid "Backup device not specified!"
 msgstr "Le périphérique de sauvegarde n'a pas été spécifié !"
 
-#: Utility/Gtk/DonationWindow.vala:89
+#: Utility/Gtk/DonationWindow.vala:79
 msgid "Become a Patron"
 msgstr "Devenir mécène"
 
@@ -275,7 +265,7 @@ msgstr "Devenir mécène"
 msgid "Bittorrent Clients"
 msgstr "Clients Bittorrent"
 
-#: Gtk/ScheduleBox.vala:134 Gtk/SnapshotListBox.vala:298
+#: Gtk/ScheduleBox.vala:136 Gtk/SnapshotListBox.vala:298
 msgid "Boot"
 msgstr "Amorçage"
 
@@ -283,18 +273,15 @@ msgstr "Amorçage"
 msgid "Boot device not selected"
 msgstr "Périphérique d'amorçage non sélectionné"
 
-#: Core/Main.vala:982
+#: Core/Main.vala:1017
 msgid "Boot snapshot failed!"
 msgstr "Erreur lors du cliché du secteur d'amorçage"
 
-#: Gtk/ScheduleBox.vala:153
-msgid ""
-"Boot snapshots are created with a delay of 10 minutes after system startup."
-msgstr ""
-"Les instantanés sont créés en utilisant les fonctions intégrées du système "
-"de fichier BTRFS."
+#: Gtk/ScheduleBox.vala:169
+msgid "Boot snapshots are created with a delay of 10 minutes after system startup."
+msgstr "Les instantanés sont créés en utilisant les fonctions intégrées du système de fichier BTRFS."
 
-#: Core/Main.vala:963
+#: Core/Main.vala:998
 msgid "Boot snapshots are enabled"
 msgstr "Cliché du secteur d'amorçage activé"
 
@@ -318,40 +305,37 @@ msgstr "Parcourir les fichiers"
 msgid "Browse selected snapshot"
 msgstr "Parcourir les instantanés sélectionnés"
 
-#: Core/Main.vala:2464
+#: Core/Main.vala:2499
 msgid "Building file list..."
 msgstr "Calcul de la liste de fichiers..."
 
-#: Gtk/SetupWizardWindow.vala:204 Gtk/RestoreWindow.vala:202
-#: Gtk/RestoreWindow.vala:211 Gtk/BackupWindow.vala:175
-#: Gtk/DeleteWindow.vala:185 Utility/GtkHelper.vala:122
-#: Utility/Gtk/CustomMessageDialog.vala:172
+#: Utility/GtkHelper.vala:122 Utility/Gtk/CustomMessageDialog.vala:172 Gtk/SetupWizardWindow.vala:214
+#: Gtk/BackupWindow.vala:178 Gtk/DeleteWindow.vala:187 Gtk/RestoreWindow.vala:206
+#: Gtk/RestoreWindow.vala:215
 msgid "Cancel"
 msgstr "Annuler"
 
-#: Gtk/RestoreWindow.vala:217
+#: Gtk/RestoreWindow.vala:221
 msgid "Cancel restore?"
 msgstr "Abandonner la restauration ?"
 
-#: Gtk/RestoreWindow.vala:219
+#: Gtk/RestoreWindow.vala:223
 msgid ""
-"Cancelling the restore process will leave the target system in an "
-"inconsistent state. The system may fail to boot or you may run into various "
-"issues. After cancelling, you need to restore another snapshot, to bring the "
-"system to a consistent state. Click Yes to confirm."
+"Cancelling the restore process will leave the target system in an inconsistent state. The system may "
+"fail to boot or you may run into various issues. After cancelling, you need to restore another "
+"snapshot, to bring the system to a consistent state. Click Yes to confirm."
 msgstr ""
-"L'annulation de la restauration va laisser le système cible dans un état "
-"incohérent. Le système peut ne peut pas démarrer ou vous pouvez être "
-"confronté à divers problèmes. Après l'annulation, vous devez restaurer un "
-"autre instantané, pour porter le système dans un état cohérent. Cliquez Oui "
-"pour confirmer."
+"L'annulation de la restauration va laisser le système cible dans un état incohérent. Le système peut "
+"ne peut pas démarrer ou vous pouvez être confronté à divers problèmes. Après l'annulation, vous devez "
+"restaurer un autre instantané, pour porter le système dans un état cohérent. Cliquez Oui pour "
+"confirmer."
 
-#: Gtk/MainWindow.vala:563
+#: Gtk/MainWindow.vala:556
 msgid "Cannot Delete Live Snapshot"
 msgstr "Impossible de supprimer l'instantané live"
 
-#: Gtk/RestoreBox.vala:125 Gtk/BackupBox.vala:87 Gtk/RsyncLogBox.vala:380
-#: Gtk/RsyncLogBox.vala:383 Gtk/RsyncLogBox.vala:567 Gtk/RsyncLogBox.vala:588
+#: Gtk/RsyncLogBox.vala:380 Gtk/RsyncLogBox.vala:383 Gtk/RsyncLogBox.vala:567 Gtk/RsyncLogBox.vala:588
+#: Gtk/RestoreBox.vala:125 Gtk/BackupBox.vala:87
 msgid "Changed"
 msgstr "Modifié"
 
@@ -359,24 +343,24 @@ msgstr "Modifié"
 msgid "Changed items:"
 msgstr "Éléments modifiés :"
 
-#: Gtk/RestoreWindow.vala:102
+#: Gtk/RestoreWindow.vala:104
 msgid "Checking Restore Actions (Dry Run)"
 msgstr ""
 
-#: Core/Main.vala:2697
+#: Core/Main.vala:2732
 msgid "Checking file systems for errors..."
 msgstr "Recherche d'erreurs sur les systèmes de fichier en cours..."
 
-#: Gtk/RestoreBox.vala:130 Gtk/BackupBox.vala:92 Gtk/RsyncLogBox.vala:390
+#: Gtk/RsyncLogBox.vala:390 Gtk/RestoreBox.vala:130 Gtk/BackupBox.vala:92
 #, c-format
 msgid "Checksum"
 msgstr "Somme de contrôle"
 
-#: Core/Main.vala:2353
+#: Core/Main.vala:2388
 msgid "Cleaning up..."
 msgstr "Nettoyage en cours..."
 
-#: Gtk/ExcludeBox.vala:84 Gtk/UsersBox.vala:92
+#: Gtk/UsersBox.vala:92 Gtk/ExcludeBox.vala:84
 msgid "Click to edit. Drag and drop to re-order."
 msgstr "Cliquez pour modifier. Glissez-déposez pour réordonner."
 
@@ -397,45 +381,39 @@ msgstr "Cloner le système actuel"
 msgid "Cloning"
 msgstr "Clonage"
 
-#: Core/Main.vala:2747
+#: Core/Main.vala:2782
 msgid "Cloning system..."
 msgstr "Clonage du système..."
 
-#: Gtk/RestoreWindow.vala:504 Gtk/BackupWindow.vala:166
-#: Gtk/BootOptionsWindow.vala:106 Gtk/DeleteWindow.vala:168
-#: Gtk/RsyncLogBox.vala:266 Gtk/SettingsWindow.vala:85
-#: Utility/Gtk/DonationWindow.vala:121 Utility/Gtk/AboutWindow.vala:326
+#: Utility/Gtk/AboutWindow.vala:326 Utility/Gtk/DonationWindow.vala:117 Gtk/RsyncLogBox.vala:266
+#: Gtk/BackupWindow.vala:169 Gtk/BootOptionsWindow.vala:106 Gtk/DeleteWindow.vala:170
+#: Gtk/RestoreWindow.vala:508
 msgid "Close"
 msgstr "Fermer"
 
-#: Gtk/DeleteFinishBox.vala:71 Gtk/RestoreFinishBox.vala:106
-#: Gtk/FinishBox.vala:101 Gtk/BackupFinishBox.vala:70
+#: Gtk/RestoreFinishBox.vala:106 Gtk/BackupFinishBox.vala:70 Gtk/FinishBox.vala:101
+#: Gtk/DeleteFinishBox.vala:71
 msgid "Close window to exit"
 msgstr "Fermez la fenêtre pour quitter"
 
-#: Utility/Gtk/AboutWindow.vala:425
-msgid "Code Contributions"
-msgstr "Contributions"
-
 #: Core/Main.vala:347
 msgid "Commands listed below are not available on this system"
-msgstr ""
-"Les commandes listées ci-dessous ne sont pas disponibles sur ce système"
+msgstr "Les commandes listées ci-dessous ne sont pas disponibles sur ce système"
 
 #: Gtk/SnapshotListBox.vala:224
 msgid "Comments"
 msgstr "Commentaires"
 
-#: Core/Main.vala:2740 Gtk/RestoreBox.vala:74 Gtk/RestoreBox.vala:187
+#: Core/Main.vala:2775 Gtk/RestoreBox.vala:74 Gtk/RestoreBox.vala:187
 msgid "Comparing Files (Dry Run)..."
 msgstr ""
 
-#: Core/Main.vala:2506
+#: Core/Main.vala:2541
 msgid "Comparing files with rsync..."
 msgstr "Synchronisation des fichiers avec rsync en cours..."
 
-#: Gtk/DeleteFinishBox.vala:50 Gtk/RestoreFinishBox.vala:50
-#: Gtk/RestoreFinishBox.vala:75 Gtk/BackupFinishBox.vala:50
+#: Gtk/RestoreFinishBox.vala:50 Gtk/RestoreFinishBox.vala:75 Gtk/BackupFinishBox.vala:50
+#: Gtk/DeleteFinishBox.vala:50
 msgid "Completed"
 msgstr "Terminé"
 
@@ -443,64 +421,66 @@ msgstr "Terminé"
 msgid "Completed With Errors"
 msgstr "Terminé avec des erreurs"
 
-#: Gtk/RestoreWindow.vala:107 Gtk/RsyncLogBox.vala:87
+#: Gtk/RsyncLogBox.vala:87 Gtk/RestoreWindow.vala:109
 msgid "Confirm Actions"
 msgstr ""
 
-#: Console/AppConsole.vala:1068
+#: Console/AppConsole.vala:1069
 #, c-format
 msgid "Continue with restore? (y/n): "
 msgstr "Continuer la restauration ? (y/n pour o/n) : "
 
-#: Console/AppConsole.vala:834 Console/AppConsole.vala:965
+#: Utility/Gtk/AboutWindow.vala:425
+msgid "Contributors"
+msgstr "Contributeurs"
+
+#: Console/AppConsole.vala:835 Console/AppConsole.vala:966
 msgid "Could not find device"
 msgstr "Impossible de trouver le périphérique"
 
-#: Utility/Device.vala:1187
+#: Utility/Device.vala:1307
 #, c-format
 msgid "Could not find file"
 msgstr "Impossible de trouver le fichier"
 
-#: Console/AppConsole.vala:731
+#: Console/AppConsole.vala:732
 msgid "Could not find snapshot"
 msgstr "Impossible de trouver l'instantané"
 
-#: Core/Main.vala:2911
+#: Core/Main.vala:2946
 msgid "Could not find system subvolume"
 msgstr "Impossible de trouver le sous-volume système"
 
-#: Core/Main.vala:2939
+#: Core/Main.vala:2974
 msgid "Could not find system subvolumes for creating pre-restore snapshot"
-msgstr ""
-"Impossible de trouver les sous-volumes système pour créer l'instantané de "
-"pré-restauration"
+msgstr "Impossible de trouver les sous-volumes système pour créer l'instantané de pré-restauration"
 
-#: Gtk/MainWindow.vala:141 Gtk/RsyncLogBox.vala:366 Gtk/RsyncLogBox.vala:571
+#: Gtk/RsyncLogBox.vala:366 Gtk/RsyncLogBox.vala:571 Gtk/MainWindow.vala:141
 #, c-format
 msgid "Create"
 msgstr "Créer"
 
-#: Gtk/BackupWindow.vala:61
+#: Gtk/BackupWindow.vala:62
 msgid "Create Snapshot"
 msgstr "Créer un instantané"
 
-#: Gtk/ScheduleBox.vala:134
+#: Gtk/ScheduleBox.vala:136
 msgid "Create one per boot"
 msgstr "Créer un instantané au démarrage"
 
-#: Gtk/ScheduleBox.vala:98
+#: Gtk/ScheduleBox.vala:100
 msgid "Create one per day"
 msgstr "Créer un instantané par jour"
 
-#: Gtk/ScheduleBox.vala:116
+#: Gtk/ScheduleBox.vala:118
 msgid "Create one per hour"
 msgstr "Créer un instantané par heure"
 
-#: Gtk/ScheduleBox.vala:62
+#: Gtk/ScheduleBox.vala:64
 msgid "Create one per month"
 msgstr "Créer un instantané par mois"
 
-#: Gtk/ScheduleBox.vala:80
+#: Gtk/ScheduleBox.vala:82
 msgid "Create one per week"
 msgstr "Créer un instantané par semaine"
 
@@ -516,24 +496,20 @@ msgstr "Créer un instantané si planifié"
 msgid "Create snapshot of current system"
 msgstr "Créer un instantané du système courant"
 
-#: Gtk/MainWindow.vala:1074
-msgid ""
-"Create snapshots manually or enable scheduled snapshots to protect your "
-"system"
-msgstr ""
-"Créez des instantanés manuellement ou planifiez des instantanés pour "
-"protéger votre système"
+#: Gtk/MainWindow.vala:1058
+msgid "Create snapshots manually or enable scheduled snapshots to protect your system"
+msgstr "Créez des instantanés manuellement ou planifiez des instantanés pour protéger votre système"
 
 #: Gtk/SnapshotBackendBox.vala:95
-msgid "Create snapshots using RSYNC"
-msgstr "Créer un instantané en utilisant RSYNC"
+msgid "Create snapshots using BTRFS"
+msgstr "Créer un instantané en utilisant BTRFS"
 
 #: Gtk/SnapshotBackendBox.vala:78
 msgid "Create snapshots using RSYNC tool and hard-links"
 msgstr "Créer un instantané en utilisant les outils RSYNC et les liens durs"
 
-#: Gtk/RestoreBox.vala:123 Gtk/BackupBox.vala:85 Gtk/RsyncLogBox.vala:366
-#: Gtk/RsyncLogBox.vala:571 Gtk/RsyncLogBox.vala:592
+#: Gtk/RsyncLogBox.vala:366 Gtk/RsyncLogBox.vala:571 Gtk/RsyncLogBox.vala:592 Gtk/RestoreBox.vala:123
+#: Gtk/BackupBox.vala:85
 #, c-format
 msgid "Created"
 msgstr "Créé"
@@ -546,11 +522,11 @@ msgstr "Fichier de contrôle créé"
 msgid "Created directory"
 msgstr "Répertoire créé"
 
-#: Core/Main.vala:2961
+#: Core/Main.vala:2996
 msgid "Created pre-restore snapshot"
 msgstr "Instantané de pré-restauration créé"
 
-#: Core/Main.vala:1464
+#: Core/Main.vala:1499
 msgid "Created subvolume snapshot"
 msgstr "Instantané de sous-volume créé"
 
@@ -558,25 +534,23 @@ msgstr "Instantané de sous-volume créé"
 msgid "Creating Snapshot..."
 msgstr "Création de l'instantané"
 
-#: Core/Main.vala:1402
+#: Core/Main.vala:1437
 msgid "Creating new backup..."
 msgstr "Création d'une nouvelle sauvegarde..."
 
-#: Core/Main.vala:1248
+#: Core/Main.vala:1283
 msgid "Creating new snapshot..."
 msgstr "Création d'un nouvel instantané..."
 
-#: Core/Main.vala:2889
+#: Core/Main.vala:2924
 msgid "Creating pre-restore snapshot from system subvolumes..."
-msgstr ""
-"Création de l'instantané de pré-restauration à partir des sous-volumes "
-"systèmes..."
+msgstr "Création de l'instantané de pré-restauration à partir des sous-volumes systèmes..."
 
 #: Utility/Gtk/AboutWindow.vala:321 Utility/Gtk/AboutWindow.vala:387
 msgid "Credits"
 msgstr "Crédits"
 
-#: Core/Main.vala:3483
+#: Core/Main.vala:3518
 msgid "Critical Error"
 msgstr "Erreur critique"
 
@@ -592,25 +566,24 @@ msgstr "Tâche Cron supprimée"
 msgid "Cron task exists"
 msgstr "La tâche cron existe"
 
-#: Gtk/ScheduleBox.vala:98 Gtk/SnapshotListBox.vala:300
+#: Gtk/ScheduleBox.vala:100 Gtk/SnapshotListBox.vala:300
 msgid "Daily"
 msgstr "Quotidienne"
 
-#: Core/Main.vala:1042
+#: Core/Main.vala:1077
 msgid "Daily snapshot failed!"
 msgstr "Cliché journalier en erreur"
 
-#: Core/Main.vala:1023
+#: Core/Main.vala:1058
 msgid "Daily snapshots are enabled"
 msgstr "Les clichés journaliers sont activés"
 
-#: Core/Main.vala:2076
+#: Core/Main.vala:2111
 msgid "Data will be modified on following devices:"
 msgstr "Les données seront modifiées sur le périphérique suivant :"
 
-#: Console/AppConsole.vala:370 Gtk/MainWindow.vala:161
-#: Gtk/SnapshotListBox.vala:322 Gtk/DeleteWindow.vala:96
-#: Gtk/RsyncLogBox.vala:370 Gtk/RsyncLogBox.vala:575
+#: Console/AppConsole.vala:370 Gtk/RsyncLogBox.vala:370 Gtk/RsyncLogBox.vala:575 Gtk/MainWindow.vala:161
+#: Gtk/SnapshotListBox.vala:322 Gtk/DeleteWindow.vala:98
 #, c-format
 msgid "Delete"
 msgstr "Supprimer"
@@ -631,8 +604,8 @@ msgstr "Supprimer les instantanés sélectionnés"
 msgid "Delete snapshot"
 msgstr "Supprimer l'instantané"
 
-#: Gtk/RestoreBox.vala:124 Gtk/BackupBox.vala:86 Gtk/RsyncLogBox.vala:370
-#: Gtk/RsyncLogBox.vala:575 Gtk/RsyncLogBox.vala:596
+#: Gtk/RsyncLogBox.vala:370 Gtk/RsyncLogBox.vala:575 Gtk/RsyncLogBox.vala:596 Gtk/RestoreBox.vala:124
+#: Gtk/BackupBox.vala:86
 #, c-format
 msgid "Deleted"
 msgstr "Supprimé"
@@ -641,7 +614,7 @@ msgstr "Supprimé"
 msgid "Deleted directory"
 msgstr "Dossier supprimé"
 
-#: Core/Main.vala:2868 Core/Main.vala:2872 Core/Subvolume.vala:154
+#: Core/Subvolume.vala:154 Core/Main.vala:2903 Core/Main.vala:2907
 #, c-format
 msgid "Deleted subvolume"
 msgstr "Sous-volume supprimé"
@@ -659,7 +632,7 @@ msgstr "Suppression du sous-volume"
 msgid "Deluge, Transmission"
 msgstr "Deluge, Transmission"
 
-#: Console/AppConsole.vala:427 Console/AppConsole.vala:542
+#: Console/AppConsole.vala:427 Console/AppConsole.vala:543
 msgid "Description"
 msgstr "Description"
 
@@ -673,24 +646,23 @@ msgstr "Qgroup supprimé"
 msgid "Destroying qgroup"
 msgstr "Suppression du qgroup"
 
-#: Core/SnapshotRepo.vala:76 Core/SnapshotRepo.vala:683
-#: Core/SnapshotRepo.vala:686 Core/Main.vala:2079 Core/Main.vala:2111
-#: Console/AppConsole.vala:454 Console/AppConsole.vala:493
-#: Console/AppConsole.vala:541 Gtk/RestoreDeviceBox.vala:97
-#: Utility/Device.vala:1810 Utility/Device.vala:1820
+#: Utility/Device.vala:1930 Utility/Device.vala:1940 Console/AppConsole.vala:455
+#: Console/AppConsole.vala:494 Console/AppConsole.vala:542 Core/SnapshotRepo.vala:76
+#: Core/SnapshotRepo.vala:683 Core/SnapshotRepo.vala:686 Core/Main.vala:2114 Core/Main.vala:2146
+#: Gtk/RestoreDeviceBox.vala:97
 #, c-format
 msgid "Device"
 msgstr "Périphérique"
 
-#: Utility/Device.vala:1269
+#: Utility/Device.vala:1389
 msgid "Device is unlocked"
 msgstr "Le périphérique est débloqué"
 
-#: Utility/Device.vala:1164 Utility/Device.vala:1226
+#: Utility/Device.vala:1284 Utility/Device.vala:1346
 msgid "Device name is empty!"
 msgstr "Le nom du périphérique est vide !"
 
-#: Core/SnapshotRepo.vala:560 Core/Main.vala:3197 Console/AppConsole.vala:663
+#: Console/AppConsole.vala:664 Core/SnapshotRepo.vala:560 Core/Main.vala:3232
 msgid "Device not found"
 msgstr "Périphérique non trouvé"
 
@@ -715,38 +687,8 @@ msgstr "Périphériques avec des systèmes de fichiers compatibles avec Linux"
 #: Gtk/BackupDeviceBox.vala:105
 msgid "Devices with Windows file systems are not supported (NTFS, FAT, etc)."
 msgstr ""
-
-#: Utility/Gtk/DonationWindow.vala:61
-msgid ""
-"Did you find this software useful?\n"
-"\n"
-"You can buy me a coffee or make a donation via PayPal to show your support. "
-"Or just drop me an email and say Hi. This application is completely free and "
-"will continue to remain that way. Your contributions will help in keeping "
-"this project alive and improving it further.\n"
-"\n"
-"Feel free to send me an email if you find any issues in this application or "
-"if you need any changes. Suggestions and feedback are always welcome.\n"
-"\n"
-"Thanks,\n"
-"Tony George\n"
-"(teejeetech@gmail.com)"
-msgstr ""
-"Vous avez trouvé ce logiciel utile ?\n"
-"\n"
-"Vous pouvez m'offrir un café ou me faire un don via PayPal pour me montrer "
-"votre soutien. Ou vous pouvez simplement m'envoyer un courriel pour me dire "
-"bonjour. Cette application est totalement libre et continuera à rester comme "
-"telle. Vos contributions aideront à garder vivant ce projet et à l'améliorer "
-"encore plus.\n"
-"\n"
-"N'hésitez pas à m'envoyer un courriel si vous trouvez des anomalies dans "
-"cette application ou si vous avez besoin de certains changements. Les "
-"suggestions et les commentaires sont toujours les bienvenus.\n"
-"\n"
-"Merci,\n"
-"Tony George\n"
-"(teejeetech@gmail.com)"
+"Les périphériques avec des systèmes de fichiers compatibles Windowsne sont pas supportés (NTFS, FAT, "
+"etc)."
 
 #: Utility/TeeJee.FileSystem.vala:518
 msgid "Dir not found"
@@ -756,7 +698,7 @@ msgstr "Dossier non trouvé"
 msgid "Directory not found"
 msgstr "Dossier non trouvé"
 
-#: Core/Main.vala:2171 Gtk/RestoreSummaryBox.vala:64
+#: Core/Main.vala:2206 Gtk/RestoreSummaryBox.vala:64
 msgid "Disclaimer"
 msgstr "Clause de non-responsabilité"
 
@@ -772,13 +714,10 @@ msgstr "Distribution"
 msgid "Documentation"
 msgstr "Dons"
 
-#: Gtk/MainWindow.vala:388 Utility/Gtk/DonationWindow.vala:42
+#: Utility/Gtk/DonationWindow.vala:43 Utility/Gtk/DonationWindow.vala:76 Gtk/MainWindow.vala:209
+#: Gtk/MainWindow.vala:210
 msgid "Donate"
 msgstr "Faire un don"
-
-#: Utility/Gtk/DonationWindow.vala:81
-msgid "Donate with PayPal"
-msgstr "Faire un don via PayPal"
 
 #: Utility/Gtk/AboutWindow.vala:465
 msgid "Donations"
@@ -788,15 +727,15 @@ msgstr "Dons"
 msgid "Enable BTRFS qgroups (recommended)"
 msgstr ""
 
-#: Gtk/MainWindow.vala:1068
+#: Gtk/MainWindow.vala:1052
 msgid "Enable scheduled snapshots to protect your system"
 msgstr "Activez les instantanés programmés pour protéger votre système"
 
-#: Core/Main.vala:3995 Core/Main.vala:4035
+#: Core/Main.vala:4030 Core/Main.vala:4070
 msgid "Enabled subvolume quota support"
 msgstr "Prise en charge des quotas de sous-volumes activée"
 
-#: Utility/Device.vala:1333
+#: Utility/Device.vala:1453
 msgid "Encrypted Device"
 msgstr "Périphérique crypté"
 
@@ -804,17 +743,17 @@ msgstr "Périphérique crypté"
 msgid "Encrypted Home Directory"
 msgstr "Dossier personnel encrypté"
 
-#: Console/AppConsole.vala:884
+#: Console/AppConsole.vala:885
 #, c-format
 msgid "Enter device name or number"
 msgstr "Saisissez le nom ou le numéro du périphérique"
 
-#: Console/AppConsole.vala:682 Console/AppConsole.vala:1013
+#: Console/AppConsole.vala:683 Console/AppConsole.vala:1014
 #, c-format
 msgid "Enter device name or number (a=Abort)"
 msgstr "Saisissez le nom ou le numéro du périphérique (a=Abandonner)"
 
-#: Utility/Device.vala:1334
+#: Utility/Device.vala:1454
 #, c-format
 msgid "Enter passphrase to unlock '%s'"
 msgstr "Saisissez la phrase secrète pour débloquer '%s'"
@@ -823,25 +762,24 @@ msgstr "Saisissez la phrase secrète pour débloquer '%s'"
 msgid "Enter path or browse for directory"
 msgstr "Saisissez un chemin ou naviguez jusqu'à un répertoire"
 
-#: Console/AppConsole.vala:754
+#: Console/AppConsole.vala:755
 #, c-format
 msgid "Enter snapshot number (a=Abort, p=Previous, n=Next)"
-msgstr ""
-"Saisissez le nombre d'instantanés (a=Abandonner, p=Précédent, n=Suivant)"
+msgstr "Saisissez le nombre d'instantanés (a=Abandonner, p=Précédent, n=Suivant)"
 
 #: Gtk/ExcludeBox.vala:225
 msgid "Enter the pattern to exclude (Ex: *.mp3, *.bak)"
 msgstr "Saisissez le pattern à exclude (ex : *.mp3, *.bak)"
 
-#: Gtk/RestoreDeviceBox.vala:534 Utility/GtkHelper.vala:18
+#: Utility/GtkHelper.vala:18 Gtk/RestoreDeviceBox.vala:534
 msgid "Error"
 msgstr "Erreur"
 
-#: Gtk/RestoreWindow.vala:484
+#: Gtk/RestoreWindow.vala:488
 msgid "Error running Rsync"
 msgstr ""
 
-#: Gtk/SetupWizardWindow.vala:95 Gtk/BackupWindow.vala:79
+#: Gtk/SetupWizardWindow.vala:99 Gtk/BackupWindow.vala:82
 msgid "Estimate"
 msgstr "Estimation"
 
@@ -849,7 +787,7 @@ msgstr "Estimation"
 msgid "Estimating System Size..."
 msgstr "Estimation de la taille du système..."
 
-#: Core/Main.vala:1244
+#: Core/Main.vala:1279
 msgid "Estimating system size..."
 msgstr "Estimation de l'espace occupé par votre système..."
 
@@ -859,13 +797,13 @@ msgstr "Exemples"
 
 #: Gtk/UsersBox.vala:136
 msgid "Exclude All"
-msgstr "Exclure des applications"
+msgstr "Exclure tout"
 
-#: Gtk/RestoreExcludeBox.vala:55 Gtk/ExcludeAppsBox.vala:51
+#: Gtk/ExcludeAppsBox.vala:51 Gtk/RestoreExcludeBox.vala:55
 msgid "Exclude Application Settings"
 msgstr "Exclure des paramètres d'applications"
 
-#: Gtk/RestoreWindow.vala:97
+#: Gtk/RestoreWindow.vala:99
 msgid "Exclude Apps"
 msgstr "Exclure des applications"
 
@@ -885,7 +823,7 @@ msgstr "Motif d'exclusion"
 msgid "Excluded Directories"
 msgstr "Dossiers exclus"
 
-#: Core/Main.vala:1532
+#: Core/Main.vala:1567
 msgid "Expected values: O, B, H, D, W, M"
 msgstr "Valeurs attendues : O, B, H, D, W, M"
 
@@ -901,15 +839,15 @@ msgstr "Échec lors de la copie du fichier"
 msgid "Failed to create directory"
 msgstr "Échec lors de la création du dossier"
 
-#: Core/Main.vala:1370
+#: Core/Main.vala:1405
 msgid "Failed to create new snapshot"
 msgstr "Erreur lors de la création d'un nouveau cliché"
 
-#: Core/Main.vala:1220
+#: Core/Main.vala:1255
 msgid "Failed to create snapshot"
 msgstr "Échec lors de la création de l'instantané"
 
-#: Core/Main.vala:1460
+#: Core/Main.vala:1495
 msgid "Failed to create subvolume snapshot"
 msgstr "Échec lors de la création de l'instantané de sous-volume"
 
@@ -937,11 +875,11 @@ msgstr "Erreur lors de la suppression de liens symboliques"
 msgid "Failed to destroy qgroup"
 msgstr "Impossible de supprimer le qgroup"
 
-#: Core/Main.vala:4020
+#: Core/Main.vala:4055
 msgid "Failed to enable subvolume quota"
 msgstr "Échec lors de l'activation de quota de sous-volume"
 
-#: Core/Main.vala:3698 Core/Main.vala:3704
+#: Core/Main.vala:3733 Core/Main.vala:3739
 msgid "Failed to estimate system size"
 msgstr "L'estimation de l'espace occupé par votre système a échoué"
 
@@ -949,17 +887,16 @@ msgstr "L'estimation de l'espace occupé par votre système a échoué"
 msgid "Failed to export crontab file"
 msgstr "Impossible d'exporter le fichier crontab"
 
-#: Console/AppConsole.vala:697 Console/AppConsole.vala:761
-#: Console/AppConsole.vala:893 Console/AppConsole.vala:988
-#: Console/AppConsole.vala:1033 Console/AppConsole.vala:1074
+#: Console/AppConsole.vala:698 Console/AppConsole.vala:762 Console/AppConsole.vala:894
+#: Console/AppConsole.vala:989 Console/AppConsole.vala:1034 Console/AppConsole.vala:1075
 msgid "Failed to get input from user in 3 attempts"
 msgstr "Impossible de détecter une saisie après trois tentatives"
 
-#: Utility/Device.vala:615
+#: Utility/Device.vala:723
 msgid "Failed to get partition list"
 msgstr "Impossible de lire la liste des partitions"
 
-#: Core/Main.vala:3280
+#: Core/Main.vala:3315
 msgid "Failed to get partition list."
 msgstr "Erreur lors de la récupération de la liste des partitions"
 
@@ -975,16 +912,15 @@ msgstr "Impossible de monter les périphériques"
 msgid "Failed to move file"
 msgstr "Échec du déplacement du fichier"
 
-#: Core/Main.vala:2926
+#: Core/Main.vala:2961
 msgid "Failed to move system subvolume to snapshot directory"
-msgstr ""
-"Impossible de déplacer le sous-volume système vers le dossier de l'instantané"
+msgstr "Impossible de déplacer le sous-volume système vers le dossier de l'instantané"
 
-#: Core/Main.vala:3828
+#: Core/Main.vala:3863
 msgid "Failed to query subvolume list"
 msgstr "Impossible de trouver la liste de sous-volumes"
 
-#: Core/Main.vala:3912
+#: Core/Main.vala:3947
 msgid "Failed to query subvolume quota"
 msgstr "Impossible de trouver le quota de sous-volume"
 
@@ -1008,7 +944,7 @@ msgstr "Erreur lors de la suppression d'une tâche cron"
 msgid "Failed to remove snapshot"
 msgstr "Impossible de retirer l'instantané"
 
-#: Core/Main.vala:4059
+#: Core/Main.vala:4094
 msgid "Failed to rescan subvolume quota"
 msgstr "Impossible de détecter le quota de sous-volume"
 
@@ -1016,26 +952,30 @@ msgstr "Impossible de détecter le quota de sous-volume"
 msgid "Failed to restore system subvolume"
 msgstr "Impossible de restaurer le sous-volume système"
 
-#: Core/Main.vala:1320
+#: Core/Main.vala:1355
 msgid "Failed to save exclude list"
 msgstr "Impossible de sauvegarder la liste d'exclusion"
 
-#: Utility/Device.vala:1260 Utility/Device.vala:1314 Utility/Device.vala:1339
-#: Utility/Device.vala:1360 Utility/Device.vala:1380
+#: Utility/Device.vala:1380 Utility/Device.vala:1434 Utility/Device.vala:1459 Utility/Device.vala:1480
+#: Utility/Device.vala:1500
 msgid "Failed to unlock device"
 msgstr "Échec lors du déverrouillage du périphérique"
 
-#: Utility/Device.vala:1611
+#: Utility/Device.vala:1731
 msgid "Failed to unmount"
 msgstr "Erreur lors du démontage"
 
-#: Core/Main.vala:3484
+#: Core/Main.vala:3519
 msgid "Failed to unmount device!"
 msgstr "Erreur lors du démontage du périphérique"
 
 #: Utility/TeeJee.FileSystem.vala:175
 msgid "Failed to write file"
 msgstr "Impossible d'écrire le fichier"
+
+#: Utility/Gtk/DonationWindow.vala:105
+msgid "Feature Requests"
+msgstr "Demandes de fonctionnalité"
 
 #: Gtk/RsyncLogBox.vala:122
 msgid "File (snapshot)"
@@ -1057,24 +997,22 @@ msgstr "Décompte des dossiers et fichiers :"
 msgid "File is missing"
 msgstr "Fichier manquant"
 
-#: Utility/CronTab.vala:225 Utility/RsyncTask.vala:296
-#: Utility/TeeJee.FileSystem.vala:205 Utility/TeeJee.FileSystem.vala:547
+#: Utility/TeeJee.FileSystem.vala:205 Utility/TeeJee.FileSystem.vala:547 Utility/CronTab.vala:225
+#: Utility/RsyncTask.vala:296
 msgid "File not found"
 msgstr "Fichier non trouvé"
 
 #: Gtk/ExcludeListSummaryWindow.vala:62
 msgid ""
-"Files &amp; directories matching the patterns below will be excluded. "
-"Patterns starting with a + will include the item instead of excluding."
+"Files &amp; directories matching the patterns below will be excluded. Patterns starting with a + will "
+"include the item instead of excluding."
 msgstr ""
-"Les fichiers et dossiers qui correspondent au pattern seront exclus. Les "
-"patterns qui commencent par a+ incluront les éléments au lieu de les exclure."
+"Les fichiers et dossiers qui correspondent au pattern seront exclus. Les patterns qui commencent par "
+"un + incluront les éléments au lieu de les exclure."
 
-#: Gtk/SnapshotBackendBox.vala:187
+#: Gtk/SnapshotBackendBox.vala:192
 msgid "Files and directories can be excluded to save disk space."
-msgstr ""
-"Des fichiers et dossiers peuvent être exclus pour préserver de l'espace "
-"disque."
+msgstr "Des fichiers et dossiers peuvent être exclus pour préserver de l'espace disque."
 
 #: Gtk/RestoreBox.vala:119
 msgid "Files and directory counts:"
@@ -1084,7 +1022,7 @@ msgstr "Décompte des fichiers et dossiers :"
 msgid "Files matching the following patterns will be excluded"
 msgstr "Les fichiers correspondant à ces motifs seront exclus"
 
-#: Utility/Device.vala:1828
+#: Utility/Device.vala:1948
 #, c-format
 msgid "Filesystem"
 msgstr "Système de fichiers"
@@ -1093,16 +1031,15 @@ msgstr "Système de fichiers"
 msgid "Filter by name or path"
 msgstr "Saisissez le nom ou le numéro du périphérique"
 
-#: Gtk/SettingsWindow.vala:111
+#: Gtk/SettingsWindow.vala:100
 msgid "Filters"
 msgstr "Filtres"
 
-#: Gtk/SetupWizardWindow.vala:195 Gtk/BackupWindow.vala:94
-#: Gtk/DeleteWindow.vala:101
+#: Gtk/SetupWizardWindow.vala:205 Gtk/BackupWindow.vala:97 Gtk/DeleteWindow.vala:103
 msgid "Finish"
 msgstr "Terminer"
 
-#: Gtk/SetupWizardWindow.vala:110 Gtk/RestoreWindow.vala:128
+#: Gtk/SetupWizardWindow.vala:120 Gtk/RestoreWindow.vala:130
 msgid "Finished"
 msgstr "Terminé"
 
@@ -1114,7 +1051,7 @@ msgstr "Firefox, Chromium, Chrome, Opera, Epiphany, Midori"
 msgid "First snapshot requires:"
 msgstr "Le premier instantané nécessite :"
 
-#: Core/Main.vala:2859
+#: Core/Main.vala:2894
 msgid "Found existing pre-restore snapshot"
 msgstr "Instantané de pré-restauration trouvé"
 
@@ -1126,7 +1063,7 @@ msgstr "Disponible"
 msgid "Free space"
 msgstr "Espace disponible"
 
-#: Console/AppConsole.vala:1042
+#: Console/AppConsole.vala:1043
 msgid "GRUB Device"
 msgstr "Périphérique GRUB"
 
@@ -1134,11 +1071,11 @@ msgstr "Périphérique GRUB"
 msgid "GRUB device not selected"
 msgstr "Périphérique GRUB non sélectionné"
 
-#: Console/AppConsole.vala:1047
+#: Console/AppConsole.vala:1048
 msgid "GRUB will NOT be reinstalled"
 msgstr "GRUB ne sera pas réinstallé"
 
-#: Core/Main.vala:2313
+#: Core/Main.vala:2348
 msgid "Generating initramfs..."
 msgstr "Création de l'initramfs..."
 
@@ -1146,20 +1083,19 @@ msgstr "Création de l'initramfs..."
 msgid "Global"
 msgstr "Global"
 
-#: Gtk/RestoreBox.vala:135 Gtk/BackupBox.vala:97 Gtk/RsyncLogBox.vala:400
+#: Gtk/RsyncLogBox.vala:400 Gtk/RestoreBox.vala:135 Gtk/BackupBox.vala:97
 #, c-format
 msgid "Group"
 msgstr "Groupe"
 
 #: Gtk/ExcludeMessageWindow.vala:129
 msgid ""
-"Hidden files and folders are included by default since they contain user-"
-"specific configuration files."
+"Hidden files and folders are included by default since they contain user-specific configuration files."
 msgstr ""
-"Les fichiers et dossiers cachés sont inclus par défaut, ils ont contiennent "
-"votre configuration personnelle."
+"Les fichiers et dossiers cachés sont inclus par défaut, ils ont contiennent votre configuration "
+"personnelle."
 
-#: Gtk/DeleteWindow.vala:176
+#: Gtk/DeleteWindow.vala:178
 msgid "Hide"
 msgstr "Masquer"
 
@@ -1167,7 +1103,7 @@ msgstr "Masquer"
 msgid "Hide rsync output"
 msgstr "Masquer la sortie rsync"
 
-#: Gtk/DeleteWindow.vala:177
+#: Gtk/DeleteWindow.vala:179
 msgid "Hide this window (files will be deleted in background)"
 msgstr "Fermer cette fenêtre (les fichiers seront supprimés en arrière-plan)"
 
@@ -1179,35 +1115,33 @@ msgstr "Dossier personnel"
 msgid "Home Directory"
 msgstr "Dossier personnel"
 
-#: Gtk/ScheduleBox.vala:116 Gtk/SnapshotListBox.vala:299
+#: Gtk/ScheduleBox.vala:118 Gtk/SnapshotListBox.vala:299
 msgid "Hourly"
 msgstr "Horaire"
 
-#: Core/Main.vala:1012
+#: Core/Main.vala:1047
 msgid "Hourly snapshot failed!"
 msgstr "Le cliché horaire a échoué !"
 
-#: Core/Main.vala:993
+#: Core/Main.vala:1028
 msgid "Hourly snapshots are enabled"
 msgstr "Les clichés horaires sont activés"
 
-#: Utility/Gtk/AboutWindow.vala:457
-msgid "Icon Themes & Utilities"
-msgstr ""
-
 #: Gtk/RestoreFinishBox.vala:102
 msgid ""
-"If the restored system fails to boot, then boot from the Live CD/USB, "
-"install Timeshift, and try restoring another snapshot."
+"If the restored system fails to boot, then boot from the Live CD/USB, install Timeshift, and try "
+"restoring another snapshot."
 msgstr ""
-"Si le système restauré échoue au démarrage, démarrez alors avec le CD/USB "
-"Live, installez Timeshift, et essayez de restaurer un autre instantané."
+"Si le système restauré échoue au démarrage, démarrez alors avec le CD/USB Live, installez Timeshift, "
+"et essayez de restaurer un autre instantané."
 
-#: Core/Main.vala:2177
-msgid ""
-"If these terms are not acceptable to you, please do not proceed beyond this "
-"point!"
+#: Core/Main.vala:2212
+msgid "If these terms are not acceptable to you, please do not proceed beyond this point!"
 msgstr "Si vous refusez ces conditions, veuillez ne pas aller pas plus loin !"
+
+#: Utility/Gtk/DonationWindow.vala:70
+msgid "If you find this application useful, consider making a donation to support the development."
+msgstr "Si vous trouvez cette application utile, pensez à faire un don pour soutenir le développement."
 
 #: Gtk/ExcludeBox.vala:54
 msgid "Include / Exclude Patterns"
@@ -1219,13 +1153,13 @@ msgstr "Inclure le sous-volume @home dans les sauvegardes"
 
 #: Gtk/UsersBox.vala:266
 msgid "Include All"
-msgstr "Exclure des applications"
+msgstr "Inclure tout"
 
 #: Gtk/UsersBox.vala:194
 msgid "Include Hidden"
 msgstr "Inclure les éléments cachés"
 
-#: Core/Main.vala:1991
+#: Core/Main.vala:2026
 msgid "Invalid Snapshot"
 msgstr "Instantané non-valide"
 
@@ -1234,42 +1168,38 @@ msgstr "Instantané non-valide"
 msgid "Invalid command line arguments"
 msgstr "Arguments de ligne de commande invalides"
 
-#: Gtk/MainWindow.vala:824
+#: Gtk/MainWindow.vala:817
 msgid "Invalid snapshot"
 msgstr "Snapshot invalide"
 
-#: Utility/Gtk/DonationWindow.vala:97
-msgid "Issue Tracker ~ Report Issues, Request Features, Ask Questions"
-msgstr ""
-"Gestionnaires de problèmes ~ Signaler des problèmes, demander des fonctions, "
-"poser des questions"
+#: Utility/Gtk/DonationWindow.vala:94
+msgid "Issue Tracker"
+msgstr "Rapporter des bugs"
 
 #: Gtk/ExcludeBox.vala:272
 msgid "Items Not Selected"
 msgstr "Éléments non sélectionnés"
 
-#: Gtk/ScheduleBox.vala:269
+#: Gtk/ScheduleBox.vala:283
 msgid "Keep"
 msgstr "Conserver"
 
 #: Gtk/RestoreExcludeBox.vala:112
 msgid ""
-"Keep configuration files for bittorrent clients like Deluge, Transmission, "
-"etc. If un-checked, previous configuration files will be restored from "
-"snapshot."
+"Keep configuration files for bittorrent clients like Deluge, Transmission, etc. If un-checked, "
+"previous configuration files will be restored from snapshot."
 msgstr ""
-"Conserver les fichiers de configuration pour les clients bittorrent tels que "
-"Deluge, Transmission, etc. Si l'option n'est pas cochée, les fichiers de "
-"configuration antérieurs seront restaurés avec l'instantané."
+"Conserver les fichiers de configuration pour les clients bittorrent tels que Deluge, Transmission, "
+"etc. Si l'option n'est pas cochée, les fichiers de configuration antérieurs seront restaurés avec "
+"l'instantané."
 
 #: Gtk/RestoreExcludeBox.vala:85
 msgid ""
-"Keep configuration files for web browsers like Firefox and Chrome. If un-"
-"checked, previous configuration files will be restored from snapshot"
+"Keep configuration files for web browsers like Firefox and Chrome. If un-checked, previous "
+"configuration files will be restored from snapshot"
 msgstr ""
-"Conserver les fichiers de configuration pour les navigateurs tels que "
-"Firefox et Chrome. Si l'option n'est pas cochée, les fichiers de "
-"configuration antérieurs seront restaurés avec l'instantané."
+"Conserver les fichiers de configuration pour les navigateurs tels que Firefox et Chrome. Si l'option "
+"n'est pas cochée, les fichiers de configuration antérieurs seront restaurés avec l'instantané."
 
 #: Gtk/RestoreDeviceBox.vala:244
 msgid "Keep on Root Device"
@@ -1283,89 +1213,87 @@ msgstr "Conserver ce chemin de montage sur le système de fichier racine"
 msgid "LIVE"
 msgstr "LIVE"
 
-#: Console/AppConsole.vala:458 Console/AppConsole.vala:497
-#: Gtk/BackupDeviceBox.vala:254 Utility/Device.vala:1829
+#: Utility/Device.vala:1949 Console/AppConsole.vala:459 Console/AppConsole.vala:498
+#: Gtk/BackupDeviceBox.vala:254
 #, c-format
 msgid "Label"
 msgstr "Libellé"
 
-#: Core/Main.vala:975
+#: Core/Main.vala:1010
 #, c-format
 msgid "Last boot snapshot is %d hours old"
 msgstr "Le dernier cliché du secteur d'amorçage est vieux de %d heures"
 
-#: Core/Main.vala:970
+#: Core/Main.vala:1005
 msgid "Last boot snapshot is older than system start time"
-msgstr ""
-"Le dernier cliché du secteur d'amorçage est plus ancien qu'à l'heure du "
-"démarrage du système"
+msgstr "Le dernier cliché du secteur d'amorçage est plus ancien qu'à l'heure du démarrage du système"
 
-#: Core/Main.vala:966
+#: Core/Main.vala:1001
 msgid "Last boot snapshot not found"
 msgstr "Le dernier cliché du secteur d'amorçage est introuvable"
 
-#: Core/Main.vala:1035
+#: Core/Main.vala:1070
 #, c-format
 msgid "Last daily snapshot is %d hours old"
 msgstr "Le dernier cliché journalier est vieux de %d heures"
 
-#: Core/Main.vala:1030
+#: Core/Main.vala:1065
 msgid "Last daily snapshot is more than 1 day old"
 msgstr "Le dernier cliché journalier date de plus d'un jour"
 
-#: Core/Main.vala:1026
+#: Core/Main.vala:1061
 msgid "Last daily snapshot not found"
 msgstr "Le dernier cliché journalier est introuvable"
 
-#: Core/Main.vala:1005
+#: Core/Main.vala:1040
 #, c-format
 msgid "Last hourly snapshot is %d minutes old"
 msgstr "Le dernier cliché horaire est agé de %d minutes"
 
-#: Core/Main.vala:1000
+#: Core/Main.vala:1035
 msgid "Last hourly snapshot is more than 1 hour old"
 msgstr "Le dernier cliché horaire date de plus d'une heure"
 
-#: Core/Main.vala:996
+#: Core/Main.vala:1031
 msgid "Last hourly snapshot not found"
 msgstr "Le dernier cliché horaire est introuvable"
 
-#: Core/Main.vala:1095
+#: Core/Main.vala:1130
 #, c-format
 msgid "Last monthly snapshot is %d days old"
 msgstr "Le dernier cliché mensuel est vieux de %d jours"
 
-#: Core/Main.vala:1090
+#: Core/Main.vala:1125
 msgid "Last monthly snapshot is more than 1 month old"
 msgstr "Le dernier cliché mensuel est daté de plus d'un mois"
 
-#: Core/Main.vala:1086
+#: Core/Main.vala:1121
 msgid "Last monthly snapshot not found"
 msgstr "Le dernier cliché mensuel est introuvable"
 
-#: Core/Main.vala:1065
+#: Core/Main.vala:1100
 #, c-format
 msgid "Last weekly snapshot is %d days old"
 msgstr "Le dernier cliché hebdomadaire est daté de %d jours"
 
-#: Core/Main.vala:1060
+#: Core/Main.vala:1095
 msgid "Last weekly snapshot is more than 1 week old"
 msgstr "Le dernier cliché hebdomadaire est daté de plus d'une semaine"
 
-#: Core/Main.vala:1056
+#: Core/Main.vala:1091
 msgid "Last weekly snapshot not found"
 msgstr "Le dernier cliché hebdomadaire est introuvable"
 
-#: Gtk/MainWindow.vala:1049
+#: Gtk/MainWindow.vala:1033
 #, c-format
 msgid "Latest snapshot"
 msgstr "Dernier instantané"
 
 #: Utility/Gtk/AboutWindow.vala:316 Utility/Gtk/AboutWindow.vala:356
 msgid "License"
-msgstr ""
+msgstr "License"
 
-#: Core/Main.vala:1309
+#: Core/Main.vala:1344
 #, c-format
 msgid "Linking from snapshot"
 msgstr "Lien à partir de l'instantané"
@@ -1382,16 +1310,15 @@ msgstr "Lister les périphériques"
 msgid "List snapshots"
 msgstr "Lister les instantanés"
 
-#: Gtk/MainWindow.vala:1000
+#: Gtk/MainWindow.vala:984
 msgid "Live USB Mode (Restore Only)"
 msgstr "Mode Live USB (seulement pour la restauration)"
 
-#: Gtk/SetupWizardWindow.vala:100 Gtk/BackupWindow.vala:84
-#: Gtk/SettingsWindow.vala:100
+#: Gtk/SetupWizardWindow.vala:104 Gtk/BackupWindow.vala:87 Gtk/SettingsWindow.vala:89
 msgid "Location"
 msgstr "Emplacement"
 
-#: Gtk/MainWindow.vala:459
+#: Gtk/MainWindow.vala:452
 msgid "Main window closed by user"
 msgstr "Fenêtre principale fermée par l'utilisateur"
 
@@ -1399,7 +1326,7 @@ msgstr "Fenêtre principale fermée par l'utilisateur"
 msgid "Mark for Deletion"
 msgstr "Marquer pour suppression"
 
-#: Gtk/MainWindow.vala:641
+#: Gtk/MainWindow.vala:634
 msgid "Marked for deletion"
 msgstr "Marqué pour suppression"
 
@@ -1407,7 +1334,7 @@ msgstr "Marqué pour suppression"
 msgid "Maximum backups exceeded for backup level"
 msgstr "Nombre de sauvegardes dépassés pour le type de sauvegarde"
 
-#: Gtk/MainWindow.vala:208
+#: Gtk/MainWindow.vala:218
 msgid "Menu"
 msgstr "Menu"
 
@@ -1424,42 +1351,41 @@ msgstr "Dépendances manquantes"
 msgid "Mode"
 msgstr "Mode"
 
-#: Utility/Device.vala:1812
+#: Utility/Device.vala:1932
 #, c-format
 msgid "Model"
 msgstr "Modèle"
 
-#: Gtk/ScheduleBox.vala:62 Gtk/SnapshotListBox.vala:302
+#: Gtk/ScheduleBox.vala:64 Gtk/SnapshotListBox.vala:302
 msgid "Monthly"
 msgstr "Mensuel"
 
-#: Core/Main.vala:1083
+#: Core/Main.vala:1118
 msgid "Monthly snapshot are enabled"
 msgstr "Les clichés mensuels sont activés"
 
-#: Core/Main.vala:1102
+#: Core/Main.vala:1137
 msgid "Monthly snapshot failed!"
 msgstr "Cliché mensuel en erreur"
 
-#: Core/Main.vala:2078 Core/Main.vala:2111
+#: Core/Main.vala:2113 Core/Main.vala:2146
 msgid "Mount"
 msgstr "Monter"
 
-#: Core/Main.vala:2933
+#: Core/Main.vala:2968
 msgid "Moved system subvolume to snapshot directory"
 msgstr "Sous-volume système déplacé vers le dossier de l'instantané"
 
-#: Gtk/MainWindow.vala:800
+#: Gtk/MainWindow.vala:793
 msgid "Multiple snapshots selected"
 msgstr "Plusieurs instantanés sélectionnés"
 
-#: Console/AppConsole.vala:425 Gtk/BackupDeviceBox.vala:235
-#: Gtk/RsyncLogBox.vala:492
+#: Console/AppConsole.vala:425 Gtk/RsyncLogBox.vala:492 Gtk/BackupDeviceBox.vala:235
 msgid "Name"
 msgstr "Nom"
 
-#: Gtk/SetupWizardWindow.vala:187 Gtk/RestoreWindow.vala:194
-#: Gtk/BackupWindow.vala:158 Gtk/DeleteWindow.vala:160
+#: Gtk/SetupWizardWindow.vala:197 Gtk/BackupWindow.vala:161 Gtk/DeleteWindow.vala:162
+#: Gtk/RestoreWindow.vala:198
 msgid "Next"
 msgstr "Suivant"
 
@@ -1471,24 +1397,23 @@ msgstr "Non"
 msgid "No Change"
 msgstr "Aucun changement"
 
-#: Gtk/MainWindow.vala:615 Gtk/DeleteWindow.vala:339
+#: Gtk/MainWindow.vala:608 Gtk/DeleteWindow.vala:341
 msgid "No Snapshots Selected"
 msgstr "Aucun cliché sélectionné"
 
-#: Gtk/MainWindow.vala:1073
+#: Gtk/MainWindow.vala:1057
 msgid "No snapshots available"
 msgstr "Aucun instantané disponible"
 
-#: Core/SnapshotRepo.vala:898 Console/AppConsole.vala:320
-#: Gtk/MainWindow.vala:1017
+#: Console/AppConsole.vala:320 Core/SnapshotRepo.vala:898 Gtk/MainWindow.vala:1001
 msgid "No snapshots found"
 msgstr "Aucun instantané trouvé"
 
-#: Console/AppConsole.vala:740
+#: Console/AppConsole.vala:741
 msgid "No snapshots found on device"
 msgstr "Aucun instantané trouvé sur le périphérique"
 
-#: Gtk/MainWindow.vala:553
+#: Gtk/MainWindow.vala:546
 msgid "No snapshots on device"
 msgstr "Aucun cliché sur ce périphérique"
 
@@ -1496,11 +1421,11 @@ msgstr "Aucun cliché sur ce périphérique"
 msgid "No snapshots on this device"
 msgstr "Aucun instantané sur ce périphérique"
 
-#: Gtk/MainWindow.vala:793
+#: Gtk/MainWindow.vala:786
 msgid "No snapshots selected"
 msgstr "Aucun instantané sélectionné"
 
-#: Gtk/MainWindow.vala:1050 Gtk/MainWindow.vala:1052
+#: Gtk/MainWindow.vala:1034 Gtk/MainWindow.vala:1036
 msgid "None"
 msgstr "Aucun"
 
@@ -1525,69 +1450,64 @@ msgstr "Espace disque insuffisant"
 msgid "Notes"
 msgstr "Remarques"
 
-#: Core/Main.vala:1112
+#: Core/Main.vala:1147
 msgid "Nothing to do!"
 msgstr "Rien à faire!"
 
-#: Console/AppConsole.vala:423 Console/AppConsole.vala:452
-#: Console/AppConsole.vala:491 Console/AppConsole.vala:539
+#: Console/AppConsole.vala:423 Console/AppConsole.vala:453 Console/AppConsole.vala:492
+#: Console/AppConsole.vala:540
 msgid "Num"
 msgstr "Num"
 
-#: Gtk/ScheduleBox.vala:268
+#: Gtk/ScheduleBox.vala:282
 msgid ""
 "Number of snapshots to keep.\n"
 "Older snapshots will be removed once this limit is exceeded."
 msgstr ""
 "Nombre d'instantanés à conserver.\n"
-"Les instantanés les plus anciens seront supprimés une fois cette limite "
-"dépassée."
+"Les instantanés les plus anciens seront supprimés une fois cette limite dépassée."
 
-#: Gtk/ExcludeListSummaryWindow.vala:84 Utility/GtkHelper.vala:121
-#: Utility/Gtk/CustomMessageDialog.vala:167
-#: Utility/Gtk/CustomMessageDialog.vala:171
+#: Utility/GtkHelper.vala:121 Utility/Gtk/CustomMessageDialog.vala:167
+#: Utility/Gtk/CustomMessageDialog.vala:171 Gtk/ExcludeListSummaryWindow.vala:84
 msgid "OK"
 msgstr "Valider"
 
-#: Gtk/SnapshotBackendBox.vala:174
+#: Gtk/SnapshotBackendBox.vala:179
 msgid ""
-"OS must be installed on a BTRFS partition with Ubuntu-type subvolume layout "
-"(@ and @home subvolumes). Other layouts are not supported."
+"OS must be installed on a BTRFS partition with Ubuntu-type subvolume layout (@ and @home subvolumes). "
+"Other layouts are not supported."
 msgstr ""
-"Le système d'exploitation doit être installé sur une partition BTRFS avec "
-"une configuration de sous-volumes de type Ubuntu (sous-volumes @ et @home).  "
-"Les autres configurations ne sont pas prises en charge."
+"Le système d'exploitation doit être installé sur une partition BTRFS avec une configuration de sous-"
+"volumes de type Ubuntu (sous-volumes @ et @home).  Les autres configurations ne sont pas prises en "
+"charge."
 
-#: Core/Main.vala:4166
+#: Core/Main.vala:4201
 msgid "Older log files removed"
 msgstr "Les anciens fichiers de journalisation ont été supprimés"
 
-#: Gtk/MainWindow.vala:1051
+#: Gtk/MainWindow.vala:1035
 msgid "Oldest snapshot"
 msgstr "Instantanés plus vieux"
 
 #: Gtk/SnapshotListBox.vala:297
+#, fuzzy
 msgid "On demand (manual)"
-msgstr ""
+msgstr "Manuellement"
 
-#: Core/Main.vala:377 Core/Main.vala:3397 Gtk/RestoreDeviceBox.vala:525
-msgid ""
-"Only ubuntu-type layouts with @ and @home subvolumes are currently supported."
+#: Core/Main.vala:377 Core/Main.vala:3432 Gtk/RestoreDeviceBox.vala:525
+msgid "Only ubuntu-type layouts with @ and @home subvolumes are currently supported."
 msgstr ""
-"Seules les configurations type ubuntu avec des sous-volumes @ et @home sont "
-"actuellement pris en charge."
+"Seules les configurations type ubuntu avec des sous-volumes @ et @home sont actuellement pris en "
+"charge."
 
-#: Gtk/MainWindow.vala:209
+#: Gtk/MainWindow.vala:219
 msgid "Open Menu"
 msgstr "Ouvrir le menu"
 
-#: Core/Main.vala:3179
-msgid ""
-"Option --snapshot-device should not be specified for creating snapshots in "
-"BTRFS mode"
+#: Core/Main.vala:3214
+msgid "Option --snapshot-device should not be specified for creating snapshots in BTRFS mode"
 msgstr ""
-"Option --snapshot-device ne devrait pas être spécifié pour la création "
-"d'instantanés en mode BTRFS"
+"Option --snapshot-device ne devrait pas être spécifié pour la création d'instantanés en mode BTRFS"
 
 #: Console/AppConsole.vala:350 Gtk/AppGtk.vala:114
 msgid "Options"
@@ -1597,17 +1517,17 @@ msgstr "Options"
 msgid "Other applications (next page)"
 msgstr "Autres applications (page suivante)"
 
-#: Gtk/RestoreBox.vala:134 Gtk/BackupBox.vala:96 Gtk/RsyncLogBox.vala:398
+#: Gtk/RsyncLogBox.vala:398 Gtk/RestoreBox.vala:134 Gtk/BackupBox.vala:96
 #, c-format
 msgid "Owner"
 msgstr "Propriétaire"
 
-#: Utility/Device.vala:1824
+#: Utility/Device.vala:1944
 #, c-format
 msgid "Parent Device"
 msgstr "Périphérique parent"
 
-#: Core/Main.vala:2434 Core/Main.vala:2525 Gtk/RsyncLogBox.vala:222
+#: Core/Main.vala:2469 Core/Main.vala:2560 Gtk/RsyncLogBox.vala:222
 msgid "Parsing log file..."
 msgstr "Lecture du journal"
 
@@ -1624,7 +1544,7 @@ msgstr "Chemin d’accès"
 msgid "Pattern"
 msgstr "Pattern"
 
-#: Gtk/RestoreBox.vala:133 Gtk/BackupBox.vala:95 Gtk/RsyncLogBox.vala:396
+#: Gtk/RsyncLogBox.vala:396 Gtk/RestoreBox.vala:133 Gtk/BackupBox.vala:95
 #, c-format
 msgid "Permissions"
 msgstr "Permissions"
@@ -1633,32 +1553,27 @@ msgstr "Permissions"
 msgid "Please check if you have multiple windows open."
 msgstr "Veuillez vérifier si plusieurs fenêtres sont ouvertes"
 
-#: Core/Main.vala:2209
+#: Core/Main.vala:2244
 msgid "Please do not interrupt the restore process!"
-msgstr "Veuillez ne pas interrompre le processus de restauration"
+msgstr "Veuillez ne pas interrompre le processus de restauration!"
 
 #: Core/Main.vala:348
 msgid "Please install required packages and try running TimeShift again"
-msgstr ""
-"Veuillez installer les paquets nécessaires et essayer de relancer TimeShift"
+msgstr "Veuillez installer les paquets nécessaires et essayer de relancer TimeShift"
 
 #: Gtk/AppGtk.vala:127
 msgid "Please re-run the application as admin (using 'sudo' or 'su')"
-msgstr ""
-"Veuillez relancer l'application en tant qu'admin (en utilisant 'sudo' ou "
-"'su')"
+msgstr "Veuillez relancer l'application en tant qu'admin (en utilisant 'sudo' ou 'su')"
 
 #: Console/AppConsole.vala:103
 msgid "Please run the application as admin (using 'sudo' or 'su')"
-msgstr ""
-"Veuillez lancer l'application en tant qu’administrateur (en utilisant "
-"« sudo » ou « su »)"
+msgstr "Veuillez lancer l'application en tant qu’administrateur (en utilisant « sudo » ou « su »)"
 
-#: Core/Main.vala:2159
+#: Core/Main.vala:2194
 msgid "Please save your work and close all applications."
 msgstr "Veuillez enregistrer votre travail et fermer toutes vos applications."
 
-#: Gtk/MainWindow.vala:695
+#: Gtk/MainWindow.vala:688
 msgid "Please select a snapshot to view the log!"
 msgstr "Veuillez sélectionner un cliché pour afficher le journal !"
 
@@ -1670,25 +1585,25 @@ msgstr "Veuillez sélectionner le périphérique GRUB"
 msgid "Please wait a few minutes and try again."
 msgstr "Veuillez attendre quelques minutes puis essayez de nouveau."
 
-#: Gtk/MainWindow.vala:762
+#: Gtk/MainWindow.vala:755
 msgid "Please wait for snapshots to be deleted."
 msgstr "Veuillez attendre que les instantanés soient supprimés."
 
 #: Gtk/EstimateBox.vala:66
 msgid "Please wait..."
-msgstr ""
+msgstr "Veuillez patienter..."
 
 #: Gtk/RsyncLogBox.vala:188
 msgid "Populating list..."
 msgstr "Génération de la liste ..."
 
-#: Core/Main.vala:1544 Gtk/RestoreBox.vala:88 Gtk/BackupBox.vala:114
-#: Gtk/DeleteBox.vala:68 Gtk/RsyncLogBox.vala:232
+#: Core/Main.vala:1579 Gtk/RsyncLogBox.vala:232 Gtk/DeleteBox.vala:68 Gtk/RestoreBox.vala:88
+#: Gtk/BackupBox.vala:114
 msgid "Preparing..."
 msgstr "Préparation..."
 
-#: Gtk/SetupWizardWindow.vala:179 Gtk/RestoreWindow.vala:186
-#: Gtk/BackupWindow.vala:150 Gtk/DeleteWindow.vala:152
+#: Gtk/SetupWizardWindow.vala:189 Gtk/BackupWindow.vala:153 Gtk/DeleteWindow.vala:154
+#: Gtk/RestoreWindow.vala:190
 msgid "Previous"
 msgstr "Précédent"
 
@@ -1696,60 +1611,58 @@ msgstr "Précédent"
 msgid "Print debug information"
 msgstr "Afficher les informations de débogage"
 
-#: Core/Main.vala:3759
+#: Core/Main.vala:3794
 msgid "Query completed"
 msgstr "Requête terminée"
 
-#: Core/Main.vala:3742
+#: Core/Main.vala:3777
 msgid "Querying subvolume info..."
-msgstr "Requête d'information du sous-volume"
+msgstr "Requête d'information du sous-volume..."
 
 #: Gtk/SnapshotBackendBox.vala:77
 msgid "RSYNC"
 msgstr "RSYNC"
 
-#: Gtk/SnapshotBackendBox.vala:179
+#: Gtk/SnapshotBackendBox.vala:184
 msgid "RSYNC Snapshots"
 msgstr "Instantanés RSYNC"
 
 #: Gtk/BootOptionsBox.vala:137
 msgid ""
-"Re-generates initramfs for all installed kernels. This is generally not "
-"needed. Select this only if the restored system fails to boot."
+"Re-generates initramfs for all installed kernels. This is generally not needed. Select this only if "
+"the restored system fails to boot."
 msgstr ""
-"Régénère initramfs pour tous les noyaux installés. Ce n'est généralement pas "
-"nécessaire. Sélectionnez-le seulement si le système restauré échoue au "
-"démarrage."
+"Régénère initramfs pour tous les noyaux installés. Ce n'est généralement pas nécessaire. Sélectionnez-"
+"le seulement si le système restauré échoue au démarrage."
 
-#: Console/AppConsole.vala:982
+#: Console/AppConsole.vala:983
 #, c-format
 msgid "Re-install GRUB2 bootloader?"
 msgstr "Réinstaller le chargeur de démarrage GRUB2?"
 
-#: Core/Main.vala:2272
+#: Core/Main.vala:2307
 msgid "Re-installing GRUB2 bootloader..."
-msgstr "Ré-installation de GRUB2"
+msgstr "Ré-installation de GRUB2..."
 
 #: Gtk/BootOptionsBox.vala:120
 msgid "Re-installs the GRUB2 bootloader on the selected device."
-msgstr ""
-"Ré-installe le chargeur de démarrage GRUB2 sur le périphérique sélectionné."
+msgstr "Ré-installe le chargeur de démarrage GRUB2 sur le périphérique sélectionné."
 
 #: Gtk/RsyncLogBox.vala:181
 #, c-format
 msgid "Read %'d of %'d lines..."
 msgstr "Lu %'d de %'d lignes..."
 
-#: Core/Main.vala:2365
+#: Core/Main.vala:2400
 msgid "Rebooting system..."
-msgstr "Redémarrage du système"
+msgstr "Redémarrage du système..."
 
 #: Gtk/RestoreExcludeBox.vala:61 Gtk/RestoreExcludeBox.vala:91
 #, c-format
 msgid "Recommended"
 msgstr "Recommandé"
 
-#: Gtk/RestoreDeviceBox.vala:70 Gtk/BackupDeviceBox.vala:65
+#: Gtk/BackupDeviceBox.vala:65 Gtk/RestoreDeviceBox.vala:70
 msgid "Refresh"
 msgstr "Rafraîchir"
 
@@ -1761,8 +1674,8 @@ msgstr "Autres applications (page suivante)"
 msgid "Remove"
 msgstr "Retirer"
 
-#: Core/Snapshot.vala:509 Core/SnapshotRepo.vala:975 Core/Main.vala:1582
-#: Core/Main.vala:1593 Core/Main.vala:4162
+#: Core/SnapshotRepo.vala:975 Core/Main.vala:1617 Core/Main.vala:1628 Core/Main.vala:4197
+#: Core/Snapshot.vala:509
 #, c-format
 msgid "Removed"
 msgstr "Supprimé"
@@ -1771,7 +1684,7 @@ msgstr "Supprimé"
 msgid "Removed cron task"
 msgstr "Tâche cron supprimée"
 
-#: Core/Main.vala:3547
+#: Core/Main.vala:3582
 #, c-format
 msgid "Removed mount directory: '%s'"
 msgstr "Répertoire de montage « %s » supprimé"
@@ -1788,21 +1701,18 @@ msgstr "Suppression"
 msgid "Removing snapshot"
 msgstr "Suppression de l'instantané"
 
-#: Core/SnapshotRepo.vala:831 Core/SnapshotRepo.vala:850
-#: Core/SnapshotRepo.vala:868 Core/SnapshotRepo.vala:882
+#: Core/SnapshotRepo.vala:831 Core/SnapshotRepo.vala:850 Core/SnapshotRepo.vala:868
+#: Core/SnapshotRepo.vala:882
 #, c-format
 msgid "Removing snapshots"
 msgstr "Suppression des instantanés"
 
 #: Gtk/UsersBox.vala:360
-msgid ""
-"Required for displaying shared and unshared size for snapshots in the main "
-"window"
+msgid "Required for displaying shared and unshared size for snapshots in the main window"
 msgstr ""
 
-#: Console/AppConsole.vala:362 Gtk/MainWindow.vala:151
-#: Gtk/RestoreWindow.vala:123 Gtk/RestoreFinishBox.vala:71
-#: Gtk/RsyncLogBox.vala:377 Gtk/RsyncLogBox.vala:567
+#: Console/AppConsole.vala:362 Gtk/RestoreFinishBox.vala:71 Gtk/RsyncLogBox.vala:377
+#: Gtk/RsyncLogBox.vala:567 Gtk/MainWindow.vala:151 Gtk/RestoreWindow.vala:125
 msgid "Restore"
 msgstr "Restaurer"
 
@@ -1811,11 +1721,11 @@ msgstr "Restaurer"
 msgid "Restore @home subvolume"
 msgstr "Sous-volume système restauré"
 
-#: Gtk/RestoreWindow.vala:87
+#: Gtk/RestoreWindow.vala:89
 msgid "Restore Device"
 msgstr "Périphérique de restauration"
 
-#: Gtk/RestoreWindow.vala:92
+#: Gtk/RestoreWindow.vala:94
 msgid "Restore Exclude"
 msgstr "Exclusions pour la restauration"
 
@@ -1823,7 +1733,7 @@ msgstr "Exclusions pour la restauration"
 msgid "Restore Snapshot"
 msgstr "Restaurer un cliché"
 
-#: Core/Main.vala:2774 Core/Main.vala:2816
+#: Core/Main.vala:2809 Core/Main.vala:2851
 msgid "Restore completed"
 msgstr "Restauration complète"
 
@@ -1837,8 +1747,7 @@ msgstr "Restaurer l'instantané"
 
 #: Gtk/RestoreFinishBox.vala:96
 msgid "Restored subvolumes will become active after system is restarted."
-msgstr ""
-"Les sous-volumes restaurés deviendront actifs après redémarrage du système."
+msgstr "Les sous-volumes restaurés deviendront actifs après redémarrage du système."
 
 #: Core/Subvolume.vala:206
 msgid "Restored system subvolume"
@@ -1850,35 +1759,30 @@ msgstr "Restauration de l'instantané..."
 
 #: Gtk/FinishBox.vala:85
 msgid ""
-"Restoring a snapshot will replace system subvolumes, and system subvolumes "
-"currently in use will be preserved as a new snapshot. If required, this "
-"snapshot can be restored later to 'undo' the restore."
+"Restoring a snapshot will replace system subvolumes, and system subvolumes currently in use will be "
+"preserved as a new snapshot. If required, this snapshot can be restored later to 'undo' the restore."
 msgstr ""
-"La restauration d'un instantané remplacera des sous-volumes système, et les "
-"sous-volumes système en cours d'utilisation seront préservés sous forme d'un "
-"nouvel instantané. Si nécessaire, cet instantané peut être restauré plus "
-"tard pour 'défaire' la restauration."
+"La restauration d'un instantané remplacera des sous-volumes système, et les sous-volumes système en "
+"cours d'utilisation seront préservés sous forme d'un nouvel instantané. Si nécessaire, cet instantané "
+"peut être restauré plus tard pour 'défaire' la restauration."
 
-#: Core/Main.vala:2743
+#: Core/Main.vala:2778
 msgid "Restoring snapshot..."
 msgstr "Restauration de l'instantané..."
 
 #: Gtk/FinishBox.vala:88
 msgid ""
-"Restoring snapshots only replaces system files and settings. Non-hidden "
-"files and directories in user home directories will not be touched. This "
-"behaviour can be changed by adding a filter to include these files. Included "
-"files will be backed up when snapshot is created, and replaced when snapshot "
-"is restored."
+"Restoring snapshots only replaces system files and settings. Non-hidden files and directories in user "
+"home directories will not be touched. This behaviour can be changed by adding a filter to include "
+"these files. Included files will be backed up when snapshot is created, and replaced when snapshot is "
+"restored."
 msgstr ""
-"La restauration d'instantanés remplace uniquement les fichiers et les "
-"paramètres système. Les fichiers et les dossiers non cachés dans les "
-"dossiers personnels ne seront pas affectés. Ce comportement peut être "
-"modifié en ajoutant un filtre pour inclure ces fichiers, Les fichiers inclus "
-"seront sauvegardés à la création de l'instantané, et remplacés à la "
-"restauration de l'instantané."
+"La restauration d'instantanés remplace uniquement les fichiers et les paramètres système. Les "
+"fichiers et les dossiers non cachés dans les dossiers personnels ne seront pas affectés. Ce "
+"comportement peut être modifié en ajoutant un filtre pour inclure ces fichiers, Les fichiers inclus "
+"seront sauvegardés à la création de l'instantané, et remplacés à la restauration de l'instantané."
 
-#: Utility/Device.vala:1814
+#: Utility/Device.vala:1934
 #, c-format
 msgid "Revision"
 msgstr "Révision"
@@ -1894,7 +1798,7 @@ msgstr "Visionneur de journaux"
 #: Gtk/AppGtk.vala:119
 #, c-format
 msgid "Run 'timeshift' for the command-line version of this tool"
-msgstr "Lancez 'timeshift' pour la version en ligne de commande de cet outil."
+msgstr "Lancez 'timeshift' pour la version en ligne de commande de cet outil"
 
 #: Console/AppConsole.vala:382
 msgid "Run in non-interactive mode"
@@ -1905,31 +1809,27 @@ msgid "Running"
 msgstr "Exécution"
 
 #: Gtk/FinishBox.vala:95
-msgid ""
-"Save snapshots to an external disk instead of the system disk to guard "
-"against drive failures."
+msgid "Save snapshots to an external disk instead of the system disk to guard against drive failures."
 msgstr ""
-"Enregistrer les instantanés sur un disque externe à la place du disque "
-"système pour se protéger des défaillances de disque."
+"Enregistrer les instantanés sur un disque externe à la place du disque système pour se protéger des "
+"défaillances de disque."
 
 #: Gtk/FinishBox.vala:97
 msgid ""
-"Saving snapshots to a non-system disk allows you to format and re-install "
-"the OS on the system disk without losing snapshots stored on it. You can "
-"even install another Linux distribution and later roll-back the previous "
-"distribution by restoring a snapshot."
+"Saving snapshots to a non-system disk allows you to format and re-install the OS on the system disk "
+"without losing snapshots stored on it. You can even install another Linux distribution and later roll-"
+"back the previous distribution by restoring a snapshot."
 msgstr ""
-"L'enregistrement des instantanés sur une disque non système vous permet de "
-"formater et réinstaller sur le disque système sans perdre les instantanés "
-"qui y sont enregistrés. Vous pouvez même installer une autre distribution "
-"Linux et plus tard revenir à la distribution précédente en restaurant un "
+"L'enregistrement des instantanés sur une disque non système vous permet de formater et réinstaller "
+"sur le disque système sans perdre les instantanés qui y sont enregistrés. Vous pouvez même installer "
+"une autre distribution Linux et plus tard revenir à la distribution précédente en restaurant un "
 "instantané."
 
-#: Core/Main.vala:1250 Core/Main.vala:1404 Core/Main.vala:1406
+#: Core/Main.vala:1285 Core/Main.vala:1439 Core/Main.vala:1441
 msgid "Saving to device"
 msgstr "Enregistrement sur le périphérique"
 
-#: Gtk/SetupWizardWindow.vala:105 Gtk/SettingsWindow.vala:103
+#: Gtk/SetupWizardWindow.vala:109 Gtk/SettingsWindow.vala:92
 msgid "Schedule"
 msgstr "Planning"
 
@@ -1937,37 +1837,34 @@ msgstr "Planning"
 msgid "Scheduled snapshot in progress..."
 msgstr "Instantané programmé en cours..."
 
-#: Core/Main.vala:1112 Gtk/ScheduleBox.vala:299 Gtk/MainWindow.vala:1067
+#: Core/Main.vala:1147 Gtk/MainWindow.vala:1051 Gtk/ScheduleBox.vala:312
 msgid "Scheduled snapshots are disabled"
 msgstr "Les clichés planifiés sont désactivés"
 
 #: Gtk/FinishBox.vala:78
 msgid "Scheduled snapshots are disabled. It's recommended to enable it."
-msgstr ""
-"Les instantanés programmés sont désactivés. Il est recommandé de les activer."
+msgstr "Les instantanés programmés sont désactivés. Il est recommandé de les activer."
 
-#: Gtk/ScheduleBox.vala:292
+#: Gtk/ScheduleBox.vala:305
 msgid "Scheduled snapshots are enabled"
 msgstr "Les snapshots programmés sont activés"
 
 #: Gtk/FinishBox.vala:75
-msgid ""
-"Scheduled snapshots are enabled. Snapshots will be created automatically for "
-"selected levels."
+msgid "Scheduled snapshots are enabled. Snapshots will be created automatically for selected levels."
 msgstr ""
-"Les instantanés programmés sont activés. Les instantanés seront créés "
-"automatiquement pour les niveaux sélectionnés."
+"Les instantanés programmés sont activés. Les instantanés seront créés automatiquement pour les "
+"niveaux sélectionnés."
 
-#: Console/AppConsole.vala:870
+#: Console/AppConsole.vala:871
 #, c-format
 msgid "Select '%s' device (default = %s)"
 msgstr "Sélectionner le périphérique « %s » (défaut = %s)"
 
-#: Core/SnapshotRepo.vala:593 Console/AppConsole.vala:689
+#: Console/AppConsole.vala:690 Core/SnapshotRepo.vala:593
 msgid "Select BTRFS system disk with root subvolume (@)"
 msgstr "Disque système BTRFS sélectionné avec sous-volume racine (@)"
 
-#: Console/AppConsole.vala:998
+#: Console/AppConsole.vala:999
 msgid "Select GRUB device"
 msgstr "Sélectionner le périphérique GRUB"
 
@@ -1975,11 +1872,11 @@ msgstr "Sélectionner le périphérique GRUB"
 msgid "Select Path"
 msgstr "Sélectionner le chemin"
 
-#: Gtk/MainWindow.vala:694
+#: Gtk/MainWindow.vala:687
 msgid "Select Snapshot"
 msgstr "Sélectionner un cliché"
 
-#: Gtk/ScheduleBox.vala:55
+#: Gtk/ScheduleBox.vala:57
 msgid "Select Snapshot Levels"
 msgstr "Sélectionnez les niveaux des instantanés"
 
@@ -1991,7 +1888,7 @@ msgstr "Sélectionnez l'emplacement des instantanés"
 msgid "Select Snapshot Type"
 msgstr "Sélectionnez le type d'instantané"
 
-#: Gtk/DeleteWindow.vala:83
+#: Gtk/DeleteWindow.vala:85
 msgid "Select Snapshots"
 msgstr "Sélectionnez les instantanés"
 
@@ -1999,29 +1896,28 @@ msgstr "Sélectionnez les instantanés"
 msgid "Select Target Device"
 msgstr "Veuillez sélectionner le périphérique cible"
 
-#: Gtk/BackupDeviceBox.vala:377
+#: Gtk/BackupDeviceBox.vala:410
 #, c-format
 msgid "Select a partition on this disk"
 msgstr "Sélectionner une partition sur ce disque"
 
-#: Gtk/MainWindow.vala:801
+#: Gtk/MainWindow.vala:794
 msgid "Select a single snapshot to restore"
 msgstr "Sélectionnez l'instantané à restaurer"
 
 #: Gtk/RestoreDeviceBox.vala:481
 msgid "Select another device for root file system (/)"
-msgstr ""
-"Sélectionnez un autre périphérique pour le système de fichier racine (/)"
+msgstr "Sélectionnez un autre périphérique pour le système de fichier racine (/)"
 
 #: Core/SnapshotRepo.vala:632 Core/SnapshotRepo.vala:659
 msgid "Select another device or free up some space"
 msgstr "Sélectionnez un autre périphérique ou libérez de l'espace"
 
-#: Gtk/MainWindow.vala:547 Gtk/MainWindow.vala:554
+#: Gtk/MainWindow.vala:540 Gtk/MainWindow.vala:547
 msgid "Select another device to delete snasphots"
 msgstr "Sélectionnez un autre périphérique pour supprimer des instantanés"
 
-#: Gtk/MainWindow.vala:481
+#: Gtk/MainWindow.vala:474
 msgid "Select another device?"
 msgstr "Sélectionner un autre périphérique ?"
 
@@ -2029,23 +1925,23 @@ msgstr "Sélectionner un autre périphérique ?"
 msgid "Select applications to exclude from restore"
 msgstr "Sélectionnez les applications à exclure de la restauration"
 
-#: Console/AppConsole.vala:672
+#: Console/AppConsole.vala:673
 msgid "Select backup device"
 msgstr "Sélectionner le périphérique de sauvegarde"
 
-#: Gtk/ExcludeBox.vala:425
+#: Gtk/ExcludeBox.vala:433
 msgid "Select directory"
 msgstr "Sélectionner un dossier"
 
-#: Gtk/ExcludeBox.vala:404
+#: Gtk/ExcludeBox.vala:406
 msgid "Select file(s)"
 msgstr "Sélectionner le(s) fichier(s)"
 
-#: Console/AppConsole.vala:746
+#: Console/AppConsole.vala:747
 msgid "Select snapshot"
 msgstr "Sélectionnez un instantané"
 
-#: Gtk/DeleteWindow.vala:340
+#: Gtk/DeleteWindow.vala:342
 msgid "Select snapshots to delete"
 msgstr "Sélectionnez les instantanés à supprimer"
 
@@ -2057,7 +1953,7 @@ msgstr "Sélectionnez le périphérique pour le système de fichier racine (/)"
 msgid "Select the devices where files will be restored."
 msgstr "Sélectionnez les périphériques où les fichiers seront restaurés."
 
-#: Gtk/ScheduleBox.vala:300
+#: Gtk/ScheduleBox.vala:313
 msgid "Select the intervals for creating snapshots"
 msgstr "Sélectionnez l'intervalle de temps pour la création des instantanés"
 
@@ -2069,15 +1965,15 @@ msgstr "Sélectionnez les éléments à supprimer de la liste"
 msgid "Select the snapshot device"
 msgstr "Sélectionner le périphérique pour les snapshots"
 
-#: Gtk/MainWindow.vala:794
+#: Gtk/MainWindow.vala:787
 msgid "Select the snapshot to restore"
 msgstr "Sélectionner le snapshot à restaurer"
 
-#: Gtk/DeleteWindow.vala:85
+#: Gtk/DeleteWindow.vala:87
 msgid "Select the snapshots to be deleted"
 msgstr "Sélectionnez les instantanés à supprimer"
 
-#: Gtk/MainWindow.vala:616
+#: Gtk/MainWindow.vala:609
 msgid "Select the snapshots to mark for deletion"
 msgstr "Sélectionnez les instantanés à marquer pour la suppression"
 
@@ -2085,19 +1981,19 @@ msgstr "Sélectionnez les instantanés à marquer pour la suppression"
 msgid "Select the target devices where system will be cloned."
 msgstr "Sélectionnez les périphériques cibles où le système sera cloné."
 
-#: Core/Main.vala:3207
+#: Core/Main.vala:3242
 msgid "Selected default snapshot device"
 msgstr "Périphérique par défaut sélectionné pour les instantanés"
 
-#: Core/Main.vala:3158 Core/Main.vala:3162
+#: Core/Main.vala:3193 Core/Main.vala:3197
 msgid "Selected default snapshot type"
 msgstr "Type par défaut sélectionné pour les instantanés"
 
-#: Gtk/BackupDeviceBox.vala:358
+#: Gtk/BackupDeviceBox.vala:388
 msgid "Selected device does not have BTRFS partition"
 msgstr "Le périphérique sélectionné n'a pas de partition BTRFS"
 
-#: Gtk/BackupDeviceBox.vala:356
+#: Gtk/BackupDeviceBox.vala:385
 msgid "Selected device does not have Linux partition"
 msgstr "Le périphérique sélectionné n'a pas de partition Linux"
 
@@ -2105,30 +2001,25 @@ msgstr "Le périphérique sélectionné n'a pas de partition Linux"
 msgid "Selected snapshot device"
 msgstr "Périphérique sélectionné pour les instantanés"
 
-#: Core/SnapshotRepo.vala:592 Console/AppConsole.vala:688
+#: Console/AppConsole.vala:689 Core/SnapshotRepo.vala:592
 msgid "Selected snapshot device is not a system disk"
-msgstr ""
-"Le périphérique sélectionné pour les instantanés n'est pas un disque système"
+msgstr "Le périphérique sélectionné pour les instantanés n'est pas un disque système"
 
-#: Core/Main.vala:1992
+#: Core/Main.vala:2027
 msgid "Selected snapshot is marked for deletion"
 msgstr "L'instantané sélectionné est marqué pour suppression"
 
-#: Gtk/MainWindow.vala:825
+#: Gtk/MainWindow.vala:818
 msgid "Selected snapshot is marked for deletion and cannot be restored"
-msgstr ""
-"L'instantané sélectionné est marqué pour suppression et ne peut pas être "
-"restauré"
+msgstr "L'instantané sélectionné est marqué pour suppression et ne peut pas être restauré"
 
 #: Gtk/UsersBox.vala:238
-msgid ""
-"Selected user has an encrypted home directory. It's not possible to include "
-"only hidden files."
+msgid "Selected user has an encrypted home directory. It's not possible to include only hidden files."
 msgstr ""
-"Le dossier personnel de l'utilisateur sélectionné est encrypté. Il n'est pas "
-"possible d'inclure seulement les fichiers cachés."
+"Le dossier personnel de l'utilisateur sélectionné est encrypté. Il n'est pas possible d'inclure "
+"seulement les fichiers cachés."
 
-#: Utility/Device.vala:1813
+#: Utility/Device.vala:1933
 #, c-format
 msgid "Serial"
 msgstr "Numéro de série"
@@ -2153,7 +2044,7 @@ msgstr "Paramètres de l'assistant"
 msgid "Setup Complete"
 msgstr "Configuration complète"
 
-#: Gtk/SetupWizardWindow.vala:63
+#: Gtk/SetupWizardWindow.vala:64
 msgid "Setup Wizard"
 msgstr "Assistant de configuration"
 
@@ -2173,45 +2064,41 @@ msgstr "Afficher plus d'applications à exclure sur la page suivante"
 msgid "Show rsync output (default)"
 msgstr "Afficher la sortie de rsync (par défaut)"
 
-#: Console/AppConsole.vala:456 Console/AppConsole.vala:495
-#: Gtk/RestoreBox.vala:131 Gtk/BackupBox.vala:93 Gtk/SnapshotListBox.vala:174
-#: Gtk/BackupDeviceBox.vala:202 Gtk/RsyncLogBox.vala:392
-#: Utility/Device.vala:1816 Utility/Device.vala:1831
+#: Utility/Device.vala:1936 Utility/Device.vala:1951 Console/AppConsole.vala:457
+#: Console/AppConsole.vala:496 Gtk/RsyncLogBox.vala:392 Gtk/RestoreBox.vala:131
+#: Gtk/BackupDeviceBox.vala:202 Gtk/BackupBox.vala:93 Gtk/SnapshotListBox.vala:174
 #, c-format
 msgid "Size"
 msgstr "Taille"
 
-#: Gtk/SnapshotBackendBox.vala:172
+#: Gtk/SnapshotBackendBox.vala:177
 msgid ""
-"Size of BTRFS snapshots are initially zero. As system files gradually change "
-"with time, data gets written to new data blocks which take up disk space "
-"(copy-on-write). Files in the snapshot continue to point to original data "
-"blocks."
+"Size of BTRFS snapshots are initially zero. As system files gradually change with time, data gets "
+"written to new data blocks which take up disk space (copy-on-write). Files in the snapshot continue "
+"to point to original data blocks."
 msgstr ""
-"La taille des instantanés BTRFS est initialement à zéro. Comme les fichiers "
-"système changent graduellement au cours du temps, les données sont écrites "
-"dans de nouveaux blocs de données qui prennent de l'espace disque (copy-on-"
-"write). Les fichiers dans l'instantané continuent à pointer vers les blocs "
-"de données d'origine."
+"La taille des instantanés BTRFS est initialement à zéro. Comme les fichiers système changent "
+"graduellement au cours du temps, les données sont écrites dans de nouveaux blocs de données qui "
+"prennent de l'espace disque (copy-on-write). Les fichiers dans l'instantané continuent à pointer vers "
+"les blocs de données d'origine."
 
 #: Console/AppConsole.vala:368
 msgid "Skip GRUB2 reinstall"
 msgstr "Ne pas réinstaller GRUB2"
 
-#: Core/SnapshotRepo.vala:714 Core/SnapshotRepo.vala:752 Core/Main.vala:1997
-#: Gtk/SnapshotListBox.vala:95
+#: Core/SnapshotRepo.vala:714 Core/SnapshotRepo.vala:752 Core/Main.vala:2032 Gtk/SnapshotListBox.vala:95
 #, c-format
 msgid "Snapshot"
 msgstr "Cliché"
 
-#: Gtk/MainWindow.vala:564
+#: Gtk/MainWindow.vala:557
 #, c-format
 msgid ""
-"Snapshot '%s' is being used by the system and cannot be deleted. Restart the "
-"system to activate the restored snapshot."
+"Snapshot '%s' is being used by the system and cannot be deleted. Restart the system to activate the "
+"restored snapshot."
 msgstr ""
-"L'instantané '%s' est en cours d'utilisation par le système et ne peut être "
-"supprimé. Redémarrez le système pour activer l'instantané restauré."
+"L'instantané '%s' est en cours d'utilisation par le système et ne peut être supprimé. Redémarrez le "
+"système pour activer l'instantané restauré."
 
 #: Gtk/BackupFinishBox.vala:60
 msgid "Snapshot Created"
@@ -2222,7 +2109,7 @@ msgstr "Instantané créé"
 msgid "Snapshot Levels"
 msgstr "Sélectionnez les niveaux des instantanés"
 
-#: Gtk/MainWindow.vala:761
+#: Gtk/MainWindow.vala:754
 msgid "Snapshot deletion in progress..."
 msgstr "Suppression en cours..."
 
@@ -2231,11 +2118,11 @@ msgstr "Suppression en cours..."
 msgid "Snapshot device"
 msgstr "Périphérique pour les instantanés"
 
-#: Core/SnapshotRepo.vala:559 Console/AppConsole.vala:662
+#: Console/AppConsole.vala:663 Core/SnapshotRepo.vala:559
 msgid "Snapshot device not available"
 msgstr "Périphérique pour les instantanés non disponible"
 
-#: Core/SnapshotRepo.vala:552 Console/AppConsole.vala:658
+#: Console/AppConsole.vala:659 Core/SnapshotRepo.vala:552
 msgid "Snapshot device not selected"
 msgstr "Périphérique pour les instantanés non sélectionné"
 
@@ -2244,15 +2131,15 @@ msgstr "Périphérique pour les instantanés non sélectionné"
 msgid "Snapshot location"
 msgstr "Emplacement des snapshots"
 
-#: Core/Main.vala:1217
+#: Core/Main.vala:1252
 msgid "Snapshot saved successfully"
 msgstr "Le cliché a été sauvegardé avec succés"
 
-#: Core/Main.vala:1987
+#: Core/Main.vala:2022
 msgid "Snapshot to restore not specified!"
 msgstr "Le cliché à restaurer n'est pas spécifié !"
 
-#: Core/Main.vala:2820
+#: Core/Main.vala:2855
 msgid "Snapshot will become active after system is rebooted."
 msgstr "L'instantané sera actif après redémarrage du système."
 
@@ -2260,116 +2147,102 @@ msgstr "L'instantané sera actif après redémarrage du système."
 msgid "Snapshot(s) Deleted"
 msgstr "Instantané(s) supprimé(s)"
 
-#: Gtk/MainWindow.vala:310 Gtk/DeleteWindow.vala:87
+#: Gtk/MainWindow.vala:320 Gtk/DeleteWindow.vala:89
 msgid "Snapshots"
 msgstr "Instantanés"
 
-#: Gtk/SnapshotBackendBox.vala:164
+#: Gtk/SnapshotBackendBox.vala:169
 msgid ""
-"Snapshots are created and restored instantly. Snapshot creation is an atomic "
-"transaction at the file system level."
+"Snapshots are created and restored instantly. Snapshot creation is an atomic transaction at the file "
+"system level."
 msgstr ""
-"Les instantanés sont crées et restaurés instantanément. La création "
-"d'instantané est une transaction atomique au niveau du système de fichier."
+"Les instantanés sont crées et restaurés instantanément. La création d'instantané est une transaction "
+"atomique au niveau du système de fichier."
 
-#: Gtk/SnapshotBackendBox.vala:181
+#: Gtk/SnapshotBackendBox.vala:186
 msgid ""
-"Snapshots are created by creating copies of system files using rsync, and "
-"hard-linking unchanged files from previous snapshot."
+"Snapshots are created by creating copies of system files using rsync, and hard-linking unchanged "
+"files from previous snapshot."
 msgstr ""
-"Les instantanés sont créés en copiant les fichiers système avec rsync et en "
-"créant des liens durs à partir d'instantanés précédents pour les fichiers "
-"non-modifies."
+"Les instantanés sont créés en copiant les fichiers système avec rsync et en créant des liens durs à "
+"partir d'instantanés précédents pour les fichiers non-modifies."
 
-#: Gtk/SnapshotBackendBox.vala:162
-msgid ""
-"Snapshots are created using the built-in features of the BTRFS file system."
-msgstr ""
-"Les instantanés sont créés en utilisant les fonctions intégrées du système "
-"de fichier BTRFS."
+#: Gtk/SnapshotBackendBox.vala:167
+msgid "Snapshots are created using the built-in features of the BTRFS file system."
+msgstr "Les instantanés sont créés en utilisant les fonctions intégrées du système de fichier BTRFS."
 
-#: Gtk/ScheduleBox.vala:151
+#: Gtk/ScheduleBox.vala:167
 #, c-format
 msgid "Snapshots are not scheduled at fixed times."
-msgstr "Périphérique pour les instantanés non sélectionné"
+msgstr "Périphérique pour les instantanés non sélectionné."
 
-#: Gtk/SnapshotBackendBox.vala:168
-msgid ""
-"Snapshots are perfect, byte-for-byte copies of the system. Nothing is "
-"excluded."
-msgstr ""
-"Les instantanés sont des copies parfaites, octet par octet, du système. Rien "
-"n'est exclu."
+#: Gtk/SnapshotBackendBox.vala:173
+msgid "Snapshots are perfect, byte-for-byte copies of the system. Nothing is excluded."
+msgstr "Les instantanés sont des copies parfaites, octet par octet, du système. Rien n'est exclu."
 
-#: Gtk/SnapshotBackendBox.vala:166
+#: Gtk/SnapshotBackendBox.vala:171
 msgid ""
-"Snapshots are restored by replacing system subvolumes. Since files are never "
-"copied, deleted or overwritten, there is no risk of data loss. The existing "
-"system is preserved as a new snapshot after restore."
+"Snapshots are restored by replacing system subvolumes. Since files are never copied, deleted or "
+"overwritten, there is no risk of data loss. The existing system is preserved as a new snapshot after "
+"restore."
 msgstr ""
-"Les instantanés sont restaurés en remplaçant les sous-volumes système. "
-"Puisque les fichiers ne sont jamais copiés, supprimés ou écrasés, il n'y a "
-"pas de risque de perte de données. Le système existant est préservé sous "
-"forme d'un nouvel instantané après la restauration."
+"Les instantanés sont restaurés en remplaçant les sous-volumes système. Puisque les fichiers ne sont "
+"jamais copiés, supprimés ou écrasés, il n'y a pas de risque de perte de données. Le système existant "
+"est préservé sous forme d'un nouvel instantané après la restauration."
 
-#: Gtk/SnapshotBackendBox.vala:170
+#: Gtk/SnapshotBackendBox.vala:175
 msgid ""
-"Snapshots are saved on the same disk from which they are created (system "
-"disk). Storage on other disks is not supported. If system disk fails then "
-"snapshots stored on it will be lost along with the system."
+"Snapshots are saved on the same disk from which they are created (system disk). Storage on other "
+"disks is not supported. If system disk fails then snapshots stored on it will be lost along with the "
+"system."
 msgstr ""
-"Les instantanés sont enregistrés sur la même disque que celui sur lequel ils "
-"sont créés (disque système). L'enregistrement sur d'autres disques n'est pas "
-"en charge. Si le disque système plante alors les instantanés qui y sont "
-"enregistrés seront perdus en même temps que le système."
+"Les instantanés sont enregistrés sur la même disque que celui sur lequel ils sont créés (disque "
+"système). L'enregistrement sur d'autres disques n'est pas en charge. Si le disque système plante "
+"alors les instantanés qui y sont enregistrés seront perdus en même temps que le système."
 
 #: Gtk/BackupDeviceBox.vala:107
-msgid ""
-"Snapshots are saved to /timeshift on selected partition. Other locations are "
-"not supported."
+msgid "Snapshots are saved to /timeshift on selected partition. Other locations are not supported."
 msgstr ""
+"Les instantanés sont enregistrés dans le dossier /timeshift sur la partition sélectionnée. Les autres "
+"emplacements ne sont pas supportés."
 
 #: Gtk/BackupDeviceBox.vala:99
 msgid ""
-"Snapshots are saved to /timeshift-btrfs on selected partition. Other "
-"locations are not supported."
+"Snapshots are saved to /timeshift-btrfs on selected partition. Other locations are not supported."
 msgstr ""
+"Les instantanés sont enregistrés dans le dossier /timeshift sur la partition sélectionnée. Les autres "
+"emplacements ne sont pas supportés."
 
-#: Gtk/MainWindow.vala:1012
+#: Gtk/MainWindow.vala:996
 msgid "Snapshots available for restore"
 msgstr "Instantanés disponibles pour la restauration"
 
-#: Gtk/SnapshotBackendBox.vala:185
+#: Gtk/SnapshotBackendBox.vala:190
 msgid ""
-"Snapshots can be saved to any disk formatted with a Linux file system. "
-"Saving snapshots to non-system or external disk allows the system to be "
-"restored even if system disk is damaged or re-formatted."
+"Snapshots can be saved to any disk formatted with a Linux file system. Saving snapshots to non-system "
+"or external disk allows the system to be restored even if system disk is damaged or re-formatted."
 msgstr ""
-"Les instantanés peuvent être enregistrés sur tout disque formaté avec un "
-"système de fichier Linux. L'enregistrement d'instantanés sur un disque non "
-"système ou externe permet la restauration du système même si le disque "
-"système est endommagé ou reformaté."
+"Les instantanés peuvent être enregistrés sur tout disque formaté avec un système de fichier Linux. "
+"L'enregistrement d'instantanés sur un disque non système ou externe permet la restauration du système "
+"même si le disque système est endommagé ou reformaté."
 
 #: Console/AppConsole.vala:283
 msgid "Snapshots cannot be created in Live CD mode"
 msgstr "Les instantanés ne peuvent pas être créés en mode Live CD"
 
-#: Gtk/MainWindow.vala:1059
+#: Gtk/MainWindow.vala:1043
 msgid "Snapshots will be created at selected intervals"
 msgstr "Les instantanés seront créés aux intervalles de temps sélectionnés"
 
-#: Gtk/ScheduleBox.vala:293
-msgid ""
-"Snapshots will be created at selected intervals if snapshot disk has enough "
-"space (> 1 GB)"
+#: Gtk/ScheduleBox.vala:306
+msgid "Snapshots will be created at selected intervals if snapshot disk has enough space (> 1 GB)"
 msgstr ""
-"Les instantanés seront créés aux intervalles de temps sélectionnés si le "
-"disque des instantanés a assez d'espace (> 1 Go)"
+"Les instantanés seront créés aux intervalles de temps sélectionnés si le disque des instantanés a "
+"assez d'espace (> 1 Go)"
 
-#: Gtk/MainWindow.vala:642
+#: Gtk/MainWindow.vala:635
 msgid "Snapshots will be removed during the next scheduled run"
-msgstr ""
-"Les instantanés seront supprimés pendant le prochain lancement programmé."
+msgstr "Les instantanés seront supprimés pendant le prochain lancement programmé"
 
 #: Console/AppConsole.vala:375
 msgid "Specify backup device (default: config)"
@@ -2377,8 +2250,7 @@ msgstr "Spécifiez le périphérique de sauvegarde (par défaut : config)"
 
 #: Console/AppConsole.vala:367
 msgid "Specify device for installing GRUB2 bootloader"
-msgstr ""
-"Spécifier le périphérique d'installation du chargeur de démarrage GRUB2"
+msgstr "Spécifier le périphérique d'installation du chargeur de démarrage GRUB2"
 
 #: Console/AppConsole.vala:365
 msgid "Specify snapshot to restore"
@@ -2393,7 +2265,7 @@ msgstr "Spécifier le périphérique cible"
 msgid "Status"
 msgstr "Statut"
 
-#: Gtk/ScheduleBox.vala:168
+#: Gtk/ScheduleBox.vala:154
 msgid "Stop cron emails for scheduled tasks"
 msgstr "Arrêter les emails cron pour les tâches programmées"
 
@@ -2411,10 +2283,14 @@ msgstr ""
 msgid "Subvolumes"
 msgstr "Volume"
 
-#: Gtk/RestoreWindow.vala:118 Gtk/ExcludeAppsBox.vala:135
-#: Gtk/ExcludeBox.vala:258
+#: Gtk/ExcludeAppsBox.vala:135 Gtk/ExcludeBox.vala:258 Gtk/RestoreWindow.vala:120
 msgid "Summary"
 msgstr "Résumé"
+
+#: Utility/Gtk/DonationWindow.vala:84
+#, fuzzy
+msgid "Support"
+msgstr "Non pris en charge"
 
 #: Console/AppConsole.vala:377
 msgid "Switch to BTRFS mode (default: config)"
@@ -2428,11 +2304,11 @@ msgstr "Passer en mode RSYNC (par défaut : config)"
 msgid "Symlinks updated"
 msgstr "Liens symboliques mis à jour"
 
-#: Core/Main.vala:2347
+#: Core/Main.vala:2382
 msgid "Synching file systems..."
-msgstr "Synchronisation des systèmes de fichiers"
+msgstr "Synchronisation des systèmes de fichiers."
 
-#: Core/Main.vala:1326 Core/Main.vala:2509 Core/Main.vala:2750
+#: Core/Main.vala:1361 Core/Main.vala:2544 Core/Main.vala:2785
 msgid "Synching files with rsync..."
 msgstr "Synchronisation des fichiers avec rsync en cours..."
 
@@ -2440,30 +2316,28 @@ msgstr "Synchronisation des fichiers avec rsync en cours..."
 msgid "Syntax"
 msgstr "Syntaxe"
 
-#: Gtk/SnapshotListBox.vala:127 Utility/Device.vala:1837
+#: Utility/Device.vala:1957 Gtk/SnapshotListBox.vala:127
 #, c-format
 msgid "System"
 msgstr "Système"
 
-#: Gtk/MainWindow.vala:957
+#: Gtk/MainWindow.vala:941
 msgid "System Restore Utility"
 msgstr "Utilitaire de restauration système"
 
 #: Gtk/FinishBox.vala:82
 msgid "System can be rolled-back to a previous date by restoring a snapshot."
-msgstr ""
-"Le système peut être remis à son état à une date antérieure en restaurant "
-"un  instantané."
+msgstr "Le système peut être remis à son état à une date antérieure en restaurant un  instantané."
 
-#: Core/Main.vala:2210
+#: Core/Main.vala:2245
 msgid "System will reboot after files are restored"
 msgstr "Le système redémarrera dés la restauration terminée"
 
-#: Core/Main.vala:2160
+#: Core/Main.vala:2195
 msgid "System will reboot after files are restored."
 msgstr "Le système redémarrera après la restauration des fichiers."
 
-#: Core/Main.vala:1186 Core/Main.vala:1227
+#: Core/Main.vala:1221 Core/Main.vala:1262
 msgid "Tagged snapshot"
 msgstr "Instantantanés étiquetés"
 
@@ -2471,7 +2345,7 @@ msgstr "Instantantanés étiquetés"
 msgid "Tags"
 msgstr "Étiquettes"
 
-#: Core/Main.vala:2022
+#: Core/Main.vala:2057
 msgid "Target device is not mounted"
 msgstr "Le périphérique cible n'est pas monté"
 
@@ -2479,87 +2353,93 @@ msgstr "Le périphérique cible n'est pas monté"
 msgid "Target device is same as system device"
 msgstr "Le périphérique cible est le même que le périphérique système"
 
-#: Core/Main.vala:2016
+#: Core/Main.vala:2051
 msgid "Target device not specified!"
 msgstr "Le périphérique cible n'a pas été spécifié !"
 
 #: Gtk/SnapshotBackendBox.vala:118
 msgid ""
-"The 'btrfs' command is not available on your system. Install the 'btrfs-"
-"tools' package and try again."
+"The 'btrfs' command is not available on your system. Install the 'btrfs-tools' package and try again."
 msgstr ""
-"La commande 'btrfs' n'est pas disponible sur votre système. Installez le "
-"paquet 'btrfs-tools' et essayez à nouveau."
+"La commande 'btrfs' n'est pas disponible sur votre système. Installez le paquet 'btrfs-tools' et "
+"essayez à nouveau."
 
-#: Gtk/ScheduleBox.vala:170
+#: Gtk/ScheduleBox.vala:156
 msgid ""
-"The cron service sends the output of scheduled tasks as an email to the "
-"current user. Select this option to suppress the emails for cron tasks "
-"created by Timeshift."
+"The cron service sends the output of scheduled tasks as an email to the current user. Select this "
+"option to suppress the emails for cron tasks created by Timeshift."
 msgstr ""
-"Le service cron envoie la sortie des tâches programmées dans un email pour "
-"l'utilisateur courant. Sélectionnez cette option pour supprimer les emails "
-"pour les tâches programmées créées par Timeshift."
+"Le service cron envoie la sortie des tâches programmées dans un email pour l'utilisateur courant. "
+"Sélectionnez cette option pour supprimer les emails pour les tâches programmées créées par Timeshift."
 
 #: Core/Main.vala:376
 msgid "The system partition has an unsupported subvolume layout."
-msgstr "La partition système dispose d'un sous volume non supporté"
+msgstr "La partition système dispose d'un sous volume non supporté."
 
-#: Core/Main.vala:3396
+#: Core/Main.vala:3431
 msgid "The target partition has an unsupported subvolume layout."
-msgstr "La partition cible dispose d'un sous volume non supporté"
+msgstr "La partition cible dispose d'un sous volume non supporté."
 
-#: Gtk/BackupDeviceBox.vala:479
+#: Gtk/BackupDeviceBox.vala:512
 #, c-format
 msgid "There are no snapshots on this device"
 msgstr "Il n'y a pas d' instantanés sur ce périphérique"
 
-#: Utility/Device.vala:1259
+#: Utility/Gtk/DonationWindow.vala:109
+msgid ""
+"This application was created for my own use in my spare time, and it's not practical for me to work "
+"for free, on every change that is requested. If you need new features or changes to the application, "
+"consider making a donation to sponsor the work. If you are a developer, consider contributing to the "
+"project, by submitting code changes for issues and features in the issue tracker."
+msgstr ""
+
+#: Utility/Device.vala:1379
 msgid "This device is not encrypted"
 msgstr "Ce périphérique n'est pas crypté"
 
-#: Core/Main.vala:2176
+#: Core/Main.vala:2211
 msgid ""
-"This software comes without absolutely NO warranty and the author takes no "
-"responsibility for any damage arising from the use of this program."
+"This software comes without absolutely NO warranty and the author takes no responsibility for any "
+"damage arising from the use of this program."
 msgstr ""
-"Ce logiciel est livré sans AUCUNE garantie et l'auteur ne prend aucune "
-"responsabilité pour les dégâts occasionnés par l'utilisation de ce programme."
+"Ce logiciel est livré sans AUCUNE garantie et l'auteur ne prend aucune responsabilité pour les dégâts "
+"occasionnés par l'utilisation de ce programme."
 
-#: Gtk/MainWindow.vala:1047 Gtk/MainWindow.vala:1058
+#: Utility/Gtk/DonationWindow.vala:66
+msgid ""
+"This software is free for personal and commercial use. It is distributed in the hope that it is "
+"useful but without any warranty. See the GNU General Public License v2 or later for more information"
+msgstr ""
+
+#: Gtk/MainWindow.vala:1031 Gtk/MainWindow.vala:1042
 msgid "Timeshift is active"
 msgstr "Timeshift est actif"
 
-#: Gtk/MainWindow.vala:948
-msgid ""
-"Timeshift is powered by the following tools and components. Please visit the "
-"links for more information."
-msgstr ""
-
-#: Gtk/RestoreBox.vala:132 Gtk/BackupBox.vala:94 Gtk/RsyncLogBox.vala:394
+#: Gtk/RsyncLogBox.vala:394 Gtk/RestoreBox.vala:132 Gtk/BackupBox.vala:94
 #, c-format
 msgid "Timestamp"
 msgstr "Horodatage"
 
-#: Console/AppConsole.vala:611
+#: Console/AppConsole.vala:612
 #, c-format
 msgid "To restore with default options, press the ENTER key for all prompts!"
-msgstr ""
-"Pour restaurer avec les options par défaut, pressez la touche ENTREE pour "
-"toutes les invites !"
+msgstr "Pour restaurer avec les options par défaut, pressez la touche ENTREE pour toutes les invites !"
+
+#: Utility/Gtk/AboutWindow.vala:457
+msgid "Tools"
+msgstr "Outils"
 
 #: Utility/Gtk/AboutWindow.vala:441
 msgid "Translations"
 msgstr "Traducteurs"
 
-#: Console/AppConsole.vala:457 Console/AppConsole.vala:496
-#: Gtk/BackupDeviceBox.vala:190 Gtk/SettingsWindow.vala:97
-#: Utility/Device.vala:1827
+#: Utility/Device.vala:1947 Console/AppConsole.vala:458 Console/AppConsole.vala:497
+#: Gtk/BackupDeviceBox.vala:190 Gtk/SettingsWindow.vala:86
 #, c-format
 msgid "Type"
 msgstr "Type"
 
-#: Utility/Device.vala:1826
+#: Utility/Device.vala:1946
 #, c-format
 msgid "UUID"
 msgstr "UUID"
@@ -2568,24 +2448,24 @@ msgstr "UUID"
 msgid "Unknown option"
 msgstr "Option inconnue"
 
-#: Core/Main.vala:1168
+#: Core/Main.vala:1203
 msgid "Unknown snapshot type"
 msgstr "Cliché de type inconnu"
 
-#: Core/Main.vala:1531
+#: Core/Main.vala:1566
 msgid "Unknown value specified for option --tags"
 msgstr "La valeur spécifiée pour l'option --tags est inconnue"
 
-#: Utility/Device.vala:1270 Utility/Device.vala:1386
+#: Utility/Device.vala:1390 Utility/Device.vala:1506
 #, c-format
 msgid "Unlocked device is mapped to '%s'"
 msgstr "Le périphérique débloqué est mappé sur '%s'"
 
-#: Utility/Device.vala:1385
+#: Utility/Device.vala:1505
 msgid "Unlocked successfully"
 msgstr "Débloquage réussi"
 
-#: Utility/Device.vala:1600
+#: Utility/Device.vala:1720
 msgid "Unmounting from"
 msgstr "Démontage à partir de"
 
@@ -2593,7 +2473,7 @@ msgstr "Démontage à partir de"
 msgid "Unshared"
 msgstr "Partage supprimé"
 
-#: Core/Main.vala:3400 Gtk/RestoreDeviceBox.vala:522
+#: Core/Main.vala:3435 Gtk/RestoreDeviceBox.vala:522
 msgid "Unsupported Subvolume Layout"
 msgstr "Agencement du sous volume non supporté"
 
@@ -2605,36 +2485,40 @@ msgstr "Mettre à jour le menu GRUB"
 msgid "Update initramfs"
 msgstr "Mettre à jour initramfs"
 
-#: Core/Main.vala:2689
+#: Core/Main.vala:2724
 msgid "Updated /etc/crypttab on target device"
 msgstr "Fichier /etc/crypttab mis à jour sur le périphérique cible"
 
-#: Core/Main.vala:2609
+#: Core/Main.vala:2644
 msgid "Updated /etc/fstab on target device"
 msgstr "/etc/fstab mis à jour sur le périphérique cible"
 
 #: Gtk/BootOptionsBox.vala:152
-msgid ""
-"Updates the GRUB menu entries (recommended). This is safe to run and should "
-"be left selected."
+msgid "Updates the GRUB menu entries (recommended). This is safe to run and should be left selected."
 msgstr ""
-"Met à jour les entrées du menu GRUB (recommandé). C'est sans danger et "
-"devrait être laissé sélectionné."
+"Met à jour les entrées du menu GRUB (recommandé). C'est sans danger et devrait être laissé "
+"sélectionné."
 
-#: Core/Main.vala:2330
+#: Core/Main.vala:2365
 msgid "Updating GRUB menu..."
 msgstr "Mise à jour du menu GRUB en cours..."
 
-#: Core/Main.vala:2533
+#: Core/Main.vala:2568
 msgid "Updating bootloader configuration..."
 msgstr "Mise à jour de la configuration du chargeur de démarrage en cours..."
 
-#: Utility/Device.vala:1834
+#: Utility/Gtk/DonationWindow.vala:88
+msgid ""
+"Use the issue tracker for reporting issues, asking questions, and requesting features. Please avoid "
+"reporting issues by email."
+msgstr ""
+
+#: Utility/Device.vala:1954
 #, c-format
 msgid "Used"
 msgstr "Utilisé"
 
-#: Gtk/UsersBox.vala:105
+#: Gtk/SetupWizardWindow.vala:114 Gtk/UsersBox.vala:105
 msgid "User"
 msgstr "Utilisateur"
 
@@ -2642,27 +2526,25 @@ msgstr "Utilisateur"
 msgid "User Home Directories"
 msgstr "Dossiers personnels d'utilisateurs"
 
-#: Utility/Device.vala:1340
+#: Utility/Device.vala:1460
 msgid "User cancelled the password prompt"
 msgstr "L'utilisateur a annulé l'invite du mot de passe"
 
 #: Gtk/UsersBox.vala:67
-msgid ""
-"User home directories are excluded by default unless you enable them here"
+msgid "User home directories are excluded by default unless you enable them here"
 msgstr ""
-"Les dossiers personnels des utilisateurs sont exclus par défaut, à moins que "
-"vous les incluiez ici."
+"Les dossiers personnels des utilisateurs sont exclus par défaut, à moins que vous les incluiez ici"
 
-#: Gtk/SettingsWindow.vala:109
+#: Gtk/SettingsWindow.vala:98
 msgid "Users"
 msgstr "Utilisateurs"
 
-#: Gtk/RestoreWindow.vala:112
+#: Gtk/RestoreWindow.vala:114
 #, fuzzy
 msgid "Users Home"
 msgstr "Utilisateurs"
 
-#: Utility/Device.vala:1811
+#: Utility/Device.vala:1931
 #, c-format
 msgid "Vendor"
 msgstr "Vendeur"
@@ -2675,7 +2557,7 @@ msgstr "Voir le journal de création"
 msgid "View Rsync Log for Restore"
 msgstr "Voir le journal de restauration"
 
-#: Gtk/MainWindow.vala:378
+#: Gtk/MainWindow.vala:380
 msgid "View TimeShift Logs"
 msgstr "Afficher les journaux de TimeShift"
 
@@ -2683,7 +2565,7 @@ msgstr "Afficher les journaux de TimeShift"
 msgid "Volume"
 msgstr "Volume"
 
-#: Core/Main.vala:2071 Gtk/RestoreSummaryBox.vala:53
+#: Core/Main.vala:2106 Gtk/RestoreSummaryBox.vala:53
 msgid "Warning"
 msgstr "Avertissement"
 
@@ -2691,28 +2573,23 @@ msgstr "Avertissement"
 msgid "Web Browsers"
 msgstr "Navigateurs web"
 
-#: Utility/Gtk/DonationWindow.vala:113
-#, c-format
-msgid "Website"
-msgstr "Site web"
-
-#: Gtk/ScheduleBox.vala:80 Gtk/SnapshotListBox.vala:301
+#: Gtk/ScheduleBox.vala:82 Gtk/SnapshotListBox.vala:301
 msgid "Weekly"
 msgstr "Hebdomadaire"
 
-#: Core/Main.vala:1072
+#: Core/Main.vala:1107
 msgid "Weekly snapshot failed!"
 msgstr "Cliché hebdomadaire en erreur !"
 
-#: Core/Main.vala:1053
+#: Core/Main.vala:1088
 msgid "Weekly snapshots are enabled"
 msgstr "Les clichés hebdomadaires sont activés"
 
-#: Utility/Gtk/DonationWindow.vala:105
-msgid "Wiki ~ Documentation & Help"
-msgstr "Wiki ~ Documentation et aide"
+#: Utility/Gtk/DonationWindow.vala:99
+msgid "Wiki"
+msgstr ""
 
-#: Gtk/DeleteFinishBox.vala:63 Gtk/BackupFinishBox.vala:63
+#: Gtk/BackupFinishBox.vala:63 Gtk/DeleteFinishBox.vala:63
 msgid "With Errors"
 msgstr "Avec erreurs"
 
@@ -2720,7 +2597,7 @@ msgstr "Avec erreurs"
 msgid "Wizard"
 msgstr "Assistant"
 
-#: Utility/Device.vala:1313 Utility/Device.vala:1359
+#: Utility/Device.vala:1433 Utility/Device.vala:1479
 msgid "Wrong password"
 msgstr "Mauvais mot de passe"
 
@@ -2730,29 +2607,25 @@ msgstr "Oui"
 
 #: Gtk/RestoreFinishBox.vala:98
 msgid ""
-"You can continue working on the current system. After restart, the current "
-"system will be visible as a new snapshot. This snapshot can be restored "
-"later if required, to 'undo' the restore."
+"You can continue working on the current system. After restart, the current system will be visible as "
+"a new snapshot. This snapshot can be restored later if required, to 'undo' the restore."
 msgstr ""
-"Vous pouvez continuer à travailler sur le système courant. Après "
-"redémarrage, le système courant sera visible comme un nouvel instantané. Cet "
-"instantané peut être restauré plus tard si nécessaire, pour 'défaire' la "
-"restauration."
+"Vous pouvez continuer à travailler sur le système courant. Après redémarrage, le système courant sera "
+"visible comme un nouvel instantané. Cet instantané peut être restauré plus tard si nécessaire, pour "
+"'défaire' la restauration."
 
 #: Gtk/RestoreDeviceBox.vala:413
-msgid ""
-"[Advanced Users Only] Change these settings only if the restored system "
-"fails to boot."
+msgid "[Advanced Users Only] Change these settings only if the restored system fails to boot."
 msgstr ""
-"[Utilisateurs avancés uniquement] Modifiez ces paramètres seulement si le "
-"système restauré n'arrive pas à démarrer."
+"[Utilisateurs avancés uniquement] Modifiez ces paramètres seulement si le système restauré n'arrive "
+"pas à démarrer."
 
-#: Console/AppConsole.vala:1010
+#: Console/AppConsole.vala:1011
 #, c-format
 msgid "[ENTER = Default (%s), a = Abort]"
 msgstr "[ENTREE = Défaut (%s), a = Annuler]"
 
-#: Console/AppConsole.vala:881
+#: Console/AppConsole.vala:882
 #, c-format
 msgid "[ENTER = Default (%s), r = Root device, a = Abort]"
 msgstr "[ENTREE = Défaut (%s), r = Périphérique racine, a = Annuler]"
@@ -2765,12 +2638,12 @@ msgstr "[Attention] Lock invalide supprimé"
 msgid "all"
 msgstr "tous"
 
-#: Core/Main.vala:1459 Core/Main.vala:3827 Core/Main.vala:3911
-#: Core/Main.vala:4019 Core/Main.vala:4058 Core/Subvolume.vala:201
+#: Core/Subvolume.vala:201 Core/Main.vala:1494 Core/Main.vala:3862 Core/Main.vala:3946
+#: Core/Main.vala:4054 Core/Main.vala:4093
 msgid "btrfs returned an error"
 msgstr "btrfs a retourné une erreur"
 
-#: Core/Snapshot.vala:500 Core/Main.vala:1358
+#: Core/Main.vala:1393 Core/Snapshot.vala:500
 msgid "complete"
 msgstr "complet"
 
@@ -2790,23 +2663,79 @@ msgstr "incomplet"
 msgid "marked for deletion"
 msgstr "marqué pour suppression"
 
-#: Core/Main.vala:1250 Core/Main.vala:1404 Core/Main.vala:1406
+#: Core/Main.vala:1285 Core/Main.vala:1439 Core/Main.vala:1441
 msgid "mounted at path"
 msgstr "monté sur le chemin"
 
-#: Core/Snapshot.vala:501 Core/Main.vala:1358 Gtk/RestoreBox.vala:237
-#: Gtk/BackupBox.vala:234 Gtk/DeleteBox.vala:149
+#: Core/Main.vala:1393 Core/Snapshot.vala:501 Gtk/DeleteBox.vala:149 Gtk/RestoreBox.vala:237
+#: Gtk/BackupBox.vala:234
 msgid "remaining"
 msgstr "restant"
 
-#: Core/Main.vala:1369
+#: Core/Main.vala:1404
 msgid "rsync returned an error"
 msgstr "rsync a retourné une erreur"
 
-#: Core/SnapshotRepo.vala:714 Core/SnapshotRepo.vala:752
-#: Core/SnapshotRepo.vala:831
+#: Core/SnapshotRepo.vala:714 Core/SnapshotRepo.vala:752 Core/SnapshotRepo.vala:831
 msgid "un-tagged"
 msgstr "non marqué"
+
+#, fuzzy
+#~ msgid "Donation Plugins"
+#~ msgstr "Dons"
+
+#, fuzzy
+#~ msgid "Donate ($5)"
+#~ msgstr "Faire un don"
+
+#, fuzzy
+#~ msgid "Get Support ($10)"
+#~ msgstr "Non pris en charge"
+
+#~ msgid ""
+#~ "Did you find this software useful?\n"
+#~ "\n"
+#~ "You can buy me a coffee or make a donation via PayPal to show your support. Or just drop me an "
+#~ "email and say Hi. This application is completely free and will continue to remain that way. Your "
+#~ "contributions will help in keeping this project alive and improving it further.\n"
+#~ "\n"
+#~ "Feel free to send me an email if you find any issues in this application or if you need any "
+#~ "changes. Suggestions and feedback are always welcome.\n"
+#~ "\n"
+#~ "Thanks,\n"
+#~ "Tony George\n"
+#~ "(teejeetech@gmail.com)"
+#~ msgstr ""
+#~ "Vous avez trouvé ce logiciel utile ?\n"
+#~ "\n"
+#~ "Vous pouvez m'offrir un café ou me faire un don via PayPal pour me montrer votre soutien. Ou vous "
+#~ "pouvez simplement m'envoyer un courriel pour me dire bonjour. Cette application est totalement "
+#~ "libre et continuera à rester comme telle. Vos contributions aideront à garder vivant ce projet et "
+#~ "à l'améliorer encore plus.\n"
+#~ "\n"
+#~ "N'hésitez pas à m'envoyer un courriel si vous trouvez des anomalies dans cette application ou si "
+#~ "vous avez besoin de certains changements. Les suggestions et les commentaires sont toujours les "
+#~ "bienvenus.\n"
+#~ "\n"
+#~ "Merci,\n"
+#~ "Tony George\n"
+#~ "(teejeetech@gmail.com)"
+
+#~ msgid "Donate with PayPal"
+#~ msgstr "Faire un don via PayPal"
+
+#~ msgid "Issue Tracker ~ Report Issues, Request Features, Ask Questions"
+#~ msgstr ""
+#~ "Gestionnaires de problèmes ~ Signaler des problèmes, demander des fonctions, poser des questions"
+
+#~ msgid "Website"
+#~ msgstr "Site web"
+
+#~ msgid "Wiki ~ Documentation & Help"
+#~ msgstr "Wiki ~ Documentation et aide"
+
+#~ msgid "Code Contributions"
+#~ msgstr "Contributions"
 
 #, fuzzy
 #~ msgid "Click to edit and drag-drop to re-order"
@@ -2832,8 +2761,7 @@ msgstr "non marqué"
 #~ msgstr "<b>Système :</b> Distribution Linux installée"
 
 #~ msgid "<b>Snapshot Date:</b> Date on which snapshot was created"
-#~ msgstr ""
-#~ "<b>Date de l'instantané:</b> Date à laquelle l'instantané a été créé"
+#~ msgstr "<b>Date de l'instantané:</b> Date à laquelle l'instantané a été créé"
 
 #~ msgid "Selected snapshot path"
 #~ msgstr "Chemin sélectionné pour les instantanés"
@@ -2862,9 +2790,6 @@ msgstr "non marqué"
 
 #~ msgid "Close Window"
 #~ msgstr "Fermer la fenêtre"
-
-#~ msgid "Contributions"
-#~ msgstr "Contributions"
 
 #~ msgid "Documenters"
 #~ msgstr "Documentalistes"
@@ -2915,11 +2840,9 @@ msgstr "non marqué"
 #~ msgstr "Supprimé"
 
 #~ msgid ""
-#~ "This program is free for personal and commercial use and comes with "
-#~ "absolutely no warranty. You use this program entirely at your own risk. "
-#~ "The author will not be liable for any damages arising from the use of "
-#~ "this program."
+#~ "This program is free for personal and commercial use and comes with absolutely no warranty. You "
+#~ "use this program entirely at your own risk. The author will not be liable for any damages arising "
+#~ "from the use of this program."
 #~ msgstr ""
-#~ "Ce logiciel est livré sans AUCUNE garantie et l'auteur ne prend aucune "
-#~ "responsabilité pour les dégâts occasionnés par l'utilisation de ce "
-#~ "programme."
+#~ "Ce logiciel est livré sans AUCUNE garantie et l'auteur ne prend aucune responsabilité pour les "
+#~ "dégâts occasionnés par l'utilisation de ce programme."

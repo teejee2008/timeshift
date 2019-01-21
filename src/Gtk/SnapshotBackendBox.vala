@@ -61,13 +61,13 @@ class SnapshotBackendBox : Gtk.Box{
 
 		add_label_header(this, _("Select Snapshot Type"), true);
 
-		var hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 12);
+		var vbox = new Gtk.Box(Gtk.Orientation.VERTICAL, 6);
 		//hbox.homogeneous = true;
-		add(hbox);
+		add(vbox);
 		
-		add_opt_rsync(hbox);
+		add_opt_rsync(vbox);
 
-		add_opt_btrfs(hbox);
+		add_opt_btrfs(vbox);
 
 		add_description();
 	}
@@ -92,7 +92,7 @@ class SnapshotBackendBox : Gtk.Box{
 	private void add_opt_btrfs(Gtk.Box hbox){
 
 		var opt = new RadioButton.with_label_from_widget(opt_rsync, _("BTRFS"));
-		opt.set_tooltip_markup(_("Create snapshots using RSYNC"));
+		opt.set_tooltip_markup(_("Create snapshots using BTRFS"));
 		hbox.add (opt);
 		opt_btrfs = opt;
 
@@ -128,16 +128,21 @@ class SnapshotBackendBox : Gtk.Box{
 	}
 	
 	private void add_description(){
+
+		Gtk.Expander expander = new Gtk.Expander("Help");
+		expander.use_markup = true;
+		expander.margin_top = 12;
+		this.add(expander);
 		
 		// scrolled
 		var scrolled = new ScrolledWindow(null, null);
 		scrolled.set_shadow_type (ShadowType.ETCHED_IN);
-		//scrolled.margin = 6;
+		scrolled.margin_top = 6;
 		//scrolled.expand = true;
 		scrolled.set_size_request(-1,200);
 		scrolled.hscrollbar_policy = Gtk.PolicyType.NEVER;
 		scrolled.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
-		add(scrolled);
+		expander.add(scrolled);
 
 		var lbl = new Gtk.Label("");
 		lbl.set_use_markup(true);
@@ -154,7 +159,7 @@ class SnapshotBackendBox : Gtk.Box{
 
 	private void update_description(){
 
-		string bullet = "▰ ";
+		string bullet = "• ";
 		
 		if (opt_btrfs.active){
 			string txt = "<b>" + _("BTRFS Snapshots") + "</b>\n\n";

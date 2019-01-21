@@ -16,10 +16,23 @@ man1dir=$(mandir)/man1
 app_name=timeshift
 app_fullname=Timeshift
 
+# vte -----------------------------
+
 vte_symbol = -D VTE_291
+vte_version=$(shell { (pkg-config --modversion vte-2.91 | cut -d. -f2); } )
+
+ifeq ($(shell { test ${vte_version} -lt 52 ; echo $$? ; } ), 0)
+vte_symbol=$(shell echo '-D VTE_291_OLD')
+else
+vte_symbol=$(shell echo '-D VTE_291')
+endif
+
+# xapp -----------------------------
 
 xapp_pkg=$(shell { ((pkg-config --exists 'xapp >= 1.0.4') >/dev/null && echo '--pkg xapp') || echo ''; } )
 xapp_symbol=$(shell { ((pkg-config --exists 'xapp >= 1.0.4') >/dev/null && echo '-D XAPP') || echo ''; } )
+
+# gtk3 -----------------------------
 
 gtk3_version=$(shell { (pkg-config --modversion gtk+-3.0 | cut -d. -f2); } )
 
@@ -31,25 +44,31 @@ endif
 
 symbols=$(shell echo "${vte_symbol} ${gtk3_symbol} ${xapp_symbol}")
 
-all:
+all: app-gtk app-console pot
+
+app-gtk:
 
 	#timeshift-gtk
 	valac -X -D'GETTEXT_PACKAGE="${app_name}"' \
-		--Xcc="-lm" ${symbols} --thread \
+		--Xcc="-lm" --Xcc="-O3" ${symbols} --thread \
 		Core/*.vala Gtk/*.vala Utility/*.vala Utility/Gtk/*.vala \
 		-o ${app_name}-gtk \
 		--pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix \
 		--pkg gee-0.8 --pkg json-glib-1.0 \
 		--pkg gtk+-3.0 --pkg vte-2.91 $(xapp_pkg)
 
+app-console:
+
 	#timeshift
 	valac -X -D'GETTEXT_PACKAGE="${app_name}"' \
-		--Xcc="-lm" ${symbols} --thread \
+		--Xcc="-lm" --Xcc="-O3" ${symbols} --thread \
 		Core/*.vala Utility/*.vala Utility/Gtk/*.vala Console/*.vala \
 		-o ${app_name} \
 		--pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix \
 		--pkg gee-0.8 --pkg json-glib-1.0 \
 		--pkg gtk+-3.0 --pkg vte-2.91 $(xapp_pkg)
+
+pot:
 
 	# update translation template
 	find . -iname "*.vala" | xargs xgettext \

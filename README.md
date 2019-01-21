@@ -176,7 +176,7 @@ This program is free for personal and commercial use and comes with absolutely n
 You can contribute to this project in various ways:
 
 - Submitting ideas, and reporting issues in the [tracker](https://github.com/teejee2008/timeshift/issues)
-- [Translating](https://translations.launchpad.net/linuxmint/latest/+pots/timeshift) this application to other languages
+- Translating this application to other languages
 - Contributing code changes by fixing issues and submitting a pull request
 - Making a donation via PayPal or bitcoin, or signing-up as a patron on Patreon
 

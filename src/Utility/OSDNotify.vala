@@ -63,8 +63,11 @@ public class OSDNotify : GLib.Object {
 			
 			if (cmd_exists("notify-send")){
 				
-				string s = "notify-send -t %d -u %s -i %s \"%s\" \"%s\"".printf(
-					durationMillis, urgency, "gtk-dialog-" + dialog_type, title, message);
+				string desktop_entry = "timeshift-gtk";
+				string hint = "string:desktop-entry:%s".printf(desktop_entry);
+
+				string s = "notify-send -t %d -u %s -i %s \"%s\" \"%s\" -h %s".printf(
+					durationMillis, urgency, "gtk-dialog-" + dialog_type, title, message, hint);
 					
 				retVal = exec_sync (s, null, null);
 				

@@ -33,6 +33,7 @@ using TeeJee.System;
 using TeeJee.Misc;
 
 class BackupWindow : Gtk.Window{
+	
 	private Gtk.Box vbox_main;
 	private Gtk.Notebook notebook;
 	private Gtk.ButtonBox bbox_action;
@@ -50,7 +51,7 @@ class BackupWindow : Gtk.Window{
 	private Gtk.Button btn_close;
 
 	private uint tmr_init;
-	private int def_width = 450;
+	private int def_width = 500;
 	private int def_height = 500;
 	private bool success = false;
 
@@ -70,6 +71,8 @@ class BackupWindow : Gtk.Window{
         vbox_main = new Gtk.Box(Orientation.VERTICAL, 6);
         vbox_main.margin = 12;
         add(vbox_main);
+
+        this.resize(def_width, def_height);
 
 		// add notebook
 		notebook = add_notebook(vbox_main, false, false);

@@ -422,7 +422,7 @@ public class AboutWindow : Dialog {
 		}
 
 		if (contributors.length > 0){
-			add_header(_("Code Contributions"));
+			add_header(_("Contributors"));
 			foreach(string name in contributors){
 				add_line("%s\n".printf(name));
 			}
@@ -454,7 +454,7 @@ public class AboutWindow : Dialog {
 		}
 
 		if (third_party.length > 0){
-			add_header(_("Icon Themes & Utilities"));
+			add_header(_("Tools"));
 			foreach(string name in third_party){
 				add_line("%s\n".printf(name));
 			}

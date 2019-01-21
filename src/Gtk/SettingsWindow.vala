@@ -45,7 +45,7 @@ class SettingsWindow : Gtk.Window{
 	private UsersBox users_box;
 
 	private uint tmr_init;
-	private int def_width = 550;
+	private int def_width = 500;
 	private int def_height = 500;
 	
 	public SettingsWindow() {
@@ -55,14 +55,16 @@ class SettingsWindow : Gtk.Window{
 		this.title = _("Settings");
         this.window_position = WindowPosition.CENTER;
         this.modal = true;
-        this.set_default_size (def_width, def_height);
+        //this.set_default_size (def_width, def_height);
 		this.icon = IconManager.lookup("timeshift",16);
 
 		this.delete_event.connect(on_delete_event);
 
         vbox_main = new Gtk.Box(Orientation.VERTICAL, 0);
-        //vbox_main.margin = 6;
+        vbox_main.set_size_request(def_width, def_height);
         add(vbox_main);
+
+        this.resize(def_width, def_height);
 
 		var hbox = new Gtk.ButtonBox (Gtk.Orientation.HORIZONTAL);
 		hbox.set_layout (Gtk.ButtonBoxStyle.CENTER);
@@ -74,22 +76,9 @@ class SettingsWindow : Gtk.Window{
 		hbox.add (switcher);
 
 		stack = new Gtk.Stack();
-		stack.set_transition_duration (200);
-        stack.set_transition_type (Gtk.StackTransitionType.SLIDE_LEFT_RIGHT);
+		stack.set_transition_duration(100);
+        stack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT);
 		vbox_main.add(stack);
-
-		var lbl = new Gtk.Label("");
-		lbl.hexpand = true;
-		hbox.add(lbl);
-		
-		var btn_close = add_button(hbox, _("Close"), "", null, null);
-		btn_close.margin = 6;
-		//hbox.add(btn_close);
-		
-        btn_close.clicked.connect(()=>{
-			save_changes();
-			this.destroy();
-		});
 
 		switcher.set_stack(stack);
 		
@@ -134,6 +123,9 @@ class SettingsWindow : Gtk.Window{
 
 		backend_box.refresh();
 		stack.set_visible_child_name("type");
+		
+		this.resize(def_width, def_height);
+		
 		//backup_dev_box.refresh(); //will be triggerred indirectly
 		
 		return false;

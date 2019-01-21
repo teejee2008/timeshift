@@ -44,7 +44,7 @@ class MainWindow : Gtk.Window{
 	private Gtk.ToolButton btn_browse_snapshot;
 	private Gtk.ToolButton btn_settings;
 	private Gtk.ToolButton btn_wizard;
-	//private Gtk.ToolButton btn_clone;
+	private Gtk.ToolButton btn_donate;
 	private Gtk.Menu menu_extra;
 
 	private SnapshotListBox snapshot_list_box;
@@ -201,6 +201,16 @@ class MainWindow : Gtk.Window{
 		separator.set_draw (false);
 		separator.set_expand (true);
 		toolbar.add (separator);
+
+		// donate
+		img = new Gtk.Image.from_icon_name("donate", Gtk.IconSize.LARGE_TOOLBAR);
+		btn_donate = new Gtk.ToolButton (img, null);
+		btn_donate.is_important = true;
+		btn_donate.label = _("Donate");
+		btn_donate.set_tooltip_text (_("Donate"));
+        toolbar.add(btn_donate);
+
+        btn_donate.clicked.connect(btn_donate_clicked);
 
 		//btn_hamburger
         img = new Gtk.Image.from_icon_name("open-menu-symbolic", Gtk.IconSize.LARGE_TOOLBAR);
@@ -365,29 +375,12 @@ class MainWindow : Gtk.Window{
 
 		Gtk.MenuItem menu_item = null;
 
-		// refresh
-		/*menu_item = create_menu_item(_("Refresh Snapshot List"),"","",16);
-		menu_extra.append(menu_item);
-		menu_item.activate.connect(() => {
-			App.repo.load_snapshots();
-			snapshot_list_box.refresh();
-		});*/
-		
 		if (!App.live_system()){
 			// app logs
 			menu_item = create_menu_item(_("View TimeShift Logs"), "", "", 16);
 			menu_extra.append(menu_item);
 			menu_item.activate.connect(btn_view_app_logs_clicked);
 		}
-
-		// separator
-		menu_item = create_menu_item_separator();
-		menu_extra.append(menu_item);
-		
-		// donate
-		menu_item = create_menu_item(_("Donate"), "", "", 16);
-		menu_extra.append(menu_item);
-		menu_item.activate.connect(btn_donate_clicked);
 
 		// about
 		menu_item = create_menu_item(_("About"), "", "", 16);
@@ -917,11 +910,8 @@ class MainWindow : Gtk.Window{
 
 	public void btn_donate_clicked(){
 		
-		var dialog = new DonationWindow();
-		dialog.set_transient_for(this);
+		var dialog = new DonationWindow(this);
 		dialog.show_all();
-		dialog.run();
-		dialog.destroy();
 	}
 
 	private void btn_about_clicked (){
@@ -933,19 +923,13 @@ class MainWindow : Gtk.Window{
 			"Tony George:teejeetech@gmail.com"
 		};
 
-		dialog.translators = {
-			"Launchpad Translation Teams:https://translations.launchpad.net/linuxmint/latest/+pots/timeshift"
-		};
+		dialog.translators = null;
 
 		dialog.contributors = {
-			"Clement Lefebvre:https://github.com/clefebvre",
-			"Maxim Taranov:https://github.com/png2378",
-			"Peter Stevenson:https://github.com/2E0PGS",
-			"Giuseppe Pignataro:https://github.com/Fastbyte01"
+			"View on GitHub:https://github.com/teejee2008/timeshift/graphs/contributors"
 		};
 
 		dialog.third_party = {
-			_("Timeshift is powered by the following tools and components. Please visit the links for more information."),
 			"rsync by Andrew Tridgell, Wayne Davison, and others:http://rsync.samba.org/"
 		};
 

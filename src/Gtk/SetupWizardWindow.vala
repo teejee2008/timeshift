@@ -43,6 +43,7 @@ class SetupWizardWindow : Gtk.Window{
 	private BackupDeviceBox backup_dev_box;
 	private FinishBox finish_box;
 	private ScheduleBox schedule_box;
+	private UsersBox users_box;
 
 	// actions
 	private Gtk.Button btn_prev;
@@ -53,7 +54,7 @@ class SetupWizardWindow : Gtk.Window{
 	private bool schedule_accepted = false;
 
 	private uint tmr_init;
-	private int def_width = 450;
+	private int def_width = 600;
 	private int def_height = 500;
 	
 	public SetupWizardWindow() {
@@ -63,7 +64,7 @@ class SetupWizardWindow : Gtk.Window{
 		this.title = _("Setup Wizard");
         this.window_position = WindowPosition.CENTER;
         this.modal = true;
-        this.set_default_size (def_width, def_height);
+        //this.set_default_size (def_width, def_height);
 		this.icon = IconManager.lookup("timeshift",16);
 
 		this.delete_event.connect(on_delete_event);
@@ -71,7 +72,10 @@ class SetupWizardWindow : Gtk.Window{
 	    // vbox_main
         vbox_main = new Gtk.Box(Orientation.VERTICAL, 6);
         vbox_main.margin = 12;
+        vbox_main.set_size_request(def_width, def_height);
         add(vbox_main);
+
+        this.resize(def_width, def_height);
 
         if (App.first_run && !schedule_accepted){
 			App.schedule_boot = false;
@@ -107,6 +111,12 @@ class SetupWizardWindow : Gtk.Window{
 		schedule_box.margin = 0;
 		notebook.append_page (schedule_box, label);
 
+		label = new Gtk.Label(_("User"));
+		var exclude_box = new ExcludeBox(this);
+		users_box = new UsersBox(this, exclude_box, false);
+		users_box.margin = 0;
+		notebook.append_page (users_box, label);
+
 		label = new Gtk.Label(_("Finished"));
 		finish_box = new FinishBox(this, false);
 		finish_box.margin = 0;
@@ -130,6 +140,8 @@ class SetupWizardWindow : Gtk.Window{
 			tmr_init = 0;
 		}
 
+		this.resize(def_width, def_height);
+
 		go_first();
 
 		return false;
@@ -137,7 +149,7 @@ class SetupWizardWindow : Gtk.Window{
 
 	private bool on_delete_event(Gdk.EventAny event){
 
-		if (!schedule_accepted){
+		if (App.first_run && !schedule_accepted){
 			App.schedule_boot = false;
 			App.schedule_hourly = false;
 			App.schedule_daily = false; // unset
@@ -153,6 +165,8 @@ class SetupWizardWindow : Gtk.Window{
 	private void save_changes(){
 		
 		App.cron_job_update();
+
+		App.first_run = false;
 		
 		//App.check_encrypted_home(this);
 
@@ -163,8 +177,6 @@ class SetupWizardWindow : Gtk.Window{
 		
 		var hbox = new Gtk.ButtonBox (Gtk.Orientation.HORIZONTAL);
 		hbox.margin = 0;
-		hbox.margin_left = 24;
-		hbox.margin_right = 24;
 		hbox.margin_top = 6;
         vbox_main.add(hbox);
         
@@ -263,8 +275,11 @@ class SetupWizardWindow : Gtk.Window{
 		case Tabs.SCHEDULE:
 			notebook.page = Tabs.BACKUP_DEVICE;
 			break;
-		case Tabs.FINISH:
+		case Tabs.USERS:
 			notebook.page = Tabs.SCHEDULE;
+			break;
+		case Tabs.FINISH:
+			notebook.page = Tabs.USERS;
 			break;
 		}
 		
@@ -286,9 +301,11 @@ class SetupWizardWindow : Gtk.Window{
 				notebook.page = Tabs.ESTIMATE; // rsync mode only
 			}
 			break;
+			
 		case Tabs.ESTIMATE:
 			notebook.page = Tabs.BACKUP_DEVICE;
 			break;
+			
 		case Tabs.BACKUP_DEVICE:
 			if (App.live_system()){
 				destroy();
@@ -297,10 +314,16 @@ class SetupWizardWindow : Gtk.Window{
 				notebook.page = Tabs.SCHEDULE;
 			}
 			break;
+			
 		case Tabs.SCHEDULE:
-			notebook.page = Tabs.FINISH;
+			notebook.page = Tabs.USERS;
 			schedule_accepted = true;
 			break;
+
+		case Tabs.USERS:
+			notebook.page = Tabs.FINISH;
+			break;
+			
 		case Tabs.FINISH:
 			// btn_next is disabled for this page
 			break;
@@ -345,6 +368,7 @@ class SetupWizardWindow : Gtk.Window{
 			btn_close.sensitive = true;
 			break;
 		case Tabs.SCHEDULE:
+		case Tabs.USERS:
 			btn_prev.sensitive = true;
 			btn_next.sensitive = true;
 			btn_close.sensitive = true;
@@ -377,6 +401,9 @@ class SetupWizardWindow : Gtk.Window{
 		case Tabs.SCHEDULE:
 			schedule_box.update_statusbar();
 			break;
+		case Tabs.USERS:
+			users_box.refresh();
+			break;
 		case Tabs.FINISH:
 			finish_box.refresh();
 			break;
@@ -406,7 +433,8 @@ class SetupWizardWindow : Gtk.Window{
 		ESTIMATE = 1,
 		BACKUP_DEVICE = 2,
 		SCHEDULE = 3,
-		FINISH = 4
+		USERS = 4,
+		FINISH = 5
 	}
 }
 

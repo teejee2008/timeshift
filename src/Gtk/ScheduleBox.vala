@@ -40,6 +40,8 @@ class ScheduleBox : Gtk.Box{
 	private Gtk.SizeGroup sg_title;
 	private Gtk.SizeGroup sg_subtitle;
 	private Gtk.SizeGroup sg_count;
+
+	private Gtk.CheckButton chk_cron;
 	
 	private Gtk.Window parent_window;
 	
@@ -54,7 +56,7 @@ class ScheduleBox : Gtk.Box{
 		
 		add_label_header(this, _("Select Snapshot Levels"), true);
 
-		Gtk.CheckButton chk_m, chk_w, chk_d, chk_h, chk_b, chk_cron = null;
+		Gtk.CheckButton chk_m, chk_w, chk_d, chk_h, chk_b = null;
 		Gtk.SpinButton spin_m, spin_w, spin_d, spin_h, spin_b;
 
 		// monthly
@@ -147,41 +149,56 @@ class ScheduleBox : Gtk.Box{
 			App.count_boot = (int) spin_b.get_value();
 		});
 
-		var msg = "◈ %s\n◈ %s\n◈ %s".printf(
-			_("Snapshots are not scheduled at fixed times."),
-			_("A maintenance task runs once every hour and creates snapshots as needed."),
-			_("Boot snapshots are created with a delay of 10 minutes after system startup."));
+		// cron emails --------------------------------------------------------------------
 		
-		var label = add_label(this, msg);
-		label.xalign = (float) 0.0;
-		label.margin_top = 20;
-		//label.margin_left = 6;
-		label.set_use_markup(true);
-		//add(label);
-		
-		// buffer
-		label = new Gtk.Label("");
-		label.vexpand = true;
-		add(label);
-		
-		// cron emails
 		chk_cron = add_checkbox(this, _("Stop cron emails for scheduled tasks"));
 		//chk_cron.hexpand = true;
 		chk_cron.set_tooltip_text(_("The cron service sends the output of scheduled tasks as an email to the current user. Select this option to suppress the emails for cron tasks created by Timeshift."));
-		//chk_cron.margin_bottom = 12;	
+
+		chk_cron.margin = 6;
+		chk_cron.margin_top = 12;	
 		
 		chk_cron.active = App.stop_cron_emails;
 		chk_cron.toggled.connect(()=>{
 			App.stop_cron_emails = chk_cron.active;
 		});
 
-		// scrolled
-		var scrolled = new ScrolledWindow(null, null);
+		var msg = "<i>• %s\n• %s\n• %s</i>".printf(
+			_("Snapshots are not scheduled at fixed times."),
+			_("A maintenance task runs once every hour and creates snapshots as needed."),
+			_("Boot snapshots are created with a delay of 10 minutes after system startup."));
+
+		// buffer
+		var label = new Gtk.Label("");
+		label.vexpand = true;
+		add(label);
+		
+		// message area -------------------------------------------------------------------
+		
+		var scrolled = new Gtk.ScrolledWindow(null, null);
 		scrolled.set_shadow_type (ShadowType.ETCHED_IN);
-		//scrolled.margin = 6;
-		//scrolled.margin_top = 0;
+		scrolled.hscrollbar_policy = Gtk.PolicyType.NEVER;
+		scrolled.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC;
+		scrolled.set_size_request(-1, 100);
+		scrolled.margin_top = 6;
+		scrolled.margin_bottom = 6;
+		this.add(scrolled);
+
+		label = new Gtk.Label(msg);
+		label.set_use_markup(true);
+		label.xalign = 0.0f;
+		label.wrap = true;
+		label.wrap_mode = Pango.WrapMode.WORD;
+		label.margin = 6;
+		scrolled.add(label);
+
+		// status area --------------------------------------------------------------------
+		
+		scrolled = new Gtk.ScrolledWindow(null, null);
+		scrolled.set_shadow_type (ShadowType.ETCHED_IN);
 		scrolled.hscrollbar_policy = Gtk.PolicyType.NEVER;
 		scrolled.vscrollbar_policy = Gtk.PolicyType.NEVER;
+		scrolled.set_size_request(-1, 100);
 		add(scrolled);
 		
 		// hbox
@@ -197,20 +214,19 @@ class ScheduleBox : Gtk.Box{
         hbox.add(img_shield);
 
 		var vbox = new Gtk.Box(Orientation.VERTICAL, 6);
+		vbox.margin_top = 6;
         hbox.add (vbox);
         
 		// lbl_shield
 		lbl_shield = add_label(vbox, "");
-        //lbl_shield.margin_bottom = 0;
-        lbl_shield.yalign = (float) 0.5;
-        lbl_shield.hexpand = true;
+        lbl_shield.yalign = 0.5f;
+        //lbl_shield.hexpand = true;
 
         // lbl_shield_subnote
 		lbl_shield_subnote = add_label(vbox, "");
-		lbl_shield_subnote.yalign = (float) 0.5;
-		lbl_shield_subnote.hexpand = true;
-		//lbl_shield_subnote.margin_bottom = 6;
-		
+		lbl_shield_subnote.yalign = 0.5f;
+		//lbl_shield_subnote.hexpand = true;
+
 		lbl_shield_subnote.wrap = true;
 		lbl_shield_subnote.wrap_mode = Pango.WrapMode.WORD;
 
@@ -248,7 +264,9 @@ class ScheduleBox : Gtk.Box{
 		out Gtk.CheckButton chk, out Gtk.SpinButton spin){
 
 		var hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
-		hbox.margin_left = 6;
+		hbox.margin = 6;
+		hbox.margin_top = 1;
+		hbox.margin_bottom = 1;
 		box.add(hbox);
 
 		if (sg_title == null){
@@ -261,13 +279,8 @@ class ScheduleBox : Gtk.Box{
 		chk = add_checkbox(hbox, txt);
 		sg_title.add_widget(chk);
 		
-		//var label = add_label(hbox, " - %s".printf(period_desc));
-		//label.hexpand = true;
-		//sg_subtitle.add_widget(label);
-
 		var tt = _("Number of snapshots to keep.\nOlder snapshots will be removed once this limit is exceeded.");
-		var label = add_label(hbox, _("Keep"));
-		label.margin_left = 24;
+		var label = add_label(hbox, "     " + _("Keep"));
 		label.set_tooltip_text(tt);
 
 		var spin2 = add_spin(hbox, 1, 999, 10);
@@ -299,5 +312,7 @@ class ScheduleBox : Gtk.Box{
 			set_shield_label(_("Scheduled snapshots are disabled"));
 			set_shield_subnote(_("Select the intervals for creating snapshots"));
 		}
+
+		chk_cron.sensitive = App.scheduled;
 	}
 }

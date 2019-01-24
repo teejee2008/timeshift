@@ -2227,11 +2227,8 @@ msgstr "Backup"
 msgid ""
 "Snapshot '%s' is being used by the system and cannot be deleted. Restart the "
 "system to activate the restored snapshot."
-msgstr ""
-"O backup '%s' está sendo usado pelo sistema e não pode ser excluído. "
-"Reinicie o sistema para ativar o backup restaurado.\n"
-"O backup '%s' está sendo usado pelo sistema e não pode ser excluído. "
-"Reinicie o sistema para ativar o backup de restaurado."
+msgstr "O backup '%s' está sendo usado pelo sistema e não pode ser excluído. "
+"Reinicie o sistema para ativar o backup restaurado."
 
 #: Gtk/BackupFinishBox.vala:60
 msgid "Snapshot Created"
@@ -2244,9 +2241,7 @@ msgstr "Selecionar Níveis de Backups"
 
 #: Gtk/MainWindow.vala:754
 msgid "Snapshot deletion in progress..."
-msgstr ""
-"Exclusão do backup em progresso...\n"
-"Excluindo backup em progresso..."
+msgstr "Exclusão do backup em progresso..."
 
 #: Core/SnapshotRepo.vala:470
 #, c-format
@@ -2268,15 +2263,11 @@ msgstr "Localização do backup"
 
 #: Core/Main.vala:1252
 msgid "Snapshot saved successfully"
-msgstr ""
-"Backup efetuado com sucesso\n"
-"Snapshot salva com sucesso"
+msgstr "Backup efetuado com sucesso\n"
 
 #: Core/Main.vala:2022
 msgid "Snapshot to restore not specified!"
-msgstr ""
-"O backup a ser restaurado não foi especificado!\n"
-"Snapshot para restaurar não especificado!"
+msgstr "O backup a ser restaurado não foi especificado!"
 
 #: Core/Main.vala:2855
 msgid "Snapshot will become active after system is rebooted."
@@ -2288,9 +2279,7 @@ msgstr "Backup(s) Excluído"
 
 #: Gtk/MainWindow.vala:320 Gtk/DeleteWindow.vala:89
 msgid "Snapshots"
-msgstr ""
-"Backup(s)\n"
-"Backups"
+msgstr "Backup(s)"
 
 #: Gtk/SnapshotBackendBox.vala:169
 msgid ""
@@ -2306,9 +2295,7 @@ msgid ""
 "hard-linking unchanged files from previous snapshot."
 msgstr ""
 "Os backups são criados através de cópias de arquivos do sistema usando o "
-"rsync, e vinculando os arquivos inalterados ao backup anterior.\n"
-"Os backups são criados criando cópias de arquivos de sistema usando o rsync "
-"e vinculando arquivos inalterados do backup anterior."
+"rsync, e vinculando os arquivos inalterados ao backup anterior."
 
 #: Gtk/SnapshotBackendBox.vala:167
 msgid ""
@@ -2355,19 +2342,19 @@ msgstr ""
 msgid ""
 "Snapshots are saved to /timeshift on selected partition. Other locations are "
 "not supported."
-msgstr ""
+msgstr "Backups são salvos em /timeshift na partição selecionada. Outros locais "
+"não são suportados."
 
 #: Gtk/BackupDeviceBox.vala:99
 msgid ""
 "Snapshots are saved to /timeshift-btrfs on selected partition. Other "
 "locations are not supported."
-msgstr ""
+msgstr "Backups são salvos em /timeshift-btrfs na partição selecionada."
+"Outros locais não são suportados."
 
 #: Gtk/MainWindow.vala:996
 msgid "Snapshots available for restore"
-msgstr ""
-"Backups disponíveis para ser restaurados\n"
-"Backups disponíveis para rastaurar"
+msgstr "Backups disponíveis para ser restaurados\n"
 
 #: Gtk/SnapshotBackendBox.vala:190
 msgid ""
@@ -2387,8 +2374,7 @@ msgstr "Os backups não podem ser criados no modo Live CD"
 #: Gtk/MainWindow.vala:1043
 msgid "Snapshots will be created at selected intervals"
 msgstr ""
-"Os backups serão criados nos intervalos selecionados\n"
-"Os backups serão criados em intervalos selecionados"
+"Os backups serão criados nos intervalos selecionados"
 
 #: Gtk/ScheduleBox.vala:306
 msgid ""
@@ -2413,8 +2399,7 @@ msgstr "Especificar dispositivo para a instalação do bootloader GRUB2"
 #: Console/AppConsole.vala:365
 msgid "Specify snapshot to restore"
 msgstr ""
-"Especificar backup a ser restaurado\n"
-"Especificar snapshot para restaurar"
+"Especificar backup a ser restaurado"
 
 #: Console/AppConsole.vala:366
 msgid "Specify target device"
@@ -2428,8 +2413,7 @@ msgstr "Estado"
 #: Gtk/ScheduleBox.vala:154
 msgid "Stop cron emails for scheduled tasks"
 msgstr ""
-"Parar emails do cron para tarefas agendadas\n"
-"Parar emails no cron para tarefas agendadas"
+"Parar emails do cron para tarefas agendadas"
 
 #: Utility/TeeJee.Process.vala:511
 msgid "Stopped"
@@ -2438,7 +2422,7 @@ msgstr "Interrompido"
 #: Core/Subvolume.vala:189
 #, c-format
 msgid "Subvolume exists at destination"
-msgstr ""
+msgstr "Volume existe no destino"
 
 #: Gtk/SnapshotListBox.vala:275
 #, fuzzy, c-format
@@ -2470,8 +2454,7 @@ msgstr "Links simbólicos atualizados"
 #: Core/Main.vala:2382
 msgid "Synching file systems..."
 msgstr ""
-"Sincronizando sistemas de arquivos...\n"
-"Sincronizar sistemas de arquivos ..."
+"Sincronizando sistemas de arquivos..."
 
 #: Core/Main.vala:1361 Core/Main.vala:2544 Core/Main.vala:2785
 msgid "Synching files with rsync..."
@@ -2539,10 +2522,7 @@ msgid ""
 msgstr ""
 "O serviço cron envia a saída de tarefas agendadas através de um e-mail para "
 "o usuário atual. Selecione esta opção para evitar esses envios, criados no "
-"cron pelo Timeshift.\n"
-"O serviço cron envia a saída de tarefas agendadas como um e-mail para o "
-"usuário atual. Selecione esta opção para suprimir os emails das tarefas "
-"criadas no cron pelo Timeshift."
+"cron pelo Timeshift."
 
 #: Core/Main.vala:376
 msgid "The system partition has an unsupported subvolume layout."
@@ -2585,7 +2565,9 @@ msgid ""
 "This software is free for personal and commercial use. It is distributed in "
 "the hope that it is useful but without any warranty. See the GNU General "
 "Public License v2 or later for more information"
-msgstr ""
+msgstr "Este software é livre para uso pessoal e comercial. Ele é distribuído"
+"na esperança de que seja útil, mas sem qualquer tipo de garantia. Consulte a "
+"Licença Pública Geral GNU v2 ou posterior para maiores informações"
 
 #: Gtk/MainWindow.vala:1031 Gtk/MainWindow.vala:1042
 msgid "Timeshift is active"
@@ -2605,7 +2587,7 @@ msgstr ""
 
 #: Utility/Gtk/AboutWindow.vala:457
 msgid "Tools"
-msgstr ""
+msgstr "Ferramentas"
 
 #: Utility/Gtk/AboutWindow.vala:441
 msgid "Translations"
@@ -2630,8 +2612,7 @@ msgstr "Opção desconhecida"
 #: Core/Main.vala:1203
 msgid "Unknown snapshot type"
 msgstr ""
-"Tipo de backup desconhecido\n"
-"Tipo de snapshot Desconhecido"
+"Tipo de backup desconhecido"
 
 #: Core/Main.vala:1566
 msgid "Unknown value specified for option --tags"
@@ -2708,8 +2689,7 @@ msgstr "Usuário"
 #: Gtk/UsersBox.vala:63
 msgid "User Home Directories"
 msgstr ""
-"Diretórios Home do Usuário (Pasta Pessoal)\n"
-"Diretórios Home do Usuário"
+"Diretórios Home do Usuário (Pasta Pessoal)"
 
 #: Utility/Device.vala:1460
 msgid "User cancelled the password prompt"
@@ -2720,8 +2700,6 @@ msgid ""
 "User home directories are excluded by default unless you enable them here"
 msgstr ""
 "Os Diretórios Home do usuário não são inclusos por padrão, a menos seja que "
-"habilitados aqui\n"
-"Diretórios Home do usuário não são inclusos por padrão a menos que "
 "habilitados aqui"
 
 #: Gtk/SettingsWindow.vala:98
@@ -2769,18 +2747,16 @@ msgstr "Semanalmente."
 #: Core/Main.vala:1107
 msgid "Weekly snapshot failed!"
 msgstr ""
-"Backup semanal falhou!\n"
-"Snapshot semanal falhou!"
+"Backup semanal falhou!"
 
 #: Core/Main.vala:1088
 msgid "Weekly snapshots are enabled"
 msgstr ""
-"Backups semanais estão habilitados\n"
-"Snapshots semanais estão habilitados"
+"Backups semanais estão habilitados"
 
 #: Utility/Gtk/DonationWindow.vala:99
 msgid "Wiki"
-msgstr ""
+msgstr "Wiki"
 
 #: Gtk/BackupFinishBox.vala:63 Gtk/DeleteFinishBox.vala:63
 msgid "With Errors"
@@ -2846,14 +2822,12 @@ msgstr "concluído"
 #: Utility/CronTab.vala:261
 msgid "crontab file exported"
 msgstr ""
-"Arquivo crontab exportado\n"
-"Exportado ao arquivo crontab"
+"Arquivo crontab exportado"
 
 #: Utility/CronTab.vala:244
 msgid "crontab file installed"
 msgstr ""
-"Arquivo crontab instalado\n"
-"Instalado ao arquivo crontab"
+"Arquivo crontab instalado"
 
 #: Core/SnapshotRepo.vala:868
 msgid "incomplete"

@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: timeshift\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
 "POT-Creation-Date: 2018-09-05 21:57+0530\n"
-"PO-Revision-Date: 2019-01-03 22:41+0100\n"
+"PO-Revision-Date: 2019-03-09 16:42+0100\n"
 "Last-Translator: Kacper Paczos <kacper-paczos@linux.pl>\n"
 "Language-Team: Polish <none>\n"
 "Language: pl\n"
@@ -122,7 +122,7 @@ msgstr "Dodaj pliki"
 
 #: Console/AppConsole.vala:360
 msgid "Add tags to snapshot (default: O)"
-msgstr "Dodaj znaczniki do migawki (domyślnie: O)"
+msgstr "Dodaj oznaczenia do migawki (domyślnie: O)"
 
 #: Utility/CronTab.vala:312
 msgid "Added cron task"
@@ -289,16 +289,14 @@ msgid "Bittorrent Clients"
 msgstr "Klienty Bittorrent"
 
 #: Gtk/ScheduleBox.vala:136 Gtk/SnapshotListBox.vala:298
-#, fuzzy
 msgid "Boot"
-msgstr "Rozruch"
+msgstr "Rozruchowe"
 
 #: Gtk/RestoreDeviceBox.vala:499
 msgid "Boot device not selected"
 msgstr "Nie wybrano urządzenia z programem rozruchowym"
 
 #: Core/Main.vala:1017
-#, fuzzy
 msgid "Boot snapshot failed!"
 msgstr "Uruchomienie migawki nie powiodło się!"
 
@@ -1097,7 +1095,7 @@ msgstr "Znaleziono istniejącą migawkę przed-przywróceniem"
 
 #: Gtk/BackupDeviceBox.vala:215
 msgid "Free"
-msgstr "Wolne"
+msgstr "Wolne miejsce"
 
 #: Core/SnapshotRepo.vala:77 Core/SnapshotRepo.vala:147
 msgid "Free space"
@@ -1158,7 +1156,7 @@ msgstr "Katalog domowy"
 
 #: Gtk/ScheduleBox.vala:118 Gtk/SnapshotListBox.vala:299
 msgid "Hourly"
-msgstr "Godzinna"
+msgstr "Godzinne"
 
 #: Core/Main.vala:1047
 msgid "Hourly snapshot failed!"
@@ -1770,12 +1768,11 @@ msgid "Removing snapshots"
 msgstr "Usuwanie migawek"
 
 #: Gtk/UsersBox.vala:360
-#, fuzzy
 msgid ""
 "Required for displaying shared and unshared size for snapshots in the main "
 "window"
 msgstr ""
-"Wymagane do wyświetlania wspólnego i niewspółdzielonego rozmiaru migawek w "
+"Wymagane, aby wyświetlić współdzielone i niewspółdzielone rozmiaru migawek w "
 "oknie głównym"
 
 #: Console/AppConsole.vala:362 Gtk/RestoreFinishBox.vala:71
@@ -1863,7 +1860,6 @@ msgid "Root device not selected"
 msgstr "Nie wybrano urządzenia z głównym systemem plików (root)"
 
 #: Gtk/RsyncLogWindow.vala:49
-#, fuzzy
 msgid "Rsync Log Viewer"
 msgstr "Przeglądarka dziennika Rsync"
 
@@ -1875,7 +1871,6 @@ msgstr ""
 "konsolowej wersji tego narzędzia"
 
 #: Console/AppConsole.vala:382
-#, fuzzy
 msgid "Run in non-interactive mode"
 msgstr "Uruchom w trybie nieinteraktywnym"
 
@@ -1908,7 +1903,6 @@ msgid "Saving to device"
 msgstr "Zapisywanie na urządzeniu"
 
 #: Gtk/SetupWizardWindow.vala:109 Gtk/SettingsWindow.vala:92
-#, fuzzy
 msgid "Schedule"
 msgstr "Harmonogram"
 
@@ -1929,7 +1923,6 @@ msgid "Scheduled snapshots are enabled"
 msgstr "Zaplanowane migawki są włączone"
 
 #: Gtk/FinishBox.vala:75
-#, fuzzy
 msgid ""
 "Scheduled snapshots are enabled. Snapshots will be created automatically for "
 "selected levels."
@@ -1961,9 +1954,8 @@ msgid "Select Snapshot"
 msgstr "Wybierz migawkę"
 
 #: Gtk/ScheduleBox.vala:57
-#, fuzzy
 msgid "Select Snapshot Levels"
-msgstr "Wybierz poziomy migawki"
+msgstr "Określ poziomy migawek"
 
 #: Gtk/BackupDeviceBox.vala:56
 msgid "Select Snapshot Location"
@@ -1999,7 +1991,6 @@ msgid "Select another device or free up some space"
 msgstr "Wybierz inne urządzenie lub zwolnij trochę miejsca na dysku"
 
 #: Gtk/MainWindow.vala:540 Gtk/MainWindow.vala:547
-#, fuzzy
 msgid "Select another device to delete snasphots"
 msgstr "Wybierz inne urządzenie, aby usunąć migawki"
 
@@ -2040,7 +2031,6 @@ msgid "Select the devices where files will be restored."
 msgstr "Wybierz urządzenia, z których pliki zostaną przywrócone."
 
 #: Gtk/ScheduleBox.vala:313
-#, fuzzy
 msgid "Select the intervals for creating snapshots"
 msgstr "Wybierz okresy, w których będą tworzone migawki"
 
@@ -2389,7 +2379,7 @@ msgid "Subvolume exists at destination"
 msgstr "Podwolumen już istnieje w docelowym miejscu"
 
 #: Gtk/SnapshotListBox.vala:275
-#, fuzzy, c-format
+#, c-format
 msgid "Subvolumes"
 msgstr "Podwolumeny"
 
@@ -2419,7 +2409,6 @@ msgid "Synching file systems..."
 msgstr "Synchronizacja systemu plików..."
 
 #: Core/Main.vala:1361 Core/Main.vala:2544 Core/Main.vala:2785
-#, fuzzy
 msgid "Synching files with rsync..."
 msgstr "Synchronizacja plików za pomocą rsync..."
 
@@ -2449,13 +2438,12 @@ msgid "System will reboot after files are restored."
 msgstr "System zostanie uruchomiony ponownie po przywróceniu plików."
 
 #: Core/Main.vala:1221 Core/Main.vala:1262
-#, fuzzy
 msgid "Tagged snapshot"
-msgstr "Otagowana migawka"
+msgstr "Oznaczono migawkę"
 
 #: Console/AppConsole.vala:426 Gtk/SnapshotListBox.vala:151
 msgid "Tags"
-msgstr "Tagi"
+msgstr "Oznaczenia"
 
 #: Core/Main.vala:2057
 msgid "Target device is not mounted"
@@ -2547,9 +2535,9 @@ msgid "Timeshift is active"
 msgstr "Timeshift jest aktywny"
 
 #: Gtk/RsyncLogBox.vala:394 Gtk/RestoreBox.vala:132 Gtk/BackupBox.vala:94
-#, fuzzy, c-format
+#, c-format
 msgid "Timestamp"
-msgstr "Datowanie"
+msgstr "Znak czasu"
 
 #: Console/AppConsole.vala:612
 #, c-format
@@ -2588,7 +2576,7 @@ msgstr "Nieznany typ migawki"
 
 #: Core/Main.vala:1566
 msgid "Unknown value specified for option --tags"
-msgstr "Określono nieznaną wartość w opcji --tagi (tags)"
+msgstr "Określono nieznaną wartość w opcji --oznaczenia (tags)"
 
 #: Utility/Device.vala:1390 Utility/Device.vala:1506
 #, c-format
@@ -2600,9 +2588,8 @@ msgid "Unlocked successfully"
 msgstr "Odblokowano pomyślnie"
 
 #: Utility/Device.vala:1720
-#, fuzzy
 msgid "Unmounting from"
-msgstr "Od montowano z"
+msgstr "Odłączanie od"
 
 #: Gtk/SnapshotListBox.vala:199
 msgid "Unshared"
@@ -2653,7 +2640,7 @@ msgstr ""
 "funkcje. Proszę unikać zgłaszania błędów przez pocztę elektroniczną."
 
 #: Utility/Device.vala:1954
-#, fuzzy, c-format
+#, c-format
 msgid "Used"
 msgstr "Użyto"
 
@@ -2694,7 +2681,6 @@ msgid "View Rsync Log for Create"
 msgstr "Zobacz pliki dziennika Rsync do utworzenia"
 
 #: Gtk/SnapshotListBox.vala:350
-#, fuzzy
 msgid "View Rsync Log for Restore"
 msgstr "Zobacz pliki dziennika Rsync do przywrócenia"
 
@@ -2703,7 +2689,6 @@ msgid "View TimeShift Logs"
 msgstr "Zobacz pliki dziennika TimeShift"
 
 #: Gtk/RestoreDeviceBox.vala:101
-#, fuzzy
 msgid "Volume"
 msgstr "Objętość"
 
@@ -2824,7 +2809,7 @@ msgstr "rsync zwrócił błąd"
 #: Core/SnapshotRepo.vala:714 Core/SnapshotRepo.vala:752
 #: Core/SnapshotRepo.vala:831
 msgid "un-tagged"
-msgstr "nieotagowany"
+msgstr "nieoznaczono"
 
 #, fuzzy
 #~ msgid "Donation Plugins"

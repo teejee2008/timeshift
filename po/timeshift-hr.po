@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: linuxmint\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-11-13 12:34+0100\n"
-"PO-Revision-Date: 2018-11-25 21:24+0100\n"
+"PO-Revision-Date: 2019-03-22 19:19+0100\n"
 "Last-Translator: gogo <trebelnik2@gmail.com>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "Language: hr\n"
@@ -233,7 +233,7 @@ msgstr "Otključavanje uspješno"
 
 #: src/Utility/Device.vala:1720
 msgid "Unmounting from"
-msgstr "Odmoontiravanje od"
+msgstr "Odmontiravanje od"
 
 #: src/Utility/Device.vala:1731
 msgid "Failed to unmount"
@@ -246,7 +246,7 @@ msgstr "Neuspjelo odmontiravanje"
 #: src/Core/SnapshotRepo.vala:76 src/Core/SnapshotRepo.vala:683
 #: src/Core/SnapshotRepo.vala:686
 msgid "Device"
-msgstr "Uređaj"
+msgstr "Particija"
 
 #: src/Utility/Device.vala:1931
 msgid "Vendor"
@@ -274,7 +274,7 @@ msgstr "Veličina"
 
 #: src/Utility/Device.vala:1944
 msgid "Parent Device"
-msgstr "Sadržajni uređaj"
+msgstr "Uređaj"
 
 #: src/Utility/Device.vala:1946
 msgid "UUID"
@@ -293,7 +293,7 @@ msgstr "Datotečni sustav"
 #: src/Utility/Device.vala:1949 src/Gtk/BackupDeviceBox.vala:254
 #: src/Console/AppConsole.vala:459 src/Console/AppConsole.vala:498
 msgid "Label"
-msgstr "Naziv"
+msgstr "Oznaka"
 
 #: src/Utility/Device.vala:1954
 msgid "Used"
@@ -404,7 +404,7 @@ msgstr "Datoteka nedostaje"
 
 #: src/Gtk/BackupDeviceBox.vala:56
 msgid "Select Snapshot Location"
-msgstr "Odaberi lokaciju snimke sustava"
+msgstr "Odabir lokacije snimke sustava"
 
 #: src/Gtk/BackupDeviceBox.vala:65 src/Gtk/RestoreDeviceBox.vala:70
 msgid "Refresh"
@@ -441,7 +441,7 @@ msgstr ""
 
 #: src/Gtk/BackupDeviceBox.vala:106
 msgid "Remote and network locations are not supported."
-msgstr "Ostale aplikacije (sljedeća stranica)"
+msgstr "Mrežne i udaljene lokacije nisu podržane."
 
 #: src/Gtk/BackupDeviceBox.vala:107
 msgid ""
@@ -486,11 +486,11 @@ msgstr "Preglednik zaspisa"
 
 #: src/Gtk/RestoreWindow.vala:69
 msgid "Clone System"
-msgstr "Kloniraj sustav"
+msgstr "Kloniranje sustava"
 
 #: src/Gtk/RestoreWindow.vala:69
 msgid "Restore Snapshot"
-msgstr "Izuzmi snimku sustava"
+msgstr "Obnavljanje snimke sustava"
 
 #: src/Gtk/RestoreWindow.vala:89
 msgid "Restore Device"
@@ -586,8 +586,8 @@ msgid ""
 "later if required, to 'undo' the restore."
 msgstr ""
 "Možete nastaviti raditi na trenutnom sustavu. Nakon ponovnog pokretanja, "
-"trenutni sustav će biti dostupan kao nova snimka sustava. Ova snimka sustava "
-"se može obnoviti kasnije ako je potrebno, na 'undo' za obnovu."
+"trenutni sustav će biti dostupan kao nova snimka sustava. Ako je potrebno, "
+"ova snimka sustava se može obnoviti kasnije u 'vrati' obnovi."
 
 #: src/Gtk/RestoreFinishBox.vala:102
 msgid ""
@@ -600,7 +600,7 @@ msgstr ""
 #: src/Gtk/RestoreFinishBox.vala:106 src/Gtk/DeleteFinishBox.vala:71
 #: src/Gtk/FinishBox.vala:101 src/Gtk/BackupFinishBox.vala:70
 msgid "Close window to exit"
-msgstr "Zatvori prozor i izađi"
+msgstr "Sada slobodno možete zatvoriti prozor"
 
 #: src/Gtk/DeleteFinishBox.vala:60
 msgid "Snapshot(s) Deleted"
@@ -806,12 +806,12 @@ msgstr "Starija snimka sustava"
 
 #: src/Gtk/MainWindow.vala:1043
 msgid "Snapshots will be created at selected intervals"
-msgstr "Snimke sustava će biti stvorene u odabranom  razdoblju"
+msgstr "Snimke sustava će biti stvorene u odabranom razdoblju"
 
 #: src/Gtk/MainWindow.vala:1051 src/Gtk/ScheduleBox.vala:312
 #: src/Core/Main.vala:1147
 msgid "Scheduled snapshots are disabled"
-msgstr "Raspored  snimanja sustava je onemogućen"
+msgstr "Raspored snimanja sustava je onemogućen"
 
 #: src/Gtk/MainWindow.vala:1052
 msgid "Enable scheduled snapshots to protect your system"
@@ -971,7 +971,7 @@ msgstr "Stanje"
 
 #: src/Gtk/BootOptionsBox.vala:118
 msgid "(Re)install GRUB2 on:"
-msgstr "(Ponovo) instaliraj GRUB2 na:"
+msgstr "(Ponovno) instaliraj GRUB2 na:"
 
 #: src/Gtk/BootOptionsBox.vala:120
 msgid "Re-installs the GRUB2 bootloader on the selected device."
@@ -1053,7 +1053,8 @@ msgstr "Prikaži sve mogućnosti"
 
 #: src/Gtk/AppGtk.vala:119
 msgid "Run 'timeshift' for the command-line version of this tool"
-msgstr "Pokrenite 'timeshift' za inačicu naredbenog redka ovog alata"
+msgstr ""
+"Pokrenite 'timeshift' u terminalu za inačicu naredbenog redka ovog alata"
 
 #: src/Gtk/AppGtk.vala:126
 msgid "Admin access is required to backup and restore system files."
@@ -1122,7 +1123,7 @@ msgstr "Osobna mapa"
 
 #: src/Gtk/UsersBox.vala:136
 msgid "Exclude All"
-msgstr "Izuzmi aplikacije"
+msgstr "Izuzmi sve"
 
 #: src/Gtk/UsersBox.vala:194
 msgid "Include Hidden"
@@ -1142,7 +1143,7 @@ msgstr ""
 
 #: src/Gtk/UsersBox.vala:266
 msgid "Include All"
-msgstr "Izuzmi aplikacije"
+msgstr "Obuhvati sve"
 
 #: src/Gtk/UsersBox.vala:329
 msgid "Restore @home subvolume"
@@ -1170,7 +1171,7 @@ msgstr ""
 
 #: src/Gtk/SnapshotBackendBox.vala:62
 msgid "Select Snapshot Type"
-msgstr "Odaberi vrstu snimke sustava"
+msgstr "Odabir vrste snimke sustava"
 
 #: src/Gtk/SnapshotBackendBox.vala:77
 msgid "RSYNC"
@@ -1178,7 +1179,7 @@ msgstr "RSYNC"
 
 #: src/Gtk/SnapshotBackendBox.vala:78
 msgid "Create snapshots using RSYNC tool and hard-links"
-msgstr "Stvori snimku sustava RSYNC alat i stvarnih poveznica"
+msgstr "Stvori snimku sustava koristeći RSYNC alat i stvarne poveznice"
 
 #: src/Gtk/SnapshotBackendBox.vala:94
 msgid "BTRFS"
@@ -1325,15 +1326,15 @@ msgid ""
 "Scheduled snapshots are enabled. Snapshots will be created automatically for "
 "selected levels."
 msgstr ""
-"Raspored  snimanja sustava je omogućen. Snimke sustava će biti automatski "
+"Raspored snimanja sustava je omogućen. Snimke sustava će biti automatski "
 "stvorene prema odabranom rasporedu.\n"
-"Raspored  snimanja sustava je omogućen. Snimke sustava će biti automatski "
+"Raspored snimanja sustava je omogućen. Snimke sustava će biti automatski "
 "stvorene za odabrane razine."
 
 #: src/Gtk/FinishBox.vala:78
 msgid "Scheduled snapshots are disabled. It's recommended to enable it."
 msgstr ""
-"Raspored  snimanja sustava je onemogućen. Preporučljivo je da ga omogućite."
+"Raspored snimanja sustava je onemogućen. Preporučljivo je da ga omogućite."
 
 #: src/Gtk/FinishBox.vala:82
 msgid "System can be rolled-back to a previous date by restoring a snapshot."
@@ -1381,8 +1382,6 @@ msgid ""
 "against drive failures."
 msgstr ""
 "Spremite snimke sustava na vanjski disk umjesto na disk sustava kako bi "
-"spriječili gubitak podataka uslijed kvara diska.\n"
-"Spremi snimke sustava na vanjski disk umjesto na disk sustava kako bi "
 "spriječili gubitak podataka uslijed kvara diska."
 
 #: src/Gtk/FinishBox.vala:97
@@ -1395,17 +1394,11 @@ msgstr ""
 "Spremanje snimaka sustava na nesustavski disk omogućuje vam formatiranje i "
 "ponovnu instalaciju OS-a bez gubitka snimaka sustava spremljenih na njemu. "
 "Možete čak instalirati drugu Linux distribuciju i zatim vratiti natrag "
-"prijašnju distribuciju obnovom iz snimke sustava.\n"
-"Spremanje snimaka sustava na nesustavski disk omogućuje vam formatiranje i "
-"reinstalaciju OS-a bez gubitka snimaka sustava spremljenih na njega. Možete "
-"čak instalirati drugu Linux distribuciju i zatim vratiti natrag prijašnju "
-"distribuciju obnovom iz snimke sustava."
+"prijašnju distribuciju obnovom iz snimke sustava."
 
 #: src/Gtk/ScheduleBox.vala:57
 msgid "Select Snapshot Levels"
-msgstr ""
-"Postavi raspored stvaranja snimke sustava\n"
-"Odaberi razinu snimke sustava"
+msgstr "Raspored stvaranja snimke sustava"
 
 #: src/Gtk/ScheduleBox.vala:64 src/Gtk/SnapshotListBox.vala:302
 msgid "Monthly"
@@ -1493,7 +1486,7 @@ msgstr "Zadrži"
 
 #: src/Gtk/ScheduleBox.vala:305
 msgid "Scheduled snapshots are enabled"
-msgstr "Raspored  snimanja sustava je omogućen"
+msgstr "Raspored snimanja sustava je omogućen"
 
 #: src/Gtk/ScheduleBox.vala:306
 msgid ""
@@ -1505,7 +1498,7 @@ msgstr ""
 
 #: src/Gtk/ScheduleBox.vala:313
 msgid "Select the intervals for creating snapshots"
-msgstr "Odaberi razdoblje stvaranja snimaka sustava"
+msgstr "Odaberite razdoblje stvaranja snimaka sustava"
 
 #: src/Gtk/SettingsWindow.vala:98
 msgid "Users"
@@ -1517,7 +1510,7 @@ msgstr "Filtri"
 
 #: src/Gtk/BackupWindow.vala:62
 msgid "Create Snapshot"
-msgstr "Stvori snimku sustava"
+msgstr "Stvaranje snimke sustava"
 
 #: src/Gtk/BackupWindow.vala:92 src/Console/AppConsole.vala:356
 msgid "Backup"
@@ -1525,15 +1518,15 @@ msgstr "Sigurnosno kopiranje"
 
 #: src/Gtk/RestoreDeviceBox.vala:61
 msgid "Select Target Device"
-msgstr "Odaberi odredišni uređaj"
+msgstr "Odabir odredišnog uređaja"
 
 #: src/Gtk/RestoreDeviceBox.vala:79
 msgid "Select the target devices where system will be cloned."
-msgstr "Odaberi odredišne uređaje gdje će se sustav klonirati."
+msgstr "Odaberite odredišne uređaje gdje će se sustav klonirati."
 
 #: src/Gtk/RestoreDeviceBox.vala:83
 msgid "Select the devices where files will be restored."
-msgstr "Odaberi uređaj gdje će se datoteke obnoviti."
+msgstr "Odaberite uređaj gdje će se datoteke obnoviti."
 
 #: src/Gtk/RestoreDeviceBox.vala:84
 msgid "Devices from which snapshot was created are pre-selected."
@@ -1815,11 +1808,11 @@ msgstr "Obriši snimke sustava"
 
 #: src/Gtk/DeleteWindow.vala:85
 msgid "Select Snapshots"
-msgstr "Odaberi snimku sustava"
+msgstr "Odabir snimke sustava"
 
 #: src/Gtk/DeleteWindow.vala:87
 msgid "Select the snapshots to be deleted"
-msgstr "Odaberi snimke sustava za brisanje"
+msgstr "Odaberite snimke sustava za brisanje"
 
 #: src/Gtk/DeleteWindow.vala:178
 msgid "Hide"
@@ -1827,11 +1820,11 @@ msgstr "Sakrij"
 
 #: src/Gtk/DeleteWindow.vala:179
 msgid "Hide this window (files will be deleted in background)"
-msgstr "Sakrij ovaj prozor (datoteke ći biti obrisane u pozadini)"
+msgstr "Sakrij ovaj prozor (datoteke će biti obrisane u pozadini)"
 
 #: src/Gtk/DeleteWindow.vala:342
 msgid "Select snapshots to delete"
-msgstr "Odaberi snimku sustava za brisanje"
+msgstr "Odaberite snimku sustava za brisanje"
 
 #: src/Console/AppConsole.vala:102
 msgid "Application needs admin access."
@@ -2008,7 +2001,7 @@ msgstr "Odaberi BTRFS disk sustava s korijenskim poduređajem (@)"
 #: src/Console/AppConsole.vala:894 src/Console/AppConsole.vala:989
 #: src/Console/AppConsole.vala:1034 src/Console/AppConsole.vala:1075
 msgid "Failed to get input from user in 3 attempts"
-msgstr "Neuspjelo dobivanje ulaza od korinika u 3 pokušaja"
+msgstr "Neuspjelo dobivanje ulaza od korisnika u 3 pokušaja"
 
 #: src/Console/AppConsole.vala:699 src/Console/AppConsole.vala:763
 #: src/Console/AppConsole.vala:895 src/Console/AppConsole.vala:990
@@ -2336,7 +2329,7 @@ msgstr "Nepoznata vrijednost određena za mogućnost --tags"
 
 #: src/Core/Main.vala:1567
 msgid "Expected values: O, B, H, D, W, M"
-msgstr "Izuzmi vrijednosti: O, B, H, D, W, M"
+msgstr "Očekivane vrijednosti: O, B, H, D, W, M"
 
 #: src/Core/Main.vala:1617 src/Core/Main.vala:1628 src/Core/Main.vala:4197
 #: src/Core/Snapshot.vala:509 src/Core/SnapshotRepo.vala:975
@@ -2396,7 +2389,7 @@ msgid ""
 "This software comes without absolutely NO warranty and the author takes no "
 "responsibility for any damage arising from the use of this program."
 msgstr ""
-"Ovaj softver dolazi BEZ ikakovg jamstva i autor ne preuzima odgovornost za "
+"Ovaj softver dolazi BEZ ikakvog jamstva i autor ne preuzima odgovornost za "
 "bilo kakve štete proizašle iz korištenja ovog programa."
 
 #: src/Core/Main.vala:2212
@@ -2416,7 +2409,7 @@ msgstr "Sustav će se ponovno pokrenuti nakon obnove datoteka"
 
 #: src/Core/Main.vala:2307
 msgid "Re-installing GRUB2 bootloader..."
-msgstr "Ponovna instalacija GRUB2 učitač pokretanja..."
+msgstr "Ponovna instalacija GRUB2 učitača pokretanja..."
 
 #: src/Core/Main.vala:2348
 msgid "Generating initramfs..."
@@ -2509,7 +2502,7 @@ msgstr ""
 
 #: src/Core/Main.vala:2996
 msgid "Created pre-restore snapshot"
-msgstr "Snimku sustava predobnove stvorena"
+msgstr "Snimka sustava predobnove stvorena"
 
 #: src/Core/Main.vala:3076
 msgid "App config saved"
@@ -2541,19 +2534,19 @@ msgstr "Neuspjelo dobivanje popisa particija."
 
 #: src/Core/Main.vala:3342
 msgid "/ is mapped to device"
-msgstr "/ je mapiran na uređaj"
+msgstr "/ je mapiran na particiju"
 
 #: src/Core/Main.vala:3353
 msgid "/home is mapped to device"
-msgstr "/home je mapiran na uređaj"
+msgstr "/home je mapiran na particiju"
 
 #: src/Core/Main.vala:3364
 msgid "/boot is mapped to device"
-msgstr "/boot je mapiran na uređaj"
+msgstr "/boot je mapiran na particiju"
 
 #: src/Core/Main.vala:3375
 msgid "/boot/efi is mapped to device"
-msgstr "/boot/efi je mapiran na uređaj"
+msgstr "/boot/efi je mapiran na particiju"
 
 #: src/Core/Main.vala:3431
 msgid "The target partition has an unsupported subvolume layout."
@@ -2659,7 +2652,7 @@ msgstr "Nema dovoljno diskovnog prostora"
 
 #: src/Core/SnapshotRepo.vala:632 src/Core/SnapshotRepo.vala:659
 msgid "Select another device or free up some space"
-msgstr "Odaberi drugi uređaj ili oslobodite malo prostora"
+msgstr "Odaberite drugi uređaj ili oslobodite malo prostora"
 
 #: src/Core/SnapshotRepo.vala:641
 #, c-format
@@ -2684,9 +2677,7 @@ msgstr "Način"
 
 #: src/Core/SnapshotRepo.vala:711 src/Core/SnapshotRepo.vala:748
 msgid "Maximum backups exceeded for backup level"
-msgstr ""
-"Premašen je broj sigurnosnih kopija za raspored sigurnosnog kopiranja\n"
-"Premašen je broj sigurnosnih kopija za razinu sigurnosnog kopiranja"
+msgstr "Premašen je broj sigurnosnih kopija za raspored sigurnosnog kopiranja"
 
 #: src/Core/SnapshotRepo.vala:714 src/Core/SnapshotRepo.vala:752
 #: src/Core/SnapshotRepo.vala:831

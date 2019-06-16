@@ -33,7 +33,7 @@ namespace TeeJee.Logging{
 	public bool LOG_ENABLE = true;
 	public bool LOG_TIMESTAMP = false;
 	public bool LOG_COLORS = true;
-	public bool LOG_DEBUG = false;
+	public bool LOG_DEBUG = true;  /* ter battery */
 	public bool LOG_COMMANDS = false;
 
 	public void log_msg (string message, bool highlight = false){

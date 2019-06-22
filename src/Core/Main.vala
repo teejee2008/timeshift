@@ -475,6 +475,8 @@ public class Main : GLib.Object{
 				case "--list-devices":
 					app_mode = "list-devices";
 					break;
+
+
 			}
 		}
 	}
@@ -4161,7 +4163,7 @@ public class Main : GLib.Object{
 			
 			//boot
 			if (schedule_boot){
-				CronTab.add_script_file("timeshift-boot", "d", "@reboot root sleep 10m && timeshift --create --scripted --tags B", stop_cron_emails);
+				CronTab.add_script_file("timeshift-boot", "d", "@reboot root sleep 10m && timeshift --check --scripted --tags B", stop_cron_emails);
 			}
 			else{
 				CronTab.remove_script_file("timeshift-boot", "d");

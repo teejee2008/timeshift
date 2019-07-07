@@ -78,6 +78,7 @@ public class Main : GLib.Object{
 	public Device sys_home;
 	public Gee.HashMap<string, Subvolume> sys_subvolumes;
 
+
 	public string mount_point_restore = "";
 	public string mount_point_app = "/mnt/timeshift";
 
@@ -1041,8 +1042,6 @@ public class Main : GLib.Object{
 
 						log_msg(_("Hourly snapshots are enabled"));
 
-						if (last_snapshot_hourly == null){
-							log_msg(_("Last hourly snapshot not found"));
 							take_new = true;
 						}
 						else if (last_snapshot_hourly.date.compare(now.add_hours(-1).add_minutes(1)) < 0){

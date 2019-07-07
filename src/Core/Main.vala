@@ -78,7 +78,6 @@ public class Main : GLib.Object{
 	public Device sys_home;
 	public Gee.HashMap<string, Subvolume> sys_subvolumes;
 
-
 	public string mount_point_restore = "";
 	public string mount_point_app = "/mnt/timeshift";
 

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: timeshift\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
 "POT-Creation-Date: 2018-09-05 21:57+0530\n"
-"PO-Revision-Date: 2017-11-03 14:49+0000\n"
+"PO-Revision-Date: 2019-08-03 14:49+0000\n"
 "Last-Translator: Pjotr12345 <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "Language: nl\n"
@@ -90,7 +90,7 @@ msgstr "Over"
 
 #: Gtk/RsyncLogBox.vala:472
 msgid "Action"
-msgstr "Locatie"
+msgstr "Actie"
 
 #: Gtk/ExcludeBox.vala:219
 msgid "Add"
@@ -136,7 +136,7 @@ msgstr ""
 
 #: Gtk/RsyncLogBox.vala:363
 msgid "All Files"
-msgstr "Bestanden toevoegen"
+msgstr "Alle bestanden"
 
 #: Gtk/SnapshotBackendBox.vala:188
 msgid ""
@@ -189,7 +189,7 @@ msgstr "Antwoord 'JA' op alle bevestigingsvragen"
 
 #: Core/Main.vala:3179
 msgid "App config loaded"
-msgstr "App confg geladen"
+msgstr "App config geladen"
 
 #: Core/Main.vala:3076
 msgid "App config saved"
@@ -225,7 +225,7 @@ msgstr "BTRFS"
 
 #: Gtk/SnapshotBackendBox.vala:165
 msgid "BTRFS Snapshots"
-msgstr "BTRFS Momentopnamen"
+msgstr "BTRFS-momentopnamen"
 
 #: Gtk/SnapshotBackendBox.vala:119
 msgid "BTRFS Tools Not Found"
@@ -241,7 +241,7 @@ msgid ""
 "BTRFS snapshots are saved on system partition. Other partitions are not "
 "supported."
 msgstr ""
-"BTRFS-momentopnamen worden bewaard op de systeempartitie. Andere "
+"BTRFS-momentopnamen worden opgeslagen op de systeempartitie. Andere "
 "partities worden niet ondersteund."
 
 #: Gtk/FinishBox.vala:92
@@ -318,11 +318,11 @@ msgstr "Opties voor opstartlader (geavanceerd)"
 
 #: Gtk/MainWindow.vala:171
 msgid "Browse"
-msgstr "Bladeren"
+msgstr "Verkennen"
 
 #: Gtk/SnapshotListBox.vala:336
 msgid "Browse Files"
-msgstr "Bestanden bekijken"
+msgstr "Bestanden verkennen"
 
 #: Gtk/MainWindow.vala:172
 msgid "Browse selected snapshot"
@@ -391,7 +391,6 @@ msgid "Click to edit. Drag and drop to re-order."
 msgstr "Klik om te bewerken. Versleep om te herschikken."
 
 #: Gtk/ExcludeBox.vala:59
-#, fuzzy
 msgid "Click to edit. Drag-drop to re-order."
 msgstr "Klik om te bewerken. Versleep om te herschikken."
 
@@ -535,9 +534,8 @@ msgstr ""
 "systeem te beschermen"
 
 #: Gtk/SnapshotBackendBox.vala:95
-#, fuzzy
 msgid "Create snapshots using BTRFS"
-msgstr "Maak momentopnamen met RSYNC"
+msgstr "Maak momentopnamen met BTRFS"
 
 #: Gtk/SnapshotBackendBox.vala:78
 msgid "Create snapshots using RSYNC tool and hard-links"
@@ -706,12 +704,12 @@ msgstr "Apparaat niet gevonden"
 #: Gtk/BackupDeviceBox.vala:97
 #, c-format
 msgid "Devices displayed above have BTRFS file systems."
-msgstr "Apparaten met Linux-bestandssystemen"
+msgstr "Bovenstaande apparaten hebben BTRFS-bestandssystemen."
 
 #: Gtk/BackupDeviceBox.vala:104
 #, c-format
 msgid "Devices displayed above have Linux file systems."
-msgstr "Apparaten met Linux-bestandssystemen"
+msgstr "Bovenstaande apparaten hebben Linux-bestandssystemen."
 
 #: Gtk/RestoreDeviceBox.vala:84
 msgid "Devices from which snapshot was created are pre-selected."
@@ -724,7 +722,7 @@ msgstr "Apparaten met Linux-bestandssystemen"
 #: Gtk/BackupDeviceBox.vala:105
 msgid "Devices with Windows file systems are not supported (NTFS, FAT, etc)."
 msgstr ""
-"Opslagmedia met Windows-bestandssystemen worden niet ondersteund. (NTFS, FAT, "
+"Apparaten met Windows-bestandssystemen worden niet ondersteund (NTFS, FAT, "
 "enz)."
 
 #: Utility/TeeJee.FileSystem.vala:518
@@ -834,7 +832,7 @@ msgstr "Voorbeelden"
 
 #: Gtk/UsersBox.vala:136
 msgid "Exclude All"
-msgstr "Toepassingen uitsluiten"
+msgstr "Alles uitsluiten"
 
 #: Gtk/ExcludeAppsBox.vala:51 Gtk/RestoreExcludeBox.vala:55
 msgid "Exclude Application Settings"
@@ -1017,11 +1015,11 @@ msgstr "Functieverzoeken"
 
 #: Gtk/RsyncLogBox.vala:122
 msgid "File (snapshot)"
-msgstr "Momentopname verwijderen"
+msgstr "Bestand (momentopname)"
 
 #: Gtk/RsyncLogBox.vala:119
 msgid "File (system)"
-msgstr "Bestandssysteem"
+msgstr "Bestand (systeem)"
 
 #: Gtk/ExcludeMessageWindow.vala:98
 msgid "File Pattern"
@@ -1070,7 +1068,7 @@ msgstr "Bestandssysteem"
 
 #: Gtk/RsyncLogBox.vala:302
 msgid "Filter by name or path"
-msgstr "Voer naam of nummer van apparaat in"
+msgstr "Filter op naam of pad"
 
 #: Gtk/SettingsWindow.vala:100
 msgid "Filters"
@@ -1191,8 +1189,9 @@ msgstr ""
 msgid ""
 "If you find this application useful, consider making a donation to support "
 "the development."
-msgstr "Als u deze toepassing nuttig vindt, overweeg dan a.u.b. om haar te "
-"ondersteunen met een donatie."
+msgstr ""
+"Als u deze toepassing nuttig vindt, overweeg dan a.u.b. om de ontwikkeling "
+"te ondersteunen met een donatie."
 
 #: Gtk/ExcludeBox.vala:54
 msgid "Include / Exclude Patterns"
@@ -1225,7 +1224,7 @@ msgstr "Ongeldige momentopname"
 
 #: Utility/Gtk/DonationWindow.vala:94
 msgid "Issue Tracker"
-msgstr "Fouten-meldsysteem"
+msgstr "Foutenmeldsysteem"
 
 #: Gtk/ExcludeBox.vala:272
 msgid "Items Not Selected"
@@ -1379,7 +1378,7 @@ msgstr "Hoofdvenster door gebruiker gesloten"
 
 #: Gtk/SnapshotListBox.vala:329
 msgid "Mark for Deletion"
-msgstr "Markeren voor verwijderen"
+msgstr "Markeren voor verwijdering"
 
 #: Gtk/MainWindow.vala:634
 msgid "Marked for deletion"
@@ -1521,8 +1520,8 @@ msgid ""
 "Older snapshots will be removed once this limit is exceeded."
 msgstr ""
 "Aantal te behouden momentopnamen.\n"
-"Oudere momentopnamen zullen worden verwijderd wanneer deze grens wordt "
-"overschreden."
+"Oudere momentopnamen zullen worden verwijderd wanneer deze grens "
+"wordt overschreden."
 
 #: Utility/GtkHelper.vala:121 Utility/Gtk/CustomMessageDialog.vala:167
 #: Utility/Gtk/CustomMessageDialog.vala:171
@@ -1627,13 +1626,12 @@ msgstr ""
 #: Gtk/AppGtk.vala:127
 msgid "Please re-run the application as admin (using 'sudo' or 'su')"
 msgstr ""
-"Draai a.u.b. de toepassing opnieuw als beheerder (met gebruik van 'sudo' of "
-"'su')"
+"Draai a.u.b. de toepassing opnieuw als beheerder (met 'sudo' of 'su')"
 
 #: Console/AppConsole.vala:103
 msgid "Please run the application as admin (using 'sudo' or 'su')"
 msgstr ""
-"Draai a.u.b. de toepassing als beheerder (met gebruik van 'sudo' of 'su')"
+"Draai a.u.b. de toepassing als beheerder (met 'sudo' of 'su')"
 
 #: Core/Main.vala:2194
 msgid "Please save your work and close all applications."
@@ -1735,7 +1733,7 @@ msgstr "Verversen"
 
 #: Gtk/BackupDeviceBox.vala:106
 msgid "Remote and network locations are not supported."
-msgstr "Andere toepassingen (volgende pagina)"
+msgstr "Netwerklocaties en locaties-op-afstand worden niet ondersteund."
 
 #: Gtk/ExcludeBox.vala:253
 msgid "Remove"
@@ -1789,9 +1787,8 @@ msgid "Restore"
 msgstr "Terugzetten"
 
 #: Gtk/UsersBox.vala:329
-#, fuzzy
 msgid "Restore @home subvolume"
-msgstr "Subvolume van systeem teruggezet"
+msgstr "Subvolume @home terugzetten"
 
 #: Gtk/RestoreWindow.vala:89
 msgid "Restore Device"
@@ -1869,7 +1866,7 @@ msgstr "Geen rootapparaat gekozen"
 
 #: Gtk/RsyncLogWindow.vala:49
 msgid "Rsync Log Viewer"
-msgstr "Logboekweergave"
+msgstr "Logboekweergave voor Rsync"
 
 #: Gtk/AppGtk.vala:119
 #, c-format
@@ -1926,8 +1923,8 @@ msgstr "Geagendeerde momentopnamen zijn uitgeschakeld"
 #: Gtk/FinishBox.vala:78
 msgid "Scheduled snapshots are disabled. It's recommended to enable it."
 msgstr ""
-"Geagendeerde momentopnamen zijn uitgeschakeld. Het is aan te raden om die in "
-"te schakelen."
+"Geagendeerde momentopnamen zijn uitgeschakeld. Het is aan te raden "
+"om die in te schakelen."
 
 #: Gtk/ScheduleBox.vala:305
 msgid "Scheduled snapshots are enabled"
@@ -2203,7 +2200,7 @@ msgstr "Momentopname gemaakt"
 #: Gtk/SnapshotListBox.vala:296
 #, c-format
 msgid "Snapshot Levels"
-msgstr "Niveaus kiezen voor momentopnamen"
+msgstr "Niveaus voor momentopnamen"
 
 #: Gtk/MainWindow.vala:754
 msgid "Snapshot deletion in progress..."
@@ -2275,7 +2272,7 @@ msgstr ""
 #: Gtk/ScheduleBox.vala:167
 #, c-format
 msgid "Snapshots are not scheduled at fixed times."
-msgstr "Momentopname-apparaat niet gekozen"
+msgstr "Momentopnamen zijn niet geagendeerd op vaste tijden."
 
 #: Gtk/SnapshotBackendBox.vala:173
 msgid ""
@@ -2325,7 +2322,7 @@ msgstr ""
 
 #: Gtk/MainWindow.vala:996
 msgid "Snapshots available for restore"
-msgstr "Beschikbare momentopnamen voor terugzetten"
+msgstr "Momentopnamen beschikbaar voor terugzetten"
 
 #: Gtk/SnapshotBackendBox.vala:190
 msgid ""
@@ -2535,6 +2532,9 @@ msgid ""
 "the hope that it is useful but without any warranty. See the GNU General "
 "Public License v2 or later for more information"
 msgstr ""
+"Deze programmatuur is vrij voor persoonlijk en commercieel gebruik. Hij wordt "
+"verspreid in de hoop dat hij nuttig is, maar zonder enige garantie. Zie de "
+"GNU General Public License v2 voor meer informatie."
 
 #: Gtk/MainWindow.vala:1031 Gtk/MainWindow.vala:1042
 msgid "Timeshift is active"
@@ -2599,7 +2599,7 @@ msgstr "Ontkoppelen van"
 
 #: Gtk/SnapshotListBox.vala:199
 msgid "Unshared"
-msgstr "Niet (meer) gedeeld"
+msgstr "Niet gedeeld"
 
 #: Core/Main.vala:3435 Gtk/RestoreDeviceBox.vala:522
 msgid "Unsupported Subvolume Layout"
@@ -2695,7 +2695,7 @@ msgstr "Bekijk de logboeken van Timeshift"
 
 #: Gtk/RestoreDeviceBox.vala:101
 msgid "Volume"
-msgstr "Volume"
+msgstr "Schijf"
 
 #: Core/Main.vala:2106 Gtk/RestoreSummaryBox.vala:53
 msgid "Warning"

@@ -636,7 +636,7 @@ public class SnapshotRepo : GLib.Object{
 			}
 			else{
 				//ok
-				status_message = "Device is OK";
+				status_message = _("OK");
 				
 				status_details = _("%d snapshots, %s free").printf(
 					snapshots.size, format_file_size(device.free_bytes));
@@ -687,7 +687,7 @@ public class SnapshotRepo : GLib.Object{
 			log_msg("%-6s : %s".printf("UUID", device.uuid));
 			log_msg("%-6s : %s".printf(_("Path"), mount_path));
 			log_msg("%-6s : %s".printf(_("Mode"), btrfs_mode ? "BTRFS" : "RSYNC"));
-			log_msg(status_message);
+			log_msg("%-6s : %s".printf(_("Status"), status_message));
 			log_msg(status_details);
 		}
 

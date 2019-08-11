@@ -68,6 +68,8 @@ app-console:
 		--pkg gee-0.8 --pkg json-glib-1.0 \
 		--pkg gtk+-3.0 --pkg vte-2.91 $(xapp_pkg)
 
+	./${app_name} --help > ../man/${app_name}.1
+	gzip -f ../man/${app_name}.1
 pot:
 
 	# update translation template
@@ -124,6 +126,9 @@ install:
 	# config
 	install -m 0644 ../files/${app_name}.json "$(DESTDIR)$(sysconfdir)/default"
 
+	# man page
+	install -m 0644 ../man/${app_name}.1.gz "$(DESTDIR)$(man1dir)/${app_name}.1.gz"
+
 	# app icons
 	cp -dpr --no-preserve=ownership -t "$(DESTDIR)$(sharedir)/icons" ./share/icons/*
 	chmod --recursive 0644 $(DESTDIR)$(sharedir)/icons/hicolor/*/apps/${app_name}.png
@@ -155,6 +160,9 @@ uninstall:
 	# polkit
 	rm -f "$(DESTDIR)$(polkitdir)/in.teejeetech.pkexec.timeshift.policy"
 
+	# man page
+	rm -f "$(DESTDIR)$(man1dir)/${app_name}.1.gz"
+	
 	# app icon
 	rm -f $(DESTDIR)$(sharedir)/icons/hicolor/*/apps/${app_name}.png
 

@@ -617,6 +617,15 @@ public class Main : GLib.Object{
 		exclude_list_default_extra.add("/home/*/.kde/share/apps/kio_http/cache");
 		exclude_list_default_extra.add("/home/*/.kde/share/cache/http");
 
+		exclude_list_default_extra.add("/var/cache/apt/archives/*");
+		exclude_list_default_extra.add("/var/cache/pacman/pkg/*");
+		exclude_list_default_extra.add("/var/cache/yum/*");
+		exclude_list_default_extra.add("/var/cache/dnf/*");
+		exclude_list_default_extra.add("/var/cache/eopkg/*");
+		exclude_list_default_extra.add("/var/cache/xbps/*");
+		exclude_list_default_extra.add("/var/cache/zypp/*");
+		exclude_list_default_extra.add("/var/cache/edb/*");
+		
 		// default home ----------------
 
 		//exclude_list_home.add("+ /root/.**");

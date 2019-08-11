@@ -43,7 +43,8 @@ class SettingsWindow : Gtk.Window{
 	private ScheduleBox schedule_box;
 	private ExcludeBox exclude_box;
 	private UsersBox users_box;
-
+	private MiscBox misc_box;
+	
 	private uint tmr_init;
 	private int def_width = 500;
 	private int def_height = 500;
@@ -94,10 +95,14 @@ class SettingsWindow : Gtk.Window{
 		exclude_box = new ExcludeBox(this);
 		users_box = new UsersBox(this, exclude_box, false);
 		exclude_box.set_users_box(users_box);
+
+		misc_box = new MiscBox(this, false);
 		
 		stack.add_titled (users_box, "users", _("Users"));
 
 		stack.add_titled (exclude_box, "filters", _("Filters"));
+
+		stack.add_titled (misc_box, "misc", _("Misc"));
 
 		backend_box.type_changed.connect(()=>{
 			exclude_box.visible = !App.btrfs_mode;
@@ -106,6 +111,23 @@ class SettingsWindow : Gtk.Window{
 		});
 
 		stack.set_visible_child_name("type");
+
+		//var hbox = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL);
+		var bbox = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL);
+		vbox_main.add(bbox);
+		
+		#if GTK3_18
+		bbox.set_layout (Gtk.ButtonBoxStyle.CENTER);
+		#endif
+		
+		var btn_ok = new Button.with_label(_("OK"));
+		btn_ok.margin = 12;
+		btn_ok.set_size_request(100, -1);
+        bbox.add(btn_ok);
+        
+        btn_ok.clicked.connect(()=>{
+			this.destroy();
+		});
 
 		show_all();
 

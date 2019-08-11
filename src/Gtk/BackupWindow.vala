@@ -69,7 +69,7 @@ class BackupWindow : Gtk.Window{
 
 	    // vbox_main
         vbox_main = new Gtk.Box(Orientation.VERTICAL, 6);
-        vbox_main.margin = 12;
+        vbox_main.margin = 0;
         add(vbox_main);
 
         this.resize(def_width, def_height);
@@ -81,22 +81,22 @@ class BackupWindow : Gtk.Window{
 		
 		label = new Gtk.Label(_("Estimate"));
 		estimate_box = new EstimateBox(this);
-		estimate_box.margin = 0;
+		estimate_box.margin = 12;
 		notebook.append_page (estimate_box, label);
 
 		label = new Gtk.Label(_("Location"));
 		backup_dev_box = new BackupDeviceBox(this);
-		backup_dev_box.margin = 0;
+		backup_dev_box.margin = 12;
 		notebook.append_page (backup_dev_box, label);
 
 		label = new Gtk.Label(_("Backup"));
 		backup_box = new BackupBox(this);
-		backup_box.margin = 0;
+		backup_box.margin = 12;
 		notebook.append_page (backup_box, label);
 
 		label = new Gtk.Label(_("Finish"));
 		backup_finish_box = new BackupFinishBox(this);
-		backup_finish_box.margin = 0;
+		backup_finish_box.margin = 12;
 		notebook.append_page (backup_finish_box, label);
 
 		create_actions();
@@ -134,23 +134,26 @@ class BackupWindow : Gtk.Window{
 	
 	private void create_actions(){
 		
-		var hbox = new Gtk.ButtonBox (Gtk.Orientation.HORIZONTAL);
-		hbox.margin = 0;
-		hbox.margin_left = 24;
-		hbox.margin_right = 24;
-		hbox.margin_top = 6;
-        vbox_main.add(hbox);
-        bbox_action = hbox;
+		var hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
+		vbox_main.add(hbox);
+		 
+		var bbox = new Gtk.ButtonBox (Gtk.Orientation.HORIZONTAL);
+		bbox.margin = 12;
+		bbox.spacing = 6;
+		bbox.hexpand = true;
+        hbox.add(bbox);
+        
+        bbox_action = bbox;
 
 		#if GTK3_18
-        hbox.set_layout (Gtk.ButtonBoxStyle.EXPAND);
+			bbox.set_layout (Gtk.ButtonBoxStyle.CENTER);	
 		#endif
 		
-		var size_group = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
+		Gtk.SizeGroup size_group = null; //new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
 		
 		// previous
 		
-		btn_prev = add_button(hbox, _("Previous"), "", size_group, null);
+		btn_prev = add_button(bbox, _("Previous"), "", size_group, null);
 		
         btn_prev.clicked.connect(()=>{
 			go_prev();
@@ -158,7 +161,7 @@ class BackupWindow : Gtk.Window{
 
 		// next
 		
-		btn_next = add_button(hbox, _("Next"), "", size_group, null);
+		btn_next = add_button(bbox, _("Next"), "", size_group, null);
 
         btn_next.clicked.connect(()=>{
 			go_next();
@@ -166,7 +169,7 @@ class BackupWindow : Gtk.Window{
 
 		// close
 		
-		btn_close = add_button(hbox, _("Close"), "", size_group, null);
+		btn_close = add_button(bbox, _("Close"), "", size_group, null);
 
         btn_close.clicked.connect(()=>{
 			save_changes();
@@ -175,7 +178,7 @@ class BackupWindow : Gtk.Window{
 
 		// cancel
 		
-		btn_cancel = add_button(hbox, _("Cancel"), "", size_group, null);
+		btn_cancel = add_button(bbox, _("Cancel"), "", size_group, null);
 
         btn_cancel.clicked.connect(()=>{
 			if (App.task != null){
@@ -276,9 +279,6 @@ class BackupWindow : Gtk.Window{
 			btn_next.hide();
 			btn_close.hide();
 			btn_cancel.show();
-			#if GTK3_18
-			bbox_action.set_layout (Gtk.ButtonBoxStyle.CENTER);
-			#endif
 			break;
 		case Tabs.BACKUP_DEVICE:
 			btn_prev.show();
@@ -288,9 +288,6 @@ class BackupWindow : Gtk.Window{
 			btn_prev.sensitive = false;
 			btn_next.sensitive = true;
 			btn_close.sensitive = true;
-			#if GTK3_18
-			bbox_action.set_layout (Gtk.ButtonBoxStyle.EXPAND);
-			#endif
 			break;
 		case Tabs.BACKUP_FINISH:
 			btn_prev.hide();
@@ -298,9 +295,6 @@ class BackupWindow : Gtk.Window{
 			btn_close.show();
 			btn_close.sensitive = true;
 			btn_cancel.hide();
-			#if GTK3_18
-			bbox_action.set_layout (Gtk.ButtonBoxStyle.CENTER);
-			#endif
 			break;
 		}
 

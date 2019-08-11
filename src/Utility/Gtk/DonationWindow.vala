@@ -97,6 +97,9 @@ public class DonationWindow : Gtk.Window {
 				"https://github.com/teejee2008/%s/wiki".printf(appname.down()));
 		}
 
+		add_button(hbox, _("Website"),
+			"https://teejeetech.in/");
+		
 		// close window ---------------------------------------------------------
 
 		hbox = add_hbox();

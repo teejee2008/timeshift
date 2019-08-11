@@ -78,7 +78,7 @@ class RestoreWindow : Gtk.Window{
 
 	    // vbox_main
         vbox_main = new Gtk.Box(Orientation.VERTICAL, 6);
-        vbox_main.margin = 12;
+        vbox_main.margin = 0;
         add(vbox_main);
 
 		// add notebook
@@ -88,48 +88,48 @@ class RestoreWindow : Gtk.Window{
 		
 		label = new Gtk.Label(_("Restore Device"));
 		restore_device_box = new RestoreDeviceBox(this);
-		restore_device_box.margin = 0;
+		restore_device_box.margin = 12;
 		notebook.append_page (restore_device_box, label);
 
 		label = new Gtk.Label(_("Restore Exclude"));
 		restore_exclude_box = new RestoreExcludeBox(this);
-		restore_exclude_box.margin = 0;
+		restore_exclude_box.margin = 12;
 		notebook.append_page (restore_exclude_box, label);
 		
 		label = new Gtk.Label(_("Exclude Apps"));
 		exclude_apps_box = new ExcludeAppsBox(this);
-		exclude_apps_box.margin = 0;
+		exclude_apps_box.margin = 12;
 		notebook.append_page (exclude_apps_box, label);
 
 		label = new Gtk.Label(_("Checking Restore Actions (Dry Run)"));
 		check_box = new RestoreBox(this);
-		check_box.margin = 0;
+		check_box.margin = 12;
 		notebook.append_page (check_box, label);
 
 		label = new Gtk.Label(_("Confirm Actions"));
 		log_box = new RsyncLogBox(this);
-		log_box.margin = 0;
+		log_box.margin = 12;
 		notebook.append_page (log_box, label);
 
 		label = new Gtk.Label(_("Users Home"));
 		var exclude_box = new ExcludeBox(this); // dummy - not used
 		users_box = new UsersBox(this, exclude_box, true);
-		users_box.margin = 0;
+		users_box.margin = 12;
 		notebook.append_page (users_box, label);
 
 		label = new Gtk.Label(_("Summary"));
 		summary_box = new RestoreSummaryBox(this);
-		summary_box.margin = 0;
+		summary_box.margin = 12;
 		notebook.append_page (summary_box, label);
 
 		label = new Gtk.Label(_("Restore"));
 		restore_box = new RestoreBox(this);
-		restore_box.margin = 0;
+		restore_box.margin = 12;
 		notebook.append_page (restore_box, label);
 
 		label = new Gtk.Label(_("Finished"));
 		restore_finish_box = new RestoreFinishBox(this);
-		restore_finish_box.margin = 0;
+		restore_finish_box.margin = 12;
 		notebook.append_page (restore_finish_box, label);
 
 		create_actions();
@@ -171,23 +171,26 @@ class RestoreWindow : Gtk.Window{
 	
 	private void create_actions(){
 		
-		var hbox = new Gtk.ButtonBox (Gtk.Orientation.HORIZONTAL);
-		hbox.margin = 0;
-		hbox.margin_left = 24;
-		hbox.margin_right = 24;
-		hbox.margin_top = 6;
-        vbox_main.add(hbox);
-        bbox_action = hbox;
+		var hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
+		vbox_main.add(hbox);
+		 
+		var bbox = new Gtk.ButtonBox (Gtk.Orientation.HORIZONTAL);
+		bbox.margin = 12;
+		bbox.spacing = 6;
+		bbox.hexpand = true;
+        hbox.add(bbox);
+        
+        bbox_action = bbox;
 
         #if GTK3_18
-			hbox.set_layout (Gtk.ButtonBoxStyle.EXPAND);	
+			bbox.set_layout (Gtk.ButtonBoxStyle.CENTER);	
 		#endif
 
-		Gtk.SizeGroup size_group = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
+		Gtk.SizeGroup size_group = null; //new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
 		
 		// previous
 		
-		btn_prev = add_button(hbox, _("Previous"), "", size_group, null);
+		btn_prev = add_button(bbox, _("Previous"), "", size_group, null);
 		
         btn_prev.clicked.connect(()=>{
 			go_prev();
@@ -195,7 +198,7 @@ class RestoreWindow : Gtk.Window{
 
 		// next
 		
-		btn_next = add_button(hbox, _("Next"), "", size_group, null);
+		btn_next = add_button(bbox, _("Next"), "", size_group, null);
 
         btn_next.clicked.connect(()=>{
 			go_next();
@@ -203,7 +206,7 @@ class RestoreWindow : Gtk.Window{
 
 		// close
 		
-		btn_close = add_button(hbox, _("Cancel"), "", size_group, null);
+		btn_close = add_button(bbox, _("Cancel"), "", size_group, null);
 
         btn_close.clicked.connect(()=>{
 			save_changes();
@@ -212,7 +215,7 @@ class RestoreWindow : Gtk.Window{
 
 		// cancel
 		
-		btn_cancel = add_button(hbox, _("Cancel"), "", size_group, null);
+		btn_cancel = add_button(bbox, _("Cancel"), "", size_group, null);
 
         btn_cancel.clicked.connect(()=>{
 
@@ -381,10 +384,6 @@ class RestoreWindow : Gtk.Window{
 			
 			btn_cancel.show();
 			
-			#if GTK3_18
-			bbox_action.set_layout (Gtk.ButtonBoxStyle.CENTER);
-			#endif
-			
 			break;
 			
 		case Tabs.CHECK:
@@ -396,9 +395,6 @@ class RestoreWindow : Gtk.Window{
 			btn_cancel.show();
 			btn_cancel.sensitive = true;
 			
-			#if GTK3_18
-			bbox_action.set_layout (Gtk.ButtonBoxStyle.CENTER);
-			#endif
 			break;
 			
 		case Tabs.TARGET_DEVICE:
@@ -416,10 +412,7 @@ class RestoreWindow : Gtk.Window{
 			btn_prev.sensitive = false;
 			btn_next.sensitive = true;
 			btn_close.sensitive = true;
-			
-			#if GTK3_18
-			bbox_action.set_layout (Gtk.ButtonBoxStyle.EXPAND);
-			#endif
+
 			break;
 
 		case Tabs.SHOW_LOG:
@@ -433,9 +426,6 @@ class RestoreWindow : Gtk.Window{
 			btn_next.sensitive = true;
 			btn_close.sensitive = true;
 			
-			#if GTK3_18
-			bbox_action.set_layout (Gtk.ButtonBoxStyle.EXPAND);
-			#endif
 			break;
 			
 		case Tabs.FINISH:
@@ -448,10 +438,7 @@ class RestoreWindow : Gtk.Window{
 			btn_prev.sensitive = false;
 			btn_next.sensitive = false;
 			btn_close.sensitive = true;
-			
-			#if GTK3_18
-			bbox_action.set_layout (Gtk.ButtonBoxStyle.EXPAND);
-			#endif
+
 			break;
 		}
 

@@ -209,6 +209,8 @@ public class RsyncTask : AsyncTask{
 
 		cmd += " --stats";
 
+		cmd += " --sparse";
+
 		//if (relative){
 		//	cmd += " --relative";
 		//}

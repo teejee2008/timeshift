@@ -10,6 +10,9 @@ app-console:
 pot:
 	cd src; make pot
 
+manpage:
+	cd src; make manpage
+	
 clean:
 	cd src; make clean
 

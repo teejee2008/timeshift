@@ -944,9 +944,9 @@ class MainWindow : Gtk.Window{
 		dialog.logo = IconManager.lookup("timeshift", 256);
 
 		//dialog.license = "";
-		dialog.website = "https://github.com/teejee2008/timeshift";
-		dialog.website_label = "https://github.com/teejee2008/timeshift";
-
+		dialog.website = "https://teejeetech.in/";
+		dialog.website_label = "https://teejeetech.in/";
+		
 		dialog.initialize();
 		dialog.show_all();
 	}
@@ -1031,9 +1031,9 @@ class MainWindow : Gtk.Window{
 						set_shield_label(_("Timeshift is active"));
 						set_shield_subnote("%s: %s\n%s: %s".printf(
 							_("Latest snapshot"),
-							(last_snapshot_date == null) ? _("None") : last_snapshot_date.format ("%B %d, %Y %H:%M"),
+							(last_snapshot_date == null) ? _("None") : last_snapshot_date.format(App.date_format),
 							_("Oldest snapshot"),
-							(oldest_snapshot_date == null) ? _("None") : oldest_snapshot_date.format ("%B %d, %Y %H:%M")
+							(oldest_snapshot_date == null) ? _("None") : oldest_snapshot_date.format(App.date_format)
 							));
 					}
 					else{

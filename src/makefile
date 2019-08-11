@@ -68,8 +68,10 @@ app-console:
 		--pkg gee-0.8 --pkg json-glib-1.0 \
 		--pkg gtk+-3.0 --pkg vte-2.91 $(xapp_pkg)
 
+manpage:
 	./${app_name} --help > ../man/${app_name}.1
 	gzip -f ../man/${app_name}.1
+	
 pot:
 
 	# update translation template

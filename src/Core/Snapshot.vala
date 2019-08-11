@@ -94,7 +94,7 @@ public class Snapshot : GLib.Object{
 	
 	public string date_formatted{
 		owned get{
-			return date.format("%Y-%m-%d %H:%M:%S");
+			return date.format(App.date_format);//.format("%Y-%m-%d %H:%M:%S");
 		}
 	}
 

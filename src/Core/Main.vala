@@ -132,6 +132,9 @@ public class Main : GLib.Object{
 	public string log_file = "";
 	public AppLock app_lock;
 
+	public string date_format = "%Y-%m-%d %H:%M:%S";
+	public const string date_format_default = "%Y-%m-%d %H:%M:%S";
+
 	public Gee.ArrayList<Snapshot> delete_list;
 	
 	public Snapshot snapshot_to_delete;
@@ -3062,6 +3065,8 @@ public class Main : GLib.Object{
 		config.set_string_member("snapshot_size", first_snapshot_size.to_string());
 		config.set_string_member("snapshot_count", first_snapshot_count.to_string());
 
+		config.set_string_member("date_format", date_format);
+		
 		Json.Array arr = new Json.Array();
 		foreach(string path in exclude_list_user){
 			arr.add_string_element(path);
@@ -3155,6 +3160,8 @@ public class Main : GLib.Object{
 		this.count_daily = json_get_int(config,"count_daily",count_daily);
 		this.count_hourly = json_get_int(config,"count_hourly",count_hourly);
 		this.count_boot = json_get_int(config,"count_boot",count_boot);
+
+		this.date_format = json_get_string(config, "date_format", date_format_default);
 
 		Main.first_snapshot_size = json_get_uint64(config,"snapshot_size", Main.first_snapshot_size);
 			

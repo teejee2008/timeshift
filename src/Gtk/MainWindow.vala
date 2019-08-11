@@ -944,9 +944,9 @@ class MainWindow : Gtk.Window{
 		dialog.logo = IconManager.lookup("timeshift", 256);
 
 		//dialog.license = "";
-		dialog.website = "https://github.com/teejee2008/timeshift";
-		dialog.website_label = "https://github.com/teejee2008/timeshift";
-
+		dialog.website = "https://teejeetech.in/";
+		dialog.website_label = "https://teejeetech.in/";
+		
 		dialog.initialize();
 		dialog.show_all();
 	}

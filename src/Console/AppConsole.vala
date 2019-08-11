@@ -101,7 +101,8 @@ public class AppConsole : GLib.Object {
 		if (!user_is_admin()) {
 			log_msg(_("Application needs admin access."));
 			log_msg(_("Please run the application as admin (using 'sudo' or 'su')"));
-			App.exit_app(1);
+			//App.exit_app(1);
+			exit(1);
 		}
 	}
 

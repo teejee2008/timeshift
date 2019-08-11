@@ -1590,7 +1590,7 @@ public class Device : GLib.Object{
 					if (mp.mount_options.length > 0){
 						msg += ", options: %s".printf(mp.mount_options);
 					}
-					log_msg(msg);
+					log_msg("\n%s\n".printf(msg));
 				}
 				return true;
 			}

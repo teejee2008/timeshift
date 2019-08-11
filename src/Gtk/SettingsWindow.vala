@@ -112,6 +112,23 @@ class SettingsWindow : Gtk.Window{
 
 		stack.set_visible_child_name("type");
 
+		//var hbox = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL);
+		var bbox = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL);
+		vbox_main.add(bbox);
+		
+		#if GTK3_18
+		bbox.set_layout (Gtk.ButtonBoxStyle.CENTER);
+		#endif
+		
+		var btn_ok = new Button.with_label(_("OK"));
+		btn_ok.margin = 12;
+		btn_ok.set_size_request(100, -1);
+        bbox.add(btn_ok);
+        
+        btn_ok.clicked.connect(()=>{
+			this.destroy();
+		});
+
 		show_all();
 
 		tmr_init = Timeout.add(100, init_delayed);

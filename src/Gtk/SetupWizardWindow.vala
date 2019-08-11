@@ -71,7 +71,7 @@ class SetupWizardWindow : Gtk.Window{
 		
 	    // vbox_main
         vbox_main = new Gtk.Box(Orientation.VERTICAL, 6);
-        vbox_main.margin = 12;
+        vbox_main.margin = 0;
         vbox_main.set_size_request(def_width, def_height);
         add(vbox_main);
 
@@ -93,33 +93,33 @@ class SetupWizardWindow : Gtk.Window{
 
 		label = new Gtk.Label(_("Backend"));
 		backend_box = new SnapshotBackendBox(this);
-		backend_box.margin = 0;
+		backend_box.margin = 12;
 		notebook.append_page (backend_box, label);
 		
 		label = new Gtk.Label(_("Estimate"));
 		estimate_box = new EstimateBox(this);
-		estimate_box.margin = 0;
+		estimate_box.margin = 12;
 		notebook.append_page (estimate_box, label);
 
 		label = new Gtk.Label(_("Location"));
 		backup_dev_box = new BackupDeviceBox(this);
-		backup_dev_box.margin = 0;
+		backup_dev_box.margin = 12;
 		notebook.append_page (backup_dev_box, label);
 
 		label = new Gtk.Label(_("Schedule"));
 		schedule_box = new ScheduleBox(this);
-		schedule_box.margin = 0;
+		schedule_box.margin = 12;
 		notebook.append_page (schedule_box, label);
 
 		label = new Gtk.Label(_("User"));
 		var exclude_box = new ExcludeBox(this);
 		users_box = new UsersBox(this, exclude_box, false);
-		users_box.margin = 0;
+		users_box.margin = 12;
 		notebook.append_page (users_box, label);
 
 		label = new Gtk.Label(_("Finished"));
 		finish_box = new FinishBox(this, false);
-		finish_box.margin = 0;
+		finish_box.margin = 12;
 		notebook.append_page (finish_box, label);
 
 		// TODO: Add a tab for excluding browser cache and other items
@@ -174,29 +174,33 @@ class SetupWizardWindow : Gtk.Window{
 	}
 	
 	private void create_actions(){
-		
-		var hbox = new Gtk.ButtonBox (Gtk.Orientation.HORIZONTAL);
-		hbox.margin = 0;
-		hbox.margin_top = 6;
-        vbox_main.add(hbox);
+
+		var hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
+		vbox_main.add(hbox);
+		 
+		var bbox = new Gtk.ButtonBox (Gtk.Orientation.HORIZONTAL);
+		bbox.margin = 12;
+		bbox.spacing = 6;
+		bbox.hexpand = true;
+        hbox.add(bbox);
         
         #if GTK3_18
-			hbox.set_layout (Gtk.ButtonBoxStyle.EXPAND);
+			bbox.set_layout (Gtk.ButtonBoxStyle.CENTER);
 		#endif
-
-		var size_group = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
+		
+		Gtk.SizeGroup size_group = null; //new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
 		
 		// previous
 		
-		btn_prev = add_button(hbox, _("Previous"), "", size_group, null);
-		
+		btn_prev = add_button(bbox, _("Previous"), "", size_group, null);
+
         btn_prev.clicked.connect(()=>{
 			go_prev();
 		});
 
 		// next
 		
-		btn_next = add_button(hbox, _("Next"), "", size_group, null);
+		btn_next = add_button(bbox, _("Next"), "", size_group, null);
 
         btn_next.clicked.connect(()=>{
 			go_next();
@@ -204,7 +208,7 @@ class SetupWizardWindow : Gtk.Window{
 
 		// close
 		
-		btn_close = add_button(hbox, _("Finish"), "", size_group, null);
+		btn_close = add_button(bbox, _("Finish"), "", size_group, null);
 
         btn_close.clicked.connect(()=>{
 			save_changes();
@@ -213,7 +217,7 @@ class SetupWizardWindow : Gtk.Window{
 
 		// cancel
 		
-		btn_cancel = add_button(hbox, _("Cancel"), "", size_group, null);
+		btn_cancel = add_button(bbox, _("Cancel"), "", size_group, null);
 
         btn_cancel.clicked.connect(()=>{
 			if (App.task != null){

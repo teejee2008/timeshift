@@ -71,7 +71,7 @@ class DeleteWindow : Gtk.Window{
 		
 	    // vbox_main
         vbox_main = new Gtk.Box(Orientation.VERTICAL, 6);
-        vbox_main.margin = 12;
+        vbox_main.margin = 0;
         add(vbox_main);
 
 		// add notebook
@@ -80,8 +80,8 @@ class DeleteWindow : Gtk.Window{
 		// create tab
 		
 		var vbox_tab = new Gtk.Box(Orientation.VERTICAL, 6);
-        vbox_tab.margin = 0;
- 
+        vbox_tab.margin = 12;
+		
 		add_label_header(vbox_tab, _("Select Snapshots"), true);
 
 		add_label(vbox_tab, _("Select the snapshots to be deleted"));
@@ -97,12 +97,12 @@ class DeleteWindow : Gtk.Window{
 		
 		label = new Gtk.Label(_("Delete"));
 		delete_box = new DeleteBox(this);
-		delete_box.margin = 0;
+		delete_box.margin = 12;
 		notebook.append_page (delete_box, label);
 
 		label = new Gtk.Label(_("Finish"));
 		delete_finish_box = new DeleteFinishBox(this);
-		delete_finish_box.margin = 0;
+		delete_finish_box.margin = 12;
 		notebook.append_page (delete_finish_box, label);
 
 		create_actions();
@@ -135,23 +135,26 @@ class DeleteWindow : Gtk.Window{
 	
 	private void create_actions(){
 		
-		var hbox = new Gtk.ButtonBox (Gtk.Orientation.HORIZONTAL);
-		hbox.margin = 0;
-		hbox.margin_left = 24;
-		hbox.margin_right = 24;
-		hbox.margin_top = 6;
-        vbox_main.add(hbox);
-        bbox_action = hbox;
+		var hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 6);
+		vbox_main.add(hbox);
+		 
+		var bbox = new Gtk.ButtonBox (Gtk.Orientation.HORIZONTAL);
+		bbox.margin = 12;
+		bbox.spacing = 6;
+		bbox.hexpand = true;
+        hbox.add(bbox);
+        
+        bbox_action = bbox;
 
-        #if GTK3_18
-        hbox.set_layout (Gtk.ButtonBoxStyle.EXPAND);
+		#if GTK3_18
+			bbox.set_layout (Gtk.ButtonBoxStyle.CENTER);	
 		#endif
-
-		var size_group = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
+		
+		Gtk.SizeGroup size_group = null; //new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
 		
 		// previous
 		
-		btn_prev = add_button(hbox, _("Previous"), "", size_group, null);
+		btn_prev = add_button(bbox, _("Previous"), "", size_group, null);
 		
         btn_prev.clicked.connect(()=>{
 			go_prev();
@@ -159,7 +162,7 @@ class DeleteWindow : Gtk.Window{
 
 		// next
 		
-		btn_next = add_button(hbox, _("Next"), "", size_group, null);
+		btn_next = add_button(bbox, _("Next"), "", size_group, null);
 
         btn_next.clicked.connect(()=>{
 			go_next();
@@ -167,7 +170,7 @@ class DeleteWindow : Gtk.Window{
 
 		// close
 		
-		btn_close = add_button(hbox, _("Close"), "", size_group, null);
+		btn_close = add_button(bbox, _("Close"), "", size_group, null);
 
         btn_close.clicked.connect(()=>{
 			this.destroy();
@@ -175,7 +178,7 @@ class DeleteWindow : Gtk.Window{
 
 		// hide
 		
-		btn_hide = add_button(hbox, _("Hide"), "", size_group, null);
+		btn_hide = add_button(bbox, _("Hide"), "", size_group, null);
 		btn_hide.set_tooltip_text(_("Hide this window (files will be deleted in background)"));
 		
         btn_hide.clicked.connect(()=>{
@@ -184,7 +187,7 @@ class DeleteWindow : Gtk.Window{
 	
 		// cancel
 		
-		btn_cancel = add_button(hbox, _("Cancel"), "", size_group, null);
+		btn_cancel = add_button(bbox, _("Cancel"), "", size_group, null);
 
         btn_cancel.clicked.connect(()=>{
 			// clear queue
@@ -283,9 +286,6 @@ class DeleteWindow : Gtk.Window{
 			btn_close.hide();
 			btn_hide.show();
 			btn_cancel.show();
-			#if GTK3_18
-			bbox_action.set_layout (Gtk.ButtonBoxStyle.EXPAND);
-			#endif
 			break;
 			
 		case Tabs.SNAPSHOT_LIST:
@@ -297,9 +297,6 @@ class DeleteWindow : Gtk.Window{
 			btn_prev.sensitive = false;
 			btn_next.sensitive = true;
 			btn_close.sensitive = true;
-			#if GTK3_18
-			bbox_action.set_layout (Gtk.ButtonBoxStyle.EXPAND);
-			#endif
 			break;
 			
 		case Tabs.DELETE_FINISH:
@@ -308,9 +305,6 @@ class DeleteWindow : Gtk.Window{
 			btn_close.show();
 			btn_hide.hide();
 			btn_cancel.hide();
-			#if GTK3_18
-			bbox_action.set_layout (Gtk.ButtonBoxStyle.CENTER);
-			#endif
 			break;
 		}
 

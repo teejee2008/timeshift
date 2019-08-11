@@ -129,7 +129,7 @@ class SnapshotBackendBox : Gtk.Box{
 	
 	private void add_description(){
 
-		Gtk.Expander expander = new Gtk.Expander("Help");
+		Gtk.Expander expander = new Gtk.Expander(_("Help"));
 		expander.use_markup = true;
 		expander.margin_top = 12;
 		this.add(expander);

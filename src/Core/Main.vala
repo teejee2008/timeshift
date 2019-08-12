@@ -1049,13 +1049,13 @@ public class Main : GLib.Object{
 							}
 						}
 					}
-
+					
 					if (schedule_hourly){
 
 						log_msg(_("Hourly snapshots are enabled"));
 
 							take_new = true;
-						}
+					}
 						else if (last_snapshot_hourly.date.compare(now.add_hours(-1).add_minutes(1)) < 0){
 							log_msg(_("Last hourly snapshot is more than 1 hour old"));
 							take_new = true;
@@ -1077,8 +1077,8 @@ public class Main : GLib.Object{
 								repo.load_snapshots();
 							}
 						}
-					}
-
+				
+					
 					if (schedule_daily){
 
 						log_msg(_("Daily snapshots are enabled"));

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: linuxmint\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2019-08-11 18:23+0530\n"
+"POT-Creation-Date: 2019-08-12 08:13+1000\n"
 "PO-Revision-Date: 2019-03-08 17:00+0800\n"
 "Last-Translator: AlephAlpha <alephalpha911@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
@@ -251,7 +251,7 @@ msgstr "返回"
 msgid "Backend"
 msgstr "后台"
 
-#: Gtk/BackupWindow.vala:92 Console/AppConsole.vala:357
+#: Console/AppConsole.vala:357 Gtk/BackupWindow.vala:92
 msgid "Backup"
 msgstr "备份"
 
@@ -267,7 +267,7 @@ msgstr "未指定需备份的设备！"
 msgid "Bittorrent Clients"
 msgstr "Bittorrent客户端"
 
-#: Gtk/SnapshotListBox.vala:298 Gtk/ScheduleBox.vala:136
+#: Gtk/ScheduleBox.vala:136 Gtk/SnapshotListBox.vala:298
 msgid "Boot"
 msgstr "启动"
 
@@ -312,8 +312,8 @@ msgstr "浏览选定的快照"
 msgid "Building file list..."
 msgstr "建立文件列表..."
 
-#: Gtk/RestoreWindow.vala:209 Gtk/RestoreWindow.vala:218
 #: Gtk/BackupWindow.vala:181 Gtk/SetupWizardWindow.vala:220
+#: Gtk/RestoreWindow.vala:209 Gtk/RestoreWindow.vala:218
 #: Gtk/DeleteWindow.vala:190 Utility/Gtk/CustomMessageDialog.vala:172
 #: Utility/GtkHelper.vala:122
 msgid "Cancel"
@@ -338,12 +338,12 @@ msgstr ""
 msgid "Cannot Delete Live Snapshot"
 msgstr "无法删除实时快照"
 
-#: Gtk/RsyncLogBox.vala:380 Gtk/RsyncLogBox.vala:383 Gtk/RsyncLogBox.vala:567
-#: Gtk/RsyncLogBox.vala:588 Gtk/RestoreBox.vala:125 Gtk/BackupBox.vala:87
+#: Gtk/BackupBox.vala:87 Gtk/RestoreBox.vala:125 Gtk/RsyncLogBox.vala:380
+#: Gtk/RsyncLogBox.vala:383 Gtk/RsyncLogBox.vala:567 Gtk/RsyncLogBox.vala:588
 msgid "Changed"
 msgstr "已更改"
 
-#: Gtk/RestoreBox.vala:127 Gtk/BackupBox.vala:89
+#: Gtk/BackupBox.vala:89 Gtk/RestoreBox.vala:127
 msgid "Changed items:"
 msgstr "更改的项目："
 
@@ -355,7 +355,7 @@ msgstr "正在检查还原操作（空运行）"
 msgid "Checking file systems for errors..."
 msgstr "正在检查文件系统中的错误..."
 
-#: Gtk/RsyncLogBox.vala:390 Gtk/RestoreBox.vala:130 Gtk/BackupBox.vala:92
+#: Gtk/BackupBox.vala:92 Gtk/RestoreBox.vala:130 Gtk/RsyncLogBox.vala:390
 #, c-format
 msgid "Checksum"
 msgstr "校验和"
@@ -364,7 +364,7 @@ msgstr "校验和"
 msgid "Cleaning up..."
 msgstr "正在清理..."
 
-#: Gtk/UsersBox.vala:92 Gtk/ExcludeBox.vala:84
+#: Gtk/ExcludeBox.vala:84 Gtk/UsersBox.vala:92
 msgid "Click to edit. Drag and drop to re-order."
 msgstr "点击以修改。拖放以排序。"
 
@@ -389,15 +389,15 @@ msgstr "正在复制"
 msgid "Cloning system..."
 msgstr "正在复制系统……"
 
-#: Gtk/RsyncLogBox.vala:266 Gtk/RestoreWindow.vala:495
-#: Gtk/BootOptionsWindow.vala:106 Gtk/BackupWindow.vala:172
+#: Gtk/BackupWindow.vala:172 Gtk/RestoreWindow.vala:495
+#: Gtk/RsyncLogBox.vala:266 Gtk/BootOptionsWindow.vala:106
 #: Gtk/DeleteWindow.vala:173 Utility/Gtk/AboutWindow.vala:326
 #: Utility/Gtk/DonationWindow.vala:107
 msgid "Close"
 msgstr "关闭"
 
-#: Gtk/FinishBox.vala:101 Gtk/BackupFinishBox.vala:70
-#: Gtk/RestoreFinishBox.vala:106 Gtk/DeleteFinishBox.vala:71
+#: Gtk/BackupFinishBox.vala:70 Gtk/DeleteFinishBox.vala:71
+#: Gtk/RestoreFinishBox.vala:106 Gtk/FinishBox.vala:101
 msgid "Close window to exit"
 msgstr "关闭窗口以退出"
 
@@ -417,8 +417,8 @@ msgstr "正在比较文件（空运行）..."
 msgid "Comparing files with rsync..."
 msgstr "正在使用rsync同步文件..."
 
-#: Gtk/BackupFinishBox.vala:50 Gtk/RestoreFinishBox.vala:50
-#: Gtk/RestoreFinishBox.vala:75 Gtk/DeleteFinishBox.vala:50
+#: Gtk/BackupFinishBox.vala:50 Gtk/DeleteFinishBox.vala:50
+#: Gtk/RestoreFinishBox.vala:50 Gtk/RestoreFinishBox.vala:75
 msgid "Completed"
 msgstr "已完成"
 
@@ -426,7 +426,7 @@ msgstr "已完成"
 msgid "Completed With Errors"
 msgstr "已完成，但有错误"
 
-#: Gtk/RsyncLogBox.vala:87 Gtk/RestoreWindow.vala:109
+#: Gtk/RestoreWindow.vala:109 Gtk/RsyncLogBox.vala:87
 msgid "Confirm Actions"
 msgstr "确认操作"
 
@@ -461,7 +461,7 @@ msgstr "无法找到系统子卷"
 msgid "Could not find system subvolumes for creating pre-restore snapshot"
 msgstr "无法找到系统子卷以创造预恢复快照"
 
-#: Gtk/RsyncLogBox.vala:366 Gtk/RsyncLogBox.vala:571 Gtk/MainWindow.vala:141
+#: Gtk/MainWindow.vala:141 Gtk/RsyncLogBox.vala:366 Gtk/RsyncLogBox.vala:571
 #, c-format
 msgid "Create"
 msgstr "创建"
@@ -517,8 +517,8 @@ msgstr "用 RSYNC 创建快照"
 msgid "Create snapshots using RSYNC tool and hard-links"
 msgstr "使用 RSYNC 工具和硬链接来创建快照"
 
-#: Gtk/RsyncLogBox.vala:366 Gtk/RsyncLogBox.vala:571 Gtk/RsyncLogBox.vala:592
-#: Gtk/RestoreBox.vala:123 Gtk/BackupBox.vala:85
+#: Gtk/BackupBox.vala:85 Gtk/RestoreBox.vala:123 Gtk/RsyncLogBox.vala:366
+#: Gtk/RsyncLogBox.vala:571 Gtk/RsyncLogBox.vala:592
 #, c-format
 msgid "Created"
 msgstr "已创建"
@@ -579,7 +579,7 @@ msgstr "Cron 任务已存在"
 msgid "Custom"
 msgstr ""
 
-#: Gtk/SnapshotListBox.vala:300 Gtk/ScheduleBox.vala:100
+#: Gtk/ScheduleBox.vala:100 Gtk/SnapshotListBox.vala:300
 msgid "Daily"
 msgstr "每日"
 
@@ -599,9 +599,9 @@ msgstr "以下设备中的数据将被修改："
 msgid "Date Format"
 msgstr ""
 
-#: Gtk/RsyncLogBox.vala:370 Gtk/RsyncLogBox.vala:575 Gtk/MainWindow.vala:161
-#: Gtk/SnapshotListBox.vala:322 Gtk/DeleteWindow.vala:98
-#: Console/AppConsole.vala:371
+#: Console/AppConsole.vala:371 Gtk/MainWindow.vala:161 Gtk/RsyncLogBox.vala:370
+#: Gtk/RsyncLogBox.vala:575 Gtk/SnapshotListBox.vala:322
+#: Gtk/DeleteWindow.vala:98
 #, c-format
 msgid "Delete"
 msgstr "删除"
@@ -622,8 +622,8 @@ msgstr "删除选中的快照"
 msgid "Delete snapshot"
 msgstr "删除快照"
 
-#: Gtk/RsyncLogBox.vala:370 Gtk/RsyncLogBox.vala:575 Gtk/RsyncLogBox.vala:596
-#: Gtk/RestoreBox.vala:124 Gtk/BackupBox.vala:86
+#: Gtk/BackupBox.vala:86 Gtk/RestoreBox.vala:124 Gtk/RsyncLogBox.vala:370
+#: Gtk/RsyncLogBox.vala:575 Gtk/RsyncLogBox.vala:596
 #, c-format
 msgid "Deleted"
 msgstr "已删除"
@@ -664,11 +664,10 @@ msgstr "已销毁配额组"
 msgid "Destroying qgroup"
 msgstr "正在销毁配额组"
 
-#: Gtk/RestoreDeviceBox.vala:97 Console/AppConsole.vala:456
-#: Console/AppConsole.vala:495 Console/AppConsole.vala:543
-#: Utility/Device.vala:1930 Utility/Device.vala:1940 Core/SnapshotRepo.vala:76
-#: Core/SnapshotRepo.vala:683 Core/SnapshotRepo.vala:686 Core/Main.vala:2132
-#: Core/Main.vala:2164
+#: Console/AppConsole.vala:456 Console/AppConsole.vala:495
+#: Console/AppConsole.vala:543 Gtk/RestoreDeviceBox.vala:97 Core/Main.vala:2132
+#: Core/Main.vala:2164 Core/SnapshotRepo.vala:76 Core/SnapshotRepo.vala:683
+#: Core/SnapshotRepo.vala:686 Utility/Device.vala:1930 Utility/Device.vala:1940
 #, c-format
 msgid "Device"
 msgstr "设备"
@@ -681,7 +680,7 @@ msgstr "设备已解锁"
 msgid "Device name is empty!"
 msgstr "设备名称为空！"
 
-#: Console/AppConsole.vala:665 Core/SnapshotRepo.vala:560 Core/Main.vala:3254
+#: Console/AppConsole.vala:665 Core/Main.vala:3254 Core/SnapshotRepo.vala:560
 msgid "Device not found"
 msgstr "设备未找到"
 
@@ -1016,8 +1015,8 @@ msgstr "文件和目录计数："
 msgid "File is missing"
 msgstr "文件丢失"
 
+#: Utility/CronTab.vala:225 Utility/RsyncTask.vala:298
 #: Utility/TeeJee.FileSystem.vala:205 Utility/TeeJee.FileSystem.vala:547
-#: Utility/RsyncTask.vala:298 Utility/CronTab.vala:225
 msgid "File not found"
 msgstr "无法找到文件"
 
@@ -1058,7 +1057,7 @@ msgstr "筛选"
 msgid "Finish"
 msgstr "完成"
 
-#: Gtk/RestoreWindow.vala:130 Gtk/SetupWizardWindow.vala:120
+#: Gtk/SetupWizardWindow.vala:120 Gtk/RestoreWindow.vala:130
 msgid "Finished"
 msgstr "已完成"
 
@@ -1102,7 +1101,7 @@ msgstr "正在生成 initramfs…"
 msgid "Global"
 msgstr "全局"
 
-#: Gtk/RsyncLogBox.vala:400 Gtk/RestoreBox.vala:135 Gtk/BackupBox.vala:97
+#: Gtk/BackupBox.vala:97 Gtk/RestoreBox.vala:135 Gtk/RsyncLogBox.vala:400
 #, c-format
 msgid "Group"
 msgstr "组"
@@ -1137,7 +1136,7 @@ msgstr "主目录"
 msgid "Home Directory"
 msgstr "主目录"
 
-#: Gtk/SnapshotListBox.vala:299 Gtk/ScheduleBox.vala:118
+#: Gtk/ScheduleBox.vala:118 Gtk/SnapshotListBox.vala:299
 msgid "Hourly"
 msgstr "每小时"
 
@@ -1239,8 +1238,8 @@ msgstr "在根文件系统上保存此挂载路径"
 msgid "LIVE"
 msgstr "实时"
 
-#: Gtk/BackupDeviceBox.vala:254 Console/AppConsole.vala:460
-#: Console/AppConsole.vala:499 Utility/Device.vala:1949
+#: Console/AppConsole.vala:460 Console/AppConsole.vala:499
+#: Gtk/BackupDeviceBox.vala:254 Utility/Device.vala:1949
 #, c-format
 msgid "Label"
 msgstr "标签"
@@ -1340,8 +1339,8 @@ msgstr "列出快照"
 msgid "Live USB Mode (Restore Only)"
 msgstr "实时 USB 模式（仅恢复）"
 
-#: Gtk/SettingsWindow.vala:90 Gtk/BackupWindow.vala:87
-#: Gtk/SetupWizardWindow.vala:104
+#: Gtk/BackupWindow.vala:87 Gtk/SetupWizardWindow.vala:104
+#: Gtk/SettingsWindow.vala:90
 msgid "Location"
 msgstr "位置"
 
@@ -1387,7 +1386,7 @@ msgstr "模式"
 msgid "Model"
 msgstr "模型"
 
-#: Gtk/SnapshotListBox.vala:302 Gtk/ScheduleBox.vala:64
+#: Gtk/ScheduleBox.vala:64 Gtk/SnapshotListBox.vala:302
 msgid "Monthly"
 msgstr "每月"
 
@@ -1411,13 +1410,13 @@ msgstr "把系统子卷移动到快照目录"
 msgid "Multiple snapshots selected"
 msgstr "选取了多个快照"
 
-#: Gtk/RsyncLogBox.vala:492 Gtk/BackupDeviceBox.vala:235
-#: Console/AppConsole.vala:426
+#: Console/AppConsole.vala:426 Gtk/RsyncLogBox.vala:492
+#: Gtk/BackupDeviceBox.vala:235
 msgid "Name"
 msgstr "名称"
 
-#: Gtk/RestoreWindow.vala:201 Gtk/BackupWindow.vala:164
-#: Gtk/SetupWizardWindow.vala:203 Gtk/DeleteWindow.vala:165
+#: Gtk/BackupWindow.vala:164 Gtk/SetupWizardWindow.vala:203
+#: Gtk/RestoreWindow.vala:201 Gtk/DeleteWindow.vala:165
 msgid "Next"
 msgstr "下一步"
 
@@ -1425,7 +1424,7 @@ msgstr "下一步"
 msgid "No"
 msgstr "否"
 
-#: Gtk/RestoreBox.vala:122 Gtk/BackupBox.vala:84
+#: Gtk/BackupBox.vala:84 Gtk/RestoreBox.vala:122
 msgid "No Change"
 msgstr "无更改"
 
@@ -1437,7 +1436,7 @@ msgstr "未选取任何快照"
 msgid "No snapshots available"
 msgstr "没有可用的快照"
 
-#: Gtk/MainWindow.vala:1001 Console/AppConsole.vala:321
+#: Console/AppConsole.vala:321 Gtk/MainWindow.vala:1001
 #: Core/SnapshotRepo.vala:914
 msgid "No snapshots found"
 msgstr "找不到快照"
@@ -1479,7 +1478,7 @@ msgstr "不支持"
 msgid "Not enough disk space"
 msgstr "可用磁盘空间不足"
 
-#: Gtk/FinishBox.vala:55 Console/AppConsole.vala:398
+#: Console/AppConsole.vala:398 Gtk/FinishBox.vala:55
 msgid "Notes"
 msgstr "备注"
 
@@ -1501,9 +1500,8 @@ msgstr ""
 "一旦超过此限制，旧的快照将被移除。"
 
 #: Gtk/ExcludeListSummaryWindow.vala:84 Gtk/SettingsWindow.vala:123
-#: Utility/Gtk/CustomMessageDialog.vala:167
+#: Core/SnapshotRepo.vala:639 Utility/Gtk/CustomMessageDialog.vala:167
 #: Utility/Gtk/CustomMessageDialog.vala:171 Utility/GtkHelper.vala:121
-#: Core/SnapshotRepo.vala:639
 msgid "OK"
 msgstr "确定"
 
@@ -1542,7 +1540,7 @@ msgid ""
 "BTRFS mode"
 msgstr "在BTRFS模式下创建快照时，请勿指定 --snapshot-device 选项"
 
-#: Gtk/AppGtk.vala:114 Console/AppConsole.vala:351
+#: Console/AppConsole.vala:351 Gtk/AppGtk.vala:114
 msgid "Options"
 msgstr "选项"
 
@@ -1550,7 +1548,7 @@ msgstr "选项"
 msgid "Other applications (next page)"
 msgstr "其它应用（下一页）"
 
-#: Gtk/RsyncLogBox.vala:398 Gtk/RestoreBox.vala:134 Gtk/BackupBox.vala:96
+#: Gtk/BackupBox.vala:96 Gtk/RestoreBox.vala:134 Gtk/RsyncLogBox.vala:398
 #, c-format
 msgid "Owner"
 msgstr "拥有者"
@@ -1577,7 +1575,7 @@ msgstr "路径"
 msgid "Pattern"
 msgstr "模式"
 
-#: Gtk/RsyncLogBox.vala:396 Gtk/RestoreBox.vala:133 Gtk/BackupBox.vala:95
+#: Gtk/BackupBox.vala:95 Gtk/RestoreBox.vala:133 Gtk/RsyncLogBox.vala:396
 #, c-format
 msgid "Permissions"
 msgstr "权限"
@@ -1630,13 +1628,13 @@ msgstr "请稍候..."
 msgid "Populating list..."
 msgstr "正在填充列表..."
 
-#: Gtk/RsyncLogBox.vala:232 Gtk/RestoreBox.vala:88 Gtk/DeleteBox.vala:68
-#: Gtk/BackupBox.vala:114 Core/Main.vala:1597
+#: Gtk/BackupBox.vala:114 Gtk/RestoreBox.vala:88 Gtk/DeleteBox.vala:68
+#: Gtk/RsyncLogBox.vala:232 Core/Main.vala:1597
 msgid "Preparing..."
 msgstr "正在准备..."
 
-#: Gtk/RestoreWindow.vala:193 Gtk/BackupWindow.vala:156
-#: Gtk/SetupWizardWindow.vala:195 Gtk/DeleteWindow.vala:157
+#: Gtk/BackupWindow.vala:156 Gtk/SetupWizardWindow.vala:195
+#: Gtk/RestoreWindow.vala:193 Gtk/DeleteWindow.vala:157
 msgid "Previous"
 msgstr "上一步"
 
@@ -1707,8 +1705,8 @@ msgstr "不支持远程和网络位置。"
 msgid "Remove"
 msgstr "移除"
 
-#: Core/SnapshotRepo.vala:991 Core/Main.vala:1635 Core/Main.vala:1646
-#: Core/Main.vala:4219 Core/Snapshot.vala:509
+#: Core/Main.vala:1635 Core/Main.vala:1646 Core/Main.vala:4219
+#: Core/Snapshot.vala:509 Core/SnapshotRepo.vala:991
 #, c-format
 msgid "Removed"
 msgstr "已移除"
@@ -1746,9 +1744,9 @@ msgid ""
 "window"
 msgstr "在主窗口中显示快照的共享大小和未共享大小时需要"
 
-#: Gtk/RsyncLogBox.vala:377 Gtk/RsyncLogBox.vala:567 Gtk/RestoreWindow.vala:125
-#: Gtk/MainWindow.vala:151 Gtk/RestoreFinishBox.vala:71
-#: Console/AppConsole.vala:363
+#: Console/AppConsole.vala:363 Gtk/RestoreWindow.vala:125
+#: Gtk/RestoreFinishBox.vala:71 Gtk/MainWindow.vala:151
+#: Gtk/RsyncLogBox.vala:377 Gtk/RsyncLogBox.vala:567
 msgid "Restore"
 msgstr "恢复"
 
@@ -1865,7 +1863,7 @@ msgstr ""
 msgid "Saving to device"
 msgstr "正在保存到设备"
 
-#: Gtk/SettingsWindow.vala:93 Gtk/SetupWizardWindow.vala:109
+#: Gtk/SetupWizardWindow.vala:109 Gtk/SettingsWindow.vala:93
 msgid "Schedule"
 msgstr "计划"
 
@@ -1873,7 +1871,7 @@ msgstr "计划"
 msgid "Scheduled snapshot in progress..."
 msgstr "计划的快照正在进行中..."
 
-#: Gtk/MainWindow.vala:1051 Gtk/ScheduleBox.vala:312 Core/Main.vala:1165
+#: Gtk/ScheduleBox.vala:312 Gtk/MainWindow.vala:1051 Core/Main.vala:1165
 msgid "Scheduled snapshots are disabled"
 msgstr "已禁用计划的快照"
 
@@ -2068,7 +2066,7 @@ msgstr "会话日志文件"
 msgid "Set snapshot description"
 msgstr "设置快照描述"
 
-#: Gtk/MainWindow.vala:181 Gtk/MainWindow.vala:182 Gtk/SettingsWindow.vala:56
+#: Gtk/SettingsWindow.vala:56 Gtk/MainWindow.vala:181 Gtk/MainWindow.vala:182
 msgid "Settings"
 msgstr "设定"
 
@@ -2088,7 +2086,7 @@ msgstr "设置向导"
 msgid "Show additional debug messages"
 msgstr "显示其他调试消息"
 
-#: Gtk/AppGtk.vala:117 Console/AppConsole.vala:384
+#: Console/AppConsole.vala:384 Gtk/AppGtk.vala:117
 msgid "Show all options"
 msgstr "显示全部选项"
 
@@ -2100,11 +2098,10 @@ msgstr "在下一页显示要排除的更多应用程序"
 msgid "Show rsync output (default)"
 msgstr "显示 rsync 输出（默认）"
 
-#: Gtk/RsyncLogBox.vala:392 Gtk/RestoreBox.vala:131
-#: Gtk/SnapshotListBox.vala:174 Gtk/BackupDeviceBox.vala:202
-#: Gtk/BackupBox.vala:93 Console/AppConsole.vala:458
-#: Console/AppConsole.vala:497 Utility/Device.vala:1936
-#: Utility/Device.vala:1951
+#: Console/AppConsole.vala:458 Console/AppConsole.vala:497
+#: Gtk/BackupBox.vala:93 Gtk/RestoreBox.vala:131 Gtk/RsyncLogBox.vala:392
+#: Gtk/BackupDeviceBox.vala:202 Gtk/SnapshotListBox.vala:174
+#: Utility/Device.vala:1936 Utility/Device.vala:1951
 #, c-format
 msgid "Size"
 msgstr "大小"
@@ -2123,8 +2120,8 @@ msgstr ""
 msgid "Skip GRUB2 reinstall"
 msgstr "跳过 GRUB2 安装"
 
-#: Gtk/SnapshotListBox.vala:95 Core/SnapshotRepo.vala:715
-#: Core/SnapshotRepo.vala:768 Core/Main.vala:2050
+#: Gtk/SnapshotListBox.vala:95 Core/Main.vala:2050 Core/SnapshotRepo.vala:715
+#: Core/SnapshotRepo.vala:768
 #, c-format
 msgid "Snapshot"
 msgstr "快照"
@@ -2377,7 +2374,7 @@ msgstr "恢复文件后系统将重启。"
 msgid "Tagged snapshot"
 msgstr "带标签的快照"
 
-#: Gtk/SnapshotListBox.vala:151 Console/AppConsole.vala:427
+#: Console/AppConsole.vala:427 Gtk/SnapshotListBox.vala:151
 msgid "Tags"
 msgstr "标签"
 
@@ -2445,7 +2442,7 @@ msgstr ""
 msgid "Timeshift is active"
 msgstr "Timeshift已开启"
 
-#: Gtk/RsyncLogBox.vala:394 Gtk/RestoreBox.vala:132 Gtk/BackupBox.vala:94
+#: Gtk/BackupBox.vala:94 Gtk/RestoreBox.vala:132 Gtk/RsyncLogBox.vala:394
 #, c-format
 msgid "Timestamp"
 msgstr "时间戳"
@@ -2463,8 +2460,8 @@ msgstr "工具"
 msgid "Translations"
 msgstr "翻译"
 
-#: Gtk/SettingsWindow.vala:87 Gtk/BackupDeviceBox.vala:190
 #: Console/AppConsole.vala:459 Console/AppConsole.vala:498
+#: Gtk/SettingsWindow.vala:87 Gtk/BackupDeviceBox.vala:190
 #: Utility/Device.vala:1947
 #, c-format
 msgid "Type"
@@ -2549,7 +2546,7 @@ msgstr "使用问题跟踪器来报告问题、提问和请求特性。请不要
 msgid "Used"
 msgstr "已使用"
 
-#: Gtk/UsersBox.vala:105 Gtk/SetupWizardWindow.vala:114
+#: Gtk/SetupWizardWindow.vala:114 Gtk/UsersBox.vala:105
 msgid "User"
 msgstr "用户"
 
@@ -2607,7 +2604,7 @@ msgstr "网页浏览器"
 msgid "Website"
 msgstr ""
 
-#: Gtk/SnapshotListBox.vala:301 Gtk/ScheduleBox.vala:82
+#: Gtk/ScheduleBox.vala:82 Gtk/SnapshotListBox.vala:301
 msgid "Weekly"
 msgstr "每周"
 
@@ -2701,7 +2698,7 @@ msgstr "已标记删除"
 msgid "mounted at path"
 msgstr "挂载到指定路径"
 
-#: Gtk/RestoreBox.vala:237 Gtk/DeleteBox.vala:149 Gtk/BackupBox.vala:234
+#: Gtk/BackupBox.vala:234 Gtk/RestoreBox.vala:237 Gtk/DeleteBox.vala:149
 #: Core/Main.vala:1411 Core/Snapshot.vala:501
 msgid "remaining"
 msgstr "剩余"

@@ -42,6 +42,7 @@ class ScheduleBox : Gtk.Box{
 	private Gtk.SizeGroup sg_count;
 
 	private Gtk.CheckButton chk_cron;
+	private Gtk.CheckButton chk_battery;
 	
 	private Gtk.Window parent_window;
 	
@@ -162,6 +163,20 @@ class ScheduleBox : Gtk.Box{
 		chk_cron.toggled.connect(()=>{
 			App.stop_cron_emails = chk_cron.active;
 		});
+
+		// battery ------------------------------------------------------------------------
+		chk_battery = add_checkbox(this, _("Run on battery"));
+
+		chk_battery.set_tooltip_text(_("Select this option to run scheduled tasks if the computer is running on battery."));
+
+		chk_battery.margin = 6;
+		chk_battery.margin_top = 12;	
+		
+		chk_battery.active = App.run_on_battery;
+		chk_battery.toggled.connect(()=>{
+			App.run_on_battery = chk_battery.active;
+		});
+		
 
 		var msg = "<i>• %s\n• %s\n• %s</i>".printf(
 			_("Snapshots are not scheduled at fixed times."),

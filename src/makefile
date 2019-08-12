@@ -45,6 +45,7 @@ endif
 symbols=$(shell echo "${vte_symbol} ${gtk3_symbol} ${xapp_symbol}")
 
 all: app-gtk app-console pot
+all-but-pot: app-gtk app-console 
 
 app-gtk:
 

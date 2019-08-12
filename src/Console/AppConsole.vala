@@ -111,7 +111,7 @@ public class AppConsole : GLib.Object {
 	private static void parse_arguments(string[] args){
 
 		log_debug("AppConsole: parse_arguments()");
-		
+
 		for (int k = 1; k < args.length; k++) // Oth arg is app path
 		{
 			switch (args[k].down()){

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timeshift\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2019-08-11 18:23+0530\n"
+"POT-Creation-Date: 2019-08-12 08:13+1000\n"
 "PO-Revision-Date: 2017-11-22 17:43+0000\n"
 "Last-Translator: Robert Antoni Buj Gelonch <Unknown>\n"
 "Language-Team: Catalan <ca@li.org>\n"
@@ -273,7 +273,7 @@ msgstr "Enrere"
 msgid "Backend"
 msgstr "Suport"
 
-#: Gtk/BackupWindow.vala:92 Console/AppConsole.vala:357
+#: Console/AppConsole.vala:357 Gtk/BackupWindow.vala:92
 msgid "Backup"
 msgstr "Còpia de seguretat"
 
@@ -293,7 +293,7 @@ msgstr ""
 msgid "Bittorrent Clients"
 msgstr "Clients Bittorrent"
 
-#: Gtk/SnapshotListBox.vala:298 Gtk/ScheduleBox.vala:136
+#: Gtk/ScheduleBox.vala:136 Gtk/SnapshotListBox.vala:298
 msgid "Boot"
 msgstr "Arrencada"
 
@@ -346,8 +346,8 @@ msgstr "Navega per la instantània seleccionada"
 msgid "Building file list..."
 msgstr "S'està construint la llista de fitxers..."
 
-#: Gtk/RestoreWindow.vala:209 Gtk/RestoreWindow.vala:218
 #: Gtk/BackupWindow.vala:181 Gtk/SetupWizardWindow.vala:220
+#: Gtk/RestoreWindow.vala:209 Gtk/RestoreWindow.vala:218
 #: Gtk/DeleteWindow.vala:190 Utility/Gtk/CustomMessageDialog.vala:172
 #: Utility/GtkHelper.vala:122
 msgid "Cancel"
@@ -375,12 +375,12 @@ msgstr ""
 msgid "Cannot Delete Live Snapshot"
 msgstr "No es pot suprimir una instantània autònoma."
 
-#: Gtk/RsyncLogBox.vala:380 Gtk/RsyncLogBox.vala:383 Gtk/RsyncLogBox.vala:567
-#: Gtk/RsyncLogBox.vala:588 Gtk/RestoreBox.vala:125 Gtk/BackupBox.vala:87
+#: Gtk/BackupBox.vala:87 Gtk/RestoreBox.vala:125 Gtk/RsyncLogBox.vala:380
+#: Gtk/RsyncLogBox.vala:383 Gtk/RsyncLogBox.vala:567 Gtk/RsyncLogBox.vala:588
 msgid "Changed"
 msgstr "Canviat"
 
-#: Gtk/RestoreBox.vala:127 Gtk/BackupBox.vala:89
+#: Gtk/BackupBox.vala:89 Gtk/RestoreBox.vala:127
 msgid "Changed items:"
 msgstr ""
 "Ítems que han canviat:\n"
@@ -396,7 +396,7 @@ msgstr ""
 "Comprovació dels sistemes de fitxers per si hi ha cap error...\n"
 "S'estàn comprovant els sistemes de fitxers per si hi ha cap error..."
 
-#: Gtk/RsyncLogBox.vala:390 Gtk/RestoreBox.vala:130 Gtk/BackupBox.vala:92
+#: Gtk/BackupBox.vala:92 Gtk/RestoreBox.vala:130 Gtk/RsyncLogBox.vala:390
 #, c-format
 msgid "Checksum"
 msgstr "Suma de verificació"
@@ -405,7 +405,7 @@ msgstr "Suma de verificació"
 msgid "Cleaning up..."
 msgstr "S'està netejant..."
 
-#: Gtk/UsersBox.vala:92 Gtk/ExcludeBox.vala:84
+#: Gtk/ExcludeBox.vala:84 Gtk/UsersBox.vala:92
 msgid "Click to edit. Drag and drop to re-order."
 msgstr "Feu clic per editar. Arrossegueu i deixeu anar per reordenar."
 
@@ -432,15 +432,15 @@ msgstr ""
 "Clonació del sistema...\n"
 "Clonant el sistema..."
 
-#: Gtk/RsyncLogBox.vala:266 Gtk/RestoreWindow.vala:495
-#: Gtk/BootOptionsWindow.vala:106 Gtk/BackupWindow.vala:172
+#: Gtk/BackupWindow.vala:172 Gtk/RestoreWindow.vala:495
+#: Gtk/RsyncLogBox.vala:266 Gtk/BootOptionsWindow.vala:106
 #: Gtk/DeleteWindow.vala:173 Utility/Gtk/AboutWindow.vala:326
 #: Utility/Gtk/DonationWindow.vala:107
 msgid "Close"
 msgstr "Tanca"
 
-#: Gtk/FinishBox.vala:101 Gtk/BackupFinishBox.vala:70
-#: Gtk/RestoreFinishBox.vala:106 Gtk/DeleteFinishBox.vala:71
+#: Gtk/BackupFinishBox.vala:70 Gtk/DeleteFinishBox.vala:71
+#: Gtk/RestoreFinishBox.vala:106 Gtk/FinishBox.vala:101
 msgid "Close window to exit"
 msgstr "Tanca la finestra per sortir"
 
@@ -461,8 +461,8 @@ msgstr ""
 msgid "Comparing files with rsync..."
 msgstr "S'estan sincronitzant els fitxers amb rsync..."
 
-#: Gtk/BackupFinishBox.vala:50 Gtk/RestoreFinishBox.vala:50
-#: Gtk/RestoreFinishBox.vala:75 Gtk/DeleteFinishBox.vala:50
+#: Gtk/BackupFinishBox.vala:50 Gtk/DeleteFinishBox.vala:50
+#: Gtk/RestoreFinishBox.vala:50 Gtk/RestoreFinishBox.vala:75
 msgid "Completed"
 msgstr "Completat"
 
@@ -470,7 +470,7 @@ msgstr "Completat"
 msgid "Completed With Errors"
 msgstr "Completat amb errors"
 
-#: Gtk/RsyncLogBox.vala:87 Gtk/RestoreWindow.vala:109
+#: Gtk/RestoreWindow.vala:109 Gtk/RsyncLogBox.vala:87
 msgid "Confirm Actions"
 msgstr ""
 
@@ -517,7 +517,7 @@ msgstr ""
 "No es troben subvolums del sistema per crear una instantània de pre-"
 "restauració."
 
-#: Gtk/RsyncLogBox.vala:366 Gtk/RsyncLogBox.vala:571 Gtk/MainWindow.vala:141
+#: Gtk/MainWindow.vala:141 Gtk/RsyncLogBox.vala:366 Gtk/RsyncLogBox.vala:571
 #, c-format
 msgid "Create"
 msgstr "Crea"
@@ -583,8 +583,8 @@ msgstr "Crea les instantànies amb RSYNC"
 msgid "Create snapshots using RSYNC tool and hard-links"
 msgstr "Crea les instantànies amb l'eina de RSYNC i amb enllaços forts"
 
-#: Gtk/RsyncLogBox.vala:366 Gtk/RsyncLogBox.vala:571 Gtk/RsyncLogBox.vala:592
-#: Gtk/RestoreBox.vala:123 Gtk/BackupBox.vala:85
+#: Gtk/BackupBox.vala:85 Gtk/RestoreBox.vala:123 Gtk/RsyncLogBox.vala:366
+#: Gtk/RsyncLogBox.vala:571 Gtk/RsyncLogBox.vala:592
 #, c-format
 msgid "Created"
 msgstr "Creat"
@@ -661,7 +661,7 @@ msgstr "La tasca cron existeix"
 msgid "Custom"
 msgstr ""
 
-#: Gtk/SnapshotListBox.vala:300 Gtk/ScheduleBox.vala:100
+#: Gtk/ScheduleBox.vala:100 Gtk/SnapshotListBox.vala:300
 msgid "Daily"
 msgstr "Diari"
 
@@ -683,9 +683,9 @@ msgstr "Es modificaran dades en els dispositius següents:"
 msgid "Date Format"
 msgstr ""
 
-#: Gtk/RsyncLogBox.vala:370 Gtk/RsyncLogBox.vala:575 Gtk/MainWindow.vala:161
-#: Gtk/SnapshotListBox.vala:322 Gtk/DeleteWindow.vala:98
-#: Console/AppConsole.vala:371
+#: Console/AppConsole.vala:371 Gtk/MainWindow.vala:161 Gtk/RsyncLogBox.vala:370
+#: Gtk/RsyncLogBox.vala:575 Gtk/SnapshotListBox.vala:322
+#: Gtk/DeleteWindow.vala:98
 #, c-format
 msgid "Delete"
 msgstr "Suprimeix"
@@ -706,8 +706,8 @@ msgstr "Suprimeix la instantània seleccionada"
 msgid "Delete snapshot"
 msgstr "Suprimeix la instantània"
 
-#: Gtk/RsyncLogBox.vala:370 Gtk/RsyncLogBox.vala:575 Gtk/RsyncLogBox.vala:596
-#: Gtk/RestoreBox.vala:124 Gtk/BackupBox.vala:86
+#: Gtk/BackupBox.vala:86 Gtk/RestoreBox.vala:124 Gtk/RsyncLogBox.vala:370
+#: Gtk/RsyncLogBox.vala:575 Gtk/RsyncLogBox.vala:596
 #, c-format
 msgid "Deleted"
 msgstr "Suprimit"
@@ -752,11 +752,10 @@ msgstr "Qgroup destruït"
 msgid "Destroying qgroup"
 msgstr "Destruint qgroup"
 
-#: Gtk/RestoreDeviceBox.vala:97 Console/AppConsole.vala:456
-#: Console/AppConsole.vala:495 Console/AppConsole.vala:543
-#: Utility/Device.vala:1930 Utility/Device.vala:1940 Core/SnapshotRepo.vala:76
-#: Core/SnapshotRepo.vala:683 Core/SnapshotRepo.vala:686 Core/Main.vala:2132
-#: Core/Main.vala:2164
+#: Console/AppConsole.vala:456 Console/AppConsole.vala:495
+#: Console/AppConsole.vala:543 Gtk/RestoreDeviceBox.vala:97 Core/Main.vala:2132
+#: Core/Main.vala:2164 Core/SnapshotRepo.vala:76 Core/SnapshotRepo.vala:683
+#: Core/SnapshotRepo.vala:686 Utility/Device.vala:1930 Utility/Device.vala:1940
 #, c-format
 msgid "Device"
 msgstr "Dispositiu"
@@ -769,7 +768,7 @@ msgstr "El dispositiu està desbloquejat"
 msgid "Device name is empty!"
 msgstr "El nom de dispositiu és buit!"
 
-#: Console/AppConsole.vala:665 Core/SnapshotRepo.vala:560 Core/Main.vala:3254
+#: Console/AppConsole.vala:665 Core/Main.vala:3254 Core/SnapshotRepo.vala:560
 msgid "Device not found"
 msgstr "Dispositiu no trobat"
 
@@ -1155,8 +1154,8 @@ msgstr "Nombre de fitxers i directoris:"
 msgid "File is missing"
 msgstr "Falta el fitxer"
 
+#: Utility/CronTab.vala:225 Utility/RsyncTask.vala:298
 #: Utility/TeeJee.FileSystem.vala:205 Utility/TeeJee.FileSystem.vala:547
-#: Utility/RsyncTask.vala:298 Utility/CronTab.vala:225
 msgid "File not found"
 msgstr "Fitxer no trobat"
 
@@ -1200,7 +1199,7 @@ msgstr "Filtres"
 msgid "Finish"
 msgstr "Acaba"
 
-#: Gtk/RestoreWindow.vala:130 Gtk/SetupWizardWindow.vala:120
+#: Gtk/SetupWizardWindow.vala:120 Gtk/RestoreWindow.vala:130
 msgid "Finished"
 msgstr "Acabat"
 
@@ -1248,7 +1247,7 @@ msgstr ""
 msgid "Global"
 msgstr "Global"
 
-#: Gtk/RsyncLogBox.vala:400 Gtk/RestoreBox.vala:135 Gtk/BackupBox.vala:97
+#: Gtk/BackupBox.vala:97 Gtk/RestoreBox.vala:135 Gtk/RsyncLogBox.vala:400
 #, c-format
 msgid "Group"
 msgstr "Grup"
@@ -1289,7 +1288,7 @@ msgstr ""
 "Directori de l'usuari\n"
 "Carpeta personal"
 
-#: Gtk/SnapshotListBox.vala:299 Gtk/ScheduleBox.vala:118
+#: Gtk/ScheduleBox.vala:118 Gtk/SnapshotListBox.vala:299
 msgid "Hourly"
 msgstr "Cada hora"
 
@@ -1411,8 +1410,8 @@ msgstr ""
 "Autònom\n"
 "LIVE"
 
-#: Gtk/BackupDeviceBox.vala:254 Console/AppConsole.vala:460
-#: Console/AppConsole.vala:499 Utility/Device.vala:1949
+#: Console/AppConsole.vala:460 Console/AppConsole.vala:499
+#: Gtk/BackupDeviceBox.vala:254 Utility/Device.vala:1949
 #, c-format
 msgid "Label"
 msgstr "Etiqueta"
@@ -1525,8 +1524,8 @@ msgstr ""
 "Mode USB autònom (només restauració)\n"
 "Mode Live USB (només restauració)"
 
-#: Gtk/SettingsWindow.vala:90 Gtk/BackupWindow.vala:87
-#: Gtk/SetupWizardWindow.vala:104
+#: Gtk/BackupWindow.vala:87 Gtk/SetupWizardWindow.vala:104
+#: Gtk/SettingsWindow.vala:90
 msgid "Location"
 msgstr "Ubicació"
 
@@ -1574,7 +1573,7 @@ msgstr "Mode"
 msgid "Model"
 msgstr "Model"
 
-#: Gtk/SnapshotListBox.vala:302 Gtk/ScheduleBox.vala:64
+#: Gtk/ScheduleBox.vala:64 Gtk/SnapshotListBox.vala:302
 msgid "Monthly"
 msgstr "Mensual"
 
@@ -1602,13 +1601,13 @@ msgstr ""
 msgid "Multiple snapshots selected"
 msgstr "Seleccionades múltiples instantànies"
 
-#: Gtk/RsyncLogBox.vala:492 Gtk/BackupDeviceBox.vala:235
-#: Console/AppConsole.vala:426
+#: Console/AppConsole.vala:426 Gtk/RsyncLogBox.vala:492
+#: Gtk/BackupDeviceBox.vala:235
 msgid "Name"
 msgstr "Nom"
 
-#: Gtk/RestoreWindow.vala:201 Gtk/BackupWindow.vala:164
-#: Gtk/SetupWizardWindow.vala:203 Gtk/DeleteWindow.vala:165
+#: Gtk/BackupWindow.vala:164 Gtk/SetupWizardWindow.vala:203
+#: Gtk/RestoreWindow.vala:201 Gtk/DeleteWindow.vala:165
 msgid "Next"
 msgstr "Següent"
 
@@ -1616,7 +1615,7 @@ msgstr "Següent"
 msgid "No"
 msgstr "No"
 
-#: Gtk/RestoreBox.vala:122 Gtk/BackupBox.vala:84
+#: Gtk/BackupBox.vala:84 Gtk/RestoreBox.vala:122
 msgid "No Change"
 msgstr "Sense canvis"
 
@@ -1630,7 +1629,7 @@ msgstr ""
 msgid "No snapshots available"
 msgstr "No hi ha cap instantània disponible"
 
-#: Gtk/MainWindow.vala:1001 Console/AppConsole.vala:321
+#: Console/AppConsole.vala:321 Gtk/MainWindow.vala:1001
 #: Core/SnapshotRepo.vala:914
 msgid "No snapshots found"
 msgstr ""
@@ -1682,7 +1681,7 @@ msgstr "No compatible"
 msgid "Not enough disk space"
 msgstr "Manca espai en el disc"
 
-#: Gtk/FinishBox.vala:55 Console/AppConsole.vala:398
+#: Console/AppConsole.vala:398 Gtk/FinishBox.vala:55
 msgid "Notes"
 msgstr "Notes"
 
@@ -1705,9 +1704,8 @@ msgstr ""
 "límit."
 
 #: Gtk/ExcludeListSummaryWindow.vala:84 Gtk/SettingsWindow.vala:123
-#: Utility/Gtk/CustomMessageDialog.vala:167
+#: Core/SnapshotRepo.vala:639 Utility/Gtk/CustomMessageDialog.vala:167
 #: Utility/Gtk/CustomMessageDialog.vala:171 Utility/GtkHelper.vala:121
-#: Core/SnapshotRepo.vala:639
 msgid "OK"
 msgstr "D'acord"
 
@@ -1760,7 +1758,7 @@ msgstr ""
 "L'opció --snapshot-device nos' hauria d'especificar per crear instantànies "
 "en mode BTRFS"
 
-#: Gtk/AppGtk.vala:114 Console/AppConsole.vala:351
+#: Console/AppConsole.vala:351 Gtk/AppGtk.vala:114
 msgid "Options"
 msgstr "Opcions"
 
@@ -1768,7 +1766,7 @@ msgstr "Opcions"
 msgid "Other applications (next page)"
 msgstr "Altres aplicacions (pàgina següent)"
 
-#: Gtk/RsyncLogBox.vala:398 Gtk/RestoreBox.vala:134 Gtk/BackupBox.vala:96
+#: Gtk/BackupBox.vala:96 Gtk/RestoreBox.vala:134 Gtk/RsyncLogBox.vala:398
 #, c-format
 msgid "Owner"
 msgstr "Propietari"
@@ -1797,7 +1795,7 @@ msgstr "Camí"
 msgid "Pattern"
 msgstr "Patró"
 
-#: Gtk/RsyncLogBox.vala:396 Gtk/RestoreBox.vala:133 Gtk/BackupBox.vala:95
+#: Gtk/BackupBox.vala:95 Gtk/RestoreBox.vala:133 Gtk/RsyncLogBox.vala:396
 #, c-format
 msgid "Permissions"
 msgstr "Permisos"
@@ -1856,15 +1854,15 @@ msgstr ""
 "Ompliment de la llista...\n"
 "Omplint la llista..."
 
-#: Gtk/RsyncLogBox.vala:232 Gtk/RestoreBox.vala:88 Gtk/DeleteBox.vala:68
-#: Gtk/BackupBox.vala:114 Core/Main.vala:1597
+#: Gtk/BackupBox.vala:114 Gtk/RestoreBox.vala:88 Gtk/DeleteBox.vala:68
+#: Gtk/RsyncLogBox.vala:232 Core/Main.vala:1597
 msgid "Preparing..."
 msgstr ""
 "Preparació...\n"
 "Preparant..."
 
-#: Gtk/RestoreWindow.vala:193 Gtk/BackupWindow.vala:156
-#: Gtk/SetupWizardWindow.vala:195 Gtk/DeleteWindow.vala:157
+#: Gtk/BackupWindow.vala:156 Gtk/SetupWizardWindow.vala:195
+#: Gtk/RestoreWindow.vala:193 Gtk/DeleteWindow.vala:157
 msgid "Previous"
 msgstr "Anterior"
 
@@ -1949,8 +1947,8 @@ msgstr "Altres aplicacions (pàgina següent)"
 msgid "Remove"
 msgstr "Elimina"
 
-#: Core/SnapshotRepo.vala:991 Core/Main.vala:1635 Core/Main.vala:1646
-#: Core/Main.vala:4219 Core/Snapshot.vala:509
+#: Core/Main.vala:1635 Core/Main.vala:1646 Core/Main.vala:4219
+#: Core/Snapshot.vala:509 Core/SnapshotRepo.vala:991
 #, c-format
 msgid "Removed"
 msgstr "Eliminat"
@@ -1990,9 +1988,9 @@ msgid ""
 "window"
 msgstr ""
 
-#: Gtk/RsyncLogBox.vala:377 Gtk/RsyncLogBox.vala:567 Gtk/RestoreWindow.vala:125
-#: Gtk/MainWindow.vala:151 Gtk/RestoreFinishBox.vala:71
-#: Console/AppConsole.vala:363
+#: Console/AppConsole.vala:363 Gtk/RestoreWindow.vala:125
+#: Gtk/RestoreFinishBox.vala:71 Gtk/MainWindow.vala:151
+#: Gtk/RsyncLogBox.vala:377 Gtk/RsyncLogBox.vala:567
 msgid "Restore"
 msgstr "Restaura"
 
@@ -2136,7 +2134,7 @@ msgstr ""
 msgid "Saving to device"
 msgstr "Desant en el dispositiu"
 
-#: Gtk/SettingsWindow.vala:93 Gtk/SetupWizardWindow.vala:109
+#: Gtk/SetupWizardWindow.vala:109 Gtk/SettingsWindow.vala:93
 msgid "Schedule"
 msgstr "Planifica"
 
@@ -2146,7 +2144,7 @@ msgstr ""
 "Instantània programada en curs...\n"
 "Instantània programada en curs ..."
 
-#: Gtk/MainWindow.vala:1051 Gtk/ScheduleBox.vala:312 Core/Main.vala:1165
+#: Gtk/ScheduleBox.vala:312 Gtk/MainWindow.vala:1051 Core/Main.vala:1165
 msgid "Scheduled snapshots are disabled"
 msgstr ""
 "Les instantànies programades estan inhabilitades\n"
@@ -2370,7 +2368,7 @@ msgstr "Fitxer de registre de sessió"
 msgid "Set snapshot description"
 msgstr "Estableix descripció de la instantània"
 
-#: Gtk/MainWindow.vala:181 Gtk/MainWindow.vala:182 Gtk/SettingsWindow.vala:56
+#: Gtk/SettingsWindow.vala:56 Gtk/MainWindow.vala:181 Gtk/MainWindow.vala:182
 msgid "Settings"
 msgstr "Ajusts"
 
@@ -2390,7 +2388,7 @@ msgstr "Assistent de configuració"
 msgid "Show additional debug messages"
 msgstr "Mostra missatges de depuració addicionals"
 
-#: Gtk/AppGtk.vala:117 Console/AppConsole.vala:384
+#: Console/AppConsole.vala:384 Gtk/AppGtk.vala:117
 msgid "Show all options"
 msgstr "Mostra totes les opcions"
 
@@ -2402,11 +2400,10 @@ msgstr "Mostra més aplicacions a excloure a la pàgina següent"
 msgid "Show rsync output (default)"
 msgstr "Mostra la sortida de rsync (defecte)"
 
-#: Gtk/RsyncLogBox.vala:392 Gtk/RestoreBox.vala:131
-#: Gtk/SnapshotListBox.vala:174 Gtk/BackupDeviceBox.vala:202
-#: Gtk/BackupBox.vala:93 Console/AppConsole.vala:458
-#: Console/AppConsole.vala:497 Utility/Device.vala:1936
-#: Utility/Device.vala:1951
+#: Console/AppConsole.vala:458 Console/AppConsole.vala:497
+#: Gtk/BackupBox.vala:93 Gtk/RestoreBox.vala:131 Gtk/RsyncLogBox.vala:392
+#: Gtk/BackupDeviceBox.vala:202 Gtk/SnapshotListBox.vala:174
+#: Utility/Device.vala:1936 Utility/Device.vala:1951
 #, c-format
 msgid "Size"
 msgstr "Mida"
@@ -2433,8 +2430,8 @@ msgstr ""
 "Omet la reinstal·lació de GRUB2\n"
 "Omet reinstal·lar GRUB2"
 
-#: Gtk/SnapshotListBox.vala:95 Core/SnapshotRepo.vala:715
-#: Core/SnapshotRepo.vala:768 Core/Main.vala:2050
+#: Gtk/SnapshotListBox.vala:95 Core/Main.vala:2050 Core/SnapshotRepo.vala:715
+#: Core/SnapshotRepo.vala:768
 #, c-format
 msgid "Snapshot"
 msgstr "Instantània"
@@ -2725,7 +2722,7 @@ msgstr "El sistema es reiniciarà després que es restaurin els fitxers."
 msgid "Tagged snapshot"
 msgstr "Instantània etiquetada"
 
-#: Gtk/SnapshotListBox.vala:151 Console/AppConsole.vala:427
+#: Console/AppConsole.vala:427 Gtk/SnapshotListBox.vala:151
 msgid "Tags"
 msgstr "Etiquetes"
 
@@ -2799,7 +2796,7 @@ msgstr ""
 msgid "Timeshift is active"
 msgstr "Timeshift està actiu"
 
-#: Gtk/RsyncLogBox.vala:394 Gtk/RestoreBox.vala:132 Gtk/BackupBox.vala:94
+#: Gtk/BackupBox.vala:94 Gtk/RestoreBox.vala:132 Gtk/RsyncLogBox.vala:394
 #, c-format
 msgid "Timestamp"
 msgstr "Marca de temps"
@@ -2821,8 +2818,8 @@ msgstr ""
 msgid "Translations"
 msgstr "Traductors"
 
-#: Gtk/SettingsWindow.vala:87 Gtk/BackupDeviceBox.vala:190
 #: Console/AppConsole.vala:459 Console/AppConsole.vala:498
+#: Gtk/SettingsWindow.vala:87 Gtk/BackupDeviceBox.vala:190
 #: Utility/Device.vala:1947
 #, c-format
 msgid "Type"
@@ -2913,7 +2910,7 @@ msgstr ""
 msgid "Used"
 msgstr "Usat"
 
-#: Gtk/UsersBox.vala:105 Gtk/SetupWizardWindow.vala:114
+#: Gtk/SetupWizardWindow.vala:114 Gtk/UsersBox.vala:105
 msgid "User"
 msgstr "Usuari"
 
@@ -2982,7 +2979,7 @@ msgstr ""
 "Lloc web\n"
 "Pàgina web"
 
-#: Gtk/SnapshotListBox.vala:301 Gtk/ScheduleBox.vala:82
+#: Gtk/ScheduleBox.vala:82 Gtk/SnapshotListBox.vala:301
 msgid "Weekly"
 msgstr "Setmanalment"
 
@@ -3088,7 +3085,7 @@ msgstr "marcat per a la supressió"
 msgid "mounted at path"
 msgstr "muntat al camí"
 
-#: Gtk/RestoreBox.vala:237 Gtk/DeleteBox.vala:149 Gtk/BackupBox.vala:234
+#: Gtk/BackupBox.vala:234 Gtk/RestoreBox.vala:237 Gtk/DeleteBox.vala:149
 #: Core/Main.vala:1411 Core/Snapshot.vala:501
 msgid "remaining"
 msgstr "restants"

@@ -33,6 +33,7 @@ using TeeJee.ProcessHelper;
 using TeeJee.GtkHelper;
 using TeeJee.System;
 using TeeJee.Misc;
+using TeeJee.Battery;
 
 public bool GTK_INITIALIZED = false;
 
@@ -53,6 +54,7 @@ public class Main : GLib.Object{
 	public bool include_btrfs_home_for_restore = false;
 	
 	public bool stop_cron_emails = true;
+	public bool run_on_battery = true;
 	
 	public Gee.ArrayList<Device> partitions;
 
@@ -75,6 +77,7 @@ public class Main : GLib.Object{
 	public Device sys_efi;
 	public Device sys_home;
 	public Gee.HashMap<string, Subvolume> sys_subvolumes;
+
 
 	public string mount_point_restore = "";
 	public string mount_point_app = "/mnt/timeshift";
@@ -475,6 +478,8 @@ public class Main : GLib.Object{
 				case "--list-devices":
 					app_mode = "list-devices";
 					break;
+
+
 			}
 		}
 	}
@@ -949,6 +954,8 @@ public class Main : GLib.Object{
 		bool update_symlinks = false;
 
 		string sys_uuid = (sys_root == null) ? "" : sys_root.uuid;
+		bool on_battery = running_on_battery();
+		log_debug("run_on_battery:%s  on_battery:%s is_ondemand: %s".printf(run_on_battery.to_string(),on_battery.to_string(),is_ondemand.to_string()));
 		
 		try
 		{
@@ -996,167 +1003,172 @@ public class Main : GLib.Object{
 					update_symlinks = true;
 				}
 			}
-			else if (scheduled){
-				Snapshot last_snapshot_boot = repo.get_latest_snapshot("boot", sys_uuid);
-				Snapshot last_snapshot_hourly = repo.get_latest_snapshot("hourly", sys_uuid);
-				Snapshot last_snapshot_daily = repo.get_latest_snapshot("daily", sys_uuid);
-				Snapshot last_snapshot_weekly = repo.get_latest_snapshot("weekly", sys_uuid);
-				Snapshot last_snapshot_monthly = repo.get_latest_snapshot("monthly", sys_uuid);
-
-				DateTime dt_sys_boot = now.add_seconds((-1) * get_system_uptime_seconds());
-				bool take_new = false;
-
-				if (schedule_boot){
-
-					log_msg(_("Boot snapshots are enabled"));
-
-					if (last_snapshot_boot == null){
-						log_msg(_("Last boot snapshot not found"));
-						take_new = true;
-					}
-					else if (last_snapshot_boot.date.compare(dt_sys_boot) < 0){
-						log_msg(_("Last boot snapshot is older than system start time"));
-						take_new = true;
-					}
-					else{
-						int hours = (int) ((float) now.difference(last_snapshot_boot.date) / TimeSpan.HOUR);
-						log_msg(_("Last boot snapshot is %d hours old").printf(hours));
-						take_new = false;
-					}
-
-					if (take_new){
-						status = create_snapshot_for_tag ("boot",now);
-						if(!status){
-							log_error(_("Boot snapshot failed!"));
-							return false;
-						}
-						else{
-							update_symlinks = true;
-							repo.load_snapshots();
-						}
-					}
+			else if (scheduled)	{	
+			    log_debug("run_on_battery:%s  on_battery:%s".printf(run_on_battery.to_string(),on_battery.to_string()));
+				if (!run_on_battery && on_battery){
+					log_msg(_("Scheduled job is skipped because system is on battery"));
 				}
+				else {
+					log_debug(_("Battery check ignored or system is on AC"));
+					Snapshot last_snapshot_boot = repo.get_latest_snapshot("boot", sys_uuid);
+					Snapshot last_snapshot_hourly = repo.get_latest_snapshot("hourly", sys_uuid);
+					Snapshot last_snapshot_daily = repo.get_latest_snapshot("daily", sys_uuid);
+					Snapshot last_snapshot_weekly = repo.get_latest_snapshot("weekly", sys_uuid);
+					Snapshot last_snapshot_monthly = repo.get_latest_snapshot("monthly", sys_uuid);
 
-				if (schedule_hourly){
+					DateTime dt_sys_boot = now.add_seconds((-1) * get_system_uptime_seconds());
+					bool take_new = false;
 
-					log_msg(_("Hourly snapshots are enabled"));
+					if (schedule_boot){
 
-					if (last_snapshot_hourly == null){
-						log_msg(_("Last hourly snapshot not found"));
-						take_new = true;
-					}
-					else if (last_snapshot_hourly.date.compare(now.add_hours(-1).add_minutes(1)) < 0){
-						log_msg(_("Last hourly snapshot is more than 1 hour old"));
-						take_new = true;
-					}
-					else{
-						int mins = (int) ((float) now.difference(last_snapshot_hourly.date) / TimeSpan.MINUTE);
-						log_msg(_("Last hourly snapshot is %d minutes old").printf(mins));
-						take_new = false;
-					}
+						log_msg(_("Boot snapshots are enabled"));
 
-					if (take_new){
-						status = create_snapshot_for_tag ("hourly",now);
-						if(!status){
-							log_error(_("Hourly snapshot failed!"));
-							return false;
+						if (last_snapshot_boot == null){
+							log_msg(_("Last boot snapshot not found"));
+							take_new = true;
+						}
+						else if (last_snapshot_boot.date.compare(dt_sys_boot) < 0){
+							log_msg(_("Last boot snapshot is older than system start time"));
+							take_new = true;
 						}
 						else{
-							update_symlinks = true;
-							repo.load_snapshots();
+							int hours = (int) ((float) now.difference(last_snapshot_boot.date) / TimeSpan.HOUR);
+							log_msg(_("Last boot snapshot is %d hours old").printf(hours));
+							take_new = false;
+						}
+
+						if (take_new){
+							status = create_snapshot_for_tag ("boot",now);
+							if(!status){
+								log_error(_("Boot snapshot failed!"));
+								return false;
+							}
+							else{
+								update_symlinks = true;
+								repo.load_snapshots();
+							}
 						}
 					}
-				}
+					
+					if (schedule_hourly){
 
-				if (schedule_daily){
+						log_msg(_("Hourly snapshots are enabled"));
 
-					log_msg(_("Daily snapshots are enabled"));
-
-					if (last_snapshot_daily == null){
-						log_msg(_("Last daily snapshot not found"));
-						take_new = true;
+							take_new = true;
 					}
-					else if (last_snapshot_daily.date.compare(now.add_days(-1).add_minutes(1)) < 0){
-						log_msg(_("Last daily snapshot is more than 1 day old"));
-						take_new = true;
-					}
-					else{
-						int hours = (int) ((float) now.difference(last_snapshot_daily.date) / TimeSpan.HOUR);
-						log_msg(_("Last daily snapshot is %d hours old").printf(hours));
-						take_new = false;
-					}
-
-					if (take_new){
-						status = create_snapshot_for_tag ("daily",now);
-						if(!status){
-							log_error(_("Daily snapshot failed!"));
-							return false;
+						else if (last_snapshot_hourly.date.compare(now.add_hours(-1).add_minutes(1)) < 0){
+							log_msg(_("Last hourly snapshot is more than 1 hour old"));
+							take_new = true;
 						}
 						else{
-							update_symlinks = true;
-							repo.load_snapshots();
+							int mins = (int) ((float) now.difference(last_snapshot_hourly.date) / TimeSpan.MINUTE);
+							log_msg(_("Last hourly snapshot is %d minutes old").printf(mins));
+							take_new = false;
 						}
-					}
-				}
 
-				if (schedule_weekly){
-
-					log_msg(_("Weekly snapshots are enabled"));
-
-					if (last_snapshot_weekly == null){
-						log_msg(_("Last weekly snapshot not found"));
-						take_new = true;
-					}
-					else if (last_snapshot_weekly.date.compare(now.add_weeks(-1).add_minutes(1)) < 0){
-						log_msg(_("Last weekly snapshot is more than 1 week old"));
-						take_new = true;
-					}
-					else{
-						int days = (int) ((float) now.difference(last_snapshot_weekly.date) / TimeSpan.DAY);
-						log_msg(_("Last weekly snapshot is %d days old").printf(days));
-						take_new = false;
-					}
-
-					if (take_new){
-						status = create_snapshot_for_tag ("weekly",now);
-						if(!status){
-							log_error(_("Weekly snapshot failed!"));
-							return false;
+						if (take_new){
+							status = create_snapshot_for_tag ("hourly",now);
+							if(!status){
+								log_error(_("Hourly snapshot failed!"));
+								return false;
+							}
+							else{
+								update_symlinks = true;
+								repo.load_snapshots();
+							}
 						}
-						else{
-							update_symlinks = true;
-							repo.load_snapshots();
+				
+					
+					if (schedule_daily){
+
+						log_msg(_("Daily snapshots are enabled"));
+
+						if (last_snapshot_daily == null){
+							log_msg(_("Last daily snapshot not found"));
+							take_new = true;
 						}
-					}
-				}
-
-				if (schedule_monthly){
-
-					log_msg(_("Monthly snapshot are enabled"));
-
-					if (last_snapshot_monthly == null){
-						log_msg(_("Last monthly snapshot not found"));
-						take_new = true;
-					}
-					else if (last_snapshot_monthly.date.compare(now.add_months(-1).add_minutes(1)) < 0){
-						log_msg(_("Last monthly snapshot is more than 1 month old"));
-						take_new = true;
-					}
-					else{
-						int days = (int) ((float) now.difference(last_snapshot_monthly.date) / TimeSpan.DAY);
-						log_msg(_("Last monthly snapshot is %d days old").printf(days));
-						take_new = false;
-					}
-
-					if (take_new){
-						status = create_snapshot_for_tag ("monthly",now);
-						if(!status){
-							log_error(_("Monthly snapshot failed!"));
-							return false;
+						else if (last_snapshot_daily.date.compare(now.add_days(-1).add_minutes(1)) < 0){
+							log_msg(_("Last daily snapshot is more than 1 day old"));
+							take_new = true;
 						}
 						else{
-							update_symlinks = true;
-							repo.load_snapshots();
+							int hours = (int) ((float) now.difference(last_snapshot_daily.date) / TimeSpan.HOUR);
+							log_msg(_("Last daily snapshot is %d hours old").printf(hours));
+							take_new = false;
+						}
+
+						if (take_new){
+							status = create_snapshot_for_tag ("daily",now);
+							if(!status){
+								log_error(_("Daily snapshot failed!"));
+								return false;
+							}
+							else{
+								update_symlinks = true;
+								repo.load_snapshots();
+							}
+						}
+					}
+
+					if (schedule_weekly){
+
+						log_msg(_("Weekly snapshots are enabled"));
+
+						if (last_snapshot_weekly == null){
+							log_msg(_("Last weekly snapshot not found"));
+							take_new = true;
+						}
+						else if (last_snapshot_weekly.date.compare(now.add_weeks(-1).add_minutes(1)) < 0){
+							log_msg(_("Last weekly snapshot is more than 1 week old"));
+							take_new = true;
+						}
+						else{
+							int days = (int) ((float) now.difference(last_snapshot_weekly.date) / TimeSpan.DAY);
+							log_msg(_("Last weekly snapshot is %d days old").printf(days));
+							take_new = false;
+						}
+
+						if (take_new){
+							status = create_snapshot_for_tag ("weekly",now);
+							if(!status){
+								log_error(_("Weekly snapshot failed!"));
+								return false;
+							}
+							else{
+								update_symlinks = true;
+								repo.load_snapshots();
+							}
+						}
+					}
+
+					if (schedule_monthly){
+
+						log_msg(_("Monthly snapshot are enabled"));
+
+						if (last_snapshot_monthly == null){
+							log_msg(_("Last monthly snapshot not found"));
+							take_new = true;
+						}
+						else if (last_snapshot_monthly.date.compare(now.add_months(-1).add_minutes(1)) < 0){
+							log_msg(_("Last monthly snapshot is more than 1 month old"));
+							take_new = true;
+						}
+						else{
+							int days = (int) ((float) now.difference(last_snapshot_monthly.date) / TimeSpan.DAY);
+							log_msg(_("Last monthly snapshot is %d days old").printf(days));
+							take_new = false;
+						}
+
+						if (take_new){
+							status = create_snapshot_for_tag ("monthly",now);
+							if(!status){
+								log_error(_("Monthly snapshot failed!"));
+								return false;
+							}
+							else{
+								update_symlinks = true;
+								repo.load_snapshots();
+							}
 						}
 					}
 				}
@@ -3048,6 +3060,7 @@ public class Main : GLib.Object{
 		config.set_string_member("include_btrfs_home_for_backup", include_btrfs_home_for_backup.to_string());
 		config.set_string_member("include_btrfs_home_for_restore", include_btrfs_home_for_restore.to_string());
 		config.set_string_member("stop_cron_emails", stop_cron_emails.to_string());
+		config.set_string_member("run_on_battery", run_on_battery.to_string());
 		config.set_string_member("btrfs_use_qgroup", btrfs_use_qgroup.to_string());
 
 		config.set_string_member("schedule_monthly", schedule_monthly.to_string());
@@ -3140,6 +3153,7 @@ public class Main : GLib.Object{
 		
 		include_btrfs_home_for_restore = json_get_bool(config, "include_btrfs_home_for_restore", include_btrfs_home_for_restore);
 		stop_cron_emails = json_get_bool(config, "stop_cron_emails", stop_cron_emails);
+		run_on_battery = json_get_bool(config, "run_on_battery", run_on_battery);	                                 
 		btrfs_use_qgroup = json_get_bool(config, "btrfs_use_qgroup", btrfs_use_qgroup);
 		
 		if (cmd_btrfs_mode != null){
@@ -4163,7 +4177,7 @@ public class Main : GLib.Object{
 			
 			//boot
 			if (schedule_boot){
-				CronTab.add_script_file("timeshift-boot", "d", "@reboot root sleep 10m && timeshift --create --scripted --tags B", stop_cron_emails);
+				CronTab.add_script_file("timeshift-boot", "d", "@reboot root sleep 10m && timeshift --check --scripted --tags B", stop_cron_emails);
 			}
 			else{
 				CronTab.remove_script_file("timeshift-boot", "d");

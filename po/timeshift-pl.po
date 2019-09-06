@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timeshift\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-13 12:34+0100\n"
-"PO-Revision-Date: 2019-07-22 16:33+0200\n"
+"POT-Creation-Date: 2019-09-06 21:04+0200\n"
+"PO-Revision-Date: 2019-09-06 21:31+0200\n"
 "Last-Translator: Kacper Paczos <kacper-paczos@linux.pl>\n"
 "Language-Team: Polish <none>\n"
 "Language: pl\n"
@@ -17,100 +17,849 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2018-02-03 14:28+0000\n"
-"X-Generator: Gtranslator 3.32.1\n"
+"X-Generator: Poedit 2.2.3\n"
 "X-Launchpad-Export-Date: 2017-11-23 10:47+0000\n"
 "X-Generator: Launchpad (build 18509)\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2)\n"
+"|| n%100>=20) ? 1 : 2);\n"
 
-#: src/Utility/AppLock.vala:49
-msgid "Another instance of this application is running"
-msgstr "Instancja tej aplikacji jest już uruchomiona"
+#: src/Core/Main.vala:189
+msgid "Running"
+msgstr "Uruchamianie"
 
-#: src/Utility/AppLock.vala:54
-msgid "[Warning] Deleted invalid lock"
-msgstr "[Ostrzeżenie] Usunięte niepoprawną blokadę"
+#: src/Core/Main.vala:217
+msgid "Session log file"
+msgstr "Plik dziennika sesji"
 
-#: src/Utility/TeeJee.Process.vala:511
-msgid "Stopped"
-msgstr "Zatrzymano"
+#: src/Core/Main.vala:229
+msgid "Distribution"
+msgstr "Dystrybucja"
 
-#: src/Utility/Gtk/DonationWindow.vala:43
-#: src/Utility/Gtk/DonationWindow.vala:76 src/Gtk/MainWindow.vala:209
-#: src/Gtk/MainWindow.vala:210
-msgid "Donate"
-msgstr "Darowizna"
+#: src/Core/Main.vala:238
+msgid "Missing Dependencies"
+msgstr "Brakujące zależności"
 
-#: src/Utility/Gtk/DonationWindow.vala:66
+#: src/Core/Main.vala:252
+msgid "Another instance of Timeshift is creating a snapshot."
+msgstr "Inna instancja aplikacji Timeshift tworzy właśnie migawkę."
+
+#: src/Core/Main.vala:253
+msgid "Please wait a few minutes and try again."
+msgstr "Proszę odczekać klika minut i spróbować ponownie."
+
+#: src/Core/Main.vala:256
+msgid "Another instance of timeshift is currently running!"
+msgstr "Inna instancja aplikacji Timeshift jest już uruchomiona!"
+
+#: src/Core/Main.vala:257
+msgid "Please check if you have multiple windows open."
+msgstr "Proszę sprawdzić, czy nie masz otworzonych wiele okien."
+
+#: src/Core/Main.vala:260
+msgid "Scheduled snapshot in progress..."
+msgstr "Tworzenie zaplanowanej migawki..."
+
+#: src/Core/Main.vala:350
+msgid "Commands listed below are not available on this system"
+msgstr "Polecenia wymienione poniżej nie są dostępne w tym systemie"
+
+#: src/Core/Main.vala:351
+msgid "Please install required packages and try running TimeShift again"
+msgstr "Proszę doinstalować wymagane pakiety i uruchomić ponownie TimeShift"
+
+#: src/Core/Main.vala:365
+msgid "** Uninstalled Timeshift BTRFS **"
+msgstr "** Odinstalowany Timeshift BTRFS **"
+
+#: src/Core/Main.vala:379
+msgid "The system partition has an unsupported subvolume layout."
+msgstr "Partycja systemowa ma nieobsługiwany układ podwolumenu."
+
+#: src/Core/Main.vala:380 src/Core/Main.vala:3454
+#: src/Gtk/RestoreDeviceBox.vala:525
 msgid ""
-"This software is free for personal and commercial use. It is distributed in "
-"the hope that it is useful but without any warranty. See the GNU General "
-"Public License v2 or later for more information"
+"Only ubuntu-type layouts with @ and @home subvolumes are currently supported."
 msgstr ""
-"To oprogramowanie jest darmowe dla użytku osobistego i komercyjnego. Jest "
-"rozpowszechniane bez jakiejkolwiek gwarancji, w nadziei, że będzie "
-"przydatne. Zobacz ogólną licencję publiczną GNU w wersji drugiej lub "
-"późniejszej, by uzyskać więcej informacji"
+"Tylko układy podwolumenów w stylu Ubuntu z @ oraz @home są aktualnie "
+"wspierane."
 
-#: src/Utility/Gtk/DonationWindow.vala:70
+#: src/Core/Main.vala:381
+msgid "Application will exit."
+msgstr "Aplikacja zostanie zamknięta."
+
+#: src/Core/Main.vala:382
+msgid "Not Supported"
+msgstr "Niewspierane"
+
+#: src/Core/Main.vala:1011
+msgid "Boot snapshots are enabled"
+msgstr "Migawki rozruchowe są włączone"
+
+#: src/Core/Main.vala:1014
+msgid "Last boot snapshot not found"
+msgstr "Nie znaleziono ostatniej migawki rozruchowej"
+
+#: src/Core/Main.vala:1018
+msgid "Last boot snapshot is older than system start time"
+msgstr "Ostatnia migawka rozruchowa jest starsza niż czas uruchamiania systemu"
+
+#: src/Core/Main.vala:1023
+#, c-format
+msgid "Last boot snapshot is %d hours old"
+msgstr "Ostatnia migawka rozruchowa ma %d godzin(ę/y)"
+
+#: src/Core/Main.vala:1030
+msgid "Boot snapshot failed!"
+msgstr "Uruchomienie migawki nie powiodło się!"
+
+#: src/Core/Main.vala:1042
+msgid "Hourly snapshots are enabled"
+msgstr "Migawki godzinne są włączone"
+
+#: src/Core/Main.vala:1045
+msgid "Last hourly snapshot not found"
+msgstr "Nie znaleziono ostatniej migawki godzinnej"
+
+#: src/Core/Main.vala:1049
+msgid "Last hourly snapshot is more than 1 hour old"
+msgstr "Ostatnia godzinna migawka jest starsza niż jedna godzina"
+
+#: src/Core/Main.vala:1054
+#, c-format
+msgid "Last hourly snapshot is %d minutes old"
+msgstr "Ostatnia godzinna migawka ma %d minut(ę/y)"
+
+#: src/Core/Main.vala:1061
+msgid "Hourly snapshot failed!"
+msgstr "Błąd migawki godzinnej!"
+
+#: src/Core/Main.vala:1073
+msgid "Daily snapshots are enabled"
+msgstr "Włączono migawki dzienne"
+
+#: src/Core/Main.vala:1076
+msgid "Last daily snapshot not found"
+msgstr "Nie znaleziono ostatniej dziennej migawki"
+
+#: src/Core/Main.vala:1080
+msgid "Last daily snapshot is more than 1 day old"
+msgstr "Ostatnia dzienna migawka jest starsza niż jeden dzień"
+
+#: src/Core/Main.vala:1085
+#, c-format
+msgid "Last daily snapshot is %d hours old"
+msgstr "Ostatnia dzienna migawka jest starsza niż %d godzin(a/y)"
+
+#: src/Core/Main.vala:1092
+msgid "Daily snapshot failed!"
+msgstr "Błąd migawki dziennej!"
+
+#: src/Core/Main.vala:1104
+msgid "Weekly snapshots are enabled"
+msgstr "Migawki tygodniowe są włączone"
+
+#: src/Core/Main.vala:1107
+msgid "Last weekly snapshot not found"
+msgstr "Nie znaleziono ostatniej migawki tygodniowej"
+
+#: src/Core/Main.vala:1111
+msgid "Last weekly snapshot is more than 1 week old"
+msgstr "Ostatnia migawka tygodniowa jest starsza niż tydzień"
+
+#: src/Core/Main.vala:1116
+#, c-format
+msgid "Last weekly snapshot is %d days old"
+msgstr "Ostatnia migawka tygodniowa ma %d dzień/dni"
+
+#: src/Core/Main.vala:1123
+msgid "Weekly snapshot failed!"
+msgstr "Błąd migawki tygodniowej!"
+
+#: src/Core/Main.vala:1135
+msgid "Monthly snapshot are enabled"
+msgstr "Migawki miesięczne są włączone"
+
+#: src/Core/Main.vala:1138
+msgid "Last monthly snapshot not found"
+msgstr "Nie znaleziono ostatniej migawki miesięcznej"
+
+#: src/Core/Main.vala:1142
+msgid "Last monthly snapshot is more than 1 month old"
+msgstr "Ostatnia migawka miesięczna jest starsza niż miesiąc"
+
+#: src/Core/Main.vala:1147
+#, c-format
+msgid "Last monthly snapshot is %d days old"
+msgstr "Ostatnia migawka miesięczna ma %d dzień/dni"
+
+#: src/Core/Main.vala:1154
+msgid "Monthly snapshot failed!"
+msgstr "Błąd migawki miesięcznej!"
+
+#: src/Core/Main.vala:1165 src/Gtk/ScheduleBox.vala:312
+#: src/Gtk/MainWindow.vala:1051
+msgid "Scheduled snapshots are disabled"
+msgstr "Zaplanowane migawki są wyłączone"
+
+#: src/Core/Main.vala:1165
+msgid "Nothing to do!"
+msgstr "Nie ma niczego do zrobienia!"
+
+#: src/Core/Main.vala:1221
+msgid "Unknown snapshot type"
+msgstr "Nieznany typ migawki"
+
+#: src/Core/Main.vala:1239 src/Core/Main.vala:1280
+msgid "Tagged snapshot"
+msgstr "Oznaczono migawkę"
+
+#: src/Core/Main.vala:1270
+msgid "Snapshot saved successfully"
+msgstr "Migawka zapisana pomyślnie"
+
+#: src/Core/Main.vala:1273
+msgid "Failed to create snapshot"
+msgstr "Nie udało się stworzyć migawki"
+
+#: src/Core/Main.vala:1297
+msgid "Estimating system size..."
+msgstr "Obliczanie rozmiaru systemu..."
+
+#: src/Core/Main.vala:1301
+msgid "Creating new snapshot..."
+msgstr "Tworzenie nowej migawki..."
+
+#: src/Core/Main.vala:1303 src/Core/Main.vala:1457 src/Core/Main.vala:1459
+msgid "Saving to device"
+msgstr "Zapisywanie na urządzeniu"
+
+#: src/Core/Main.vala:1303 src/Core/Main.vala:1457 src/Core/Main.vala:1459
+msgid "mounted at path"
+msgstr "zamontowano na ścieżce"
+
+#: src/Core/Main.vala:1362
+msgid "Linking from snapshot"
+msgstr "Łączenie z migawki"
+
+#: src/Core/Main.vala:1373
+msgid "Failed to save exclude list"
+msgstr "Nie udało się zapisać listy pominiętych (exclude list)"
+
+#: src/Core/Main.vala:1379 src/Core/Main.vala:2562 src/Core/Main.vala:2803
+msgid "Synching files with rsync..."
+msgstr "Synchronizacja plików za pomocą rsync..."
+
+#: src/Core/Main.vala:1411 src/Core/Snapshot.vala:500
+msgid "complete"
+msgstr "kompletne"
+
+#: src/Core/Main.vala:1411 src/Core/Snapshot.vala:501
+#: src/Gtk/DeleteBox.vala:149 src/Gtk/BackupBox.vala:234
+#: src/Gtk/RestoreBox.vala:237
+msgid "remaining"
+msgstr "pozostało"
+
+#: src/Core/Main.vala:1422
+msgid "rsync returned an error"
+msgstr "rsync zwrócił błąd"
+
+#: src/Core/Main.vala:1423
+msgid "Failed to create new snapshot"
+msgstr "Nie udało się stworzyć nowej migawki"
+
+#: src/Core/Main.vala:1455
+msgid "Creating new backup..."
+msgstr "Tworzenie nowej kopii zapasowej..."
+
+#: src/Core/Main.vala:1512 src/Core/Main.vala:3884 src/Core/Main.vala:3968
+#: src/Core/Main.vala:4076 src/Core/Main.vala:4115 src/Core/Subvolume.vala:214
+msgid "btrfs returned an error"
+msgstr "btrfs zwrócił błąd"
+
+#: src/Core/Main.vala:1513
+msgid "Failed to create subvolume snapshot"
+msgstr "Nie udało się stworzyć migawki podwolumenu"
+
+#: src/Core/Main.vala:1517
+msgid "Created subvolume snapshot"
+msgstr "Utworzono migawkę podwolumenu"
+
+#: src/Core/Main.vala:1584
+msgid "Unknown value specified for option --tags"
+msgstr "Określono nieznaną wartość w opcji --oznaczenia (tags)"
+
+#: src/Core/Main.vala:1585
+msgid "Expected values: O, B, H, D, W, M"
+msgstr "Spodziewane wartości: O, B, H, D, W, M"
+
+#: src/Core/Main.vala:1597 src/Gtk/DeleteBox.vala:68
+#: src/Gtk/RsyncLogBox.vala:232 src/Gtk/BackupBox.vala:114
+#: src/Gtk/RestoreBox.vala:88
+msgid "Preparing..."
+msgstr "Przygotowywanie..."
+
+#: src/Core/Main.vala:1635 src/Core/Main.vala:1646 src/Core/Main.vala:4219
+#: src/Core/SnapshotRepo.vala:991 src/Core/Snapshot.vala:509
+msgid "Removed"
+msgstr "Usunięto"
+
+#: src/Core/Main.vala:2030
+msgid "Backup device not specified!"
+msgstr "Nie wskazano urządzenia do kopii zapasowej!"
+
+#: src/Core/Main.vala:2035
+msgid "Backup Device"
+msgstr "Urządzenie kopii zapasowej"
+
+#: src/Core/Main.vala:2040
+msgid "Snapshot to restore not specified!"
+msgstr "Nie określono migawki do przywrócenia!"
+
+#: src/Core/Main.vala:2044
+msgid "Invalid Snapshot"
+msgstr "Nieprawidłowa migawka"
+
+#: src/Core/Main.vala:2045
+msgid "Selected snapshot is marked for deletion"
+msgstr "Wybrane migawka jest oznaczona do usunięcia"
+
+#: src/Core/Main.vala:2050 src/Core/SnapshotRepo.vala:715
+#: src/Core/SnapshotRepo.vala:768 src/Gtk/SnapshotListBox.vala:95
+msgid "Snapshot"
+msgstr "Migawka"
+
+#: src/Core/Main.vala:2059 src/Core/Main.vala:2063
+msgid "BTRFS device is not mounted"
+msgstr "Urządzenie BTRFS nie jest zamontowane"
+
+#: src/Core/Main.vala:2069
+msgid "Target device not specified!"
+msgstr "Nie określono urządzenia docelowego!"
+
+#: src/Core/Main.vala:2075
+msgid "Target device is not mounted"
+msgstr "Urządzenie docelowe nie jest zamontowane"
+
+#: src/Core/Main.vala:2124 src/Gtk/RestoreSummaryBox.vala:53
+msgid "Warning"
+msgstr "Ostrzeżenie"
+
+#: src/Core/Main.vala:2129
+msgid "Data will be modified on following devices:"
+msgstr "Dane zostaną zmodyfikowane na następujących urządzeniach:"
+
+#: src/Core/Main.vala:2131 src/Core/Main.vala:2164
+msgid "Mount"
+msgstr "Zamontuj"
+
+#: src/Core/Main.vala:2132 src/Core/Main.vala:2164
+#: src/Core/SnapshotRepo.vala:76 src/Core/SnapshotRepo.vala:683
+#: src/Core/SnapshotRepo.vala:686 src/Utility/Device.vala:1930
+#: src/Utility/Device.vala:1940 src/Gtk/RestoreDeviceBox.vala:97
+#: src/Console/AppConsole.vala:456 src/Console/AppConsole.vala:495
+#: src/Console/AppConsole.vala:543
+msgid "Device"
+msgstr "Urządzenie"
+
+#: src/Core/Main.vala:2212
+msgid "Please save your work and close all applications."
+msgstr "Proszę zapisać swoją prace i zamknąć wszystkie aplikacje."
+
+#: src/Core/Main.vala:2213
+msgid "System will reboot after files are restored."
+msgstr "System zostanie uruchomiony ponownie po przywróceniu plików."
+
+#: src/Core/Main.vala:2224 src/Gtk/RestoreSummaryBox.vala:64
+msgid "Disclaimer"
+msgstr "Wyłączenie odpowiedzialności"
+
+#: src/Core/Main.vala:2229
 msgid ""
-"If you find this application useful, consider making a donation to support "
-"the development."
+"This software comes without absolutely NO warranty and the author takes no "
+"responsibility for any damage arising from the use of this program."
 msgstr ""
-"Jeśli uważasz te aplikacje za przydatną, to wesprzyj jej rozwój, przekazując "
-"darowiznę."
+"To oprogramowanie jest dostarczane bez absolutnie ŻADNEJ gwarancji a autor "
+"nie bierze na siebie odpowiedzialności za jakiekolwiek szkody powstałe w "
+"związku z używaniem tego programu."
 
-#: src/Utility/Gtk/DonationWindow.vala:79
-msgid "Become a Patron"
-msgstr "Zostań patronem"
-
-#: src/Utility/Gtk/DonationWindow.vala:84
-msgid "Support"
-msgstr "Wsparcie"
-
-#: src/Utility/Gtk/DonationWindow.vala:88
+#: src/Core/Main.vala:2230
 msgid ""
-"Use the issue tracker for reporting issues, asking questions, and requesting "
-"features. Please avoid reporting issues by email."
+"If these terms are not acceptable to you, please do not proceed beyond this "
+"point!"
+msgstr "Jeśli te warunki są dla Ciebie nie do przyjęcia, nie idź dalej!"
+
+#: src/Core/Main.vala:2262
+msgid "Please do not interrupt the restore process!"
+msgstr "Proszę nie przerywać procesu przywracania!"
+
+#: src/Core/Main.vala:2263
+msgid "System will reboot after files are restored"
+msgstr "System zostanie uruchomiony ponownie po przywróceniu plików"
+
+#: src/Core/Main.vala:2325
+msgid "Re-installing GRUB2 bootloader..."
+msgstr "Reinstalacja programu rozruchowego GRUB2..."
+
+#: src/Core/Main.vala:2366
+msgid "Generating initramfs..."
+msgstr "Generowanie systemu plików w przestrzeni użytkownika (initramfs)..."
+
+#: src/Core/Main.vala:2383
+msgid "Updating GRUB menu..."
+msgstr "Aktualizowanie menu GRUB..."
+
+#: src/Core/Main.vala:2400
+msgid "Synching file systems..."
+msgstr "Synchronizacja systemu plików..."
+
+#: src/Core/Main.vala:2406
+msgid "Cleaning up..."
+msgstr "Czyszczenie..."
+
+#: src/Core/Main.vala:2418
+msgid "Rebooting system..."
+msgstr "Ponowne uruchamianie systemu..."
+
+#: src/Core/Main.vala:2487 src/Core/Main.vala:2578 src/Gtk/RsyncLogBox.vala:222
+msgid "Parsing log file..."
+msgstr "Parsowanie pliku dziennika..."
+
+#: src/Core/Main.vala:2517
+msgid "Building file list..."
+msgstr "Tworzenie listy plików..."
+
+#: src/Core/Main.vala:2559
+msgid "Comparing files with rsync..."
+msgstr "Porównywanie plików z użyciem RSYNC..."
+
+#: src/Core/Main.vala:2586
+msgid "Updating bootloader configuration..."
+msgstr "Aktualizowanie konfiguracji programu rozruchowego..."
+
+#: src/Core/Main.vala:2662
+msgid "Updated /etc/fstab on target device"
+msgstr "Zaktualizowano /etc/fstab na urządzeniu docelowym"
+
+#: src/Core/Main.vala:2742
+msgid "Updated /etc/crypttab on target device"
+msgstr "Zaktualizowano /etc/crypttab na urządzeniu docelowym"
+
+#: src/Core/Main.vala:2750
+msgid "Checking file systems for errors..."
+msgstr "Sprawdzanie systemu plików w poszukiwaniu błędów..."
+
+#: src/Core/Main.vala:2793 src/Gtk/RestoreBox.vala:74
+#: src/Gtk/RestoreBox.vala:187
+msgid "Comparing Files (Dry Run)..."
+msgstr "Porównywanie plików (przebieg próbny)..."
+
+#: src/Core/Main.vala:2796
+msgid "Restoring snapshot..."
+msgstr "Przywracanie migawki..."
+
+#: src/Core/Main.vala:2800
+msgid "Cloning system..."
+msgstr "Klonowanie systemu..."
+
+#: src/Core/Main.vala:2827 src/Core/Main.vala:2869
+msgid "Restore completed"
+msgstr "Przywracanie ukończone"
+
+#: src/Core/Main.vala:2873
+msgid "Snapshot will become active after system is rebooted."
+msgstr "Migawka stanie się aktywna po ponownym uruchomieniu systemu."
+
+#: src/Core/Main.vala:2912
+msgid "Found existing pre-restore snapshot"
+msgstr "Znaleziono istniejącą migawkę przed-przywróceniem"
+
+#: src/Core/Main.vala:2921 src/Core/Main.vala:2925 src/Core/Subvolume.vala:167
+msgid "Deleted subvolume"
+msgstr "Usunięto podwolumen"
+
+#: src/Core/Main.vala:2942
+msgid "Creating pre-restore snapshot from system subvolumes..."
+msgstr "Tworzenie migawki przed przywróceniem podwolumenów systemowych..."
+
+#: src/Core/Main.vala:2964
+msgid "Could not find system subvolume"
+msgstr "Nie można odnaleźć podwolumenu systemowego"
+
+#: src/Core/Main.vala:2979
+msgid "Failed to move system subvolume to snapshot directory"
+msgstr "Nie udało się przenieść podwolumenu systemu do katalogu migawki"
+
+#: src/Core/Main.vala:2986
+msgid "Moved system subvolume to snapshot directory"
+msgstr "Przeniesiono podwolumen systemowy do katalogu migawki"
+
+#: src/Core/Main.vala:2992
+msgid "Could not find system subvolumes for creating pre-restore snapshot"
 msgstr ""
-"Użyj tropiciela błędów, by zgłosić błąd, zadawać pytania, i prosić o nowe "
-"funkcje. Proszę unikać zgłaszania błędów przez pocztę elektroniczną."
+"Nie można odnaleźć podwolumenu systemowego w celu utworzenia migawki przed-"
+"odtworzeniowej"
 
-#: src/Utility/Gtk/DonationWindow.vala:94
-msgid "Issue Tracker"
-msgstr "Lista problemów"
+#: src/Core/Main.vala:3014
+msgid "Created pre-restore snapshot"
+msgstr "Utworzono migawkę przed przywróceniem"
 
-#: src/Utility/Gtk/DonationWindow.vala:99
-msgid "Wiki"
-msgstr "Wiki"
+#: src/Core/Main.vala:3096
+msgid "App config saved"
+msgstr "Zapisano konfigurację aplikacji"
 
-#: src/Utility/Gtk/DonationWindow.vala:105
-msgid "Feature Requests"
-msgstr "Prośba o nową funkcję"
+#: src/Core/Main.vala:3201
+msgid "App config loaded"
+msgstr "Wczytano konfigurację aplikacji"
 
-#: src/Utility/Gtk/DonationWindow.vala:109
+#: src/Core/Main.vala:3215 src/Core/Main.vala:3219
+msgid "Selected default snapshot type"
+msgstr "Wybierz domyślny typ migawki"
+
+#: src/Core/Main.vala:3236
 msgid ""
-"This application was created for my own use in my spare time, and it's not "
-"practical for me to work for free, on every change that is requested. If you "
-"need new features or changes to the application, consider making a donation "
-"to sponsor the work. If you are a developer, consider contributing to the "
-"project, by submitting code changes for issues and features in the issue "
-"tracker."
+"Option --snapshot-device should not be specified for creating snapshots in "
+"BTRFS mode"
 msgstr ""
-"Ta aplikacja została stworzona w wolnym czasie na mój własny użytek, nie mam "
-"w zwyczaju pracować za darmo z powodu każdej prośby o zmianę. Jeżeli "
-"potrzebujesz nowych funkcji lub zmian w aplikacji, rozważ przekazanie "
-"darowizny, tym samym za sponsoruj moją pracę. Jeżeli jesteś deweloperem, "
-"rozważ dołączenie do projektu, aby dodawać zmiany w kodzie w przypadku "
-"błędów oraz próśb o nowe funkcje zgłaszane w tropicielu błędów (issue "
-"tracker)."
+"Opcja --snapshot-device nie powinna być określona do tworzeniu migawek w "
+"trybie BTRFS"
 
-#: src/Utility/Gtk/DonationWindow.vala:117 src/Utility/Gtk/AboutWindow.vala:326
-#: src/Gtk/RestoreWindow.vala:508 src/Gtk/RsyncLogBox.vala:266
-#: src/Gtk/BootOptionsWindow.vala:106 src/Gtk/BackupWindow.vala:169
-#: src/Gtk/DeleteWindow.vala:170
-msgid "Close"
-msgstr "Zamknij"
+#: src/Core/Main.vala:3254 src/Core/SnapshotRepo.vala:560
+#: src/Console/AppConsole.vala:665
+msgid "Device not found"
+msgstr "Nie odnaleziono urządzenia"
+
+#: src/Core/Main.vala:3264
+msgid "Selected default snapshot device"
+msgstr "Wybrano domyślne urządzenie na migawkę"
+
+#: src/Core/Main.vala:3337
+msgid "Failed to get partition list."
+msgstr "Nie udało się uzyskać listy partycji."
+
+#: src/Core/Main.vala:3364
+msgid "/ is mapped to device"
+msgstr "/ jest zmapowany do urządzenia"
+
+#: src/Core/Main.vala:3375
+msgid "/home is mapped to device"
+msgstr "/home jest zmapowany do urządzenia"
+
+#: src/Core/Main.vala:3386
+msgid "/boot is mapped to device"
+msgstr "/boot jest zmapowany do urządzenia"
+
+#: src/Core/Main.vala:3397
+msgid "/boot/efi is mapped to device"
+msgstr "/boot/efi jest zmapowany do urządzenia"
+
+#: src/Core/Main.vala:3453
+msgid "The target partition has an unsupported subvolume layout."
+msgstr "Docelowa partycja ma nieobsługiwany układ podwolumenu."
+
+#: src/Core/Main.vala:3457 src/Gtk/RestoreDeviceBox.vala:522
+msgid "Unsupported Subvolume Layout"
+msgstr "Niewspierany układ podwolumenu"
+
+#: src/Core/Main.vala:3540
+msgid "Critical Error"
+msgstr "Błąd Krytyczny"
+
+#: src/Core/Main.vala:3541
+msgid "Failed to unmount device!"
+msgstr "Nie udało się odmontować urządzenia!"
+
+#: src/Core/Main.vala:3541
+msgid "Application will exit"
+msgstr "Aplikacja zostanie zamknięta"
+
+#: src/Core/Main.vala:3604
+#, c-format
+msgid "Removed mount directory: '%s'"
+msgstr "Usunięto zamontowany katalog: '%s'"
+
+#: src/Core/Main.vala:3755 src/Core/Main.vala:3761
+msgid "Failed to estimate system size"
+msgstr "Nie udało się obliczyć rozmiaru systemu plików"
+
+#: src/Core/Main.vala:3799
+msgid "Querying subvolume info..."
+msgstr "Zapytanie o informacje podwolumenu..."
+
+#: src/Core/Main.vala:3816
+msgid "Query completed"
+msgstr "Zapytanie ukończone"
+
+#: src/Core/Main.vala:3885
+msgid "Failed to query subvolume list"
+msgstr "Nie można wyświetlić listy podwolumenu"
+
+#: src/Core/Main.vala:3969
+msgid "Failed to query subvolume quota"
+msgstr "Nie można wyświetlić części podwolumenu (subvolume quota)"
+
+#: src/Core/Main.vala:4052 src/Core/Main.vala:4092
+msgid "Enabled subvolume quota support"
+msgstr "Włączono obsługę części podwolumenu (quota support)"
+
+#: src/Core/Main.vala:4077
+msgid "Failed to enable subvolume quota"
+msgstr "Błąd podczas włączania części podwolumenu"
+
+#: src/Core/Main.vala:4116
+msgid "Failed to rescan subvolume quota"
+msgstr "Nie udało się przeskanować ponownie części podwolumenu"
+
+#: src/Core/Main.vala:4223
+msgid "Older log files removed"
+msgstr "Usunięto starsze pliki dziennika"
+
+#: src/Core/SnapshotRepo.vala:77 src/Core/SnapshotRepo.vala:147
+msgid "Free space"
+msgstr "Wolna przestrzeń"
+
+#: src/Core/SnapshotRepo.vala:146
+msgid "Selected snapshot device"
+msgstr "Wybrano urządzenie na migawkę"
+
+#: src/Core/SnapshotRepo.vala:470
+msgid "Snapshot device"
+msgstr "Urządzenie na migawkę"
+
+#: src/Core/SnapshotRepo.vala:474
+msgid "Snapshot location"
+msgstr "Lokalizacja migawki"
+
+#: src/Core/SnapshotRepo.vala:480 src/Core/SnapshotRepo.vala:690
+#: src/Gtk/RsyncLogBox.vala:472
+msgid "Status"
+msgstr "Status"
+
+#: src/Core/SnapshotRepo.vala:552 src/Console/AppConsole.vala:660
+msgid "Snapshot device not selected"
+msgstr "Nie wybrano urządzenia na migawkę"
+
+#: src/Core/SnapshotRepo.vala:553
+msgid "Select the snapshot device"
+msgstr "Wybierz urządzenie na migawkę"
+
+#: src/Core/SnapshotRepo.vala:559 src/Console/AppConsole.vala:664
+msgid "Snapshot device not available"
+msgstr "Urządzenie na migawkę jest niedostępne"
+
+#: src/Core/SnapshotRepo.vala:592 src/Console/AppConsole.vala:690
+msgid "Selected snapshot device is not a system disk"
+msgstr "Urządzenie wybrane na migawkę nie jest dyskiem systemowym"
+
+#: src/Core/SnapshotRepo.vala:593 src/Console/AppConsole.vala:691
+msgid "Select BTRFS system disk with root subvolume (@)"
+msgstr ""
+"Wybierz dysk systemowy BTRFS z podwolumenem z głównym systemem plików (root) "
+"(@)"
+
+#: src/Core/SnapshotRepo.vala:629 src/Core/SnapshotRepo.vala:656
+msgid "Not enough disk space"
+msgstr "Brak wystarczającej ilości miejsca na dysku"
+
+#: src/Core/SnapshotRepo.vala:632 src/Core/SnapshotRepo.vala:659
+msgid "Select another device or free up some space"
+msgstr "Wybierz inne urządzenie lub zwolnij trochę miejsca na dysku"
+
+#: src/Core/SnapshotRepo.vala:639 src/Utility/Gtk/CustomMessageDialog.vala:167
+#: src/Utility/Gtk/CustomMessageDialog.vala:171 src/Utility/GtkHelper.vala:121
+#: src/Gtk/ExcludeListSummaryWindow.vala:84 src/Gtk/SettingsWindow.vala:123
+msgid "OK"
+msgstr "OK"
+
+#: src/Core/SnapshotRepo.vala:641
+#, c-format
+msgid "%d snapshots, %s free"
+msgstr "%d migawek, %s wolnego miejsca"
+
+#: src/Core/SnapshotRepo.vala:665
+msgid "No snapshots on this device"
+msgstr "Brak migawek na tym urzadzneiu"
+
+#: src/Core/SnapshotRepo.vala:667
+msgid "First snapshot requires:"
+msgstr "Pierwsza migawka wymaga:"
+
+#: src/Core/SnapshotRepo.vala:683
+msgid "Not Selected"
+msgstr "Nie zaznaczone"
+
+#: src/Core/SnapshotRepo.vala:688 src/Gtk/RestoreDeviceBox.vala:93
+msgid "Path"
+msgstr "Scieżka"
+
+#: src/Core/SnapshotRepo.vala:689
+msgid "Mode"
+msgstr "Tryb"
+
+#: src/Core/SnapshotRepo.vala:712 src/Core/SnapshotRepo.vala:755
+msgid "Maximum backups exceeded for backup level"
+msgstr "Przekroczono maksymalną liczbę kopii zapasowych dla kopii zapasowej"
+
+#: src/Core/SnapshotRepo.vala:715 src/Core/SnapshotRepo.vala:768
+#: src/Core/SnapshotRepo.vala:847
+msgid "un-tagged"
+msgstr "nieoznaczono"
+
+#: src/Core/SnapshotRepo.vala:847 src/Core/SnapshotRepo.vala:866
+#: src/Core/SnapshotRepo.vala:884 src/Core/SnapshotRepo.vala:898
+msgid "Removing snapshots"
+msgstr "Usuwanie migawek"
+
+#: src/Core/SnapshotRepo.vala:866
+msgid "marked for deletion"
+msgstr "oznaczone do usunięcia"
+
+#: src/Core/SnapshotRepo.vala:884
+msgid "incomplete"
+msgstr "niekompletne"
+
+#: src/Core/SnapshotRepo.vala:898
+msgid "all"
+msgstr "wszystko"
+
+#: src/Core/SnapshotRepo.vala:914 src/Gtk/MainWindow.vala:1001
+#: src/Console/AppConsole.vala:321
+msgid "No snapshots found"
+msgstr "Nie znaleziono migawek"
+
+#: src/Core/SnapshotRepo.vala:985
+msgid "Failed to remove"
+msgstr "Nie udało się usunąć"
+
+#: src/Core/SnapshotRepo.vala:998
+msgid "Directory not found"
+msgstr "Nie znaleziono katalogu"
+
+#: src/Core/SnapshotRepo.vala:1039
+msgid "Failed to create symlinks"
+msgstr "Nie udało się stworzyć dowiązań symbolicznych (symlinks)"
+
+#: src/Core/SnapshotRepo.vala:1045
+msgid "Symlinks updated"
+msgstr "Odświeżono dowiązania symboliczne"
+
+#: src/Core/SnapshotRepo.vala:1065
+msgid "Failed to delete symlinks"
+msgstr "Nie udało się usunąć dowiązań symbolicznych (symlinks)"
+
+#: src/Core/Subvolume.vala:141
+msgid "Deleting subvolume"
+msgstr "Usuwanie podwolumenu"
+
+#: src/Core/Subvolume.vala:153
+msgid "Failed to delete snapshot nested subvolume"
+msgstr "Nie udało się usunąć zagnieżdżonej (nested) migawki podwolumenu"
+
+#: src/Core/Subvolume.vala:163
+msgid "Failed to delete snapshot subvolume"
+msgstr "Nie udało się usunąć migawki podwolumenu"
+
+#: src/Core/Subvolume.vala:171
+msgid "Destroying qgroup"
+msgstr "Niszczenie grup przydziałów (qgroup)"
+
+#: src/Core/Subvolume.vala:177
+msgid "Failed to destroy qgroup"
+msgstr "Nie udało się zniszczyć grup przydziałów"
+
+#: src/Core/Subvolume.vala:181
+msgid "Destroyed qgroup"
+msgstr "Zniszczono grupy przydziałów (qgroup)"
+
+#: src/Core/Subvolume.vala:197
+msgid "Not Found"
+msgstr "Nie znaleziono"
+
+#: src/Core/Subvolume.vala:202
+msgid "Subvolume exists at destination"
+msgstr "Podwolumen już istnieje w docelowym miejscu"
+
+#: src/Core/Subvolume.vala:215
+msgid "Failed to restore system subvolume"
+msgstr "Nie udało się przywrócić podwolumenu systemu"
+
+#: src/Core/Subvolume.vala:219
+msgid "Restored system subvolume"
+msgstr "Przywrócono podwolumen systemu"
+
+#: src/Core/Snapshot.vala:430
+msgid "Created control file"
+msgstr "Utworzono plik kontrolny"
+
+#: src/Core/Snapshot.vala:484
+msgid "Removing"
+msgstr "Usuwanie"
+
+#: src/Core/Snapshot.vala:521
+msgid "Removing snapshot"
+msgstr "Usuwanie migawki"
+
+#: src/Core/Snapshot.vala:530 src/Core/Snapshot.vala:542
+#: src/Core/Snapshot.vala:550
+msgid "Failed to remove snapshot"
+msgstr "Nie udało się usunąć migawki"
+
+#: src/Core/Snapshot.vala:555
+msgid "Removed snapshot"
+msgstr "Usunięto migawkę"
+
+#: src/Utility/CronTab.vala:50
+msgid "Failed to read cron tab"
+msgstr "Nie udało się odczytać tablicy cron'a"
+
+#: src/Utility/CronTab.vala:132
+msgid "Failed to add cron job"
+msgstr "Nie udało się dodać zadania cron'a"
+
+#: src/Utility/CronTab.vala:136
+msgid "Cron job added"
+msgstr "Zadanie cron'a dodane"
+
+#: src/Utility/CronTab.vala:213
+msgid "Failed to remove cron job"
+msgstr "Nie udało się usunąć zadania cron'a"
+
+#: src/Utility/CronTab.vala:217
+msgid "Cron job removed"
+msgstr "Zadanie cron'a usunięte"
+
+#: src/Utility/CronTab.vala:225 src/Utility/RsyncTask.vala:298
+#: src/Utility/TeeJee.FileSystem.vala:205
+#: src/Utility/TeeJee.FileSystem.vala:547
+msgid "File not found"
+msgstr "Nie znaleziono pliku"
+
+#: src/Utility/CronTab.vala:240
+msgid "Failed to install crontab file"
+msgstr "Nie udało się zainstalować pliku crontab"
+
+#: src/Utility/CronTab.vala:244
+msgid "crontab file installed"
+msgstr "zainstalowano plik crontab"
+
+#: src/Utility/CronTab.vala:257
+msgid "Failed to export crontab file"
+msgstr "Nie udało się wyeksportować pliku crontab"
+
+#: src/Utility/CronTab.vala:261
+msgid "crontab file exported"
+msgstr "wyeksportowano plik crontab"
+
+#: src/Utility/CronTab.vala:304
+msgid "Cron task exists"
+msgstr "Zadanie cron'a istnieje"
+
+#: src/Utility/CronTab.vala:312
+msgid "Added cron task"
+msgstr "Dodane zadania cron'a"
+
+#: src/Utility/CronTab.vala:341
+msgid "Removed cron task"
+msgstr "Usunięto zadanie cron'a"
 
 #: src/Utility/Gtk/AboutWindow.vala:316 src/Utility/Gtk/AboutWindow.vala:356
 msgid "License"
@@ -119,6 +868,13 @@ msgstr "Licencja"
 #: src/Utility/Gtk/AboutWindow.vala:321 src/Utility/Gtk/AboutWindow.vala:387
 msgid "Credits"
 msgstr "Twórcy"
+
+#: src/Utility/Gtk/AboutWindow.vala:326 src/Utility/Gtk/DonationWindow.vala:107
+#: src/Gtk/RestoreWindow.vala:495 src/Gtk/RsyncLogBox.vala:266
+#: src/Gtk/BackupWindow.vala:172 src/Gtk/DeleteWindow.vala:173
+#: src/Gtk/BootOptionsWindow.vala:106
+msgid "Close"
+msgstr "Zamknij"
 
 #: src/Utility/Gtk/AboutWindow.vala:349 src/Utility/Gtk/AboutWindow.vala:381
 msgid "Back"
@@ -152,16 +908,59 @@ msgstr "Narzędzia"
 msgid "Donations"
 msgstr "Darowizny"
 
-#: src/Utility/Gtk/CustomMessageDialog.vala:167
-#: src/Utility/Gtk/CustomMessageDialog.vala:171 src/Utility/GtkHelper.vala:121
-#: src/Gtk/ExcludeListSummaryWindow.vala:84
-msgid "OK"
-msgstr "OK"
+#: src/Utility/Gtk/DonationWindow.vala:43
+#: src/Utility/Gtk/DonationWindow.vala:76 src/Gtk/MainWindow.vala:209
+#: src/Gtk/MainWindow.vala:210
+msgid "Donate"
+msgstr "Darowizna"
+
+#: src/Utility/Gtk/DonationWindow.vala:66
+msgid ""
+"This software is free for personal and commercial use. It is distributed in "
+"the hope that it is useful but without any warranty. See the GNU General "
+"Public License v2 or later for more information"
+msgstr ""
+"To oprogramowanie jest darmowe dla użytku osobistego i komercyjnego. Jest "
+"rozpowszechniane bez jakiejkolwiek gwarancji, w nadziei, że będzie "
+"przydatne. Zobacz ogólną licencję publiczną GNU w wersji drugiej lub "
+"późniejszej, by uzyskać więcej informacji"
+
+#: src/Utility/Gtk/DonationWindow.vala:70
+msgid ""
+"If you find this application useful, consider making a donation to support "
+"the development."
+msgstr ""
+"Jeśli uważasz te aplikacje za przydatną, to wesprzyj jej rozwój, przekazując "
+"darowiznę."
+
+#: src/Utility/Gtk/DonationWindow.vala:81
+msgid "Support"
+msgstr "Wsparcie"
+
+#: src/Utility/Gtk/DonationWindow.vala:85
+msgid ""
+"Use the issue tracker for reporting issues, asking questions, and requesting "
+"features. Please avoid reporting issues by email."
+msgstr ""
+"Użyj tropiciela błędów, by zgłosić błąd, zadawać pytania, i prosić o nowe "
+"funkcje. Proszę unikać zgłaszania błędów przez pocztę elektroniczną."
+
+#: src/Utility/Gtk/DonationWindow.vala:91
+msgid "Issue Tracker"
+msgstr "Lista problemów"
+
+#: src/Utility/Gtk/DonationWindow.vala:96
+msgid "Wiki"
+msgstr "Wiki"
+
+#: src/Utility/Gtk/DonationWindow.vala:100
+msgid "Website"
+msgstr "Witryna internetowa"
 
 #: src/Utility/Gtk/CustomMessageDialog.vala:172 src/Utility/GtkHelper.vala:122
-#: src/Gtk/RestoreWindow.vala:206 src/Gtk/RestoreWindow.vala:215
-#: src/Gtk/SetupWizardWindow.vala:214 src/Gtk/BackupWindow.vala:178
-#: src/Gtk/DeleteWindow.vala:187
+#: src/Gtk/RestoreWindow.vala:209 src/Gtk/RestoreWindow.vala:218
+#: src/Gtk/BackupWindow.vala:181 src/Gtk/DeleteWindow.vala:190
+#: src/Gtk/SetupWizardWindow.vala:220
 msgid "Cancel"
 msgstr "Anuluj"
 
@@ -245,15 +1044,6 @@ msgstr "Odłączanie od"
 msgid "Failed to unmount"
 msgstr "Nie udało się odmontować"
 
-#: src/Utility/Device.vala:1930 src/Utility/Device.vala:1940
-#: src/Gtk/RestoreDeviceBox.vala:97 src/Console/AppConsole.vala:455
-#: src/Console/AppConsole.vala:494 src/Console/AppConsole.vala:542
-#: src/Core/Main.vala:2114 src/Core/Main.vala:2146
-#: src/Core/SnapshotRepo.vala:76 src/Core/SnapshotRepo.vala:683
-#: src/Core/SnapshotRepo.vala:686
-msgid "Device"
-msgstr "Urządzenie"
-
 #: src/Utility/Device.vala:1931
 msgid "Vendor"
 msgstr "Producent"
@@ -271,10 +1061,10 @@ msgid "Revision"
 msgstr "Rewizja"
 
 #: src/Utility/Device.vala:1936 src/Utility/Device.vala:1951
-#: src/Gtk/BackupDeviceBox.vala:202 src/Gtk/RsyncLogBox.vala:392
-#: src/Gtk/BackupBox.vala:93 src/Gtk/RestoreBox.vala:131
-#: src/Gtk/SnapshotListBox.vala:174 src/Console/AppConsole.vala:457
-#: src/Console/AppConsole.vala:496
+#: src/Gtk/RsyncLogBox.vala:392 src/Gtk/SnapshotListBox.vala:174
+#: src/Gtk/BackupBox.vala:93 src/Gtk/BackupDeviceBox.vala:202
+#: src/Gtk/RestoreBox.vala:131 src/Console/AppConsole.vala:458
+#: src/Console/AppConsole.vala:497
 msgid "Size"
 msgstr "Rozmiar"
 
@@ -286,9 +1076,9 @@ msgstr "Urządzenie nadrzędne"
 msgid "UUID"
 msgstr "UUID"
 
-#: src/Utility/Device.vala:1947 src/Gtk/BackupDeviceBox.vala:190
-#: src/Gtk/SettingsWindow.vala:86 src/Console/AppConsole.vala:458
-#: src/Console/AppConsole.vala:497
+#: src/Utility/Device.vala:1947 src/Gtk/SettingsWindow.vala:87
+#: src/Gtk/BackupDeviceBox.vala:190 src/Console/AppConsole.vala:459
+#: src/Console/AppConsole.vala:498
 msgid "Type"
 msgstr "Typ"
 
@@ -297,7 +1087,7 @@ msgid "Filesystem"
 msgstr "System plików"
 
 #: src/Utility/Device.vala:1949 src/Gtk/BackupDeviceBox.vala:254
-#: src/Console/AppConsole.vala:459 src/Console/AppConsole.vala:498
+#: src/Console/AppConsole.vala:460 src/Console/AppConsole.vala:499
 msgid "Label"
 msgstr "Etykieta"
 
@@ -308,59 +1098,6 @@ msgstr "Użyto"
 #: src/Utility/Device.vala:1957 src/Gtk/SnapshotListBox.vala:127
 msgid "System"
 msgstr "System"
-
-#: src/Utility/CronTab.vala:50
-msgid "Failed to read cron tab"
-msgstr "Nie udało się odczytać tablicy cron'a"
-
-#: src/Utility/CronTab.vala:132
-msgid "Failed to add cron job"
-msgstr "Nie udało się dodać zadania cron'a"
-
-#: src/Utility/CronTab.vala:136
-msgid "Cron job added"
-msgstr "Zadanie cron'a dodane"
-
-#: src/Utility/CronTab.vala:213
-msgid "Failed to remove cron job"
-msgstr "Nie udało się usunąć zadania cron'a"
-
-#: src/Utility/CronTab.vala:217
-msgid "Cron job removed"
-msgstr "Zadanie cron'a usunięte"
-
-#: src/Utility/CronTab.vala:225 src/Utility/TeeJee.FileSystem.vala:205
-#: src/Utility/TeeJee.FileSystem.vala:547 src/Utility/RsyncTask.vala:296
-msgid "File not found"
-msgstr "Nie znaleziono pliku"
-
-#: src/Utility/CronTab.vala:240
-msgid "Failed to install crontab file"
-msgstr "Nie udało się zainstalować pliku crontab"
-
-#: src/Utility/CronTab.vala:244
-msgid "crontab file installed"
-msgstr "zainstalowano plik crontab"
-
-#: src/Utility/CronTab.vala:257
-msgid "Failed to export crontab file"
-msgstr "Nie udało się wyeksportować pliku crontab"
-
-#: src/Utility/CronTab.vala:261
-msgid "crontab file exported"
-msgstr "wyeksportowano plik crontab"
-
-#: src/Utility/CronTab.vala:304
-msgid "Cron task exists"
-msgstr "Zadanie cron'a istnieje"
-
-#: src/Utility/CronTab.vala:312
-msgid "Added cron task"
-msgstr "Dodane zadania cron'a"
-
-#: src/Utility/CronTab.vala:341
-msgid "Removed cron task"
-msgstr "Usunięto zadanie cron'a"
 
 #: src/Utility/TeeJee.FileSystem.vala:100
 msgid "Failed to delete file"
@@ -408,88 +1145,33 @@ msgstr "Nie znaleziono indeksu katalogu (dir)"
 msgid "File is missing"
 msgstr "Brak pliku"
 
-#: src/Gtk/BackupDeviceBox.vala:56
-msgid "Select Snapshot Location"
-msgstr "Wybierz położenie migawki"
+#: src/Utility/AppLock.vala:49
+msgid "Another instance of this application is running"
+msgstr "Instancja tej aplikacji jest już uruchomiona"
 
-#: src/Gtk/BackupDeviceBox.vala:65 src/Gtk/RestoreDeviceBox.vala:70
-msgid "Refresh"
-msgstr "Odśwież"
+#: src/Utility/AppLock.vala:54
+msgid "[Warning] Deleted invalid lock"
+msgstr "[Ostrzeżenie] Usunięto niepoprawną blokadę"
 
-#: src/Gtk/BackupDeviceBox.vala:97
-msgid "Devices displayed above have BTRFS file systems."
-msgstr "Urządzenia wyświetlane powyżej mają system plików BTRFS."
+#: src/Utility/TeeJee.Process.vala:511
+msgid "Stopped"
+msgstr "Zatrzymano"
 
-#: src/Gtk/BackupDeviceBox.vala:98
+#: src/Gtk/DeleteBox.vala:58
+msgid "Deleting Snapshots..."
+msgstr "Usuwanie migawek..."
+
+#: src/Gtk/ExcludeListSummaryWindow.vala:49
+msgid "Exclude List Summary"
+msgstr "Wyklucz podsumowanie listy"
+
+#: src/Gtk/ExcludeListSummaryWindow.vala:62
 msgid ""
-"BTRFS snapshots are saved on system partition. Other partitions are not "
-"supported."
+"Files &amp; directories matching the patterns below will be excluded. "
+"Patterns starting with a + will include the item instead of excluding."
 msgstr ""
-"Migawki BTRFS są zapisywane na partycji systemowej. Inne partycje nie są "
-"wspierane."
-
-#: src/Gtk/BackupDeviceBox.vala:99
-msgid ""
-"Snapshots are saved to /timeshift-btrfs on selected partition. Other "
-"locations are not supported."
-msgstr ""
-"Migawki są zapisywane w /timeshift-btrfs na wybranej partycji. Inne "
-"lokalizacje są niewpierane."
-
-#: src/Gtk/BackupDeviceBox.vala:104
-msgid "Devices displayed above have Linux file systems."
-msgstr "Urządzenia wyświetlane powyżej mają Linuksowy system plików."
-
-#: src/Gtk/BackupDeviceBox.vala:105
-msgid "Devices with Windows file systems are not supported (NTFS, FAT, etc)."
-msgstr ""
-"Urządzenia z systemami plików Microsoft Windows nie są wspierane (NTFS, FAT, "
-"itp.)."
-
-#: src/Gtk/BackupDeviceBox.vala:106
-msgid "Remote and network locations are not supported."
-msgstr "Lokację zdalne i położenia sieciowe są niewspierane."
-
-#: src/Gtk/BackupDeviceBox.vala:107
-msgid ""
-"Snapshots are saved to /timeshift on selected partition. Other locations are "
-"not supported."
-msgstr ""
-"Migawki są zapisywane w /timeshift na wybranej partycji. Inne lokalizacje są "
-"niewpierane."
-
-#: src/Gtk/BackupDeviceBox.vala:127
-msgid "Disk"
-msgstr "Dysk"
-
-#: src/Gtk/BackupDeviceBox.vala:215
-msgid "Free"
-msgstr "Wolne miejsce"
-
-#: src/Gtk/BackupDeviceBox.vala:235 src/Gtk/RsyncLogBox.vala:492
-#: src/Console/AppConsole.vala:425
-msgid "Name"
-msgstr "Nazwa"
-
-#: src/Gtk/BackupDeviceBox.vala:385
-msgid "Selected device does not have Linux partition"
-msgstr "Wybrane urządzenie nie posiada partycji Linuksowej"
-
-#: src/Gtk/BackupDeviceBox.vala:388
-msgid "Selected device does not have BTRFS partition"
-msgstr "Wybrane urządzenie nie posiada partycji BTRFS"
-
-#: src/Gtk/BackupDeviceBox.vala:410
-msgid "Select a partition on this disk"
-msgstr "Wybierz partycję na tym dysku"
-
-#: src/Gtk/BackupDeviceBox.vala:512
-msgid "There are no snapshots on this device"
-msgstr "Na tym urządzeniu nie ma migawek"
-
-#: src/Gtk/RsyncLogWindow.vala:49
-msgid "Rsync Log Viewer"
-msgstr "Przeglądarka dziennika Rsync"
+"Pliki i katalogi pasujące do poniższego wzorca będą pominięte. Wzorce "
+"zaczynające się od + dołączają, a nie pomijają elementy."
 
 #: src/Gtk/RestoreWindow.vala:69
 msgid "Clone System"
@@ -524,13 +1206,13 @@ msgid "Users Home"
 msgstr "Katalog domowy użytkownika"
 
 #: src/Gtk/RestoreWindow.vala:120 src/Gtk/ExcludeAppsBox.vala:135
-#: src/Gtk/ExcludeBox.vala:258
+#: src/Gtk/ExcludeBox.vala:259
 msgid "Summary"
 msgstr "Podsumowanie"
 
 #: src/Gtk/RestoreWindow.vala:125 src/Gtk/RestoreFinishBox.vala:71
-#: src/Gtk/MainWindow.vala:151 src/Gtk/RsyncLogBox.vala:377
-#: src/Gtk/RsyncLogBox.vala:567 src/Console/AppConsole.vala:362
+#: src/Gtk/RsyncLogBox.vala:377 src/Gtk/RsyncLogBox.vala:567
+#: src/Gtk/MainWindow.vala:151 src/Console/AppConsole.vala:363
 msgid "Restore"
 msgstr "Przywróć"
 
@@ -538,21 +1220,21 @@ msgstr "Przywróć"
 msgid "Finished"
 msgstr "Zakończono"
 
-#: src/Gtk/RestoreWindow.vala:190 src/Gtk/SetupWizardWindow.vala:189
-#: src/Gtk/BackupWindow.vala:153 src/Gtk/DeleteWindow.vala:154
+#: src/Gtk/RestoreWindow.vala:193 src/Gtk/BackupWindow.vala:156
+#: src/Gtk/DeleteWindow.vala:157 src/Gtk/SetupWizardWindow.vala:195
 msgid "Previous"
 msgstr "Cofnij"
 
-#: src/Gtk/RestoreWindow.vala:198 src/Gtk/SetupWizardWindow.vala:197
-#: src/Gtk/BackupWindow.vala:161 src/Gtk/DeleteWindow.vala:162
+#: src/Gtk/RestoreWindow.vala:201 src/Gtk/BackupWindow.vala:164
+#: src/Gtk/DeleteWindow.vala:165 src/Gtk/SetupWizardWindow.vala:203
 msgid "Next"
 msgstr "Dalej"
 
-#: src/Gtk/RestoreWindow.vala:221
+#: src/Gtk/RestoreWindow.vala:224
 msgid "Cancel restore?"
 msgstr "Anulować przywracanie?"
 
-#: src/Gtk/RestoreWindow.vala:223
+#: src/Gtk/RestoreWindow.vala:226
 msgid ""
 "Cancelling the restore process will leave the target system in an "
 "inconsistent state. The system may fail to boot or you may run into various "
@@ -564,12 +1246,146 @@ msgstr ""
 "anulowaniu musisz odtworzyć inną migawkę, aby wrócić systemowi spójność. "
 "Kliknij Tak, by potwierdzić."
 
-#: src/Gtk/RestoreWindow.vala:488
+#: src/Gtk/RestoreWindow.vala:475
 msgid "Error running Rsync"
 msgstr "Błąd podczas uruchamiania Rsync"
 
+#: src/Gtk/ExcludeMessageWindow.vala:56
+msgid "Excluded Directories"
+msgstr "Pominięte katalogi"
+
+#: src/Gtk/ExcludeMessageWindow.vala:70
+msgid "Exclude List"
+msgstr "Wyklucz listę"
+
+#: src/Gtk/ExcludeMessageWindow.vala:76
+msgid "Files matching the following patterns will be excluded"
+msgstr "Pliki zgodne z następującymi wzorcami zostaną pominięte"
+
+#: src/Gtk/ExcludeMessageWindow.vala:98
+msgid "File Pattern"
+msgstr "Wzorzec pliku"
+
+#: src/Gtk/ExcludeMessageWindow.vala:116
+msgid "Home Directory"
+msgstr "Katalog domowy"
+
+#: src/Gtk/ExcludeMessageWindow.vala:129
+msgid ""
+"Hidden files and folders are included by default since they contain user-"
+"specific configuration files."
+msgstr ""
+"Ukryte pliki i foldery są domyślnie dołączane, ponieważ zawierają pliki "
+"konfiguracyjne specyficzne dla użytkownika."
+
+#: src/Gtk/ExcludeMessageWindow.vala:130
+msgid "All other files and folders are excluded."
+msgstr "Wszystkie inne pliki i foldery są wykluczone."
+
+#: src/Gtk/RestoreDeviceBox.vala:61
+msgid "Select Target Device"
+msgstr "Wybierz urządzenie docelowe"
+
+#: src/Gtk/RestoreDeviceBox.vala:70 src/Gtk/BackupDeviceBox.vala:65
+msgid "Refresh"
+msgstr "Odśwież"
+
+#: src/Gtk/RestoreDeviceBox.vala:79
+msgid "Select the target devices where system will be cloned."
+msgstr "Wybierz docelowe urządzenie, na które system zostanie sklonowany."
+
+#: src/Gtk/RestoreDeviceBox.vala:83
+msgid "Select the devices where files will be restored."
+msgstr "Wybierz urządzenia, z których pliki zostaną przywrócone."
+
+#: src/Gtk/RestoreDeviceBox.vala:84
+msgid "Devices from which snapshot was created are pre-selected."
+msgstr "Urządzenia, z których utworzono migawki, są już wybrane."
+
+#: src/Gtk/RestoreDeviceBox.vala:101
+msgid "Volume"
+msgstr "Objętość"
+
+#: src/Gtk/RestoreDeviceBox.vala:229
+msgid "Keep this mount path on the root filesystem"
+msgstr "Zachowaj tę ścieżkę montowania w głównym systemie plików"
+
+#: src/Gtk/RestoreDeviceBox.vala:244
+msgid "Keep on Root Device"
+msgstr "Zachowaj na głównym urządzeniu"
+
+#: src/Gtk/RestoreDeviceBox.vala:411
+msgid "Bootloader Options (Advanced)"
+msgstr "Opcje programu rozruchowego (zaawansowane)"
+
+#: src/Gtk/RestoreDeviceBox.vala:413
+msgid ""
+"[Advanced Users Only] Change these settings only if the restored system "
+"fails to boot."
+msgstr ""
+"[Tylko zaawansowani użytkownicy] Zmieniaj te opcje tylko wtedy gdy "
+"przywrócony system ma problem z rozruchem."
+
+#: src/Gtk/RestoreDeviceBox.vala:452
+msgid "Root device not selected"
+msgstr "Nie wybrano urządzenia z głównym systemem plików (root)"
+
+#: src/Gtk/RestoreDeviceBox.vala:453
+msgid "Select the device for root file system (/)"
+msgstr "Wybierz urządzenie dla głównego systemu plików (/)"
+
+#: src/Gtk/RestoreDeviceBox.vala:480
+msgid "Target device is same as system device"
+msgstr "Urządzenie docelowe jest takie same jak urządzenie systemowe"
+
+#: src/Gtk/RestoreDeviceBox.vala:481
+msgid "Select another device for root file system (/)"
+msgstr "Wybierz inne urządzenie dla głównego systemu plików (/)"
+
+#: src/Gtk/RestoreDeviceBox.vala:499
+msgid "Boot device not selected"
+msgstr "Nie wybrano urządzenia z programem rozruchowym"
+
+#: src/Gtk/RestoreDeviceBox.vala:500
+msgid ""
+"An encrypted device is selected for root file system (/). The boot directory "
+"(/boot) must be mounted on a non-encrypted device for the system to boot "
+"successfully.\n"
+"\n"
+"Either select a non-encrypted device for boot directory or select a non-"
+"encrypted device for root filesystem."
+msgstr ""
+"Dla systemu plików katalogu głównego root (/) zostało wybrane zaszyfrowane "
+"urządzenie. Katalog ze statycznymi plikami programu rozruchowego (/boot) "
+"musi być zamontowany na niezaszyfrowanym urządzeniu, aby uruchomienie "
+"systemu zakończyło się powodzeniem.\n"
+"\n"
+"Wybierz nieszyfrowane urządzenie do katalogu ze statycznymi plikami programu "
+"rozruchowego lub wybierz niezaszyfrowane urządzenie dla głównego systemu "
+"plików."
+
+#: src/Gtk/RestoreDeviceBox.vala:511
+msgid "GRUB device not selected"
+msgstr "Nie wybrano urządzenia z programem rozruchowym GRUB"
+
+#: src/Gtk/RestoreDeviceBox.vala:512
+msgid "Please select the GRUB device"
+msgstr "Proszę wybrać urządzenie z programem rozruchowym GRUB"
+
+#: src/Gtk/RestoreDeviceBox.vala:524
+msgid "Partition has an unsupported subvolume layout."
+msgstr "Partycja ma niewspierany układ podwolumenu."
+
+#: src/Gtk/RestoreDeviceBox.vala:535
+msgid "Failed to mount devices"
+msgstr "Nie udało się zamontować urządzeń"
+
+#: src/Gtk/ExcludeAppsBox.vala:51 src/Gtk/RestoreExcludeBox.vala:55
+msgid "Exclude Application Settings"
+msgstr "Wyklucz ustawienia aplikacji"
+
 #: src/Gtk/RestoreFinishBox.vala:50 src/Gtk/RestoreFinishBox.vala:75
-#: src/Gtk/DeleteFinishBox.vala:50 src/Gtk/BackupFinishBox.vala:50
+#: src/Gtk/BackupFinishBox.vala:50 src/Gtk/DeleteFinishBox.vala:50
 msgid "Completed"
 msgstr "Zakończono"
 
@@ -604,291 +1420,10 @@ msgstr ""
 "Jeżeli przywrócony system nie może przejść procedury rozruchu, uruchom "
 "system na ŻYWO z CB/USB, i spróbuj przywrócić inną migawkę."
 
-#: src/Gtk/RestoreFinishBox.vala:106 src/Gtk/DeleteFinishBox.vala:71
-#: src/Gtk/FinishBox.vala:101 src/Gtk/BackupFinishBox.vala:70
+#: src/Gtk/RestoreFinishBox.vala:106 src/Gtk/BackupFinishBox.vala:70
+#: src/Gtk/DeleteFinishBox.vala:71 src/Gtk/FinishBox.vala:101
 msgid "Close window to exit"
 msgstr "Zamknij okno, aby zamknąć aplikację"
-
-#: src/Gtk/DeleteFinishBox.vala:60
-msgid "Snapshot(s) Deleted"
-msgstr "Usunięte migawki"
-
-#: src/Gtk/DeleteFinishBox.vala:63 src/Gtk/BackupFinishBox.vala:63
-msgid "With Errors"
-msgstr "Z błędami"
-
-#: src/Gtk/EstimateBox.vala:56
-msgid "Estimating System Size..."
-msgstr "Obliczanie rozmiaru systemu..."
-
-#: src/Gtk/EstimateBox.vala:66
-msgid "Please wait..."
-msgstr "Proszę czekać..."
-
-#: src/Gtk/MainWindow.vala:141 src/Gtk/RsyncLogBox.vala:366
-#: src/Gtk/RsyncLogBox.vala:571
-msgid "Create"
-msgstr "Utwórz"
-
-#: src/Gtk/MainWindow.vala:142
-msgid "Create snapshot of current system"
-msgstr "Utwórz migawkę obecnego systemu"
-
-#: src/Gtk/MainWindow.vala:152
-msgid "Restore selected snapshot"
-msgstr "Przywróć wybraną migawkę"
-
-#: src/Gtk/MainWindow.vala:161 src/Gtk/RsyncLogBox.vala:370
-#: src/Gtk/RsyncLogBox.vala:575 src/Gtk/SnapshotListBox.vala:322
-#: src/Gtk/DeleteWindow.vala:98 src/Console/AppConsole.vala:370
-msgid "Delete"
-msgstr "Usuń"
-
-#: src/Gtk/MainWindow.vala:162
-msgid "Delete selected snapshot"
-msgstr "Usuń wybrane migawki"
-
-#: src/Gtk/MainWindow.vala:171
-msgid "Browse"
-msgstr "Przeglądaj"
-
-#: src/Gtk/MainWindow.vala:172
-msgid "Browse selected snapshot"
-msgstr "Przejrzyj wybraną migawkę"
-
-#: src/Gtk/MainWindow.vala:181 src/Gtk/MainWindow.vala:182
-#: src/Gtk/SettingsWindow.vala:55
-msgid "Settings"
-msgstr "Ustawienia"
-
-#: src/Gtk/MainWindow.vala:191
-msgid "Wizard"
-msgstr "Kreator"
-
-#: src/Gtk/MainWindow.vala:192
-msgid "Settings wizard"
-msgstr "Kreator ustawień"
-
-#: src/Gtk/MainWindow.vala:218
-msgid "Menu"
-msgstr "Menu"
-
-#: src/Gtk/MainWindow.vala:219
-msgid "Open Menu"
-msgstr "Otwórz menu"
-
-#: src/Gtk/MainWindow.vala:320 src/Gtk/DeleteWindow.vala:89
-msgid "Snapshots"
-msgstr "Migawki"
-
-#: src/Gtk/MainWindow.vala:356
-msgid "Available"
-msgstr "Dostępne"
-
-#: src/Gtk/MainWindow.vala:380
-msgid "View TimeShift Logs"
-msgstr "Zobacz pliki dziennika TimeShift"
-
-#: src/Gtk/MainWindow.vala:386
-msgid "About"
-msgstr "O programie"
-
-#: src/Gtk/MainWindow.vala:452
-msgid "Main window closed by user"
-msgstr "Okno główne zamknięte przez użytkownika"
-
-#: src/Gtk/MainWindow.vala:474
-msgid "Select another device?"
-msgstr "Chciałbyś wybrać inne urządzenie?"
-
-#: src/Gtk/MainWindow.vala:540 src/Gtk/MainWindow.vala:547
-msgid "Select another device to delete snasphots"
-msgstr "Wybierz inne urządzenie, aby usunąć migawki"
-
-#: src/Gtk/MainWindow.vala:546
-msgid "No snapshots on device"
-msgstr "Brak migawek na urządzeniu"
-
-#: src/Gtk/MainWindow.vala:556
-msgid "Cannot Delete Live Snapshot"
-msgstr "Nie można usunąć migawki live"
-
-#: src/Gtk/MainWindow.vala:557
-#, c-format
-msgid ""
-"Snapshot '%s' is being used by the system and cannot be deleted. Restart the "
-"system to activate the restored snapshot."
-msgstr ""
-"Migawka '%s' jest używana przez system i nie może zostać usunięta. Uruchom "
-"ponownie system, aby aktywować przywróconą migawkę."
-
-#: src/Gtk/MainWindow.vala:608 src/Gtk/DeleteWindow.vala:341
-msgid "No Snapshots Selected"
-msgstr "Nie zaznaczono migawek"
-
-#: src/Gtk/MainWindow.vala:609
-msgid "Select the snapshots to mark for deletion"
-msgstr "Oznacz wybrane migawki jako do usunięcia"
-
-#: src/Gtk/MainWindow.vala:634
-msgid "Marked for deletion"
-msgstr "Oznaczone do usunięcia"
-
-#: src/Gtk/MainWindow.vala:635
-msgid "Snapshots will be removed during the next scheduled run"
-msgstr "Migawki zostaną usunięte podczas następnego zaplanowanego zadania"
-
-#: src/Gtk/MainWindow.vala:687
-msgid "Select Snapshot"
-msgstr "Wybierz migawkę"
-
-#: src/Gtk/MainWindow.vala:688
-msgid "Please select a snapshot to view the log!"
-msgstr "Proszę wybrać migawkę, aby zobaczyć plik dziennika!"
-
-#: src/Gtk/MainWindow.vala:754
-msgid "Snapshot deletion in progress..."
-msgstr "Trwa usuwanie migawki..."
-
-#: src/Gtk/MainWindow.vala:755
-msgid "Please wait for snapshots to be deleted."
-msgstr "Proszę czekać, aż migawki zostaną usunięte."
-
-#: src/Gtk/MainWindow.vala:786
-msgid "No snapshots selected"
-msgstr "Nie zaznaczono migawek"
-
-#: src/Gtk/MainWindow.vala:787
-msgid "Select the snapshot to restore"
-msgstr "Wybierz migawkę do przywrócenia"
-
-#: src/Gtk/MainWindow.vala:793
-msgid "Multiple snapshots selected"
-msgstr "Zaznaczono wiele migawek"
-
-#: src/Gtk/MainWindow.vala:794
-msgid "Select a single snapshot to restore"
-msgstr "Wybierz pojedynczą migawkę do przywrócenia"
-
-#: src/Gtk/MainWindow.vala:817
-msgid "Invalid snapshot"
-msgstr "Nieprawidłowa migawka"
-
-#: src/Gtk/MainWindow.vala:818
-msgid "Selected snapshot is marked for deletion and cannot be restored"
-msgstr "Wybrane migawka jest oznaczona do usunięcia i nie może być przywrócona"
-
-#: src/Gtk/MainWindow.vala:941
-msgid "System Restore Utility"
-msgstr "Narzędzie przywracania systemu"
-
-#: src/Gtk/MainWindow.vala:984
-msgid "Live USB Mode (Restore Only)"
-msgstr "Tryb Live USB (tylko odzyskiwanie)"
-
-#: src/Gtk/MainWindow.vala:996
-msgid "Snapshots available for restore"
-msgstr "Migawki dostępne do przywrócenia"
-
-#: src/Gtk/MainWindow.vala:1001 src/Console/AppConsole.vala:320
-#: src/Core/SnapshotRepo.vala:898
-msgid "No snapshots found"
-msgstr "Nie znaleziono migawek"
-
-#: src/Gtk/MainWindow.vala:1031 src/Gtk/MainWindow.vala:1042
-msgid "Timeshift is active"
-msgstr "Timeshift jest aktywny"
-
-#: src/Gtk/MainWindow.vala:1033
-msgid "Latest snapshot"
-msgstr "Ostatnia migawka"
-
-#: src/Gtk/MainWindow.vala:1034 src/Gtk/MainWindow.vala:1036
-msgid "None"
-msgstr "Nic"
-
-#: src/Gtk/MainWindow.vala:1035
-msgid "Oldest snapshot"
-msgstr "Najstarsza migawka"
-
-#: src/Gtk/MainWindow.vala:1043
-msgid "Snapshots will be created at selected intervals"
-msgstr "Migawki mogą być tworzone w wybranych okresach"
-
-#: src/Gtk/MainWindow.vala:1051 src/Gtk/ScheduleBox.vala:312
-#: src/Core/Main.vala:1147
-msgid "Scheduled snapshots are disabled"
-msgstr "Zaplanowane migawki są wyłączone"
-
-#: src/Gtk/MainWindow.vala:1052
-msgid "Enable scheduled snapshots to protect your system"
-msgstr "Włącz zaplanowane migawki, by chronić twój system"
-
-#: src/Gtk/MainWindow.vala:1057
-msgid "No snapshots available"
-msgstr "Brak dostępnych migawek"
-
-#: src/Gtk/MainWindow.vala:1058
-msgid ""
-"Create snapshots manually or enable scheduled snapshots to protect your "
-"system"
-msgstr ""
-"Utwórz migawkę ręcznie lub włącz planowanie migawek w celu ochrony systemu"
-
-#: src/Gtk/RestoreExcludeBox.vala:55 src/Gtk/ExcludeAppsBox.vala:51
-msgid "Exclude Application Settings"
-msgstr "Wyklucz ustawienia aplikacji"
-
-#: src/Gtk/RestoreExcludeBox.vala:57
-msgid "Select applications to exclude from restore"
-msgstr "Wybierz aplikacje do pominięcia z przywrócenia"
-
-#: src/Gtk/RestoreExcludeBox.vala:61
-msgid "Web Browsers"
-msgstr "Przeglądarki internetowe"
-
-#: src/Gtk/RestoreExcludeBox.vala:61 src/Gtk/RestoreExcludeBox.vala:91
-msgid "Recommended"
-msgstr "Zalecane"
-
-#: src/Gtk/RestoreExcludeBox.vala:78
-msgid "Firefox, Chromium, Chrome, Opera, Epiphany, Midori"
-msgstr "Firefox, Chromium, Chrome, Opera, Epiphany, Midori"
-
-#: src/Gtk/RestoreExcludeBox.vala:85
-msgid ""
-"Keep configuration files for web browsers like Firefox and Chrome. If un-"
-"checked, previous configuration files will be restored from snapshot"
-msgstr ""
-"Przechowuj pliki konfiguracyjne przeglądarek internetowych takich jak "
-"Mozilla Firefox czy Chromium. Jeżeli odznaczysz tę opcję, wcześniejsze pliki "
-"konfiguracyjne zostaną skasowane z migawki"
-
-#: src/Gtk/RestoreExcludeBox.vala:91
-msgid "Bittorrent Clients"
-msgstr "Klienty Bittorrent"
-
-#: src/Gtk/RestoreExcludeBox.vala:105
-msgid "Deluge, Transmission"
-msgstr "Deluge, Transmission"
-
-#: src/Gtk/RestoreExcludeBox.vala:112
-msgid ""
-"Keep configuration files for bittorrent clients like Deluge, Transmission, "
-"etc. If un-checked, previous configuration files will be restored from "
-"snapshot."
-msgstr ""
-"Przechowuj pliki konfiguracyjne klientów sieci BitTorrent takich jak Deluge, "
-"Transmission itp. Jeżeli odznaczysz tę opcję, wcześniejsze pliki "
-"konfiguracyjne zostaną skasowane z migawki."
-
-#: src/Gtk/RestoreExcludeBox.vala:118
-msgid "Other applications (next page)"
-msgstr "Inne aplikacje (następna strona)"
-
-#: src/Gtk/RestoreExcludeBox.vala:121
-msgid "Show more applications to exclude on the next page"
-msgstr "Pokaż więcej aplikacji do pominięcia na następnej stronie"
 
 #: src/Gtk/RsyncLogBox.vala:119
 msgid "File (system)"
@@ -907,15 +1442,6 @@ msgstr "Przeczytano %'d z %'d wierszy..."
 msgid "Populating list..."
 msgstr "Wypełnianie listy..."
 
-#: src/Gtk/RsyncLogBox.vala:222 src/Core/Main.vala:2469 src/Core/Main.vala:2560
-msgid "Parsing log file..."
-msgstr "Parsowanie pliku dziennika..."
-
-#: src/Gtk/RsyncLogBox.vala:232 src/Gtk/BackupBox.vala:114
-#: src/Gtk/DeleteBox.vala:68 src/Gtk/RestoreBox.vala:88 src/Core/Main.vala:1579
-msgid "Preparing..."
-msgstr "Przygotowywanie..."
-
 #: src/Gtk/RsyncLogBox.vala:302
 msgid "Filter by name or path"
 msgstr "Filtruj według nazwy lub ścieżki"
@@ -925,10 +1451,21 @@ msgid "All Files"
 msgstr "Dodaj pliki"
 
 #: src/Gtk/RsyncLogBox.vala:366 src/Gtk/RsyncLogBox.vala:571
+#: src/Gtk/MainWindow.vala:141
+msgid "Create"
+msgstr "Utwórz"
+
+#: src/Gtk/RsyncLogBox.vala:366 src/Gtk/RsyncLogBox.vala:571
 #: src/Gtk/RsyncLogBox.vala:592 src/Gtk/BackupBox.vala:85
 #: src/Gtk/RestoreBox.vala:123
 msgid "Created"
 msgstr "Utworzone"
+
+#: src/Gtk/RsyncLogBox.vala:370 src/Gtk/RsyncLogBox.vala:575
+#: src/Gtk/SnapshotListBox.vala:322 src/Gtk/DeleteWindow.vala:98
+#: src/Gtk/MainWindow.vala:161 src/Console/AppConsole.vala:371
+msgid "Delete"
+msgstr "Usuń"
 
 #: src/Gtk/RsyncLogBox.vala:370 src/Gtk/RsyncLogBox.vala:575
 #: src/Gtk/RsyncLogBox.vala:596 src/Gtk/BackupBox.vala:86
@@ -971,147 +1508,298 @@ msgstr "Grupa"
 msgid "Action"
 msgstr "Akcja"
 
-#: src/Gtk/RsyncLogBox.vala:472 src/Core/SnapshotRepo.vala:480
-msgid "Status"
-msgstr "Status"
+#: src/Gtk/RsyncLogBox.vala:492 src/Gtk/BackupDeviceBox.vala:235
+#: src/Console/AppConsole.vala:426
+msgid "Name"
+msgstr "Nazwa"
 
-#: src/Gtk/BootOptionsBox.vala:118
-msgid "(Re)install GRUB2 on:"
-msgstr "Przeinstaluj/Zainstaluj GRUB2 na:"
+#: src/Gtk/BackupWindow.vala:62
+msgid "Create Snapshot"
+msgstr "Utwórz migawkę"
 
-#: src/Gtk/BootOptionsBox.vala:120
-msgid "Re-installs the GRUB2 bootloader on the selected device."
-msgstr "Przeinstaluj program rozruchowy GRUB2 na zaznaczonym urządzeniu."
-
-#: src/Gtk/BootOptionsBox.vala:135
-msgid "Update initramfs"
-msgstr "Zaktualizuj initramfs"
-
-#: src/Gtk/BootOptionsBox.vala:137
-msgid ""
-"Re-generates initramfs for all installed kernels. This is generally not "
-"needed. Select this only if the restored system fails to boot."
-msgstr ""
-"Ponowne generowanie systemu plików w przestrzeni użytkownika dla wszystkich "
-"zainstalowanych jąder. Ogólnie rzecz biorąc, nie jest to konieczne. Zaznacz "
-"to tylko wtedy gdy przywrócony system nie może przejść procedury rozruchu."
-
-#: src/Gtk/BootOptionsBox.vala:150
-msgid "Update GRUB menu"
-msgstr "Zaktualizuj menu GRUB"
-
-#: src/Gtk/BootOptionsBox.vala:152
-msgid ""
-"Updates the GRUB menu entries (recommended). This is safe to run and should "
-"be left selected."
-msgstr ""
-"Odśwież wpisy w menu programu rozruchowego GRUB (zalecane). Uruchomienie tej "
-"opcji jest bezpieczne i powinna ona być pozostawiona zaznaczona."
-
-#: src/Gtk/SetupWizardWindow.vala:64
-msgid "Setup Wizard"
-msgstr "Kreator konfiguracji"
-
-#: src/Gtk/SetupWizardWindow.vala:94
-#, fuzzy
-msgid "Backend"
-msgstr "Backend"
-
-#: src/Gtk/SetupWizardWindow.vala:99 src/Gtk/BackupWindow.vala:82
+#: src/Gtk/BackupWindow.vala:82 src/Gtk/SetupWizardWindow.vala:99
 msgid "Estimate"
 msgstr "Szacowane"
 
-#: src/Gtk/SetupWizardWindow.vala:104 src/Gtk/SettingsWindow.vala:89
-#: src/Gtk/BackupWindow.vala:87
+#: src/Gtk/BackupWindow.vala:87 src/Gtk/SettingsWindow.vala:90
+#: src/Gtk/SetupWizardWindow.vala:104
 msgid "Location"
 msgstr "Położenie"
 
-#: src/Gtk/SetupWizardWindow.vala:109 src/Gtk/SettingsWindow.vala:92
-msgid "Schedule"
-msgstr "Harmonogram"
+#: src/Gtk/BackupWindow.vala:92 src/Console/AppConsole.vala:357
+msgid "Backup"
+msgstr "Kopia zapasowa"
 
-#: src/Gtk/SetupWizardWindow.vala:114 src/Gtk/UsersBox.vala:105
-msgid "User"
-msgstr "Użytkownik"
-
-#: src/Gtk/SetupWizardWindow.vala:205 src/Gtk/BackupWindow.vala:97
-#: src/Gtk/DeleteWindow.vala:103
+#: src/Gtk/BackupWindow.vala:97 src/Gtk/DeleteWindow.vala:103
+#: src/Gtk/SetupWizardWindow.vala:211
 msgid "Finish"
 msgstr "Koniec"
 
-#: src/Gtk/AppGtk.vala:99
-msgid "Unknown option"
-msgstr "Nieznana opcja"
+#: src/Gtk/MiscBox.vala:71
+msgid "Date Format"
+msgstr "Format daty"
 
-#: src/Gtk/AppGtk.vala:112
-msgid "Syntax"
-msgstr "Składnia"
+#: src/Gtk/MiscBox.vala:98
+msgid "Custom"
+msgstr "Wybrany"
 
-#: src/Gtk/AppGtk.vala:114 src/Console/AppConsole.vala:350
-msgid "Options"
-msgstr "Opcje"
+#: src/Gtk/SnapshotListBox.vala:151 src/Console/AppConsole.vala:427
+msgid "Tags"
+msgstr "Oznaczenia"
 
-#: src/Gtk/AppGtk.vala:116
-msgid "Print debug information"
-msgstr "Drukuj informacje o usterkach (debug)"
+#: src/Gtk/SnapshotListBox.vala:199
+msgid "Unshared"
+msgstr "Niewspółdzielone"
 
-#: src/Gtk/AppGtk.vala:117 src/Console/AppConsole.vala:383
-msgid "Show all options"
-msgstr "Pokaż wszystkie opcje"
+#: src/Gtk/SnapshotListBox.vala:224
+msgid "Comments"
+msgstr "Komentarze"
 
-#: src/Gtk/AppGtk.vala:119
-msgid "Run 'timeshift' for the command-line version of this tool"
+#: src/Gtk/SnapshotListBox.vala:275
+msgid "Subvolumes"
+msgstr "Podwolumeny"
+
+#: src/Gtk/SnapshotListBox.vala:290
+msgid "<b>Comments</b> (double-click to edit)"
+msgstr "<b>Komentarze</b> (kliknij dwa razy, aby edytować)"
+
+#: src/Gtk/SnapshotListBox.vala:296
+msgid "Snapshot Levels"
+msgstr "Migawki BTRFS"
+
+#: src/Gtk/SnapshotListBox.vala:297
+msgid "On demand (manual)"
+msgstr "Na żądanie (instrukcja)"
+
+#: src/Gtk/SnapshotListBox.vala:298 src/Gtk/ScheduleBox.vala:136
+msgid "Boot"
+msgstr "Rozruchowe"
+
+#: src/Gtk/SnapshotListBox.vala:299 src/Gtk/ScheduleBox.vala:118
+msgid "Hourly"
+msgstr "Godzinne"
+
+#: src/Gtk/SnapshotListBox.vala:300 src/Gtk/ScheduleBox.vala:100
+msgid "Daily"
+msgstr "Codzienne"
+
+#: src/Gtk/SnapshotListBox.vala:301 src/Gtk/ScheduleBox.vala:82
+msgid "Weekly"
+msgstr "Tygodniowe"
+
+#: src/Gtk/SnapshotListBox.vala:302 src/Gtk/ScheduleBox.vala:64
+msgid "Monthly"
+msgstr "Miesięczne"
+
+#: src/Gtk/SnapshotListBox.vala:329
+msgid "Mark for Deletion"
+msgstr "Zaznacz do usunięcia"
+
+#: src/Gtk/SnapshotListBox.vala:336
+msgid "Browse Files"
+msgstr "Przeglądaj pliki"
+
+#: src/Gtk/SnapshotListBox.vala:343
+msgid "View Rsync Log for Create"
+msgstr "Zobacz pliki dziennika Rsync do utworzenia"
+
+#: src/Gtk/SnapshotListBox.vala:350
+msgid "View Rsync Log for Restore"
+msgstr "Zobacz pliki dziennika Rsync do przywrócenia"
+
+#: src/Gtk/SnapshotListBox.vala:519
+msgid "LIVE"
+msgstr "NA ŻYWO"
+
+#: src/Gtk/RsyncLogWindow.vala:49
+msgid "Rsync Log Viewer"
+msgstr "Przeglądarka dziennika Rsync"
+
+#: src/Gtk/BackupFinishBox.vala:60
+msgid "Snapshot Created"
+msgstr "Utworzono migawkę"
+
+#: src/Gtk/BackupFinishBox.vala:63 src/Gtk/DeleteFinishBox.vala:63
+msgid "With Errors"
+msgstr "Z błędami"
+
+#: src/Gtk/ScheduleBox.vala:57
+msgid "Select Snapshot Levels"
+msgstr "Określ liczbę migawek"
+
+#: src/Gtk/ScheduleBox.vala:64
+msgid "Create one per month"
+msgstr "Twórz jedną co miesiąc"
+
+#: src/Gtk/ScheduleBox.vala:82
+msgid "Create one per week"
+msgstr "Twórz jedną co tydzień"
+
+#: src/Gtk/ScheduleBox.vala:100
+msgid "Create one per day"
+msgstr "Twórz jedną codziennie"
+
+#: src/Gtk/ScheduleBox.vala:118
+msgid "Create one per hour"
+msgstr "Twórz jedną co godzinę"
+
+#: src/Gtk/ScheduleBox.vala:136
+msgid "Create one per boot"
+msgstr "Twórz jedną co rozruch"
+
+#: src/Gtk/ScheduleBox.vala:154
+msgid "Stop cron emails for scheduled tasks"
 msgstr ""
-"Uruchom 'timeshift' z poziomu linii poleceń, aby uzyskać dostęp do "
-"konsolowej wersji tego narzędzia"
+"Wstrzymaj wiadomości poczty elektronicznej cron'a dla zaplanowanych zadań"
 
-#: src/Gtk/AppGtk.vala:126
-msgid "Admin access is required to backup and restore system files."
-msgstr ""
-"W celu utworzenia i odtworzenia kopii zapasowej plików systemowych, wymagane "
-"są uprawnienia administratora."
-
-#: src/Gtk/AppGtk.vala:127
-msgid "Please re-run the application as admin (using 'sudo' or 'su')"
-msgstr ""
-"Proszę uruchomić ponownie aplikację jako administrator (używając 'sudo' lub "
-"'su')"
-
-#: src/Gtk/AppGtk.vala:131
-msgid "Admin Access Required"
-msgstr "Wymagane uprawnienia administratora"
-
-#: src/Gtk/ExcludeMessageWindow.vala:56
-msgid "Excluded Directories"
-msgstr "Pominięte katalogi"
-
-#: src/Gtk/ExcludeMessageWindow.vala:70
-msgid "Exclude List"
-msgstr "Wyklucz listę"
-
-#: src/Gtk/ExcludeMessageWindow.vala:76
-msgid "Files matching the following patterns will be excluded"
-msgstr "Pliki zgodne z następującymi wzorcami zostaną pominięte"
-
-#: src/Gtk/ExcludeMessageWindow.vala:98
-msgid "File Pattern"
-msgstr "Wzorzec pliku"
-
-#: src/Gtk/ExcludeMessageWindow.vala:116
-msgid "Home Directory"
-msgstr "Katalog domowy"
-
-#: src/Gtk/ExcludeMessageWindow.vala:129
+#: src/Gtk/ScheduleBox.vala:156
 msgid ""
-"Hidden files and folders are included by default since they contain user-"
-"specific configuration files."
+"The cron service sends the output of scheduled tasks as an email to the "
+"current user. Select this option to suppress the emails for cron tasks "
+"created by Timeshift."
 msgstr ""
-"Ukryte pliki i foldery są domyślnie dołączane, ponieważ zawierają pliki "
-"konfiguracyjne specyficzne dla użytkownika."
+"Usługa cron'a wysyła dane wyjściowe (output) zaplanowanych zadań jako "
+"wiadomość poczty elektronicznej (email) do bieżącego użytkownika. Wybierz tę "
+"opcję, aby ukryć wiadomości poczty elektronicznej dla zadań cron'a "
+"utworzonych przez Timeshift."
 
-#: src/Gtk/ExcludeMessageWindow.vala:130
-msgid "All other files and folders are excluded."
-msgstr "Wszystkie inne pliki i foldery są wykluczone."
+#: src/Gtk/ScheduleBox.vala:167
+msgid "Snapshots are not scheduled at fixed times."
+msgstr "Migawki nie są planowane w odstępach czasu."
+
+#: src/Gtk/ScheduleBox.vala:168
+msgid ""
+"A maintenance task runs once every hour and creates snapshots as needed."
+msgstr ""
+"Konserwacja jest uruchamiana co godzinę, tworzy migawki w razie potrzeby."
+
+#: src/Gtk/ScheduleBox.vala:169
+msgid ""
+"Boot snapshots are created with a delay of 10 minutes after system startup."
+msgstr ""
+"Migawki rozruchowe są tworzone z 10-minutowym opóźnieniem po uruchomieniu "
+"systemu."
+
+#: src/Gtk/ScheduleBox.vala:282
+msgid ""
+"Number of snapshots to keep.\n"
+"Older snapshots will be removed once this limit is exceeded."
+msgstr ""
+"Liczba migawek do utrzymania.\n"
+"Starsze migawki zostaną usunięte po przekroczeniu tego limitu."
+
+#: src/Gtk/ScheduleBox.vala:283
+msgid "Keep"
+msgstr "Utrzymuj"
+
+#: src/Gtk/ScheduleBox.vala:305
+msgid "Scheduled snapshots are enabled"
+msgstr "Zaplanowane migawki są włączone"
+
+#: src/Gtk/ScheduleBox.vala:306
+msgid ""
+"Snapshots will be created at selected intervals if snapshot disk has enough "
+"space (> 1 GB)"
+msgstr ""
+"Migawki będą tworzone w wybranych okresach czasu jezeli migawka dysku ma "
+"wystarczająco dużo wolnej przestrzeni dyskowej (> 1 GB)"
+
+#: src/Gtk/ScheduleBox.vala:313
+msgid "Select the intervals for creating snapshots"
+msgstr "Wybierz okresy, w których będą tworzone migawki"
+
+#: src/Gtk/ExcludeBox.vala:54
+msgid "Include / Exclude Patterns"
+msgstr "Dołączone / Pominięte wzorce"
+
+#: src/Gtk/ExcludeBox.vala:59
+msgid "Click to edit. Drag-drop to re-order."
+msgstr "Kliknij, aby zmodyfikować. Przeciągnij i upuść, aby zmienić kolejność."
+
+#: src/Gtk/ExcludeBox.vala:84 src/Gtk/UsersBox.vala:92
+msgid "Click to edit. Drag and drop to re-order."
+msgstr "Kliknij, aby zmodyfikować. Przeciągnij i upuść, aby zmienić kolejność."
+
+#: src/Gtk/ExcludeBox.vala:162
+msgid "Pattern"
+msgstr "Wzorzec"
+
+#: src/Gtk/ExcludeBox.vala:219
+msgid "Add"
+msgstr "Dodaj"
+
+#: src/Gtk/ExcludeBox.vala:219
+msgid "Add custom pattern"
+msgstr "Dodaj własny wzorzec"
+
+#: src/Gtk/ExcludeBox.vala:224
+msgid "Exclude Pattern"
+msgstr "Wyklucz wzorzec"
+
+#: src/Gtk/ExcludeBox.vala:225
+msgid "Enter the pattern to exclude (Ex: *.mp3, *.bak)"
+msgstr "Wprowadź wzorzec wykluczenia (np.: *.mp3, *.bak)"
+
+#: src/Gtk/ExcludeBox.vala:234
+msgid "Add Files"
+msgstr "Dodaj pliki"
+
+#: src/Gtk/ExcludeBox.vala:234
+msgid "Add files"
+msgstr "Dodaj pliki"
+
+#: src/Gtk/ExcludeBox.vala:240
+msgid "Add Folders"
+msgstr "Dodaj katalogi"
+
+#: src/Gtk/ExcludeBox.vala:240
+msgid "Add directories"
+msgstr "Dodaj katalogi"
+
+#: src/Gtk/ExcludeBox.vala:254
+msgid "Remove"
+msgstr "Usuń"
+
+#: src/Gtk/ExcludeBox.vala:273
+msgid "Items Not Selected"
+msgstr "Nie zostały wybrane elementy"
+
+#: src/Gtk/ExcludeBox.vala:274
+msgid "Select the items to be removed from the list"
+msgstr "Wybierz elementy, które mają zostać usunięte z listy"
+
+#: src/Gtk/ExcludeBox.vala:407
+msgid "Select file(s)"
+msgstr "Zaznaczono plik(i)"
+
+#: src/Gtk/ExcludeBox.vala:434
+msgid "Select directory"
+msgstr "Wybierz katalog"
+
+#: src/Gtk/DeleteFinishBox.vala:60
+msgid "Snapshot(s) Deleted"
+msgstr "Usunięte migawki"
+
+#: src/Gtk/SettingsWindow.vala:56 src/Gtk/MainWindow.vala:181
+#: src/Gtk/MainWindow.vala:182
+msgid "Settings"
+msgstr "Ustawienia"
+
+#: src/Gtk/SettingsWindow.vala:93 src/Gtk/SetupWizardWindow.vala:109
+msgid "Schedule"
+msgstr "Harmonogram"
+
+#: src/Gtk/SettingsWindow.vala:101
+msgid "Users"
+msgstr "Użytkownicy"
+
+#: src/Gtk/SettingsWindow.vala:103
+msgid "Filters"
+msgstr "Filtry"
+
+#: src/Gtk/SettingsWindow.vala:105
+msgid "Misc"
+msgstr "Różne"
 
 #: src/Gtk/UsersBox.vala:63
 msgid "User Home Directories"
@@ -1124,9 +1812,9 @@ msgstr ""
 "Katalogi domowe użytkowników są domyślnie wykluczone, dopóki się ich tutaj "
 "nie włączy"
 
-#: src/Gtk/UsersBox.vala:92 src/Gtk/ExcludeBox.vala:84
-msgid "Click to edit. Drag and drop to re-order."
-msgstr "Kliknij, aby zmodyfikować. Przeciągnij i upuść, aby zmienić kolejność."
+#: src/Gtk/UsersBox.vala:105 src/Gtk/SetupWizardWindow.vala:114
+msgid "User"
+msgstr "Użytkownik"
 
 #: src/Gtk/UsersBox.vala:120
 msgid "Home"
@@ -1212,6 +1900,10 @@ msgstr ""
 msgid "BTRFS Tools Not Found"
 msgstr "Nie odnaleziono narzędzi BTRFS"
 
+#: src/Gtk/SnapshotBackendBox.vala:132
+msgid "Help"
+msgstr "Pomoc"
+
 #: src/Gtk/SnapshotBackendBox.vala:165
 msgid "BTRFS Snapshots"
 msgstr "Migawki BTRFS"
@@ -1290,8 +1982,8 @@ msgid ""
 "hard-linking unchanged files from previous snapshot."
 msgstr ""
 "Migawki są tworzone przez wykonywanie kopii systemu plików z użyciem rsync, "
-"z twardym dowiązaniami (hard-linking) do niezmienionych plików z poprzedniej "
-"migawki."
+"z twardymi dowiązaniami (hard-linking) do niezmienionych plików z "
+"poprzedniej migawki."
 
 #: src/Gtk/SnapshotBackendBox.vala:188
 msgid ""
@@ -1319,11 +2011,456 @@ msgid "Files and directories can be excluded to save disk space."
 msgstr ""
 "Pliki i katalogi mogą być pominięte w celu oszczędzenia miejsca na dysku."
 
+#: src/Gtk/BackupBox.vala:71
+msgid "Creating Snapshot..."
+msgstr "Tworzenie migawki..."
+
+#: src/Gtk/BackupBox.vala:80
+msgid "File and directory counts:"
+msgstr "Liczba plików i katalogów:"
+
+#: src/Gtk/BackupBox.vala:84 src/Gtk/RestoreBox.vala:122
+msgid "No Change"
+msgstr "Bez zmian"
+
+#: src/Gtk/BackupBox.vala:89 src/Gtk/RestoreBox.vala:127
+msgid "Changed items:"
+msgstr "Zmienione elementy:"
+
+#: src/Gtk/EstimateBox.vala:56
+msgid "Estimating System Size..."
+msgstr "Obliczanie rozmiaru systemu..."
+
+#: src/Gtk/EstimateBox.vala:66
+msgid "Please wait..."
+msgstr "Proszę czekać..."
+
+#: src/Gtk/BootOptionsBox.vala:118
+msgid "(Re)install GRUB2 on:"
+msgstr "Przeinstaluj/Zainstaluj GRUB2 na:"
+
+#: src/Gtk/BootOptionsBox.vala:120
+msgid "Re-installs the GRUB2 bootloader on the selected device."
+msgstr "Przeinstaluj program rozruchowy GRUB2 na zaznaczonym urządzeniu."
+
+#: src/Gtk/BootOptionsBox.vala:135
+msgid "Update initramfs"
+msgstr "Zaktualizuj initramfs"
+
+#: src/Gtk/BootOptionsBox.vala:137
+msgid ""
+"Re-generates initramfs for all installed kernels. This is generally not "
+"needed. Select this only if the restored system fails to boot."
+msgstr ""
+"Ponowne generowanie systemu plików w przestrzeni użytkownika dla wszystkich "
+"zainstalowanych jąder. Ogólnie rzecz biorąc, nie jest to konieczne. Zaznacz "
+"to tylko wtedy gdy przywrócony system nie może przejść procedury rozruchu."
+
+#: src/Gtk/BootOptionsBox.vala:150
+msgid "Update GRUB menu"
+msgstr "Zaktualizuj menu GRUB"
+
+#: src/Gtk/BootOptionsBox.vala:152
+msgid ""
+"Updates the GRUB menu entries (recommended). This is safe to run and should "
+"be left selected."
+msgstr ""
+"Odśwież wpisy w menu programu rozruchowego GRUB (zalecane). Uruchomienie tej "
+"opcji jest bezpieczne i powinna ona być pozostawiona zaznaczona."
+
+#: src/Gtk/DeleteWindow.vala:62
+msgid "Delete Snapshots"
+msgstr "Usuń migawki"
+
+#: src/Gtk/DeleteWindow.vala:85
+msgid "Select Snapshots"
+msgstr "Wybierz migawki"
+
+#: src/Gtk/DeleteWindow.vala:87
+msgid "Select the snapshots to be deleted"
+msgstr "Wybierz migawkę do usunięcia"
+
+#: src/Gtk/DeleteWindow.vala:89 src/Gtk/MainWindow.vala:320
+msgid "Snapshots"
+msgstr "Migawki"
+
+#: src/Gtk/DeleteWindow.vala:181
+msgid "Hide"
+msgstr "Ukryj"
+
+#: src/Gtk/DeleteWindow.vala:182
+msgid "Hide this window (files will be deleted in background)"
+msgstr "Ukryj to okno (pliki zostaną usunięte w tle)"
+
+#: src/Gtk/DeleteWindow.vala:335 src/Gtk/MainWindow.vala:608
+msgid "No Snapshots Selected"
+msgstr "Nie zaznaczono migawek"
+
+#: src/Gtk/DeleteWindow.vala:336
+msgid "Select snapshots to delete"
+msgstr "Zaznaczono migawkę do usunięcia"
+
+#: src/Gtk/BackupDeviceBox.vala:56
+msgid "Select Snapshot Location"
+msgstr "Wybierz położenie migawki"
+
+#: src/Gtk/BackupDeviceBox.vala:97
+msgid "Devices displayed above have BTRFS file systems."
+msgstr "Urządzenia wyświetlane powyżej mają system plików BTRFS."
+
+#: src/Gtk/BackupDeviceBox.vala:98
+msgid ""
+"BTRFS snapshots are saved on system partition. Other partitions are not "
+"supported."
+msgstr ""
+"Migawki BTRFS są zapisywane na partycji systemowej. Inne partycje nie są "
+"wspierane."
+
+#: src/Gtk/BackupDeviceBox.vala:99
+msgid ""
+"Snapshots are saved to /timeshift-btrfs on selected partition. Other "
+"locations are not supported."
+msgstr ""
+"Migawki są zapisywane w /timeshift-btrfs na wybranej partycji. Inne "
+"lokalizacje są niewpierane."
+
+#: src/Gtk/BackupDeviceBox.vala:104
+msgid "Devices displayed above have Linux file systems."
+msgstr "Urządzenia wyświetlane powyżej mają Linuksowy system plików."
+
+#: src/Gtk/BackupDeviceBox.vala:105
+msgid "Devices with Windows file systems are not supported (NTFS, FAT, etc)."
+msgstr ""
+"Urządzenia z systemami plików Microsoft Windows nie są wspierane (NTFS, FAT, "
+"itp.)."
+
+#: src/Gtk/BackupDeviceBox.vala:106
+msgid "Remote and network locations are not supported."
+msgstr "Lokacje zdalne i położenia sieciowe są niewspierane."
+
+#: src/Gtk/BackupDeviceBox.vala:107
+msgid ""
+"Snapshots are saved to /timeshift on selected partition. Other locations are "
+"not supported."
+msgstr ""
+"Migawki są zapisywane w /timeshift na wybranej partycji. Inne lokalizacje są "
+"niewpierane."
+
+#: src/Gtk/BackupDeviceBox.vala:127
+msgid "Disk"
+msgstr "Dysk"
+
+#: src/Gtk/BackupDeviceBox.vala:215
+msgid "Free"
+msgstr "Wolne miejsce"
+
+#: src/Gtk/BackupDeviceBox.vala:385
+msgid "Selected device does not have Linux partition"
+msgstr "Wybrane urządzenie nie posiada partycji Linuksowej"
+
+#: src/Gtk/BackupDeviceBox.vala:388
+msgid "Selected device does not have BTRFS partition"
+msgstr "Wybrane urządzenie nie posiada partycji BTRFS"
+
+#: src/Gtk/BackupDeviceBox.vala:410
+msgid "Select a partition on this disk"
+msgstr "Wybierz partycję na tym dysku"
+
+#: src/Gtk/BackupDeviceBox.vala:512
+msgid "There are no snapshots on this device"
+msgstr "Na tym urządzeniu nie ma migawek"
+
+#: src/Gtk/SetupWizardWindow.vala:64
+msgid "Setup Wizard"
+msgstr "Kreator konfiguracji"
+
+#: src/Gtk/SetupWizardWindow.vala:94
+#, fuzzy
+msgid "Backend"
+msgstr "Backend"
+
+#: src/Gtk/AppGtk.vala:99
+msgid "Unknown option"
+msgstr "Nieznana opcja"
+
+#: src/Gtk/AppGtk.vala:112
+msgid "Syntax"
+msgstr "Składnia"
+
+#: src/Gtk/AppGtk.vala:114 src/Console/AppConsole.vala:351
+msgid "Options"
+msgstr "Opcje"
+
+#: src/Gtk/AppGtk.vala:116
+msgid "Print debug information"
+msgstr "Drukuj informacje o usterkach (debug)"
+
+#: src/Gtk/AppGtk.vala:117 src/Console/AppConsole.vala:384
+msgid "Show all options"
+msgstr "Pokaż wszystkie opcje"
+
+#: src/Gtk/AppGtk.vala:119
+msgid "Run 'timeshift' for the command-line version of this tool"
+msgstr ""
+"Uruchom 'timeshift' z poziomu linii poleceń, aby uzyskać dostęp do "
+"konsolowej wersji tego narzędzia"
+
+#: src/Gtk/AppGtk.vala:126
+msgid "Admin access is required to backup and restore system files."
+msgstr ""
+"W celu utworzenia i odtworzenia kopii zapasowej plików systemowych, wymagane "
+"są uprawnienia administratora."
+
+#: src/Gtk/AppGtk.vala:127
+msgid "Please re-run the application as admin (using 'sudo' or 'su')"
+msgstr ""
+"Proszę uruchomić ponownie aplikację jako administrator (używając 'sudo' lub "
+"'su')"
+
+#: src/Gtk/AppGtk.vala:131
+msgid "Admin Access Required"
+msgstr "Wymagane uprawnienia administratora"
+
+#: src/Gtk/RestoreBox.vala:77 src/Gtk/RestoreBox.vala:190
+msgid "Restoring Snapshot..."
+msgstr "Przywracanie migawki..."
+
+#: src/Gtk/RestoreBox.vala:119
+msgid "Files and directory counts:"
+msgstr "Ilość plików i katalogów:"
+
+#: src/Gtk/MainWindow.vala:142
+msgid "Create snapshot of current system"
+msgstr "Utwórz migawkę obecnego systemu"
+
+#: src/Gtk/MainWindow.vala:152
+msgid "Restore selected snapshot"
+msgstr "Przywróć wybraną migawkę"
+
+#: src/Gtk/MainWindow.vala:162
+msgid "Delete selected snapshot"
+msgstr "Usuń wybrane migawki"
+
+#: src/Gtk/MainWindow.vala:171
+msgid "Browse"
+msgstr "Przeglądaj"
+
+#: src/Gtk/MainWindow.vala:172
+msgid "Browse selected snapshot"
+msgstr "Przejrzyj wybraną migawkę"
+
+#: src/Gtk/MainWindow.vala:191
+msgid "Wizard"
+msgstr "Kreator"
+
+#: src/Gtk/MainWindow.vala:192
+msgid "Settings wizard"
+msgstr "Kreator ustawień"
+
+#: src/Gtk/MainWindow.vala:218
+msgid "Menu"
+msgstr "Menu"
+
+#: src/Gtk/MainWindow.vala:219
+msgid "Open Menu"
+msgstr "Otwórz menu"
+
+#: src/Gtk/MainWindow.vala:356
+msgid "Available"
+msgstr "Dostępne"
+
+#: src/Gtk/MainWindow.vala:380
+msgid "View TimeShift Logs"
+msgstr "Zobacz pliki dziennika TimeShift"
+
+#: src/Gtk/MainWindow.vala:386
+msgid "About"
+msgstr "O programie"
+
+#: src/Gtk/MainWindow.vala:452
+msgid "Main window closed by user"
+msgstr "Okno główne zamknięte przez użytkownika"
+
+#: src/Gtk/MainWindow.vala:474
+msgid "Select another device?"
+msgstr "Chciałbyś wybrać inne urządzenie?"
+
+#: src/Gtk/MainWindow.vala:540 src/Gtk/MainWindow.vala:547
+msgid "Select another device to delete snasphots"
+msgstr "Wybierz inne urządzenie, aby usunąć migawki"
+
+#: src/Gtk/MainWindow.vala:546
+msgid "No snapshots on device"
+msgstr "Brak migawek na urządzeniu"
+
+#: src/Gtk/MainWindow.vala:556
+msgid "Cannot Delete Live Snapshot"
+msgstr "Nie można usunąć migawki live"
+
+#: src/Gtk/MainWindow.vala:557
+#, c-format
+msgid ""
+"Snapshot '%s' is being used by the system and cannot be deleted. Restart the "
+"system to activate the restored snapshot."
+msgstr ""
+"Migawka '%s' jest używana przez system i nie może zostać usunięta. Uruchom "
+"ponownie system, aby aktywować przywróconą migawkę."
+
+#: src/Gtk/MainWindow.vala:609
+msgid "Select the snapshots to mark for deletion"
+msgstr "Oznacz wybrane migawki jako do usunięcia"
+
+#: src/Gtk/MainWindow.vala:634
+msgid "Marked for deletion"
+msgstr "Oznaczone do usunięcia"
+
+#: src/Gtk/MainWindow.vala:635
+msgid "Snapshots will be removed during the next scheduled run"
+msgstr "Migawki zostaną usunięte podczas następnego zaplanowanego zadania"
+
+#: src/Gtk/MainWindow.vala:687
+msgid "Select Snapshot"
+msgstr "Wybierz migawkę"
+
+#: src/Gtk/MainWindow.vala:688
+msgid "Please select a snapshot to view the log!"
+msgstr "Proszę wybrać migawkę, aby zobaczyć plik dziennika!"
+
+#: src/Gtk/MainWindow.vala:754
+msgid "Snapshot deletion in progress..."
+msgstr "Trwa usuwanie migawki..."
+
+#: src/Gtk/MainWindow.vala:755
+msgid "Please wait for snapshots to be deleted."
+msgstr "Proszę czekać, aż migawki zostaną usunięte."
+
+#: src/Gtk/MainWindow.vala:786
+msgid "No snapshots selected"
+msgstr "Nie zaznaczono migawek"
+
+#: src/Gtk/MainWindow.vala:787
+msgid "Select the snapshot to restore"
+msgstr "Wybierz migawkę do przywrócenia"
+
+#: src/Gtk/MainWindow.vala:793
+msgid "Multiple snapshots selected"
+msgstr "Zaznaczono wiele migawek"
+
+#: src/Gtk/MainWindow.vala:794
+msgid "Select a single snapshot to restore"
+msgstr "Wybierz pojedynczą migawkę do przywrócenia"
+
+#: src/Gtk/MainWindow.vala:817
+msgid "Invalid snapshot"
+msgstr "Nieprawidłowa migawka"
+
+#: src/Gtk/MainWindow.vala:818
+msgid "Selected snapshot is marked for deletion and cannot be restored"
+msgstr "Wybrane migawka jest oznaczona do usunięcia i nie może być przywrócona"
+
+#: src/Gtk/MainWindow.vala:941
+msgid "System Restore Utility"
+msgstr "Narzędzie przywracania systemu"
+
+#: src/Gtk/MainWindow.vala:984
+msgid "Live USB Mode (Restore Only)"
+msgstr "Tryb Live USB (tylko odzyskiwanie)"
+
+#: src/Gtk/MainWindow.vala:996
+msgid "Snapshots available for restore"
+msgstr "Migawki dostępne do przywrócenia"
+
+#: src/Gtk/MainWindow.vala:1031 src/Gtk/MainWindow.vala:1042
+msgid "Timeshift is active"
+msgstr "Timeshift jest aktywny"
+
+#: src/Gtk/MainWindow.vala:1033
+msgid "Latest snapshot"
+msgstr "Ostatnia migawka"
+
+#: src/Gtk/MainWindow.vala:1034 src/Gtk/MainWindow.vala:1036
+msgid "None"
+msgstr "Nic"
+
+#: src/Gtk/MainWindow.vala:1035
+msgid "Oldest snapshot"
+msgstr "Najstarsza migawka"
+
+#: src/Gtk/MainWindow.vala:1043
+msgid "Snapshots will be created at selected intervals"
+msgstr "Migawki mogą być tworzone w wybranych okresach"
+
+#: src/Gtk/MainWindow.vala:1052
+msgid "Enable scheduled snapshots to protect your system"
+msgstr "Włącz zaplanowane migawki, by chronić twój system"
+
+#: src/Gtk/MainWindow.vala:1057
+msgid "No snapshots available"
+msgstr "Brak dostępnych migawek"
+
+#: src/Gtk/MainWindow.vala:1058
+msgid ""
+"Create snapshots manually or enable scheduled snapshots to protect your "
+"system"
+msgstr ""
+"Utwórz migawkę ręcznie lub włącz planowanie migawek w celu ochrony systemu"
+
 #: src/Gtk/BootOptionsWindow.vala:49
 msgid "Bootloader Options"
 msgstr "Opcje programu rozruchowego"
 
-#: src/Gtk/FinishBox.vala:55 src/Console/AppConsole.vala:397
+#: src/Gtk/RestoreExcludeBox.vala:57
+msgid "Select applications to exclude from restore"
+msgstr "Wybierz aplikacje do pominięcia z przywrócenia"
+
+#: src/Gtk/RestoreExcludeBox.vala:61
+msgid "Web Browsers"
+msgstr "Przeglądarki internetowe"
+
+#: src/Gtk/RestoreExcludeBox.vala:61 src/Gtk/RestoreExcludeBox.vala:91
+msgid "Recommended"
+msgstr "Zalecane"
+
+#: src/Gtk/RestoreExcludeBox.vala:78
+msgid "Firefox, Chromium, Chrome, Opera, Epiphany, Midori"
+msgstr "Firefox, Chromium, Chrome, Opera, Epiphany, Midori"
+
+#: src/Gtk/RestoreExcludeBox.vala:85
+msgid ""
+"Keep configuration files for web browsers like Firefox and Chrome. If un-"
+"checked, previous configuration files will be restored from snapshot"
+msgstr ""
+"Przechowuj pliki konfiguracyjne przeglądarek internetowych takich jak "
+"Mozilla Firefox czy Chromium. Jeżeli odznaczysz tę opcję, wcześniejsze pliki "
+"konfiguracyjne zostaną skasowane z migawki"
+
+#: src/Gtk/RestoreExcludeBox.vala:91
+msgid "Bittorrent Clients"
+msgstr "Klienty Bittorrent"
+
+#: src/Gtk/RestoreExcludeBox.vala:105
+msgid "Deluge, Transmission"
+msgstr "Deluge, Transmission"
+
+#: src/Gtk/RestoreExcludeBox.vala:112
+msgid ""
+"Keep configuration files for bittorrent clients like Deluge, Transmission, "
+"etc. If un-checked, previous configuration files will be restored from "
+"snapshot."
+msgstr ""
+"Przechowuj pliki konfiguracyjne klientów sieci BitTorrent takich jak Deluge, "
+"Transmission itp. Jeżeli odznaczysz tę opcję, wcześniejsze pliki "
+"konfiguracyjne zostaną skasowane z migawki."
+
+#: src/Gtk/RestoreExcludeBox.vala:118
+msgid "Other applications (next page)"
+msgstr "Inne aplikacje (następna strona)"
+
+#: src/Gtk/RestoreExcludeBox.vala:121
+msgid "Show more applications to exclude on the next page"
+msgstr "Pokaż więcej aplikacji do pominięcia na następnej stronie"
+
+#: src/Gtk/FinishBox.vala:55 src/Console/AppConsole.vala:398
 msgid "Notes"
 msgstr "Uwagi"
 
@@ -1403,441 +2540,6 @@ msgstr ""
 "na nim składowanych. Możesz zawsze zainstalować inną dystrybucję GNU/"
 "Linuksa, a potem przywrócić wcześniejszą dystrybucję, przywracając migawkę."
 
-#: src/Gtk/ScheduleBox.vala:57
-msgid "Select Snapshot Levels"
-msgstr "Określ liczbę migawek"
-
-#: src/Gtk/ScheduleBox.vala:64 src/Gtk/SnapshotListBox.vala:302
-msgid "Monthly"
-msgstr "Miesięczne"
-
-#: src/Gtk/ScheduleBox.vala:64
-msgid "Create one per month"
-msgstr "Twórz jedną co miesiąc"
-
-#: src/Gtk/ScheduleBox.vala:82 src/Gtk/SnapshotListBox.vala:301
-msgid "Weekly"
-msgstr "Tygodniowe"
-
-#: src/Gtk/ScheduleBox.vala:82
-msgid "Create one per week"
-msgstr "Twórz jedną co tydzień"
-
-#: src/Gtk/ScheduleBox.vala:100 src/Gtk/SnapshotListBox.vala:300
-msgid "Daily"
-msgstr "Codzienne"
-
-#: src/Gtk/ScheduleBox.vala:100
-msgid "Create one per day"
-msgstr "Twórz jedną codziennie"
-
-#: src/Gtk/ScheduleBox.vala:118 src/Gtk/SnapshotListBox.vala:299
-msgid "Hourly"
-msgstr "Godzinne"
-
-#: src/Gtk/ScheduleBox.vala:118
-msgid "Create one per hour"
-msgstr "Twórz jedną co godzinę"
-
-#: src/Gtk/ScheduleBox.vala:136 src/Gtk/SnapshotListBox.vala:298
-msgid "Boot"
-msgstr "Rozruchowe"
-
-#: src/Gtk/ScheduleBox.vala:136
-msgid "Create one per boot"
-msgstr "Twórz jedną co rozruch"
-
-#: src/Gtk/ScheduleBox.vala:154
-msgid "Stop cron emails for scheduled tasks"
-msgstr ""
-"Wstrzymaj wiadomości poczty elektronicznej cron'a dla zaplanowanych zadań"
-
-#: src/Gtk/ScheduleBox.vala:156
-msgid ""
-"The cron service sends the output of scheduled tasks as an email to the "
-"current user. Select this option to suppress the emails for cron tasks "
-"created by Timeshift."
-msgstr ""
-"Usługa cron'a wysyła dane wyjściowe (output) zaplanowanych zadań jako "
-"wiadomość poczty elektronicznej (email) do bieżącego użytkownika. Wybierz tę "
-"opcję, aby ukryć wiadomości poczty elektronicznej dla zadań cron'a "
-"utworzonych przez Timeshift."
-
-#: src/Gtk/ScheduleBox.vala:167
-msgid "Snapshots are not scheduled at fixed times."
-msgstr "Migawki nie są planowane w odstępach czasu."
-
-#: src/Gtk/ScheduleBox.vala:168
-msgid ""
-"A maintenance task runs once every hour and creates snapshots as needed."
-msgstr ""
-"Konserwacja jest uruchamiana co godzinę, tworzy migawki w razie potrzeby."
-
-#: src/Gtk/ScheduleBox.vala:169
-msgid ""
-"Boot snapshots are created with a delay of 10 minutes after system startup."
-msgstr ""
-"Migawki rozruchowe są tworzone z 10-minutowym opóźnieniem po uruchomieniu "
-"systemu."
-
-#: src/Gtk/ScheduleBox.vala:282
-msgid ""
-"Number of snapshots to keep.\n"
-"Older snapshots will be removed once this limit is exceeded."
-msgstr ""
-"Liczba migawek do utrzymania.\n"
-"Starsze migawki zostaną usunięte po przekroczeniu tego limitu."
-
-#: src/Gtk/ScheduleBox.vala:283
-msgid "Keep"
-msgstr "Utrzymuj"
-
-#: src/Gtk/ScheduleBox.vala:305
-msgid "Scheduled snapshots are enabled"
-msgstr "Zaplanowane migawki są włączone"
-
-#: src/Gtk/ScheduleBox.vala:306
-msgid ""
-"Snapshots will be created at selected intervals if snapshot disk has enough "
-"space (> 1 GB)"
-msgstr ""
-"Migawki będą tworzone w wybranych okresach czasu jezeli migawka dysku ma "
-"wystarczająco dużo wolnej przestrzeni dyskowej (> 1 GB)"
-
-#: src/Gtk/ScheduleBox.vala:313
-msgid "Select the intervals for creating snapshots"
-msgstr "Wybierz okresy, w których będą tworzone migawki"
-
-#: src/Gtk/SettingsWindow.vala:98
-msgid "Users"
-msgstr "Użytkownicy"
-
-#: src/Gtk/SettingsWindow.vala:100
-msgid "Filters"
-msgstr "Filtry"
-
-#: src/Gtk/BackupWindow.vala:62
-msgid "Create Snapshot"
-msgstr "Utwórz migawkę"
-
-#: src/Gtk/BackupWindow.vala:92 src/Console/AppConsole.vala:356
-msgid "Backup"
-msgstr "Kopia zapasowa"
-
-#: src/Gtk/RestoreDeviceBox.vala:61
-msgid "Select Target Device"
-msgstr "Wybierz urządzenie docelowe"
-
-#: src/Gtk/RestoreDeviceBox.vala:79
-msgid "Select the target devices where system will be cloned."
-msgstr "Wybierz docelowe urządzenie, na które system zostanie sklonowany."
-
-#: src/Gtk/RestoreDeviceBox.vala:83
-msgid "Select the devices where files will be restored."
-msgstr "Wybierz urządzenia, z których pliki zostaną przywrócone."
-
-#: src/Gtk/RestoreDeviceBox.vala:84
-msgid "Devices from which snapshot was created are pre-selected."
-msgstr "Urządzenia, z których utworzono migawki, są już wybrane."
-
-#: src/Gtk/RestoreDeviceBox.vala:93 src/Core/SnapshotRepo.vala:688
-msgid "Path"
-msgstr "Scieżka"
-
-#: src/Gtk/RestoreDeviceBox.vala:101
-msgid "Volume"
-msgstr "Objętość"
-
-#: src/Gtk/RestoreDeviceBox.vala:229
-msgid "Keep this mount path on the root filesystem"
-msgstr "Zachowaj tę ścieżkę montowania w głównym systemie plików"
-
-#: src/Gtk/RestoreDeviceBox.vala:244
-msgid "Keep on Root Device"
-msgstr "Zachowaj na głównym urządzeniu"
-
-#: src/Gtk/RestoreDeviceBox.vala:411
-msgid "Bootloader Options (Advanced)"
-msgstr "Opcje programu rozruchowego (zaawansowane)"
-
-#: src/Gtk/RestoreDeviceBox.vala:413
-msgid ""
-"[Advanced Users Only] Change these settings only if the restored system "
-"fails to boot."
-msgstr ""
-"[Tylko zaawansowani użytkownicy] Zmieniaj te opcje tylko wtedy gdy "
-"przywrócony system ma problem z rozruchem."
-
-#: src/Gtk/RestoreDeviceBox.vala:452
-msgid "Root device not selected"
-msgstr "Nie wybrano urządzenia z głównym systemem plików (root)"
-
-#: src/Gtk/RestoreDeviceBox.vala:453
-msgid "Select the device for root file system (/)"
-msgstr "Wybierz urządzenie dla głównego systemu plików (/)"
-
-#: src/Gtk/RestoreDeviceBox.vala:480
-msgid "Target device is same as system device"
-msgstr "Urządzenie docelowe jest takie same jak urządzenie systemowe"
-
-#: src/Gtk/RestoreDeviceBox.vala:481
-msgid "Select another device for root file system (/)"
-msgstr "Wybierz inne urządzenie dla głównego systemu plików (/)"
-
-#: src/Gtk/RestoreDeviceBox.vala:499
-msgid "Boot device not selected"
-msgstr "Nie wybrano urządzenia z programem rozruchowym"
-
-#: src/Gtk/RestoreDeviceBox.vala:500
-msgid ""
-"An encrypted device is selected for root file system (/). The boot directory "
-"(/boot) must be mounted on a non-encrypted device for the system to boot "
-"successfully.\n"
-"\n"
-"Either select a non-encrypted device for boot directory or select a non-"
-"encrypted device for root filesystem."
-msgstr ""
-"Dla systemu plików katalogu głównego root (/) zostało wybrane zaszyfrowane "
-"urządzenie. Katalog ze statycznymi plikami programu rozruchowego (/boot) "
-"musi być zamontowany na niezaszyfrowanym urządzeniu, aby uruchomienie "
-"systemu zakończyło się powodzeniem.\n"
-"\n"
-"Wybierz nieszyfrowane urządzenie do katalogu ze statycznymi plikami programu "
-"rozruchowego lub wybierz niezaszyfrowane urządzenie dla głównego systemu "
-"plików."
-
-#: src/Gtk/RestoreDeviceBox.vala:511
-msgid "GRUB device not selected"
-msgstr "Nie wybrano urządzenia z programem rozruchowym GRUB"
-
-#: src/Gtk/RestoreDeviceBox.vala:512
-msgid "Please select the GRUB device"
-msgstr "Proszę wybrać urządzenie z programem rozruchowym GRUB"
-
-#: src/Gtk/RestoreDeviceBox.vala:522 src/Core/Main.vala:3435
-msgid "Unsupported Subvolume Layout"
-msgstr "Niewspierany układ podwolumenu"
-
-#: src/Gtk/RestoreDeviceBox.vala:524
-msgid "Partition has an unsupported subvolume layout."
-msgstr "Partycja ma niewspierany układ podwolumenu."
-
-#: src/Gtk/RestoreDeviceBox.vala:525 src/Core/Main.vala:377
-#: src/Core/Main.vala:3432
-msgid ""
-"Only ubuntu-type layouts with @ and @home subvolumes are currently supported."
-msgstr ""
-"Tylko układy podwolumenów w stylu Ubuntu z @ oraz @home są aktualnie "
-"wspierane."
-
-#: src/Gtk/RestoreDeviceBox.vala:535
-msgid "Failed to mount devices"
-msgstr "Nie udało się zamontować urządzeń"
-
-#: src/Gtk/ExcludeBox.vala:54
-msgid "Include / Exclude Patterns"
-msgstr "Dołączone / Pominięte wzorce"
-
-#: src/Gtk/ExcludeBox.vala:59
-msgid "Click to edit. Drag-drop to re-order."
-msgstr "Kliknij, aby zmodyfikować. Przeciągnij i upuść, aby zmienić kolejność."
-
-#: src/Gtk/ExcludeBox.vala:162
-msgid "Pattern"
-msgstr "Wzorzec"
-
-#: src/Gtk/ExcludeBox.vala:219
-msgid "Add"
-msgstr "Dodaj"
-
-#: src/Gtk/ExcludeBox.vala:219
-msgid "Add custom pattern"
-msgstr "Dodaj własny wzorzec"
-
-#: src/Gtk/ExcludeBox.vala:224
-msgid "Exclude Pattern"
-msgstr "Wyklucz wzorzec"
-
-#: src/Gtk/ExcludeBox.vala:225
-msgid "Enter the pattern to exclude (Ex: *.mp3, *.bak)"
-msgstr "Wprowadź wzorzec wykluczenia (np.: *.mp3, *.bak)"
-
-#: src/Gtk/ExcludeBox.vala:233
-msgid "Add Files"
-msgstr "Dodaj pliki"
-
-#: src/Gtk/ExcludeBox.vala:233
-msgid "Add files"
-msgstr "Dodaj pliki"
-
-#: src/Gtk/ExcludeBox.vala:239
-msgid "Add Folders"
-msgstr "Dodaj katalogi"
-
-#: src/Gtk/ExcludeBox.vala:239
-msgid "Add directories"
-msgstr "Dodaj katalogi"
-
-#: src/Gtk/ExcludeBox.vala:253
-msgid "Remove"
-msgstr "Usuń"
-
-#: src/Gtk/ExcludeBox.vala:272
-msgid "Items Not Selected"
-msgstr "Nie zostały wybrane elementy"
-
-#: src/Gtk/ExcludeBox.vala:273
-msgid "Select the items to be removed from the list"
-msgstr "Wybierz elementy, które mają zostać usunięte z listy"
-
-#: src/Gtk/ExcludeBox.vala:406
-msgid "Select file(s)"
-msgstr "Zaznaczono plik(i)"
-
-#: src/Gtk/ExcludeBox.vala:433
-msgid "Select directory"
-msgstr "Wybierz katalog"
-
-#: src/Gtk/BackupBox.vala:71
-msgid "Creating Snapshot..."
-msgstr "Tworzenie migawki..."
-
-#: src/Gtk/BackupBox.vala:80
-msgid "File and directory counts:"
-msgstr "Liczba plików i katalogów:"
-
-#: src/Gtk/BackupBox.vala:84 src/Gtk/RestoreBox.vala:122
-msgid "No Change"
-msgstr "Bez zmian"
-
-#: src/Gtk/BackupBox.vala:89 src/Gtk/RestoreBox.vala:127
-msgid "Changed items:"
-msgstr "Zmienione elementy:"
-
-#: src/Gtk/BackupBox.vala:234 src/Gtk/DeleteBox.vala:149
-#: src/Gtk/RestoreBox.vala:237 src/Core/Main.vala:1393
-#: src/Core/Snapshot.vala:501
-msgid "remaining"
-msgstr "pozostało"
-
-#: src/Gtk/RestoreSummaryBox.vala:53 src/Core/Main.vala:2106
-msgid "Warning"
-msgstr "Ostrzeżenie"
-
-#: src/Gtk/RestoreSummaryBox.vala:64 src/Core/Main.vala:2206
-msgid "Disclaimer"
-msgstr "Wyłączenie odpowiedzialności"
-
-#: src/Gtk/BackupFinishBox.vala:60
-msgid "Snapshot Created"
-msgstr "Utworzono migawkę"
-
-#: src/Gtk/DeleteBox.vala:58
-msgid "Deleting Snapshots..."
-msgstr "Usuwanie migawek..."
-
-#: src/Gtk/RestoreBox.vala:74 src/Gtk/RestoreBox.vala:187
-#: src/Core/Main.vala:2775
-msgid "Comparing Files (Dry Run)..."
-msgstr "Porównywanie plików (przebieg próbny)..."
-
-#: src/Gtk/RestoreBox.vala:77 src/Gtk/RestoreBox.vala:190
-msgid "Restoring Snapshot..."
-msgstr "Przywracanie migawki..."
-
-#: src/Gtk/RestoreBox.vala:119
-msgid "Files and directory counts:"
-msgstr "Ilość plików i katalogów:"
-
-#: src/Gtk/ExcludeListSummaryWindow.vala:49
-msgid "Exclude List Summary"
-msgstr "Wyklucz podsumowanie listy"
-
-#: src/Gtk/ExcludeListSummaryWindow.vala:62
-msgid ""
-"Files &amp; directories matching the patterns below will be excluded. "
-"Patterns starting with a + will include the item instead of excluding."
-msgstr ""
-"Pliki i katalogi pasujące do poniższego wzorca będą pominięte. Wzorce "
-"zaczynające się od + dołączają, a nie pomijają elementy."
-
-#: src/Gtk/SnapshotListBox.vala:95 src/Core/Main.vala:2032
-#: src/Core/SnapshotRepo.vala:714 src/Core/SnapshotRepo.vala:752
-msgid "Snapshot"
-msgstr "Migawka"
-
-#: src/Gtk/SnapshotListBox.vala:151 src/Console/AppConsole.vala:426
-msgid "Tags"
-msgstr "Oznaczenia"
-
-#: src/Gtk/SnapshotListBox.vala:199
-msgid "Unshared"
-msgstr "Niewspółdzielone"
-
-#: src/Gtk/SnapshotListBox.vala:224
-msgid "Comments"
-msgstr "Komentarze"
-
-#: src/Gtk/SnapshotListBox.vala:275
-msgid "Subvolumes"
-msgstr "Podwolumeny"
-
-#: src/Gtk/SnapshotListBox.vala:290
-msgid "<b>Comments</b> (double-click to edit)"
-msgstr "<b>Komentarze</b> (kliknij dwa razy, aby edytować)"
-
-#: src/Gtk/SnapshotListBox.vala:296
-msgid "Snapshot Levels"
-msgstr "Migawki BTRFS"
-
-#: src/Gtk/SnapshotListBox.vala:297
-msgid "On demand (manual)"
-msgstr "Na żądanie (instrukcja)"
-
-#: src/Gtk/SnapshotListBox.vala:329
-msgid "Mark for Deletion"
-msgstr "Zaznacz do usunięcia"
-
-#: src/Gtk/SnapshotListBox.vala:336
-msgid "Browse Files"
-msgstr "Przeglądaj pliki"
-
-#: src/Gtk/SnapshotListBox.vala:343
-msgid "View Rsync Log for Create"
-msgstr "Zobacz pliki dziennika Rsync do utworzenia"
-
-#: src/Gtk/SnapshotListBox.vala:350
-msgid "View Rsync Log for Restore"
-msgstr "Zobacz pliki dziennika Rsync do przywrócenia"
-
-#: src/Gtk/SnapshotListBox.vala:519
-msgid "LIVE"
-msgstr "NA ŻYWO"
-
-#: src/Gtk/DeleteWindow.vala:62
-msgid "Delete Snapshots"
-msgstr "Usuń migawki"
-
-#: src/Gtk/DeleteWindow.vala:85
-msgid "Select Snapshots"
-msgstr "Wybierz migawki"
-
-#: src/Gtk/DeleteWindow.vala:87
-msgid "Select the snapshots to be deleted"
-msgstr "Wybierz migawkę do usunięcia"
-
-#: src/Gtk/DeleteWindow.vala:178
-msgid "Hide"
-msgstr "Ukryj"
-
-#: src/Gtk/DeleteWindow.vala:179
-msgid "Hide this window (files will be deleted in background)"
-msgstr "Ukryj to okno (pliki zostaną usunięte w tle)"
-
-#: src/Gtk/DeleteWindow.vala:342
-msgid "Select snapshots to delete"
-msgstr "Zaznaczono migawkę do usunięcia"
-
 #: src/Console/AppConsole.vala:102
 msgid "Application needs admin access."
 msgstr "Aplikacja wymaga uprawnień administratora."
@@ -1847,136 +2549,136 @@ msgid "Please run the application as admin (using 'sudo' or 'su')"
 msgstr ""
 "Proszę uruchomić aplikację jako administrator (używając 'sudo' lub 'su')"
 
-#: src/Console/AppConsole.vala:251
+#: src/Console/AppConsole.vala:252
 msgid "Invalid command line arguments"
 msgstr "Nieprawidłowe argumenty wiersza poleceń"
 
-#: src/Console/AppConsole.vala:283
+#: src/Console/AppConsole.vala:284
 msgid "Snapshots cannot be created in Live CD mode"
 msgstr "Nie można tworzyć migawek w trybie Live CD"
 
-#: src/Console/AppConsole.vala:326
+#: src/Console/AppConsole.vala:327
 msgid "Devices with Linux file systems"
 msgstr "Urządzenia z Linuksowym systemem plików"
 
-#: src/Console/AppConsole.vala:352
+#: src/Console/AppConsole.vala:353
 msgid "List"
 msgstr "Lista"
 
-#: src/Console/AppConsole.vala:353
+#: src/Console/AppConsole.vala:354
 msgid "List snapshots"
 msgstr "Lista migawek"
 
-#: src/Console/AppConsole.vala:354
+#: src/Console/AppConsole.vala:355
 msgid "List devices"
 msgstr "Lista urządzeń"
 
-#: src/Console/AppConsole.vala:357
+#: src/Console/AppConsole.vala:358
 msgid "Create snapshot if scheduled"
 msgstr "Utwórz migawkę (jeśli była zaplanowana)"
 
-#: src/Console/AppConsole.vala:358
+#: src/Console/AppConsole.vala:359
 msgid "Create snapshot (even if not scheduled)"
 msgstr "Utwórz migawkę (nawet jeśli nie była zaplanowana)"
 
-#: src/Console/AppConsole.vala:359
+#: src/Console/AppConsole.vala:360
 msgid "Set snapshot description"
 msgstr "Ustaw opis migawki"
 
-#: src/Console/AppConsole.vala:360
+#: src/Console/AppConsole.vala:361
 msgid "Add tags to snapshot (default: O)"
 msgstr "Dodaj oznaczenia do migawki (domyślnie: O)"
 
-#: src/Console/AppConsole.vala:363
+#: src/Console/AppConsole.vala:364
 msgid "Restore snapshot"
 msgstr "Przywracanie migawki"
 
-#: src/Console/AppConsole.vala:364
+#: src/Console/AppConsole.vala:365
 msgid "Clone current system"
 msgstr "Sklonuj obecny system"
 
-#: src/Console/AppConsole.vala:365
+#: src/Console/AppConsole.vala:366
 msgid "Specify snapshot to restore"
 msgstr "Określ migawkę do przywrócenia"
 
-#: src/Console/AppConsole.vala:366
+#: src/Console/AppConsole.vala:367
 msgid "Specify target device"
 msgstr "Określ urządzenie docelowe"
 
-#: src/Console/AppConsole.vala:367
+#: src/Console/AppConsole.vala:368
 msgid "Specify device for installing GRUB2 bootloader"
 msgstr ""
 "Określ urządzenie, na którym zostanie zainstalowany program rozruchowy GRUB2"
 
-#: src/Console/AppConsole.vala:368
+#: src/Console/AppConsole.vala:369
 msgid "Skip GRUB2 reinstall"
 msgstr "Pomiń ponowną instalację programu rozruchowego GRUB2"
 
-#: src/Console/AppConsole.vala:371
+#: src/Console/AppConsole.vala:372
 msgid "Delete snapshot"
 msgstr "Usuń migawkę"
 
-#: src/Console/AppConsole.vala:372
+#: src/Console/AppConsole.vala:373
 msgid "Delete all snapshots"
 msgstr "Usuń wszystkie migawki"
 
-#: src/Console/AppConsole.vala:374
+#: src/Console/AppConsole.vala:375
 msgid "Global"
 msgstr "Globalny"
 
-#: src/Console/AppConsole.vala:375
+#: src/Console/AppConsole.vala:376
 msgid "Specify backup device (default: config)"
 msgstr "Określ urządzenie kopii zapasowej (domyślnie: konfiguracja)"
 
-#: src/Console/AppConsole.vala:376
+#: src/Console/AppConsole.vala:377
 msgid "Answer YES to all confirmation prompts"
 msgstr ""
 "Odpowiedz „TAK” we wszystkich oknach dialogowych z prośbą o potwierdzenie"
 
-#: src/Console/AppConsole.vala:377
+#: src/Console/AppConsole.vala:378
 msgid "Switch to BTRFS mode (default: config)"
 msgstr "Przełącz w tryb BTRFS (domyślnie: konfiguracja)"
 
-#: src/Console/AppConsole.vala:378
+#: src/Console/AppConsole.vala:379
 msgid "Switch to RSYNC mode (default: config)"
 msgstr "Przełącz w tryb RSYNC (domyślnie: konfiguracja)"
 
-#: src/Console/AppConsole.vala:379
+#: src/Console/AppConsole.vala:380
 msgid "Show additional debug messages"
 msgstr "Pokaż dodatkowe wiadomości o usterkach (debug messages)"
 
-#: src/Console/AppConsole.vala:380
+#: src/Console/AppConsole.vala:381
 msgid "Show rsync output (default)"
 msgstr "Pokaż wyjście rsync (domyślnie)"
 
-#: src/Console/AppConsole.vala:381
+#: src/Console/AppConsole.vala:382
 msgid "Hide rsync output"
 msgstr "Ukryj wyjście (output) rsync"
 
-#: src/Console/AppConsole.vala:382
+#: src/Console/AppConsole.vala:383
 msgid "Run in non-interactive mode"
 msgstr "Uruchom w trybie nieinteraktywnym"
 
-#: src/Console/AppConsole.vala:386
+#: src/Console/AppConsole.vala:387
 msgid "Examples"
 msgstr "Przykłady"
 
-#: src/Console/AppConsole.vala:423 src/Console/AppConsole.vala:453
-#: src/Console/AppConsole.vala:492 src/Console/AppConsole.vala:540
+#: src/Console/AppConsole.vala:424 src/Console/AppConsole.vala:454
+#: src/Console/AppConsole.vala:493 src/Console/AppConsole.vala:541
 msgid "Num"
 msgstr "Liczba"
 
-#: src/Console/AppConsole.vala:427 src/Console/AppConsole.vala:543
+#: src/Console/AppConsole.vala:428 src/Console/AppConsole.vala:544
 msgid "Description"
 msgstr "Opis"
 
-#: src/Console/AppConsole.vala:612
+#: src/Console/AppConsole.vala:613
 msgid "To restore with default options, press the ENTER key for all prompts!"
 msgstr ""
 "Aby przywrócić z domyślnymi opcjami, naciśnij klawisz ENTER przy wszystkich "
 "oknach dialogowych!"
 
-#: src/Console/AppConsole.vala:614
+#: src/Console/AppConsole.vala:615
 msgid ""
 "\n"
 "Press ENTER to continue..."
@@ -1984,795 +2686,95 @@ msgstr ""
 "\n"
 "Wciśnij ENTER, aby kontynuować..."
 
-#: src/Console/AppConsole.vala:659 src/Core/SnapshotRepo.vala:552
-msgid "Snapshot device not selected"
-msgstr "Nie wybrano urządzenia na migawkę"
-
-#: src/Console/AppConsole.vala:663 src/Core/SnapshotRepo.vala:559
-msgid "Snapshot device not available"
-msgstr "Urządzenie na migawkę jest niedostępne"
-
-#: src/Console/AppConsole.vala:664 src/Core/Main.vala:3232
-#: src/Core/SnapshotRepo.vala:560
-msgid "Device not found"
-msgstr "Nie odnaleziono urządzenia"
-
-#: src/Console/AppConsole.vala:673
+#: src/Console/AppConsole.vala:674
 msgid "Select backup device"
 msgstr "Wybierz urządzenie przeznaczone na kopię zapasową"
 
-#: src/Console/AppConsole.vala:683 src/Console/AppConsole.vala:1014
+#: src/Console/AppConsole.vala:684 src/Console/AppConsole.vala:1015
 msgid "Enter device name or number (a=Abort)"
 msgstr "Wprowadź nazwę lub numer urządzenia (a=Przerwij)"
-
-#: src/Console/AppConsole.vala:689 src/Core/SnapshotRepo.vala:592
-msgid "Selected snapshot device is not a system disk"
-msgstr "Urządzenie wybrane na migawkę nie jest dyskiem systemowym"
-
-#: src/Console/AppConsole.vala:690 src/Core/SnapshotRepo.vala:593
-msgid "Select BTRFS system disk with root subvolume (@)"
-msgstr ""
-"Wybierz dysk systemowy BTRFS z podwolumenem z głównym systemem plików (root) "
-"(@)"
-
-#: src/Console/AppConsole.vala:698 src/Console/AppConsole.vala:762
-#: src/Console/AppConsole.vala:894 src/Console/AppConsole.vala:989
-#: src/Console/AppConsole.vala:1034 src/Console/AppConsole.vala:1075
-msgid "Failed to get input from user in 3 attempts"
-msgstr "Trzy nieudane próby pobrania danych od użytkownika"
 
 #: src/Console/AppConsole.vala:699 src/Console/AppConsole.vala:763
 #: src/Console/AppConsole.vala:895 src/Console/AppConsole.vala:990
 #: src/Console/AppConsole.vala:1035 src/Console/AppConsole.vala:1076
-#: src/Console/AppConsole.vala:1094
+msgid "Failed to get input from user in 3 attempts"
+msgstr "Trzy nieudane próby pobrania danych od użytkownika"
+
+#: src/Console/AppConsole.vala:700 src/Console/AppConsole.vala:764
+#: src/Console/AppConsole.vala:896 src/Console/AppConsole.vala:991
+#: src/Console/AppConsole.vala:1036 src/Console/AppConsole.vala:1077
+#: src/Console/AppConsole.vala:1095
 msgid "Aborted."
 msgstr "Przerwano."
 
-#: src/Console/AppConsole.vala:732
+#: src/Console/AppConsole.vala:733
 msgid "Could not find snapshot"
 msgstr "Nie można odnaleźć migawki"
 
-#: src/Console/AppConsole.vala:741
+#: src/Console/AppConsole.vala:742
 msgid "No snapshots found on device"
 msgstr "Nie znaleziono migawek na urządzneiu"
 
-#: src/Console/AppConsole.vala:747
+#: src/Console/AppConsole.vala:748
 msgid "Select snapshot"
 msgstr "Zaznaczono migawkę"
 
-#: src/Console/AppConsole.vala:755
+#: src/Console/AppConsole.vala:756
 msgid "Enter snapshot number (a=Abort, p=Previous, n=Next)"
 msgstr "Wprowadź numer migawki (a=Przerwij, p=Poprzednia, n=Następna)"
 
-#: src/Console/AppConsole.vala:835 src/Console/AppConsole.vala:966
+#: src/Console/AppConsole.vala:836 src/Console/AppConsole.vala:967
 msgid "Could not find device"
 msgstr "Nie można odnaleźć urządzenia"
 
-#: src/Console/AppConsole.vala:871
+#: src/Console/AppConsole.vala:872
 #, c-format
 msgid "Select '%s' device (default = %s)"
 msgstr "Wybierz '%s' urządzenie (domyślne = %s)"
 
-#: src/Console/AppConsole.vala:882
+#: src/Console/AppConsole.vala:883
 #, c-format
 msgid "[ENTER = Default (%s), r = Root device, a = Abort]"
 msgstr "[ENTER = Domyślne (%s), r = urządzenie root, a = Przerwij]"
 
-#: src/Console/AppConsole.vala:885
+#: src/Console/AppConsole.vala:886
 msgid "Enter device name or number"
 msgstr "Wprowadź nazwę lub numer urządzenia"
 
-#: src/Console/AppConsole.vala:912
+#: src/Console/AppConsole.vala:913
 #, c-format
 msgid "'%s' will be on root device"
 msgstr "'%s' będzie znajdował się na urządzeniu root"
 
-#: src/Console/AppConsole.vala:915
+#: src/Console/AppConsole.vala:916
 #, c-format
 msgid "'%s' will be on '%s'"
 msgstr "'%s' będzie znajdował się na '%s'"
 
-#: src/Console/AppConsole.vala:983
+#: src/Console/AppConsole.vala:984
 msgid "Re-install GRUB2 bootloader?"
 msgstr "Przeinstalować program rozruchowy GRUB2?"
 
-#: src/Console/AppConsole.vala:999
+#: src/Console/AppConsole.vala:1000
 msgid "Select GRUB device"
 msgstr "Wybierz urządzenie z programem rozruchowym (GNU GRUB)"
 
-#: src/Console/AppConsole.vala:1011
+#: src/Console/AppConsole.vala:1012
 #, c-format
 msgid "[ENTER = Default (%s), a = Abort]"
 msgstr "[ENTER = Domyślnie (%s), a = Przerwij]"
 
-#: src/Console/AppConsole.vala:1043
+#: src/Console/AppConsole.vala:1044
 msgid "GRUB Device"
 msgstr "Urządzenie z programem rozruchowym GRUB"
 
-#: src/Console/AppConsole.vala:1048
+#: src/Console/AppConsole.vala:1049
 msgid "GRUB will NOT be reinstalled"
 msgstr "Program rozruchowy GRUB NIE zostanie zainstalowany ponownie"
 
-#: src/Console/AppConsole.vala:1069
+#: src/Console/AppConsole.vala:1070
 msgid "Continue with restore? (y/n): "
 msgstr "Kontynuować odtwarzanie? (y/n): "
-
-#: src/Core/Main.vala:186
-msgid "Running"
-msgstr "Uruchamianie"
-
-#: src/Core/Main.vala:214
-msgid "Session log file"
-msgstr "Plik dziennika sesji"
-
-#: src/Core/Main.vala:226
-msgid "Distribution"
-msgstr "Dystrybucja"
-
-#: src/Core/Main.vala:235
-msgid "Missing Dependencies"
-msgstr "Brakujące zależności"
-
-#: src/Core/Main.vala:249
-msgid "Another instance of Timeshift is creating a snapshot."
-msgstr "Inna instancja aplikacji Timeshift tworzy właśnie migawkę."
-
-#: src/Core/Main.vala:250
-msgid "Please wait a few minutes and try again."
-msgstr "Proszę odczekać klika minut i spróbować ponownie."
-
-#: src/Core/Main.vala:253
-msgid "Another instance of timeshift is currently running!"
-msgstr "Inna instancja aplikacji Timeshift jest już uruchomiona!"
-
-#: src/Core/Main.vala:254
-msgid "Please check if you have multiple windows open."
-msgstr "Proszę sprawdzić, czy masz otworzone wiele okien."
-
-#: src/Core/Main.vala:257
-msgid "Scheduled snapshot in progress..."
-msgstr "Tworzenie zaplanowanej migawki..."
-
-#: src/Core/Main.vala:347
-msgid "Commands listed below are not available on this system"
-msgstr "Polecenia wymienione poniżej nie są dostępne w tym systemie"
-
-#: src/Core/Main.vala:348
-msgid "Please install required packages and try running TimeShift again"
-msgstr "Proszę doinstalować wymagane pakiety i uruchomić ponownie TimeShift"
-
-#: src/Core/Main.vala:362
-msgid "** Uninstalled Timeshift BTRFS **"
-msgstr "** Odinstalowany Timeshift BTRFS **"
-
-#: src/Core/Main.vala:376
-msgid "The system partition has an unsupported subvolume layout."
-msgstr "Partycja systemowa ma nieobsługiwany układ podwolumenu."
-
-#: src/Core/Main.vala:378
-msgid "Application will exit."
-msgstr "Aplikacja zostanie zamknięta."
-
-#: src/Core/Main.vala:379
-msgid "Not Supported"
-msgstr "Niewspierane"
-
-#: src/Core/Main.vala:998
-msgid "Boot snapshots are enabled"
-msgstr "Migawki rozruchowe są włączone"
-
-#: src/Core/Main.vala:1001
-msgid "Last boot snapshot not found"
-msgstr "Nie znaleziono ostatniej migawki rozruchowej"
-
-#: src/Core/Main.vala:1005
-msgid "Last boot snapshot is older than system start time"
-msgstr "Ostatnia migawka rozruchowa jest starsza niż czas uruchamiania systemu"
-
-#: src/Core/Main.vala:1010
-#, c-format
-msgid "Last boot snapshot is %d hours old"
-msgstr "Ostatnia migawka rozruchowa ma %d godzin(a/y/-)"
-
-#: src/Core/Main.vala:1017
-msgid "Boot snapshot failed!"
-msgstr "Uruchomienie migawki nie powiodło się!"
-
-#: src/Core/Main.vala:1028
-msgid "Hourly snapshots are enabled"
-msgstr "Migawki godzinne są włączone"
-
-#: src/Core/Main.vala:1031
-msgid "Last hourly snapshot not found"
-msgstr "Nie znaleziono ostatniej migawki godzinnej"
-
-#: src/Core/Main.vala:1035
-msgid "Last hourly snapshot is more than 1 hour old"
-msgstr "Ostatnia godzinna migawka jest starsza niż jedna godzina"
-
-#: src/Core/Main.vala:1040
-#, c-format
-msgid "Last hourly snapshot is %d minutes old"
-msgstr "Ostatnia godzinna migawka ma %d minut(e/y-)"
-
-#: src/Core/Main.vala:1047
-msgid "Hourly snapshot failed!"
-msgstr "Błąd migawki godzinnej!"
-
-#: src/Core/Main.vala:1058
-msgid "Daily snapshots are enabled"
-msgstr "Włączono migawki dzienne"
-
-#: src/Core/Main.vala:1061
-msgid "Last daily snapshot not found"
-msgstr "Nie znaleziono ostatniej dziennej migawki"
-
-#: src/Core/Main.vala:1065
-msgid "Last daily snapshot is more than 1 day old"
-msgstr "Ostatnia dzienna migawka jest starsza niż jeden dzień"
-
-#: src/Core/Main.vala:1070
-#, c-format
-msgid "Last daily snapshot is %d hours old"
-msgstr "Ostatnia dzienna migawka jest starsza niż %d godzin(a/y/-)"
-
-#: src/Core/Main.vala:1077
-msgid "Daily snapshot failed!"
-msgstr "Błąd migawki dziennej!"
-
-#: src/Core/Main.vala:1088
-msgid "Weekly snapshots are enabled"
-msgstr "Migawki tygodniowe są włączone"
-
-#: src/Core/Main.vala:1091
-msgid "Last weekly snapshot not found"
-msgstr "Nie znaleziono ostatniej migawki tygodniowej"
-
-#: src/Core/Main.vala:1095
-msgid "Last weekly snapshot is more than 1 week old"
-msgstr "Ostatnia migawka tygodniowa jest starsza niż tydzień"
-
-#: src/Core/Main.vala:1100
-#, c-format
-msgid "Last weekly snapshot is %d days old"
-msgstr "Ostatnia migawka tygodniowa ma %d dzień/dni"
-
-#: src/Core/Main.vala:1107
-msgid "Weekly snapshot failed!"
-msgstr "Błąd migawki tygodniowej!"
-
-#: src/Core/Main.vala:1118
-msgid "Monthly snapshot are enabled"
-msgstr "Migawki miesięczne są włączone"
-
-#: src/Core/Main.vala:1121
-msgid "Last monthly snapshot not found"
-msgstr "Nie znaleziono ostatniej migawki miesięcznej"
-
-#: src/Core/Main.vala:1125
-msgid "Last monthly snapshot is more than 1 month old"
-msgstr "Ostatnia migawka miesięczna jest starsza niż miesiąc"
-
-#: src/Core/Main.vala:1130
-#, c-format
-msgid "Last monthly snapshot is %d days old"
-msgstr "Ostatnia migawka miesięczna ma %d dzień/dni"
-
-#: src/Core/Main.vala:1137
-msgid "Monthly snapshot failed!"
-msgstr "Błąd migawki miesięcznej!"
-
-#: src/Core/Main.vala:1147
-msgid "Nothing to do!"
-msgstr "Nie ma niczego do zrobienia!"
-
-#: src/Core/Main.vala:1203
-msgid "Unknown snapshot type"
-msgstr "Nieznany typ migawki"
-
-#: src/Core/Main.vala:1221 src/Core/Main.vala:1262
-msgid "Tagged snapshot"
-msgstr "Oznaczono migawkę"
-
-#: src/Core/Main.vala:1252
-msgid "Snapshot saved successfully"
-msgstr "Migawka zapisana pomyślnie"
-
-#: src/Core/Main.vala:1255
-msgid "Failed to create snapshot"
-msgstr "Nie udało się stworzyć migawki"
-
-#: src/Core/Main.vala:1279
-msgid "Estimating system size..."
-msgstr "Obliczanie rozmiaru systemu..."
-
-#: src/Core/Main.vala:1283
-msgid "Creating new snapshot..."
-msgstr "Tworzenie nowej migawki..."
-
-#: src/Core/Main.vala:1285 src/Core/Main.vala:1439 src/Core/Main.vala:1441
-msgid "Saving to device"
-msgstr "Zapisywanie na urządzeniu"
-
-#: src/Core/Main.vala:1285 src/Core/Main.vala:1439 src/Core/Main.vala:1441
-msgid "mounted at path"
-msgstr "zamontowano na ścieżce"
-
-#: src/Core/Main.vala:1344
-msgid "Linking from snapshot"
-msgstr "Łączenie z migawki"
-
-#: src/Core/Main.vala:1355
-msgid "Failed to save exclude list"
-msgstr "Nie udało się zapisać listy pominiętych (exclude list)"
-
-#: src/Core/Main.vala:1361 src/Core/Main.vala:2544 src/Core/Main.vala:2785
-msgid "Synching files with rsync..."
-msgstr "Synchronizacja plików za pomocą rsync..."
-
-#: src/Core/Main.vala:1393 src/Core/Snapshot.vala:500
-msgid "complete"
-msgstr "kompletne"
-
-#: src/Core/Main.vala:1404
-msgid "rsync returned an error"
-msgstr "rsync zwrócił błąd"
-
-#: src/Core/Main.vala:1405
-msgid "Failed to create new snapshot"
-msgstr "Nie udało się stworzyć nowej migawki"
-
-#: src/Core/Main.vala:1437
-msgid "Creating new backup..."
-msgstr "Tworzenie nowej kopii zapasowej..."
-
-#: src/Core/Main.vala:1494 src/Core/Main.vala:3862 src/Core/Main.vala:3946
-#: src/Core/Main.vala:4054 src/Core/Main.vala:4093 src/Core/Subvolume.vala:201
-msgid "btrfs returned an error"
-msgstr "btrfs zwrócił błąd"
-
-#: src/Core/Main.vala:1495
-msgid "Failed to create subvolume snapshot"
-msgstr "Nie udało się stworzyć migawki podwolumenu"
-
-#: src/Core/Main.vala:1499
-msgid "Created subvolume snapshot"
-msgstr "Utworzono migawkę podwolumenu"
-
-#: src/Core/Main.vala:1566
-msgid "Unknown value specified for option --tags"
-msgstr "Określono nieznaną wartość w opcji --oznaczenia (tags)"
-
-#: src/Core/Main.vala:1567
-msgid "Expected values: O, B, H, D, W, M"
-msgstr "Spodziewane wartości: O, B, H, D, W, M"
-
-#: src/Core/Main.vala:1617 src/Core/Main.vala:1628 src/Core/Main.vala:4197
-#: src/Core/Snapshot.vala:509 src/Core/SnapshotRepo.vala:975
-msgid "Removed"
-msgstr "Usunięto"
-
-#: src/Core/Main.vala:2012
-msgid "Backup device not specified!"
-msgstr "Nie wskazano urządzenia do kopii zapasowej!"
-
-#: src/Core/Main.vala:2017
-msgid "Backup Device"
-msgstr "Urządzenie kopii zapasowej"
-
-#: src/Core/Main.vala:2022
-msgid "Snapshot to restore not specified!"
-msgstr "Nie określono migawki do przywrócenia!"
-
-#: src/Core/Main.vala:2026
-msgid "Invalid Snapshot"
-msgstr "Nieprawidłowa migawka"
-
-#: src/Core/Main.vala:2027
-msgid "Selected snapshot is marked for deletion"
-msgstr "Wybrane migawka jest oznaczona do usunięcia"
-
-#: src/Core/Main.vala:2041 src/Core/Main.vala:2045
-msgid "BTRFS device is not mounted"
-msgstr "Urządzenie BTRFS nie jest zamontowane"
-
-#: src/Core/Main.vala:2051
-msgid "Target device not specified!"
-msgstr "Nie określono urządzenia docelowego!"
-
-#: src/Core/Main.vala:2057
-msgid "Target device is not mounted"
-msgstr "Urządzenie docelowe nie jest zamontowane"
-
-#: src/Core/Main.vala:2111
-msgid "Data will be modified on following devices:"
-msgstr "Dane zostaną zmodyfikowane na następujących urządzeniach:"
-
-#: src/Core/Main.vala:2113 src/Core/Main.vala:2146
-msgid "Mount"
-msgstr "Zamontuj"
-
-#: src/Core/Main.vala:2194
-msgid "Please save your work and close all applications."
-msgstr "Proszę zapisać swoją prace i zamknąć wszystkie aplikacje."
-
-#: src/Core/Main.vala:2195
-msgid "System will reboot after files are restored."
-msgstr "System zostanie uruchomiony ponownie po przywróceniu plików."
-
-#: src/Core/Main.vala:2211
-msgid ""
-"This software comes without absolutely NO warranty and the author takes no "
-"responsibility for any damage arising from the use of this program."
-msgstr ""
-"To oprogramowanie jest dostarczane bez absolutnie ŻADNEJ gwarancji a autor "
-"nie bierze na siebie odpowiedzialności za jakiekolwiek szkody powstałe w "
-"związku z używaniem tego programu."
-
-#: src/Core/Main.vala:2212
-msgid ""
-"If these terms are not acceptable to you, please do not proceed beyond this "
-"point!"
-msgstr "Jeśli te warunki są dla Ciebie nie do przyjęcia, nie idź dalej!"
-
-#: src/Core/Main.vala:2244
-msgid "Please do not interrupt the restore process!"
-msgstr "Proszę nie przerywać procesu przywracania!"
-
-#: src/Core/Main.vala:2245
-msgid "System will reboot after files are restored"
-msgstr "System zostanie uruchomiony ponownie po przywróceniu plików"
-
-#: src/Core/Main.vala:2307
-msgid "Re-installing GRUB2 bootloader..."
-msgstr "Reinstalacja programu rozruchowego GRUB2..."
-
-#: src/Core/Main.vala:2348
-msgid "Generating initramfs..."
-msgstr "Generowanie systemu plików w przestrzeni użytkownika (initramfs)..."
-
-#: src/Core/Main.vala:2365
-msgid "Updating GRUB menu..."
-msgstr "Aktualizowanie menu GRUB..."
-
-#: src/Core/Main.vala:2382
-msgid "Synching file systems..."
-msgstr "Synchronizacja systemu plików..."
-
-#: src/Core/Main.vala:2388
-msgid "Cleaning up..."
-msgstr "Czyszczenie..."
-
-#: src/Core/Main.vala:2400
-msgid "Rebooting system..."
-msgstr "Ponowne uruchamianie systemu..."
-
-#: src/Core/Main.vala:2499
-msgid "Building file list..."
-msgstr "Tworzenie listy plików..."
-
-#: src/Core/Main.vala:2541
-msgid "Comparing files with rsync..."
-msgstr "Porównywanie plików z użyciem RSYNC..."
-
-#: src/Core/Main.vala:2568
-msgid "Updating bootloader configuration..."
-msgstr "Aktualizowanie konfiguracji programu rozruchowego..."
-
-#: src/Core/Main.vala:2644
-msgid "Updated /etc/fstab on target device"
-msgstr "Zaktualizowano /etc/fstab na urządzeniu docelowym"
-
-#: src/Core/Main.vala:2724
-msgid "Updated /etc/crypttab on target device"
-msgstr "Zaktualizowano /etc/crypttab na urządzeniu docelowym"
-
-#: src/Core/Main.vala:2732
-msgid "Checking file systems for errors..."
-msgstr "Sprawdzanie systemu plików w poszukiwaniu błędów..."
-
-#: src/Core/Main.vala:2778
-msgid "Restoring snapshot..."
-msgstr "Przywracanie migawki..."
-
-#: src/Core/Main.vala:2782
-msgid "Cloning system..."
-msgstr "Klonowanie systemu..."
-
-#: src/Core/Main.vala:2809 src/Core/Main.vala:2851
-msgid "Restore completed"
-msgstr "Przywracanie ukończone"
-
-#: src/Core/Main.vala:2855
-msgid "Snapshot will become active after system is rebooted."
-msgstr "Migawka stanie się aktywna po ponownym uruchomieniu systemu."
-
-#: src/Core/Main.vala:2894
-msgid "Found existing pre-restore snapshot"
-msgstr "Znaleziono istniejącą migawkę przed-przywróceniem"
-
-#: src/Core/Main.vala:2903 src/Core/Main.vala:2907 src/Core/Subvolume.vala:154
-msgid "Deleted subvolume"
-msgstr "Usunięto podwolumen"
-
-#: src/Core/Main.vala:2924
-msgid "Creating pre-restore snapshot from system subvolumes..."
-msgstr "Tworzenie migawki przed przywróceniem podwolumenów systemowych..."
-
-#: src/Core/Main.vala:2946
-msgid "Could not find system subvolume"
-msgstr "Nie można odnaleźć podwolumenu systemowego"
-
-#: src/Core/Main.vala:2961
-msgid "Failed to move system subvolume to snapshot directory"
-msgstr "Nie udało się przenieść podwolumenu systemu do katalogu migawki"
-
-#: src/Core/Main.vala:2968
-msgid "Moved system subvolume to snapshot directory"
-msgstr "Przeniesiono podwolumen systemowy do katalogu migawki"
-
-#: src/Core/Main.vala:2974
-msgid "Could not find system subvolumes for creating pre-restore snapshot"
-msgstr ""
-"Nie można odnaleźć podwolumenu systemowego w celu utworzenia migawki przed-"
-"odtworzeniowej"
-
-#: src/Core/Main.vala:2996
-msgid "Created pre-restore snapshot"
-msgstr "Utworzono migawkę przed przywróceniem"
-
-#: src/Core/Main.vala:3076
-msgid "App config saved"
-msgstr "Zapisano konfigurację aplikacji"
-
-#: src/Core/Main.vala:3179
-msgid "App config loaded"
-msgstr "Wczytano konfigurację aplikacji"
-
-#: src/Core/Main.vala:3193 src/Core/Main.vala:3197
-msgid "Selected default snapshot type"
-msgstr "Wybierz domyślny typ migawki"
-
-#: src/Core/Main.vala:3214
-msgid ""
-"Option --snapshot-device should not be specified for creating snapshots in "
-"BTRFS mode"
-msgstr ""
-"Opcja --snapshot-device nie powinna być określona do tworzeniu migawek w "
-"trybie BTRFS"
-
-#: src/Core/Main.vala:3242
-msgid "Selected default snapshot device"
-msgstr "Wybrano domyślne urządzenie na migawkę"
-
-#: src/Core/Main.vala:3315
-msgid "Failed to get partition list."
-msgstr "Nie udało się uzyskać listy partycji."
-
-#: src/Core/Main.vala:3342
-msgid "/ is mapped to device"
-msgstr "/ jest zmapowany do urządzenia"
-
-#: src/Core/Main.vala:3353
-msgid "/home is mapped to device"
-msgstr "/home jest zmapowany do urządzenia"
-
-#: src/Core/Main.vala:3364
-msgid "/boot is mapped to device"
-msgstr "/boot jest zmapowany do urządzenia"
-
-#: src/Core/Main.vala:3375
-msgid "/boot/efi is mapped to device"
-msgstr "/boot/efi jest zmapowany do urządzenia"
-
-#: src/Core/Main.vala:3431
-msgid "The target partition has an unsupported subvolume layout."
-msgstr "Docelowa partycja ma nieobsługiwany układ podwolumenu."
-
-#: src/Core/Main.vala:3518
-msgid "Critical Error"
-msgstr "Błąd Krytyczny"
-
-#: src/Core/Main.vala:3519
-msgid "Failed to unmount device!"
-msgstr "Nie udało się odmontować urządzenia!"
-
-#: src/Core/Main.vala:3519
-msgid "Application will exit"
-msgstr "Aplikacja zostanie zamknięta"
-
-#: src/Core/Main.vala:3582
-#, c-format
-msgid "Removed mount directory: '%s'"
-msgstr "Usunięto zamontowany katalog: '%s'"
-
-#: src/Core/Main.vala:3733 src/Core/Main.vala:3739
-msgid "Failed to estimate system size"
-msgstr "Nie udało się obliczyć rozmiaru systemu plików"
-
-#: src/Core/Main.vala:3777
-msgid "Querying subvolume info..."
-msgstr "Zapytanie o informacje podwolumenu..."
-
-#: src/Core/Main.vala:3794
-msgid "Query completed"
-msgstr "Zapytanie ukończone"
-
-#: src/Core/Main.vala:3863
-msgid "Failed to query subvolume list"
-msgstr "Nie można wyświetlić listy podwolumenu"
-
-#: src/Core/Main.vala:3947
-msgid "Failed to query subvolume quota"
-msgstr "Nie można wyświetlić części podwolumenu (subvolume quota)"
-
-#: src/Core/Main.vala:4030 src/Core/Main.vala:4070
-msgid "Enabled subvolume quota support"
-msgstr "Włączono obsługę części podwolumenu (quota support)"
-
-#: src/Core/Main.vala:4055
-msgid "Failed to enable subvolume quota"
-msgstr "Błąd podczas włączania części podwolumenu"
-
-#: src/Core/Main.vala:4094
-msgid "Failed to rescan subvolume quota"
-msgstr "Nie udało się przeskanować ponownie części podwolumenu"
-
-#: src/Core/Main.vala:4201
-msgid "Older log files removed"
-msgstr "Usunięto starsze pliki dziennika"
-
-#: src/Core/Snapshot.vala:430
-msgid "Created control file"
-msgstr "Utworzono plik kontrolny"
-
-#: src/Core/Snapshot.vala:484
-msgid "Removing"
-msgstr "Usuwanie"
-
-#: src/Core/Snapshot.vala:521
-msgid "Removing snapshot"
-msgstr "Usuwanie migawki"
-
-#: src/Core/Snapshot.vala:530 src/Core/Snapshot.vala:542
-#: src/Core/Snapshot.vala:550
-msgid "Failed to remove snapshot"
-msgstr "Nie udało się usunąć migawki"
-
-#: src/Core/Snapshot.vala:555
-msgid "Removed snapshot"
-msgstr "Usunięto migawkę"
-
-#: src/Core/SnapshotRepo.vala:77 src/Core/SnapshotRepo.vala:147
-msgid "Free space"
-msgstr "Wolna przestrzeń"
-
-#: src/Core/SnapshotRepo.vala:146
-msgid "Selected snapshot device"
-msgstr "Wybrano urządzenie na migawkę"
-
-#: src/Core/SnapshotRepo.vala:470
-msgid "Snapshot device"
-msgstr "Urządzenie na migawkę"
-
-#: src/Core/SnapshotRepo.vala:474
-msgid "Snapshot location"
-msgstr "Lokalizacja migawki"
-
-#: src/Core/SnapshotRepo.vala:553
-msgid "Select the snapshot device"
-msgstr "Wybierz urządzenie na migawkę"
-
-#: src/Core/SnapshotRepo.vala:629 src/Core/SnapshotRepo.vala:656
-msgid "Not enough disk space"
-msgstr "Brak wystarczającej ilości miejsca na dysku"
-
-#: src/Core/SnapshotRepo.vala:632 src/Core/SnapshotRepo.vala:659
-msgid "Select another device or free up some space"
-msgstr "Wybierz inne urządzenie lub zwolnij trochę miejsca na dysku"
-
-#: src/Core/SnapshotRepo.vala:641
-#, c-format
-msgid "%d snapshots, %s free"
-msgstr "%d migawek, %s wolnego miejsca"
-
-#: src/Core/SnapshotRepo.vala:665
-msgid "No snapshots on this device"
-msgstr "Brak migawek na tym urzadzneiu"
-
-#: src/Core/SnapshotRepo.vala:667
-msgid "First snapshot requires:"
-msgstr "Pierwsza migawka wymaga:"
-
-#: src/Core/SnapshotRepo.vala:683
-msgid "Not Selected"
-msgstr "Nie zaznaczone"
-
-#: src/Core/SnapshotRepo.vala:689
-msgid "Mode"
-msgstr "Tryb"
-
-#: src/Core/SnapshotRepo.vala:711 src/Core/SnapshotRepo.vala:748
-msgid "Maximum backups exceeded for backup level"
-msgstr "Przekroczono maksymalną liczbę kopii zapasowych dla kopii zapasowej"
-
-#: src/Core/SnapshotRepo.vala:714 src/Core/SnapshotRepo.vala:752
-#: src/Core/SnapshotRepo.vala:831
-msgid "un-tagged"
-msgstr "nieoznaczono"
-
-#: src/Core/SnapshotRepo.vala:831 src/Core/SnapshotRepo.vala:850
-#: src/Core/SnapshotRepo.vala:868 src/Core/SnapshotRepo.vala:882
-msgid "Removing snapshots"
-msgstr "Usuwanie migawek"
-
-#: src/Core/SnapshotRepo.vala:850
-msgid "marked for deletion"
-msgstr "oznaczone do usunięcia"
-
-#: src/Core/SnapshotRepo.vala:868
-msgid "incomplete"
-msgstr "niekompletne"
-
-#: src/Core/SnapshotRepo.vala:882
-msgid "all"
-msgstr "wszystko"
-
-#: src/Core/SnapshotRepo.vala:969
-msgid "Failed to remove"
-msgstr "Nie udało się usunąć"
-
-#: src/Core/SnapshotRepo.vala:982
-msgid "Directory not found"
-msgstr "Nie znaleziono katalogu"
-
-#: src/Core/SnapshotRepo.vala:1023
-msgid "Failed to create symlinks"
-msgstr "Nie udało się stworzyć dowiązań symbolicznych (symlinks)"
-
-#: src/Core/SnapshotRepo.vala:1029
-msgid "Symlinks updated"
-msgstr "Odświeżono dowiązania symboliczne"
-
-#: src/Core/SnapshotRepo.vala:1049
-msgid "Failed to delete symlinks"
-msgstr "Nie udało się usunąć dowiązań symbolicznych (symlinks)"
-
-#: src/Core/Subvolume.vala:141
-msgid "Deleting subvolume"
-msgstr "Usuwanie podwolumenu"
-
-#: src/Core/Subvolume.vala:150
-msgid "Failed to delete snapshot subvolume"
-msgstr "Nie udało się usunąć migawki podwolumenu"
-
-#: src/Core/Subvolume.vala:158
-msgid "Destroying qgroup"
-msgstr "Niszczenie grup przydziałów (qgroup)"
-
-#: src/Core/Subvolume.vala:164
-msgid "Failed to destroy qgroup"
-msgstr "Nie udało się zniszczyć grup przydziałów"
-
-#: src/Core/Subvolume.vala:168
-msgid "Destroyed qgroup"
-msgstr "Zniszczono grupy przydziałów (qgroup)"
-
-#: src/Core/Subvolume.vala:184
-msgid "Not Found"
-msgstr "Nie znaleziono"
-
-#: src/Core/Subvolume.vala:189
-msgid "Subvolume exists at destination"
-msgstr "Podwolumen już istnieje w docelowym miejscu"
-
-#: src/Core/Subvolume.vala:202
-msgid "Failed to restore system subvolume"
-msgstr "Nie udało się przywrócić podwolumenu systemu"
-
-#: src/Core/Subvolume.vala:206
-msgid "Restored system subvolume"
-msgstr "Przywrócono podwolumen systemu"
 
 #: src/share/polkit-1/actions/in.teejeetech.pkexec.timeshift.policy:9
 #: src/share/polkit-1/actions/in.teejeetech.pkexec.timeshift.policy:21
@@ -2784,6 +2786,28 @@ msgstr ""
 #: src/share/polkit-1/actions/in.teejeetech.pkexec.timeshift.policy:22
 msgid "Run Timeshift as Administrator"
 msgstr "Uruchom Timeshift jako Administrator"
+
+#~ msgid "Become a Patron"
+#~ msgstr "Zostań patronem"
+
+#~ msgid "Feature Requests"
+#~ msgstr "Prośba o nową funkcję"
+
+#~ msgid ""
+#~ "This application was created for my own use in my spare time, and it's "
+#~ "not practical for me to work for free, on every change that is requested. "
+#~ "If you need new features or changes to the application, consider making a "
+#~ "donation to sponsor the work. If you are a developer, consider "
+#~ "contributing to the project, by submitting code changes for issues and "
+#~ "features in the issue tracker."
+#~ msgstr ""
+#~ "Ta aplikacja została stworzona w wolnym czasie na mój własny użytek, nie "
+#~ "mam w zwyczaju pracować za darmo z powodu każdej prośby o zmianę. Jeżeli "
+#~ "potrzebujesz nowych funkcji lub zmian w aplikacji, rozważ przekazanie "
+#~ "darowizny, tym samym za sponsoruj moją pracę. Jeżeli jesteś deweloperem, "
+#~ "rozważ dołączenie do projektu, aby dodawać zmiany w kodzie w przypadku "
+#~ "błędów oraz próśb o nowe funkcje zgłaszane w tropicielu błędów (issue "
+#~ "tracker)."
 
 #, fuzzy
 #~ msgid "Donation Plugins"

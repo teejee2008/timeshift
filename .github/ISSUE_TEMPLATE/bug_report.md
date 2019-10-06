@@ -7,7 +7,7 @@ assignees: ''
 
 ---
 
-Note: This application is provided "as-is" without support or warranty. If you need help with issues, consider [making a donation](https://www.paypal.com/cgi-bin/webscr?business=teejeetech@gmail.com&cmd=_xclick&currency_code=USD&item_name=Timeshift+Donation) to support the project..
+**Note:** This application is provided "as-is" without support or warranty. If you need help with issues, consider [making a donation](https://www.paypal.com/cgi-bin/webscr?business=teejeetech@gmail.com&cmd=_xclick&currency_code=USD&item_name=Timeshift+Donation) to support the project..
 
 **Describe the bug**
 A clear and concise description of what the bug is.

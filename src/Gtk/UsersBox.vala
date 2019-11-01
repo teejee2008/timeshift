@@ -133,7 +133,7 @@ class UsersBox : Gtk.Box{
 		// column -------------------------------------------------
 		
 		col = new TreeViewColumn();
-		col.title = _("Exclude All");
+		col.title = _("Exclude All Files");
 		treeview.append_column(col);
 		
 		// radio_exclude
@@ -191,7 +191,7 @@ class UsersBox : Gtk.Box{
 		// column -------------------------------------------------
 		
 		col = new TreeViewColumn();
-		col.title = _("Include Hidden");
+		col.title = _("Include Only Hidden Files");
 		treeview.append_column(col);
 		
 		// radio_include
@@ -263,7 +263,7 @@ class UsersBox : Gtk.Box{
 		// column --------------------------------------------
 		
 		col = new TreeViewColumn();
-		col.title = _("Include All");
+		col.title = _("Include All Files");
 		treeview.append_column(col);
 
 		// radio_exclude

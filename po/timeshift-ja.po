@@ -1,0 +1,2977 @@
+# English (United Kingdom) translation for linuxmint
+# Copyright (c) 2017 Rosetta Contributors and Canonical Ltd 2017
+# This file is distributed under the same license as the linuxmint package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2017.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: linuxmint\n"
+"Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
+"POT-Creation-Date: 2019-08-11 18:23+0530\n"
+"PO-Revision-Date: 2019-10-13 04:55+0900\n"
+"Last-Translator: @ kazuo210 <kazu.nito@gmail.com>\n"
+"Language-Team: \n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2018-02-03 14:28+0000\n"
+"X-Generator: Poedit 2.2.4\n"
+"X-Launchpad-Export-Date: 2017-11-23 10:47+0000\n"
+"X-Generator: Launchpad (build 18509)\n"
+"X-Poedit-Basepath: ../src\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: Console/AppConsole.vala:615
+#, c-format
+msgid ""
+"\n"
+"Press ENTER to continue..."
+msgstr ""
+"\n"
+"ENTER キーを押して続行します..."
+
+#: Core/SnapshotRepo.vala:641
+#, c-format
+msgid "%d snapshots, %s free"
+msgstr "%d スナップショット,  %s 未使用"
+
+#: Console/AppConsole.vala:916
+#, c-format
+msgid "'%s' will be on '%s'"
+msgstr "'%s' は '%s' になります"
+
+#: Console/AppConsole.vala:913
+#, c-format
+msgid "'%s' will be on root device"
+msgstr "'%s' ルートデバイスにあります"
+
+#: Gtk/BootOptionsBox.vala:118
+msgid "(Re)install GRUB2 on:"
+msgstr "GRUB2の（再）インストール："
+
+#: Core/Main.vala:365
+msgid "** Uninstalled Timeshift BTRFS **"
+msgstr "** Timeshift BTRFSをアンインストール**"
+
+#: Core/Main.vala:3364
+msgid "/ is mapped to device"
+msgstr "/ はデバイスにマッピングされます"
+
+#: Core/Main.vala:3386
+msgid "/boot is mapped to device"
+msgstr "/boot はデバイスにマップされます"
+
+#: Core/Main.vala:3397
+msgid "/boot/efi is mapped to device"
+msgstr "/boot/efi はデバイスにマップされます"
+
+#: Core/Main.vala:3375
+msgid "/home is mapped to device"
+msgstr "/home はデバイスにマップされます"
+
+#: Gtk/SnapshotListBox.vala:290
+msgid "<b>Comments</b> (double-click to edit)"
+msgstr "<b>コメント</b> (ダブルクリックして編集)"
+
+#: Gtk/ScheduleBox.vala:168
+msgid ""
+"A maintenance task runs once every hour and creates snapshots as needed."
+msgstr ""
+"メンテナンスタスクは1時間に1回実行され、必要に応じてスナップショットを作成し"
+"ます。"
+
+#: Console/AppConsole.vala:700 Console/AppConsole.vala:764
+#: Console/AppConsole.vala:896 Console/AppConsole.vala:991
+#: Console/AppConsole.vala:1036 Console/AppConsole.vala:1077
+#: Console/AppConsole.vala:1095
+msgid "Aborted."
+msgstr "中止。"
+
+#: Gtk/MainWindow.vala:386
+msgid "About"
+msgstr "Timeshift について"
+
+#: Gtk/RsyncLogBox.vala:472
+msgid "Action"
+msgstr "アクション"
+
+#: Gtk/ExcludeBox.vala:219
+msgid "Add"
+msgstr "追加"
+
+#: Gtk/ExcludeBox.vala:234
+msgid "Add Files"
+msgstr "ファイルを追加"
+
+#: Gtk/ExcludeBox.vala:240
+msgid "Add Folders"
+msgstr "フォルダを追加"
+
+#: Gtk/ExcludeBox.vala:219
+msgid "Add custom pattern"
+msgstr "カスタム パターンを追加"
+
+#: Gtk/ExcludeBox.vala:240
+msgid "Add directories"
+msgstr "ディレクトリを追加"
+
+#: Gtk/ExcludeBox.vala:234
+msgid "Add files"
+msgstr "ファイルを追加"
+
+#: Console/AppConsole.vala:361
+msgid "Add tags to snapshot (default: O)"
+msgstr "スナップショットにタグを追加する(デフォルト:O)"
+
+#: Utility/CronTab.vala:312
+msgid "Added cron task"
+msgstr "cron タスクを追加しました"
+
+#: Gtk/AppGtk.vala:131
+msgid "Admin Access Required"
+msgstr "管理者アクセスが必要です"
+
+#: Gtk/AppGtk.vala:126
+msgid "Admin access is required to backup and restore system files."
+msgstr ""
+"システムファイルをバックアップおよび復元するには、管理者アクセスが必要です。"
+
+#: Gtk/RsyncLogBox.vala:363
+msgid "All Files"
+msgstr "全てのファイル"
+
+#: Gtk/SnapshotBackendBox.vala:188
+msgid ""
+"All files are copied when first snapshot is created. Subsequent snapshots "
+"are incremental. Unchanged files will be hard-linked from the previous "
+"snapshot if available."
+msgstr ""
+"最初のスナップショットの作成されると、すべてのファイルがコピーされます。後続"
+"のスナップショットは増分です。変更されていないファイルは、使用可能な場合は、"
+"以前のスナップショットからハードリンクされます。"
+
+#: Gtk/ExcludeMessageWindow.vala:130
+msgid "All other files and folders are excluded."
+msgstr "他のすべてのファイルとフォルダーは除外されます。"
+
+#: Gtk/RestoreDeviceBox.vala:500
+msgid ""
+"An encrypted device is selected for root file system (/). The boot directory "
+"(/boot) must be mounted on a non-encrypted device for the system to boot "
+"successfully.\n"
+"\n"
+"Either select a non-encrypted device for boot directory or select a non-"
+"encrypted device for root filesystem."
+msgstr ""
+"暗号化されたデバイスがルートファイルシステム（/）に選択されます。 システムを"
+"正常に起動するには、暗号化されていないデバイスにブートディレクトリ（/ boot）"
+"をマウントする必要があります。\n"
+"\n"
+"ブートディレクトリに暗号化されていないデバイスを選択するか、ルートファイルシ"
+"ステムに暗号化されていないデバイスを選択します。"
+
+#: Core/Main.vala:252
+msgid "Another instance of Timeshift is creating a snapshot."
+msgstr "タイムシフトの別のインスタンスは、スナップショットの作成です。"
+
+#: Utility/AppLock.vala:49
+msgid "Another instance of this application is running"
+msgstr "このアプリケーションの別のインスタンスが実行中です"
+
+#: Core/Main.vala:256
+msgid "Another instance of timeshift is currently running!"
+msgstr "タイムシフトの別のインスタンスが現在実行中です！"
+
+#: Console/AppConsole.vala:377
+msgid "Answer YES to all confirmation prompts"
+msgstr "すべての確認プロンプトに［はい］と答えます"
+
+#: Core/Main.vala:3201
+msgid "App config loaded"
+msgstr "アプリの設定が読み込まれました"
+
+#: Core/Main.vala:3096
+msgid "App config saved"
+msgstr "アプリの設定を保存しました"
+
+#: Console/AppConsole.vala:102
+msgid "Application needs admin access."
+msgstr "アプリケーションには管理者アクセスが必要です。"
+
+#: Core/Main.vala:3541
+msgid "Application will exit"
+msgstr "アプリケーションは終了します"
+
+#: Core/Main.vala:381
+msgid "Application will exit."
+msgstr "アプリケーションは終了します。"
+
+#: Utility/Gtk/AboutWindow.vala:433
+msgid "Artists"
+msgstr "アーティスト"
+
+#: Utility/Gtk/AboutWindow.vala:417
+msgid "Authors"
+msgstr "作成者"
+
+#: Gtk/MainWindow.vala:356
+msgid "Available"
+msgstr "利用可能"
+
+#: Gtk/SnapshotBackendBox.vala:94
+msgid "BTRFS"
+msgstr "BTRFS"
+
+#: Gtk/SnapshotBackendBox.vala:165
+msgid "BTRFS Snapshots"
+msgstr "BTRFS スナップショット"
+
+#: Gtk/SnapshotBackendBox.vala:119
+msgid "BTRFS Tools Not Found"
+msgstr "BTRFS ツールが見つかりません"
+
+#: Core/Main.vala:2059 Core/Main.vala:2063
+msgid "BTRFS device is not mounted"
+msgstr "BTRFS デバイスがマウントされていません"
+
+#: Gtk/BackupDeviceBox.vala:98
+msgid ""
+"BTRFS snapshots are saved on system partition. Other partitions are not "
+"supported."
+msgstr ""
+"BTRFS スナップショットは、システムパーティションに保存されます。 他のパーティ"
+"ションはサポートされていません。"
+
+#: Gtk/FinishBox.vala:92
+msgid ""
+"BTRFS snapshots are saved on the same disk from which it is created. If the "
+"system disk fails, snapshots will be lost along with the system. Save "
+"snapshots to an external non-system disk in RSYNC mode to guard against disk "
+"failures."
+msgstr ""
+"BTRFS スナップショットは、作成元と同じディスクに保存されます。 システムディス"
+"クに障害が発生すると、システムとともにスナップショットが失われます。 スナップ"
+"ショットを RSYNC モードで外部のシステムディスク以外に保存し、ディスク障害から"
+"保護します。"
+
+#: Utility/Gtk/AboutWindow.vala:349 Utility/Gtk/AboutWindow.vala:381
+msgid "Back"
+msgstr "戻る"
+
+#: Gtk/SetupWizardWindow.vala:94
+msgid "Backend"
+msgstr "バックエンド"
+
+#: Gtk/BackupWindow.vala:92 Console/AppConsole.vala:357
+msgid "Backup"
+msgstr "バックアップ"
+
+#: Core/Main.vala:2035
+msgid "Backup Device"
+msgstr "バックアップ デバイス"
+
+#: Core/Main.vala:2030
+msgid "Backup device not specified!"
+msgstr "バックアップ デバイスが指定されていません!"
+
+#: Gtk/RestoreExcludeBox.vala:91
+msgid "Bittorrent Clients"
+msgstr "Bittorrent クライアント"
+
+#: Gtk/SnapshotListBox.vala:298 Gtk/ScheduleBox.vala:136
+msgid "Boot"
+msgstr "ブート"
+
+#: Gtk/RestoreDeviceBox.vala:499
+msgid "Boot device not selected"
+msgstr "ブートデバイスが選択されていません"
+
+#: Core/Main.vala:1030
+msgid "Boot snapshot failed!"
+msgstr "ブートスナップショットに失敗しました！"
+
+#: Gtk/ScheduleBox.vala:169
+msgid ""
+"Boot snapshots are created with a delay of 10 minutes after system startup."
+msgstr "ブートスナップショットは、システムの起動後10分の遅延で作成されます。"
+
+#: Core/Main.vala:1011
+msgid "Boot snapshots are enabled"
+msgstr "ブートスナップショットが有効になっています"
+
+#: Gtk/BootOptionsWindow.vala:49
+msgid "Bootloader Options"
+msgstr "ブートローダーオプション"
+
+#: Gtk/RestoreDeviceBox.vala:411
+msgid "Bootloader Options (Advanced)"
+msgstr "ブートローダーオプション(詳細)"
+
+#: Gtk/MainWindow.vala:171
+msgid "Browse"
+msgstr "ブラウズ"
+
+#: Gtk/SnapshotListBox.vala:336
+msgid "Browse Files"
+msgstr "ファイルを閲覧"
+
+#: Gtk/MainWindow.vala:172
+msgid "Browse selected snapshot"
+msgstr "選択したスナップショットを閲覧する"
+
+#: Core/Main.vala:2517
+msgid "Building file list..."
+msgstr "ファイルリストの作成しています..."
+
+#: Gtk/RestoreWindow.vala:209 Gtk/RestoreWindow.vala:218
+#: Gtk/BackupWindow.vala:181 Gtk/SetupWizardWindow.vala:220
+#: Gtk/DeleteWindow.vala:190 Utility/Gtk/CustomMessageDialog.vala:172
+#: Utility/GtkHelper.vala:122
+msgid "Cancel"
+msgstr "取消し"
+
+#: Gtk/RestoreWindow.vala:224
+msgid "Cancel restore?"
+msgstr "復元をキャンセルしますか？"
+
+#: Gtk/RestoreWindow.vala:226
+msgid ""
+"Cancelling the restore process will leave the target system in an "
+"inconsistent state. The system may fail to boot or you may run into various "
+"issues. After cancelling, you need to restore another snapshot, to bring the "
+"system to a consistent state. Click Yes to confirm."
+msgstr ""
+"復元プロセスをキャンセルすると、ターゲットシステムは一貫性のない状態のままに"
+"なります。 システムの起動に失敗したり、さまざまな問題が発生したりする場合があ"
+"ります。 キャンセルした後、システムを一貫した状態にするために、別のスナップ"
+"ショットを復元する必要があります。 [はい]をクリックして確認します。"
+
+#: Gtk/MainWindow.vala:556
+msgid "Cannot Delete Live Snapshot"
+msgstr "ライブスナップショットを削除できません"
+
+#: Gtk/RsyncLogBox.vala:380 Gtk/RsyncLogBox.vala:383 Gtk/RsyncLogBox.vala:567
+#: Gtk/RsyncLogBox.vala:588 Gtk/RestoreBox.vala:125 Gtk/BackupBox.vala:87
+msgid "Changed"
+msgstr "変更"
+
+#: Gtk/RestoreBox.vala:127 Gtk/BackupBox.vala:89
+msgid "Changed items:"
+msgstr "変更されたアイテム:"
+
+#: Gtk/RestoreWindow.vala:104
+msgid "Checking Restore Actions (Dry Run)"
+msgstr "復元アクションの確認（ドライラン）"
+
+#: Core/Main.vala:2750
+msgid "Checking file systems for errors..."
+msgstr "ファイルシステムのエラーをチェックしています..."
+
+#: Gtk/RsyncLogBox.vala:390 Gtk/RestoreBox.vala:130 Gtk/BackupBox.vala:92
+#, c-format
+msgid "Checksum"
+msgstr "チェックサム"
+
+#: Core/Main.vala:2406
+msgid "Cleaning up..."
+msgstr "クリーンアップしています..."
+
+#: Gtk/UsersBox.vala:92 Gtk/ExcludeBox.vala:84
+msgid "Click to edit. Drag and drop to re-order."
+msgstr "クリックして編集します。 ドラッグアンドドロップして並べ替えます。"
+
+#: Gtk/ExcludeBox.vala:59
+msgid "Click to edit. Drag-drop to re-order."
+msgstr "編集する時にクリックします。 ドラッグアンドドロップして並べ替えます。"
+
+#: Gtk/RestoreWindow.vala:69
+msgid "Clone System"
+msgstr "クローンシステム"
+
+#: Console/AppConsole.vala:365
+msgid "Clone current system"
+msgstr "現在のシステムのクローンを作成"
+
+#: Gtk/RestoreFinishBox.vala:68
+msgid "Cloning"
+msgstr "クローニング"
+
+#: Core/Main.vala:2800
+msgid "Cloning system..."
+msgstr "クローニングシステム..."
+
+#: Gtk/RsyncLogBox.vala:266 Gtk/RestoreWindow.vala:495
+#: Gtk/BootOptionsWindow.vala:106 Gtk/BackupWindow.vala:172
+#: Gtk/DeleteWindow.vala:173 Utility/Gtk/AboutWindow.vala:326
+#: Utility/Gtk/DonationWindow.vala:107
+msgid "Close"
+msgstr "閉じる"
+
+#: Gtk/FinishBox.vala:101 Gtk/BackupFinishBox.vala:70
+#: Gtk/RestoreFinishBox.vala:106 Gtk/DeleteFinishBox.vala:71
+msgid "Close window to exit"
+msgstr "ウィンドウを閉じて終了します"
+
+#: Core/Main.vala:350
+msgid "Commands listed below are not available on this system"
+msgstr "以下にリストされているコマンドは、このシステムでは使用できません"
+
+#: Gtk/SnapshotListBox.vala:224
+msgid "Comments"
+msgstr "コメント"
+
+#: Gtk/RestoreBox.vala:74 Gtk/RestoreBox.vala:187 Core/Main.vala:2793
+msgid "Comparing Files (Dry Run)..."
+msgstr "ファイルの比較する（ドライラン）..."
+
+#: Core/Main.vala:2559
+msgid "Comparing files with rsync..."
+msgstr "rsync でファイルを同期しています..."
+
+#: Gtk/BackupFinishBox.vala:50 Gtk/RestoreFinishBox.vala:50
+#: Gtk/RestoreFinishBox.vala:75 Gtk/DeleteFinishBox.vala:50
+msgid "Completed"
+msgstr "完了しました"
+
+#: Gtk/RestoreFinishBox.vala:78
+msgid "Completed With Errors"
+msgstr "エラーありで完了しました"
+
+#: Gtk/RsyncLogBox.vala:87 Gtk/RestoreWindow.vala:109
+msgid "Confirm Actions"
+msgstr "アクションを確認する"
+
+#: Console/AppConsole.vala:1070
+#, c-format
+msgid "Continue with restore? (y/n): "
+msgstr "復元を続行しますか？ (y /n): "
+
+#: Utility/Gtk/AboutWindow.vala:425
+msgid "Contributors"
+msgstr "寄与"
+
+#: Console/AppConsole.vala:836 Console/AppConsole.vala:967
+msgid "Could not find device"
+msgstr "デバイスが見つかりませんでした"
+
+#: Utility/Device.vala:1307
+#, c-format
+msgid "Could not find file"
+msgstr "ファイルが見つかりませんでした"
+
+#: Console/AppConsole.vala:733
+msgid "Could not find snapshot"
+msgstr "スナップショットが見つかりませんでした"
+
+#: Core/Main.vala:2964
+msgid "Could not find system subvolume"
+msgstr "システム サブボリュームが見つかりませんでした"
+
+#: Core/Main.vala:2992
+msgid "Could not find system subvolumes for creating pre-restore snapshot"
+msgstr ""
+"復元前スナップショットを作成するためのシステム サブボリュームが見つかりません"
+"でした"
+
+#: Gtk/RsyncLogBox.vala:366 Gtk/RsyncLogBox.vala:571 Gtk/MainWindow.vala:141
+#, c-format
+msgid "Create"
+msgstr "新規作成"
+
+#: Gtk/BackupWindow.vala:62
+msgid "Create Snapshot"
+msgstr "スナップショットの作成"
+
+#: Gtk/ScheduleBox.vala:136
+msgid "Create one per boot"
+msgstr "ブートごとに 1 つ作成する"
+
+#: Gtk/ScheduleBox.vala:100
+msgid "Create one per day"
+msgstr "1 日に 1 つ作成する"
+
+#: Gtk/ScheduleBox.vala:118
+msgid "Create one per hour"
+msgstr "1 時間に 1 つ作成する"
+
+#: Gtk/ScheduleBox.vala:64
+msgid "Create one per month"
+msgstr "月に 1 つ作成する"
+
+#: Gtk/ScheduleBox.vala:82
+msgid "Create one per week"
+msgstr "週に 1 つ作成する"
+
+#: Console/AppConsole.vala:359
+msgid "Create snapshot (even if not scheduled)"
+msgstr "スナップショットを作成します（スケジュールされていなくても）"
+
+#: Console/AppConsole.vala:358
+msgid "Create snapshot if scheduled"
+msgstr "スケジュールされている場合はスナップショットを作成する"
+
+#: Gtk/MainWindow.vala:142
+msgid "Create snapshot of current system"
+msgstr "現在のシステムのスナップショットを作成する"
+
+#: Gtk/MainWindow.vala:1058
+msgid ""
+"Create snapshots manually or enable scheduled snapshots to protect your "
+"system"
+msgstr ""
+"手動でスナップショットを作成するか、スケジュールされたスナップショットを有効"
+"にしてシステムを保護します"
+
+#: Gtk/SnapshotBackendBox.vala:95
+msgid "Create snapshots using BTRFS"
+msgstr "BTRFSを使用してスナップショットを作成する"
+
+#: Gtk/SnapshotBackendBox.vala:78
+msgid "Create snapshots using RSYNC tool and hard-links"
+msgstr "RSYNC ツールとハードリンクを使用してスナップショットを作成します"
+
+#: Gtk/RsyncLogBox.vala:366 Gtk/RsyncLogBox.vala:571 Gtk/RsyncLogBox.vala:592
+#: Gtk/RestoreBox.vala:123 Gtk/BackupBox.vala:85
+#, c-format
+msgid "Created"
+msgstr "作成されました"
+
+#: Core/Snapshot.vala:430
+msgid "Created control file"
+msgstr "作成された制御ファイル"
+
+#: Utility/TeeJee.FileSystem.vala:351
+msgid "Created directory"
+msgstr "ディレクトリを作成しました"
+
+#: Core/Main.vala:3014
+msgid "Created pre-restore snapshot"
+msgstr "復元前のスナップショットを作成しました"
+
+#: Core/Main.vala:1517
+msgid "Created subvolume snapshot"
+msgstr "サブボリュームスナップショットを作成しました"
+
+#: Gtk/BackupBox.vala:71
+msgid "Creating Snapshot..."
+msgstr "スナップショットを作成しています..."
+
+#: Core/Main.vala:1455
+msgid "Creating new backup..."
+msgstr "新しいバックアップを作成しています..."
+
+#: Core/Main.vala:1301
+msgid "Creating new snapshot..."
+msgstr "新しいスナップショットを作成しています..."
+
+#: Core/Main.vala:2942
+msgid "Creating pre-restore snapshot from system subvolumes..."
+msgstr ""
+"システムのサブボリュームから復元前のスナップショットを作成しています..."
+
+#: Utility/Gtk/AboutWindow.vala:321 Utility/Gtk/AboutWindow.vala:387
+msgid "Credits"
+msgstr "クレジット"
+
+#: Core/Main.vala:3540
+msgid "Critical Error"
+msgstr "重大なエラー"
+
+#: Utility/CronTab.vala:136
+msgid "Cron job added"
+msgstr "Cron ジョブが追加されました"
+
+#: Utility/CronTab.vala:217
+msgid "Cron job removed"
+msgstr "Cron ジョブが削除されました"
+
+#: Utility/CronTab.vala:304
+msgid "Cron task exists"
+msgstr "Cron タスクが存在します"
+
+#: Gtk/MiscBox.vala:98
+msgid "Custom"
+msgstr "カスタム"
+
+#: Gtk/SnapshotListBox.vala:300 Gtk/ScheduleBox.vala:100
+msgid "Daily"
+msgstr "日次"
+
+#: Core/Main.vala:1092
+msgid "Daily snapshot failed!"
+msgstr "日次のスナップショットに失敗しました！"
+
+#: Core/Main.vala:1073
+msgid "Daily snapshots are enabled"
+msgstr "日次のスナップショットが有効になっています"
+
+#: Core/Main.vala:2129
+msgid "Data will be modified on following devices:"
+msgstr "データは次のデバイスで変更されます:"
+
+#: Gtk/MiscBox.vala:71
+msgid "Date Format"
+msgstr "日付形式"
+
+#: Gtk/RsyncLogBox.vala:370 Gtk/RsyncLogBox.vala:575 Gtk/MainWindow.vala:161
+#: Gtk/SnapshotListBox.vala:322 Gtk/DeleteWindow.vala:98
+#: Console/AppConsole.vala:371
+#, c-format
+msgid "Delete"
+msgstr "削除"
+
+#: Gtk/DeleteWindow.vala:62
+msgid "Delete Snapshots"
+msgstr "スナップショットの削除"
+
+#: Console/AppConsole.vala:373
+msgid "Delete all snapshots"
+msgstr "すべてのスナップショットを削除"
+
+#: Gtk/MainWindow.vala:162
+msgid "Delete selected snapshot"
+msgstr "選択したスナップショットを削除"
+
+#: Console/AppConsole.vala:372
+msgid "Delete snapshot"
+msgstr "スナップショットを削除"
+
+#: Gtk/RsyncLogBox.vala:370 Gtk/RsyncLogBox.vala:575 Gtk/RsyncLogBox.vala:596
+#: Gtk/RestoreBox.vala:124 Gtk/BackupBox.vala:86
+#, c-format
+msgid "Deleted"
+msgstr "削除されました"
+
+#: Utility/TeeJee.FileSystem.vala:381
+msgid "Deleted directory"
+msgstr "削除されたディレクトリ"
+
+#: Core/Main.vala:2921 Core/Main.vala:2925 Core/Subvolume.vala:167
+#, c-format
+msgid "Deleted subvolume"
+msgstr "削除されたサブボリューム"
+
+#: Gtk/DeleteBox.vala:58
+msgid "Deleting Snapshots..."
+msgstr "スナップショットを削除しています..."
+
+#: Core/Subvolume.vala:141
+#, c-format
+msgid "Deleting subvolume"
+msgstr "サブボリュームの削除"
+
+#: Gtk/RestoreExcludeBox.vala:105
+msgid "Deluge, Transmission"
+msgstr "Deluge, Transmission"
+
+#: Console/AppConsole.vala:428 Console/AppConsole.vala:544
+msgid "Description"
+msgstr "説明"
+
+#: Core/Subvolume.vala:181
+#, c-format
+msgid "Destroyed qgroup"
+msgstr "qgroup 破棄されました"
+
+#: Core/Subvolume.vala:171
+#, c-format
+msgid "Destroying qgroup"
+msgstr "qgroup の破棄"
+
+#: Gtk/RestoreDeviceBox.vala:97 Console/AppConsole.vala:456
+#: Console/AppConsole.vala:495 Console/AppConsole.vala:543
+#: Utility/Device.vala:1930 Utility/Device.vala:1940 Core/SnapshotRepo.vala:76
+#: Core/SnapshotRepo.vala:683 Core/SnapshotRepo.vala:686 Core/Main.vala:2132
+#: Core/Main.vala:2164
+#, c-format
+msgid "Device"
+msgstr "デバイス"
+
+#: Utility/Device.vala:1389
+msgid "Device is unlocked"
+msgstr "デバイスのロックが解除されています"
+
+#: Utility/Device.vala:1284 Utility/Device.vala:1346
+msgid "Device name is empty!"
+msgstr "デバイス名が空です！"
+
+#: Console/AppConsole.vala:665 Core/SnapshotRepo.vala:560 Core/Main.vala:3254
+msgid "Device not found"
+msgstr "デバイスが見つかりません"
+
+#: Gtk/BackupDeviceBox.vala:97
+#, c-format
+msgid "Devices displayed above have BTRFS file systems."
+msgstr "上記に表示されるデバイスには、BTRFS ファイル システムがあります。"
+
+#: Gtk/BackupDeviceBox.vala:104
+#, c-format
+msgid "Devices displayed above have Linux file systems."
+msgstr "上記のデバイスには Linux ファイルシステムがあります。"
+
+#: Gtk/RestoreDeviceBox.vala:84
+msgid "Devices from which snapshot was created are pre-selected."
+msgstr "スナップショットが作成されたデバイスは事前に選択されています。"
+
+#: Console/AppConsole.vala:327
+msgid "Devices with Linux file systems"
+msgstr "Linux ファイルシステムを搭載したデバイス"
+
+#: Gtk/BackupDeviceBox.vala:105
+msgid "Devices with Windows file systems are not supported (NTFS, FAT, etc)."
+msgstr ""
+"Windows ファイルシステムを搭載したデバイスはサポートされていません（NTFS、FAT"
+"など）。"
+
+#: Utility/TeeJee.FileSystem.vala:518
+msgid "Dir not found"
+msgstr "ディレクトリが見つかりません"
+
+#: Core/SnapshotRepo.vala:998
+msgid "Directory not found"
+msgstr "ディレクトリが見つかりません"
+
+#: Gtk/RestoreSummaryBox.vala:64 Core/Main.vala:2224
+msgid "Disclaimer"
+msgstr "免責事項"
+
+#: Gtk/BackupDeviceBox.vala:127
+msgid "Disk"
+msgstr "ディスク"
+
+#: Core/Main.vala:229
+msgid "Distribution"
+msgstr "配布"
+
+#: Utility/Gtk/AboutWindow.vala:449
+msgid "Documentation"
+msgstr "ドキュメンテーション"
+
+#: Gtk/MainWindow.vala:209 Gtk/MainWindow.vala:210
+#: Utility/Gtk/DonationWindow.vala:43 Utility/Gtk/DonationWindow.vala:76
+msgid "Donate"
+msgstr "寄付する"
+
+#: Utility/Gtk/AboutWindow.vala:465
+msgid "Donations"
+msgstr "寄付"
+
+#: Gtk/UsersBox.vala:357
+msgid "Enable BTRFS qgroups (recommended)"
+msgstr "BTRFS qgroup を有効にする（推奨）"
+
+#: Gtk/MainWindow.vala:1052
+msgid "Enable scheduled snapshots to protect your system"
+msgstr "スケジュールされたスナップショットを有効にしてシステムを保護します"
+
+#: Core/Main.vala:4052 Core/Main.vala:4092
+msgid "Enabled subvolume quota support"
+msgstr "サブボリュームクォータのサポートを有効化"
+
+#: Utility/Device.vala:1453
+msgid "Encrypted Device"
+msgstr "暗号化されたデバイス"
+
+#: Gtk/UsersBox.vala:236
+msgid "Encrypted Home Directory"
+msgstr "暗号化されたホームディレクトリ"
+
+#: Console/AppConsole.vala:886
+#, c-format
+msgid "Enter device name or number"
+msgstr "デバイス名または番号を入力してください"
+
+#: Console/AppConsole.vala:684 Console/AppConsole.vala:1015
+#, c-format
+msgid "Enter device name or number (a=Abort)"
+msgstr "デバイス名または番号を入力します（a =中止）"
+
+#: Utility/Device.vala:1454
+#, c-format
+msgid "Enter passphrase to unlock '%s'"
+msgstr "パスフレーズを入力して '%s' のロックを解除します"
+
+#: Utility/GtkHelper.vala:805
+msgid "Enter path or browse for directory"
+msgstr "パスを入力するか、ディレクトリを参照します"
+
+#: Console/AppConsole.vala:756
+#, c-format
+msgid "Enter snapshot number (a=Abort, p=Previous, n=Next)"
+msgstr "スナップショット番号を入力します（a =中止、p =前へ、n =次へ）"
+
+#: Gtk/ExcludeBox.vala:225
+msgid "Enter the pattern to exclude (Ex: *.mp3, *.bak)"
+msgstr "除外するパターンを入力します (例: *.mp3, *.bak)"
+
+#: Gtk/RestoreDeviceBox.vala:534 Utility/GtkHelper.vala:18
+msgid "Error"
+msgstr "エラー"
+
+#: Gtk/RestoreWindow.vala:475
+msgid "Error running Rsync"
+msgstr "Rsyncの実行エラー"
+
+#: Gtk/BackupWindow.vala:82 Gtk/SetupWizardWindow.vala:99
+msgid "Estimate"
+msgstr "見積もり"
+
+#: Gtk/EstimateBox.vala:56
+msgid "Estimating System Size..."
+msgstr "システムサイズを見積もっています..."
+
+#: Core/Main.vala:1297
+msgid "Estimating system size..."
+msgstr "システムサイズを見積もっています..."
+
+#: Console/AppConsole.vala:387
+msgid "Examples"
+msgstr "例"
+
+#: Gtk/UsersBox.vala:136
+msgid "Exclude All"
+msgstr "すべて除外"
+
+#: Gtk/ExcludeAppsBox.vala:51 Gtk/RestoreExcludeBox.vala:55
+msgid "Exclude Application Settings"
+msgstr "アプリケーション設定を除外する"
+
+#: Gtk/RestoreWindow.vala:99
+msgid "Exclude Apps"
+msgstr "アプリを除外する"
+
+#: Gtk/ExcludeMessageWindow.vala:70
+msgid "Exclude List"
+msgstr "除外リスト"
+
+#: Gtk/ExcludeListSummaryWindow.vala:49
+msgid "Exclude List Summary"
+msgstr "除外リストの概要"
+
+#: Gtk/ExcludeBox.vala:224
+msgid "Exclude Pattern"
+msgstr "パターンを除外"
+
+#: Gtk/ExcludeMessageWindow.vala:56
+msgid "Excluded Directories"
+msgstr "除外されたディレクトリ"
+
+#: Core/Main.vala:1585
+msgid "Expected values: O, B, H, D, W, M"
+msgstr "期待値: O, B, H, D, W, M"
+
+#: Utility/CronTab.vala:132
+msgid "Failed to add cron job"
+msgstr "cron ジョブを追加できませんでした"
+
+#: Utility/TeeJee.FileSystem.vala:191
+msgid "Failed to copy file"
+msgstr "ファイルをコピーできませんでした"
+
+#: Utility/TeeJee.FileSystem.vala:354 Utility/TeeJee.FileSystem.vala:362
+msgid "Failed to create directory"
+msgstr "ディレクトリを作成できませんでした"
+
+#: Core/Main.vala:1423
+msgid "Failed to create new snapshot"
+msgstr "新しいスナップショットを作成できませんでした"
+
+#: Core/Main.vala:1273
+msgid "Failed to create snapshot"
+msgstr "スナップショットを作成できませんでした"
+
+#: Core/Main.vala:1513
+msgid "Failed to create subvolume snapshot"
+msgstr "サブボリュームスナップショットを作成できませんでした"
+
+#: Core/SnapshotRepo.vala:1039
+msgid "Failed to create symlinks"
+msgstr "シンボリックリンクを作成できませんでした"
+
+#: Utility/TeeJee.FileSystem.vala:384
+msgid "Failed to delete directory"
+msgstr "ディレクトリを削除できませんでした"
+
+#: Utility/TeeJee.FileSystem.vala:100
+msgid "Failed to delete file"
+msgstr "ファイルを削除できませんでした"
+
+#: Core/Subvolume.vala:153
+msgid "Failed to delete snapshot nested subvolume"
+msgstr "スナップショットのネストされたサブボリュームを削除できませんでした"
+
+#: Core/Subvolume.vala:163
+msgid "Failed to delete snapshot subvolume"
+msgstr "スナップショットサブボリュームを削除できませんでした"
+
+#: Core/SnapshotRepo.vala:1065
+msgid "Failed to delete symlinks"
+msgstr "シンボリックリンクを削除できませんでした"
+
+#: Core/Subvolume.vala:177
+msgid "Failed to destroy qgroup"
+msgstr "qgroup を破棄できませんでした"
+
+#: Core/Main.vala:4077
+msgid "Failed to enable subvolume quota"
+msgstr "サブボリュームクォータを有効にできませんでした"
+
+#: Core/Main.vala:3755 Core/Main.vala:3761
+msgid "Failed to estimate system size"
+msgstr "システムサイズを推定できませんでした"
+
+#: Utility/CronTab.vala:257
+msgid "Failed to export crontab file"
+msgstr "crontab ファイルをエクスポートできませんでした"
+
+#: Console/AppConsole.vala:699 Console/AppConsole.vala:763
+#: Console/AppConsole.vala:895 Console/AppConsole.vala:990
+#: Console/AppConsole.vala:1035 Console/AppConsole.vala:1076
+msgid "Failed to get input from user in 3 attempts"
+msgstr "3回の試行でユーザーからの入力を取得できませんでした"
+
+#: Utility/Device.vala:723
+msgid "Failed to get partition list"
+msgstr "パーティションリストの取得ができませんでした"
+
+#: Core/Main.vala:3337
+msgid "Failed to get partition list."
+msgstr "パーティションリストの取得ができませんでした。"
+
+#: Utility/CronTab.vala:240
+msgid "Failed to install crontab file"
+msgstr "crontab ファイルのインストールできませんでした"
+
+#: Gtk/RestoreDeviceBox.vala:535
+msgid "Failed to mount devices"
+msgstr "デバイスのマウントできませんでした"
+
+#: Utility/TeeJee.FileSystem.vala:210
+msgid "Failed to move file"
+msgstr "ファイルを移動できませんでした"
+
+#: Core/Main.vala:2979
+msgid "Failed to move system subvolume to snapshot directory"
+msgstr ""
+"システムサブボリュームをスナップショットディレクトリに移動できませんでした"
+
+#: Core/Main.vala:3885
+msgid "Failed to query subvolume list"
+msgstr "サブボリュームリストの照会ができませんでした"
+
+#: Core/Main.vala:3969
+msgid "Failed to query subvolume quota"
+msgstr "サブボリュームクォータの照会ができませんでした"
+
+#: Utility/CronTab.vala:50
+msgid "Failed to read cron tab"
+msgstr "crontab を読み込めませんでした"
+
+#: Utility/TeeJee.FileSystem.vala:148
+msgid "Failed to read file"
+msgstr "ファイルの読み込みができませんでした"
+
+#: Core/SnapshotRepo.vala:985
+msgid "Failed to remove"
+msgstr "削除できませんでした"
+
+#: Utility/CronTab.vala:213
+msgid "Failed to remove cron job"
+msgstr "cron ジョブを削除できませんでした"
+
+#: Core/Snapshot.vala:530 Core/Snapshot.vala:542 Core/Snapshot.vala:550
+msgid "Failed to remove snapshot"
+msgstr "スナップショットを削除できませんでした"
+
+#: Core/Main.vala:4116
+msgid "Failed to rescan subvolume quota"
+msgstr "サブボリュームクォータの再スキャンができませんでした"
+
+#: Core/Subvolume.vala:215
+msgid "Failed to restore system subvolume"
+msgstr "システムサブボリュームの復元ができませんでした"
+
+#: Core/Main.vala:1373
+msgid "Failed to save exclude list"
+msgstr "除外リストを保存できませんでした"
+
+#: Utility/Device.vala:1380 Utility/Device.vala:1434 Utility/Device.vala:1459
+#: Utility/Device.vala:1480 Utility/Device.vala:1500
+msgid "Failed to unlock device"
+msgstr "デバイスのロック解除ができませんでした"
+
+#: Utility/Device.vala:1731
+msgid "Failed to unmount"
+msgstr "マウント解除ができませんでした"
+
+#: Core/Main.vala:3541
+msgid "Failed to unmount device!"
+msgstr "デバイスのマウント解除ができませんでした！"
+
+#: Utility/TeeJee.FileSystem.vala:175
+msgid "Failed to write file"
+msgstr "ファイルをディスクに書き込めませんでした"
+
+#: Gtk/RsyncLogBox.vala:122
+msgid "File (snapshot)"
+msgstr "ファイル (スナップショット)"
+
+#: Gtk/RsyncLogBox.vala:119
+msgid "File (system)"
+msgstr "ファイル (システム)"
+
+#: Gtk/ExcludeMessageWindow.vala:98
+msgid "File Pattern"
+msgstr "ファイルパターン"
+
+#: Gtk/BackupBox.vala:80
+msgid "File and directory counts:"
+msgstr "ファイルとディレクトリの数："
+
+#: Utility/TeeJee.FileSystem.vala:671 Utility/TeeJee.FileSystem.vala:720
+msgid "File is missing"
+msgstr "ファイルがありません"
+
+#: Utility/TeeJee.FileSystem.vala:205 Utility/TeeJee.FileSystem.vala:547
+#: Utility/RsyncTask.vala:298 Utility/CronTab.vala:225
+msgid "File not found"
+msgstr "ファイルが見つかりません"
+
+#: Gtk/ExcludeListSummaryWindow.vala:62
+msgid ""
+"Files &amp; directories matching the patterns below will be excluded. "
+"Patterns starting with a + will include the item instead of excluding."
+msgstr ""
+"以下のパターンに一致するファイルとディレクトリは除外されます。 +で始まるパ"
+"ターンには、除外する代わりにアイテムが含まれます。"
+
+#: Gtk/SnapshotBackendBox.vala:192
+msgid "Files and directories can be excluded to save disk space."
+msgstr "ファイルとディレクトリを除外して、ディスク容量を節約できます。"
+
+#: Gtk/RestoreBox.vala:119
+msgid "Files and directory counts:"
+msgstr "ファイルとディレクトリの数："
+
+#: Gtk/ExcludeMessageWindow.vala:76
+msgid "Files matching the following patterns will be excluded"
+msgstr "次のパターンに一致するファイルは除外されます"
+
+#: Utility/Device.vala:1948
+#, c-format
+msgid "Filesystem"
+msgstr "ファイルシステム"
+
+#: Gtk/RsyncLogBox.vala:302
+msgid "Filter by name or path"
+msgstr "名前またはパスでフィルター処理する"
+
+#: Gtk/SettingsWindow.vala:103
+msgid "Filters"
+msgstr "フィルター"
+
+#: Gtk/BackupWindow.vala:97 Gtk/SetupWizardWindow.vala:211
+#: Gtk/DeleteWindow.vala:103
+msgid "Finish"
+msgstr "完了"
+
+#: Gtk/RestoreWindow.vala:130 Gtk/SetupWizardWindow.vala:120
+msgid "Finished"
+msgstr "完了しました"
+
+#: Gtk/RestoreExcludeBox.vala:78
+msgid "Firefox, Chromium, Chrome, Opera, Epiphany, Midori"
+msgstr "Firefox, Chromium, Chrome, Opera, Epiphany, Midori"
+
+#: Core/SnapshotRepo.vala:667
+msgid "First snapshot requires:"
+msgstr "最初のスナップショットには以下が必要です:"
+
+#: Core/Main.vala:2912
+msgid "Found existing pre-restore snapshot"
+msgstr "既存の復元前のスナップショットが見つかりました"
+
+#: Gtk/BackupDeviceBox.vala:215
+msgid "Free"
+msgstr "未使用"
+
+#: Core/SnapshotRepo.vala:77 Core/SnapshotRepo.vala:147
+msgid "Free space"
+msgstr "空き容量"
+
+#: Console/AppConsole.vala:1044
+msgid "GRUB Device"
+msgstr "GRUB デバイス"
+
+#: Gtk/RestoreDeviceBox.vala:511
+msgid "GRUB device not selected"
+msgstr "GRUB デバイスが選択されていません"
+
+#: Console/AppConsole.vala:1049
+msgid "GRUB will NOT be reinstalled"
+msgstr "GRUB は再インストールされません"
+
+#: Core/Main.vala:2366
+msgid "Generating initramfs..."
+msgstr "initramfs を生成しています..."
+
+#: Console/AppConsole.vala:375
+msgid "Global"
+msgstr "一般"
+
+#: Gtk/RsyncLogBox.vala:400 Gtk/RestoreBox.vala:135 Gtk/BackupBox.vala:97
+#, c-format
+msgid "Group"
+msgstr "グループ"
+
+#: Gtk/SnapshotBackendBox.vala:132
+msgid "Help"
+msgstr "ヘルプ"
+
+#: Gtk/ExcludeMessageWindow.vala:129
+msgid ""
+"Hidden files and folders are included by default since they contain user-"
+"specific configuration files."
+msgstr ""
+"隠しファイルとフォルダにはユーザー固有の構成ファイルが含まれているため、デ"
+"フォルトで含まれています。"
+
+#: Gtk/DeleteWindow.vala:181
+msgid "Hide"
+msgstr "表示"
+
+#: Console/AppConsole.vala:382
+msgid "Hide rsync output"
+msgstr "rsync 出力を非表示にする"
+
+#: Gtk/DeleteWindow.vala:182
+msgid "Hide this window (files will be deleted in background)"
+msgstr ""
+"このウィンドウを表示にします（ファイルはバックグラウンドで削除されます）"
+
+#: Gtk/UsersBox.vala:120
+msgid "Home"
+msgstr "ホーム"
+
+#: Gtk/ExcludeMessageWindow.vala:116
+msgid "Home Directory"
+msgstr "ホームディレクトリ"
+
+#: Gtk/SnapshotListBox.vala:299 Gtk/ScheduleBox.vala:118
+msgid "Hourly"
+msgstr "毎時"
+
+#: Core/Main.vala:1061
+msgid "Hourly snapshot failed!"
+msgstr "毎時のスナップショットに失敗しました！"
+
+#: Core/Main.vala:1042
+msgid "Hourly snapshots are enabled"
+msgstr "毎時のスナップショットが有効になっています"
+
+#: Gtk/RestoreFinishBox.vala:102
+msgid ""
+"If the restored system fails to boot, then boot from the Live CD/USB, "
+"install Timeshift, and try restoring another snapshot."
+msgstr ""
+"復元されたシステムの起動に失敗した場合、Live CD / USB から起動し、Timeshift "
+"をインストールし、別のスナップショットを復元してください。"
+
+#: Core/Main.vala:2230
+msgid ""
+"If these terms are not acceptable to you, please do not proceed beyond this "
+"point!"
+msgstr ""
+"これらの条件が受け入れられない場合は、このポイントを超えて先に進まないでくだ"
+"さい！"
+
+#: Utility/Gtk/DonationWindow.vala:70
+msgid ""
+"If you find this application useful, consider making a donation to support "
+"the development."
+msgstr ""
+"このアプリケーションが役立つと思う場合は、開発を支援するために寄付をすること"
+"を検討してください。"
+
+#: Gtk/ExcludeBox.vala:54
+msgid "Include / Exclude Patterns"
+msgstr "パターンを含める/除外する"
+
+#: Gtk/UsersBox.vala:340
+msgid "Include @home subvolume in backups"
+msgstr "バックアップに @home サブボリュームを含めます"
+
+#: Gtk/UsersBox.vala:266
+msgid "Include All"
+msgstr "すべて含める"
+
+#: Gtk/UsersBox.vala:194
+msgid "Include Hidden"
+msgstr "表示にする"
+
+#: Core/Main.vala:2044
+msgid "Invalid Snapshot"
+msgstr "無効なスナップショット"
+
+#: Console/AppConsole.vala:252
+#, c-format
+msgid "Invalid command line arguments"
+msgstr "無効なコマンドライン引数"
+
+#: Gtk/MainWindow.vala:817
+msgid "Invalid snapshot"
+msgstr "無効なスナップショット"
+
+#: Utility/Gtk/DonationWindow.vala:91
+msgid "Issue Tracker"
+msgstr "問題追跡"
+
+#: Gtk/ExcludeBox.vala:273
+msgid "Items Not Selected"
+msgstr "選択されていないアイテム"
+
+#: Gtk/ScheduleBox.vala:283
+msgid "Keep"
+msgstr "保持"
+
+#: Gtk/RestoreExcludeBox.vala:112
+msgid ""
+"Keep configuration files for bittorrent clients like Deluge, Transmission, "
+"etc. If un-checked, previous configuration files will be restored from "
+"snapshot."
+msgstr ""
+"Deluge、Transmission などの BitTorrent クライアントの構成ファイルを保持しま"
+"す。チェックしない場合、以前の構成ファイルはスナップショットから復元されま"
+"す。"
+
+#: Gtk/RestoreExcludeBox.vala:85
+msgid ""
+"Keep configuration files for web browsers like Firefox and Chrome. If un-"
+"checked, previous configuration files will be restored from snapshot"
+msgstr ""
+"FirefoxやChromeなどのWebブラウザーの構成ファイルを保持します。 チェックを外す"
+"と、以前の構成ファイルがスナップショットから復元されます"
+
+#: Gtk/RestoreDeviceBox.vala:244
+msgid "Keep on Root Device"
+msgstr "ルートデバイスを維持する"
+
+#: Gtk/RestoreDeviceBox.vala:229
+msgid "Keep this mount path on the root filesystem"
+msgstr "ルートファイルシステムにこのマウントパスを保持します"
+
+#: Gtk/SnapshotListBox.vala:519
+msgid "LIVE"
+msgstr "ライブ"
+
+#: Gtk/BackupDeviceBox.vala:254 Console/AppConsole.vala:460
+#: Console/AppConsole.vala:499 Utility/Device.vala:1949
+#, c-format
+msgid "Label"
+msgstr "ラベル"
+
+#: Core/Main.vala:1023
+#, c-format
+msgid "Last boot snapshot is %d hours old"
+msgstr "最後のブートスナップショットは %d 時間前です"
+
+#: Core/Main.vala:1018
+msgid "Last boot snapshot is older than system start time"
+msgstr "最後のブートスナップショットがシステムの開始時間よりも古い"
+
+#: Core/Main.vala:1014
+msgid "Last boot snapshot not found"
+msgstr "最後のブートスナップショットが見つかりません"
+
+#: Core/Main.vala:1085
+#, c-format
+msgid "Last daily snapshot is %d hours old"
+msgstr "最後の日次スナップショットは %d 時間前です"
+
+#: Core/Main.vala:1080
+msgid "Last daily snapshot is more than 1 day old"
+msgstr "最後の日次スナップショットは1日以上前のものです"
+
+#: Core/Main.vala:1076
+msgid "Last daily snapshot not found"
+msgstr "最後の日次スナップショットが見つかりません"
+
+#: Core/Main.vala:1054
+#, c-format
+msgid "Last hourly snapshot is %d minutes old"
+msgstr "最後の毎時スナップショットは %d 分前です"
+
+#: Core/Main.vala:1049
+msgid "Last hourly snapshot is more than 1 hour old"
+msgstr "最後の毎時スナップショットは1時間以上前のものです"
+
+#: Core/Main.vala:1045
+msgid "Last hourly snapshot not found"
+msgstr "最後の毎時スナップショットが見つかりません"
+
+#: Core/Main.vala:1147
+#, c-format
+msgid "Last monthly snapshot is %d days old"
+msgstr "最後の月次スナップショットは %d 日前です"
+
+#: Core/Main.vala:1142
+msgid "Last monthly snapshot is more than 1 month old"
+msgstr "最後の月次のスナップショットは1か月以上前のものです"
+
+#: Core/Main.vala:1138
+msgid "Last monthly snapshot not found"
+msgstr "最後の月次スナップショットが見つかりません"
+
+#: Core/Main.vala:1116
+#, c-format
+msgid "Last weekly snapshot is %d days old"
+msgstr "最後の週次スナップショットは %d 日前です"
+
+#: Core/Main.vala:1111
+msgid "Last weekly snapshot is more than 1 week old"
+msgstr "最後の週次スナップショットは1週間以上前のものです"
+
+#: Core/Main.vala:1107
+msgid "Last weekly snapshot not found"
+msgstr "最後の週次スナップショットが見つかりません"
+
+#: Gtk/MainWindow.vala:1033
+#, c-format
+msgid "Latest snapshot"
+msgstr "最新のスナップショット"
+
+#: Utility/Gtk/AboutWindow.vala:316 Utility/Gtk/AboutWindow.vala:356
+msgid "License"
+msgstr "ライセンス"
+
+#: Core/Main.vala:1362
+#, c-format
+msgid "Linking from snapshot"
+msgstr "スナップショットからのリンク"
+
+#: Console/AppConsole.vala:353
+msgid "List"
+msgstr "一覧"
+
+#: Console/AppConsole.vala:355
+msgid "List devices"
+msgstr "デバイスを一覧表示する"
+
+#: Console/AppConsole.vala:354
+msgid "List snapshots"
+msgstr "スナップショットを一覧表示する"
+
+#: Gtk/MainWindow.vala:984
+msgid "Live USB Mode (Restore Only)"
+msgstr "ライブ USB モード (復元のみ)"
+
+#: Gtk/SettingsWindow.vala:90 Gtk/BackupWindow.vala:87
+#: Gtk/SetupWizardWindow.vala:104
+msgid "Location"
+msgstr "場所"
+
+#: Gtk/MainWindow.vala:452
+msgid "Main window closed by user"
+msgstr "ユーザーが閉じたメインウィンドウ"
+
+#: Gtk/SnapshotListBox.vala:329
+msgid "Mark for Deletion"
+msgstr "削除のマーク"
+
+#: Gtk/MainWindow.vala:634
+msgid "Marked for deletion"
+msgstr "削除のマークが付いています"
+
+#: Core/SnapshotRepo.vala:712 Core/SnapshotRepo.vala:755
+msgid "Maximum backups exceeded for backup level"
+msgstr "バックアップレベルの最大バックアップ数を超えました"
+
+#: Gtk/MainWindow.vala:218
+msgid "Menu"
+msgstr "メニュー"
+
+#: Gtk/SettingsWindow.vala:105
+msgid "Misc"
+msgstr "その他"
+
+#: Gtk/UsersBox.vala:354
+msgid "Miscellaneous"
+msgstr "その他"
+
+#: Core/Main.vala:238
+msgid "Missing Dependencies"
+msgstr "依存関係がありません"
+
+#: Core/SnapshotRepo.vala:689
+#, c-format
+msgid "Mode"
+msgstr "モード"
+
+#: Utility/Device.vala:1932
+#, c-format
+msgid "Model"
+msgstr "モデル"
+
+#: Gtk/SnapshotListBox.vala:302 Gtk/ScheduleBox.vala:64
+msgid "Monthly"
+msgstr "月次"
+
+#: Core/Main.vala:1135
+msgid "Monthly snapshot are enabled"
+msgstr "月次のスナップショットが有効になっています"
+
+#: Core/Main.vala:1154
+msgid "Monthly snapshot failed!"
+msgstr "月次のスナップショットに失敗しました!"
+
+#: Core/Main.vala:2131 Core/Main.vala:2164
+msgid "Mount"
+msgstr "マウント"
+
+#: Core/Main.vala:2986
+msgid "Moved system subvolume to snapshot directory"
+msgstr "システムのサブボリュームをスナップショットディレクトリに移動しました"
+
+#: Gtk/MainWindow.vala:793
+msgid "Multiple snapshots selected"
+msgstr "複数のスナップショットが選択されました"
+
+#: Gtk/RsyncLogBox.vala:492 Gtk/BackupDeviceBox.vala:235
+#: Console/AppConsole.vala:426
+msgid "Name"
+msgstr "名前"
+
+#: Gtk/RestoreWindow.vala:201 Gtk/BackupWindow.vala:164
+#: Gtk/SetupWizardWindow.vala:203 Gtk/DeleteWindow.vala:165
+msgid "Next"
+msgstr "次へ"
+
+#: Utility/Gtk/CustomMessageDialog.vala:177
+msgid "No"
+msgstr "いいえ"
+
+#: Gtk/RestoreBox.vala:122 Gtk/BackupBox.vala:84
+msgid "No Change"
+msgstr "変更なし"
+
+#: Gtk/MainWindow.vala:608 Gtk/DeleteWindow.vala:335
+msgid "No Snapshots Selected"
+msgstr "スナップショットが選択されていません"
+
+#: Gtk/MainWindow.vala:1057
+msgid "No snapshots available"
+msgstr "利用可能なスナップショットはありません"
+
+#: Gtk/MainWindow.vala:1001 Console/AppConsole.vala:321
+#: Core/SnapshotRepo.vala:914
+msgid "No snapshots found"
+msgstr "スナップショットが見つかりません"
+
+#: Console/AppConsole.vala:742
+msgid "No snapshots found on device"
+msgstr "デバイスにスナップショットが見つかりません"
+
+#: Gtk/MainWindow.vala:546
+msgid "No snapshots on device"
+msgstr "デバイスにスナップショットがありません"
+
+#: Core/SnapshotRepo.vala:665
+msgid "No snapshots on this device"
+msgstr "このデバイスにはスナップショットがありません"
+
+#: Gtk/MainWindow.vala:786
+msgid "No snapshots selected"
+msgstr "スナップショットが選択されていません"
+
+#: Gtk/MainWindow.vala:1034 Gtk/MainWindow.vala:1036
+msgid "None"
+msgstr "無し"
+
+#: Core/Subvolume.vala:197
+#, c-format
+msgid "Not Found"
+msgstr "見つかりません"
+
+#: Core/SnapshotRepo.vala:683
+msgid "Not Selected"
+msgstr "選択されていません"
+
+#: Core/Main.vala:382
+msgid "Not Supported"
+msgstr "サポートされていません"
+
+#: Core/SnapshotRepo.vala:629 Core/SnapshotRepo.vala:656
+msgid "Not enough disk space"
+msgstr "ディスク容量が不足しています"
+
+#: Gtk/FinishBox.vala:55 Console/AppConsole.vala:398
+msgid "Notes"
+msgstr "ノート"
+
+#: Core/Main.vala:1165
+msgid "Nothing to do!"
+msgstr "何もしません！"
+
+#: Console/AppConsole.vala:424 Console/AppConsole.vala:454
+#: Console/AppConsole.vala:493 Console/AppConsole.vala:541
+msgid "Num"
+msgstr "数"
+
+#: Gtk/ScheduleBox.vala:282
+msgid ""
+"Number of snapshots to keep.\n"
+"Older snapshots will be removed once this limit is exceeded."
+msgstr ""
+"保持するスナップショットの数。\n"
+"この制限を超えると、古いスナップショットは削除されます。"
+
+#: Gtk/ExcludeListSummaryWindow.vala:84 Gtk/SettingsWindow.vala:123
+#: Utility/Gtk/CustomMessageDialog.vala:167
+#: Utility/Gtk/CustomMessageDialog.vala:171 Utility/GtkHelper.vala:121
+#: Core/SnapshotRepo.vala:639
+msgid "OK"
+msgstr "はい"
+
+#: Gtk/SnapshotBackendBox.vala:179
+msgid ""
+"OS must be installed on a BTRFS partition with Ubuntu-type subvolume layout "
+"(@ and @home subvolumes). Other layouts are not supported."
+msgstr ""
+"OS は、Ubuntu タイプのサブボリュームレイアウト（@ および @home サブボリュー"
+"ム）を持つ BTRFS パーティションにインストールする必要があります。 他のレイア"
+"ウトはサポートされていません。"
+
+#: Core/Main.vala:4223
+msgid "Older log files removed"
+msgstr "古いログファイルが削除されました"
+
+#: Gtk/MainWindow.vala:1035
+msgid "Oldest snapshot"
+msgstr "最も古いスナップショット"
+
+#: Gtk/SnapshotListBox.vala:297
+msgid "On demand (manual)"
+msgstr "オンデマンド(マニュアル)"
+
+#: Gtk/RestoreDeviceBox.vala:525 Core/Main.vala:380 Core/Main.vala:3454
+msgid ""
+"Only ubuntu-type layouts with @ and @home subvolumes are currently supported."
+msgstr ""
+"現在、@ および @home サブボリュームを持つ ubuntu タイプのレイアウトのみがサ"
+"ポートされています。"
+
+#: Gtk/MainWindow.vala:219
+msgid "Open Menu"
+msgstr "メニューを開く"
+
+#: Core/Main.vala:3236
+msgid ""
+"Option --snapshot-device should not be specified for creating snapshots in "
+"BTRFS mode"
+msgstr ""
+"オプション --snapshot-device は、BTRFS モードでスナップショットを作成するため"
+"に指定しないでください"
+
+#: Gtk/AppGtk.vala:114 Console/AppConsole.vala:351
+msgid "Options"
+msgstr "オプション"
+
+#: Gtk/RestoreExcludeBox.vala:118
+msgid "Other applications (next page)"
+msgstr "その他のアプリケーション（次のページ）"
+
+#: Gtk/RsyncLogBox.vala:398 Gtk/RestoreBox.vala:134 Gtk/BackupBox.vala:96
+#, c-format
+msgid "Owner"
+msgstr "所有者"
+
+#: Utility/Device.vala:1944
+#, c-format
+msgid "Parent Device"
+msgstr "親デバイス"
+
+#: Gtk/RsyncLogBox.vala:222 Core/Main.vala:2487 Core/Main.vala:2578
+msgid "Parsing log file..."
+msgstr "ログファイルを解析しています..."
+
+#: Gtk/RestoreDeviceBox.vala:524
+msgid "Partition has an unsupported subvolume layout."
+msgstr ""
+"パーティションには、サポートされていないサブボリューム レイアウトがあります。"
+
+#: Gtk/RestoreDeviceBox.vala:93 Core/SnapshotRepo.vala:688
+#, c-format
+msgid "Path"
+msgstr "パス"
+
+#: Gtk/ExcludeBox.vala:162
+msgid "Pattern"
+msgstr "パターン"
+
+#: Gtk/RsyncLogBox.vala:396 Gtk/RestoreBox.vala:133 Gtk/BackupBox.vala:95
+#, c-format
+msgid "Permissions"
+msgstr "アクセス権"
+
+#: Core/Main.vala:257
+msgid "Please check if you have multiple windows open."
+msgstr "複数のウィンドウが開いているかどうかを確認してください。"
+
+#: Core/Main.vala:2262
+msgid "Please do not interrupt the restore process!"
+msgstr "復元プロセスを中断しないでください！"
+
+#: Core/Main.vala:351
+msgid "Please install required packages and try running TimeShift again"
+msgstr "必要なパッケージをインストールして、TimeShiftを再度実行してください"
+
+#: Gtk/AppGtk.vala:127
+msgid "Please re-run the application as admin (using 'sudo' or 'su')"
+msgstr ""
+"管理者としてアプリケーションを再実行してください（'sudo' または 'su'を使用）"
+
+#: Console/AppConsole.vala:103
+msgid "Please run the application as admin (using 'sudo' or 'su')"
+msgstr ""
+"管理者としてアプリケーションを実行してください（’sudo' または 'su' を使用）"
+
+#: Core/Main.vala:2212
+msgid "Please save your work and close all applications."
+msgstr "作業を保存して、すべてのアプリケーションを閉じてください。"
+
+#: Gtk/MainWindow.vala:688
+msgid "Please select a snapshot to view the log!"
+msgstr "ログを表示するスナップショットを選択してください！"
+
+#: Gtk/RestoreDeviceBox.vala:512
+msgid "Please select the GRUB device"
+msgstr "GRUB デバイスを選択してください"
+
+#: Core/Main.vala:253
+msgid "Please wait a few minutes and try again."
+msgstr "数分待ってから、もう一度お試しください。"
+
+#: Gtk/MainWindow.vala:755
+msgid "Please wait for snapshots to be deleted."
+msgstr "スナップショットが削除されるまでお待ちください。"
+
+#: Gtk/EstimateBox.vala:66
+msgid "Please wait..."
+msgstr "しばらくお待ちください..."
+
+#: Gtk/RsyncLogBox.vala:188
+msgid "Populating list..."
+msgstr "リストを入力しています..."
+
+#: Gtk/RsyncLogBox.vala:232 Gtk/RestoreBox.vala:88 Gtk/DeleteBox.vala:68
+#: Gtk/BackupBox.vala:114 Core/Main.vala:1597
+msgid "Preparing..."
+msgstr "準備中です..."
+
+#: Gtk/RestoreWindow.vala:193 Gtk/BackupWindow.vala:156
+#: Gtk/SetupWizardWindow.vala:195 Gtk/DeleteWindow.vala:157
+msgid "Previous"
+msgstr "前へ"
+
+#: Gtk/AppGtk.vala:116
+msgid "Print debug information"
+msgstr "デバッグ情報を印刷する"
+
+#: Core/Main.vala:3816
+msgid "Query completed"
+msgstr "照会が完了しました"
+
+#: Core/Main.vala:3799
+msgid "Querying subvolume info..."
+msgstr "サブボリューム情報を照会しています..."
+
+#: Gtk/SnapshotBackendBox.vala:77
+msgid "RSYNC"
+msgstr "RSYNC"
+
+#: Gtk/SnapshotBackendBox.vala:184
+msgid "RSYNC Snapshots"
+msgstr "RSYNC スナップショット"
+
+#: Gtk/BootOptionsBox.vala:137
+msgid ""
+"Re-generates initramfs for all installed kernels. This is generally not "
+"needed. Select this only if the restored system fails to boot."
+msgstr ""
+"インストールされているすべてのカーネルの initramf を再生成します。これは一般"
+"的に必要ありません。復元されたシステムの起動に失敗した場合にのみ、このオプ"
+"ションを選択してください。"
+
+#: Console/AppConsole.vala:984
+#, c-format
+msgid "Re-install GRUB2 bootloader?"
+msgstr "GRUB2 ブートローダーを再インストールしますか？"
+
+#: Core/Main.vala:2325
+msgid "Re-installing GRUB2 bootloader..."
+msgstr "GRUB2 ブートローダーを再インストールしています..."
+
+#: Gtk/BootOptionsBox.vala:120
+msgid "Re-installs the GRUB2 bootloader on the selected device."
+msgstr "選択したデバイスに GRUB2 ブートローダーを再インストールします。"
+
+#: Gtk/RsyncLogBox.vala:181
+#, c-format
+msgid "Read %'d of %'d lines..."
+msgstr "'%d' 行の '%d' を読み取ります..."
+
+#: Core/Main.vala:2418
+msgid "Rebooting system..."
+msgstr "システムを再起動しています..."
+
+#: Gtk/RestoreExcludeBox.vala:61 Gtk/RestoreExcludeBox.vala:91
+#, c-format
+msgid "Recommended"
+msgstr "推奨"
+
+#: Gtk/RestoreDeviceBox.vala:70 Gtk/BackupDeviceBox.vala:65
+msgid "Refresh"
+msgstr "更新"
+
+#: Gtk/BackupDeviceBox.vala:106
+msgid "Remote and network locations are not supported."
+msgstr "リモートおよびネットワークの場所はサポートされていません。"
+
+#: Gtk/ExcludeBox.vala:254
+msgid "Remove"
+msgstr "削除"
+
+#: Core/SnapshotRepo.vala:991 Core/Main.vala:1635 Core/Main.vala:1646
+#: Core/Main.vala:4219 Core/Snapshot.vala:509
+#, c-format
+msgid "Removed"
+msgstr "削除されました"
+
+#: Utility/CronTab.vala:341
+msgid "Removed cron task"
+msgstr "cron タスクを削除しました"
+
+#: Core/Main.vala:3604
+#, c-format
+msgid "Removed mount directory: '%s'"
+msgstr "マウントディレクトリを削除: '%s'"
+
+#: Core/Snapshot.vala:555
+msgid "Removed snapshot"
+msgstr "スナップショットを削除しました"
+
+#: Core/Snapshot.vala:484
+msgid "Removing"
+msgstr "削除"
+
+#: Core/Snapshot.vala:521
+msgid "Removing snapshot"
+msgstr "スナップショットを削除する"
+
+#: Core/SnapshotRepo.vala:847 Core/SnapshotRepo.vala:866
+#: Core/SnapshotRepo.vala:884 Core/SnapshotRepo.vala:898
+#, c-format
+msgid "Removing snapshots"
+msgstr "スナップショットを削除する"
+
+#: Gtk/UsersBox.vala:360
+msgid ""
+"Required for displaying shared and unshared size for snapshots in the main "
+"window"
+msgstr ""
+"メイン ウィンドウにスナップショットの共有サイズと共有されていないサイズを表示"
+"するために必要"
+
+#: Gtk/RsyncLogBox.vala:377 Gtk/RsyncLogBox.vala:567 Gtk/RestoreWindow.vala:125
+#: Gtk/MainWindow.vala:151 Gtk/RestoreFinishBox.vala:71
+#: Console/AppConsole.vala:363
+msgid "Restore"
+msgstr "復元"
+
+#: Gtk/UsersBox.vala:329
+msgid "Restore @home subvolume"
+msgstr "@homeサブボリュームを復元する"
+
+#: Gtk/RestoreWindow.vala:89
+msgid "Restore Device"
+msgstr "デバイスを復元"
+
+#: Gtk/RestoreWindow.vala:94
+msgid "Restore Exclude"
+msgstr "除外を復元"
+
+#: Gtk/RestoreWindow.vala:69
+msgid "Restore Snapshot"
+msgstr "スナップショットを復元"
+
+#: Core/Main.vala:2827 Core/Main.vala:2869
+msgid "Restore completed"
+msgstr "復元が完了しました"
+
+#: Gtk/MainWindow.vala:152
+msgid "Restore selected snapshot"
+msgstr "選択したスナップショットを復元する"
+
+#: Console/AppConsole.vala:364
+msgid "Restore snapshot"
+msgstr "スナップショットを復元"
+
+#: Gtk/RestoreFinishBox.vala:96
+msgid "Restored subvolumes will become active after system is restarted."
+msgstr "復元されたサブボリュームは、システムの再起動後にアクティブになります。"
+
+#: Core/Subvolume.vala:219
+msgid "Restored system subvolume"
+msgstr "復元されたシステムサブボリューム"
+
+#: Gtk/RestoreBox.vala:77 Gtk/RestoreBox.vala:190
+msgid "Restoring Snapshot..."
+msgstr "スナップショットを復元しています..."
+
+#: Gtk/FinishBox.vala:85
+msgid ""
+"Restoring a snapshot will replace system subvolumes, and system subvolumes "
+"currently in use will be preserved as a new snapshot. If required, this "
+"snapshot can be restored later to 'undo' the restore."
+msgstr ""
+"スナップショットを復元するとシステムのサブボリュームが置き換えられ、現在使用"
+"中のシステムのサブボリュームは新しいスナップショットとして保持されます。 必要"
+"に応じて、このスナップショットを後で復元して、復元を '元に戻す' ことができま"
+"す。"
+
+#: Core/Main.vala:2796
+msgid "Restoring snapshot..."
+msgstr "スナップショットを復元しています..."
+
+#: Gtk/FinishBox.vala:88
+msgid ""
+"Restoring snapshots only replaces system files and settings. Non-hidden "
+"files and directories in user home directories will not be touched. This "
+"behaviour can be changed by adding a filter to include these files. Included "
+"files will be backed up when snapshot is created, and replaced when snapshot "
+"is restored."
+msgstr ""
+"スナップショットの復元は、システムファイルと設定のみを置き換えます。 ユーザー"
+"のホームディレクトリにある隠しファイル以外とディレクトリは変更されません。 こ"
+"の動作は、これらのファイルを含めるフィルターを追加することで変更できます。 含"
+"まれるファイルは、スナップショットの作成時にバックアップされ、スナップショッ"
+"トの復元時に置き換えられます。"
+
+#: Utility/Device.vala:1934
+#, c-format
+msgid "Revision"
+msgstr "リビジョン"
+
+#: Gtk/RestoreDeviceBox.vala:452
+msgid "Root device not selected"
+msgstr "ルートデバイスが選択されていません"
+
+#: Gtk/RsyncLogWindow.vala:49
+msgid "Rsync Log Viewer"
+msgstr "Rsync ログビューア"
+
+#: Gtk/AppGtk.vala:119
+#, c-format
+msgid "Run 'timeshift' for the command-line version of this tool"
+msgstr "このツールのコマンドラインバージョンに対して 'Timeshft' を実行します"
+
+#: Console/AppConsole.vala:383
+msgid "Run in non-interactive mode"
+msgstr "対話モードで実行する"
+
+#: Core/Main.vala:189
+msgid "Running"
+msgstr "実行中"
+
+#: Gtk/FinishBox.vala:95
+msgid ""
+"Save snapshots to an external disk instead of the system disk to guard "
+"against drive failures."
+msgstr ""
+"ドライブの障害を防ぐために、システムディスクではなく外部ディスクにスナップ"
+"ショットを保存します。"
+
+#: Gtk/FinishBox.vala:97
+msgid ""
+"Saving snapshots to a non-system disk allows you to format and re-install "
+"the OS on the system disk without losing snapshots stored on it. You can "
+"even install another Linux distribution and later roll-back the previous "
+"distribution by restoring a snapshot."
+msgstr ""
+"システムディスク以外にスナップショットを保存すると、システムディスクに保存さ"
+"れているスナップショットを失うことなく、システムディスクでOSをフォーマットし"
+"て再インストールできます。 別のLinuxディストリビューションをインストールし、"
+"スナップショットを復元することで以前のディストリビューションを後でロールバッ"
+"クすることもできます。"
+
+#: Core/Main.vala:1303 Core/Main.vala:1457 Core/Main.vala:1459
+msgid "Saving to device"
+msgstr "デバイスに保存しています"
+
+#: Gtk/SettingsWindow.vala:93 Gtk/SetupWizardWindow.vala:109
+msgid "Schedule"
+msgstr "スケジュール"
+
+#: Core/Main.vala:260
+msgid "Scheduled snapshot in progress..."
+msgstr "スケジュールされたスナップショットが進行中です..."
+
+#: Gtk/MainWindow.vala:1051 Gtk/ScheduleBox.vala:312 Core/Main.vala:1165
+msgid "Scheduled snapshots are disabled"
+msgstr "スケジュールされたスナップショットは無効です"
+
+#: Gtk/FinishBox.vala:78
+msgid "Scheduled snapshots are disabled. It's recommended to enable it."
+msgstr ""
+"スケジュールされたスナップショットは無効です。 有効にすることをお勧めします。"
+
+#: Gtk/ScheduleBox.vala:305
+msgid "Scheduled snapshots are enabled"
+msgstr "スケジュールされたスナップショットが有効になっています"
+
+#: Gtk/FinishBox.vala:75
+msgid ""
+"Scheduled snapshots are enabled. Snapshots will be created automatically for "
+"selected levels."
+msgstr ""
+"スケジュールされたスナップショットが有効になります。 選択したレベルのスナップ"
+"ショットが自動的に作成されます。"
+
+#: Console/AppConsole.vala:872
+#, c-format
+msgid "Select '%s' device (default = %s)"
+msgstr "'%s' デバイスを選択します (デフォルト = %s)"
+
+#: Console/AppConsole.vala:691 Core/SnapshotRepo.vala:593
+msgid "Select BTRFS system disk with root subvolume (@)"
+msgstr "ルートサブボリューム（@）を含む BTRFS システムディスクを選択します"
+
+#: Console/AppConsole.vala:1000
+msgid "Select GRUB device"
+msgstr "GRUB デバイスを選択"
+
+#: Utility/GtkHelper.vala:815
+msgid "Select Path"
+msgstr "パスを選択"
+
+#: Gtk/MainWindow.vala:687
+msgid "Select Snapshot"
+msgstr "スナップショットを選択"
+
+#: Gtk/ScheduleBox.vala:57
+msgid "Select Snapshot Levels"
+msgstr "スナップショットレベルの選択"
+
+#: Gtk/BackupDeviceBox.vala:56
+msgid "Select Snapshot Location"
+msgstr "スナップショットの場所を選択"
+
+#: Gtk/SnapshotBackendBox.vala:62
+msgid "Select Snapshot Type"
+msgstr "スナップショットタイプの選択"
+
+#: Gtk/DeleteWindow.vala:85
+msgid "Select Snapshots"
+msgstr "スナップショットを選択"
+
+#: Gtk/RestoreDeviceBox.vala:61
+msgid "Select Target Device"
+msgstr "ターゲットデバイスを選択"
+
+#: Gtk/BackupDeviceBox.vala:410
+#, c-format
+msgid "Select a partition on this disk"
+msgstr "このディスク上のパーティションを選択します"
+
+#: Gtk/MainWindow.vala:794
+msgid "Select a single snapshot to restore"
+msgstr "復元するスナップショットを 1 つ選択する"
+
+#: Gtk/RestoreDeviceBox.vala:481
+msgid "Select another device for root file system (/)"
+msgstr "ルートファイルシステム（/）に別のデバイスを選択します"
+
+#: Core/SnapshotRepo.vala:632 Core/SnapshotRepo.vala:659
+msgid "Select another device or free up some space"
+msgstr "別のデバイスを選択するか、領域を解放してください"
+
+#: Gtk/MainWindow.vala:540 Gtk/MainWindow.vala:547
+msgid "Select another device to delete snasphots"
+msgstr "別のデバイスを選択してスナップショットを削除します"
+
+#: Gtk/MainWindow.vala:474
+msgid "Select another device?"
+msgstr "別のデバイスを選択しますか？"
+
+#: Gtk/RestoreExcludeBox.vala:57
+msgid "Select applications to exclude from restore"
+msgstr "復元から除外するアプリケーションを選択します"
+
+#: Console/AppConsole.vala:674
+msgid "Select backup device"
+msgstr "バックアップデバイスを選択"
+
+#: Gtk/ExcludeBox.vala:434
+msgid "Select directory"
+msgstr "ディレクトリを選択"
+
+#: Gtk/ExcludeBox.vala:407
+msgid "Select file(s)"
+msgstr "ファイルを選択"
+
+#: Console/AppConsole.vala:748
+msgid "Select snapshot"
+msgstr "スナップショットを選択"
+
+#: Gtk/DeleteWindow.vala:336
+msgid "Select snapshots to delete"
+msgstr "削除するスナップショットを選択"
+
+#: Gtk/RestoreDeviceBox.vala:453
+msgid "Select the device for root file system (/)"
+msgstr "ルートファイルシステム (/) のデバイスを選択します"
+
+#: Gtk/RestoreDeviceBox.vala:83
+msgid "Select the devices where files will be restored."
+msgstr "ファイルを復元するデバイスを選択します。"
+
+#: Gtk/ScheduleBox.vala:313
+msgid "Select the intervals for creating snapshots"
+msgstr "スナップショットを作成する間隔を選択します"
+
+#: Gtk/ExcludeBox.vala:274
+msgid "Select the items to be removed from the list"
+msgstr "リストから削除するアイテムを選択します"
+
+#: Core/SnapshotRepo.vala:553
+msgid "Select the snapshot device"
+msgstr "スナップショットデバイスを選択します"
+
+#: Gtk/MainWindow.vala:787
+msgid "Select the snapshot to restore"
+msgstr "復元するスナップショットを選択します"
+
+#: Gtk/DeleteWindow.vala:87
+msgid "Select the snapshots to be deleted"
+msgstr "削除するスナップショットを選択します"
+
+#: Gtk/MainWindow.vala:609
+msgid "Select the snapshots to mark for deletion"
+msgstr "削除のマークを付けるスナップショットを選択します"
+
+#: Gtk/RestoreDeviceBox.vala:79
+msgid "Select the target devices where system will be cloned."
+msgstr "システムのクローンを作成するターゲットデバイスを選択します。"
+
+#: Core/Main.vala:3264
+msgid "Selected default snapshot device"
+msgstr "選択されたデフォルトのスナップショットデバイス"
+
+#: Core/Main.vala:3215 Core/Main.vala:3219
+msgid "Selected default snapshot type"
+msgstr "選択されたデフォルトのスナップショットタイプ"
+
+#: Gtk/BackupDeviceBox.vala:388
+msgid "Selected device does not have BTRFS partition"
+msgstr "選択したデバイスには BTRFS パーティションがありません"
+
+#: Gtk/BackupDeviceBox.vala:385
+msgid "Selected device does not have Linux partition"
+msgstr "選択したデバイスには Linux パーティションがありません"
+
+#: Core/SnapshotRepo.vala:146
+msgid "Selected snapshot device"
+msgstr "選択されたスナップショットデバイス"
+
+#: Console/AppConsole.vala:690 Core/SnapshotRepo.vala:592
+msgid "Selected snapshot device is not a system disk"
+msgstr "選択されたスナップショットデバイスはシステムディスクではありません"
+
+#: Core/Main.vala:2045
+msgid "Selected snapshot is marked for deletion"
+msgstr "選択したスナップショットに削除のマークが付けられます"
+
+#: Gtk/MainWindow.vala:818
+msgid "Selected snapshot is marked for deletion and cannot be restored"
+msgstr ""
+"選択したスナップショットには削除のマークが付けられており、復元できません"
+
+#: Gtk/UsersBox.vala:238
+msgid ""
+"Selected user has an encrypted home directory. It's not possible to include "
+"only hidden files."
+msgstr ""
+"選択したユーザーのホームディレクトリは暗号化されています。 隠しファイルのみを"
+"含めることはできません。"
+
+#: Utility/Device.vala:1933
+#, c-format
+msgid "Serial"
+msgstr "シリアル"
+
+#: Core/Main.vala:217
+msgid "Session log file"
+msgstr "セッションログファイル"
+
+#: Console/AppConsole.vala:360
+msgid "Set snapshot description"
+msgstr "スナップショットの説明を設定する"
+
+#: Gtk/MainWindow.vala:181 Gtk/MainWindow.vala:182 Gtk/SettingsWindow.vala:56
+msgid "Settings"
+msgstr "設定"
+
+#: Gtk/MainWindow.vala:192
+msgid "Settings wizard"
+msgstr "設定ウィザード"
+
+#: Gtk/FinishBox.vala:58
+msgid "Setup Complete"
+msgstr "セットアップが完了しました"
+
+#: Gtk/SetupWizardWindow.vala:64
+msgid "Setup Wizard"
+msgstr "セットアップウィザード"
+
+#: Console/AppConsole.vala:380
+msgid "Show additional debug messages"
+msgstr "追加のデバッグメッセージを表示する"
+
+#: Gtk/AppGtk.vala:117 Console/AppConsole.vala:384
+msgid "Show all options"
+msgstr "すべてのオプションを表示"
+
+#: Gtk/RestoreExcludeBox.vala:121
+msgid "Show more applications to exclude on the next page"
+msgstr "次のページで除外するアプリケーションを表示します"
+
+#: Console/AppConsole.vala:381
+msgid "Show rsync output (default)"
+msgstr "rsync 出力を表示（デフォルト）"
+
+#: Gtk/RsyncLogBox.vala:392 Gtk/RestoreBox.vala:131
+#: Gtk/SnapshotListBox.vala:174 Gtk/BackupDeviceBox.vala:202
+#: Gtk/BackupBox.vala:93 Console/AppConsole.vala:458
+#: Console/AppConsole.vala:497 Utility/Device.vala:1936
+#: Utility/Device.vala:1951
+#, c-format
+msgid "Size"
+msgstr "サイズ"
+
+#: Gtk/SnapshotBackendBox.vala:177
+msgid ""
+"Size of BTRFS snapshots are initially zero. As system files gradually change "
+"with time, data gets written to new data blocks which take up disk space "
+"(copy-on-write). Files in the snapshot continue to point to original data "
+"blocks."
+msgstr ""
+"BTRFSスナップショットのサイズは、最初はゼロです。 システムファイルは時間とと"
+"もに徐々に変化するため、データはディスク領域を占有する新しいデータブロックに"
+"書き込まれます（コピーオンライト）。 スナップショット内のファイルは、引き続き"
+"元のデータブロックを指します。"
+
+#: Console/AppConsole.vala:369
+msgid "Skip GRUB2 reinstall"
+msgstr "GRUB2 の再インストールをスキップする"
+
+#: Gtk/SnapshotListBox.vala:95 Core/SnapshotRepo.vala:715
+#: Core/SnapshotRepo.vala:768 Core/Main.vala:2050
+#, c-format
+msgid "Snapshot"
+msgstr "スナップショット"
+
+#: Gtk/MainWindow.vala:557
+#, c-format
+msgid ""
+"Snapshot '%s' is being used by the system and cannot be deleted. Restart the "
+"system to activate the restored snapshot."
+msgstr ""
+"スナップショット '%s' はシステムによって使用されており、削除できません。 シス"
+"テムを再起動して、復元されたスナップショットをアクティブにします。"
+
+#: Gtk/BackupFinishBox.vala:60
+msgid "Snapshot Created"
+msgstr "作成されたスナップショット"
+
+#: Gtk/SnapshotListBox.vala:296
+#, c-format
+msgid "Snapshot Levels"
+msgstr "スナップショットレベル"
+
+#: Gtk/MainWindow.vala:754
+msgid "Snapshot deletion in progress..."
+msgstr "スナップショットの削除中です..."
+
+#: Core/SnapshotRepo.vala:470
+#, c-format
+msgid "Snapshot device"
+msgstr "スナップショットデバイス"
+
+#: Console/AppConsole.vala:664 Core/SnapshotRepo.vala:559
+msgid "Snapshot device not available"
+msgstr "スナップショットデバイスは利用できません"
+
+#: Console/AppConsole.vala:660 Core/SnapshotRepo.vala:552
+msgid "Snapshot device not selected"
+msgstr "スナップショットデバイスが選択されていません"
+
+#: Core/SnapshotRepo.vala:474
+#, c-format
+msgid "Snapshot location"
+msgstr "スナップショットの場所"
+
+#: Core/Main.vala:1270
+msgid "Snapshot saved successfully"
+msgstr "スナップショットが保存されました"
+
+#: Core/Main.vala:2040
+msgid "Snapshot to restore not specified!"
+msgstr "復元するスナップショットが指定されていません！"
+
+#: Core/Main.vala:2873
+msgid "Snapshot will become active after system is rebooted."
+msgstr "システムを再起動すると、スナップショットがアクティブになります。"
+
+#: Gtk/DeleteFinishBox.vala:60
+msgid "Snapshot(s) Deleted"
+msgstr "スナップショットが削除されました"
+
+#: Gtk/MainWindow.vala:320 Gtk/DeleteWindow.vala:89
+msgid "Snapshots"
+msgstr "スナップショット"
+
+#: Gtk/SnapshotBackendBox.vala:169
+msgid ""
+"Snapshots are created and restored instantly. Snapshot creation is an atomic "
+"transaction at the file system level."
+msgstr ""
+"スナップショットは即座に作成および復元されます。 スナップショットの作成は、"
+"ファイルシステムレベルでのアトミックトランザクションです。"
+
+#: Gtk/SnapshotBackendBox.vala:186
+msgid ""
+"Snapshots are created by creating copies of system files using rsync, and "
+"hard-linking unchanged files from previous snapshot."
+msgstr ""
+"スナップショットは、rsync を使用してシステムファイルのコピーを作成し、以前の"
+"スナップショットから変更されていないファイルをハードリンクすることによって作"
+"成されます。"
+
+#: Gtk/SnapshotBackendBox.vala:167
+msgid ""
+"Snapshots are created using the built-in features of the BTRFS file system."
+msgstr ""
+"スナップショットは、BTRFS ファイルシステムの組み込み機能を使用して作成されま"
+"す。"
+
+#: Gtk/ScheduleBox.vala:167
+#, c-format
+msgid "Snapshots are not scheduled at fixed times."
+msgstr "スナップショットは、決まった時間にスケジュールされていません。"
+
+#: Gtk/SnapshotBackendBox.vala:173
+msgid ""
+"Snapshots are perfect, byte-for-byte copies of the system. Nothing is "
+"excluded."
+msgstr ""
+"スナップショットは、システムの完全なバイト単位のコピーです。 何も除外されませ"
+"ん。"
+
+#: Gtk/SnapshotBackendBox.vala:171
+msgid ""
+"Snapshots are restored by replacing system subvolumes. Since files are never "
+"copied, deleted or overwritten, there is no risk of data loss. The existing "
+"system is preserved as a new snapshot after restore."
+msgstr ""
+"スナップショットは、システムのサブボリュームを置き換えることにより復元されま"
+"す。 ファイルはコピー、削除、または上書きされることはないため、データ損失のリ"
+"スクはありません。 既存のシステムは、復元後に新しいスナップショットとして保持"
+"されます。"
+
+#: Gtk/SnapshotBackendBox.vala:175
+msgid ""
+"Snapshots are saved on the same disk from which they are created (system "
+"disk). Storage on other disks is not supported. If system disk fails then "
+"snapshots stored on it will be lost along with the system."
+msgstr ""
+"スナップショットは、作成元と同じディスク（システムディスク）に保存されます。 "
+"他のディスク上のストレージはサポートされていません。 システムディスクに障害が"
+"発生すると、そこに保存されているスナップショットはシステムとともに失われま"
+"す。"
+
+#: Gtk/BackupDeviceBox.vala:107
+msgid ""
+"Snapshots are saved to /timeshift on selected partition. Other locations are "
+"not supported."
+msgstr ""
+"スナップショットは、選択したパーティションの / timeshift に保存されます。 そ"
+"の他の場所はサポートされていません。"
+
+#: Gtk/BackupDeviceBox.vala:99
+msgid ""
+"Snapshots are saved to /timeshift-btrfs on selected partition. Other "
+"locations are not supported."
+msgstr ""
+"スナップショットは、選択したパーティションの / timeshift-btrfs に保存されま"
+"す。 その他の場所はサポートされていません。"
+
+#: Gtk/MainWindow.vala:996
+msgid "Snapshots available for restore"
+msgstr "復元可能なスナップショット"
+
+#: Gtk/SnapshotBackendBox.vala:190
+msgid ""
+"Snapshots can be saved to any disk formatted with a Linux file system. "
+"Saving snapshots to non-system or external disk allows the system to be "
+"restored even if system disk is damaged or re-formatted."
+msgstr ""
+"スナップショットは、Linux ファイルシステムでフォーマットされた任意のディスク"
+"に保存できます。 スナップショットをシステムまたは外部ディスクに保存すると、シ"
+"ステムディスクが破損または再フォーマットされた場合でもシステムを復元できま"
+"す。"
+
+#: Console/AppConsole.vala:284
+msgid "Snapshots cannot be created in Live CD mode"
+msgstr "Live CDモードではスナップショットを作成できません"
+
+#: Gtk/MainWindow.vala:1043
+msgid "Snapshots will be created at selected intervals"
+msgstr "スナップショットは選択した間隔で作成されます"
+
+#: Gtk/ScheduleBox.vala:306
+msgid ""
+"Snapshots will be created at selected intervals if snapshot disk has enough "
+"space (> 1 GB)"
+msgstr ""
+"スナップショットディスクに十分な領域 (> 1 GB) がある場合、選択した間隔でス"
+"ナップショットが作成されます"
+
+#: Gtk/MainWindow.vala:635
+msgid "Snapshots will be removed during the next scheduled run"
+msgstr "スナップショットは、次回のスケジュールされた実行中に削除されます"
+
+#: Console/AppConsole.vala:376
+msgid "Specify backup device (default: config)"
+msgstr "バックアップデバイスの指定（デフォルト：config）"
+
+#: Console/AppConsole.vala:368
+msgid "Specify device for installing GRUB2 bootloader"
+msgstr "GRUB2 ブートローダーをインストールするデバイスを指定します"
+
+#: Console/AppConsole.vala:366
+msgid "Specify snapshot to restore"
+msgstr "復元するスナップショットを指定する"
+
+#: Console/AppConsole.vala:367
+msgid "Specify target device"
+msgstr "ターゲットデバイスを指定する"
+
+#: Gtk/RsyncLogBox.vala:472 Core/SnapshotRepo.vala:480
+#: Core/SnapshotRepo.vala:690
+#, c-format
+msgid "Status"
+msgstr "状態"
+
+#: Gtk/ScheduleBox.vala:154
+msgid "Stop cron emails for scheduled tasks"
+msgstr "スケジュールされたタスクのcronメールを停止します"
+
+#: Utility/TeeJee.Process.vala:511
+msgid "Stopped"
+msgstr "停止しました"
+
+#: Core/Subvolume.vala:202
+#, c-format
+msgid "Subvolume exists at destination"
+msgstr "宛先にサブボリュームが存在します"
+
+#: Gtk/SnapshotListBox.vala:275
+#, c-format
+msgid "Subvolumes"
+msgstr "サブボリューム"
+
+#: Gtk/ExcludeAppsBox.vala:135 Gtk/RestoreWindow.vala:120
+#: Gtk/ExcludeBox.vala:259
+msgid "Summary"
+msgstr "概要"
+
+#: Utility/Gtk/DonationWindow.vala:81
+msgid "Support"
+msgstr "サポート"
+
+#: Console/AppConsole.vala:378
+msgid "Switch to BTRFS mode (default: config)"
+msgstr "BTRFS モードに切り替えます（デフォルト：config）"
+
+#: Console/AppConsole.vala:379
+msgid "Switch to RSYNC mode (default: config)"
+msgstr "RSYNC モードに切り替えます（デフォルト：config）"
+
+#: Core/SnapshotRepo.vala:1045
+msgid "Symlinks updated"
+msgstr "シンボリックリンクが更新されました"
+
+#: Core/Main.vala:2400
+msgid "Synching file systems..."
+msgstr "ファイルシステムを同期しています..."
+
+#: Core/Main.vala:1379 Core/Main.vala:2562 Core/Main.vala:2803
+msgid "Synching files with rsync..."
+msgstr "rsync でファイルを同期しています..."
+
+#: Gtk/AppGtk.vala:112
+msgid "Syntax"
+msgstr "構文"
+
+#: Gtk/SnapshotListBox.vala:127 Utility/Device.vala:1957
+#, c-format
+msgid "System"
+msgstr "システム"
+
+#: Gtk/MainWindow.vala:941
+msgid "System Restore Utility"
+msgstr "システム復元ユーティリティ"
+
+#: Gtk/FinishBox.vala:82
+msgid "System can be rolled-back to a previous date by restoring a snapshot."
+msgstr ""
+"スナップショットを復元することで、システムを以前の日付にロールバックできま"
+"す。"
+
+#: Core/Main.vala:2263
+msgid "System will reboot after files are restored"
+msgstr "ファイルが復元された後、システムが再起動します"
+
+#: Core/Main.vala:2213
+msgid "System will reboot after files are restored."
+msgstr "ファイルが復元された後、システムが再起動します。"
+
+#: Core/Main.vala:1239 Core/Main.vala:1280
+msgid "Tagged snapshot"
+msgstr "タグ付きスナップショット"
+
+#: Gtk/SnapshotListBox.vala:151 Console/AppConsole.vala:427
+msgid "Tags"
+msgstr "タグ"
+
+#: Core/Main.vala:2075
+msgid "Target device is not mounted"
+msgstr "ターゲットデバイスがマウントされていません"
+
+#: Gtk/RestoreDeviceBox.vala:480
+msgid "Target device is same as system device"
+msgstr "ターゲットデバイスはシステムデバイスと同じです"
+
+#: Core/Main.vala:2069
+msgid "Target device not specified!"
+msgstr "ターゲットデバイスが指定されていません！"
+
+#: Gtk/SnapshotBackendBox.vala:118
+msgid ""
+"The 'btrfs' command is not available on your system. Install the 'btrfs-"
+"tools' package and try again."
+msgstr ""
+"'btrfs' コマンドはシステムでは使用できません。'btrfs-tools' パッケージをイン"
+"ストールして、もう一度やり直してください。"
+
+#: Gtk/ScheduleBox.vala:156
+msgid ""
+"The cron service sends the output of scheduled tasks as an email to the "
+"current user. Select this option to suppress the emails for cron tasks "
+"created by Timeshift."
+msgstr ""
+"cron サービスは、スケジュールされたタスクの出力をメールとして現在のユーザーに"
+"送信します。 このオプションを選択して、Timeshift によって作成されたcron タス"
+"クのメールを抑制します。"
+
+#: Core/Main.vala:379
+msgid "The system partition has an unsupported subvolume layout."
+msgstr ""
+"システムパーティションには、サポートされていないサブボリュームレイアウトがあ"
+"ります。"
+
+#: Core/Main.vala:3453
+msgid "The target partition has an unsupported subvolume layout."
+msgstr ""
+"ターゲットパーティションにサポートされていないサブボリュームレイアウトがあり"
+"ます。"
+
+#: Gtk/BackupDeviceBox.vala:512
+#, c-format
+msgid "There are no snapshots on this device"
+msgstr "このデバイスにはスナップショットがありません"
+
+#: Utility/Device.vala:1379
+msgid "This device is not encrypted"
+msgstr "このデバイスは暗号化されていません"
+
+#: Core/Main.vala:2229
+msgid ""
+"This software comes without absolutely NO warranty and the author takes no "
+"responsibility for any damage arising from the use of this program."
+msgstr ""
+"このソフトウェアは完全に無保証で提供されており、作者はこのプログラムの使用か"
+"ら生じるいかなる損害についても責任を負いません。"
+
+#: Utility/Gtk/DonationWindow.vala:66
+msgid ""
+"This software is free for personal and commercial use. It is distributed in "
+"the hope that it is useful but without any warranty. See the GNU General "
+"Public License v2 or later for more information"
+msgstr ""
+"このソフトウェアは、個人および商用での使用は無料です。 役に立つことを期待して"
+"配布されていますが、保証はありません。 詳細については、GNU一般公衆利用許諾契"
+"約書のV2以降を参照してください"
+
+#: Gtk/MainWindow.vala:1031 Gtk/MainWindow.vala:1042
+msgid "Timeshift is active"
+msgstr "タイムシフトが有効です"
+
+#: Gtk/RsyncLogBox.vala:394 Gtk/RestoreBox.vala:132 Gtk/BackupBox.vala:94
+#, c-format
+msgid "Timestamp"
+msgstr "タイムスタンプ"
+
+#: Console/AppConsole.vala:613
+#, c-format
+msgid "To restore with default options, press the ENTER key for all prompts!"
+msgstr ""
+"デフォルトのオプションで復元するには、すべてのプロンプトでEnterキーを押してく"
+"ださい！"
+
+#: Utility/Gtk/AboutWindow.vala:457
+msgid "Tools"
+msgstr "ツール"
+
+#: Utility/Gtk/AboutWindow.vala:441
+msgid "Translations"
+msgstr "翻訳"
+
+#: Gtk/SettingsWindow.vala:87 Gtk/BackupDeviceBox.vala:190
+#: Console/AppConsole.vala:459 Console/AppConsole.vala:498
+#: Utility/Device.vala:1947
+#, c-format
+msgid "Type"
+msgstr "タイプ"
+
+#: Utility/Device.vala:1946
+#, c-format
+msgid "UUID"
+msgstr "UUID"
+
+#: Gtk/AppGtk.vala:99
+msgid "Unknown option"
+msgstr "不明なオプション"
+
+#: Core/Main.vala:1221
+msgid "Unknown snapshot type"
+msgstr "不明なスナップショットタイプ"
+
+#: Core/Main.vala:1584
+msgid "Unknown value specified for option --tags"
+msgstr "オプション --tags に不明な値が指定されました"
+
+#: Utility/Device.vala:1390 Utility/Device.vala:1506
+#, c-format
+msgid "Unlocked device is mapped to '%s'"
+msgstr "ロック解除されたデバイスは '%s 'にマッピングされています"
+
+#: Utility/Device.vala:1505
+msgid "Unlocked successfully"
+msgstr "ロック解除されました"
+
+#: Utility/Device.vala:1720
+msgid "Unmounting from"
+msgstr "マウント解除"
+
+#: Gtk/SnapshotListBox.vala:199
+msgid "Unshared"
+msgstr "共有"
+
+#: Gtk/RestoreDeviceBox.vala:522 Core/Main.vala:3457
+msgid "Unsupported Subvolume Layout"
+msgstr "サポートされていないサブボリュームレイアウト"
+
+#: Gtk/BootOptionsBox.vala:150
+msgid "Update GRUB menu"
+msgstr "GRUB メニューを更新する"
+
+#: Gtk/BootOptionsBox.vala:135
+msgid "Update initramfs"
+msgstr "initramfs を更新する"
+
+#: Core/Main.vala:2742
+msgid "Updated /etc/crypttab on target device"
+msgstr "ターゲットデバイスの /etc/crypttab を更新しました"
+
+#: Core/Main.vala:2662
+msgid "Updated /etc/fstab on target device"
+msgstr "ターゲットデバイスの /etc/fstabを更新しました"
+
+#: Gtk/BootOptionsBox.vala:152
+msgid ""
+"Updates the GRUB menu entries (recommended). This is safe to run and should "
+"be left selected."
+msgstr ""
+"GRUB メニューエントリを更新します（推奨）。 これは実行しても安全であり、選択"
+"したままにしておく必要があります。"
+
+#: Core/Main.vala:2383
+msgid "Updating GRUB menu..."
+msgstr "GRUB メニューを更新しています..."
+
+#: Core/Main.vala:2586
+msgid "Updating bootloader configuration..."
+msgstr "ブートローダーの設定を更新しています..."
+
+#: Utility/Gtk/DonationWindow.vala:85
+msgid ""
+"Use the issue tracker for reporting issues, asking questions, and requesting "
+"features. Please avoid reporting issues by email."
+msgstr ""
+"問題の報告、質問、機能のリクエストには、問題追跡ツールを使用します。 電子メー"
+"ルによる問題の報告は避けてください。"
+
+#: Utility/Device.vala:1954
+#, c-format
+msgid "Used"
+msgstr "使用済み"
+
+#: Gtk/UsersBox.vala:105 Gtk/SetupWizardWindow.vala:114
+msgid "User"
+msgstr "ユーザー"
+
+#: Gtk/UsersBox.vala:63
+msgid "User Home Directories"
+msgstr "ユーザーホームディレクトリ"
+
+#: Utility/Device.vala:1460
+msgid "User cancelled the password prompt"
+msgstr "ユーザーがパスワード プロンプトを取り消しました"
+
+#: Gtk/UsersBox.vala:67
+msgid ""
+"User home directories are excluded by default unless you enable them here"
+msgstr ""
+"ここで有効にしない限り、ユーザーのホームディレクトリはデフォルトで除外されま"
+"す"
+
+#: Gtk/SettingsWindow.vala:101
+msgid "Users"
+msgstr "ユーザー"
+
+#: Gtk/RestoreWindow.vala:114
+msgid "Users Home"
+msgstr "ユーザーホーム"
+
+#: Utility/Device.vala:1931
+#, c-format
+msgid "Vendor"
+msgstr "ベンダー"
+
+#: Gtk/SnapshotListBox.vala:343
+msgid "View Rsync Log for Create"
+msgstr "作成時のRsyncログを表示"
+
+#: Gtk/SnapshotListBox.vala:350
+msgid "View Rsync Log for Restore"
+msgstr "復元時のRsync ログを表示"
+
+#: Gtk/MainWindow.vala:380
+msgid "View TimeShift Logs"
+msgstr "タイムシフトログを表示"
+
+#: Gtk/RestoreDeviceBox.vala:101
+msgid "Volume"
+msgstr "ボリューム"
+
+#: Gtk/RestoreSummaryBox.vala:53 Core/Main.vala:2124
+msgid "Warning"
+msgstr "警告"
+
+#: Gtk/RestoreExcludeBox.vala:61
+msgid "Web Browsers"
+msgstr "Web ブラウザ"
+
+#: Utility/Gtk/DonationWindow.vala:100
+msgid "Website"
+msgstr "Web サイト"
+
+#: Gtk/SnapshotListBox.vala:301 Gtk/ScheduleBox.vala:82
+msgid "Weekly"
+msgstr "週次"
+
+#: Core/Main.vala:1123
+msgid "Weekly snapshot failed!"
+msgstr "週次のスナップショットに失敗しました！"
+
+#: Core/Main.vala:1104
+msgid "Weekly snapshots are enabled"
+msgstr "週次のスナップショットが有効になっています"
+
+#: Utility/Gtk/DonationWindow.vala:96
+msgid "Wiki"
+msgstr "Wiki"
+
+#: Gtk/BackupFinishBox.vala:63 Gtk/DeleteFinishBox.vala:63
+msgid "With Errors"
+msgstr "エラーがあります"
+
+#: Gtk/MainWindow.vala:191
+msgid "Wizard"
+msgstr "ウィザード"
+
+#: Utility/Device.vala:1433 Utility/Device.vala:1479
+msgid "Wrong password"
+msgstr "間違ったパスワード"
+
+#: Utility/Gtk/CustomMessageDialog.vala:176
+msgid "Yes"
+msgstr "はい"
+
+#: Gtk/RestoreFinishBox.vala:98
+msgid ""
+"You can continue working on the current system. After restart, the current "
+"system will be visible as a new snapshot. This snapshot can be restored "
+"later if required, to 'undo' the restore."
+msgstr ""
+"現在のシステムで作業を続けることができます。 再起動後、現在のシステムは新しい"
+"スナップショットとして表示されます。 このスナップショットは、必要に応じて後で"
+"復元し、復元を '元に戻す' ことができます。"
+
+#: Gtk/RestoreDeviceBox.vala:413
+msgid ""
+"[Advanced Users Only] Change these settings only if the restored system "
+"fails to boot."
+msgstr ""
+"[上級ユーザーのみ]これらの設定は、復元されたシステムの起動に失敗した場合にの"
+"み変更してください。"
+
+#: Console/AppConsole.vala:1012
+#, c-format
+msgid "[ENTER = Default (%s), a = Abort]"
+msgstr "[ENTER = デフォルト (%s), a = 中止]"
+
+#: Console/AppConsole.vala:883
+#, c-format
+msgid "[ENTER = Default (%s), r = Root device, a = Abort]"
+msgstr "[ENTER = デフォルト (%s), r = ルートデバイス, a = 中止]"
+
+#: Utility/AppLock.vala:54
+msgid "[Warning] Deleted invalid lock"
+msgstr "[警告]無効なロックを削除しました"
+
+#: Core/SnapshotRepo.vala:898
+msgid "all"
+msgstr "全て"
+
+#: Core/Main.vala:1512 Core/Main.vala:3884 Core/Main.vala:3968
+#: Core/Main.vala:4076 Core/Main.vala:4115 Core/Subvolume.vala:214
+msgid "btrfs returned an error"
+msgstr "btrfsがエラーを返しました"
+
+#: Core/Main.vala:1411 Core/Snapshot.vala:500
+msgid "complete"
+msgstr "完了"
+
+#: Utility/CronTab.vala:261
+msgid "crontab file exported"
+msgstr "エクスポートされた crontab ファイル"
+
+#: Utility/CronTab.vala:244
+msgid "crontab file installed"
+msgstr "インストールされた crontab ファイル"
+
+#: Core/SnapshotRepo.vala:884
+msgid "incomplete"
+msgstr "不完全な"
+
+#: Core/SnapshotRepo.vala:866
+msgid "marked for deletion"
+msgstr "削除のマークが付いています"
+
+#: Core/Main.vala:1303 Core/Main.vala:1457 Core/Main.vala:1459
+msgid "mounted at path"
+msgstr "パスにマウント"
+
+#: Gtk/RestoreBox.vala:237 Gtk/DeleteBox.vala:149 Gtk/BackupBox.vala:234
+#: Core/Main.vala:1411 Core/Snapshot.vala:501
+msgid "remaining"
+msgstr "残り"
+
+#: Core/Main.vala:1422
+msgid "rsync returned an error"
+msgstr "rsync がエラーを返しました"
+
+#: Core/SnapshotRepo.vala:715 Core/SnapshotRepo.vala:768
+#: Core/SnapshotRepo.vala:847
+msgid "un-tagged"
+msgstr "タグなし"
+
+#~ msgid "Become a Patron"
+#~ msgstr "Become a Patron"
+
+#, fuzzy
+#~ msgid "Donation Plugins"
+#~ msgstr "Donations"
+
+#, fuzzy
+#~ msgid "Donate ($5)"
+#~ msgstr "Donate"
+
+#, fuzzy
+#~ msgid "Get Support ($10)"
+#~ msgstr "Not Supported"
+
+#~ msgid ""
+#~ "Did you find this software useful?\n"
+#~ "\n"
+#~ "You can buy me a coffee or make a donation via PayPal to show your "
+#~ "support. Or just drop me an email and say Hi. This application is "
+#~ "completely free and will continue to remain that way. Your contributions "
+#~ "will help in keeping this project alive and improving it further.\n"
+#~ "\n"
+#~ "Feel free to send me an email if you find any issues in this application "
+#~ "or if you need any changes. Suggestions and feedback are always welcome.\n"
+#~ "\n"
+#~ "Thanks,\n"
+#~ "Tony George\n"
+#~ "(teejeetech@gmail.com)"
+#~ msgstr ""
+#~ "Did you find this software useful?\n"
+#~ "\n"
+#~ "You can buy me a coffee or make a donation via PayPal to show your "
+#~ "support. Or just drop me an email and say Hi. This application is "
+#~ "completely free and will continue to remain that way. Your contributions "
+#~ "will help in keeping this project alive and improving it further.\n"
+#~ "\n"
+#~ "Feel free to send me an email if you find any issues in this application "
+#~ "or if you need any changes. Suggestions and feedback are always welcome.\n"
+#~ "\n"
+#~ "Thanks,\n"
+#~ "Tony George\n"
+#~ "(teejeetech@gmail.com)"
+
+#~ msgid "Donate with PayPal"
+#~ msgstr "Donate with PayPal"
+
+#~ msgid "Issue Tracker ~ Report Issues, Request Features, Ask Questions"
+#~ msgstr "Issue Tracker ~ Report Issues, Request Features, Ask Questions"
+
+#~ msgid "Wiki ~ Documentation & Help"
+#~ msgstr "Wiki ~ Documentation & Help"
+
+#~ msgid "Code Contributions"
+#~ msgstr "Contributions"
+
+#, fuzzy
+#~ msgid "Click to edit and drag-drop to re-order"
+#~ msgstr "Click to edit. Drag and drop to re-order."
+
+#~ msgid ""
+#~ "Click an item to edit the pattern.\n"
+#~ "Drag and drop items with mouse to re-order."
+#~ msgstr ""
+#~ "Click an item to edit the pattern.\n"
+#~ "Drag and drop items with mouse to re-order."
+
+#~ msgid "Editing and Re-Ordering"
+#~ msgstr "Editing and Re-Ordering"
+
+#~ msgid "Info"
+#~ msgstr "Info"
+
+#~ msgid "Deleted system subvolumes"
+#~ msgstr "Deleted system subvolumes"
+
+#~ msgid "<b>System:</b> Installed Linux distribution"
+#~ msgstr "<b>System:</b> Installed Linux distribution"
+
+#~ msgid "<b>Snapshot Date:</b> Date on which snapshot was created"
+#~ msgstr "<b>Snapshot Date:</b> Date on which snapshot was created"
+
+#~ msgid "Selected snapshot path"
+#~ msgstr "Selected snapshot path"
+
+#~ msgid ""
+#~ "<b>Backup Levels</b>\n"
+#~ "\n"
+#~ "O\tOn demand (manual)\n"
+#~ "B\tBoot\n"
+#~ "H\tHourly\n"
+#~ "D\tDaily\n"
+#~ "W\tWeekly\n"
+#~ "M\tMonthly"
+#~ msgstr ""
+#~ "<b>Backup Levels</b>\n"
+#~ "\n"
+#~ "O\tOn demand (manual)\n"
+#~ "B\tBoot\n"
+#~ "H\tHourly\n"
+#~ "D\tDaily\n"
+#~ "W\tWeekly\n"
+#~ "M\tMonthly"
+
+#~ msgid "Cloning System..."
+#~ msgstr "Cloning System..."
+
+#~ msgid "Close Window"
+#~ msgstr "Close Window"
+
+#~ msgid "Documenters"
+#~ msgstr "Documenters"
+
+#~ msgid "Include everything"
+#~ msgstr "Include everything"
+
+#~ msgid "Include hidden items"
+#~ msgstr "Include hidden items"
+
+#~ msgid "Log Viewer"
+#~ msgstr "Log Viewer"
+
+#~ msgid "Refresh Snapshot List"
+#~ msgstr "Refresh Snapshot List"
+
+#~ msgid "Scheduled task runs once every hour"
+#~ msgstr "Scheduled task runs once every hour"
+
+#~ msgid "Third Party Tools"
+#~ msgstr "Third Party Tools"
+
+#~ msgid "Translators"
+#~ msgstr "Translators"
+
+#~ msgid "View Log for Create"
+#~ msgstr "View Log for Create"
+
+#~ msgid "View Log for Restore"
+#~ msgstr "View Log for Restore"
+
+#~ msgid "View:"
+#~ msgstr "View:"
+
+#~ msgid "Change"
+#~ msgstr "Changed"
+
+#~ msgid "Restored"
+#~ msgstr "Restore"
+
+#~ msgid "Review Actions"
+#~ msgstr "Revision"
+
+#~ msgid "Filter:"
+#~ msgstr "Filters"
+
+#~ msgid "deleted"
+#~ msgstr "Deleted"
+
+#~ msgid ""
+#~ "This program is free for personal and commercial use and comes with "
+#~ "absolutely no warranty. You use this program entirely at your own risk. "
+#~ "The author will not be liable for any damages arising from the use of "
+#~ "this program."
+#~ msgstr ""
+#~ "This software comes without absolutely NO warranty and the author takes "
+#~ "no responsibility for any damage arising from the use of this program."

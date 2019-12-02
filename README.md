@@ -111,7 +111,7 @@ Packages are available in the Launchpad PPA for supported Ubuntu releases.
 Run the following commands in a terminal window:  
 
 ```sh
-sudo add-apt-repository -y ppa:teejee2008/ppa
+sudo add-apt-repository -y ppa:teejee2008/timeshift
 sudo apt-get update
 sudo apt-get install timeshift
 ```

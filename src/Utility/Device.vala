@@ -184,6 +184,7 @@ public class Device : GLib.Object{
 			case "xfs":
 			case "jfs":
 			case "zfs":
+			case "zfs_member":
 			case "btrfs":
 			case "lvm":
 			case "lvm2":

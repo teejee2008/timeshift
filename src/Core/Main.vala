@@ -2409,11 +2409,19 @@ public class Main : GLib.Object{
 		log_debug("GRUB2 install script:");
 		log_debug(sh);
 
+		// Perform any post-restore actions
+		log_debug("Running post-restore tasks...");
+
+		sh += "if [ -d \"/etc/timeshift/restore-hooks.d\" ]; then \n";
+		sh += "  run-parts --verbose /etc/timeshift/restore-hooks.d \n";
+		sh += "fi \n";
+
 		// reboot if required -----------------------------------
 
 		if (restore_current_system){
 			sh += "echo '' \n";
 			sh += "echo '" + _("Rebooting system...") + "' \n";
+			sh += "sleep 5s \n";
 			sh += "reboot -f \n";
 			//sh_reboot += "shutdown -r now \n";
 		}

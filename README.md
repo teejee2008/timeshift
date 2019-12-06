@@ -81,6 +81,10 @@ You can selectively include items for backup from the ***Settings*** window. Sel
 - Since installing a new linux distribution also formats your root partition you need to save your snapshots on a separate linux partition for this to work.
 - It is recommended to include hidden items in home directory by selecting the option "*Include  Hidden Items*" from *Settings* > *Users*.
 
+### Post Restore Hooks
+
+- Scripts can be run at the end of a restore job for anything that may need to be done prior to rebooting. The location for these scripts is `/etc/timeshift/restore-hooks.d`.  Note: the script(s) will be run from the restored filesystem.
+
 ## Supported System Configurations
 
 - **Normal** - OS installed on non-encrypted partitions

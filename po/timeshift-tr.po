@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: timeshift\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
 "POT-Creation-Date: 2019-08-11 18:23+0530\n"
-"PO-Revision-Date: 2018-10-05 22:49+0300\n"
+"PO-Revision-Date: 2019-12-06 15:43+0300\n"
 "Last-Translator: Gökhan Gökkaya <gokhanlnx@gmail.com>\n"
 "Language-Team: Linux Mint Turkey <linuxmint@linuxmint.net.tr>\n"
 "Language: tr\n"
@@ -37,16 +37,16 @@ msgstr "%d anlık görüntü, %s boş"
 #: Console/AppConsole.vala:916
 #, c-format
 msgid "'%s' will be on '%s'"
-msgstr "'%s' '%s' üstünde olacak"
+msgstr "'%s' '%s' üstünde olmalı"
 
 #: Console/AppConsole.vala:913
 #, c-format
 msgid "'%s' will be on root device"
-msgstr "'%s' kök aygıt üstünde olacak"
+msgstr "'%s' kök aygıt üstünde olmalı"
 
 #: Gtk/BootOptionsBox.vala:118
 msgid "(Re)install GRUB2 on:"
-msgstr "GRUB2 (Yeniden)Kurulum:"
+msgstr "GRUB2'yi şunun üstünde (yeniden) kur:"
 
 #: Core/Main.vala:365
 msgid "** Uninstalled Timeshift BTRFS **"
@@ -92,7 +92,7 @@ msgstr "Hakkında"
 
 #: Gtk/RsyncLogBox.vala:472
 msgid "Action"
-msgstr "Konum"
+msgstr "Eylem"
 
 #: Gtk/ExcludeBox.vala:219
 msgid "Add"
@@ -128,17 +128,16 @@ msgstr "Cron görevi eklendi"
 
 #: Gtk/AppGtk.vala:131
 msgid "Admin Access Required"
-msgstr "Yönetici İzni Gerekiyor"
+msgstr "Yönetici Erişimi Gerekiyor"
 
 #: Gtk/AppGtk.vala:126
 msgid "Admin access is required to backup and restore system files."
 msgstr ""
-"TimeShift dosya sistemini yedekleme ya da geri yükleme için yönetici "
-"erişimine ihtiyaç duyuyor."
+"Yedekleme ya da dosya sistemini geri yükleme için yönetici erişimi gerekli."
 
 #: Gtk/RsyncLogBox.vala:363
 msgid "All Files"
-msgstr "Dosyalar Ekle"
+msgstr "Tüm Dosyalar"
 
 #: Gtk/SnapshotBackendBox.vala:188
 msgid ""
@@ -167,7 +166,7 @@ msgstr ""
 "başarıyla önyükleme yapabilmesi için, açılış dizini (/boot) şifrelenmemiş "
 "bir aygıt olarak bağlanmalıdır. \n"
 "\n"
-"Önyükleme dizini için şifrelenmemiş bir aygıt seçin veya kök dosya sistemi "
+"Önyükleme dizini için şifrelenmemiş bir aygıt seçin ya da kök dosya sistemi "
 "için şifrelenmemiş bir aygıt seçin."
 
 #: Core/Main.vala:252
@@ -232,14 +231,15 @@ msgstr "BTRFS Araçları Bulunamadı"
 
 #: Core/Main.vala:2059 Core/Main.vala:2063
 msgid "BTRFS device is not mounted"
-msgstr "BTRFS aygıt bağlanamadı"
+msgstr "BTRFS aygıt bağlı değil"
 
 #: Gtk/BackupDeviceBox.vala:98
-#, fuzzy
 msgid ""
 "BTRFS snapshots are saved on system partition. Other partitions are not "
 "supported."
-msgstr "Diğer uygulamalar (sonraki sayfa)"
+msgstr ""
+"BTRFS anlık görüntüleri sistem bölümüne kaydedilir. Diğer bölümler "
+"desteklenmiyor."
 
 #: Gtk/FinishBox.vala:92
 msgid ""
@@ -293,8 +293,8 @@ msgstr "Anlık görüntü önyüklemesi başarısız!"
 msgid ""
 "Boot snapshots are created with a delay of 10 minutes after system startup."
 msgstr ""
-"Anlık görüntüler BTRFS dosya sisteminin dahili özellikleri kullanılarak "
-"oluşturulur."
+"Önyükleme anlık görüntüleri, sistem başlatıldıktan sonra 10 dakikalık bir "
+"gecikme ile oluşturuldu."
 
 #: Core/Main.vala:1011
 msgid "Boot snapshots are enabled"
@@ -363,7 +363,7 @@ msgstr "Değişen öğeler:"
 
 #: Gtk/RestoreWindow.vala:104
 msgid "Checking Restore Actions (Dry Run)"
-msgstr "Geri Yükleme İşlemlerini Kontrol Etme (Ön Sınama)"
+msgstr "Geri Yükleme İşlemleri Denetleniyor (Ön Sınama)"
 
 #: Core/Main.vala:2750
 msgid "Checking file systems for errors..."
@@ -384,7 +384,7 @@ msgstr "Düzenlemek için tıklayın. Yeniden sıralamak için sürükleyip bır
 
 #: Gtk/ExcludeBox.vala:59
 msgid "Click to edit. Drag-drop to re-order."
-msgstr "Düzenlemek için tıklayın. Yeniden sıralamak için sürükleyip bırakın."
+msgstr "Düzenlemek için tıklayın. Yeniden sıralamak için sürükle-bırak."
 
 #: Gtk/RestoreWindow.vala:69
 msgid "Clone System"
@@ -420,7 +420,7 @@ msgstr "Aşağıdaki komut listesi bu sistem için kullanılabilir değil"
 
 #: Gtk/SnapshotListBox.vala:224
 msgid "Comments"
-msgstr "Açıklamalar"
+msgstr "Yorumlar"
 
 #: Gtk/RestoreBox.vala:74 Gtk/RestoreBox.vala:187 Core/Main.vala:2793
 msgid "Comparing Files (Dry Run)..."
@@ -428,7 +428,7 @@ msgstr "Dosyaları Karşılaştırma (Ön Sınama) ..."
 
 #: Core/Main.vala:2559
 msgid "Comparing files with rsync..."
-msgstr "Dosyalar rsync ile eşitleniyor..."
+msgstr "Dosyalar rsync ile karşılaştırılıyor..."
 
 #: Gtk/BackupFinishBox.vala:50 Gtk/RestoreFinishBox.vala:50
 #: Gtk/RestoreFinishBox.vala:75 Gtk/DeleteFinishBox.vala:50
@@ -526,7 +526,7 @@ msgstr ""
 
 #: Gtk/SnapshotBackendBox.vala:95
 msgid "Create snapshots using BTRFS"
-msgstr "RSYNC kullanalarak anlık görüntü oluştur"
+msgstr "BTRFS kullanalarak anlık görüntü oluştur"
 
 #: Gtk/SnapshotBackendBox.vala:78
 msgid "Create snapshots using RSYNC tool and hard-links"
@@ -570,7 +570,8 @@ msgstr "Yeni anlık görüntü oluşturuluyor..."
 
 #: Core/Main.vala:2942
 msgid "Creating pre-restore snapshot from system subvolumes..."
-msgstr "Yeni anlık görüntü oluşturuluyor..."
+msgstr ""
+"Sistem alt hacimlerinden ön-geri yükleme anlık görünütüsü oluşturuluyor ..."
 
 #: Utility/Gtk/AboutWindow.vala:321 Utility/Gtk/AboutWindow.vala:387
 msgid "Credits"
@@ -594,7 +595,7 @@ msgstr "Cron görevi mevcut"
 
 #: Gtk/MiscBox.vala:98
 msgid "Custom"
-msgstr ""
+msgstr "Özel"
 
 #: Gtk/SnapshotListBox.vala:300 Gtk/ScheduleBox.vala:100
 msgid "Daily"
@@ -606,7 +607,7 @@ msgstr "Günlük anlık görüntü başarısız!"
 
 #: Core/Main.vala:1073
 msgid "Daily snapshots are enabled"
-msgstr "Günlük anlık görüntüler etkinleştirildi!"
+msgstr "Günlük anlık görüntüler etkinleştirildi"
 
 #: Core/Main.vala:2129
 msgid "Data will be modified on following devices:"
@@ -614,7 +615,7 @@ msgstr "Aşağıdaki cihazlarda veri değiştirilecek:"
 
 #: Gtk/MiscBox.vala:71
 msgid "Date Format"
-msgstr ""
+msgstr "Tarih Biçimi"
 
 #: Gtk/RsyncLogBox.vala:370 Gtk/RsyncLogBox.vala:575 Gtk/MainWindow.vala:161
 #: Gtk/SnapshotListBox.vala:322 Gtk/DeleteWindow.vala:98
@@ -633,7 +634,7 @@ msgstr "Tüm anlık görüntüleri sil"
 
 #: Gtk/MainWindow.vala:162
 msgid "Delete selected snapshot"
-msgstr "Seçilen anlık görüntüler silindi"
+msgstr "Seçilen anlık görüntüler sil"
 
 #: Console/AppConsole.vala:372
 msgid "Delete snapshot"
@@ -652,7 +653,7 @@ msgstr "Silinen dizin"
 #: Core/Main.vala:2921 Core/Main.vala:2925 Core/Subvolume.vala:167
 #, c-format
 msgid "Deleted subvolume"
-msgstr "Silinen altbölüm"
+msgstr "Altbölüm silindi"
 
 #: Gtk/DeleteBox.vala:58
 msgid "Deleting Snapshots..."
@@ -674,7 +675,7 @@ msgstr "Açıklama"
 #: Core/Subvolume.vala:181
 #, c-format
 msgid "Destroyed qgroup"
-msgstr "Yokedilen qgroup"
+msgstr "qgroup yokedildi"
 
 #: Core/Subvolume.vala:171
 #, c-format
@@ -692,7 +693,7 @@ msgstr "Aygıt"
 
 #: Utility/Device.vala:1389
 msgid "Device is unlocked"
-msgstr "Aygıt kilidi açık"
+msgstr "Aygıt kilitli değil"
 
 #: Utility/Device.vala:1284 Utility/Device.vala:1346
 msgid "Device name is empty!"
@@ -705,12 +706,12 @@ msgstr "Aygıt bulunamadı"
 #: Gtk/BackupDeviceBox.vala:97
 #, c-format
 msgid "Devices displayed above have BTRFS file systems."
-msgstr "Linux dosya sistemli aygıtlar"
+msgstr "Yukarıda görüntülenen cihazlar BTRFS dosya sistemine sahip."
 
 #: Gtk/BackupDeviceBox.vala:104
 #, c-format
 msgid "Devices displayed above have Linux file systems."
-msgstr "Linux dosya sistemli aygıtlar"
+msgstr "Yukarıda görüntülenen cihazlar Linux dosya sistemine sahip."
 
 #: Gtk/RestoreDeviceBox.vala:84
 msgid "Devices from which snapshot was created are pre-selected."
@@ -747,7 +748,7 @@ msgstr "Dağıtım"
 
 #: Utility/Gtk/AboutWindow.vala:449
 msgid "Documentation"
-msgstr "Bağışlar"
+msgstr "Belgelendirme"
 
 #: Gtk/MainWindow.vala:209 Gtk/MainWindow.vala:210
 #: Utility/Gtk/DonationWindow.vala:43 Utility/Gtk/DonationWindow.vala:76
@@ -776,7 +777,7 @@ msgstr "Şifrelenmiş Aygıt"
 
 #: Gtk/UsersBox.vala:236
 msgid "Encrypted Home Directory"
-msgstr "Şifreli Ev Dizini"
+msgstr "Şifrelenmiş Ev Dizini"
 
 #: Console/AppConsole.vala:886
 #, c-format
@@ -812,11 +813,11 @@ msgstr "Hata"
 
 #: Gtk/RestoreWindow.vala:475
 msgid "Error running Rsync"
-msgstr "Rsync çalıştırılırken hata oluştu"
+msgstr "Rsync çalışırken hata oluştu"
 
 #: Gtk/BackupWindow.vala:82 Gtk/SetupWizardWindow.vala:99
 msgid "Estimate"
-msgstr "Hesapla"
+msgstr "Hesaplama"
 
 #: Gtk/EstimateBox.vala:56
 msgid "Estimating System Size..."
@@ -899,9 +900,8 @@ msgid "Failed to delete file"
 msgstr "Dosya silme başarısız"
 
 #: Core/Subvolume.vala:153
-#, fuzzy
 msgid "Failed to delete snapshot nested subvolume"
-msgstr "Anlık görüntü altbölümü silme başarısız"
+msgstr "İç içe geçmiş altbölüm anlık görüntüsü silinemedi"
 
 #: Core/Subvolume.vala:163
 msgid "Failed to delete snapshot subvolume"
@@ -925,7 +925,7 @@ msgstr "Sistem boyutu hesaplama başarısız"
 
 #: Utility/CronTab.vala:257
 msgid "Failed to export crontab file"
-msgstr "Crontab dosyası dışa aktarma başarısız"
+msgstr "Crontab dosyasını dışa aktarma başarısız"
 
 #: Console/AppConsole.vala:699 Console/AppConsole.vala:763
 #: Console/AppConsole.vala:895 Console/AppConsole.vala:990
@@ -1000,7 +1000,7 @@ msgstr "Hariç tutma listesini kaydetme başarısız"
 #: Utility/Device.vala:1380 Utility/Device.vala:1434 Utility/Device.vala:1459
 #: Utility/Device.vala:1480 Utility/Device.vala:1500
 msgid "Failed to unlock device"
-msgstr "Aygıt kilidi açma başarısız"
+msgstr "Aygıt kilidini açma başarısız"
 
 #: Utility/Device.vala:1731
 msgid "Failed to unmount"
@@ -1016,11 +1016,11 @@ msgstr "Dosya yazma başarısız"
 
 #: Gtk/RsyncLogBox.vala:122
 msgid "File (snapshot)"
-msgstr "Anlık görüntü sil"
+msgstr "Dosya (anlık görüntü)"
 
 #: Gtk/RsyncLogBox.vala:119
 msgid "File (system)"
-msgstr "Dosya Sistemi"
+msgstr "Dosya (sistem)"
 
 #: Gtk/ExcludeMessageWindow.vala:98
 msgid "File Pattern"
@@ -1037,7 +1037,7 @@ msgstr "Dosya eksik"
 #: Utility/TeeJee.FileSystem.vala:205 Utility/TeeJee.FileSystem.vala:547
 #: Utility/RsyncTask.vala:298 Utility/CronTab.vala:225
 msgid "File not found"
-msgstr "Dosya bulunamadı"
+msgstr "Dosya bulunmadı"
 
 #: Gtk/ExcludeListSummaryWindow.vala:62
 msgid ""
@@ -1045,7 +1045,7 @@ msgid ""
 "Patterns starting with a + will include the item instead of excluding."
 msgstr ""
 "Aşağıdaki şablonlarla eşleşen dosyalar ve dizinler hariç tutulacaktır. + Ile "
-"başlayan şablonlar hariç tutmak yerine öğeyi içerecektir."
+"başlayan şablonlar, hariç tutmak yerine öğeyi içerecektir."
 
 #: Gtk/SnapshotBackendBox.vala:192
 msgid "Files and directories can be excluded to save disk space."
@@ -1054,20 +1054,20 @@ msgstr ""
 
 #: Gtk/RestoreBox.vala:119
 msgid "Files and directory counts:"
-msgstr "Dosyalar ve dizin sayıları:"
+msgstr "Dosya ve dizin sayıları:"
 
 #: Gtk/ExcludeMessageWindow.vala:76
 msgid "Files matching the following patterns will be excluded"
-msgstr "Aşağıdaki şablonlarla eşleşen dosyalar hariç tutuluyor"
+msgstr "Aşağıdaki şablonlarla eşleşen dosyalar hariç tutulacak"
 
 #: Utility/Device.vala:1948
 #, c-format
 msgid "Filesystem"
-msgstr "Dosya Sistemi"
+msgstr "Dosya sistemi"
 
 #: Gtk/RsyncLogBox.vala:302
 msgid "Filter by name or path"
-msgstr "Aygıt adı ya da numarası girin"
+msgstr "Ada veya yola göre filtrele"
 
 #: Gtk/SettingsWindow.vala:103
 msgid "Filters"
@@ -1080,7 +1080,7 @@ msgstr "Bitir"
 
 #: Gtk/RestoreWindow.vala:130 Gtk/SetupWizardWindow.vala:120
 msgid "Finished"
-msgstr "Tamamlandı"
+msgstr "Bitti"
 
 #: Gtk/RestoreExcludeBox.vala:78
 msgid "Firefox, Chromium, Chrome, Opera, Epiphany, Midori"
@@ -1092,7 +1092,7 @@ msgstr "İlk anlık görüntü gerekiyor:"
 
 #: Core/Main.vala:2912
 msgid "Found existing pre-restore snapshot"
-msgstr "Ön-geri yükleme anlık görüntüsü bulundu"
+msgstr "Mevcut ön-geri yükleme anlık görüntüsü bulundu"
 
 #: Gtk/BackupDeviceBox.vala:215
 msgid "Free"
@@ -1129,7 +1129,7 @@ msgstr "Grup"
 
 #: Gtk/SnapshotBackendBox.vala:132
 msgid "Help"
-msgstr ""
+msgstr "Yardım"
 
 #: Gtk/ExcludeMessageWindow.vala:129
 msgid ""
@@ -1153,7 +1153,7 @@ msgstr "Bu pencereyi gizle (dosyalar arka planda silinir)"
 
 #: Gtk/UsersBox.vala:120
 msgid "Home"
-msgstr "Ev Dizini"
+msgstr "Ev"
 
 #: Gtk/ExcludeMessageWindow.vala:116
 msgid "Home Directory"
@@ -1261,7 +1261,7 @@ msgstr "Kök Aygıtta Koru"
 
 #: Gtk/RestoreDeviceBox.vala:229
 msgid "Keep this mount path on the root filesystem"
-msgstr "Bu bağlama yolunu kök dizin dosya sisteminde koru"
+msgstr "Bu bağlama yolunu, kök dizin dosya sisteminde koru"
 
 #: Gtk/SnapshotListBox.vala:519
 msgid "LIVE"
@@ -1276,15 +1276,15 @@ msgstr "Etiket"
 #: Core/Main.vala:1023
 #, c-format
 msgid "Last boot snapshot is %d hours old"
-msgstr "Son açılış anlık görüntüsü %d saatten daha eski"
+msgstr "Son açılış anlık görüntü %d saatten daha eski"
 
 #: Core/Main.vala:1018
 msgid "Last boot snapshot is older than system start time"
-msgstr "Son açılış anlık görüntüsü sistem açılış zamanından daha eski"
+msgstr "Son açılış anlık görüntü sistem açılış zamanından daha eski"
 
 #: Core/Main.vala:1014
 msgid "Last boot snapshot not found"
-msgstr "Son açılış anlık görüntü bulunamadı"
+msgstr "Son açılış anlık görüntüsü bulunamadı"
 
 #: Core/Main.vala:1085
 #, c-format
@@ -1354,7 +1354,7 @@ msgstr "Anlık görüntüden bağlantı"
 
 #: Console/AppConsole.vala:353
 msgid "List"
-msgstr "Listele"
+msgstr "Liste"
 
 #: Console/AppConsole.vala:355
 msgid "List devices"
@@ -1387,7 +1387,7 @@ msgstr "Silme için işaretlendi"
 
 #: Core/SnapshotRepo.vala:712 Core/SnapshotRepo.vala:755
 msgid "Maximum backups exceeded for backup level"
-msgstr "Yedekleme seviyesi için maksimum yedekler aşıldı"
+msgstr "Yedekleme seviyesi için maksimum yedekleme aşıldı"
 
 #: Gtk/MainWindow.vala:218
 msgid "Menu"
@@ -1395,7 +1395,7 @@ msgstr "Menü"
 
 #: Gtk/SettingsWindow.vala:105
 msgid "Misc"
-msgstr ""
+msgstr "Çeşitli"
 
 #: Gtk/UsersBox.vala:354
 msgid "Miscellaneous"
@@ -1459,7 +1459,7 @@ msgstr "Değişiklik Yok"
 
 #: Gtk/MainWindow.vala:608 Gtk/DeleteWindow.vala:335
 msgid "No Snapshots Selected"
-msgstr "Seçili anlık görüntü yok"
+msgstr "Seçili Anlık Görüntü Yok"
 
 #: Gtk/MainWindow.vala:1057
 msgid "No snapshots available"
@@ -1497,7 +1497,7 @@ msgstr "Bulunamadı"
 
 #: Core/SnapshotRepo.vala:683
 msgid "Not Selected"
-msgstr "Seçim Yok"
+msgstr "Seçilmedi"
 
 #: Core/Main.vala:382
 msgid "Not Supported"
@@ -1540,8 +1540,8 @@ msgid ""
 "OS must be installed on a BTRFS partition with Ubuntu-type subvolume layout "
 "(@ and @home subvolumes). Other layouts are not supported."
 msgstr ""
-"İşletim Sistemi, Ubuntu tipi altbölüm ile (@ ve @home altbölümleri) bir "
-"BTRFS disk bölümünde olmalı. Diğer düzenler desteklenmiyor."
+"İşletim Sistemi, Ubuntu tipi altbölüm düzeni ile (@ ve @home altbölümleri) "
+"bir BTRFS disk bölümünde olmalı. Diğer düzenler desteklenmiyor."
 
 #: Core/Main.vala:4223
 msgid "Older log files removed"
@@ -1559,7 +1559,7 @@ msgstr "İsteğe bağlı (elle)"
 msgid ""
 "Only ubuntu-type layouts with @ and @home subvolumes are currently supported."
 msgstr ""
-"Şu an sadece @ and @home altbölümleri ile Ubuntu tipi  düzenler "
+"Şu an sadece @ ve @home altbölümleri ile Ubuntu tipi düzenler "
 "desteklenmektedir."
 
 #: Gtk/MainWindow.vala:219
@@ -1572,7 +1572,7 @@ msgid ""
 "BTRFS mode"
 msgstr ""
 "BTRFS kipinde anlık görüntüler oluşturmak için \"--snapshot-device\" "
-"seçeneği belirtilmemelidir."
+"seçeneği belirtilmemelidir"
 
 #: Gtk/AppGtk.vala:114 Console/AppConsole.vala:351
 msgid "Options"
@@ -1603,7 +1603,7 @@ msgstr "Disk bölümü desteklenmeyen bir altbölüme sahip."
 #: Gtk/RestoreDeviceBox.vala:93 Core/SnapshotRepo.vala:688
 #, c-format
 msgid "Path"
-msgstr "Dosya yolu"
+msgstr "Hedef"
 
 #: Gtk/ExcludeBox.vala:162
 msgid "Pattern"
@@ -1636,7 +1636,7 @@ msgstr ""
 #: Console/AppConsole.vala:103
 msgid "Please run the application as admin (using 'sudo' or 'su')"
 msgstr ""
-"Lütfen uygulamayı ('sudo' ya da  'su' kullanarak) yönetici haklarıyla "
+"Lütfen uygulamayı ('sudo' ya da 'su' kullanarak) yönetici haklarıyla "
 "çalıştırın"
 
 #: Core/Main.vala:2212
@@ -1645,7 +1645,7 @@ msgstr "Lütfen tüm çalışmanızı kaydedin ve tüm programları kapatın."
 
 #: Gtk/MainWindow.vala:688
 msgid "Please select a snapshot to view the log!"
-msgstr "Lütfen günlüğe bakmak için bir anlık görüntü seçin."
+msgstr "Lütfen günlüğe bakmak için bir anlık görüntü seçin!"
 
 #: Gtk/RestoreDeviceBox.vala:512
 msgid "Please select the GRUB device"
@@ -1722,7 +1722,7 @@ msgstr "GRUB2 önyükleyiciyi seçilen aygıtta yeniden kurar."
 #: Gtk/RsyncLogBox.vala:181
 #, c-format
 msgid "Read %'d of %'d lines..."
-msgstr "%'d of %'d satırları okunuyor..."
+msgstr "%'d / %'d satırlar okunuyor..."
 
 #: Core/Main.vala:2418
 msgid "Rebooting system..."
@@ -1739,7 +1739,7 @@ msgstr "Yenile"
 
 #: Gtk/BackupDeviceBox.vala:106
 msgid "Remote and network locations are not supported."
-msgstr "Diğer uygulamalar (sonraki sayfa)"
+msgstr "Uzak bağlantı ve ağ konumları desteklenmiyor."
 
 #: Gtk/ExcludeBox.vala:254
 msgid "Remove"
@@ -1783,8 +1783,8 @@ msgid ""
 "Required for displaying shared and unshared size for snapshots in the main "
 "window"
 msgstr ""
-"Ana penceredeki anlık görüntüler için paylaşılmayan ve paylaşılmayan "
-"boyutların görüntülenmesi için gereklidir"
+"Paylaşılmayan ve paylaşılmayan anlık görüntü boyutlarının görüntülenmesi "
+"için gereklidir"
 
 #: Gtk/RsyncLogBox.vala:377 Gtk/RsyncLogBox.vala:567 Gtk/RestoreWindow.vala:125
 #: Gtk/MainWindow.vala:151 Gtk/RestoreFinishBox.vala:71
@@ -1798,11 +1798,11 @@ msgstr "@home altbölümü geri yüklendi"
 
 #: Gtk/RestoreWindow.vala:89
 msgid "Restore Device"
-msgstr "Geri Yükleme Aygıtı"
+msgstr "Aygıtı Geri Yükle"
 
 #: Gtk/RestoreWindow.vala:94
 msgid "Restore Exclude"
-msgstr "Geri Yükleme Hariç Tutmaları"
+msgstr "Hariç Tutmaları Geri Yükle"
 
 #: Gtk/RestoreWindow.vala:69
 msgid "Restore Snapshot"
@@ -1839,8 +1839,8 @@ msgid ""
 "currently in use will be preserved as a new snapshot. If required, this "
 "snapshot can be restored later to 'undo' the restore."
 msgstr ""
-"Bir anlık görüntü geri yüklenerek sistem altbölümlerinin yerini alır,  ve şu "
-"an kullanımdaki sistem altbölümleri yeni bir anlık görüntü olarak "
+"Bir anlık görüntü geri yüklenerek sistem altbölümlerinin yerini alır, ve şu "
+"an kullanımdaki sistem altbölümleri, yeni bir anlık görüntü olarak "
 "korunacaktır. Eğer gerekirse, bu anlık görüntü daha sonra geri yüklemenin "
 "'geri alınması' için eski haline getirilebilir."
 
@@ -1873,12 +1873,12 @@ msgstr "Kök aygıt seçilmedi"
 
 #: Gtk/RsyncLogWindow.vala:49
 msgid "Rsync Log Viewer"
-msgstr "Günlük Görüntüleyici"
+msgstr "Rsync Günlük Görüntüleyici"
 
 #: Gtk/AppGtk.vala:119
 #, c-format
 msgid "Run 'timeshift' for the command-line version of this tool"
-msgstr "Bu aracın komut satırı sürümü için 'timeshift' komutu çalıştırın"
+msgstr "Bu aracın komut satırı sürümü için 'timeshift' komutunu çalıştırın"
 
 #: Console/AppConsole.vala:383
 msgid "Run in non-interactive mode"
@@ -1893,8 +1893,8 @@ msgid ""
 "Save snapshots to an external disk instead of the system disk to guard "
 "against drive failures."
 msgstr ""
-"Sürücü arızalarına karşı koruma sağlamak için anlık görüntüleri sistem diski "
-"yerine harici bir diske kaydedin."
+"Sürücü arızalarına karşı koruma sağlamak için, anlık görüntüleri sistem "
+"diski yerine harici bir diske kaydedin."
 
 #: Gtk/FinishBox.vala:97
 msgid ""
@@ -1944,7 +1944,7 @@ msgstr ""
 #: Console/AppConsole.vala:872
 #, c-format
 msgid "Select '%s' device (default = %s)"
-msgstr "'%s' aygıtı seç (varsayılan = %s)"
+msgstr "'%s' aygıtını seç (varsayılan = %s)"
 
 #: Console/AppConsole.vala:691 Core/SnapshotRepo.vala:593
 msgid "Select BTRFS system disk with root subvolume (@)"
@@ -1960,7 +1960,7 @@ msgstr "Yolu Seç"
 
 #: Gtk/MainWindow.vala:687
 msgid "Select Snapshot"
-msgstr "Anlık Görüntü Seç"
+msgstr "Anlık Görüntü Seçin"
 
 #: Gtk/ScheduleBox.vala:57
 msgid "Select Snapshot Levels"
@@ -1976,7 +1976,7 @@ msgstr "Anlık Görüntü Türünü Seçin"
 
 #: Gtk/DeleteWindow.vala:85
 msgid "Select Snapshots"
-msgstr "Anlık Görüntü Seçin"
+msgstr "Anlık Görüntüleri Seçin"
 
 #: Gtk/RestoreDeviceBox.vala:61
 msgid "Select Target Device"
@@ -1997,7 +1997,7 @@ msgstr "Kök dizin dosya sistemi (/) için başka bir aygıt seçin"
 
 #: Core/SnapshotRepo.vala:632 Core/SnapshotRepo.vala:659
 msgid "Select another device or free up some space"
-msgstr "Bir başka aygıt seçin ya da boş alanı artırın"
+msgstr "Başka bir aygıt seçin ya da boş alanı artırın"
 
 #: Gtk/MainWindow.vala:540 Gtk/MainWindow.vala:547
 msgid "Select another device to delete snasphots"
@@ -2005,7 +2005,7 @@ msgstr "Anlık görüntüleri silmek için başka bir aygıt seçin"
 
 #: Gtk/MainWindow.vala:474
 msgid "Select another device?"
-msgstr "Başka bir aygıt seç?"
+msgstr "Başka bir aygıt seçin?"
 
 #: Gtk/RestoreExcludeBox.vala:57
 msgid "Select applications to exclude from restore"
@@ -2097,15 +2097,16 @@ msgstr "Seçilen anlık görüntü silme işlemi için işaretlendi"
 
 #: Gtk/MainWindow.vala:818
 msgid "Selected snapshot is marked for deletion and cannot be restored"
-msgstr "Seçilen anlık görüntü silinme için işaretlendi ve geri yüklenemeyecek"
+msgstr ""
+"Seçilen anlık görüntü silme işlemi için işaretlendi ve geri yüklenemeyecek"
 
 #: Gtk/UsersBox.vala:238
 msgid ""
 "Selected user has an encrypted home directory. It's not possible to include "
 "only hidden files."
 msgstr ""
-"Seçilen kullanıcı şifreli ev dizinine sahip. Sadece gizli dosyalar dahil "
-"edilemez."
+"Seçilen kullanıcı şifreli ev dizinine sahip. Sadece gizli dosyaları dahil "
+"etmek mümkün değildir."
 
 #: Utility/Device.vala:1933
 #, c-format
@@ -2130,11 +2131,11 @@ msgstr "Ayarlar sihirbazı"
 
 #: Gtk/FinishBox.vala:58
 msgid "Setup Complete"
-msgstr "Yapılandırma Tamamlandı"
+msgstr "Ayar Tamamlandı"
 
 #: Gtk/SetupWizardWindow.vala:64
 msgid "Setup Wizard"
-msgstr "Yapılandırma Sihirbazı"
+msgstr "Ayar Sihirbazı"
 
 #: Console/AppConsole.vala:380
 msgid "Show additional debug messages"
@@ -2146,7 +2147,7 @@ msgstr "Tüm seçenekleri göster"
 
 #: Gtk/RestoreExcludeBox.vala:121
 msgid "Show more applications to exclude on the next page"
-msgstr "Daha fazla hariç bırakılacak uygulamalar sonraki sayfada"
+msgstr "Sonraki sayfada hariç tutulacak daha fazla uygulama göster"
 
 #: Console/AppConsole.vala:381
 msgid "Show rsync output (default)"
@@ -2175,7 +2176,7 @@ msgstr ""
 
 #: Console/AppConsole.vala:369
 msgid "Skip GRUB2 reinstall"
-msgstr "GRUB2 yeniden kurulumu atla"
+msgstr "GRUB2 yeniden kurulumunu atla"
 
 #: Gtk/SnapshotListBox.vala:95 Core/SnapshotRepo.vala:715
 #: Core/SnapshotRepo.vala:768 Core/Main.vala:2050
@@ -2199,7 +2200,7 @@ msgstr "Anlık Görüntü Oluşturuldu"
 #: Gtk/SnapshotListBox.vala:296
 #, c-format
 msgid "Snapshot Levels"
-msgstr "Anlık Görüntü Seviyesini Seçin"
+msgstr "Anlık Görüntü Seviyeleri"
 
 #: Gtk/MainWindow.vala:754
 msgid "Snapshot deletion in progress..."
@@ -2265,12 +2266,12 @@ msgid ""
 "Snapshots are created using the built-in features of the BTRFS file system."
 msgstr ""
 "Anlık görüntüler BTRFS dosya sisteminin dahili özellikleri kullanılarak "
-"oluşturulur."
+"oluşturuldu."
 
 #: Gtk/ScheduleBox.vala:167
 #, c-format
 msgid "Snapshots are not scheduled at fixed times."
-msgstr "Anlık görüntü aygıtı seçilmedi"
+msgstr "Anlık görüntüler için sabit zamanlama planlanmadı."
 
 #: Gtk/SnapshotBackendBox.vala:173
 msgid ""
@@ -2286,9 +2287,10 @@ msgid ""
 "copied, deleted or overwritten, there is no risk of data loss. The existing "
 "system is preserved as a new snapshot after restore."
 msgstr ""
-"Anlık görüntüler sistem altbölümlerini değiştirerek geri yüklenir. Dosyalar "
-"asla kopyalanmadığı, silinmediği veya üzerine yazılmadığından, veri kaybı "
-"riski yoktur."
+"Anlık görüntüler sistem altbölümlerinin değiştirilmesiyle geri yüklenir. "
+"Dosyalar asla kopyalanmadığı, silinmediği veya üzerine yazılmadığından, veri "
+"kaybı riski yoktur. Mevcut sistem, geri yükleme işleminden sonra yeni bir "
+"anlık görüntü olarak korunur."
 
 #: Gtk/SnapshotBackendBox.vala:175
 msgid ""
@@ -2306,7 +2308,7 @@ msgid ""
 "not supported."
 msgstr ""
 "Anlık görüntüler seçilen disk bölümünde /timeshift altına kaydedilir. Diğer "
-"yerler desteklenmez."
+"konumlar desteklenmez."
 
 #: Gtk/BackupDeviceBox.vala:99
 msgid ""
@@ -2314,7 +2316,7 @@ msgid ""
 "locations are not supported."
 msgstr ""
 "Anlık görüntüler seçilen disk bölümünde /timeshift-btrfs altına kaydedilir. "
-"Diğer yerler desteklenmez."
+"Diğer konumlar desteklenmez."
 
 #: Gtk/MainWindow.vala:996
 msgid "Snapshots available for restore"
@@ -2362,7 +2364,7 @@ msgstr "GRUB2 önyükleyici kurulumu için aygıt belirtin"
 
 #: Console/AppConsole.vala:366
 msgid "Specify snapshot to restore"
-msgstr "Geri yükleme için aygıt belirtin"
+msgstr "Geri yüklenecek anlık görüntüyü belirtin"
 
 #: Console/AppConsole.vala:367
 msgid "Specify target device"
@@ -2407,7 +2409,7 @@ msgstr "BTRFS kipine geçiş (varsayılan: config)"
 
 #: Console/AppConsole.vala:379
 msgid "Switch to RSYNC mode (default: config)"
-msgstr "RSYNC kipine geçiş (varsayılan: config)"
+msgstr "RSYNC kipine geç (varsayılan: config)"
 
 #: Core/SnapshotRepo.vala:1045
 msgid "Symlinks updated"
@@ -2492,7 +2494,7 @@ msgstr "Sistem disk bölümü desteklenmeyen bir altbölüm düzenine sahip."
 
 #: Core/Main.vala:3453
 msgid "The target partition has an unsupported subvolume layout."
-msgstr "Bu aygıt desteklenmeyen bir altbölüm düzenine sahip."
+msgstr "Hedef disk bölümü desteklenmeyen bir altbölüm düzenine sahip."
 
 #: Gtk/BackupDeviceBox.vala:512
 #, c-format
@@ -2501,7 +2503,7 @@ msgstr "Bu aygıtta anlık görüntü yok"
 
 #: Utility/Device.vala:1379
 msgid "This device is not encrypted"
-msgstr "Bu aygıt şifrelenmedi"
+msgstr "Bu aygıt şifrelenmiş değil"
 
 #: Core/Main.vala:2229
 msgid ""
@@ -2660,7 +2662,7 @@ msgstr "Kullanıcılar"
 
 #: Gtk/RestoreWindow.vala:114
 msgid "Users Home"
-msgstr "Kullanıcıların na Dizini"
+msgstr "Kullanıcıların Ana Dizini"
 
 #: Utility/Device.vala:1931
 #, c-format
@@ -2669,11 +2671,11 @@ msgstr "Üretici"
 
 #: Gtk/SnapshotListBox.vala:343
 msgid "View Rsync Log for Create"
-msgstr "Oluşturma için Günlük Göster"
+msgstr "Oluşturma için Rsync Günlüğünü Göster"
 
 #: Gtk/SnapshotListBox.vala:350
 msgid "View Rsync Log for Restore"
-msgstr "Geri Yükleme için Günlük Göster"
+msgstr "Geri Yükleme için Rsync Günlüğünü Görüntüle"
 
 #: Gtk/MainWindow.vala:380
 msgid "View TimeShift Logs"
@@ -2796,7 +2798,7 @@ msgstr "yoluna bağlandı"
 #: Gtk/RestoreBox.vala:237 Gtk/DeleteBox.vala:149 Gtk/BackupBox.vala:234
 #: Core/Main.vala:1411 Core/Snapshot.vala:501
 msgid "remaining"
-msgstr "kaldı"
+msgstr "kalan"
 
 #: Core/Main.vala:1422
 msgid "rsync returned an error"

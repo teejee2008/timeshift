@@ -174,6 +174,19 @@ public class SnapshotRepo : GLib.Object{
 			return path_combine(timeshift_path, "snapshots");
 		}
 	}
+	
+	public string custom_timeshift_path(string path){
+		if (btrfs_mode){
+			return path_combine(path, "timeshift-btrfs");
+		}
+		else{
+			return path_combine(path, "timeshift");
+		}
+	}
+	
+	public string custom_snapshots_path(string path){
+		return path_combine(custom_timeshift_path(path), "snapshots");
+	}
  
 	// load ---------------------------------------
 
@@ -279,7 +292,18 @@ public class SnapshotRepo : GLib.Object{
 			var mps = Device.get_device_mount_points(dev.uuid);
 
 			if (mps.size > 0){
-				return mps[0].mount_point;
+				if (mps.size == 1){
+					return mps[0].mount_point;
+				}
+				else{
+					foreach(var m in mps){
+						if (check_for_snapshots(m.mount_point)){
+							log_debug("Found existing snapshot dir");
+							return m.mount_point;
+						}
+					}
+					return mps[0].mount_point;
+				}
 			}
 			else{
 				Device.automount_udisks(dev.device, parent_window);
@@ -287,7 +311,18 @@ public class SnapshotRepo : GLib.Object{
 				mps = Device.get_device_mount_points(dev.uuid);
 				
 				if (mps.size > 0){
-					return mps[0].mount_point;
+					if (mps.size == 1){
+						return mps[0].mount_point;
+					}
+					else{
+						foreach(var m in mps){
+							if (check_for_snapshots(m.mount_point)){
+								log_debug("Found existing snapshot dir");
+								return m.mount_point;
+							}
+						}
+						return mps[0].mount_point;
+					}
 				}
 				else{
 					return "";
@@ -317,6 +352,16 @@ public class SnapshotRepo : GLib.Object{
 			luks_device, "", "", parent_window, out msg_out, out msg_err);
 
 		return luks_unlocked;
+	}
+	
+	public bool check_for_snapshots(string test_path){
+		log_debug("SnapshotRepo: check_for_snapshots()");
+		
+		if ((device == null) || !dir_exists(custom_snapshots_path(test_path))){
+			return false;
+		}
+		
+		return true;
 	}
 	
 	public bool load_snapshots(){

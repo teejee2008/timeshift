@@ -116,20 +116,17 @@ sudo apt-get update
 sudo apt-get install timeshift
 ```
 
-DEB and RUN packages are available on [Releases](https://github.com/teejee2008/Timeshift/releases) page for older Ubuntu releases which have reached end-of-life.
+DEB packages are available on [Releases](https://github.com/teejee2008/Timeshift/releases) page for older Ubuntu releases which have reached end-of-life.
 
-#### Other Linux Distributions
-
-Download the installer from [Releases](https://github.com/teejee2008/Timeshift/releases) page and execute it in a terminal window: 
+#### Fedora
 
 ```sh
-sudo sh ./timeshift*amd64.run # 64-bit
-sudo sh ./timeshift*i386.run  # 32-bit
+sudo dnf update
+sudo apt-get install timeshift
 ```
 
 Installer can be used on the following distribution types:
 
-- **Fedora** based - Fedora, RedHat, Cent OS, etc (supports **dnf** and **yum**)
 - **Debian** based - Debian, Ubuntu, Linux Mint, Elementary OS, etc (supports **apt**)
 - **Arch** based - Arch Linux, Manjaro, etc (supports **pacman**)
 

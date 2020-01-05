@@ -122,7 +122,7 @@ DEB packages are available on [Releases](https://github.com/teejee2008/Timeshift
 
 ```sh
 sudo dnf update
-sudo apt-get install timeshift
+sudo dnf install timeshift
 ```
 
 Installer can be used on the following distribution types:

@@ -10,7 +10,7 @@ Homepage: https://teejeetech.in/
 
 Package: timeshift
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, rsync
+Depends: ${shlibs:Depends}, ${misc:Depends}, rsync, btrfs-tools | btrfs-progs
 #Recommends:
 Replaces: timeshift-btrfs
 Description: System restore utility

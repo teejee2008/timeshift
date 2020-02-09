@@ -111,9 +111,9 @@ install:
 	# binary
 	install -m 0755 ${app_name} "$(DESTDIR)$(bindir)"
 	install -m 0755 ${app_name}-gtk "$(DESTDIR)$(bindir)"
-	install -m 0755 ${app_name}-uninstall "$(DESTDIR)$(bindir)"
+	#install -m 0755 ${app_name}-uninstall "$(DESTDIR)$(bindir)"
 	install -m 0755 ${app_name}-launcher "$(DESTDIR)$(bindir)"
-
+	
 	# shared files
 	cp -dpr --no-preserve=ownership -t "$(DESTDIR)$(sharedir)/${app_name}" ./share/${app_name}/*
 	find $(DESTDIR)$(sharedir)/${app_name} -type d -exec chmod 755 {} \+

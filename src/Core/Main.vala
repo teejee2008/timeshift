@@ -336,7 +336,7 @@ public class Main : GLib.Object{
 
 		log_debug("Main: check_dependencies()");
 		
-		string[] dependencies = { "rsync","/sbin/blkid","df","mount","umount","fuser","crontab","cp","rm","touch","ln","sync"}; //"shutdown","chroot",
+		string[] dependencies = { "rsync","/sbin/blkid","df","mount","umount","fuser","crontab","cp","rm","touch","ln","sync","ionice"}; //"shutdown","chroot",
 
 		string path;
 		foreach(string cmd_tool in dependencies){
@@ -2267,7 +2267,7 @@ public class Main : GLib.Object{
 
 		// run rsync ---------------------------------------
 
-		sh += "rsync -avir --force --delete --delete-after";
+		sh += "ionice -c idle rsync -avir --force --delete --delete-after";
 
 		if (dry_run){
 			sh += " --dry-run";

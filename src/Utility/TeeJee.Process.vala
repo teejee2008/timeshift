@@ -42,7 +42,7 @@ namespace TeeJee.ProcessHelper{
 		exec_script_sync("echo 'ok'",out std_out,out std_err, true);
 		if ((std_out == null)||(std_out.strip() != "ok")){
 			TEMP_DIR = Environment.get_home_dir() + "/.temp/" + subdir_name + "/" + random_string();
-			exec_sync("rm -rf '%s'".printf(TEMP_DIR), null, null);
+			exec_sync("ionice -c idle rm -rf '%s'".printf(TEMP_DIR), null, null);
 			dir_create(TEMP_DIR);
 		}
 

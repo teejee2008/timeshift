@@ -77,7 +77,7 @@ public class Main : GLib.Object{
 	public Gee.HashMap<string, Subvolume> sys_subvolumes;
 
 	public string mount_point_restore = "";
-	public string mount_point_app = "/mnt/timeshift";
+	public string mount_point_app = "/run/timeshift";
 
 	public LinuxDistro current_distro;
 	public bool mirror_system = false;

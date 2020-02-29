@@ -188,7 +188,7 @@ public class SnapshotRepo : GLib.Object{
 			log_debug("device=%s".printf(device.device));
 		}
 
-		mount_path = unlock_and_mount_device(device, "/mnt/timeshift/backup");
+		mount_path = unlock_and_mount_device(device, "/run/timeshift/backup");
 		
 		if (mount_path.length == 0){
 			return false;
@@ -217,7 +217,7 @@ public class SnapshotRepo : GLib.Object{
 					// @home is on a separate device
 					device_home = subvol.get_device();
 					
-					mount_paths["@home"] = unlock_and_mount_device(device_home, "/mnt/timeshift/backup-home");
+					mount_paths["@home"] = unlock_and_mount_device(device_home, "/run/timeshift/backup-home");
 					
 					if (mount_paths["@home"].length == 0){
 						return false;

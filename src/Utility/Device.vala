@@ -1643,10 +1643,10 @@ public class Device : GLib.Object{
 	}
 
 	public static string automount(
-		string dev_name_or_uuid, string mount_options = "", string mount_prefix = "/mnt"){
+		string dev_name_or_uuid, string mount_options = "", string mount_prefix = "/run"){
 
 		/* Returns the mount point of specified device.
-		 * If unmounted, mounts the device to /mnt/<uuid> and returns the mount point.
+		 * If unmounted, mounts the device to /run/<uuid> and returns the mount point.
 		 * */
 
 		string device = "";

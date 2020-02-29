@@ -82,6 +82,7 @@ class SnapshotBackendBox : Gtk.Box{
 		opt_rsync.toggled.connect(()=>{
 			if (opt_rsync.active){
 				App.btrfs_mode = false;
+				Main.first_snapshot_size = 0;
 				init_backend();
 				type_changed();
 				update_description();

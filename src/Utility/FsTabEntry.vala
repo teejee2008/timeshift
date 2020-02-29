@@ -30,6 +30,7 @@ using TeeJee.System;
 using TeeJee.Misc;
 
 public class FsTabEntry : GLib.Object{
+	
 	public bool is_comment = false;
 	public bool is_empty_line = false;
 	

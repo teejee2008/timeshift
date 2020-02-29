@@ -261,38 +261,14 @@ public class SnapshotRepo : GLib.Object{
 			}
 		}
 
-		if (dev.fstype == "btrfs"){
-
-			//Device.unmount(mount_path);
-			
-			// mount
-			bool ok = Device.mount(dev.uuid, path_to_mount, ""); // TODO: check if already mounted
-			
-			if (ok){
-				return path_to_mount;
-			}
-			else{
-				return "";
-			}
+		// mount
+		bool ok = Device.mount(dev.uuid, path_to_mount, ""); // TODO: check if already mounted
+		
+		if (ok){
+			return path_to_mount;
 		}
 		else{
-			var mps = Device.get_device_mount_points(dev.uuid);
-
-			if (mps.size > 0){
-				return mps[0].mount_point;
-			}
-			else{
-				Device.automount_udisks(dev.device, parent_window);
-
-				mps = Device.get_device_mount_points(dev.uuid);
-				
-				if (mps.size > 0){
-					return mps[0].mount_point;
-				}
-				else{
-					return "";
-				}
-			}
+			return "";
 		}
 
 		log_debug("SnapshotRepo: unlock_and_mount_device(): exit");

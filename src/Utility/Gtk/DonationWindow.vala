@@ -82,13 +82,13 @@ public class DonationWindow : Gtk.Window {
 
 		add_label(msg);
 		
-		msg = _("Use the issue tracker for reporting issues, asking questions, and requesting features. Please avoid reporting issues by email.");
+		msg = _("Since this a free application there is no dedicated support for this app. You can use the GitHub issue tracker for reporting issues, or post your questions on the Linux Mint forums. Please avoid reporting issues by email.");
 		
 		add_label(msg);
 
-		hbox = add_hbox();
+		hbox = add_vbox();
 
-		add_button(hbox, _("Issue Tracker"),
+		add_button(hbox, _("GitHub"),
 			"https://github.com/teejee2008/%s/issues".printf(appname.down()));
 
 		if (has_wiki){
@@ -132,7 +132,7 @@ public class DonationWindow : Gtk.Window {
 	
 	private string format_heading(string msg){
 
-		return "<span weight=\"bold\" size=\"large\" style=\"italic\">%s</span>".printf(msg);
+		return "<span size=\"large\" style=\"italic\">%s</span>".printf(msg);
 	}
 
 	private Gtk.Label add_label(string msg){
@@ -159,6 +159,15 @@ public class DonationWindow : Gtk.Window {
 		hbox.set_spacing(6);
 		vbox_main.add(hbox);
 		return hbox;
+	}
+	
+	private Gtk.ButtonBox add_vbox(){
+
+		var vbox = new Gtk.ButtonBox(Orientation.VERTICAL);
+		vbox.set_layout(Gtk.ButtonBoxStyle.CENTER);
+		vbox.set_spacing(6);
+		vbox_main.add(vbox);
+		return vbox;
 	}
 
 	private void add_button(Gtk.Box box, string text, string url){

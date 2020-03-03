@@ -381,6 +381,7 @@ public class Device : GLib.Object{
 		test_lsblk_version();
 
 		var list = new Gee.ArrayList<Device>();
+		var knames_check_list = new Gee.HashSet<string>();
 
 		string std_out;
 		string std_err;
@@ -442,6 +443,19 @@ public class Device : GLib.Object{
 					
 					pi.name = match.fetch(++pos).strip();
 					pi.kname = match.fetch(++pos).strip();
+
+					if ( knames_check_list.contains(pi.kname) ) {
+						if (LOG_DEBUG) {
+							log_debug("Device \"%s\" with same kname \"%s\" already added.".printf(
+								pi.name,
+								pi.kname
+							));
+						}
+
+						continue;
+					} else {
+						knames_check_list.add(pi.kname);
+					}
 					
 					pi.label = match.fetch(++pos); // don't strip; labels can have leading or trailing spaces
 					pi.uuid = match.fetch(++pos).strip();

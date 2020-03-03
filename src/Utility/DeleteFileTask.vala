@@ -90,7 +90,7 @@ public class DeleteFileTask : AsyncTask{
 
 		if (use_rsync){
 
-			cmd += "rsync -aii";
+			cmd += "ionice -c idle rsync -aii";
 
 			if (verbose){
 				cmd += " --verbose";
@@ -113,7 +113,7 @@ public class DeleteFileTask : AsyncTask{
 			cmd += " '%s/'".printf(escape_single_quote(dest_path));
 		}
 		else{
-			cmd += "rm";
+			cmd += "ionice -c idle rm";
 
 			if (verbose){
 				cmd += " -rfv";

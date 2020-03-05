@@ -344,8 +344,11 @@ namespace TeeJee.FileSystem{
 
 		try{
 			var dir = File.parse_name (dir_path);
+			
 			if (dir.query_exists () == false) {
+				
 				bool ok = dir.make_directory_with_parents (null);
+				
 				if (show_message){
 					if (ok){
 						log_msg(_("Created directory") + ": %s".printf(dir_path));
@@ -355,6 +358,7 @@ namespace TeeJee.FileSystem{
 					}
 				}
 			}
+			
 			return true;
 		}
 		catch (Error e) {
@@ -373,9 +377,12 @@ namespace TeeJee.FileSystem{
 		}
 		
 		string cmd = "rm -rf '%s'".printf(escape_single_quote(dir_path));
+		
 		log_debug(cmd);
+		
 		string std_out, std_err;
 		int status = exec_sync(cmd, out std_out, out std_err);
+		
 		if (show_message){
 			if (status == 0){
 				log_msg(_("Deleted directory") + ": %s".printf(dir_path));

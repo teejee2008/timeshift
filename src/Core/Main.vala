@@ -4244,6 +4244,8 @@ public class Main : GLib.Object{
 		clean_logs();
 
 		app_lock.remove();
+		
+		dir_delete(TEMP_DIR);
 
 		exit(exit_code);
 

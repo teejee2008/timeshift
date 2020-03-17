@@ -18,7 +18,7 @@ else
 			xhost -SI:localuser:root
 			xhost
 		elif command -v pkexec >/dev/null 2>&1; then
-			pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY ${app_command}
+			pkexec ${app_command}
 		elif command -v sudo >/dev/null 2>&1; then
 			x-terminal-emulator -e "sudo ${app_command}"
 		elif command -v su >/dev/null 2>&1; then

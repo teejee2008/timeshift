@@ -326,7 +326,7 @@ class SnapshotListBox : Gtk.Box{
 		mi_remove = item;
 		
 		// mi_mark
-		item = new ImageMenuItem.with_label(_("Mark for Deletion"));
+		item = new ImageMenuItem.with_label(_("Mark/Uncheck for Deletion"));
 		item.image = IconManager.lookup_image("edit-delete", 16);
 		item.activate.connect(()=> { mark_selected(); });
 		menu_snapshots.append(item);

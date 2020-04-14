@@ -3732,13 +3732,13 @@ public class Main : GLib.Object{
 
 			save_exclude_list_for_backup(TEMP_DIR);
 			
-			cmd  = "LC_ALL=C ; rsync -ai --delete --numeric-ids --relative --stats --dry-run --delete-excluded --exclude-from='%s' /. '%s' &> '%s'".printf(file_exclude_list, dir_empty, file_log);
+			cmd  = "LC_ALL=C ; du -a -B1 --exclude-from='%s' / &> '%s'".printf(file_exclude_list, file_log);
 
 			log_debug(cmd);
 			ret_val = exec_script_sync(cmd, out std_out, out std_err);
 
 			if (file_exists(file_log)){
-				cmd = "cat '%s' | awk '/Total file size/ {print $4}'".printf(file_log);
+				cmd = "tail -n 1 '%s' | awk '{print $1}'".printf(file_log);
 				ret_val = exec_script_sync(cmd, out std_out, out std_err);
 				if (ret_val == 0){
 					required_space = long.parse(std_out.replace(",","").strip());

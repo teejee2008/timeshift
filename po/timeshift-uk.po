@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timeshift\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2019-08-11 18:23+0530\n"
-"PO-Revision-Date: 2017-11-03 18:39+0000\n"
+"POT-Creation-Date: 2019-08-19 03:30+0000\n"
+"PO-Revision-Date: 2020-05-01 01:21+0300\n"
 "Last-Translator: Oliver Star <ewqstar@gmail.com>\n"
 "Language-Team: Launchpad Ukrainian Translators <uk@li.org>\n"
 "Language: uk\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2018-02-03 14:28+0000\n"
-"X-Generator: Launchpad (build 18544)\n"
+"X-Generator: Poedit 2.3\n"
 "X-Launchpad-Export-Date: 2017-11-23 10:47+0000\n"
 "X-Generator: Launchpad (build 18509)\n"
 
@@ -76,6 +76,8 @@ msgstr "<b>Коментар</b> (подвійне клацання для ред
 msgid ""
 "A maintenance task runs once every hour and creates snapshots as needed."
 msgstr ""
+"Завдання з технічного обслуговування виконується один раз на годину і "
+"створює знімки за потребою."
 
 #: Console/AppConsole.vala:700 Console/AppConsole.vala:764
 #: Console/AppConsole.vala:896 Console/AppConsole.vala:991
@@ -193,7 +195,7 @@ msgstr "Конфігурацію програми збережено"
 
 #: Console/AppConsole.vala:102
 msgid "Application needs admin access."
-msgstr "Для доступу програма вимагає права адміністратора"
+msgstr "Для доступу програма вимагає права адміністратора."
 
 #: Core/Main.vala:3541
 msgid "Application will exit"
@@ -232,11 +234,12 @@ msgid "BTRFS device is not mounted"
 msgstr "Пристрій BTRFS не підключено"
 
 #: Gtk/BackupDeviceBox.vala:98
-#, fuzzy
 msgid ""
 "BTRFS snapshots are saved on system partition. Other partitions are not "
 "supported."
-msgstr "Інші застосунки (наступна сторінка)"
+msgstr ""
+"Знімки BTRFS зберігаються на системному розділі диску. Інші розділи не "
+"підтримуються."
 
 #: Gtk/FinishBox.vala:92
 msgid ""
@@ -268,7 +271,7 @@ msgstr "Пристрій архівації"
 
 #: Core/Main.vala:2030
 msgid "Backup device not specified!"
-msgstr "Не вказаний пристрій архівації"
+msgstr "Не вказаний пристрій архівації!"
 
 #: Gtk/RestoreExcludeBox.vala:91
 msgid "Bittorrent Clients"
@@ -358,7 +361,7 @@ msgstr "Змінені елементи:"
 
 #: Gtk/RestoreWindow.vala:104
 msgid "Checking Restore Actions (Dry Run)"
-msgstr ""
+msgstr "Перевірка дій відновлення (пробний прогін)"
 
 #: Core/Main.vala:2750
 msgid "Checking file systems for errors..."
@@ -378,9 +381,8 @@ msgid "Click to edit. Drag and drop to re-order."
 msgstr "Клацніть для редагування. Перетягніть і скиньте для перепорядкування."
 
 #: Gtk/ExcludeBox.vala:59
-#, fuzzy
 msgid "Click to edit. Drag-drop to re-order."
-msgstr "Клацніть для редагування. Перетягніть і скиньте для перепорядкування."
+msgstr "Клацніть для редагування. Перетягніть і скиньте, щоб перевпорядкувати."
 
 #: Gtk/RestoreWindow.vala:69
 msgid "Clone System"
@@ -420,7 +422,7 @@ msgstr "Коментарі"
 
 #: Gtk/RestoreBox.vala:74 Gtk/RestoreBox.vala:187 Core/Main.vala:2793
 msgid "Comparing Files (Dry Run)..."
-msgstr ""
+msgstr "Порівняння файлів (пробний прогін)..."
 
 #: Core/Main.vala:2559
 msgid "Comparing files with rsync..."
@@ -437,7 +439,7 @@ msgstr "Закінчено з помилками"
 
 #: Gtk/RsyncLogBox.vala:87 Gtk/RestoreWindow.vala:109
 msgid "Confirm Actions"
-msgstr ""
+msgstr "Підтвердити дії"
 
 #: Console/AppConsole.vala:1070
 #, c-format
@@ -445,9 +447,8 @@ msgid "Continue with restore? (y/n): "
 msgstr "Продовжити відновлення? (т/н): "
 
 #: Utility/Gtk/AboutWindow.vala:425
-#, fuzzy
 msgid "Contributors"
-msgstr "Внески"
+msgstr "Автори"
 
 #: Console/AppConsole.vala:836 Console/AppConsole.vala:967
 msgid "Could not find device"
@@ -470,7 +471,7 @@ msgstr "Неможливо знайти підтом системи"
 msgid "Could not find system subvolumes for creating pre-restore snapshot"
 msgstr ""
 "Неможливо знайти підтоми системи для створення знімку попереднього "
-"відновлення."
+"відновлення"
 
 #: Gtk/RsyncLogBox.vala:366 Gtk/RsyncLogBox.vala:571 Gtk/MainWindow.vala:141
 #, c-format
@@ -522,13 +523,12 @@ msgstr ""
 "знімків"
 
 #: Gtk/SnapshotBackendBox.vala:95
-#, fuzzy
 msgid "Create snapshots using BTRFS"
-msgstr "Створити знімок з використанням режиму RSYNC"
+msgstr "Створення знімків за допомогою BTRFS"
 
 #: Gtk/SnapshotBackendBox.vala:78
 msgid "Create snapshots using RSYNC tool and hard-links"
-msgstr "Створити знімок з використанням режиму RSYNC і жорстких посилань."
+msgstr "Створити знімок з використанням режиму RSYNC і жорстких посилань"
 
 #: Gtk/RsyncLogBox.vala:366 Gtk/RsyncLogBox.vala:571 Gtk/RsyncLogBox.vala:592
 #: Gtk/RestoreBox.vala:123 Gtk/BackupBox.vala:85
@@ -590,7 +590,7 @@ msgstr "Завдання демона Cron існує"
 
 #: Gtk/MiscBox.vala:98
 msgid "Custom"
-msgstr ""
+msgstr "Вибірково"
 
 #: Gtk/SnapshotListBox.vala:300 Gtk/ScheduleBox.vala:100
 msgid "Daily"
@@ -606,11 +606,11 @@ msgstr "Увімкнено щоденні знімки"
 
 #: Core/Main.vala:2129
 msgid "Data will be modified on following devices:"
-msgstr "Дані будуть змінені на наступних пристроях"
+msgstr "Дані будуть змінені на наступних пристроях:"
 
 #: Gtk/MiscBox.vala:71
 msgid "Date Format"
-msgstr ""
+msgstr "Формат дати"
 
 #: Gtk/RsyncLogBox.vala:370 Gtk/RsyncLogBox.vala:575 Gtk/MainWindow.vala:161
 #: Gtk/SnapshotListBox.vala:322 Gtk/DeleteWindow.vala:98
@@ -701,12 +701,12 @@ msgstr "Пристрою не знайдено"
 #: Gtk/BackupDeviceBox.vala:97
 #, c-format
 msgid "Devices displayed above have BTRFS file systems."
-msgstr "Пристрої з файловими системами Linux"
+msgstr "Пристрої з файловими системами Linux."
 
 #: Gtk/BackupDeviceBox.vala:104
 #, c-format
 msgid "Devices displayed above have Linux file systems."
-msgstr "Пристрої з файловими системами Linux"
+msgstr "Пристрої з файловими системами Linux."
 
 #: Gtk/RestoreDeviceBox.vala:84
 msgid "Devices from which snapshot was created are pre-selected."
@@ -719,6 +719,7 @@ msgstr "Пристрої з файловими системами Linux"
 #: Gtk/BackupDeviceBox.vala:105
 msgid "Devices with Windows file systems are not supported (NTFS, FAT, etc)."
 msgstr ""
+"Пристрої з файловими системами Windows не підтримуються (NTFS, FAT і т. д.)."
 
 #: Utility/TeeJee.FileSystem.vala:518
 msgid "Dir not found"
@@ -755,7 +756,7 @@ msgstr "Пожертви"
 
 #: Gtk/UsersBox.vala:357
 msgid "Enable BTRFS qgroups (recommended)"
-msgstr ""
+msgstr "Увімкнути BTRFS qgroups (рекомендовано)"
 
 #: Gtk/MainWindow.vala:1052
 msgid "Enable scheduled snapshots to protect your system"
@@ -807,7 +808,7 @@ msgstr "Помилка"
 
 #: Gtk/RestoreWindow.vala:475
 msgid "Error running Rsync"
-msgstr ""
+msgstr "Помилка виконання Rsync"
 
 #: Gtk/BackupWindow.vala:82 Gtk/SetupWizardWindow.vala:99
 msgid "Estimate"
@@ -894,9 +895,8 @@ msgid "Failed to delete file"
 msgstr "Помилка видалення файлу"
 
 #: Core/Subvolume.vala:153
-#, fuzzy
 msgid "Failed to delete snapshot nested subvolume"
-msgstr "Помилка видалення знімку підтому"
+msgstr "Не вдалося видалити вкладений додатковий Том знімка"
 
 #: Core/Subvolume.vala:163
 msgid "Failed to delete snapshot subvolume"
@@ -1003,7 +1003,7 @@ msgstr "Помилка демонтування"
 
 #: Core/Main.vala:3541
 msgid "Failed to unmount device!"
-msgstr "Помилка демонтування пристрою"
+msgstr "Помилка демонтування пристрою!"
 
 #: Utility/TeeJee.FileSystem.vala:175
 msgid "Failed to write file"
@@ -1123,7 +1123,7 @@ msgstr "Група"
 
 #: Gtk/SnapshotBackendBox.vala:132
 msgid "Help"
-msgstr ""
+msgstr "Отримання допомоги"
 
 #: Gtk/ExcludeMessageWindow.vala:129
 msgid ""
@@ -1185,6 +1185,8 @@ msgid ""
 "If you find this application useful, consider making a donation to support "
 "the development."
 msgstr ""
+"Якщо вам здається, що ця програма корисна, подумайте про те, щоб зробити "
+"пожертву на підтримку розвитку."
 
 #: Gtk/ExcludeBox.vala:54
 msgid "Include / Exclude Patterns"
@@ -1217,7 +1219,7 @@ msgstr "Недійсний знімок"
 
 #: Utility/Gtk/DonationWindow.vala:91
 msgid "Issue Tracker"
-msgstr ""
+msgstr "Відстеження проблем"
 
 #: Gtk/ExcludeBox.vala:273
 msgid "Items Not Selected"
@@ -1243,7 +1245,7 @@ msgid ""
 "checked, previous configuration files will be restored from snapshot"
 msgstr ""
 "Зберегти файли конфігурації для таких браузерів, як Firefox та Chrome. Якщо "
-"прапорець знято, попередні файли конфігурації будуть відновлені із знімка."
+"прапорець знято, попередні файли конфігурації будуть відновлені із знімка"
 
 #: Gtk/RestoreDeviceBox.vala:244
 msgid "Keep on Root Device"
@@ -1266,7 +1268,7 @@ msgstr "Мітка"
 #: Core/Main.vala:1023
 #, c-format
 msgid "Last boot snapshot is %d hours old"
-msgstr "Останній знімок завантаження старіший на %d год."
+msgstr "Останній знімок завантаження на %d год. старіший"
 
 #: Core/Main.vala:1018
 msgid "Last boot snapshot is older than system start time"
@@ -1279,7 +1281,7 @@ msgstr "Останнього знімку завантаження не знай
 #: Core/Main.vala:1085
 #, c-format
 msgid "Last daily snapshot is %d hours old"
-msgstr "Останній щоденний знімок старіший на %d год."
+msgstr "Останній щоденний знімок на %d год. старіший"
 
 #: Core/Main.vala:1080
 msgid "Last daily snapshot is more than 1 day old"
@@ -1292,7 +1294,7 @@ msgstr "Останнього щоденного знімку не знайден
 #: Core/Main.vala:1054
 #, c-format
 msgid "Last hourly snapshot is %d minutes old"
-msgstr "Останній щогодинний знімок старіший на %d хв."
+msgstr "Останній щогодинний знімок на %d хв. старіший"
 
 #: Core/Main.vala:1049
 msgid "Last hourly snapshot is more than 1 hour old"
@@ -1305,7 +1307,7 @@ msgstr "Останнього щогодинного знімку не знайд
 #: Core/Main.vala:1147
 #, c-format
 msgid "Last monthly snapshot is %d days old"
-msgstr "Останній щомісячний знімок старіший на %d дн."
+msgstr "Останній щомісячний знімок  на %d дн. старіший"
 
 #: Core/Main.vala:1142
 msgid "Last monthly snapshot is more than 1 month old"
@@ -1318,7 +1320,7 @@ msgstr "Останнього щомісячного знімку не знайд
 #: Core/Main.vala:1116
 #, c-format
 msgid "Last weekly snapshot is %d days old"
-msgstr "Останній щотижневий знімок старіший на %d дн."
+msgstr "Останній щотижневий знімок на %d дн. старіший"
 
 #: Core/Main.vala:1111
 msgid "Last weekly snapshot is more than 1 week old"
@@ -1335,7 +1337,7 @@ msgstr "Останній знімок"
 
 #: Utility/Gtk/AboutWindow.vala:316 Utility/Gtk/AboutWindow.vala:356
 msgid "License"
-msgstr ""
+msgstr "Ліцензія"
 
 #: Core/Main.vala:1362
 #, c-format
@@ -1385,11 +1387,11 @@ msgstr "Меню"
 
 #: Gtk/SettingsWindow.vala:105
 msgid "Misc"
-msgstr ""
+msgstr "Різне"
 
 #: Gtk/UsersBox.vala:354
 msgid "Miscellaneous"
-msgstr ""
+msgstr "Різне"
 
 #: Core/Main.vala:238
 msgid "Missing Dependencies"
@@ -1415,7 +1417,7 @@ msgstr "Увімкнено режим щомісячних знімків"
 
 #: Core/Main.vala:1154
 msgid "Monthly snapshot failed!"
-msgstr "Помилка  режиму щомісячних знімків"
+msgstr "Помилка  режиму щомісячних знімків!"
 
 #: Core/Main.vala:2131 Core/Main.vala:2164
 msgid "Mount"
@@ -1481,9 +1483,9 @@ msgid "None"
 msgstr "Нічого"
 
 #: Core/Subvolume.vala:197
-#, fuzzy, c-format
+#, c-format
 msgid "Not Found"
-msgstr "Каталог не знайдено"
+msgstr "Не знайдено"
 
 #: Core/SnapshotRepo.vala:683
 msgid "Not Selected"
@@ -1543,14 +1545,14 @@ msgstr "Найстаріші знімки"
 
 #: Gtk/SnapshotListBox.vala:297
 msgid "On demand (manual)"
-msgstr ""
+msgstr "За запитом (вручну)"
 
 #: Gtk/RestoreDeviceBox.vala:525 Core/Main.vala:380 Core/Main.vala:3454
 msgid ""
 "Only ubuntu-type layouts with @ and @home subvolumes are currently supported."
 msgstr ""
 "На даний час підтримуються лише структури типу Ubuntu з частинами тому @ та "
-"@home"
+"@home."
 
 #: Gtk/MainWindow.vala:219
 msgid "Open Menu"
@@ -1647,7 +1649,7 @@ msgstr "Дочекайтеся, будь-ласка, видалення знім
 
 #: Gtk/EstimateBox.vala:66
 msgid "Please wait..."
-msgstr ""
+msgstr "Зачекайте, будь ласка..."
 
 #: Gtk/RsyncLogBox.vala:188
 msgid "Populating list..."
@@ -1769,6 +1771,8 @@ msgid ""
 "Required for displaying shared and unshared size for snapshots in the main "
 "window"
 msgstr ""
+"Необхідно для показу загального розміру та  розміру без обмежень для знімків "
+"у головному вікні"
 
 #: Gtk/RsyncLogBox.vala:377 Gtk/RsyncLogBox.vala:567 Gtk/RestoreWindow.vala:125
 #: Gtk/MainWindow.vala:151 Gtk/RestoreFinishBox.vala:71
@@ -1777,9 +1781,8 @@ msgid "Restore"
 msgstr "Відновити"
 
 #: Gtk/UsersBox.vala:329
-#, fuzzy
 msgid "Restore @home subvolume"
-msgstr "Відновлений підтом системи"
+msgstr "Відновити субтом @home"
 
 #: Gtk/RestoreWindow.vala:89
 msgid "Restore Device"
@@ -2175,7 +2178,7 @@ msgstr ""
 
 #: Gtk/BackupFinishBox.vala:60
 msgid "Snapshot Created"
-msgstr "Знімок створено."
+msgstr "Знімок створено"
 
 #: Gtk/SnapshotListBox.vala:296
 #, c-format
@@ -2214,7 +2217,7 @@ msgstr "Не вказано знімку для відновлення!"
 
 #: Core/Main.vala:2873
 msgid "Snapshot will become active after system is rebooted."
-msgstr "Знімок буде активовано після перезавантаження системи"
+msgstr "Знімок буде активовано після перезавантаження системи."
 
 #: Gtk/DeleteFinishBox.vala:60
 msgid "Snapshot(s) Deleted"
@@ -2249,7 +2252,7 @@ msgstr ""
 #: Gtk/ScheduleBox.vala:167
 #, c-format
 msgid "Snapshots are not scheduled at fixed times."
-msgstr "Не обрано пристрою знімків"
+msgstr "Не обрано пристрою знімків."
 
 #: Gtk/SnapshotBackendBox.vala:173
 msgid ""
@@ -2284,12 +2287,16 @@ msgid ""
 "Snapshots are saved to /timeshift on selected partition. Other locations are "
 "not supported."
 msgstr ""
+"Знімки зберігаються в директорії  /timeshift на вибраному розділі диску. "
+"Інші місця не підтримуються."
 
 #: Gtk/BackupDeviceBox.vala:99
 msgid ""
 "Snapshots are saved to /timeshift-btrfs on selected partition. Other "
 "locations are not supported."
 msgstr ""
+"Знімки зберігаються в директорії / timeshift-btrfs на вибраному розділі "
+"диску. Інші місця не підтримуються."
 
 #: Gtk/MainWindow.vala:996
 msgid "Snapshots available for restore"
@@ -2359,12 +2366,12 @@ msgstr "Зупинено"
 #: Core/Subvolume.vala:202
 #, c-format
 msgid "Subvolume exists at destination"
-msgstr ""
+msgstr "Підрозділ тому існує у місці призначення"
 
 #: Gtk/SnapshotListBox.vala:275
-#, fuzzy, c-format
+#, c-format
 msgid "Subvolumes"
-msgstr "Том"
+msgstr "Субтоми"
 
 #: Gtk/ExcludeAppsBox.vala:135 Gtk/RestoreWindow.vala:120
 #: Gtk/ExcludeBox.vala:259
@@ -2372,9 +2379,8 @@ msgid "Summary"
 msgstr "Звіт"
 
 #: Utility/Gtk/DonationWindow.vala:81
-#, fuzzy
 msgid "Support"
-msgstr "Не підтримується"
+msgstr "Підтримка"
 
 #: Console/AppConsole.vala:378
 msgid "Switch to BTRFS mode (default: config)"
@@ -2412,7 +2418,7 @@ msgstr "Засіб Відновлення Системи"
 #: Gtk/FinishBox.vala:82
 msgid "System can be rolled-back to a previous date by restoring a snapshot."
 msgstr ""
-"Систему можна відкотити до попередньої дати через відновлення із знімка"
+"Систему можна відкотити до попередньої дати через відновлення із знімка."
 
 #: Core/Main.vala:2263
 msgid "System will reboot after files are restored"
@@ -2492,6 +2498,10 @@ msgid ""
 "the hope that it is useful but without any warranty. See the GNU General "
 "Public License v2 or later for more information"
 msgstr ""
+"Це програмне забезпечення є безкоштовним для особистого та комерційного "
+"використання. Воно поширюється з надією бути корисним, але без жодних "
+"гарантій. Для отримання додаткової інформації див. Загальну публічну "
+"ліцензію GNU v2 або новішу версію"
 
 #: Gtk/MainWindow.vala:1031 Gtk/MainWindow.vala:1042
 msgid "Timeshift is active"
@@ -2511,7 +2521,7 @@ msgstr ""
 
 #: Utility/Gtk/AboutWindow.vala:457
 msgid "Tools"
-msgstr ""
+msgstr "Інструменти"
 
 #: Utility/Gtk/AboutWindow.vala:441
 msgid "Translations"
@@ -2598,6 +2608,9 @@ msgid ""
 "Use the issue tracker for reporting issues, asking questions, and requesting "
 "features. Please avoid reporting issues by email."
 msgstr ""
+"Використовуйте інструмент відстеження проблем для звітування про проблеми, "
+"подавання запитань та запиту функцій. Будь ласка, уникайте повідомлень про "
+"проблеми електронною поштою."
 
 #: Utility/Device.vala:1954
 #, c-format
@@ -2628,9 +2641,8 @@ msgid "Users"
 msgstr "Користувачі"
 
 #: Gtk/RestoreWindow.vala:114
-#, fuzzy
 msgid "Users Home"
-msgstr "Користувачі"
+msgstr "Домашній каталог"
 
 #: Utility/Device.vala:1931
 #, c-format
@@ -2671,7 +2683,7 @@ msgstr "Щотижня"
 
 #: Core/Main.vala:1123
 msgid "Weekly snapshot failed!"
-msgstr "Помилка щотижневого знімка"
+msgstr "Помилка щотижневого знімка!"
 
 #: Core/Main.vala:1104
 msgid "Weekly snapshots are enabled"
@@ -2679,7 +2691,7 @@ msgstr "Щотижневі знімки увімкнено"
 
 #: Utility/Gtk/DonationWindow.vala:96
 msgid "Wiki"
-msgstr ""
+msgstr "Wiki"
 
 #: Gtk/BackupFinishBox.vala:63 Gtk/DeleteFinishBox.vala:63
 msgid "With Errors"

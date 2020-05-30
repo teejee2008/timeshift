@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: linuxmint\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
 "POT-Creation-Date: 2019-08-11 18:23+0530\n"
-"PO-Revision-Date: 2017-11-03 18:43+0000\n"
-"Last-Translator: Asier Iturralde Sarasola <Unknown>\n"
+"PO-Revision-Date: 2020-05-30 17:36+0200\n"
+"Last-Translator: Asier Iturralde Sarasola <asier.iturralde@gmail.com>\n"
 "Language-Team: Basque <eu@li.org>\n"
 "Language: eu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2018-02-03 14:28+0000\n"
-"X-Generator: Launchpad (build 18544)\n"
+"X-Generator: Poedit 2.0.6\n"
 "X-Launchpad-Export-Date: 2017-11-23 10:47+0000\n"
 "X-Generator: Launchpad (build 18509)\n"
 
@@ -54,19 +54,19 @@ msgstr "** BTRFS desinstalatu da **"
 
 #: Core/Main.vala:3364
 msgid "/ is mapped to device"
-msgstr "/ gailura mapatuta dago"
+msgstr "/ gailura esleitua dago"
 
 #: Core/Main.vala:3386
 msgid "/boot is mapped to device"
-msgstr "/boot gailura mapatuta dago"
+msgstr "/boot gailura esleitua dago"
 
 #: Core/Main.vala:3397
 msgid "/boot/efi is mapped to device"
-msgstr "/boot/efi gailura mapatuta dago"
+msgstr "/boot/efi gailura esleitua dago"
 
 #: Core/Main.vala:3375
 msgid "/home is mapped to device"
-msgstr "/home gailura mapatuta dago"
+msgstr "/home gailura esleitua dago"
 
 #: Gtk/SnapshotListBox.vala:290
 msgid "<b>Comments</b> (double-click to edit)"
@@ -76,6 +76,8 @@ msgstr "<b>Iruzkinak</b> (klik bikoitza editatzeko)"
 msgid ""
 "A maintenance task runs once every hour and creates snapshots as needed."
 msgstr ""
+"Mantentze ataza bat orduro exekutatzen da eta argazkiak sortzen ditu "
+"beharraren arabera."
 
 #: Console/AppConsole.vala:700 Console/AppConsole.vala:764
 #: Console/AppConsole.vala:896 Console/AppConsole.vala:991
@@ -90,7 +92,7 @@ msgstr "Honi buruz"
 
 #: Gtk/RsyncLogBox.vala:472
 msgid "Action"
-msgstr "Kokalekua"
+msgstr "Ekintza"
 
 #: Gtk/ExcludeBox.vala:219
 msgid "Add"
@@ -136,7 +138,7 @@ msgstr ""
 
 #: Gtk/RsyncLogBox.vala:363
 msgid "All Files"
-msgstr "Gehitu fitxategiak"
+msgstr "Fitxategi guztiak"
 
 #: Gtk/SnapshotBackendBox.vala:188
 msgid ""
@@ -162,7 +164,7 @@ msgid ""
 "encrypted device for root filesystem."
 msgstr ""
 "Enkriptatutako gailua hautatu da erroko fitxategi-sistemarentzat (/). Abioko "
-"direktorioa (/boot) enkriptatu gabeko gailu batean muntatu behar da sistemak "
+"direktorioa (/boot) enkriptatu gabeko gailu batean muntatu behar da sistema "
 "behar bezala abiarazteko.\n"
 "\n"
 "Hautatu enkriptatu gabeko gailu bat abioko direktoriorako edo hautatu "
@@ -233,11 +235,12 @@ msgid "BTRFS device is not mounted"
 msgstr "BTRFS gailua ez dago muntatuta"
 
 #: Gtk/BackupDeviceBox.vala:98
-#, fuzzy
 msgid ""
 "BTRFS snapshots are saved on system partition. Other partitions are not "
 "supported."
-msgstr "Beste aplikazioak (hurrengo orria)"
+msgstr ""
+"BTRFS argazkiak sistemaren partizioan gordetzen dira. Ez dago beste "
+"partizioentzako euskarririk."
 
 #: Gtk/FinishBox.vala:92
 msgid ""
@@ -291,8 +294,8 @@ msgstr "Abioko argazkiak huts egin du"
 msgid ""
 "Boot snapshots are created with a delay of 10 minutes after system startup."
 msgstr ""
-"Argazkiak sortzeko BTRFS fitxategi-sistemaren berezko ezaugarriak erabiltzen "
-"dira."
+"Abioko argazkiak 10 minutuko atzerapenarekin sortzen dira sistema abiatu "
+"ondoren."
 
 #: Core/Main.vala:1011
 msgid "Boot snapshots are enabled"
@@ -300,11 +303,11 @@ msgstr "Abioko argazkiak gaituta daude"
 
 #: Gtk/BootOptionsWindow.vala:49
 msgid "Bootloader Options"
-msgstr "Abioko kargatzailearen aukerak"
+msgstr "Abiarazlearen aukerak"
 
 #: Gtk/RestoreDeviceBox.vala:411
 msgid "Bootloader Options (Advanced)"
-msgstr "Abioko kargatzailearen aukerak (aurreratua)"
+msgstr "Abiarazlearen aukerak (aurreratua)"
 
 #: Gtk/MainWindow.vala:171
 msgid "Browse"
@@ -343,7 +346,7 @@ msgstr ""
 "Leheneratzea bertan behera uzteak helburuko sistema koherentziarik gabeko "
 "egoera batean utziko du. Sistemak huts egin dezake abiaraztean edo hainbat "
 "arazo izan ditzake. Bertan behera utzi ondoren beste argazki bat leheneratu "
-"behar duzu, sistema egoera koherente batean uzteko. Klikatu Bai berresteko."
+"behar duzu, sistema egoera koherente batean uzteko. Egin klik Bai berresteko."
 
 #: Gtk/MainWindow.vala:556
 msgid "Cannot Delete Live Snapshot"
@@ -360,7 +363,7 @@ msgstr "Aldatutako elementuak:"
 
 #: Gtk/RestoreWindow.vala:104
 msgid "Checking Restore Actions (Dry Run)"
-msgstr ""
+msgstr "Leheneratzeko ekintzak egiaztatzen (proba)"
 
 #: Core/Main.vala:2750
 msgid "Checking file systems for errors..."
@@ -377,12 +380,11 @@ msgstr "Garbitzen..."
 
 #: Gtk/UsersBox.vala:92 Gtk/ExcludeBox.vala:84
 msgid "Click to edit. Drag and drop to re-order."
-msgstr "Klikatu editatzeko. Arrastatu eta jaregin berrantolatzeko."
+msgstr "Egin klik editatzeko. Arrastatu eta jaregin berrantolatzeko."
 
 #: Gtk/ExcludeBox.vala:59
-#, fuzzy
 msgid "Click to edit. Drag-drop to re-order."
-msgstr "Klikatu editatzeko. Arrastatu eta jaregin berrantolatzeko."
+msgstr "Egin klik editatzeko. Arrastatu eta jaregin berrantolatzeko."
 
 #: Gtk/RestoreWindow.vala:69
 msgid "Clone System"
@@ -422,24 +424,24 @@ msgstr "Iruzkinak"
 
 #: Gtk/RestoreBox.vala:74 Gtk/RestoreBox.vala:187 Core/Main.vala:2793
 msgid "Comparing Files (Dry Run)..."
-msgstr ""
+msgstr "Fitxategiak konparatzen (proba)..."
 
 #: Core/Main.vala:2559
 msgid "Comparing files with rsync..."
-msgstr "Fitxategiak rsync-ekin sinkronizatzen..."
+msgstr "Fitxategiak rsync-ekin konparatzen..."
 
 #: Gtk/BackupFinishBox.vala:50 Gtk/RestoreFinishBox.vala:50
 #: Gtk/RestoreFinishBox.vala:75 Gtk/DeleteFinishBox.vala:50
 msgid "Completed"
-msgstr "Eginda"
+msgstr "Osatuta"
 
 #: Gtk/RestoreFinishBox.vala:78
 msgid "Completed With Errors"
-msgstr "Eginda erroreekin"
+msgstr "Osatuta erroreekin"
 
 #: Gtk/RsyncLogBox.vala:87 Gtk/RestoreWindow.vala:109
 msgid "Confirm Actions"
-msgstr ""
+msgstr "Berretsi ekintzak"
 
 #: Console/AppConsole.vala:1070
 #, c-format
@@ -447,9 +449,8 @@ msgid "Continue with restore? (y/n): "
 msgstr "Leheneratzearekin jarraitu? (y/n): "
 
 #: Utility/Gtk/AboutWindow.vala:425
-#, fuzzy
 msgid "Contributors"
-msgstr "Ekarpenak"
+msgstr "Laguntzaileak"
 
 #: Console/AppConsole.vala:836 Console/AppConsole.vala:967
 msgid "Could not find device"
@@ -524,9 +525,8 @@ msgstr ""
 "babesteko"
 
 #: Gtk/SnapshotBackendBox.vala:95
-#, fuzzy
 msgid "Create snapshots using BTRFS"
-msgstr "Sortu argazkiak RSYNC erabiliz"
+msgstr "Sortu argazkiak BTRFS erabiliz"
 
 #: Gtk/SnapshotBackendBox.vala:78
 msgid "Create snapshots using RSYNC tool and hard-links"
@@ -552,7 +552,7 @@ msgstr "Leheneratze aurreko argazkia sortuta"
 
 #: Core/Main.vala:1517
 msgid "Created subvolume snapshot"
-msgstr "Azpi-bolumen argazkia sortuta"
+msgstr "Azpi-bolumenaren argazkia sortuta"
 
 #: Gtk/BackupBox.vala:71
 msgid "Creating Snapshot..."
@@ -576,7 +576,7 @@ msgstr "Kredituak"
 
 #: Core/Main.vala:3540
 msgid "Critical Error"
-msgstr "Errore kritikoa"
+msgstr "Errore larria"
 
 #: Utility/CronTab.vala:136
 msgid "Cron job added"
@@ -592,7 +592,7 @@ msgstr "Cron ataza existitzen da"
 
 #: Gtk/MiscBox.vala:98
 msgid "Custom"
-msgstr ""
+msgstr "Pertsonalizatua"
 
 #: Gtk/SnapshotListBox.vala:300 Gtk/ScheduleBox.vala:100
 msgid "Daily"
@@ -612,7 +612,7 @@ msgstr "Datuak aldatuko dira ondorengo gailuetan:"
 
 #: Gtk/MiscBox.vala:71
 msgid "Date Format"
-msgstr ""
+msgstr "Dataren formatua"
 
 #: Gtk/RsyncLogBox.vala:370 Gtk/RsyncLogBox.vala:575 Gtk/MainWindow.vala:161
 #: Gtk/SnapshotListBox.vala:322 Gtk/DeleteWindow.vala:98
@@ -721,6 +721,7 @@ msgstr "Linux fitxategi-sistemak dituzten gailuak"
 #: Gtk/BackupDeviceBox.vala:105
 msgid "Devices with Windows file systems are not supported (NTFS, FAT, etc)."
 msgstr ""
+"Windows fitxategi-sistemak dituzten gailuak ez dira onartzen (NTFS, FAT...)"
 
 #: Utility/TeeJee.FileSystem.vala:518
 msgid "Dir not found"
@@ -744,7 +745,7 @@ msgstr "Banaketa"
 
 #: Utility/Gtk/AboutWindow.vala:449
 msgid "Documentation"
-msgstr "Dohaintzak"
+msgstr "Dokumentazioa"
 
 #: Gtk/MainWindow.vala:209 Gtk/MainWindow.vala:210
 #: Utility/Gtk/DonationWindow.vala:43 Utility/Gtk/DonationWindow.vala:76
@@ -757,7 +758,7 @@ msgstr "Dohaintzak"
 
 #: Gtk/UsersBox.vala:357
 msgid "Enable BTRFS qgroups (recommended)"
-msgstr ""
+msgstr "Gaitu BTRFS qgroups (gomendatua)"
 
 #: Gtk/MainWindow.vala:1052
 msgid "Enable scheduled snapshots to protect your system"
@@ -810,7 +811,7 @@ msgstr "Errorea"
 
 #: Gtk/RestoreWindow.vala:475
 msgid "Error running Rsync"
-msgstr ""
+msgstr "Errorea Rsync exekutatzean"
 
 #: Gtk/BackupWindow.vala:82 Gtk/SetupWizardWindow.vala:99
 msgid "Estimate"
@@ -830,11 +831,11 @@ msgstr "Adibideak"
 
 #: Gtk/UsersBox.vala:136
 msgid "Exclude All"
-msgstr "Aplikazioak kanpo utzi"
+msgstr "Guztia kanpo utzi"
 
 #: Gtk/ExcludeAppsBox.vala:51 Gtk/RestoreExcludeBox.vala:55
 msgid "Exclude Application Settings"
-msgstr "Aplikazioak kanpo uzteko ezarpenak"
+msgstr "Aplikazioen ezarpenak kanpo utzi"
 
 #: Gtk/RestoreWindow.vala:99
 msgid "Exclude Apps"
@@ -897,13 +898,12 @@ msgid "Failed to delete file"
 msgstr "Huts egin du fitxategia ezabatzean"
 
 #: Core/Subvolume.vala:153
-#, fuzzy
 msgid "Failed to delete snapshot nested subvolume"
-msgstr "Huts egin du argazkiaren azpi-bolumena ezabatzean"
+msgstr "Huts egin du habiaratutako azpi-bolumenaren argazkia ezabatzean"
 
 #: Core/Subvolume.vala:163
 msgid "Failed to delete snapshot subvolume"
-msgstr "Huts egin du argazkiaren azpi-bolumena ezabatzean"
+msgstr "Huts egin du azpi-bolumenaren argazkia ezabatzean"
 
 #: Core/SnapshotRepo.vala:1065
 msgid "Failed to delete symlinks"
@@ -933,11 +933,11 @@ msgstr "Huts egin du erabiltzailearen sarrera eskuratzen 3 saiakeraren ondoren"
 
 #: Utility/Device.vala:723
 msgid "Failed to get partition list"
-msgstr "Huts egin du partizio zerrenda eskuratzean"
+msgstr "Huts egin du partizio-zerrenda eskuratzean"
 
 #: Core/Main.vala:3337
 msgid "Failed to get partition list."
-msgstr "Huts egin du partizio zerrenda eskuratzean."
+msgstr "Huts egin du partizio-zerrenda eskuratzean."
 
 #: Utility/CronTab.vala:240
 msgid "Failed to install crontab file"
@@ -953,7 +953,8 @@ msgstr "Huts egin du fitxategia lekuz aldatzean"
 
 #: Core/Main.vala:2979
 msgid "Failed to move system subvolume to snapshot directory"
-msgstr "Huts egin du sistemaren azpi-bolumena argazkien direktoriora mugitzean"
+msgstr ""
+"Huts egin du sistemaren azpi-bolumena argazkien direktoriora lekuz aldatzean"
 
 #: Core/Main.vala:3885
 msgid "Failed to query subvolume list"
@@ -1014,11 +1015,11 @@ msgstr "Huts egin du fitxategia idaztean"
 
 #: Gtk/RsyncLogBox.vala:122
 msgid "File (snapshot)"
-msgstr "Ezabatu argazkia"
+msgstr "Fitxategia (argazkia)"
 
 #: Gtk/RsyncLogBox.vala:119
 msgid "File (system)"
-msgstr "Fitxategi-sistema"
+msgstr "Fitxategia (sistema)"
 
 #: Gtk/ExcludeMessageWindow.vala:98
 msgid "File Pattern"
@@ -1066,7 +1067,7 @@ msgstr "Fitxategi-sistema"
 
 #: Gtk/RsyncLogBox.vala:302
 msgid "Filter by name or path"
-msgstr "Sartu gailuaren izena edo zenbakia"
+msgstr "Iragazi izena edo bidearen arabera"
 
 #: Gtk/SettingsWindow.vala:103
 msgid "Filters"
@@ -1091,11 +1092,11 @@ msgstr "Lehen argazkiak behar du:"
 
 #: Core/Main.vala:2912
 msgid "Found existing pre-restore snapshot"
-msgstr "Lehendik dagoen leheneratze aurreko argazkia aurkitu da"
+msgstr "Lehendik zegoen leheneratze aurreko argazkia aurkitu da"
 
 #: Gtk/BackupDeviceBox.vala:215
 msgid "Free"
-msgstr "Librea"
+msgstr "Libre"
 
 #: Core/SnapshotRepo.vala:77 Core/SnapshotRepo.vala:147
 msgid "Free space"
@@ -1128,7 +1129,7 @@ msgstr "Taldea"
 
 #: Gtk/SnapshotBackendBox.vala:132
 msgid "Help"
-msgstr ""
+msgstr "Laguntza"
 
 #: Gtk/ExcludeMessageWindow.vala:129
 msgid ""
@@ -1160,15 +1161,15 @@ msgstr "Karpeta nagusia"
 
 #: Gtk/SnapshotListBox.vala:299 Gtk/ScheduleBox.vala:118
 msgid "Hourly"
-msgstr "Orduro"
+msgstr "Orduero"
 
 #: Core/Main.vala:1061
 msgid "Hourly snapshot failed!"
-msgstr "Orduroko argazkiak huts egin du!"
+msgstr "Ordueroko argazkiak huts egin du!"
 
 #: Core/Main.vala:1042
 msgid "Hourly snapshots are enabled"
-msgstr "Orduroko argazkiak gaituta"
+msgstr "Ordueroko argazkiak gaituta daude"
 
 #: Gtk/RestoreFinishBox.vala:102
 msgid ""
@@ -1191,6 +1192,8 @@ msgid ""
 "If you find this application useful, consider making a donation to support "
 "the development."
 msgstr ""
+"Aplikazio hau erabilgarria iruditzen bazaizu, dohaintza bat egin dezakezu "
+"garapena babesteko."
 
 #: Gtk/ExcludeBox.vala:54
 msgid "Include / Exclude Patterns"
@@ -1202,11 +1205,11 @@ msgstr "@home azpi-bolumena barne hartu babeskopietan"
 
 #: Gtk/UsersBox.vala:266
 msgid "Include All"
-msgstr "Aplikazioak kanpo utzi"
+msgstr "Guztiak barne hartu"
 
 #: Gtk/UsersBox.vala:194
 msgid "Include Hidden"
-msgstr "Ezkutuko elementuak barne hartu"
+msgstr "Ezkutukoak barne hartu"
 
 #: Core/Main.vala:2044
 msgid "Invalid Snapshot"
@@ -1223,7 +1226,7 @@ msgstr "Argazki baliogabea"
 
 #: Utility/Gtk/DonationWindow.vala:91
 msgid "Issue Tracker"
-msgstr ""
+msgstr "Arazoen erregistroa"
 
 #: Gtk/ExcludeBox.vala:273
 msgid "Items Not Selected"
@@ -1294,7 +1297,7 @@ msgstr "Eguneroko azken argazkia duela egun 1 baino gehiagokoa da"
 
 #: Core/Main.vala:1076
 msgid "Last daily snapshot not found"
-msgstr "Ez da eguneroko azken argazkia aurkitu"
+msgstr "Ez da eguneroko azken argazkirik aurkitu"
 
 #: Core/Main.vala:1054
 #, c-format
@@ -1342,7 +1345,7 @@ msgstr "Azken argazkia"
 
 #: Utility/Gtk/AboutWindow.vala:316 Utility/Gtk/AboutWindow.vala:356
 msgid "License"
-msgstr ""
+msgstr "Lizentzia"
 
 #: Core/Main.vala:1362
 #, c-format
@@ -1392,11 +1395,11 @@ msgstr "Menua"
 
 #: Gtk/SettingsWindow.vala:105
 msgid "Misc"
-msgstr ""
+msgstr "Askotarikoa"
 
 #: Gtk/UsersBox.vala:354
 msgid "Miscellaneous"
-msgstr ""
+msgstr "Askotarikoa"
 
 #: Core/Main.vala:238
 msgid "Missing Dependencies"
@@ -1488,9 +1491,9 @@ msgid "None"
 msgstr "Bat ere ez"
 
 #: Core/Subvolume.vala:197
-#, fuzzy, c-format
+#, c-format
 msgid "Not Found"
-msgstr "Ez da direktorioa aurkitu"
+msgstr "Ez da aurkitu"
 
 #: Core/SnapshotRepo.vala:683
 msgid "Not Selected"
@@ -1537,9 +1540,9 @@ msgid ""
 "OS must be installed on a BTRFS partition with Ubuntu-type subvolume layout "
 "(@ and @home subvolumes). Other layouts are not supported."
 msgstr ""
-"SEak Ubuntu moduko azpi-bolumen diseinua duen (@ eta @home azpi-bolumenak) "
-"BTRFS partizio batean instalatuta egon behar du. Bestelako diseinuek ez dute "
-"euskarririk."
+"SEak Ubuntu moduko azpi-bolumen antolaketa duen (@ eta @home azpi-bolumenak) "
+"BTRFS partizio batean instalatuta egon behar du. Bestelako antolaketek ez "
+"dute euskarririk."
 
 #: Core/Main.vala:4223
 msgid "Older log files removed"
@@ -1551,13 +1554,13 @@ msgstr "Argazkirik zaharrena"
 
 #: Gtk/SnapshotListBox.vala:297
 msgid "On demand (manual)"
-msgstr ""
+msgstr "Eskatu ahala (eskuz)"
 
 #: Gtk/RestoreDeviceBox.vala:525 Core/Main.vala:380 Core/Main.vala:3454
 msgid ""
 "Only ubuntu-type layouts with @ and @home subvolumes are currently supported."
 msgstr ""
-"Une honetan @ eta @home azpi-bolumenak dituzten Ubuntu moduko diseinuak "
+"Une honetan @ eta @home azpi-bolumenak dituzten Ubuntu moduko antolaketak "
 "onartzen dira soilik."
 
 #: Gtk/MainWindow.vala:219
@@ -1587,7 +1590,7 @@ msgstr "Jabea"
 #: Utility/Device.vala:1944
 #, c-format
 msgid "Parent Device"
-msgstr "Gailu nagusia"
+msgstr "Gailu gurasoa"
 
 #: Gtk/RsyncLogBox.vala:222 Core/Main.vala:2487 Core/Main.vala:2578
 msgid "Parsing log file..."
@@ -1595,7 +1598,7 @@ msgstr "Egunkari-fitxategia analizatzen..."
 
 #: Gtk/RestoreDeviceBox.vala:524
 msgid "Partition has an unsupported subvolume layout."
-msgstr "Partizioak euskarririk gabeko azpi-bolumen diseinua dauka."
+msgstr "Partizioak euskarririk gabeko azpi-bolumen antolaketa dauka."
 
 #: Gtk/RestoreDeviceBox.vala:93 Core/SnapshotRepo.vala:688
 #, c-format
@@ -1640,7 +1643,7 @@ msgstr "Gorde zure lana eta itxi aplikazio guztiak."
 
 #: Gtk/MainWindow.vala:688
 msgid "Please select a snapshot to view the log!"
-msgstr "Hautatu argazki bat egunkaria ikusteko"
+msgstr "Hautatu argazki bat egunkaria ikusteko!"
 
 #: Gtk/RestoreDeviceBox.vala:512
 msgid "Please select the GRUB device"
@@ -1652,11 +1655,11 @@ msgstr "Mesedez itxaron minutu batzuk eta saiatu berriro."
 
 #: Gtk/MainWindow.vala:755
 msgid "Please wait for snapshots to be deleted."
-msgstr "Mesedez itxaron argazkiak ezabatu arte."
+msgstr "Itxaron argazkiak ezabatu arte."
 
 #: Gtk/EstimateBox.vala:66
 msgid "Please wait..."
-msgstr ""
+msgstr "Itxaron..."
 
 #: Gtk/RsyncLogBox.vala:188
 msgid "Populating list..."
@@ -1704,15 +1707,15 @@ msgstr ""
 #: Console/AppConsole.vala:984
 #, c-format
 msgid "Re-install GRUB2 bootloader?"
-msgstr "GRUB2 abioko kargatzailea berrinstalatu?"
+msgstr "GRUB2 abiarazlea berrinstalatu?"
 
 #: Core/Main.vala:2325
 msgid "Re-installing GRUB2 bootloader..."
-msgstr "GRUB2 abioko kargatzailea berrinstalatzen..."
+msgstr "GRUB2 abiarazlea berrinstalatzen..."
 
 #: Gtk/BootOptionsBox.vala:120
 msgid "Re-installs the GRUB2 bootloader on the selected device."
-msgstr "GRUB2 abioko kargatzailea berrinstalatzen du hautatutako gailuan."
+msgstr "GRUB2 abiarazlea berrinstalatzen du hautatutako gailuan."
 
 #: Gtk/RsyncLogBox.vala:181
 #, c-format
@@ -1734,7 +1737,7 @@ msgstr "Freskatu"
 
 #: Gtk/BackupDeviceBox.vala:106
 msgid "Remote and network locations are not supported."
-msgstr "Beste aplikazioak (hurrengo orria)"
+msgstr "Urruneko eta sareko kokalekuak ez dira onartzen."
 
 #: Gtk/ExcludeBox.vala:254
 msgid "Remove"
@@ -1778,6 +1781,8 @@ msgid ""
 "Required for displaying shared and unshared size for snapshots in the main "
 "window"
 msgstr ""
+"Beharrezkoa da argazkien partekatutako eta partekatu gabeko tamaina leiho "
+"nagusian bistaratzeko"
 
 #: Gtk/RsyncLogBox.vala:377 Gtk/RsyncLogBox.vala:567 Gtk/RestoreWindow.vala:125
 #: Gtk/MainWindow.vala:151 Gtk/RestoreFinishBox.vala:71
@@ -1786,9 +1791,8 @@ msgid "Restore"
 msgstr "Leheneratu"
 
 #: Gtk/UsersBox.vala:329
-#, fuzzy
 msgid "Restore @home subvolume"
-msgstr "Sistemaren azpi-bolumena leheneratuta"
+msgstr "Leheneratu @home azpi-bolumena"
 
 #: Gtk/RestoreWindow.vala:89
 msgid "Restore Device"
@@ -1834,9 +1838,9 @@ msgid ""
 "snapshot can be restored later to 'undo' the restore."
 msgstr ""
 "Argazki bat leheneratzeak sistemaren azpi-bolumenak ordezkatuko ditu eta "
-"uneko sistemaren azpi-bolumenak argazki berri batean gordeko dira. Behar "
-"izanez gero argazki hori leheneratu daiteke beranduago leheneratzea "
-"'desegiteko'."
+"unean erabiltzen diren sistemaren azpi-bolumenak argazki berri batean "
+"gordeko dira. Behar izanez gero argazki hori leheneratu daiteke beranduago "
+"leheneratzea 'desegiteko'."
 
 #: Core/Main.vala:2796
 msgid "Restoring snapshot..."
@@ -1852,9 +1856,9 @@ msgid ""
 msgstr ""
 "Argazkiak leheneratzeak sistemaren fitxategi eta ezarpenak soilik "
 "ordezkatzen ditu. Ezkutukoak ez diren erabiltzailearen karpeta nagusiko "
-"direktorioetako fitxategi eta direktorioak ez dira ukituko. Portaera hau "
-"aldatu daiteke fitxategi horiek barne hartzeko iragazki bat gehituz. Barne "
-"hartutako fitxategien babeskopia egingo da argazkia sortzean eta argazkia "
+"fitxategiak eta direktorioak ez dira ukituko. Portaera hau aldatu daiteke "
+"fitxategi horiek barne hartzeko iragazki bat gehituz. Barne hartutako "
+"fitxategien babeskopia egingo da argazkia sortzean eta argazkia "
 "leheneratzean ordezkatuko dira."
 
 #: Utility/Device.vala:1934
@@ -1864,11 +1868,11 @@ msgstr "Berrikuspena"
 
 #: Gtk/RestoreDeviceBox.vala:452
 msgid "Root device not selected"
-msgstr "Erro gailua ez dago hautatuta"
+msgstr "Erroko gailua ez dago hautatuta"
 
 #: Gtk/RsyncLogWindow.vala:49
 msgid "Rsync Log Viewer"
-msgstr "Erregistroen ikustailea"
+msgstr "Rsync egunkarien ikustailea"
 
 #: Gtk/AppGtk.vala:119
 #, c-format
@@ -1889,8 +1893,8 @@ msgid ""
 "Save snapshots to an external disk instead of the system disk to guard "
 "against drive failures."
 msgstr ""
-"Argazkiak sistemaren diskoan gorde ordez kanpoko disko batean gorde, gailuen "
-"hutsegiteetatik babesteko."
+"Gorde argazkiak sistemaren diskoan gorde ordez kanpoko disko batean gorde, "
+"gailuen hutsegiteetatik babesteko."
 
 #: Gtk/FinishBox.vala:97
 msgid ""
@@ -1901,7 +1905,7 @@ msgid ""
 msgstr ""
 "Argazkiak sistemarena ez den disko batean gordetzeak sistemaren diskoa "
 "formateatu eta SEa berrinstalatzeko aukera ematen dizu, bertan gordetako "
-"argazkiak gorde gabe. Beste Linux banaketa bat ere instala dezakezu eta "
+"argazkiak galdu gabe. Beste Linux banaketa bat ere instala dezakezu eta "
 "beranduago aurreko banaketa berrezarri argazki bat leheneratuz."
 
 #: Core/Main.vala:1303 Core/Main.vala:1457 Core/Main.vala:1459
@@ -1988,7 +1992,7 @@ msgstr "Hautatu argazki bakar bat leheneratzeko"
 
 #: Gtk/RestoreDeviceBox.vala:481
 msgid "Select another device for root file system (/)"
-msgstr "Hautatu beste gailu bat erro fitxategi-sistemarentzat (/)"
+msgstr "Hautatu beste gailu bat erroko fitxategi-sistemarentzat (/)"
 
 #: Core/SnapshotRepo.vala:632 Core/SnapshotRepo.vala:659
 msgid "Select another device or free up some space"
@@ -2028,7 +2032,7 @@ msgstr "Hautatu argazkiak ezabatzeko"
 
 #: Gtk/RestoreDeviceBox.vala:453
 msgid "Select the device for root file system (/)"
-msgstr "Hautatu erro fitxategi-sistemarentzako gailua (/)"
+msgstr "Hautatu erroko fitxategi-sistemarentzako gailua (/)"
 
 #: Gtk/RestoreDeviceBox.vala:83
 msgid "Select the devices where files will be restored."
@@ -2064,11 +2068,11 @@ msgstr "Hautatu ze helburuko gailutan klonatuko den sistema."
 
 #: Core/Main.vala:3264
 msgid "Selected default snapshot device"
-msgstr "Hautatutako argazki gailu lehenetsia"
+msgstr "Hautatutako argazki-gailu lehenetsia"
 
 #: Core/Main.vala:3215 Core/Main.vala:3219
 msgid "Selected default snapshot type"
-msgstr "Hautatutako argazki mota lehenetsia"
+msgstr "Hautatutako argazki-mota lehenetsia"
 
 #: Gtk/BackupDeviceBox.vala:388
 msgid "Selected device does not have BTRFS partition"
@@ -2080,11 +2084,11 @@ msgstr "Hautatutako gailuak ez dauka Linux partiziorik"
 
 #: Core/SnapshotRepo.vala:146
 msgid "Selected snapshot device"
-msgstr "Hautatutako argazki gailua"
+msgstr "Hautatutako argazki-gailua"
 
 #: Console/AppConsole.vala:690 Core/SnapshotRepo.vala:592
 msgid "Selected snapshot device is not a system disk"
-msgstr "Hautatutako argazki gailua ez da sistemaren disko bat"
+msgstr "Hautatutako argazki-gailua ez da sistemaren disko bat"
 
 #: Core/Main.vala:2045
 msgid "Selected snapshot is marked for deletion"
@@ -2194,7 +2198,7 @@ msgstr "Argazkia sortuta"
 #: Gtk/SnapshotListBox.vala:296
 #, c-format
 msgid "Snapshot Levels"
-msgstr "Hautatu argazki mailak"
+msgstr "Hautatu argazki-mailak"
 
 #: Gtk/MainWindow.vala:754
 msgid "Snapshot deletion in progress..."
@@ -2203,20 +2207,20 @@ msgstr "Argazkia ezabatzen..."
 #: Core/SnapshotRepo.vala:470
 #, c-format
 msgid "Snapshot device"
-msgstr "Argazki gailua"
+msgstr "Argazki-gailua"
 
 #: Console/AppConsole.vala:664 Core/SnapshotRepo.vala:559
 msgid "Snapshot device not available"
-msgstr "Argazki gailua ez dago erabilgarri"
+msgstr "Argazki-gailua ez dago erabilgarri"
 
 #: Console/AppConsole.vala:660 Core/SnapshotRepo.vala:552
 msgid "Snapshot device not selected"
-msgstr "Argazki gailua ez dago hautatuta"
+msgstr "Argazki-gailua ez dago hautatuta"
 
 #: Core/SnapshotRepo.vala:474
 #, c-format
 msgid "Snapshot location"
-msgstr "Argazki kokalekua"
+msgstr "Argazki-kokalekua"
 
 #: Core/Main.vala:1270
 msgid "Snapshot saved successfully"
@@ -2271,7 +2275,8 @@ msgid ""
 "Snapshots are perfect, byte-for-byte copies of the system. Nothing is "
 "excluded."
 msgstr ""
-"Argazkiak sistemaren kopia zehatz, perfektuak dira. Ezer ez da kanpo uzten."
+"Argazkiak bytez byteko sistemaren kopia zehatz, perfektuak dira. Ezer ez da "
+"kanpo uzten."
 
 #: Gtk/SnapshotBackendBox.vala:171
 msgid ""
@@ -2299,12 +2304,16 @@ msgid ""
 "Snapshots are saved to /timeshift on selected partition. Other locations are "
 "not supported."
 msgstr ""
+"Argazkiak hautatutako partizioko /timeshift direktorioan gordetzen dira. Ez "
+"dago beste kokalekuentzako euskarririk."
 
 #: Gtk/BackupDeviceBox.vala:99
 msgid ""
 "Snapshots are saved to /timeshift-btrfs on selected partition. Other "
 "locations are not supported."
 msgstr ""
+"Argazkiak hautatutako partizioko /timeshift-btrfs direktorioan gordetzen "
+"dira. Ez dago beste kokalekuentzako euskarririk."
 
 #: Gtk/MainWindow.vala:996
 msgid "Snapshots available for restore"
@@ -2347,7 +2356,7 @@ msgstr "Zehaztu babeskopia gailua (lehenetsia: konfigurazioa)"
 
 #: Console/AppConsole.vala:368
 msgid "Specify device for installing GRUB2 bootloader"
-msgstr "Zehaztu GRUB2 abioko kargatzailea ze gailutan instalatu behar den"
+msgstr "Zehaztu GRUB2 abiarazlea ze gailutan instalatu behar den"
 
 #: Console/AppConsole.vala:366
 msgid "Specify snapshot to restore"
@@ -2365,7 +2374,7 @@ msgstr "Egoera"
 
 #: Gtk/ScheduleBox.vala:154
 msgid "Stop cron emails for scheduled tasks"
-msgstr "Gelditu programatutako atazen cron e-postak"
+msgstr "Gelditu programatutako atazen cron posta elektronikoak"
 
 #: Utility/TeeJee.Process.vala:511
 msgid "Stopped"
@@ -2374,12 +2383,12 @@ msgstr "Geldituta"
 #: Core/Subvolume.vala:202
 #, c-format
 msgid "Subvolume exists at destination"
-msgstr ""
+msgstr "Azpi-bolumena badago helburuan"
 
 #: Gtk/SnapshotListBox.vala:275
-#, fuzzy, c-format
+#, c-format
 msgid "Subvolumes"
-msgstr "Bolumena"
+msgstr "Azpi-bolumenak"
 
 #: Gtk/ExcludeAppsBox.vala:135 Gtk/RestoreWindow.vala:120
 #: Gtk/ExcludeBox.vala:259
@@ -2387,17 +2396,16 @@ msgid "Summary"
 msgstr "Laburpena"
 
 #: Utility/Gtk/DonationWindow.vala:81
-#, fuzzy
 msgid "Support"
-msgstr "Ez dago onartuta"
+msgstr "Euskarria"
 
 #: Console/AppConsole.vala:378
 msgid "Switch to BTRFS mode (default: config)"
-msgstr "Aldatu BTRFS modura (lehenetsia: config)"
+msgstr "Aldatu BTRFS modura (lehenetsia: konfigurazioa)"
 
 #: Console/AppConsole.vala:379
 msgid "Switch to RSYNC mode (default: config)"
-msgstr "Aldatu RSYNC modura (lehenetsia: config)"
+msgstr "Aldatu RSYNC modura (lehenetsia: konfigurazioa)"
 
 #: Core/SnapshotRepo.vala:1045
 msgid "Symlinks updated"
@@ -2409,7 +2417,7 @@ msgstr "Fitxategi-sistemak sinkronizatzen..."
 
 #: Core/Main.vala:1379 Core/Main.vala:2562 Core/Main.vala:2803
 msgid "Synching files with rsync..."
-msgstr "Fitxategiak rsync-ekin sinkronizatzen..."
+msgstr "Fitxategiak rsync erabiliz sinkronizatzen..."
 
 #: Gtk/AppGtk.vala:112
 msgid "Syntax"
@@ -2478,12 +2486,12 @@ msgstr ""
 #: Core/Main.vala:379
 msgid "The system partition has an unsupported subvolume layout."
 msgstr ""
-"Sistemaren partizioak euskarririk gabeko azpi-bolumen diseinu bat dauka."
+"Sistemaren partizioak euskarririk gabeko azpi-bolumen antolaketa bat dauka."
 
 #: Core/Main.vala:3453
 msgid "The target partition has an unsupported subvolume layout."
 msgstr ""
-"Helburuko partizioak euskarririk gabeko azpi-bolumen diseinu bat dauka."
+"Helburuko partizioak euskarririk gabeko azpi-bolumen antolaketa bat dauka."
 
 #: Gtk/BackupDeviceBox.vala:512
 #, c-format
@@ -2508,6 +2516,9 @@ msgid ""
 "the hope that it is useful but without any warranty. See the GNU General "
 "Public License v2 or later for more information"
 msgstr ""
+"Software hau doan/librea da erabilera pertsonal eta komertzialerako. "
+"Erabilgarria delako ustean banatzen da, baina inolako bermerik gabe. Ikusi "
+"GNU General Public License v2 edo berriagoa informazio gehiagorako"
 
 #: Gtk/MainWindow.vala:1031 Gtk/MainWindow.vala:1042
 msgid "Timeshift is active"
@@ -2525,11 +2536,11 @@ msgstr "Aukera lehenetsiekin leheneratzeko sakatu ENTER tekla gonbit guztietan"
 
 #: Utility/Gtk/AboutWindow.vala:457
 msgid "Tools"
-msgstr ""
+msgstr "Tresnak"
 
 #: Utility/Gtk/AboutWindow.vala:441
 msgid "Translations"
-msgstr "Itzultzaileak"
+msgstr "Itzulpenak"
 
 #: Gtk/SettingsWindow.vala:87 Gtk/BackupDeviceBox.vala:190
 #: Console/AppConsole.vala:459 Console/AppConsole.vala:498
@@ -2541,7 +2552,7 @@ msgstr "Mota"
 #: Utility/Device.vala:1946
 #, c-format
 msgid "UUID"
-msgstr "UUIDa"
+msgstr "UUID"
 
 #: Gtk/AppGtk.vala:99
 msgid "Unknown option"
@@ -2549,7 +2560,7 @@ msgstr "Aukera ezezaguna"
 
 #: Core/Main.vala:1221
 msgid "Unknown snapshot type"
-msgstr "Argazki mota ezezaguna"
+msgstr "Argazki-mota ezezaguna"
 
 #: Core/Main.vala:1584
 msgid "Unknown value specified for option --tags"
@@ -2562,7 +2573,7 @@ msgstr "Desblokeatutako gailua '%s'(e)ra mapatuta dago"
 
 #: Utility/Device.vala:1505
 msgid "Unlocked successfully"
-msgstr "Desblokeatu da"
+msgstr "Behar bezala desblokeatu da"
 
 #: Utility/Device.vala:1720
 msgid "Unmounting from"
@@ -2574,7 +2585,7 @@ msgstr "Partekatu gabea"
 
 #: Gtk/RestoreDeviceBox.vala:522 Core/Main.vala:3457
 msgid "Unsupported Subvolume Layout"
-msgstr "Euskarririk gabeko azpi-bolumen diseinua"
+msgstr "Euskarririk gabeko azpi-bolumen antolaketa"
 
 #: Gtk/BootOptionsBox.vala:150
 msgid "Update GRUB menu"
@@ -2586,11 +2597,11 @@ msgstr "Eguneratu initramfs"
 
 #: Core/Main.vala:2742
 msgid "Updated /etc/crypttab on target device"
-msgstr "Eguneratu /etc/crypttab helburuko gailuan"
+msgstr "/etc/crypttab eguneratuta helburuko gailuan"
 
 #: Core/Main.vala:2662
 msgid "Updated /etc/fstab on target device"
-msgstr "Eguneratu /etc/fstab helburuko gailuan"
+msgstr "/etc/fstab eguneratuta helburuko gailuan"
 
 #: Gtk/BootOptionsBox.vala:152
 msgid ""
@@ -2606,13 +2617,15 @@ msgstr "GRUB menua eguneratzen..."
 
 #: Core/Main.vala:2586
 msgid "Updating bootloader configuration..."
-msgstr "Abioko kargatzailearen konfigurazioa eguneratzen..."
+msgstr "Abiarazlearen konfigurazioa eguneratzen..."
 
 #: Utility/Gtk/DonationWindow.vala:85
 msgid ""
 "Use the issue tracker for reporting issues, asking questions, and requesting "
 "features. Please avoid reporting issues by email."
 msgstr ""
+"Erabili arazoen erregistroa arazoen berri eman, galderak egin edo "
+"ezaugarriak eskatzeko. Ez eman arazoen berri posta elektroniko bidez."
 
 #: Utility/Device.vala:1954
 #, c-format
@@ -2643,9 +2656,8 @@ msgid "Users"
 msgstr "Erabiltzaileak"
 
 #: Gtk/RestoreWindow.vala:114
-#, fuzzy
 msgid "Users Home"
-msgstr "Erabiltzaileak"
+msgstr "Erabiltzaileen karpeta nagusiak"
 
 #: Utility/Device.vala:1931
 #, c-format
@@ -2654,11 +2666,11 @@ msgstr "Hornitzailea"
 
 #: Gtk/SnapshotListBox.vala:343
 msgid "View Rsync Log for Create"
-msgstr "Ikusi sorrera egunkaria"
+msgstr "Ikusi sortzearen Rsync egunkaria"
 
 #: Gtk/SnapshotListBox.vala:350
 msgid "View Rsync Log for Restore"
-msgstr "Ikusi leheneratze egunkaria"
+msgstr "Ikusi leheneratzearen Rsync egunkaria"
 
 #: Gtk/MainWindow.vala:380
 msgid "View TimeShift Logs"
@@ -2674,7 +2686,7 @@ msgstr "Abisua"
 
 #: Gtk/RestoreExcludeBox.vala:61
 msgid "Web Browsers"
-msgstr "Web-arakatzaileak"
+msgstr "Web-nabigatzaileak"
 
 #: Utility/Gtk/DonationWindow.vala:100
 msgid "Website"
@@ -2694,7 +2706,7 @@ msgstr "Asteroko argazkiak gaituta daude"
 
 #: Utility/Gtk/DonationWindow.vala:96
 msgid "Wiki"
-msgstr ""
+msgstr "Wiki-a"
 
 #: Gtk/BackupFinishBox.vala:63 Gtk/DeleteFinishBox.vala:63
 msgid "With Errors"
@@ -2738,7 +2750,7 @@ msgstr "[ENTER = Lehenetsia (%s), a = Bertan behera utzi]"
 #: Console/AppConsole.vala:883
 #, c-format
 msgid "[ENTER = Default (%s), r = Root device, a = Abort]"
-msgstr "[ENTER = Lehenetsia (%s), r = Erro gailua, a = Bertan behera utzi]"
+msgstr "[ENTER = Lehenetsia (%s), r = Erroko gailua, a = Bertan behera utzi]"
 
 #: Utility/AppLock.vala:54
 msgid "[Warning] Deleted invalid lock"
@@ -2780,7 +2792,7 @@ msgstr "bidean muntatuta"
 #: Gtk/RestoreBox.vala:237 Gtk/DeleteBox.vala:149 Gtk/BackupBox.vala:234
 #: Core/Main.vala:1411 Core/Snapshot.vala:501
 msgid "remaining"
-msgstr "falta dena"
+msgstr "faltan"
 
 #: Core/Main.vala:1422
 msgid "rsync returned an error"

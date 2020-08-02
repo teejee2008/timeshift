@@ -182,7 +182,7 @@ public class FsTabEntry : GLib.Object{
 			|| mount_point.has_prefix("/media")
 			|| (mount_point == "none")
 			|| !mount_point.has_prefix("/")
-			|| (!device_string.has_prefix("/dev/") && !device_string.down().has_prefix("uuid="))){
+			|| (!device_string.has_prefix("/dev/") && !device_string.down().has_prefix("uuid=") && !device_string.down().has_prefix("label=") )){
 			
 			return false;
 		}

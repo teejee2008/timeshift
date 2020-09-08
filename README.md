@@ -164,6 +164,12 @@ If the backup device is running out of space, try the following steps:
 * EFI systems are fully supported. Ensure that the ***/boot/efi*** partition is mapped while restoring a snapshot. It will be mapped automatically if detected.
 * If you are restoring from Live CD/USB, and your installed system uses EFI mode, then you must boot from Live CD/USB in EFI mode.
 
+## Support
+
+If you use Linux Mint and need support for an issue please use the [Linux Mint support forums](https://forums.linuxmint.com)
+
+Issues reported on the Issue Tracker will be fixed during the next update. Please do not expect a response as the tracker is checked only when the app is being updated.
+
 ## Disclaimer
 
 This program is free for personal and commercial use and comes with absolutely no warranty. You use this program entirely at your own risk. The author will not be liable for any damages arising from the use of this program. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.   
@@ -175,19 +181,15 @@ You can contribute to this project in various ways:
 - Submitting ideas, and reporting issues in the [tracker](https://github.com/teejee2008/timeshift/issues)
 - Translating this application to other languages
 - Contributing code changes by fixing issues and submitting a pull request
-- Making a donation via PayPal or bitcoin, or signing-up as a patron on Patreon
+- Making a donation via PayPal or bitcoin
 
 ## Donate
 
-*Timeshift* is a non-commercial application. I work on it during my free time based on my requirements and interest. If you wish to support this project, you can make a donation for $10 or more via PayPal. Your contributions will help keep the project alive and support future development.
+*Timeshift* is a non-commercial application. I work on it during my free time based on my requirements and interest. If you wish to support this project, you can make a donation for $10 or more via PayPal. Your contributions will help keep the project alive.
 
-**PayPal** ~ If you find this application useful and wish to say thanks, you can buy me a coffee by making a donation with Paypal.
+**PayPal**
 
 [![](images/PayPal.png)](https://www.paypal.com/cgi-bin/webscr?business=teejeetech@gmail.com&cmd=_xclick&currency_code=USD&amount=10&item_name=Timeshift%20Donation)  
-
-**Patreon** ~ You can also sign up as a sponsor on [Patreon.com](https://www.patreon.com/teejeetech). As a patron you will get access to beta releases of new applications that I'm working on. You will also get news and updates about new features that are not published elsewhere.
-
-[![](images/patreon.png)](https://www.patreon.com/bePatron?u=3059450)
 
 **Bitcoin** ~ You can send bitcoins at this address or by scanning the QR code below:
 

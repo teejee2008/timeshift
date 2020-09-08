@@ -7,7 +7,7 @@ assignees: ''
 
 ---
 
-**Note:** This application is provided "as-is" without support or warranty. If you need help with issues, consider [making a donation](https://www.paypal.com/cgi-bin/webscr?business=teejeetech@gmail.com&cmd=_xclick&currency_code=USD&item_name=Timeshift+Donation) to support the development.
+**Note:** This application is provided "as-is" without support or warranty. Due to lack of time, I check this tracker once every few months. If you need help with an issue, consider posting the issue on Linux Mint forums where there are more people to help you out.
 
 **Describe the bug**
 A clear and concise description of what the bug is.

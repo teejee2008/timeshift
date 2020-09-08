@@ -234,11 +234,12 @@ msgid "BTRFS device is not mounted"
 msgstr "Dispositivo BTRFS não está montado"
 
 #: Gtk/BackupDeviceBox.vala:98
-#, fuzzy
 msgid ""
 "BTRFS snapshots are saved on system partition. Other partitions are not "
 "supported."
-msgstr "Outra aplicação (próxima página)"
+msgstr ""
+"Cópias BTRFS são salvas na partição de sistema. Outras partições não são "
+"suportadas."
 
 #: Gtk/FinishBox.vala:92
 msgid ""
@@ -292,8 +293,8 @@ msgstr "Arranque pela cópia falhou!"
 msgid ""
 "Boot snapshots are created with a delay of 10 minutes after system startup."
 msgstr ""
-"As cópias de segurança são criadas utilizando os recursos internos do "
-"sistema de ficheiros BTRFS."
+"Cópias de arranque são criadas com um atraso de 10 minutos após o "
+"início do sistema."
 
 #: Core/Main.vala:1011
 msgid "Boot snapshots are enabled"
@@ -528,7 +529,7 @@ msgstr ""
 #: Gtk/SnapshotBackendBox.vala:95
 #, fuzzy
 msgid "Create snapshots using BTRFS"
-msgstr "Criar cópias de segurança utilizando RSYNC"
+msgstr "Criar cópias de segurança utilizando BTRFS"
 
 #: Gtk/SnapshotBackendBox.vala:78
 msgid "Create snapshots using RSYNC tool and hard-links"
@@ -705,7 +706,7 @@ msgstr "Dispositivo não encontrado"
 #: Gtk/BackupDeviceBox.vala:97
 #, c-format
 msgid "Devices displayed above have BTRFS file systems."
-msgstr "Dispositivos com sistemas de ficheiros Linux"
+msgstr "Dispositivos com sistemas de ficheiros BTRFS"
 
 #: Gtk/BackupDeviceBox.vala:104
 #, c-format
@@ -724,7 +725,7 @@ msgstr "Dispositivos com sistemas de ficheiros Linux"
 
 #: Gtk/BackupDeviceBox.vala:105
 msgid "Devices with Windows file systems are not supported (NTFS, FAT, etc)."
-msgstr ""
+msgstr "Dispositivos com sistemas de ficheiros Windows não são suportados (NTFS, FAT, etc.)"
 
 #: Utility/TeeJee.FileSystem.vala:518
 msgid "Dir not found"
@@ -813,7 +814,7 @@ msgstr "Erro"
 
 #: Gtk/RestoreWindow.vala:475
 msgid "Error running Rsync"
-msgstr ""
+msgstr "Erro ao executar Rsync"
 
 #: Gtk/BackupWindow.vala:82 Gtk/SetupWizardWindow.vala:99
 msgid "Estimate"
@@ -833,7 +834,7 @@ msgstr "Exemplos"
 
 #: Gtk/UsersBox.vala:136
 msgid "Exclude All"
-msgstr "Excluir Programas"
+msgstr "Excluir Tudo"
 
 #: Gtk/ExcludeAppsBox.vala:51 Gtk/RestoreExcludeBox.vala:55
 msgid "Exclude Application Settings"
@@ -849,7 +850,7 @@ msgstr "Excluir Lista"
 
 #: Gtk/ExcludeListSummaryWindow.vala:49
 msgid "Exclude List Summary"
-msgstr "Excluir Lista do Resumo"
+msgstr "Resumo da Lista de Exclusão"
 
 #: Gtk/ExcludeBox.vala:224
 msgid "Exclude Pattern"
@@ -900,9 +901,8 @@ msgid "Failed to delete file"
 msgstr "Falha ao eliminar o ficheiro"
 
 #: Core/Subvolume.vala:153
-#, fuzzy
 msgid "Failed to delete snapshot nested subvolume"
-msgstr "Falha ao eliminar o subvolume da cópia"
+msgstr "Falha ao eliminar o subvolume aninhado da cópia"
 
 #: Core/Subvolume.vala:163
 msgid "Failed to delete snapshot subvolume"
@@ -1011,7 +1011,7 @@ msgstr "Falha ao desmontar"
 
 #: Core/Main.vala:3541
 msgid "Failed to unmount device!"
-msgstr "Falha ao desmontar dispositivo"
+msgstr "Falha ao desmontar dispositivo!"
 
 #: Utility/TeeJee.FileSystem.vala:175
 msgid "Failed to write file"
@@ -1206,7 +1206,7 @@ msgstr "Incluir o @home nas cópias de segurança do subvolume"
 
 #: Gtk/UsersBox.vala:266
 msgid "Include All"
-msgstr "Excluir Programas"
+msgstr "Incluir Tudo"
 
 #: Gtk/UsersBox.vala:194
 msgid "Include Hidden"
@@ -1796,9 +1796,8 @@ msgid "Restore"
 msgstr "Restaurar"
 
 #: Gtk/UsersBox.vala:329
-#, fuzzy
 msgid "Restore @home subvolume"
-msgstr "Subvolume do sistema restaurado"
+msgstr "Restaurar subvolume @home"
 
 #: Gtk/RestoreWindow.vala:89
 msgid "Restore Device"
@@ -2280,14 +2279,14 @@ msgstr ""
 #: Gtk/ScheduleBox.vala:167
 #, c-format
 msgid "Snapshots are not scheduled at fixed times."
-msgstr "Nenhum dispositivo de cópia de segurança selecionado"
+msgstr "Cópias não estão agendadas em tempos fixos."
 
 #: Gtk/SnapshotBackendBox.vala:173
 msgid ""
 "Snapshots are perfect, byte-for-byte copies of the system. Nothing is "
 "excluded."
 msgstr ""
-"As cópias de segurança são cópias perfeitas,  byte-byte do sistema. Nada é "
+"As cópias de segurança são cópias perfeitas, byte-byte do sistema. Nada é "
 "excluído."
 
 #: Gtk/SnapshotBackendBox.vala:171
@@ -2396,9 +2395,9 @@ msgid "Subvolume exists at destination"
 msgstr ""
 
 #: Gtk/SnapshotListBox.vala:275
-#, fuzzy, c-format
+#, c-format
 msgid "Subvolumes"
-msgstr "Volume"
+msgstr "Subvolumes"
 
 #: Gtk/ExcludeAppsBox.vala:135 Gtk/RestoreWindow.vala:120
 #: Gtk/ExcludeBox.vala:259
@@ -2408,7 +2407,7 @@ msgstr "Resumo"
 #: Utility/Gtk/DonationWindow.vala:81
 #, fuzzy
 msgid "Support"
-msgstr "Não Suportado"
+msgstr "Suporte"
 
 #: Console/AppConsole.vala:378
 msgid "Switch to BTRFS mode (default: config)"

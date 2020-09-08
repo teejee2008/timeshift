@@ -7,7 +7,7 @@ assignees: ''
 
 ---
 
-**Note:** This application is provided "as-is" without support or warranty. Due to lack of time, I check this tracker once every few months. If you need help with an issue, consider posting the issue on Linux Mint forums where there are more people to help you out.
+**Note:** This application is provided "as-is" without support or warranty. If you need changes or additional features in the application, please download the source code, make the changes, test it properly, and then submit a pull request. The changes will be reviewed and merged in the next update.
 
 **Is your feature request related to a problem? Please describe.**
 A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]

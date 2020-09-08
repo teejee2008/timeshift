@@ -168,7 +168,7 @@ If the backup device is running out of space, try the following steps:
 
 If you use Linux Mint and need support for an issue please use the [Linux Mint support forums](https://forums.linuxmint.com)
 
-Issues reported on the Issue Tracker will be fixed during the next update. Please do not expect a response as the tracker is checked only when the app is being updated.
+Issues reported on the Issue Tracker will be fixed during the next update. Please do not expect a response as the tracker is checked once a year when the app is being updated.
 
 ## Disclaimer
 

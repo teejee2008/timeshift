@@ -54,7 +54,7 @@ app-gtk:
 		Core/*.vala Gtk/*.vala Utility/*.vala Utility/Gtk/*.vala \
 		-o ${app_name}-gtk \
 		--pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix \
-		--pkg gee-0.8 --pkg json-glib-1.0 \
+		--pkg gee-0.8 --pkg json-glib-1.0 --pkg gio-2.0 \
 		--pkg gtk+-3.0 --pkg vte-2.91 $(xapp_pkg)
 
 app-console:
@@ -65,7 +65,7 @@ app-console:
 		Core/*.vala Utility/*.vala Utility/Gtk/*.vala Console/*.vala \
 		-o ${app_name} \
 		--pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix \
-		--pkg gee-0.8 --pkg json-glib-1.0 \
+		--pkg gee-0.8 --pkg json-glib-1.0 --pkg gio-2.0 \
 		--pkg gtk+-3.0 --pkg vte-2.91 $(xapp_pkg)
 
 manpage:

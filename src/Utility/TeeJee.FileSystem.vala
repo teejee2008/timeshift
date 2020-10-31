@@ -102,16 +102,18 @@ namespace TeeJee.FileSystem{
 	    }
 	}
 
-	public bool file_move_to_trash(string file_path){
+	/*public bool file_move_to_trash(string file_path){*/
 
 		/* Check and delete file */
 
-		var file = File.new_for_path (file_path);
-		if (file.query_exists ()) {
-			Posix.system("gvfs-trash '%s'".printf(escape_single_quote(file_path)));
+		/*
+         * GFile *file;
+        file = g_file_new_for_path (file_path);
+		if (g_file_query_exists (file)) {
+			g_file_trash(file);
 		}
 		return true;
-	}
+	}*/
 
 	public bool file_shred(string file_path){
 
@@ -397,9 +399,9 @@ namespace TeeJee.FileSystem{
 		return (status == 0);
 	}
 
-	public bool dir_move_to_trash (string dir_path){
+	/*public bool dir_move_to_trash (string dir_path){
 		return file_move_to_trash(dir_path);
-	}
+	}*/
 	
 	public bool dir_is_empty (string dir_path){
 

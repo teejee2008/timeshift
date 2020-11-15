@@ -564,43 +564,17 @@ namespace TeeJee.FileSystem{
 	}
 
 	public string escape_single_quote(string file_path){
+		
 		return file_path.replace("'","'\\''");
 	}
 	
 	// dep: chmod
 	public int chmod (string file, string permission){
 
-		/* Change file permissions */
 		string cmd = "chmod %s '%s'".printf(permission, escape_single_quote(file));
 		return exec_sync (cmd, null, null);
 	}
-
-	// dep: realpath
-	public string resolve_relative_path (string filePath){
-
-		/* Resolve the full path of given file using 'realpath' command */
-
-		string filePath2 = filePath;
-		if (filePath2.has_prefix ("~")){
-			filePath2 = Environment.get_home_dir () + "/" + filePath2[2:filePath2.length];
-		}
-
-		try {
-			string output = "";
-			string cmd = "realpath '%s'".printf(escape_single_quote(filePath2));
-			Process.spawn_command_line_sync(cmd, out output);
-			output = output.strip ();
-			if (FileUtils.test(output, GLib.FileTest.EXISTS)){
-				return output;
-			}
-		}
-		catch(Error e){
-	        log_error (e.message);
-	    }
-
-	    return filePath2;
-	}
-
+	
 	public int rsync(string sourceDirectory, string destDirectory, bool updateExisting, bool deleteExtra){
 
 		/* Sync files with rsync */

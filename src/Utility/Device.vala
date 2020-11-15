@@ -1423,9 +1423,9 @@ public class Device : GLib.Object{
 				// use password to unlock
 
 				var cmd = "echo -n -e '%s' | cryptsetup luksOpen --key-file - '%s' '%s'\n".printf(
-					luks_pass, luks_device.device, luks_name);
+					escape_single_quote(luks_pass), luks_device.device, luks_name);
 
-				log_debug(cmd.replace(luks_pass, "**PASSWORD**"));
+				log_debug(cmd.replace(escape_single_quote(luks_pass), "**PASSWORD**"));
 				
 				int status = exec_script_sync(cmd, out std_out, out std_err, false, true);
 
@@ -1469,9 +1469,9 @@ public class Device : GLib.Object{
 				// use password to unlock
 
 				var cmd = "echo -n -e '%s' | cryptsetup luksOpen --key-file - '%s' '%s'\n".printf(
-					luks_pass, luks_device.device, luks_name);
+					escape_single_quote(luks_pass), luks_device.device, luks_name);
 
-				log_debug(cmd.replace(luks_pass, "**PASSWORD**"));
+				log_debug(cmd.replace(escape_single_quote(luks_pass), "**PASSWORD**"));
 				
 				int status = exec_script_sync(cmd, out std_out, out std_err, false, true);
 
@@ -1515,6 +1515,7 @@ public class Device : GLib.Object{
 	}
 
 	public static bool luks_lock(string kname, Gtk.Window? parent_window){
+		
 		var cmd = "cryptsetup luksClose %s".printf(kname);
 
 		log_debug(cmd);

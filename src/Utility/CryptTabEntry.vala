@@ -31,6 +31,7 @@ using TeeJee.System;
 using TeeJee.Misc;
 
 public class CryptTabEntry : GLib.Object{
+	
 	public bool is_comment = false;
 	public bool is_empty_line = false;
 
@@ -56,6 +57,7 @@ public class CryptTabEntry : GLib.Object{
 	}
 
 	public static Gee.ArrayList<CryptTabEntry> read_file(string file_path){
+		
 		var list = new Gee.ArrayList<CryptTabEntry>();
 
 		if (!file_exists(file_path)){ return list; }
@@ -103,9 +105,7 @@ public class CryptTabEntry : GLib.Object{
 		return list;
 	}
 
-	public static string write_file(
-		Gee.ArrayList<CryptTabEntry> entries, string file_path,
-		bool keep_comments_and_empty_lines = true){
+	public static string write_file(Gee.ArrayList<CryptTabEntry> entries, string file_path, bool keep_comments_and_empty_lines = true){
 			
 		string text = "";
 		foreach(var entry in entries){

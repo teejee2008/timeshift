@@ -1,6 +1,6 @@
 
 /*
- * ProcStats.vala
+ * LinuxDistro.vala
  *
  * Copyright 2012-2018 Tony George <teejeetech@gmail.com>
  *

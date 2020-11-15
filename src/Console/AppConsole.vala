@@ -56,7 +56,7 @@ public class AppConsole : GLib.Object {
 		set_locale();
 
 		LOG_TIMESTAMP = false;
-
+		
 		if (args.length > 1) {
 			switch (args[1].down()) {
 				case "--help":

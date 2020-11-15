@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: linuxmint\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2019-08-11 18:23+0530\n"
+"POT-Creation-Date: 2020-11-15 15:01+0000\n"
 "PO-Revision-Date: 2017-11-03 18:43+0000\n"
 "Last-Translator: Asier Iturralde Sarasola <Unknown>\n"
 "Language-Team: Basque <eu@li.org>\n"
@@ -29,7 +29,7 @@ msgstr ""
 "\n"
 "Sakatu ENTER jarraitzeko..."
 
-#: Core/SnapshotRepo.vala:641
+#: Core/SnapshotRepo.vala:617
 #, c-format
 msgid "%d snapshots, %s free"
 msgstr "%d argazki, %s libre"
@@ -92,27 +92,27 @@ msgstr "Honi buruz"
 msgid "Action"
 msgstr "Kokalekua"
 
-#: Gtk/ExcludeBox.vala:219
+#: Gtk/ExcludeBox.vala:223
 msgid "Add"
 msgstr "Gehitu"
 
-#: Gtk/ExcludeBox.vala:234
+#: Gtk/ExcludeBox.vala:238
 msgid "Add Files"
 msgstr "Gehitu fitxategiak"
 
-#: Gtk/ExcludeBox.vala:240
+#: Gtk/ExcludeBox.vala:244
 msgid "Add Folders"
 msgstr "Gehitu karpetak"
 
-#: Gtk/ExcludeBox.vala:219
+#: Gtk/ExcludeBox.vala:223
 msgid "Add custom pattern"
 msgstr "Gehitu eredu pertsonalizatua"
 
-#: Gtk/ExcludeBox.vala:240
+#: Gtk/ExcludeBox.vala:244
 msgid "Add directories"
 msgstr "Gehitu direktorioak"
 
-#: Gtk/ExcludeBox.vala:234
+#: Gtk/ExcludeBox.vala:238
 msgid "Add files"
 msgstr "Gehitu fitxategiak"
 
@@ -138,7 +138,7 @@ msgstr ""
 msgid "All Files"
 msgstr "Gehitu fitxategiak"
 
-#: Gtk/SnapshotBackendBox.vala:188
+#: Gtk/SnapshotBackendBox.vala:189
 msgid ""
 "All files are copied when first snapshot is created. Subsequent snapshots "
 "are incremental. Unchanged files will be hard-linked from the previous "
@@ -216,15 +216,15 @@ msgstr "Egileak"
 msgid "Available"
 msgstr "Erabilgarri"
 
-#: Gtk/SnapshotBackendBox.vala:94
+#: Gtk/SnapshotBackendBox.vala:95
 msgid "BTRFS"
 msgstr "BTRFS"
 
-#: Gtk/SnapshotBackendBox.vala:165
+#: Gtk/SnapshotBackendBox.vala:166
 msgid "BTRFS Snapshots"
 msgstr "BTRFS argazkiak"
 
-#: Gtk/SnapshotBackendBox.vala:119
+#: Gtk/SnapshotBackendBox.vala:120
 msgid "BTRFS Tools Not Found"
 msgstr "BTRFS tresnak ez dira aurkitu"
 
@@ -259,7 +259,7 @@ msgstr "Atzera"
 msgid "Backend"
 msgstr "Motorra"
 
-#: Gtk/BackupWindow.vala:92 Console/AppConsole.vala:357
+#: Console/AppConsole.vala:357 Gtk/BackupWindow.vala:92
 msgid "Backup"
 msgstr "Babeskopia"
 
@@ -322,10 +322,10 @@ msgstr "Arakatu hautatutako argazkia"
 msgid "Building file list..."
 msgstr "Fitxategi-zerrenda eraikitzen..."
 
+#: Utility/GtkHelper.vala:120 Utility/Gtk/CustomMessageDialog.vala:172
 #: Gtk/RestoreWindow.vala:209 Gtk/RestoreWindow.vala:218
-#: Gtk/BackupWindow.vala:181 Gtk/SetupWizardWindow.vala:220
-#: Gtk/DeleteWindow.vala:190 Utility/Gtk/CustomMessageDialog.vala:172
-#: Utility/GtkHelper.vala:122
+#: Gtk/SetupWizardWindow.vala:220 Gtk/BackupWindow.vala:181
+#: Gtk/DeleteWindow.vala:190
 msgid "Cancel"
 msgstr "Utzi"
 
@@ -349,8 +349,8 @@ msgstr ""
 msgid "Cannot Delete Live Snapshot"
 msgstr "Ezin da live argazkia ezabatu"
 
-#: Gtk/RsyncLogBox.vala:380 Gtk/RsyncLogBox.vala:383 Gtk/RsyncLogBox.vala:567
-#: Gtk/RsyncLogBox.vala:588 Gtk/RestoreBox.vala:125 Gtk/BackupBox.vala:87
+#: Gtk/RestoreBox.vala:125 Gtk/BackupBox.vala:87 Gtk/RsyncLogBox.vala:380
+#: Gtk/RsyncLogBox.vala:383 Gtk/RsyncLogBox.vala:567 Gtk/RsyncLogBox.vala:588
 msgid "Changed"
 msgstr "Aldatua"
 
@@ -366,7 +366,7 @@ msgstr ""
 msgid "Checking file systems for errors..."
 msgstr "Fitxategi-sistemak egiaztatzen erroreen bila..."
 
-#: Gtk/RsyncLogBox.vala:390 Gtk/RestoreBox.vala:130 Gtk/BackupBox.vala:92
+#: Gtk/RestoreBox.vala:130 Gtk/BackupBox.vala:92 Gtk/RsyncLogBox.vala:390
 #, c-format
 msgid "Checksum"
 msgstr "Kontrol-batura"
@@ -400,15 +400,15 @@ msgstr "Klonatzen"
 msgid "Cloning system..."
 msgstr "Sistema klonatzen..."
 
-#: Gtk/RsyncLogBox.vala:266 Gtk/RestoreWindow.vala:495
-#: Gtk/BootOptionsWindow.vala:106 Gtk/BackupWindow.vala:172
-#: Gtk/DeleteWindow.vala:173 Utility/Gtk/AboutWindow.vala:326
-#: Utility/Gtk/DonationWindow.vala:107
+#: Utility/Gtk/AboutWindow.vala:326 Utility/Gtk/DonationWindow.vala:104
+#: Gtk/RestoreWindow.vala:495 Gtk/BackupWindow.vala:172
+#: Gtk/BootOptionsWindow.vala:106 Gtk/DeleteWindow.vala:173
+#: Gtk/RsyncLogBox.vala:266
 msgid "Close"
 msgstr "Itxi"
 
 #: Gtk/FinishBox.vala:101 Gtk/BackupFinishBox.vala:70
-#: Gtk/RestoreFinishBox.vala:106 Gtk/DeleteFinishBox.vala:71
+#: Gtk/DeleteFinishBox.vala:71 Gtk/RestoreFinishBox.vala:106
 msgid "Close window to exit"
 msgstr "Itxi leihoa irteteko"
 
@@ -428,8 +428,8 @@ msgstr ""
 msgid "Comparing files with rsync..."
 msgstr "Fitxategiak rsync-ekin sinkronizatzen..."
 
-#: Gtk/BackupFinishBox.vala:50 Gtk/RestoreFinishBox.vala:50
-#: Gtk/RestoreFinishBox.vala:75 Gtk/DeleteFinishBox.vala:50
+#: Gtk/BackupFinishBox.vala:50 Gtk/DeleteFinishBox.vala:50
+#: Gtk/RestoreFinishBox.vala:50 Gtk/RestoreFinishBox.vala:75
 msgid "Completed"
 msgstr "Eginda"
 
@@ -437,7 +437,7 @@ msgstr "Eginda"
 msgid "Completed With Errors"
 msgstr "Eginda erroreekin"
 
-#: Gtk/RsyncLogBox.vala:87 Gtk/RestoreWindow.vala:109
+#: Gtk/RestoreWindow.vala:109 Gtk/RsyncLogBox.vala:87
 msgid "Confirm Actions"
 msgstr ""
 
@@ -455,7 +455,7 @@ msgstr "Ekarpenak"
 msgid "Could not find device"
 msgstr "Ezin izan da gailua aurkitu"
 
-#: Utility/Device.vala:1307
+#: Utility/Device.vala:1308
 #, c-format
 msgid "Could not find file"
 msgstr "Ezin izan da fitxategia aurkitu"
@@ -474,7 +474,7 @@ msgstr ""
 "Ezin izan dira sistemaren azpi-bolumenak aurkitu leheneratze aurreko "
 "argazkia sortzeko"
 
-#: Gtk/RsyncLogBox.vala:366 Gtk/RsyncLogBox.vala:571 Gtk/MainWindow.vala:141
+#: Gtk/MainWindow.vala:141 Gtk/RsyncLogBox.vala:366 Gtk/RsyncLogBox.vala:571
 #, c-format
 msgid "Create"
 msgstr "Sortu"
@@ -523,7 +523,7 @@ msgstr ""
 "Sortu argazkiak eskuz edo gaitu programatutako argazkiak zure sistema "
 "babesteko"
 
-#: Gtk/SnapshotBackendBox.vala:95
+#: Gtk/SnapshotBackendBox.vala:96
 #, fuzzy
 msgid "Create snapshots using BTRFS"
 msgstr "Sortu argazkiak RSYNC erabiliz"
@@ -532,8 +532,8 @@ msgstr "Sortu argazkiak RSYNC erabiliz"
 msgid "Create snapshots using RSYNC tool and hard-links"
 msgstr "Sortu argazkiak RSYNC tresna eta esteka gogorrak erabiliz"
 
-#: Gtk/RsyncLogBox.vala:366 Gtk/RsyncLogBox.vala:571 Gtk/RsyncLogBox.vala:592
-#: Gtk/RestoreBox.vala:123 Gtk/BackupBox.vala:85
+#: Gtk/RestoreBox.vala:123 Gtk/BackupBox.vala:85 Gtk/RsyncLogBox.vala:366
+#: Gtk/RsyncLogBox.vala:571 Gtk/RsyncLogBox.vala:592
 #, c-format
 msgid "Created"
 msgstr "Sortze-data"
@@ -542,7 +542,7 @@ msgstr "Sortze-data"
 msgid "Created control file"
 msgstr "Kontrol-fitxategia sortuta"
 
-#: Utility/TeeJee.FileSystem.vala:351
+#: Utility/TeeJee.FileSystem.vala:332
 msgid "Created directory"
 msgstr "Direktorioa sortuta"
 
@@ -614,9 +614,9 @@ msgstr "Datuak aldatuko dira ondorengo gailuetan:"
 msgid "Date Format"
 msgstr ""
 
-#: Gtk/RsyncLogBox.vala:370 Gtk/RsyncLogBox.vala:575 Gtk/MainWindow.vala:161
+#: Console/AppConsole.vala:371 Gtk/MainWindow.vala:161
 #: Gtk/SnapshotListBox.vala:322 Gtk/DeleteWindow.vala:98
-#: Console/AppConsole.vala:371
+#: Gtk/RsyncLogBox.vala:370 Gtk/RsyncLogBox.vala:575
 #, c-format
 msgid "Delete"
 msgstr "Ezabatu"
@@ -637,17 +637,17 @@ msgstr "Ezabatu hautatutako argazkia"
 msgid "Delete snapshot"
 msgstr "Ezabatu argazkia"
 
-#: Gtk/RsyncLogBox.vala:370 Gtk/RsyncLogBox.vala:575 Gtk/RsyncLogBox.vala:596
-#: Gtk/RestoreBox.vala:124 Gtk/BackupBox.vala:86
+#: Gtk/RestoreBox.vala:124 Gtk/BackupBox.vala:86 Gtk/RsyncLogBox.vala:370
+#: Gtk/RsyncLogBox.vala:575 Gtk/RsyncLogBox.vala:596
 #, c-format
 msgid "Deleted"
 msgstr "Ezabatuta"
 
-#: Utility/TeeJee.FileSystem.vala:381
+#: Utility/TeeJee.FileSystem.vala:366
 msgid "Deleted directory"
 msgstr "Direktorioa ezabatuta"
 
-#: Core/Main.vala:2921 Core/Main.vala:2925 Core/Subvolume.vala:167
+#: Core/Subvolume.vala:167 Core/Main.vala:2921 Core/Main.vala:2925
 #, c-format
 msgid "Deleted subvolume"
 msgstr "Azpi-bolumena ezabatuta"
@@ -679,24 +679,24 @@ msgstr "qgroup suntsituta"
 msgid "Destroying qgroup"
 msgstr "qgroup suntsitzen"
 
-#: Gtk/RestoreDeviceBox.vala:97 Console/AppConsole.vala:456
-#: Console/AppConsole.vala:495 Console/AppConsole.vala:543
-#: Utility/Device.vala:1930 Utility/Device.vala:1940 Core/SnapshotRepo.vala:76
-#: Core/SnapshotRepo.vala:683 Core/SnapshotRepo.vala:686 Core/Main.vala:2132
-#: Core/Main.vala:2164
+#: Console/AppConsole.vala:456 Console/AppConsole.vala:495
+#: Console/AppConsole.vala:543 Utility/Device.vala:1932
+#: Utility/Device.vala:1942 Gtk/RestoreDeviceBox.vala:97
+#: Core/SnapshotRepo.vala:76 Core/SnapshotRepo.vala:659
+#: Core/SnapshotRepo.vala:662 Core/Main.vala:2132 Core/Main.vala:2164
 #, c-format
 msgid "Device"
 msgstr "Gailua"
 
-#: Utility/Device.vala:1389
+#: Utility/Device.vala:1390
 msgid "Device is unlocked"
 msgstr "Gailua desblokeatuta dago"
 
-#: Utility/Device.vala:1284 Utility/Device.vala:1346
+#: Utility/Device.vala:1285 Utility/Device.vala:1347
 msgid "Device name is empty!"
 msgstr "Gailuaren izena hutsik dago!"
 
-#: Console/AppConsole.vala:665 Core/SnapshotRepo.vala:560 Core/Main.vala:3254
+#: Console/AppConsole.vala:665 Core/SnapshotRepo.vala:536 Core/Main.vala:3254
 msgid "Device not found"
 msgstr "Ez da gailua aurkitu"
 
@@ -722,11 +722,7 @@ msgstr "Linux fitxategi-sistemak dituzten gailuak"
 msgid "Devices with Windows file systems are not supported (NTFS, FAT, etc)."
 msgstr ""
 
-#: Utility/TeeJee.FileSystem.vala:518
-msgid "Dir not found"
-msgstr "Ez da direktorioa aurkitu"
-
-#: Core/SnapshotRepo.vala:998
+#: Core/SnapshotRepo.vala:974
 msgid "Directory not found"
 msgstr "Ez da direktorioa aurkitu"
 
@@ -746,8 +742,8 @@ msgstr "Banaketa"
 msgid "Documentation"
 msgstr "Dohaintzak"
 
-#: Gtk/MainWindow.vala:209 Gtk/MainWindow.vala:210
 #: Utility/Gtk/DonationWindow.vala:43 Utility/Gtk/DonationWindow.vala:76
+#: Gtk/MainWindow.vala:209 Gtk/MainWindow.vala:210
 msgid "Donate"
 msgstr "Dohaintza egin"
 
@@ -767,7 +763,7 @@ msgstr "Gaitu programatutako argazkiak zure sistema babesteko"
 msgid "Enabled subvolume quota support"
 msgstr "Azpi-bolumenaren kuota euskarria gaituta"
 
-#: Utility/Device.vala:1453
+#: Utility/Device.vala:1454
 msgid "Encrypted Device"
 msgstr "Enkriptatutako gailua"
 
@@ -785,12 +781,12 @@ msgstr "Sartu gailuaren izena edo zenbakia"
 msgid "Enter device name or number (a=Abort)"
 msgstr "Sartu gailuaren izena edo zenbakia (a=Bertan behera utzi)"
 
-#: Utility/Device.vala:1454
+#: Utility/Device.vala:1455
 #, c-format
 msgid "Enter passphrase to unlock '%s'"
 msgstr "Sartu pasa-esaldia '%s' desblokeatzeko"
 
-#: Utility/GtkHelper.vala:805
+#: Utility/GtkHelper.vala:623
 msgid "Enter path or browse for directory"
 msgstr "Sartu direktorioaren bidea edo arakatu"
 
@@ -800,11 +796,11 @@ msgid "Enter snapshot number (a=Abort, p=Previous, n=Next)"
 msgstr ""
 "Sartu argazkiaren zenbakia (a=Bertan behera utzi, p=Aurrekoa, n=Hurrengoa)"
 
-#: Gtk/ExcludeBox.vala:225
+#: Gtk/ExcludeBox.vala:229
 msgid "Enter the pattern to exclude (Ex: *.mp3, *.bak)"
 msgstr "Sartu kanpo uzteko eredua (adibidez, *.mp3, *.bak)"
 
-#: Gtk/RestoreDeviceBox.vala:534 Utility/GtkHelper.vala:18
+#: Utility/GtkHelper.vala:18 Gtk/RestoreDeviceBox.vala:534
 msgid "Error"
 msgstr "Errorea"
 
@@ -812,7 +808,7 @@ msgstr "Errorea"
 msgid "Error running Rsync"
 msgstr ""
 
-#: Gtk/BackupWindow.vala:82 Gtk/SetupWizardWindow.vala:99
+#: Gtk/SetupWizardWindow.vala:99 Gtk/BackupWindow.vala:82
 msgid "Estimate"
 msgstr "Kalkulatu"
 
@@ -829,10 +825,11 @@ msgid "Examples"
 msgstr "Adibideak"
 
 #: Gtk/UsersBox.vala:136
-msgid "Exclude All"
+#, fuzzy
+msgid "Exclude All Files"
 msgstr "Aplikazioak kanpo utzi"
 
-#: Gtk/ExcludeAppsBox.vala:51 Gtk/RestoreExcludeBox.vala:55
+#: Gtk/RestoreExcludeBox.vala:55 Gtk/ExcludeAppsBox.vala:51
 msgid "Exclude Application Settings"
 msgstr "Aplikazioak kanpo uzteko ezarpenak"
 
@@ -848,7 +845,7 @@ msgstr "Kanpo uzteko zerrenda"
 msgid "Exclude List Summary"
 msgstr "Kanpo uzteko zerrendaren laburpena"
 
-#: Gtk/ExcludeBox.vala:224
+#: Gtk/ExcludeBox.vala:228
 msgid "Exclude Pattern"
 msgstr "Kanpo uzteko eredua"
 
@@ -864,11 +861,11 @@ msgstr "Esperotako balioak: O, B, H, D, W, M"
 msgid "Failed to add cron job"
 msgstr "Huts egin du cron lana gehitzean"
 
-#: Utility/TeeJee.FileSystem.vala:191
+#: Utility/TeeJee.FileSystem.vala:169
 msgid "Failed to copy file"
 msgstr "Huts egin du fitxategia kopiatzean"
 
-#: Utility/TeeJee.FileSystem.vala:354 Utility/TeeJee.FileSystem.vala:362
+#: Utility/TeeJee.FileSystem.vala:335 Utility/TeeJee.FileSystem.vala:344
 msgid "Failed to create directory"
 msgstr "Huts egin du direktorioa sortzean"
 
@@ -884,11 +881,11 @@ msgstr "Huts egin du argazkia sortzean"
 msgid "Failed to create subvolume snapshot"
 msgstr "Huts egin du azpi-bolumenaren argazkia sortzean"
 
-#: Core/SnapshotRepo.vala:1039
+#: Core/SnapshotRepo.vala:1015
 msgid "Failed to create symlinks"
 msgstr "Huts egin du esteka sinbolikoak sortzean"
 
-#: Utility/TeeJee.FileSystem.vala:384
+#: Utility/TeeJee.FileSystem.vala:369
 msgid "Failed to delete directory"
 msgstr "Huts egin du direktorioa ezabatzean"
 
@@ -905,7 +902,7 @@ msgstr "Huts egin du argazkiaren azpi-bolumena ezabatzean"
 msgid "Failed to delete snapshot subvolume"
 msgstr "Huts egin du argazkiaren azpi-bolumena ezabatzean"
 
-#: Core/SnapshotRepo.vala:1065
+#: Core/SnapshotRepo.vala:1041
 msgid "Failed to delete symlinks"
 msgstr "Huts egin du esteka sinbolikoak ezabatzean"
 
@@ -931,7 +928,7 @@ msgstr "Huts egin du crontab fitxategia esportatzean"
 msgid "Failed to get input from user in 3 attempts"
 msgstr "Huts egin du erabiltzailearen sarrera eskuratzen 3 saiakeraren ondoren"
 
-#: Utility/Device.vala:723
+#: Utility/Device.vala:724
 msgid "Failed to get partition list"
 msgstr "Huts egin du partizio zerrenda eskuratzean"
 
@@ -947,7 +944,7 @@ msgstr "Huts egin du crontab fitxategia instalatzean"
 msgid "Failed to mount devices"
 msgstr "Huts egin du gailuak muntatzean"
 
-#: Utility/TeeJee.FileSystem.vala:210
+#: Utility/TeeJee.FileSystem.vala:188
 msgid "Failed to move file"
 msgstr "Huts egin du fitxategia lekuz aldatzean"
 
@@ -967,11 +964,11 @@ msgstr "Huts egin du azpi-bolumenen kuota kontsultatzean"
 msgid "Failed to read cron tab"
 msgstr "Huts egin du crontab irakurtzean"
 
-#: Utility/TeeJee.FileSystem.vala:148
+#: Utility/TeeJee.FileSystem.vala:126
 msgid "Failed to read file"
 msgstr "Huts egin du fitxategia irakurtzean"
 
-#: Core/SnapshotRepo.vala:985
+#: Core/SnapshotRepo.vala:961
 msgid "Failed to remove"
 msgstr "Huts egin du kentzean"
 
@@ -995,12 +992,12 @@ msgstr "Huts egin du sistemaren azpi-bolumena leheneratzean"
 msgid "Failed to save exclude list"
 msgstr "Huts egin du kanpo utzitakoen zerrenda gordetzean"
 
-#: Utility/Device.vala:1380 Utility/Device.vala:1434 Utility/Device.vala:1459
-#: Utility/Device.vala:1480 Utility/Device.vala:1500
+#: Utility/Device.vala:1381 Utility/Device.vala:1435 Utility/Device.vala:1460
+#: Utility/Device.vala:1481 Utility/Device.vala:1501
 msgid "Failed to unlock device"
 msgstr "Huts egin du gailua desblokeatzean"
 
-#: Utility/Device.vala:1731
+#: Utility/Device.vala:1733
 msgid "Failed to unmount"
 msgstr "Huts egin du desmuntatzean"
 
@@ -1008,7 +1005,7 @@ msgstr "Huts egin du desmuntatzean"
 msgid "Failed to unmount device!"
 msgstr "Huts egin du gailua desmuntatzean"
 
-#: Utility/TeeJee.FileSystem.vala:175
+#: Utility/TeeJee.FileSystem.vala:153
 msgid "Failed to write file"
 msgstr "Huts egin du fitxategia idaztean"
 
@@ -1028,12 +1025,8 @@ msgstr "Fitxategi eredua"
 msgid "File and directory counts:"
 msgstr "Fitxategi eta direktorioen kontaketa:"
 
-#: Utility/TeeJee.FileSystem.vala:671 Utility/TeeJee.FileSystem.vala:720
-msgid "File is missing"
-msgstr "Fitxategia falta da"
-
-#: Utility/TeeJee.FileSystem.vala:205 Utility/TeeJee.FileSystem.vala:547
-#: Utility/RsyncTask.vala:298 Utility/CronTab.vala:225
+#: Utility/CronTab.vala:225 Utility/TeeJee.FileSystem.vala:183
+#: Utility/RsyncTask.vala:298
 msgid "File not found"
 msgstr "Ez da fitxategia aurkitu"
 
@@ -1046,7 +1039,7 @@ msgstr ""
 "zeinuarekin hasten diren ereduek elementua barne hartuko dute kanpo utzi "
 "ordez."
 
-#: Gtk/SnapshotBackendBox.vala:192
+#: Gtk/SnapshotBackendBox.vala:193
 msgid "Files and directories can be excluded to save disk space."
 msgstr ""
 "Fitxategi eta direktorioak kanpo utzi daitezke diskoko lekua irabazteko."
@@ -1059,7 +1052,7 @@ msgstr "Fitxategi eta direktorioen kontaketa:"
 msgid "Files matching the following patterns will be excluded"
 msgstr "Ondorengo ereduekin bat datozen fitxategiak kanpo utziko dira"
 
-#: Utility/Device.vala:1948
+#: Utility/Device.vala:1950
 #, c-format
 msgid "Filesystem"
 msgstr "Fitxategi-sistema"
@@ -1072,7 +1065,7 @@ msgstr "Sartu gailuaren izena edo zenbakia"
 msgid "Filters"
 msgstr "Iragazkiak"
 
-#: Gtk/BackupWindow.vala:97 Gtk/SetupWizardWindow.vala:211
+#: Gtk/SetupWizardWindow.vala:211 Gtk/BackupWindow.vala:97
 #: Gtk/DeleteWindow.vala:103
 msgid "Finish"
 msgstr "Amaitu"
@@ -1085,7 +1078,7 @@ msgstr "Amaituta"
 msgid "Firefox, Chromium, Chrome, Opera, Epiphany, Midori"
 msgstr "Firefox, Chromium, Chrome, Opera, Epiphany, Midori"
 
-#: Core/SnapshotRepo.vala:667
+#: Core/SnapshotRepo.vala:643
 msgid "First snapshot requires:"
 msgstr "Lehen argazkiak behar du:"
 
@@ -1117,16 +1110,20 @@ msgstr "GRUB EZ da berrinstalatuko"
 msgid "Generating initramfs..."
 msgstr "initramfs sortzen..."
 
+#: Utility/Gtk/DonationWindow.vala:91
+msgid "GitHub"
+msgstr ""
+
 #: Console/AppConsole.vala:375
 msgid "Global"
 msgstr "Globala"
 
-#: Gtk/RsyncLogBox.vala:400 Gtk/RestoreBox.vala:135 Gtk/BackupBox.vala:97
+#: Gtk/RestoreBox.vala:135 Gtk/BackupBox.vala:97 Gtk/RsyncLogBox.vala:400
 #, c-format
 msgid "Group"
 msgstr "Taldea"
 
-#: Gtk/SnapshotBackendBox.vala:132
+#: Gtk/SnapshotBackendBox.vala:133
 msgid "Help"
 msgstr ""
 
@@ -1201,11 +1198,13 @@ msgid "Include @home subvolume in backups"
 msgstr "@home azpi-bolumena barne hartu babeskopietan"
 
 #: Gtk/UsersBox.vala:266
-msgid "Include All"
+#, fuzzy
+msgid "Include All Files"
 msgstr "Aplikazioak kanpo utzi"
 
 #: Gtk/UsersBox.vala:194
-msgid "Include Hidden"
+#, fuzzy
+msgid "Include Only Hidden Files"
 msgstr "Ezkutuko elementuak barne hartu"
 
 #: Core/Main.vala:2044
@@ -1221,11 +1220,7 @@ msgstr "Komando lerroko argumentu baliogabeak"
 msgid "Invalid snapshot"
 msgstr "Argazki baliogabea"
 
-#: Utility/Gtk/DonationWindow.vala:91
-msgid "Issue Tracker"
-msgstr ""
-
-#: Gtk/ExcludeBox.vala:273
+#: Gtk/ExcludeBox.vala:277
 msgid "Items Not Selected"
 msgstr "Ez da elementurik hautatu"
 
@@ -1264,8 +1259,8 @@ msgstr "Mantendu muntatze-bide hau root fitxategi-sisteman"
 msgid "LIVE"
 msgstr "LIVE"
 
-#: Gtk/BackupDeviceBox.vala:254 Console/AppConsole.vala:460
-#: Console/AppConsole.vala:499 Utility/Device.vala:1949
+#: Console/AppConsole.vala:460 Console/AppConsole.vala:499
+#: Utility/Device.vala:1951 Gtk/BackupDeviceBox.vala:254
 #, c-format
 msgid "Label"
 msgstr "Etiketa"
@@ -1365,8 +1360,8 @@ msgstr "Zerrendatu argazkiak"
 msgid "Live USB Mode (Restore Only)"
 msgstr "Live USB modua (leheneratzeko soilik)"
 
-#: Gtk/SettingsWindow.vala:90 Gtk/BackupWindow.vala:87
-#: Gtk/SetupWizardWindow.vala:104
+#: Gtk/SetupWizardWindow.vala:104 Gtk/BackupWindow.vala:87
+#: Gtk/SettingsWindow.vala:90
 msgid "Location"
 msgstr "Kokalekua"
 
@@ -1382,7 +1377,7 @@ msgstr "Markatu ezabatzeko"
 msgid "Marked for deletion"
 msgstr "Ezabatzeko markatuta"
 
-#: Core/SnapshotRepo.vala:712 Core/SnapshotRepo.vala:755
+#: Core/SnapshotRepo.vala:688 Core/SnapshotRepo.vala:731
 msgid "Maximum backups exceeded for backup level"
 msgstr "Babeskopia mailako gehienezko babeskopia kopurua gaindituta"
 
@@ -1402,12 +1397,12 @@ msgstr ""
 msgid "Missing Dependencies"
 msgstr "Mendekotasunak falta ditu"
 
-#: Core/SnapshotRepo.vala:689
+#: Core/SnapshotRepo.vala:665
 #, c-format
 msgid "Mode"
 msgstr "Modua"
 
-#: Utility/Device.vala:1932
+#: Utility/Device.vala:1934
 #, c-format
 msgid "Model"
 msgstr "Modeloa"
@@ -1436,13 +1431,13 @@ msgstr "Sistemaren azpi-bolumena argazkien direktoriora lekuz aldatu da"
 msgid "Multiple snapshots selected"
 msgstr "Hainbat argazki hautatuta"
 
-#: Gtk/RsyncLogBox.vala:492 Gtk/BackupDeviceBox.vala:235
-#: Console/AppConsole.vala:426
+#: Console/AppConsole.vala:426 Gtk/BackupDeviceBox.vala:235
+#: Gtk/RsyncLogBox.vala:492
 msgid "Name"
 msgstr "Izena"
 
-#: Gtk/RestoreWindow.vala:201 Gtk/BackupWindow.vala:164
-#: Gtk/SetupWizardWindow.vala:203 Gtk/DeleteWindow.vala:165
+#: Gtk/RestoreWindow.vala:201 Gtk/SetupWizardWindow.vala:203
+#: Gtk/BackupWindow.vala:164 Gtk/DeleteWindow.vala:165
 msgid "Next"
 msgstr "Hurrengoa"
 
@@ -1462,8 +1457,8 @@ msgstr "Ez da argazkirik hautatu"
 msgid "No snapshots available"
 msgstr "Ez dago argazkirik eskuragarri"
 
-#: Gtk/MainWindow.vala:1001 Console/AppConsole.vala:321
-#: Core/SnapshotRepo.vala:914
+#: Console/AppConsole.vala:321 Gtk/MainWindow.vala:1001
+#: Core/SnapshotRepo.vala:890
 msgid "No snapshots found"
 msgstr "Ez da argazkirik aurkitu"
 
@@ -1475,7 +1470,7 @@ msgstr "Ez da argazkirik aurkitu gailuan"
 msgid "No snapshots on device"
 msgstr "Ez dago argazkirik gailuan"
 
-#: Core/SnapshotRepo.vala:665
+#: Core/SnapshotRepo.vala:641
 msgid "No snapshots on this device"
 msgstr "Ez dago argazkirik gailu honetan"
 
@@ -1492,7 +1487,7 @@ msgstr "Bat ere ez"
 msgid "Not Found"
 msgstr "Ez da direktorioa aurkitu"
 
-#: Core/SnapshotRepo.vala:683
+#: Core/SnapshotRepo.vala:659
 msgid "Not Selected"
 msgstr "Hautatu gabe"
 
@@ -1500,11 +1495,11 @@ msgstr "Hautatu gabe"
 msgid "Not Supported"
 msgstr "Ez dago onartuta"
 
-#: Core/SnapshotRepo.vala:629 Core/SnapshotRepo.vala:656
+#: Core/SnapshotRepo.vala:605 Core/SnapshotRepo.vala:632
 msgid "Not enough disk space"
 msgstr "Ez dago nahikoa leku diskoan"
 
-#: Gtk/FinishBox.vala:55 Console/AppConsole.vala:398
+#: Console/AppConsole.vala:398 Gtk/FinishBox.vala:55
 msgid "Notes"
 msgstr "Oharrak"
 
@@ -1525,14 +1520,13 @@ msgstr ""
 "Mantendu beharreko argazki kopurua.\n"
 "Kopuru hori gainditzean argazki zaharrak kendu egingo dira."
 
-#: Gtk/ExcludeListSummaryWindow.vala:84 Gtk/SettingsWindow.vala:123
-#: Utility/Gtk/CustomMessageDialog.vala:167
-#: Utility/Gtk/CustomMessageDialog.vala:171 Utility/GtkHelper.vala:121
-#: Core/SnapshotRepo.vala:639
+#: Utility/GtkHelper.vala:119 Utility/Gtk/CustomMessageDialog.vala:167
+#: Utility/Gtk/CustomMessageDialog.vala:171 Gtk/SettingsWindow.vala:123
+#: Gtk/ExcludeListSummaryWindow.vala:84 Core/SnapshotRepo.vala:615
 msgid "OK"
 msgstr "Ados"
 
-#: Gtk/SnapshotBackendBox.vala:179
+#: Gtk/SnapshotBackendBox.vala:180
 msgid ""
 "OS must be installed on a BTRFS partition with Ubuntu-type subvolume layout "
 "(@ and @home subvolumes). Other layouts are not supported."
@@ -1571,7 +1565,7 @@ msgid ""
 msgstr ""
 "--snapshot-device aukera ez da zehaztu behar BTRFS moduan argazkiak sortzeko"
 
-#: Gtk/AppGtk.vala:114 Console/AppConsole.vala:351
+#: Console/AppConsole.vala:351 Gtk/AppGtk.vala:114
 msgid "Options"
 msgstr "Aukerak"
 
@@ -1579,12 +1573,12 @@ msgstr "Aukerak"
 msgid "Other applications (next page)"
 msgstr "Beste aplikazioak (hurrengo orria)"
 
-#: Gtk/RsyncLogBox.vala:398 Gtk/RestoreBox.vala:134 Gtk/BackupBox.vala:96
+#: Gtk/RestoreBox.vala:134 Gtk/BackupBox.vala:96 Gtk/RsyncLogBox.vala:398
 #, c-format
 msgid "Owner"
 msgstr "Jabea"
 
-#: Utility/Device.vala:1944
+#: Utility/Device.vala:1946
 #, c-format
 msgid "Parent Device"
 msgstr "Gailu nagusia"
@@ -1597,16 +1591,16 @@ msgstr "Egunkari-fitxategia analizatzen..."
 msgid "Partition has an unsupported subvolume layout."
 msgstr "Partizioak euskarririk gabeko azpi-bolumen diseinua dauka."
 
-#: Gtk/RestoreDeviceBox.vala:93 Core/SnapshotRepo.vala:688
+#: Gtk/RestoreDeviceBox.vala:93 Core/SnapshotRepo.vala:664
 #, c-format
 msgid "Path"
 msgstr "Bidea"
 
-#: Gtk/ExcludeBox.vala:162
+#: Gtk/ExcludeBox.vala:166
 msgid "Pattern"
 msgstr "Eredua"
 
-#: Gtk/RsyncLogBox.vala:396 Gtk/RestoreBox.vala:133 Gtk/BackupBox.vala:95
+#: Gtk/RestoreBox.vala:133 Gtk/BackupBox.vala:95 Gtk/RsyncLogBox.vala:396
 #, c-format
 msgid "Permissions"
 msgstr "Baimenak"
@@ -1662,13 +1656,13 @@ msgstr ""
 msgid "Populating list..."
 msgstr "Zerrenda osatzen..."
 
-#: Gtk/RsyncLogBox.vala:232 Gtk/RestoreBox.vala:88 Gtk/DeleteBox.vala:68
-#: Gtk/BackupBox.vala:114 Core/Main.vala:1597
+#: Gtk/RestoreBox.vala:88 Gtk/BackupBox.vala:114 Gtk/DeleteBox.vala:68
+#: Gtk/RsyncLogBox.vala:232 Core/Main.vala:1597
 msgid "Preparing..."
 msgstr "Prestatzen..."
 
-#: Gtk/RestoreWindow.vala:193 Gtk/BackupWindow.vala:156
-#: Gtk/SetupWizardWindow.vala:195 Gtk/DeleteWindow.vala:157
+#: Gtk/RestoreWindow.vala:193 Gtk/SetupWizardWindow.vala:195
+#: Gtk/BackupWindow.vala:156 Gtk/DeleteWindow.vala:157
 msgid "Previous"
 msgstr "Aurrekoa"
 
@@ -1688,7 +1682,7 @@ msgstr "Azpi-bolumenen informazioa kontsultatzen..."
 msgid "RSYNC"
 msgstr "RSYNC"
 
-#: Gtk/SnapshotBackendBox.vala:184
+#: Gtk/SnapshotBackendBox.vala:185
 msgid "RSYNC Snapshots"
 msgstr "RSYNC argazkiak"
 
@@ -1728,7 +1722,7 @@ msgstr "Sistema berrabiarazten..."
 msgid "Recommended"
 msgstr "Gomendatua"
 
-#: Gtk/RestoreDeviceBox.vala:70 Gtk/BackupDeviceBox.vala:65
+#: Gtk/BackupDeviceBox.vala:65 Gtk/RestoreDeviceBox.vala:70
 msgid "Refresh"
 msgstr "Freskatu"
 
@@ -1736,12 +1730,12 @@ msgstr "Freskatu"
 msgid "Remote and network locations are not supported."
 msgstr "Beste aplikazioak (hurrengo orria)"
 
-#: Gtk/ExcludeBox.vala:254
+#: Gtk/ExcludeBox.vala:258
 msgid "Remove"
 msgstr "Kendu"
 
-#: Core/SnapshotRepo.vala:991 Core/Main.vala:1635 Core/Main.vala:1646
-#: Core/Main.vala:4219 Core/Snapshot.vala:509
+#: Core/Snapshot.vala:509 Core/SnapshotRepo.vala:967 Core/Main.vala:1635
+#: Core/Main.vala:1646 Core/Main.vala:4219
 #, c-format
 msgid "Removed"
 msgstr "Kenduta"
@@ -1767,8 +1761,8 @@ msgstr "Kentzen"
 msgid "Removing snapshot"
 msgstr "Argazkia kentzen"
 
-#: Core/SnapshotRepo.vala:847 Core/SnapshotRepo.vala:866
-#: Core/SnapshotRepo.vala:884 Core/SnapshotRepo.vala:898
+#: Core/SnapshotRepo.vala:823 Core/SnapshotRepo.vala:842
+#: Core/SnapshotRepo.vala:860 Core/SnapshotRepo.vala:874
 #, c-format
 msgid "Removing snapshots"
 msgstr "Argazkiak kentzen"
@@ -1779,9 +1773,9 @@ msgid ""
 "window"
 msgstr ""
 
-#: Gtk/RsyncLogBox.vala:377 Gtk/RsyncLogBox.vala:567 Gtk/RestoreWindow.vala:125
+#: Console/AppConsole.vala:363 Gtk/RestoreWindow.vala:125
 #: Gtk/MainWindow.vala:151 Gtk/RestoreFinishBox.vala:71
-#: Console/AppConsole.vala:363
+#: Gtk/RsyncLogBox.vala:377 Gtk/RsyncLogBox.vala:567
 msgid "Restore"
 msgstr "Leheneratu"
 
@@ -1857,7 +1851,7 @@ msgstr ""
 "hartutako fitxategien babeskopia egingo da argazkia sortzean eta argazkia "
 "leheneratzean ordezkatuko dira."
 
-#: Utility/Device.vala:1934
+#: Utility/Device.vala:1936
 #, c-format
 msgid "Revision"
 msgstr "Berrikuspena"
@@ -1908,7 +1902,7 @@ msgstr ""
 msgid "Saving to device"
 msgstr "Gailura gordetzen"
 
-#: Gtk/SettingsWindow.vala:93 Gtk/SetupWizardWindow.vala:109
+#: Gtk/SetupWizardWindow.vala:109 Gtk/SettingsWindow.vala:93
 msgid "Schedule"
 msgstr "Programazioa"
 
@@ -1941,7 +1935,7 @@ msgstr ""
 msgid "Select '%s' device (default = %s)"
 msgstr "Hautatu '%s' gailua (lehenetsia = %s)"
 
-#: Console/AppConsole.vala:691 Core/SnapshotRepo.vala:593
+#: Console/AppConsole.vala:691 Core/SnapshotRepo.vala:569
 msgid "Select BTRFS system disk with root subvolume (@)"
 msgstr "Hautatu erroko azpi-bolumena (@) duen BTRFS sistemaren diskoa"
 
@@ -1949,7 +1943,7 @@ msgstr "Hautatu erroko azpi-bolumena (@) duen BTRFS sistemaren diskoa"
 msgid "Select GRUB device"
 msgstr "Hautatu GRUB gailua"
 
-#: Utility/GtkHelper.vala:815
+#: Utility/GtkHelper.vala:633
 msgid "Select Path"
 msgstr "Hautatu bidea"
 
@@ -1990,7 +1984,7 @@ msgstr "Hautatu argazki bakar bat leheneratzeko"
 msgid "Select another device for root file system (/)"
 msgstr "Hautatu beste gailu bat erro fitxategi-sistemarentzat (/)"
 
-#: Core/SnapshotRepo.vala:632 Core/SnapshotRepo.vala:659
+#: Core/SnapshotRepo.vala:608 Core/SnapshotRepo.vala:635
 msgid "Select another device or free up some space"
 msgstr "Hautatu beste gailu bat edo egin leku librea"
 
@@ -2010,11 +2004,11 @@ msgstr "Hautatu leheneratzetik kanpo utzi beharreko aplikazioak"
 msgid "Select backup device"
 msgstr "Hautatu babeskopia gailua"
 
-#: Gtk/ExcludeBox.vala:434
+#: Gtk/ExcludeBox.vala:438
 msgid "Select directory"
 msgstr "Hautatu direktorioa"
 
-#: Gtk/ExcludeBox.vala:407
+#: Gtk/ExcludeBox.vala:411
 msgid "Select file(s)"
 msgstr "Hautatu fitxategia(k)"
 
@@ -2038,11 +2032,11 @@ msgstr "Hautatu fitxategiak ze gailutan leheneratu behar diren."
 msgid "Select the intervals for creating snapshots"
 msgstr "Hautatu argazkiak sortzeko tartea"
 
-#: Gtk/ExcludeBox.vala:274
+#: Gtk/ExcludeBox.vala:278
 msgid "Select the items to be removed from the list"
 msgstr "Hautatu elementuak zerrendatik kentzeko"
 
-#: Core/SnapshotRepo.vala:553
+#: Core/SnapshotRepo.vala:529
 msgid "Select the snapshot device"
 msgstr "Hautatu argazki gailua"
 
@@ -2082,7 +2076,7 @@ msgstr "Hautatutako gailuak ez dauka Linux partiziorik"
 msgid "Selected snapshot device"
 msgstr "Hautatutako argazki gailua"
 
-#: Console/AppConsole.vala:690 Core/SnapshotRepo.vala:592
+#: Console/AppConsole.vala:690 Core/SnapshotRepo.vala:568
 msgid "Selected snapshot device is not a system disk"
 msgstr "Hautatutako argazki gailua ez da sistemaren disko bat"
 
@@ -2102,7 +2096,7 @@ msgstr ""
 "Hautatutako erabiltzaileak enkriptatutako karpeta nagusi bat dauka. Ez da "
 "posible ezkutuko fitxategiak soilik barne hartzea."
 
-#: Utility/Device.vala:1933
+#: Utility/Device.vala:1935
 #, c-format
 msgid "Serial"
 msgstr "Serie-zenbakia"
@@ -2135,7 +2129,7 @@ msgstr "Konfigurazioaren morroia"
 msgid "Show additional debug messages"
 msgstr "Erakutsi arazketako mezu gehigarriak"
 
-#: Gtk/AppGtk.vala:117 Console/AppConsole.vala:384
+#: Console/AppConsole.vala:384 Gtk/AppGtk.vala:117
 msgid "Show all options"
 msgstr "Erakutsi aukera guztiak"
 
@@ -2147,16 +2141,15 @@ msgstr "Erakutsi kanpo uzteko aplikazio gehiago hurrengo orrian"
 msgid "Show rsync output (default)"
 msgstr "Erakutsi rsync-en irteera (lehenetsia)"
 
-#: Gtk/RsyncLogBox.vala:392 Gtk/RestoreBox.vala:131
-#: Gtk/SnapshotListBox.vala:174 Gtk/BackupDeviceBox.vala:202
-#: Gtk/BackupBox.vala:93 Console/AppConsole.vala:458
-#: Console/AppConsole.vala:497 Utility/Device.vala:1936
-#: Utility/Device.vala:1951
+#: Console/AppConsole.vala:458 Console/AppConsole.vala:497
+#: Utility/Device.vala:1938 Utility/Device.vala:1953 Gtk/RestoreBox.vala:131
+#: Gtk/SnapshotListBox.vala:174 Gtk/BackupBox.vala:93
+#: Gtk/BackupDeviceBox.vala:202 Gtk/RsyncLogBox.vala:392
 #, c-format
 msgid "Size"
 msgstr "Tamaina"
 
-#: Gtk/SnapshotBackendBox.vala:177
+#: Gtk/SnapshotBackendBox.vala:178
 msgid ""
 "Size of BTRFS snapshots are initially zero. As system files gradually change "
 "with time, data gets written to new data blocks which take up disk space "
@@ -2172,8 +2165,8 @@ msgstr ""
 msgid "Skip GRUB2 reinstall"
 msgstr "Saltatu GRUB2 berriz instalatzea"
 
-#: Gtk/SnapshotListBox.vala:95 Core/SnapshotRepo.vala:715
-#: Core/SnapshotRepo.vala:768 Core/Main.vala:2050
+#: Gtk/SnapshotListBox.vala:95 Core/SnapshotRepo.vala:691
+#: Core/SnapshotRepo.vala:744 Core/Main.vala:2050
 #, c-format
 msgid "Snapshot"
 msgstr "Argazkia"
@@ -2200,20 +2193,20 @@ msgstr "Hautatu argazki mailak"
 msgid "Snapshot deletion in progress..."
 msgstr "Argazkia ezabatzen..."
 
-#: Core/SnapshotRepo.vala:470
+#: Core/SnapshotRepo.vala:446
 #, c-format
 msgid "Snapshot device"
 msgstr "Argazki gailua"
 
-#: Console/AppConsole.vala:664 Core/SnapshotRepo.vala:559
+#: Console/AppConsole.vala:664 Core/SnapshotRepo.vala:535
 msgid "Snapshot device not available"
 msgstr "Argazki gailua ez dago erabilgarri"
 
-#: Console/AppConsole.vala:660 Core/SnapshotRepo.vala:552
+#: Console/AppConsole.vala:660 Core/SnapshotRepo.vala:528
 msgid "Snapshot device not selected"
 msgstr "Argazki gailua ez dago hautatuta"
 
-#: Core/SnapshotRepo.vala:474
+#: Core/SnapshotRepo.vala:450
 #, c-format
 msgid "Snapshot location"
 msgstr "Argazki kokalekua"
@@ -2238,7 +2231,7 @@ msgstr "Argazkia(k) ezabatuta"
 msgid "Snapshots"
 msgstr "Argazkiak"
 
-#: Gtk/SnapshotBackendBox.vala:169
+#: Gtk/SnapshotBackendBox.vala:170
 msgid ""
 "Snapshots are created and restored instantly. Snapshot creation is an atomic "
 "transaction at the file system level."
@@ -2246,7 +2239,7 @@ msgstr ""
 "Argazkiak bat-batean sortu eta leheneratzen dira. Argazkiak sortzea "
 "fitxategi-sistema mailako transakzio atomiko bat da."
 
-#: Gtk/SnapshotBackendBox.vala:186
+#: Gtk/SnapshotBackendBox.vala:187
 msgid ""
 "Snapshots are created by creating copies of system files using rsync, and "
 "hard-linking unchanged files from previous snapshot."
@@ -2254,7 +2247,7 @@ msgstr ""
 "Argazkiak rsync erabiliz sistemaren fitxategien kopiak eginez sortzen dira "
 "eta aldatu gabeko fitxategien esteka gogorrak eginez aurreko argazkira."
 
-#: Gtk/SnapshotBackendBox.vala:167
+#: Gtk/SnapshotBackendBox.vala:168
 msgid ""
 "Snapshots are created using the built-in features of the BTRFS file system."
 msgstr ""
@@ -2266,14 +2259,14 @@ msgstr ""
 msgid "Snapshots are not scheduled at fixed times."
 msgstr "Argazki gailua ez dago hautatuta"
 
-#: Gtk/SnapshotBackendBox.vala:173
+#: Gtk/SnapshotBackendBox.vala:174
 msgid ""
 "Snapshots are perfect, byte-for-byte copies of the system. Nothing is "
 "excluded."
 msgstr ""
 "Argazkiak sistemaren kopia zehatz, perfektuak dira. Ezer ez da kanpo uzten."
 
-#: Gtk/SnapshotBackendBox.vala:171
+#: Gtk/SnapshotBackendBox.vala:172
 msgid ""
 "Snapshots are restored by replacing system subvolumes. Since files are never "
 "copied, deleted or overwritten, there is no risk of data loss. The existing "
@@ -2284,7 +2277,7 @@ msgstr ""
 "galtzeko arriskurik. Lehendik dagoen sistema argazki berri bezala gordetzen "
 "da leheneratu ondoren."
 
-#: Gtk/SnapshotBackendBox.vala:175
+#: Gtk/SnapshotBackendBox.vala:176
 msgid ""
 "Snapshots are saved on the same disk from which they are created (system "
 "disk). Storage on other disks is not supported. If system disk fails then "
@@ -2310,7 +2303,7 @@ msgstr ""
 msgid "Snapshots available for restore"
 msgstr "Leheneratzeko erabilgarri dauden argazkiak"
 
-#: Gtk/SnapshotBackendBox.vala:190
+#: Gtk/SnapshotBackendBox.vala:191
 msgid ""
 "Snapshots can be saved to any disk formatted with a Linux file system. "
 "Saving snapshots to non-system or external disk allows the system to be "
@@ -2357,8 +2350,8 @@ msgstr "Zehaztu argazkia leheneratzeko"
 msgid "Specify target device"
 msgstr "Zehaztu helburuko gailua"
 
-#: Gtk/RsyncLogBox.vala:472 Core/SnapshotRepo.vala:480
-#: Core/SnapshotRepo.vala:690
+#: Gtk/RsyncLogBox.vala:472 Core/SnapshotRepo.vala:456
+#: Core/SnapshotRepo.vala:666
 #, c-format
 msgid "Status"
 msgstr "Egoera"
@@ -2367,7 +2360,7 @@ msgstr "Egoera"
 msgid "Stop cron emails for scheduled tasks"
 msgstr "Gelditu programatutako atazen cron e-postak"
 
-#: Utility/TeeJee.Process.vala:511
+#: Utility/TeeJee.Process.vala:486
 msgid "Stopped"
 msgstr "Geldituta"
 
@@ -2381,8 +2374,8 @@ msgstr ""
 msgid "Subvolumes"
 msgstr "Bolumena"
 
-#: Gtk/ExcludeAppsBox.vala:135 Gtk/RestoreWindow.vala:120
-#: Gtk/ExcludeBox.vala:259
+#: Gtk/RestoreWindow.vala:120 Gtk/ExcludeAppsBox.vala:135
+#: Gtk/ExcludeBox.vala:263
 msgid "Summary"
 msgstr "Laburpena"
 
@@ -2399,7 +2392,7 @@ msgstr "Aldatu BTRFS modura (lehenetsia: config)"
 msgid "Switch to RSYNC mode (default: config)"
 msgstr "Aldatu RSYNC modura (lehenetsia: config)"
 
-#: Core/SnapshotRepo.vala:1045
+#: Core/SnapshotRepo.vala:1021
 msgid "Symlinks updated"
 msgstr "Esteka sinbolikoak eguneratuta"
 
@@ -2415,7 +2408,7 @@ msgstr "Fitxategiak rsync-ekin sinkronizatzen..."
 msgid "Syntax"
 msgstr "Sintaxia"
 
-#: Gtk/SnapshotListBox.vala:127 Utility/Device.vala:1957
+#: Utility/Device.vala:1959 Gtk/SnapshotListBox.vala:127
 #, c-format
 msgid "System"
 msgstr "Sistema"
@@ -2441,7 +2434,7 @@ msgstr "Sistema berrabiaraziko da fitxategiak leheneratu ondoren."
 msgid "Tagged snapshot"
 msgstr "Etiketatutako argazkia"
 
-#: Gtk/SnapshotListBox.vala:151 Console/AppConsole.vala:427
+#: Console/AppConsole.vala:427 Gtk/SnapshotListBox.vala:151
 msgid "Tags"
 msgstr "Etiketak"
 
@@ -2457,7 +2450,7 @@ msgstr "Helburuko gailua sistemaren gailuaren berdina da"
 msgid "Target device not specified!"
 msgstr "Ez da helburuko gailurik zehaztu!"
 
-#: Gtk/SnapshotBackendBox.vala:118
+#: Gtk/SnapshotBackendBox.vala:119
 msgid ""
 "The 'btrfs' command is not available on your system. Install the 'btrfs-"
 "tools' package and try again."
@@ -2490,7 +2483,14 @@ msgstr ""
 msgid "There are no snapshots on this device"
 msgstr "Ez dago argazkirik gailu honetan"
 
-#: Utility/Device.vala:1379
+#: Utility/Gtk/DonationWindow.vala:85
+msgid ""
+"This a free application that is provided without warranty or support. You "
+"can use the GitHub issue tracker for reporting issues, or post your "
+"questions on the Linux Mint forums. Please avoid reporting issues by email."
+msgstr ""
+
+#: Utility/Device.vala:1380
 msgid "This device is not encrypted"
 msgstr "Gailu hau ez dago enkriptatuta"
 
@@ -2513,7 +2513,7 @@ msgstr ""
 msgid "Timeshift is active"
 msgstr "Timeshift aktibo dago"
 
-#: Gtk/RsyncLogBox.vala:394 Gtk/RestoreBox.vala:132 Gtk/BackupBox.vala:94
+#: Gtk/RestoreBox.vala:132 Gtk/BackupBox.vala:94 Gtk/RsyncLogBox.vala:394
 #, c-format
 msgid "Timestamp"
 msgstr "Denbora-zigilua"
@@ -2531,14 +2531,14 @@ msgstr ""
 msgid "Translations"
 msgstr "Itzultzaileak"
 
-#: Gtk/SettingsWindow.vala:87 Gtk/BackupDeviceBox.vala:190
 #: Console/AppConsole.vala:459 Console/AppConsole.vala:498
-#: Utility/Device.vala:1947
+#: Utility/Device.vala:1949 Gtk/SettingsWindow.vala:87
+#: Gtk/BackupDeviceBox.vala:190
 #, c-format
 msgid "Type"
 msgstr "Mota"
 
-#: Utility/Device.vala:1946
+#: Utility/Device.vala:1948
 #, c-format
 msgid "UUID"
 msgstr "UUIDa"
@@ -2555,16 +2555,16 @@ msgstr "Argazki mota ezezaguna"
 msgid "Unknown value specified for option --tags"
 msgstr "Balio ezezaguna zehaztu da --tags aukerarentzat"
 
-#: Utility/Device.vala:1390 Utility/Device.vala:1506
+#: Utility/Device.vala:1391 Utility/Device.vala:1507
 #, c-format
 msgid "Unlocked device is mapped to '%s'"
 msgstr "Desblokeatutako gailua '%s'(e)ra mapatuta dago"
 
-#: Utility/Device.vala:1505
+#: Utility/Device.vala:1506
 msgid "Unlocked successfully"
 msgstr "Desblokeatu da"
 
-#: Utility/Device.vala:1720
+#: Utility/Device.vala:1722
 msgid "Unmounting from"
 msgstr "Hemendik desmuntatzen:"
 
@@ -2608,13 +2608,7 @@ msgstr "GRUB menua eguneratzen..."
 msgid "Updating bootloader configuration..."
 msgstr "Abioko kargatzailearen konfigurazioa eguneratzen..."
 
-#: Utility/Gtk/DonationWindow.vala:85
-msgid ""
-"Use the issue tracker for reporting issues, asking questions, and requesting "
-"features. Please avoid reporting issues by email."
-msgstr ""
-
-#: Utility/Device.vala:1954
+#: Utility/Device.vala:1956
 #, c-format
 msgid "Used"
 msgstr "Erabilia"
@@ -2627,7 +2621,7 @@ msgstr "Erabiltzailea"
 msgid "User Home Directories"
 msgstr "Erabiltzaileen karpeta nagusiak"
 
-#: Utility/Device.vala:1460
+#: Utility/Device.vala:1461
 msgid "User cancelled the password prompt"
 msgstr "Erabiltzaileak pasahitz gonbita ezeztatu du"
 
@@ -2647,7 +2641,7 @@ msgstr "Erabiltzaileak"
 msgid "Users Home"
 msgstr "Erabiltzaileak"
 
-#: Utility/Device.vala:1931
+#: Utility/Device.vala:1933
 #, c-format
 msgid "Vendor"
 msgstr "Hornitzailea"
@@ -2676,7 +2670,7 @@ msgstr "Abisua"
 msgid "Web Browsers"
 msgstr "Web-arakatzaileak"
 
-#: Utility/Gtk/DonationWindow.vala:100
+#: Utility/Gtk/DonationWindow.vala:98
 msgid "Website"
 msgstr "Webgunea"
 
@@ -2692,7 +2686,7 @@ msgstr "Asteroko argazkiak huts egin du!"
 msgid "Weekly snapshots are enabled"
 msgstr "Asteroko argazkiak gaituta daude"
 
-#: Utility/Gtk/DonationWindow.vala:96
+#: Utility/Gtk/DonationWindow.vala:95
 msgid "Wiki"
 msgstr ""
 
@@ -2704,7 +2698,7 @@ msgstr "Erroreekin"
 msgid "Wizard"
 msgstr "Morroia"
 
-#: Utility/Device.vala:1433 Utility/Device.vala:1479
+#: Utility/Device.vala:1434 Utility/Device.vala:1480
 msgid "Wrong password"
 msgstr "Pasahitz okerra"
 
@@ -2744,16 +2738,16 @@ msgstr "[ENTER = Lehenetsia (%s), r = Erro gailua, a = Bertan behera utzi]"
 msgid "[Warning] Deleted invalid lock"
 msgstr "[Abisua] Baliogabeko blokeoa ezabatu da"
 
-#: Core/SnapshotRepo.vala:898
+#: Core/SnapshotRepo.vala:874
 msgid "all"
 msgstr "guztiak"
 
-#: Core/Main.vala:1512 Core/Main.vala:3884 Core/Main.vala:3968
-#: Core/Main.vala:4076 Core/Main.vala:4115 Core/Subvolume.vala:214
+#: Core/Subvolume.vala:214 Core/Main.vala:1512 Core/Main.vala:3884
+#: Core/Main.vala:3968 Core/Main.vala:4076 Core/Main.vala:4115
 msgid "btrfs returned an error"
 msgstr "btrfs-ek errore bat itzuli du"
 
-#: Core/Main.vala:1411 Core/Snapshot.vala:500
+#: Core/Snapshot.vala:500 Core/Main.vala:1411
 msgid "complete"
 msgstr "osatua"
 
@@ -2765,11 +2759,11 @@ msgstr "crontab fitxategia esportatuta"
 msgid "crontab file installed"
 msgstr "crontab fitxategia instalatuta"
 
-#: Core/SnapshotRepo.vala:884
+#: Core/SnapshotRepo.vala:860
 msgid "incomplete"
 msgstr "osatu gabea"
 
-#: Core/SnapshotRepo.vala:866
+#: Core/SnapshotRepo.vala:842
 msgid "marked for deletion"
 msgstr "ezabatzeko markatuta"
 
@@ -2777,8 +2771,8 @@ msgstr "ezabatzeko markatuta"
 msgid "mounted at path"
 msgstr "bidean muntatuta"
 
-#: Gtk/RestoreBox.vala:237 Gtk/DeleteBox.vala:149 Gtk/BackupBox.vala:234
-#: Core/Main.vala:1411 Core/Snapshot.vala:501
+#: Gtk/RestoreBox.vala:237 Gtk/BackupBox.vala:234 Gtk/DeleteBox.vala:149
+#: Core/Snapshot.vala:501 Core/Main.vala:1411
 msgid "remaining"
 msgstr "falta dena"
 
@@ -2786,10 +2780,19 @@ msgstr "falta dena"
 msgid "rsync returned an error"
 msgstr "rsync-ek errore bat itzuli du"
 
-#: Core/SnapshotRepo.vala:715 Core/SnapshotRepo.vala:768
-#: Core/SnapshotRepo.vala:847
+#: Core/SnapshotRepo.vala:691 Core/SnapshotRepo.vala:744
+#: Core/SnapshotRepo.vala:823
 msgid "un-tagged"
 msgstr "etiketa kenduta"
+
+#~ msgid "Dir not found"
+#~ msgstr "Ez da direktorioa aurkitu"
+
+#~ msgid "File is missing"
+#~ msgstr "Fitxategia falta da"
+
+#~ msgid "Include Hidden"
+#~ msgstr "Ezkutuko elementuak barne hartu"
 
 #~ msgid "Become a Patron"
 #~ msgstr "Egin zaitez babesle"
@@ -2905,9 +2908,6 @@ msgstr "etiketa kenduta"
 
 #~ msgid "Include everything"
 #~ msgstr "Guztia barne hartu"
-
-#~ msgid "Include hidden items"
-#~ msgstr "Ezkutuko elementuak barne hartu"
 
 #~ msgid "Log Viewer"
 #~ msgstr "Erregistroen ikustailea"

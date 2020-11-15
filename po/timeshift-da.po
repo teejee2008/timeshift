@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timeshift\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2019-08-11 18:23+0530\n"
+"POT-Creation-Date: 2020-11-15 15:01+0000\n"
 "PO-Revision-Date: 2020-02-07 15:59+0100\n"
 "Last-Translator: Alan Mortensen <alanmortensen.am@gmail.com>\n"
 "Language-Team: Danish\n"
@@ -27,7 +27,7 @@ msgstr ""
 "\n"
 "Tryk ENTER for at fortsætte …"
 
-#: Core/SnapshotRepo.vala:641
+#: Core/SnapshotRepo.vala:617
 #, c-format
 msgid "%d snapshots, %s free"
 msgstr "%d øjebliksbilleder, %s ledig"
@@ -92,27 +92,27 @@ msgstr "Om"
 msgid "Action"
 msgstr "Placering"
 
-#: Gtk/ExcludeBox.vala:219
+#: Gtk/ExcludeBox.vala:223
 msgid "Add"
 msgstr "Tilføj"
 
-#: Gtk/ExcludeBox.vala:234
+#: Gtk/ExcludeBox.vala:238
 msgid "Add Files"
 msgstr "Tilføj filer"
 
-#: Gtk/ExcludeBox.vala:240
+#: Gtk/ExcludeBox.vala:244
 msgid "Add Folders"
 msgstr "Tilføj mapper"
 
-#: Gtk/ExcludeBox.vala:219
+#: Gtk/ExcludeBox.vala:223
 msgid "Add custom pattern"
 msgstr "Tilføj tilpasset mønster"
 
-#: Gtk/ExcludeBox.vala:240
+#: Gtk/ExcludeBox.vala:244
 msgid "Add directories"
 msgstr "Tilføj mapper"
 
-#: Gtk/ExcludeBox.vala:234
+#: Gtk/ExcludeBox.vala:238
 msgid "Add files"
 msgstr "Tilføj filer"
 
@@ -138,7 +138,7 @@ msgstr ""
 msgid "All Files"
 msgstr "Tilføj filer"
 
-#: Gtk/SnapshotBackendBox.vala:188
+#: Gtk/SnapshotBackendBox.vala:189
 msgid ""
 "All files are copied when first snapshot is created. Subsequent snapshots "
 "are incremental. Unchanged files will be hard-linked from the previous "
@@ -215,15 +215,15 @@ msgstr "Forfattere"
 msgid "Available"
 msgstr "Tilgængelig"
 
-#: Gtk/SnapshotBackendBox.vala:94
+#: Gtk/SnapshotBackendBox.vala:95
 msgid "BTRFS"
 msgstr "BTRFS"
 
-#: Gtk/SnapshotBackendBox.vala:165
+#: Gtk/SnapshotBackendBox.vala:166
 msgid "BTRFS Snapshots"
 msgstr "BTRFS-øjebliksbilleder"
 
-#: Gtk/SnapshotBackendBox.vala:119
+#: Gtk/SnapshotBackendBox.vala:120
 msgid "BTRFS Tools Not Found"
 msgstr "BTRFS-værktøjer kunne ikke findes"
 
@@ -259,7 +259,7 @@ msgstr "Tilbage"
 msgid "Backend"
 msgstr "Backend"
 
-#: Gtk/BackupWindow.vala:92 Console/AppConsole.vala:357
+#: Console/AppConsole.vala:357 Gtk/BackupWindow.vala:92
 msgid "Backup"
 msgstr "Sikkerhedskopi"
 
@@ -320,10 +320,10 @@ msgstr "Gennemse det valgte øjebliksbillede"
 msgid "Building file list..."
 msgstr "Bygger filliste …"
 
+#: Utility/GtkHelper.vala:120 Utility/Gtk/CustomMessageDialog.vala:172
 #: Gtk/RestoreWindow.vala:209 Gtk/RestoreWindow.vala:218
-#: Gtk/BackupWindow.vala:181 Gtk/SetupWizardWindow.vala:220
-#: Gtk/DeleteWindow.vala:190 Utility/Gtk/CustomMessageDialog.vala:172
-#: Utility/GtkHelper.vala:122
+#: Gtk/SetupWizardWindow.vala:220 Gtk/BackupWindow.vala:181
+#: Gtk/DeleteWindow.vala:190
 msgid "Cancel"
 msgstr "Annullér"
 
@@ -348,8 +348,8 @@ msgstr ""
 msgid "Cannot Delete Live Snapshot"
 msgstr "Kan ikke slette live-øjebliksbillede"
 
-#: Gtk/RsyncLogBox.vala:380 Gtk/RsyncLogBox.vala:383 Gtk/RsyncLogBox.vala:567
-#: Gtk/RsyncLogBox.vala:588 Gtk/RestoreBox.vala:125 Gtk/BackupBox.vala:87
+#: Gtk/RestoreBox.vala:125 Gtk/BackupBox.vala:87 Gtk/RsyncLogBox.vala:380
+#: Gtk/RsyncLogBox.vala:383 Gtk/RsyncLogBox.vala:567 Gtk/RsyncLogBox.vala:588
 msgid "Changed"
 msgstr "Ændret"
 
@@ -365,7 +365,7 @@ msgstr "Undersøger gendannelseshandlinger (testkørsel)"
 msgid "Checking file systems for errors..."
 msgstr "Undersøger filsystemet for fejl …"
 
-#: Gtk/RsyncLogBox.vala:390 Gtk/RestoreBox.vala:130 Gtk/BackupBox.vala:92
+#: Gtk/RestoreBox.vala:130 Gtk/BackupBox.vala:92 Gtk/RsyncLogBox.vala:390
 #, c-format
 msgid "Checksum"
 msgstr "Kontrolsum"
@@ -398,15 +398,15 @@ msgstr "Kloner"
 msgid "Cloning system..."
 msgstr "Kloner systemet …"
 
-#: Gtk/RsyncLogBox.vala:266 Gtk/RestoreWindow.vala:495
-#: Gtk/BootOptionsWindow.vala:106 Gtk/BackupWindow.vala:172
-#: Gtk/DeleteWindow.vala:173 Utility/Gtk/AboutWindow.vala:326
-#: Utility/Gtk/DonationWindow.vala:107
+#: Utility/Gtk/AboutWindow.vala:326 Utility/Gtk/DonationWindow.vala:104
+#: Gtk/RestoreWindow.vala:495 Gtk/BackupWindow.vala:172
+#: Gtk/BootOptionsWindow.vala:106 Gtk/DeleteWindow.vala:173
+#: Gtk/RsyncLogBox.vala:266
 msgid "Close"
 msgstr "Luk"
 
 #: Gtk/FinishBox.vala:101 Gtk/BackupFinishBox.vala:70
-#: Gtk/RestoreFinishBox.vala:106 Gtk/DeleteFinishBox.vala:71
+#: Gtk/DeleteFinishBox.vala:71 Gtk/RestoreFinishBox.vala:106
 msgid "Close window to exit"
 msgstr "Luk vinduet for at afslutte"
 
@@ -426,8 +426,8 @@ msgstr "Sammenligner filer (testkørsel) …"
 msgid "Comparing files with rsync..."
 msgstr "Sammenligner filer med rsync …"
 
-#: Gtk/BackupFinishBox.vala:50 Gtk/RestoreFinishBox.vala:50
-#: Gtk/RestoreFinishBox.vala:75 Gtk/DeleteFinishBox.vala:50
+#: Gtk/BackupFinishBox.vala:50 Gtk/DeleteFinishBox.vala:50
+#: Gtk/RestoreFinishBox.vala:50 Gtk/RestoreFinishBox.vala:75
 msgid "Completed"
 msgstr "Fuldført"
 
@@ -435,7 +435,7 @@ msgstr "Fuldført"
 msgid "Completed With Errors"
 msgstr "Fuldført med fejl"
 
-#: Gtk/RsyncLogBox.vala:87 Gtk/RestoreWindow.vala:109
+#: Gtk/RestoreWindow.vala:109 Gtk/RsyncLogBox.vala:87
 msgid "Confirm Actions"
 msgstr "Bekræft handlinger"
 
@@ -452,7 +452,7 @@ msgstr "Bidragydere"
 msgid "Could not find device"
 msgstr "Kunne ikke finde enheden"
 
-#: Utility/Device.vala:1307
+#: Utility/Device.vala:1308
 #, c-format
 msgid "Could not find file"
 msgstr "Kunne ikke finde filen"
@@ -471,7 +471,7 @@ msgstr ""
 "Kunne ikke finde systemets underdiskenhed til oprettelse af præ-"
 "gendannelsesøjebliksbillede"
 
-#: Gtk/RsyncLogBox.vala:366 Gtk/RsyncLogBox.vala:571 Gtk/MainWindow.vala:141
+#: Gtk/MainWindow.vala:141 Gtk/RsyncLogBox.vala:366 Gtk/RsyncLogBox.vala:571
 #, c-format
 msgid "Create"
 msgstr "Opret"
@@ -520,7 +520,7 @@ msgstr ""
 "Opret øjebliksbilleder manuelt eller brug planlagte øjebliksbilleder for at "
 "beskytte dit system"
 
-#: Gtk/SnapshotBackendBox.vala:95
+#: Gtk/SnapshotBackendBox.vala:96
 msgid "Create snapshots using BTRFS"
 msgstr "Opret øjebliksbilleder med brug af BTRFS"
 
@@ -528,8 +528,8 @@ msgstr "Opret øjebliksbilleder med brug af BTRFS"
 msgid "Create snapshots using RSYNC tool and hard-links"
 msgstr "Opret øjebliksbilleder med brug af værktøjet RSYNC og hårde links"
 
-#: Gtk/RsyncLogBox.vala:366 Gtk/RsyncLogBox.vala:571 Gtk/RsyncLogBox.vala:592
-#: Gtk/RestoreBox.vala:123 Gtk/BackupBox.vala:85
+#: Gtk/RestoreBox.vala:123 Gtk/BackupBox.vala:85 Gtk/RsyncLogBox.vala:366
+#: Gtk/RsyncLogBox.vala:571 Gtk/RsyncLogBox.vala:592
 #, c-format
 msgid "Created"
 msgstr "Oprettet"
@@ -538,7 +538,7 @@ msgstr "Oprettet"
 msgid "Created control file"
 msgstr "Oprettede kontrolfil"
 
-#: Utility/TeeJee.FileSystem.vala:351
+#: Utility/TeeJee.FileSystem.vala:332
 msgid "Created directory"
 msgstr "Oprettede mappen"
 
@@ -611,9 +611,9 @@ msgstr "Data vil blive ændret på følgende enheder:"
 msgid "Date Format"
 msgstr "Datoformat"
 
-#: Gtk/RsyncLogBox.vala:370 Gtk/RsyncLogBox.vala:575 Gtk/MainWindow.vala:161
+#: Console/AppConsole.vala:371 Gtk/MainWindow.vala:161
 #: Gtk/SnapshotListBox.vala:322 Gtk/DeleteWindow.vala:98
-#: Console/AppConsole.vala:371
+#: Gtk/RsyncLogBox.vala:370 Gtk/RsyncLogBox.vala:575
 #, c-format
 msgid "Delete"
 msgstr "Slet"
@@ -634,17 +634,17 @@ msgstr "Slet det valgte øjebliksbillede"
 msgid "Delete snapshot"
 msgstr "Slet øjebliksbilledet"
 
-#: Gtk/RsyncLogBox.vala:370 Gtk/RsyncLogBox.vala:575 Gtk/RsyncLogBox.vala:596
-#: Gtk/RestoreBox.vala:124 Gtk/BackupBox.vala:86
+#: Gtk/RestoreBox.vala:124 Gtk/BackupBox.vala:86 Gtk/RsyncLogBox.vala:370
+#: Gtk/RsyncLogBox.vala:575 Gtk/RsyncLogBox.vala:596
 #, c-format
 msgid "Deleted"
 msgstr "Slettet"
 
-#: Utility/TeeJee.FileSystem.vala:381
+#: Utility/TeeJee.FileSystem.vala:366
 msgid "Deleted directory"
 msgstr "Slettede mappen"
 
-#: Core/Main.vala:2921 Core/Main.vala:2925 Core/Subvolume.vala:167
+#: Core/Subvolume.vala:167 Core/Main.vala:2921 Core/Main.vala:2925
 #, c-format
 msgid "Deleted subvolume"
 msgstr "Slettede underdiskenheden"
@@ -676,24 +676,24 @@ msgstr "Ødelagde qgroup"
 msgid "Destroying qgroup"
 msgstr "Ødelægger qgroup"
 
-#: Gtk/RestoreDeviceBox.vala:97 Console/AppConsole.vala:456
-#: Console/AppConsole.vala:495 Console/AppConsole.vala:543
-#: Utility/Device.vala:1930 Utility/Device.vala:1940 Core/SnapshotRepo.vala:76
-#: Core/SnapshotRepo.vala:683 Core/SnapshotRepo.vala:686 Core/Main.vala:2132
-#: Core/Main.vala:2164
+#: Console/AppConsole.vala:456 Console/AppConsole.vala:495
+#: Console/AppConsole.vala:543 Utility/Device.vala:1932
+#: Utility/Device.vala:1942 Gtk/RestoreDeviceBox.vala:97
+#: Core/SnapshotRepo.vala:76 Core/SnapshotRepo.vala:659
+#: Core/SnapshotRepo.vala:662 Core/Main.vala:2132 Core/Main.vala:2164
 #, c-format
 msgid "Device"
 msgstr "Enhed"
 
-#: Utility/Device.vala:1389
+#: Utility/Device.vala:1390
 msgid "Device is unlocked"
 msgstr "Enheden er ikke låst"
 
-#: Utility/Device.vala:1284 Utility/Device.vala:1346
+#: Utility/Device.vala:1285 Utility/Device.vala:1347
 msgid "Device name is empty!"
 msgstr "Enhedsnavnet er tomt!"
 
-#: Console/AppConsole.vala:665 Core/SnapshotRepo.vala:560 Core/Main.vala:3254
+#: Console/AppConsole.vala:665 Core/SnapshotRepo.vala:536 Core/Main.vala:3254
 msgid "Device not found"
 msgstr "Enheden blev ikke fundet"
 
@@ -719,11 +719,7 @@ msgstr "Enheder med Linux-filsystemer"
 msgid "Devices with Windows file systems are not supported (NTFS, FAT, etc)."
 msgstr "Enheder med Windows-filsystemer understøttes ikke (NTFS, FAT osv.)."
 
-#: Utility/TeeJee.FileSystem.vala:518
-msgid "Dir not found"
-msgstr "Mappen blev ikke fundet"
-
-#: Core/SnapshotRepo.vala:998
+#: Core/SnapshotRepo.vala:974
 msgid "Directory not found"
 msgstr "Mappen blev ikke fundet"
 
@@ -743,8 +739,8 @@ msgstr "Distribution"
 msgid "Documentation"
 msgstr "Donationer"
 
-#: Gtk/MainWindow.vala:209 Gtk/MainWindow.vala:210
 #: Utility/Gtk/DonationWindow.vala:43 Utility/Gtk/DonationWindow.vala:76
+#: Gtk/MainWindow.vala:209 Gtk/MainWindow.vala:210
 msgid "Donate"
 msgstr "Donér"
 
@@ -764,7 +760,7 @@ msgstr "Aktivér planlagte øjebliksbilleder for at beskytte dit system"
 msgid "Enabled subvolume quota support"
 msgstr "Aktivér understøttelse af underdiskenhedskvoter"
 
-#: Utility/Device.vala:1453
+#: Utility/Device.vala:1454
 msgid "Encrypted Device"
 msgstr "Krypteret enhed"
 
@@ -782,12 +778,12 @@ msgstr "Angiv enhedsnavn eller -nummer"
 msgid "Enter device name or number (a=Abort)"
 msgstr "Angiv enhedsnavn eller -nummer (a = afbryd)"
 
-#: Utility/Device.vala:1454
+#: Utility/Device.vala:1455
 #, c-format
 msgid "Enter passphrase to unlock '%s'"
 msgstr "Angiv adgangskoden til at låse \"%s\" op"
 
-#: Utility/GtkHelper.vala:805
+#: Utility/GtkHelper.vala:623
 msgid "Enter path or browse for directory"
 msgstr "Angiv sti eller søg efter mappe"
 
@@ -796,11 +792,11 @@ msgstr "Angiv sti eller søg efter mappe"
 msgid "Enter snapshot number (a=Abort, p=Previous, n=Next)"
 msgstr "Angiv øjeblikbilledets nummer (a = afbryd, p = forrige, n = næste)"
 
-#: Gtk/ExcludeBox.vala:225
+#: Gtk/ExcludeBox.vala:229
 msgid "Enter the pattern to exclude (Ex: *.mp3, *.bak)"
 msgstr "Angiv mønster til udeladelse (f.eks. *.mp3, *.bak)"
 
-#: Gtk/RestoreDeviceBox.vala:534 Utility/GtkHelper.vala:18
+#: Utility/GtkHelper.vala:18 Gtk/RestoreDeviceBox.vala:534
 msgid "Error"
 msgstr "Fejl"
 
@@ -808,7 +804,7 @@ msgstr "Fejl"
 msgid "Error running Rsync"
 msgstr "Fejl ved kørsel af Rsync"
 
-#: Gtk/BackupWindow.vala:82 Gtk/SetupWizardWindow.vala:99
+#: Gtk/SetupWizardWindow.vala:99 Gtk/BackupWindow.vala:82
 msgid "Estimate"
 msgstr "Anslå"
 
@@ -825,10 +821,11 @@ msgid "Examples"
 msgstr "Eksempler"
 
 #: Gtk/UsersBox.vala:136
-msgid "Exclude All"
+#, fuzzy
+msgid "Exclude All Files"
 msgstr "Udeladte programmer"
 
-#: Gtk/ExcludeAppsBox.vala:51 Gtk/RestoreExcludeBox.vala:55
+#: Gtk/RestoreExcludeBox.vala:55 Gtk/ExcludeAppsBox.vala:51
 msgid "Exclude Application Settings"
 msgstr "Indstillinger for udeladte programmer"
 
@@ -844,7 +841,7 @@ msgstr "Udeladelsesliste"
 msgid "Exclude List Summary"
 msgstr "Sammendrag over udeladelsesliste"
 
-#: Gtk/ExcludeBox.vala:224
+#: Gtk/ExcludeBox.vala:228
 msgid "Exclude Pattern"
 msgstr "Udeladelsesmønster"
 
@@ -861,11 +858,11 @@ msgstr "Forventede værdier: E, B, T, D, U, M"
 msgid "Failed to add cron job"
 msgstr "Kunne ikke tilføje cron-job"
 
-#: Utility/TeeJee.FileSystem.vala:191
+#: Utility/TeeJee.FileSystem.vala:169
 msgid "Failed to copy file"
 msgstr "Kunne ikke kopiere filen"
 
-#: Utility/TeeJee.FileSystem.vala:354 Utility/TeeJee.FileSystem.vala:362
+#: Utility/TeeJee.FileSystem.vala:335 Utility/TeeJee.FileSystem.vala:344
 msgid "Failed to create directory"
 msgstr "Kunne ikke oprette mappen"
 
@@ -881,11 +878,11 @@ msgstr "Kunne ikke oprette øjebliksbilledet"
 msgid "Failed to create subvolume snapshot"
 msgstr "Kunne ikke oprette et øjebliksbillede af underdiskenheden"
 
-#: Core/SnapshotRepo.vala:1039
+#: Core/SnapshotRepo.vala:1015
 msgid "Failed to create symlinks"
 msgstr "Kunne ikke oprette symbolske links"
 
-#: Utility/TeeJee.FileSystem.vala:384
+#: Utility/TeeJee.FileSystem.vala:369
 msgid "Failed to delete directory"
 msgstr "Kunne ikke slette mappen"
 
@@ -901,7 +898,7 @@ msgstr "Kunne ikke slette øjebliksbilledet af den indlejrede underdiskenhed"
 msgid "Failed to delete snapshot subvolume"
 msgstr "Kunne ikke slette øjebliksbilledet af underdiskenheden"
 
-#: Core/SnapshotRepo.vala:1065
+#: Core/SnapshotRepo.vala:1041
 msgid "Failed to delete symlinks"
 msgstr "Kunne ikke slette symbolske links"
 
@@ -927,7 +924,7 @@ msgstr "Kunne ikke eksportere crontab-filen"
 msgid "Failed to get input from user in 3 attempts"
 msgstr "Kunne ikke få input fra brugeren i tre forsøg"
 
-#: Utility/Device.vala:723
+#: Utility/Device.vala:724
 msgid "Failed to get partition list"
 msgstr "Kunne ikke få partitionslisten"
 
@@ -943,7 +940,7 @@ msgstr "Kunne ikke installere crontab-filen"
 msgid "Failed to mount devices"
 msgstr "Kunne ikke montere enhederne"
 
-#: Utility/TeeJee.FileSystem.vala:210
+#: Utility/TeeJee.FileSystem.vala:188
 msgid "Failed to move file"
 msgstr "Kunne ikke flytte filen"
 
@@ -963,11 +960,11 @@ msgstr "Kunne ikke forespørge underdiskenhedskvoterne"
 msgid "Failed to read cron tab"
 msgstr "Kunne ikke læse crontab"
 
-#: Utility/TeeJee.FileSystem.vala:148
+#: Utility/TeeJee.FileSystem.vala:126
 msgid "Failed to read file"
 msgstr "Kunne ikke læse filen"
 
-#: Core/SnapshotRepo.vala:985
+#: Core/SnapshotRepo.vala:961
 msgid "Failed to remove"
 msgstr "Kunne ikke fjerne"
 
@@ -991,12 +988,12 @@ msgstr "Kunne ikke gendanne systemets underdiskenhed"
 msgid "Failed to save exclude list"
 msgstr "Kunne ikke gemme udeladelseslisten"
 
-#: Utility/Device.vala:1380 Utility/Device.vala:1434 Utility/Device.vala:1459
-#: Utility/Device.vala:1480 Utility/Device.vala:1500
+#: Utility/Device.vala:1381 Utility/Device.vala:1435 Utility/Device.vala:1460
+#: Utility/Device.vala:1481 Utility/Device.vala:1501
 msgid "Failed to unlock device"
 msgstr "Kunne ikke låse enheden op"
 
-#: Utility/Device.vala:1731
+#: Utility/Device.vala:1733
 msgid "Failed to unmount"
 msgstr "Kunne ikke afmontere"
 
@@ -1004,7 +1001,7 @@ msgstr "Kunne ikke afmontere"
 msgid "Failed to unmount device!"
 msgstr "Kunne ikke afmontere enheden!"
 
-#: Utility/TeeJee.FileSystem.vala:175
+#: Utility/TeeJee.FileSystem.vala:153
 msgid "Failed to write file"
 msgstr "Kunne ikke skrive filen"
 
@@ -1024,12 +1021,8 @@ msgstr "Filmønster"
 msgid "File and directory counts:"
 msgstr "Antal filer og mapper:"
 
-#: Utility/TeeJee.FileSystem.vala:671 Utility/TeeJee.FileSystem.vala:720
-msgid "File is missing"
-msgstr "Filen mangler"
-
-#: Utility/TeeJee.FileSystem.vala:205 Utility/TeeJee.FileSystem.vala:547
-#: Utility/RsyncTask.vala:298 Utility/CronTab.vala:225
+#: Utility/CronTab.vala:225 Utility/TeeJee.FileSystem.vala:183
+#: Utility/RsyncTask.vala:298
 msgid "File not found"
 msgstr "Filen blev ikke fundet"
 
@@ -1041,7 +1034,7 @@ msgstr ""
 "Filer og mapper, som matcher mønstrene nedenfor, vil ikke medtages. Mønstre, "
 "som begynder med et +, vil inkludere elementet i stedet for at udelade det."
 
-#: Gtk/SnapshotBackendBox.vala:192
+#: Gtk/SnapshotBackendBox.vala:193
 msgid "Files and directories can be excluded to save disk space."
 msgstr "Filer og mapper kan udelades for at spare diskplads."
 
@@ -1053,7 +1046,7 @@ msgstr "Antal filer og mapper:"
 msgid "Files matching the following patterns will be excluded"
 msgstr "Filer og mapper, som matcher mønstrene nedenfor, vil ikke medtages"
 
-#: Utility/Device.vala:1948
+#: Utility/Device.vala:1950
 #, c-format
 msgid "Filesystem"
 msgstr "Filsystem"
@@ -1066,7 +1059,7 @@ msgstr "Angiv enhedsnavn eller -nummer"
 msgid "Filters"
 msgstr "Filtre"
 
-#: Gtk/BackupWindow.vala:97 Gtk/SetupWizardWindow.vala:211
+#: Gtk/SetupWizardWindow.vala:211 Gtk/BackupWindow.vala:97
 #: Gtk/DeleteWindow.vala:103
 msgid "Finish"
 msgstr "Færdiggør"
@@ -1079,7 +1072,7 @@ msgstr "Færdig"
 msgid "Firefox, Chromium, Chrome, Opera, Epiphany, Midori"
 msgstr "Firefox, Chromium, Chrome, Opera, Epiphany, Midori"
 
-#: Core/SnapshotRepo.vala:667
+#: Core/SnapshotRepo.vala:643
 msgid "First snapshot requires:"
 msgstr "Første øjebliksbillede kræver:"
 
@@ -1111,16 +1104,20 @@ msgstr "GRUB vil IKKE blive geninstalleret"
 msgid "Generating initramfs..."
 msgstr "Danner initramfs …"
 
+#: Utility/Gtk/DonationWindow.vala:91
+msgid "GitHub"
+msgstr ""
+
 #: Console/AppConsole.vala:375
 msgid "Global"
 msgstr "Global"
 
-#: Gtk/RsyncLogBox.vala:400 Gtk/RestoreBox.vala:135 Gtk/BackupBox.vala:97
+#: Gtk/RestoreBox.vala:135 Gtk/BackupBox.vala:97 Gtk/RsyncLogBox.vala:400
 #, c-format
 msgid "Group"
 msgstr "Gruppe"
 
-#: Gtk/SnapshotBackendBox.vala:132
+#: Gtk/SnapshotBackendBox.vala:133
 msgid "Help"
 msgstr "Hjælp"
 
@@ -1195,11 +1192,13 @@ msgid "Include @home subvolume in backups"
 msgstr "Medtag @home-underdiskenhed i sikkerhedskopier"
 
 #: Gtk/UsersBox.vala:266
-msgid "Include All"
+#, fuzzy
+msgid "Include All Files"
 msgstr "Udeladte programmer"
 
 #: Gtk/UsersBox.vala:194
-msgid "Include Hidden"
+#, fuzzy
+msgid "Include Only Hidden Files"
 msgstr "Medtag skjulte elementer"
 
 #: Core/Main.vala:2044
@@ -1215,11 +1214,7 @@ msgstr "Ugyldige kommandolinjeargumenter"
 msgid "Invalid snapshot"
 msgstr "Ugyldigt øjebliksbillede"
 
-#: Utility/Gtk/DonationWindow.vala:91
-msgid "Issue Tracker"
-msgstr "Problemsporing"
-
-#: Gtk/ExcludeBox.vala:273
+#: Gtk/ExcludeBox.vala:277
 msgid "Items Not Selected"
 msgstr "Elementer er ikke valgt"
 
@@ -1258,8 +1253,8 @@ msgstr "Behold denne monteringssti på rodfilsystemet"
 msgid "LIVE"
 msgstr "LIVE"
 
-#: Gtk/BackupDeviceBox.vala:254 Console/AppConsole.vala:460
-#: Console/AppConsole.vala:499 Utility/Device.vala:1949
+#: Console/AppConsole.vala:460 Console/AppConsole.vala:499
+#: Utility/Device.vala:1951 Gtk/BackupDeviceBox.vala:254
 #, c-format
 msgid "Label"
 msgstr "Mærkat"
@@ -1360,8 +1355,8 @@ msgstr "Oplist øjebliksbilleder"
 msgid "Live USB Mode (Restore Only)"
 msgstr "Live-USB-tilstand (kun gendannelse)"
 
-#: Gtk/SettingsWindow.vala:90 Gtk/BackupWindow.vala:87
-#: Gtk/SetupWizardWindow.vala:104
+#: Gtk/SetupWizardWindow.vala:104 Gtk/BackupWindow.vala:87
+#: Gtk/SettingsWindow.vala:90
 msgid "Location"
 msgstr "Placering"
 
@@ -1377,7 +1372,7 @@ msgstr "Markér til sletning"
 msgid "Marked for deletion"
 msgstr "Markeret til sletning"
 
-#: Core/SnapshotRepo.vala:712 Core/SnapshotRepo.vala:755
+#: Core/SnapshotRepo.vala:688 Core/SnapshotRepo.vala:731
 msgid "Maximum backups exceeded for backup level"
 msgstr ""
 "Maksimalt antal sikkerhedskopier overskredet for sikkerhedskopiniveauet"
@@ -1398,12 +1393,12 @@ msgstr "Diverse"
 msgid "Missing Dependencies"
 msgstr "Manglende afhængigheder"
 
-#: Core/SnapshotRepo.vala:689
+#: Core/SnapshotRepo.vala:665
 #, c-format
 msgid "Mode"
 msgstr "Tilstand"
 
-#: Utility/Device.vala:1932
+#: Utility/Device.vala:1934
 #, c-format
 msgid "Model"
 msgstr "Model"
@@ -1432,13 +1427,13 @@ msgstr "Flyttede systemets underdiskenhed til mappen med øjebliksbilleder"
 msgid "Multiple snapshots selected"
 msgstr "Flere øjebliksbilleder er valgt"
 
-#: Gtk/RsyncLogBox.vala:492 Gtk/BackupDeviceBox.vala:235
-#: Console/AppConsole.vala:426
+#: Console/AppConsole.vala:426 Gtk/BackupDeviceBox.vala:235
+#: Gtk/RsyncLogBox.vala:492
 msgid "Name"
 msgstr "Navn"
 
-#: Gtk/RestoreWindow.vala:201 Gtk/BackupWindow.vala:164
-#: Gtk/SetupWizardWindow.vala:203 Gtk/DeleteWindow.vala:165
+#: Gtk/RestoreWindow.vala:201 Gtk/SetupWizardWindow.vala:203
+#: Gtk/BackupWindow.vala:164 Gtk/DeleteWindow.vala:165
 msgid "Next"
 msgstr "Næste"
 
@@ -1458,8 +1453,8 @@ msgstr "Ingen øjebliksbilleder valgt"
 msgid "No snapshots available"
 msgstr "Ingen tilgængelige øjebliksbilleder"
 
-#: Gtk/MainWindow.vala:1001 Console/AppConsole.vala:321
-#: Core/SnapshotRepo.vala:914
+#: Console/AppConsole.vala:321 Gtk/MainWindow.vala:1001
+#: Core/SnapshotRepo.vala:890
 msgid "No snapshots found"
 msgstr "Fandt ingen øjebliksbilleder"
 
@@ -1471,7 +1466,7 @@ msgstr "Fandt ingen øjebliksbilleder på enheden"
 msgid "No snapshots on device"
 msgstr "Der er ingen øjebliksbilleder på enheden"
 
-#: Core/SnapshotRepo.vala:665
+#: Core/SnapshotRepo.vala:641
 msgid "No snapshots on this device"
 msgstr "Der er ingen øjebliksbilleder på denne enhed"
 
@@ -1488,7 +1483,7 @@ msgstr "Ingen"
 msgid "Not Found"
 msgstr "Ikke fundet"
 
-#: Core/SnapshotRepo.vala:683
+#: Core/SnapshotRepo.vala:659
 msgid "Not Selected"
 msgstr "Ikke valgt"
 
@@ -1496,11 +1491,11 @@ msgstr "Ikke valgt"
 msgid "Not Supported"
 msgstr "Ikke understøttet"
 
-#: Core/SnapshotRepo.vala:629 Core/SnapshotRepo.vala:656
+#: Core/SnapshotRepo.vala:605 Core/SnapshotRepo.vala:632
 msgid "Not enough disk space"
 msgstr "Der er ikke nok plads på disken"
 
-#: Gtk/FinishBox.vala:55 Console/AppConsole.vala:398
+#: Console/AppConsole.vala:398 Gtk/FinishBox.vala:55
 msgid "Notes"
 msgstr "Noter"
 
@@ -1521,14 +1516,13 @@ msgstr ""
 "Antal øjebliksbilleder der skal beholdes.\n"
 "Ældre øjebliksbilleder vil blive fjernet, når denne grænse overskrides."
 
-#: Gtk/ExcludeListSummaryWindow.vala:84 Gtk/SettingsWindow.vala:123
-#: Utility/Gtk/CustomMessageDialog.vala:167
-#: Utility/Gtk/CustomMessageDialog.vala:171 Utility/GtkHelper.vala:121
-#: Core/SnapshotRepo.vala:639
+#: Utility/GtkHelper.vala:119 Utility/Gtk/CustomMessageDialog.vala:167
+#: Utility/Gtk/CustomMessageDialog.vala:171 Gtk/SettingsWindow.vala:123
+#: Gtk/ExcludeListSummaryWindow.vala:84 Core/SnapshotRepo.vala:615
 msgid "OK"
 msgstr "OK"
 
-#: Gtk/SnapshotBackendBox.vala:179
+#: Gtk/SnapshotBackendBox.vala:180
 msgid ""
 "OS must be installed on a BTRFS partition with Ubuntu-type subvolume layout "
 "(@ and @home subvolumes). Other layouts are not supported."
@@ -1566,7 +1560,7 @@ msgstr ""
 "Tilvalget --snapshot-device skal ikke angives for at oprette "
 "øjebliksbilleder i BTRFS-tilstanden"
 
-#: Gtk/AppGtk.vala:114 Console/AppConsole.vala:351
+#: Console/AppConsole.vala:351 Gtk/AppGtk.vala:114
 msgid "Options"
 msgstr "Tilvalg"
 
@@ -1574,12 +1568,12 @@ msgstr "Tilvalg"
 msgid "Other applications (next page)"
 msgstr "Andre programmer (næste side)"
 
-#: Gtk/RsyncLogBox.vala:398 Gtk/RestoreBox.vala:134 Gtk/BackupBox.vala:96
+#: Gtk/RestoreBox.vala:134 Gtk/BackupBox.vala:96 Gtk/RsyncLogBox.vala:398
 #, c-format
 msgid "Owner"
 msgstr "Ejer"
 
-#: Utility/Device.vala:1944
+#: Utility/Device.vala:1946
 #, c-format
 msgid "Parent Device"
 msgstr "Ophavsenhed"
@@ -1592,16 +1586,16 @@ msgstr "Fortolker logfilen …"
 msgid "Partition has an unsupported subvolume layout."
 msgstr "Partitionens underdiskenhedslayout understøttes ikke."
 
-#: Gtk/RestoreDeviceBox.vala:93 Core/SnapshotRepo.vala:688
+#: Gtk/RestoreDeviceBox.vala:93 Core/SnapshotRepo.vala:664
 #, c-format
 msgid "Path"
 msgstr "Sti"
 
-#: Gtk/ExcludeBox.vala:162
+#: Gtk/ExcludeBox.vala:166
 msgid "Pattern"
 msgstr "Mønster"
 
-#: Gtk/RsyncLogBox.vala:396 Gtk/RestoreBox.vala:133 Gtk/BackupBox.vala:95
+#: Gtk/RestoreBox.vala:133 Gtk/BackupBox.vala:95 Gtk/RsyncLogBox.vala:396
 #, c-format
 msgid "Permissions"
 msgstr "Rettigheder"
@@ -1658,13 +1652,13 @@ msgstr "Vent venligst …"
 msgid "Populating list..."
 msgstr "Udfylder listen …"
 
-#: Gtk/RsyncLogBox.vala:232 Gtk/RestoreBox.vala:88 Gtk/DeleteBox.vala:68
-#: Gtk/BackupBox.vala:114 Core/Main.vala:1597
+#: Gtk/RestoreBox.vala:88 Gtk/BackupBox.vala:114 Gtk/DeleteBox.vala:68
+#: Gtk/RsyncLogBox.vala:232 Core/Main.vala:1597
 msgid "Preparing..."
 msgstr "Forbereder …"
 
-#: Gtk/RestoreWindow.vala:193 Gtk/BackupWindow.vala:156
-#: Gtk/SetupWizardWindow.vala:195 Gtk/DeleteWindow.vala:157
+#: Gtk/RestoreWindow.vala:193 Gtk/SetupWizardWindow.vala:195
+#: Gtk/BackupWindow.vala:156 Gtk/DeleteWindow.vala:157
 msgid "Previous"
 msgstr "Forrige"
 
@@ -1684,7 +1678,7 @@ msgstr "Indhenter information om underdiskenheden …"
 msgid "RSYNC"
 msgstr "RSYNC"
 
-#: Gtk/SnapshotBackendBox.vala:184
+#: Gtk/SnapshotBackendBox.vala:185
 msgid "RSYNC Snapshots"
 msgstr "RSYNC-øjebliksbilleder"
 
@@ -1723,7 +1717,7 @@ msgstr "Genstarter systemet …"
 msgid "Recommended"
 msgstr "Anbefalet"
 
-#: Gtk/RestoreDeviceBox.vala:70 Gtk/BackupDeviceBox.vala:65
+#: Gtk/BackupDeviceBox.vala:65 Gtk/RestoreDeviceBox.vala:70
 msgid "Refresh"
 msgstr "Opdatér"
 
@@ -1731,12 +1725,12 @@ msgstr "Opdatér"
 msgid "Remote and network locations are not supported."
 msgstr "Fjern- og netværksplaceringer understøttes ikke."
 
-#: Gtk/ExcludeBox.vala:254
+#: Gtk/ExcludeBox.vala:258
 msgid "Remove"
 msgstr "Fjern"
 
-#: Core/SnapshotRepo.vala:991 Core/Main.vala:1635 Core/Main.vala:1646
-#: Core/Main.vala:4219 Core/Snapshot.vala:509
+#: Core/Snapshot.vala:509 Core/SnapshotRepo.vala:967 Core/Main.vala:1635
+#: Core/Main.vala:1646 Core/Main.vala:4219
 #, c-format
 msgid "Removed"
 msgstr "Fjernet"
@@ -1762,8 +1756,8 @@ msgstr "Fjerner"
 msgid "Removing snapshot"
 msgstr "Fjerner øjebliksbilledet"
 
-#: Core/SnapshotRepo.vala:847 Core/SnapshotRepo.vala:866
-#: Core/SnapshotRepo.vala:884 Core/SnapshotRepo.vala:898
+#: Core/SnapshotRepo.vala:823 Core/SnapshotRepo.vala:842
+#: Core/SnapshotRepo.vala:860 Core/SnapshotRepo.vala:874
 #, c-format
 msgid "Removing snapshots"
 msgstr "Fjerner øjebliksbillederne"
@@ -1776,9 +1770,9 @@ msgstr ""
 "Krævet til visning af øjebliksbilleders delte og udelte størrelse i "
 "hovedvinduet"
 
-#: Gtk/RsyncLogBox.vala:377 Gtk/RsyncLogBox.vala:567 Gtk/RestoreWindow.vala:125
+#: Console/AppConsole.vala:363 Gtk/RestoreWindow.vala:125
 #: Gtk/MainWindow.vala:151 Gtk/RestoreFinishBox.vala:71
-#: Console/AppConsole.vala:363
+#: Gtk/RsyncLogBox.vala:377 Gtk/RsyncLogBox.vala:567
 msgid "Restore"
 msgstr "Gendan"
 
@@ -1853,7 +1847,7 @@ msgstr ""
 "oprettes, og erstattet, når øjebliksbilledet gendannes."
 
 # Der er tale om en disk. Andre strenge relateret til denne er: "Device", "Vendor", "Model" og "Serial"
-#: Utility/Device.vala:1934
+#: Utility/Device.vala:1936
 #, c-format
 msgid "Revision"
 msgstr "Version"
@@ -1903,7 +1897,7 @@ msgstr ""
 msgid "Saving to device"
 msgstr "Gemmer på enheden"
 
-#: Gtk/SettingsWindow.vala:93 Gtk/SetupWizardWindow.vala:109
+#: Gtk/SetupWizardWindow.vala:109 Gtk/SettingsWindow.vala:93
 msgid "Schedule"
 msgstr "Planlægning"
 
@@ -1937,7 +1931,7 @@ msgstr ""
 msgid "Select '%s' device (default = %s)"
 msgstr "Vælg enheden \"%s\" (standard = %s)"
 
-#: Console/AppConsole.vala:691 Core/SnapshotRepo.vala:593
+#: Console/AppConsole.vala:691 Core/SnapshotRepo.vala:569
 msgid "Select BTRFS system disk with root subvolume (@)"
 msgstr "Vælg BTRFS-systemdisken med rodunderdiskenheden (@)"
 
@@ -1945,7 +1939,7 @@ msgstr "Vælg BTRFS-systemdisken med rodunderdiskenheden (@)"
 msgid "Select GRUB device"
 msgstr "Vælg GRUB-enhed"
 
-#: Utility/GtkHelper.vala:815
+#: Utility/GtkHelper.vala:633
 msgid "Select Path"
 msgstr "Vælg sti"
 
@@ -1986,7 +1980,7 @@ msgstr "Vælg et enkelt øjebliksbillede, som skal gendannes"
 msgid "Select another device for root file system (/)"
 msgstr "Vælg en anden enhed til rodfilsystemet (/)"
 
-#: Core/SnapshotRepo.vala:632 Core/SnapshotRepo.vala:659
+#: Core/SnapshotRepo.vala:608 Core/SnapshotRepo.vala:635
 msgid "Select another device or free up some space"
 msgstr "Vælg en anden enhed eller frigør noget plads"
 
@@ -2006,11 +2000,11 @@ msgstr "Vælg programmer, som ikke skal gendannes"
 msgid "Select backup device"
 msgstr "Vælg enhed til sikkerhedskopier"
 
-#: Gtk/ExcludeBox.vala:434
+#: Gtk/ExcludeBox.vala:438
 msgid "Select directory"
 msgstr "Vælg mappe"
 
-#: Gtk/ExcludeBox.vala:407
+#: Gtk/ExcludeBox.vala:411
 msgid "Select file(s)"
 msgstr "Vælg fil(er)"
 
@@ -2034,11 +2028,11 @@ msgstr "Vælg enheden, hvorpå filerne vil blive gendannet."
 msgid "Select the intervals for creating snapshots"
 msgstr "Vælg intervallerne for oprettelse af øjebliksbilleder"
 
-#: Gtk/ExcludeBox.vala:274
+#: Gtk/ExcludeBox.vala:278
 msgid "Select the items to be removed from the list"
 msgstr "Vælg de elementer, som skal fjernes fra listen"
 
-#: Core/SnapshotRepo.vala:553
+#: Core/SnapshotRepo.vala:529
 msgid "Select the snapshot device"
 msgstr "Vælg enheden til øjebliksbilleder"
 
@@ -2078,7 +2072,7 @@ msgstr "Den valgte enhed har ikke en Linux-partition"
 msgid "Selected snapshot device"
 msgstr "Valgt enhed til øjebliksbillede"
 
-#: Console/AppConsole.vala:690 Core/SnapshotRepo.vala:592
+#: Console/AppConsole.vala:690 Core/SnapshotRepo.vala:568
 msgid "Selected snapshot device is not a system disk"
 msgstr "Den valgte enhed til øjebliksbillede er ikke en systemdisk"
 
@@ -2099,7 +2093,7 @@ msgstr ""
 "Den valgte brugers Hjem-mappe er krypteret. Det er ikke muligt kun at "
 "medtage skjulte filer."
 
-#: Utility/Device.vala:1933
+#: Utility/Device.vala:1935
 #, c-format
 msgid "Serial"
 msgstr "Serienummer"
@@ -2132,7 +2126,7 @@ msgstr "Opsætningsguide"
 msgid "Show additional debug messages"
 msgstr "Vis flere fejlsøgningsbeskeder"
 
-#: Gtk/AppGtk.vala:117 Console/AppConsole.vala:384
+#: Console/AppConsole.vala:384 Gtk/AppGtk.vala:117
 msgid "Show all options"
 msgstr "Vis alle muligheder"
 
@@ -2144,16 +2138,15 @@ msgstr "Vis flere programmer, som skal udelades, på den næste side"
 msgid "Show rsync output (default)"
 msgstr "Vis output fra rsync (standard)"
 
-#: Gtk/RsyncLogBox.vala:392 Gtk/RestoreBox.vala:131
-#: Gtk/SnapshotListBox.vala:174 Gtk/BackupDeviceBox.vala:202
-#: Gtk/BackupBox.vala:93 Console/AppConsole.vala:458
-#: Console/AppConsole.vala:497 Utility/Device.vala:1936
-#: Utility/Device.vala:1951
+#: Console/AppConsole.vala:458 Console/AppConsole.vala:497
+#: Utility/Device.vala:1938 Utility/Device.vala:1953 Gtk/RestoreBox.vala:131
+#: Gtk/SnapshotListBox.vala:174 Gtk/BackupBox.vala:93
+#: Gtk/BackupDeviceBox.vala:202 Gtk/RsyncLogBox.vala:392
 #, c-format
 msgid "Size"
 msgstr "Størrelse"
 
-#: Gtk/SnapshotBackendBox.vala:177
+#: Gtk/SnapshotBackendBox.vala:178
 msgid ""
 "Size of BTRFS snapshots are initially zero. As system files gradually change "
 "with time, data gets written to new data blocks which take up disk space "
@@ -2169,8 +2162,8 @@ msgstr ""
 msgid "Skip GRUB2 reinstall"
 msgstr "Spring geninstalleringen af GRUB2 over"
 
-#: Gtk/SnapshotListBox.vala:95 Core/SnapshotRepo.vala:715
-#: Core/SnapshotRepo.vala:768 Core/Main.vala:2050
+#: Gtk/SnapshotListBox.vala:95 Core/SnapshotRepo.vala:691
+#: Core/SnapshotRepo.vala:744 Core/Main.vala:2050
 #, c-format
 msgid "Snapshot"
 msgstr "Øjebliksbillede"
@@ -2197,20 +2190,20 @@ msgstr "Vælg niveau for øjebliksbillede"
 msgid "Snapshot deletion in progress..."
 msgstr "Øjebliksbilledet er ved at blive slettet …"
 
-#: Core/SnapshotRepo.vala:470
+#: Core/SnapshotRepo.vala:446
 #, c-format
 msgid "Snapshot device"
 msgstr "Enhed til øjebliksbillede"
 
-#: Console/AppConsole.vala:664 Core/SnapshotRepo.vala:559
+#: Console/AppConsole.vala:664 Core/SnapshotRepo.vala:535
 msgid "Snapshot device not available"
 msgstr "Enheden til øjebliksbilleder er ikke tilgængelig"
 
-#: Console/AppConsole.vala:660 Core/SnapshotRepo.vala:552
+#: Console/AppConsole.vala:660 Core/SnapshotRepo.vala:528
 msgid "Snapshot device not selected"
 msgstr "Enheden til øjebliksbillede er ikke valgt"
 
-#: Core/SnapshotRepo.vala:474
+#: Core/SnapshotRepo.vala:450
 #, c-format
 msgid "Snapshot location"
 msgstr "Placering af øjebliksbillede"
@@ -2235,7 +2228,7 @@ msgstr "Øjebliksbillede(r) blev slettet"
 msgid "Snapshots"
 msgstr "Øjebliksbilleder"
 
-#: Gtk/SnapshotBackendBox.vala:169
+#: Gtk/SnapshotBackendBox.vala:170
 msgid ""
 "Snapshots are created and restored instantly. Snapshot creation is an atomic "
 "transaction at the file system level."
@@ -2243,7 +2236,7 @@ msgstr ""
 "Øjebliksbilleder oprettes og gendannes øjeblikkeligt. Oprettelse af "
 "øjebliksbilleder er en \"atomovergang\" på filsystemniveauet."
 
-#: Gtk/SnapshotBackendBox.vala:186
+#: Gtk/SnapshotBackendBox.vala:187
 msgid ""
 "Snapshots are created by creating copies of system files using rsync, and "
 "hard-linking unchanged files from previous snapshot."
@@ -2252,7 +2245,7 @@ msgstr ""
 "rsync og ved at lave hårde links til uændrede filer i tidligere "
 "øjebliksbilleder."
 
-#: Gtk/SnapshotBackendBox.vala:167
+#: Gtk/SnapshotBackendBox.vala:168
 msgid ""
 "Snapshots are created using the built-in features of the BTRFS file system."
 msgstr ""
@@ -2264,14 +2257,14 @@ msgstr ""
 msgid "Snapshots are not scheduled at fixed times."
 msgstr "Øjebliksbilleder er ikke planlagt ved bestemte tidspunkter."
 
-#: Gtk/SnapshotBackendBox.vala:173
+#: Gtk/SnapshotBackendBox.vala:174
 msgid ""
 "Snapshots are perfect, byte-for-byte copies of the system. Nothing is "
 "excluded."
 msgstr ""
 "Øjebliksbilleder er perfekte bit-for-bit-kopier af systemet. Intet udelades."
 
-#: Gtk/SnapshotBackendBox.vala:171
+#: Gtk/SnapshotBackendBox.vala:172
 msgid ""
 "Snapshots are restored by replacing system subvolumes. Since files are never "
 "copied, deleted or overwritten, there is no risk of data loss. The existing "
@@ -2282,7 +2275,7 @@ msgstr ""
 "tab af data. Det eksisterende system bevares som et nyt øjebliksbillede "
 "efter gendannelsen."
 
-#: Gtk/SnapshotBackendBox.vala:175
+#: Gtk/SnapshotBackendBox.vala:176
 msgid ""
 "Snapshots are saved on the same disk from which they are created (system "
 "disk). Storage on other disks is not supported. If system disk fails then "
@@ -2312,7 +2305,7 @@ msgstr ""
 msgid "Snapshots available for restore"
 msgstr "Øjebliksbilleder tilgængelige til gendannelse"
 
-#: Gtk/SnapshotBackendBox.vala:190
+#: Gtk/SnapshotBackendBox.vala:191
 msgid ""
 "Snapshots can be saved to any disk formatted with a Linux file system. "
 "Saving snapshots to non-system or external disk allows the system to be "
@@ -2358,8 +2351,8 @@ msgstr "Angiv det øjebliksbillede, som skal gendannes"
 msgid "Specify target device"
 msgstr "Angiv målenheden"
 
-#: Gtk/RsyncLogBox.vala:472 Core/SnapshotRepo.vala:480
-#: Core/SnapshotRepo.vala:690
+#: Gtk/RsyncLogBox.vala:472 Core/SnapshotRepo.vala:456
+#: Core/SnapshotRepo.vala:666
 #, c-format
 msgid "Status"
 msgstr "Status"
@@ -2368,7 +2361,7 @@ msgstr "Status"
 msgid "Stop cron emails for scheduled tasks"
 msgstr "Stop cron-e-mail for planlagte opgaver"
 
-#: Utility/TeeJee.Process.vala:511
+#: Utility/TeeJee.Process.vala:486
 msgid "Stopped"
 msgstr "Stoppet"
 
@@ -2382,8 +2375,8 @@ msgstr "Underdiskenhed findes på destinationen"
 msgid "Subvolumes"
 msgstr "Underdiskenheder"
 
-#: Gtk/ExcludeAppsBox.vala:135 Gtk/RestoreWindow.vala:120
-#: Gtk/ExcludeBox.vala:259
+#: Gtk/RestoreWindow.vala:120 Gtk/ExcludeAppsBox.vala:135
+#: Gtk/ExcludeBox.vala:263
 msgid "Summary"
 msgstr "Sammendrag"
 
@@ -2399,7 +2392,7 @@ msgstr "Skift til BTRFS-tilstand (standard: config)"
 msgid "Switch to RSYNC mode (default: config)"
 msgstr "Skift til RSYNC-tilstand (standard: config)"
 
-#: Core/SnapshotRepo.vala:1045
+#: Core/SnapshotRepo.vala:1021
 msgid "Symlinks updated"
 msgstr "Symbolske links blev opdateret"
 
@@ -2415,7 +2408,7 @@ msgstr "Synkroniserer filerne med rsync …"
 msgid "Syntax"
 msgstr "Syntaks"
 
-#: Gtk/SnapshotListBox.vala:127 Utility/Device.vala:1957
+#: Utility/Device.vala:1959 Gtk/SnapshotListBox.vala:127
 #, c-format
 msgid "System"
 msgstr "System"
@@ -2442,7 +2435,7 @@ msgstr "Systemet vil genstarte efter filerne er blevet gendannet."
 msgid "Tagged snapshot"
 msgstr "Øjebliksbilleder med mærker"
 
-#: Gtk/SnapshotListBox.vala:151 Console/AppConsole.vala:427
+#: Console/AppConsole.vala:427 Gtk/SnapshotListBox.vala:151
 msgid "Tags"
 msgstr "Mærker"
 
@@ -2458,7 +2451,7 @@ msgstr "Målenheden er den samme som systemenheden"
 msgid "Target device not specified!"
 msgstr "Målenheden er ikke angivet!"
 
-#: Gtk/SnapshotBackendBox.vala:118
+#: Gtk/SnapshotBackendBox.vala:119
 msgid ""
 "The 'btrfs' command is not available on your system. Install the 'btrfs-"
 "tools' package and try again."
@@ -2489,7 +2482,17 @@ msgstr "Målpartitionens layout af underdiskenhed understøttes ikke."
 msgid "There are no snapshots on this device"
 msgstr "Der er ikke nogen øjebliksbilleder på denne enhed"
 
-#: Utility/Device.vala:1379
+#: Utility/Gtk/DonationWindow.vala:85
+#, fuzzy
+msgid ""
+"This a free application that is provided without warranty or support. You "
+"can use the GitHub issue tracker for reporting issues, or post your "
+"questions on the Linux Mint forums. Please avoid reporting issues by email."
+msgstr ""
+"Brug problemsporingen til at rapportere problemer, stille spørgsmål og "
+"anmode om nye funktioner. Undgå at rapportere problemer via e-mail."
+
+#: Utility/Device.vala:1380
 msgid "This device is not encrypted"
 msgstr "Denne enhed er ikke krypteret"
 
@@ -2515,7 +2518,7 @@ msgstr ""
 msgid "Timeshift is active"
 msgstr "Timeshift er aktiv"
 
-#: Gtk/RsyncLogBox.vala:394 Gtk/RestoreBox.vala:132 Gtk/BackupBox.vala:94
+#: Gtk/RestoreBox.vala:132 Gtk/BackupBox.vala:94 Gtk/RsyncLogBox.vala:394
 #, c-format
 msgid "Timestamp"
 msgstr "Tidsstempel"
@@ -2535,14 +2538,14 @@ msgstr "Værktøjer"
 msgid "Translations"
 msgstr "Oversættere"
 
-#: Gtk/SettingsWindow.vala:87 Gtk/BackupDeviceBox.vala:190
 #: Console/AppConsole.vala:459 Console/AppConsole.vala:498
-#: Utility/Device.vala:1947
+#: Utility/Device.vala:1949 Gtk/SettingsWindow.vala:87
+#: Gtk/BackupDeviceBox.vala:190
 #, c-format
 msgid "Type"
 msgstr "Type"
 
-#: Utility/Device.vala:1946
+#: Utility/Device.vala:1948
 #, c-format
 msgid "UUID"
 msgstr "UUID"
@@ -2559,16 +2562,16 @@ msgstr "Ukendt øjebliksbilledtype"
 msgid "Unknown value specified for option --tags"
 msgstr "Ukendt værdi angivet for tilvalget --tags"
 
-#: Utility/Device.vala:1390 Utility/Device.vala:1506
+#: Utility/Device.vala:1391 Utility/Device.vala:1507
 #, c-format
 msgid "Unlocked device is mapped to '%s'"
 msgstr "Ulåst enhed er afbildet til \"%s\""
 
-#: Utility/Device.vala:1505
+#: Utility/Device.vala:1506
 msgid "Unlocked successfully"
 msgstr "Låst op"
 
-#: Utility/Device.vala:1720
+#: Utility/Device.vala:1722
 msgid "Unmounting from"
 msgstr "Afmonterer fra"
 
@@ -2612,15 +2615,7 @@ msgstr "Opdaterer GRUB-menuen …"
 msgid "Updating bootloader configuration..."
 msgstr "Opdaterer bootloader-konfigurationen …"
 
-#: Utility/Gtk/DonationWindow.vala:85
-msgid ""
-"Use the issue tracker for reporting issues, asking questions, and requesting "
-"features. Please avoid reporting issues by email."
-msgstr ""
-"Brug problemsporingen til at rapportere problemer, stille spørgsmål og "
-"anmode om nye funktioner. Undgå at rapportere problemer via e-mail."
-
-#: Utility/Device.vala:1954
+#: Utility/Device.vala:1956
 #, c-format
 msgid "Used"
 msgstr "Brugt"
@@ -2633,7 +2628,7 @@ msgstr "Bruger"
 msgid "User Home Directories"
 msgstr "Brugeres Hjem-mapper"
 
-#: Utility/Device.vala:1460
+#: Utility/Device.vala:1461
 msgid "User cancelled the password prompt"
 msgstr "Brugeren annullerede adgangskodeprompten"
 
@@ -2652,7 +2647,7 @@ msgstr "Brugere"
 msgid "Users Home"
 msgstr "Brugeres hjem"
 
-#: Utility/Device.vala:1931
+#: Utility/Device.vala:1933
 #, c-format
 msgid "Vendor"
 msgstr "Producent"
@@ -2681,7 +2676,7 @@ msgstr "Advarsel"
 msgid "Web Browsers"
 msgstr "Webbrowsere"
 
-#: Utility/Gtk/DonationWindow.vala:100
+#: Utility/Gtk/DonationWindow.vala:98
 msgid "Website"
 msgstr "Websted"
 
@@ -2697,7 +2692,7 @@ msgstr "Ugentligt øjebliksbillede mislykkedes!"
 msgid "Weekly snapshots are enabled"
 msgstr "Ugentlige øjebliksbilleder er aktiveret"
 
-#: Utility/Gtk/DonationWindow.vala:96
+#: Utility/Gtk/DonationWindow.vala:95
 msgid "Wiki"
 msgstr "Wiki"
 
@@ -2709,7 +2704,7 @@ msgstr "Med fejl"
 msgid "Wizard"
 msgstr "Guide"
 
-#: Utility/Device.vala:1433 Utility/Device.vala:1479
+#: Utility/Device.vala:1434 Utility/Device.vala:1480
 msgid "Wrong password"
 msgstr "Forkert adgangskode"
 
@@ -2750,17 +2745,17 @@ msgstr "[ENTER = standard (%s), r = rodenhed, a = afbryd]"
 msgid "[Warning] Deleted invalid lock"
 msgstr "[Advarsel] Slettede ugyldig lås"
 
-#: Core/SnapshotRepo.vala:898
+#: Core/SnapshotRepo.vala:874
 msgid "all"
 msgstr "alle"
 
-#: Core/Main.vala:1512 Core/Main.vala:3884 Core/Main.vala:3968
-#: Core/Main.vala:4076 Core/Main.vala:4115 Core/Subvolume.vala:214
+#: Core/Subvolume.vala:214 Core/Main.vala:1512 Core/Main.vala:3884
+#: Core/Main.vala:3968 Core/Main.vala:4076 Core/Main.vala:4115
 msgid "btrfs returned an error"
 msgstr "btrfs returnerede en fejl"
 
 # Hvor langt programmet er i opgaven (i %)
-#: Core/Main.vala:1411 Core/Snapshot.vala:500
+#: Core/Snapshot.vala:500 Core/Main.vala:1411
 msgid "complete"
 msgstr "færdigt"
 
@@ -2772,11 +2767,11 @@ msgstr "crontab-filen blev eksporteret"
 msgid "crontab file installed"
 msgstr "crontab-filen blev installeret"
 
-#: Core/SnapshotRepo.vala:884
+#: Core/SnapshotRepo.vala:860
 msgid "incomplete"
 msgstr "ufuldstændig"
 
-#: Core/SnapshotRepo.vala:866
+#: Core/SnapshotRepo.vala:842
 msgid "marked for deletion"
 msgstr "markeret til sletning"
 
@@ -2784,8 +2779,8 @@ msgstr "markeret til sletning"
 msgid "mounted at path"
 msgstr "monteret på stien"
 
-#: Gtk/RestoreBox.vala:237 Gtk/DeleteBox.vala:149 Gtk/BackupBox.vala:234
-#: Core/Main.vala:1411 Core/Snapshot.vala:501
+#: Gtk/RestoreBox.vala:237 Gtk/BackupBox.vala:234 Gtk/DeleteBox.vala:149
+#: Core/Snapshot.vala:501 Core/Main.vala:1411
 msgid "remaining"
 msgstr "resterende"
 
@@ -2793,7 +2788,16 @@ msgstr "resterende"
 msgid "rsync returned an error"
 msgstr "rsync returnerede en fejl"
 
-#: Core/SnapshotRepo.vala:715 Core/SnapshotRepo.vala:768
-#: Core/SnapshotRepo.vala:847
+#: Core/SnapshotRepo.vala:691 Core/SnapshotRepo.vala:744
+#: Core/SnapshotRepo.vala:823
 msgid "un-tagged"
 msgstr "umærket"
+
+#~ msgid "Dir not found"
+#~ msgstr "Mappen blev ikke fundet"
+
+#~ msgid "File is missing"
+#~ msgstr "Filen mangler"
+
+#~ msgid "Issue Tracker"
+#~ msgstr "Problemsporing"

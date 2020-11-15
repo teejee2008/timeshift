@@ -121,6 +121,8 @@ class ExcludeBox : Gtk.Box{
 			}
 
 			treeview_update_item(ref iter, pattern);
+			
+			save_changes();
 		});
 
 		// column
@@ -155,6 +157,8 @@ class ExcludeBox : Gtk.Box{
 			}
 
 			treeview_update_item(ref iter, pattern);
+			
+			save_changes();
 		});
 		
 		// column

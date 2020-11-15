@@ -26,7 +26,6 @@ using Gtk;
 using Gee;
 using Json;
 
-
 using TeeJee.Logging;
 using TeeJee.FileSystem;
 using TeeJee.JsonHelper;
@@ -38,7 +37,7 @@ using TeeJee.Misc;
 public Main App;
 public const string AppName = "Timeshift";
 public const string AppShortName = "timeshift";
-public const string AppVersion = "20.03";
+public const string AppVersion = "20.11";
 public const string AppAuthor = "Tony George";
 public const string AppAuthorEmail = "teejeetech@gmail.com";
 
@@ -72,6 +71,7 @@ public class AppGtk : GLib.Object {
 	}
 
 	private static void set_locale() {
+		
 		log_debug("setting locale...");
 		Intl.setlocale(GLib.LocaleCategory.MESSAGES, "timeshift");
 		Intl.textdomain(GETTEXT_PACKAGE);

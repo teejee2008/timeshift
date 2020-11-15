@@ -250,7 +250,7 @@ class MainWindow : Gtk.Window{
 		
 		// scrolled
 		var scrolled = new Gtk.ScrolledWindow(null, null);
-		scrolled.set_shadow_type (ShadowType.ETCHED_IN);
+		//scrolled.set_shadow_type (ShadowType.ETCHED_IN);
 		//scrolled.margin = 6;
 		//scrolled.margin_top = 0;
 		scrolled.hscrollbar_policy = Gtk.PolicyType.NEVER;
@@ -298,7 +298,7 @@ class MainWindow : Gtk.Window{
 
 		// scrolled
         scrolled = new Gtk.ScrolledWindow(null, null);
-		scrolled.set_shadow_type (ShadowType.ETCHED_IN);
+		//scrolled.set_shadow_type (ShadowType.ETCHED_IN);
 		scrolled.hscrollbar_policy = Gtk.PolicyType.NEVER;
 		scrolled.vscrollbar_policy = Gtk.PolicyType.NEVER;
 		scrolled.set_no_show_all(true);
@@ -334,7 +334,7 @@ class MainWindow : Gtk.Window{
         //vbox_free_space = vbox;
 
         scrolled = new Gtk.ScrolledWindow(null, null);
-		scrolled.set_shadow_type (ShadowType.ETCHED_IN);
+		//scrolled.set_shadow_type (ShadowType.ETCHED_IN);
 		scrolled.hscrollbar_policy = Gtk.PolicyType.NEVER;
 		scrolled.vscrollbar_policy = Gtk.PolicyType.NEVER;
 		scrolled.set_no_show_all(true);

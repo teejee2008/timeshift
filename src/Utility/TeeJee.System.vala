@@ -432,43 +432,6 @@ namespace TeeJee.System{
 		return dir_exists("/sys/firmware/efi");
 	}
 
-	public void open_terminal_window(
-		string terminal_emulator,
-		string working_dir,
-		string script_file_to_execute,
-		bool run_as_admin){
-			
-		string cmd = "";
-		if (run_as_admin){
-			cmd += "pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY ";
-		}
-
-		string term = terminal_emulator;
-		if (!command_exists(term)){
-			term = "gnome-terminal";
-			if (!command_exists(term)){
-				term = "xfce4-terminal";
-			}
-		}
-
-		cmd += term;
-		
-		switch (term){
-		case "gnome-terminal":
-		case "xfce4-terminal":
-			if (working_dir.length > 0){
-				cmd += " --working-directory='%s'".printf(escape_single_quote(working_dir));
-			}
-			if (script_file_to_execute.length > 0){
-				cmd += " -e '%s\n; echo Press ENTER to exit... ; read dummy;'".printf(escape_single_quote(script_file_to_execute));
-			}
-			break;
-		}
-
-		log_debug(cmd);
-		exec_script_async(cmd);
-	}
-	
 	// timers --------------------------------------------------
 	
 	public GLib.Timer timer_start(){

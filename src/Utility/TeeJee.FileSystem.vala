@@ -108,7 +108,7 @@ namespace TeeJee.FileSystem{
 
 		var file = File.new_for_path (file_path);
 		if (file.query_exists ()) {
-			Posix.system("gvfs-trash '%s'".printf(escape_single_quote(file_path)));
+			file.trash();
 		}
 		return true;
 	}

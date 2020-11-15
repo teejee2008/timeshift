@@ -13,6 +13,12 @@ pot:
 manpage:
 	cd src; make manpage
 	
+dist-release:
+	build
+
+dist-deb:
+	build-deb amd64
+	
 clean:
 	cd src; make clean
 

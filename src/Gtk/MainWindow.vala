@@ -616,6 +616,7 @@ class MainWindow : Gtk.Window{
 
 		var store = (Gtk.ListStore) snapshot_list_box.treeview.model;
 		bool iterExists = store.get_iter_first (out iter);
+		bool marked = false;
 		
 		while (iterExists && is_success) {
 			
@@ -625,14 +626,19 @@ class MainWindow : Gtk.Window{
 				store.get (iter, 0, out bak);
 				// mark for deletion
 				bak.mark_for_deletion();
+				// have any snapshots been marked?
+				marked = marked || bak.marked_for_deletion;
 			}
 			iterExists = store.iter_next (ref iter);
 		}
 
 		App.repo.load_snapshots();
 
-		gtk_messagebox(_("Marked for deletion"), 
-			_("Snapshots will be removed during the next scheduled run"),
+		string title = (marked ? "Marked " : "Unchecked ") + "for deletion";
+		string message = (marked ? "Snapshots will " : "Snapshots will not ") + "be removed during the next scheduled run";
+
+		gtk_messagebox(_(title),
+			_(message),
 			this, false);
 
 		snapshot_list_box.refresh();

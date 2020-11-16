@@ -138,7 +138,7 @@ install:
 	chmod --recursive 0644 $(DESTDIR)$(sharedir)/icons/hicolor/*/apps/${app_name}.png
 
 	# appdata
-	install -m 0644 ../debian/${app_name}.appdata.xml "$(DESTDIR)$(sharedir)/appdata" 
+	#install -m 0644 ../debian/${app_name}.appdata.xml "$(DESTDIR)$(sharedir)/appdata" 
 	install -m 0644 ../debian/${app_name}.appdata.xml "$(DESTDIR)$(sharedir)/metainfo"
 
 	# translations

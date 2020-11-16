@@ -1217,7 +1217,7 @@ public class Main : GLib.Object{
 					case "daily":
 					case "weekly":
 					case "monthly":
-						dt_filter = now.add_hours(-1);
+						dt_filter = now.add_hours(-1).add_seconds(59);
 						break;
 					default:
 						log_error(_("Unknown snapshot type") + ": %s".printf(tag));

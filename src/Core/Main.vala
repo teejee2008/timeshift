@@ -42,6 +42,7 @@ public class Main : GLib.Object{
 	public string share_folder = "";
 	public string rsnapshot_conf_path = "";
 	public string app_conf_path = "";
+	public string app_conf_path_old = "";
 	public string app_conf_path_default = "";
 	public bool first_run = false;
 	
@@ -270,10 +271,11 @@ public class Main : GLib.Object{
 
 		this.app_path = (File.new_for_path (args[0])).get_parent().get_path ();
 		this.share_folder = "/usr/share";
-		this.app_conf_path = "/etc/timeshift.json";
-		this.app_conf_path_default = "/etc/default/timeshift.json";
+		this.app_conf_path = "/etc/timeshift/timeshift.json";
+		this.app_conf_path_old = "/etc/timeshift.json";
+		this.app_conf_path_default = "/etc/timeshift/default.json";
 		//sys_root and sys_home will be initalized by update_partition_list()
-
+		
 		// check if running locally ------------------------
 
 		string local_exec = args[0];
@@ -3107,7 +3109,11 @@ public class Main : GLib.Object{
 		
 		if (!f.query_exists()) {
 			
-			if (file_exists(app_conf_path_default)){
+			if (file_exists(app_conf_path_old)){
+				// move old file
+				file_move(app_conf_path_old, app_conf_path);
+			}
+			else if (file_exists(app_conf_path_default)){
 				// copy default file
 				file_copy(app_conf_path_default, app_conf_path);
 			}
@@ -3171,6 +3177,7 @@ public class Main : GLib.Object{
 		exclude_list_user.clear();
 		
 		if (config.has_member ("exclude")){
+			
 			foreach (Json.Node jnode in config.get_array_member ("exclude").get_elements()) {
 				
 				string path = jnode.get_string();
@@ -3187,7 +3194,9 @@ public class Main : GLib.Object{
 		exclude_app_names.clear();
 
 		if (config.has_member ("exclude-apps")){
+			
 			var apps = config.get_array_member("exclude-apps");
+			
 			foreach (Json.Node jnode in apps.get_elements()) {
 				
 				string name = jnode.get_string();

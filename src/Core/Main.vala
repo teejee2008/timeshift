@@ -2756,7 +2756,7 @@ public class Main : GLib.Object{
 				}
 			}
 			sh_fsck += "echo '' \n";
-			int ret_val = exec_script_sync(sh_fsck, null, null, false, false, false, true);
+			exec_script_sync(sh_fsck, null, null, false, false, false, true);
 		}
 	}
 

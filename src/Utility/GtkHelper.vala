@@ -115,11 +115,8 @@ namespace TeeJee.GtkHelper{
 		content.margin = 6;
 		
 		//add buttons
-		var actions = (Box) dlg.get_action_area ();
 		dlg.add_button(_("OK"),Gtk.ResponseType.OK);
 		dlg.add_button(_("Cancel"),Gtk.ResponseType.CANCEL);
-		//actions.margin = 6;
-		actions.margin_top = 12;
 		
 		//keyboard shortcuts
 		txt_input.key_press_event.connect ((w, event) => {
@@ -308,7 +305,6 @@ namespace TeeJee.GtkHelper{
 		// TreeView
 		var treeview = new TreeView();
 		treeview.get_selection().mode = selection_mode;
-		treeview.set_rules_hint (true);
 		treeview.show_expanders = true;
 		treeview.enable_tree_lines = true;
 
@@ -450,10 +446,7 @@ namespace TeeJee.GtkHelper{
 		if (show_border){
 			scroll.set_shadow_type (ShadowType.ETCHED_IN);
 		}
-		else{
-			label.margin_left = 0;
-		}
-		
+
 		return label;
 	}
 
@@ -498,7 +491,6 @@ namespace TeeJee.GtkHelper{
 	private Gtk.Label add_label_subnote(Gtk.Box box, string text){
 		
 		var label = add_label(box, text, false, true);
-		label.margin_left = 6;
 		return label;
 	}
 
@@ -590,70 +582,26 @@ namespace TeeJee.GtkHelper{
 
         return button;
 	}
-
-	// add_toggle_button
-	private Gtk.ToggleButton add_toggle_button(Gtk.Box box, string text, string tooltip, Gtk.SizeGroup? size_group, Gtk.Image? icon = null){
-			
-		var button = new Gtk.ToggleButton();
-        box.add(button);
-
-        button.set_label(text);
-        button.set_tooltip_text(tooltip);
-
-        if (icon != null){
-			button.set_image(icon);
-			button.set_always_show_image(true);
-		}
-
-		if (size_group != null){
-			size_group.add_widget(button);
-		}
-		
-        return button;
-	}
 	
-	// add_directory_chooser
-	private Gtk.Entry add_directory_chooser(Gtk.Box box, string selected_directory, Gtk.Window parent_window){
-			
-		// Entry
-		var entry = new Gtk.Entry();
-		entry.hexpand = true;
-		//entry.margin_left = 6;
-		entry.secondary_icon_stock = "gtk-open";
-		entry.placeholder_text = _("Enter path or browse for directory");
-		box.add (entry);
+	public Gtk.ButtonBox add_button_box(Gtk.Container box, Gtk.Orientation orientation = Gtk.Orientation.HORIZONTAL, 
+		Gtk.ButtonBoxStyle layout = Gtk.ButtonBoxStyle.CENTER, int spacing = 6){
 
-		if ((selected_directory != null) && dir_exists(selected_directory)){
-			entry.text = selected_directory;
-		}
+		var bbox = new Gtk.ButtonBox(orientation);
+		bbox.set_layout(layout);
+		bbox.set_spacing(spacing);
+		box.add(bbox);
 
-		entry.icon_release.connect((p0, p1) => {
-			//chooser
-			var chooser = new Gtk.FileChooserDialog(
-			    _("Select Path"),
-			    parent_window,
-			    FileChooserAction.SELECT_FOLDER,
-			    "_Cancel",
-			    Gtk.ResponseType.CANCEL,
-			    "_Open",
-			    Gtk.ResponseType.ACCEPT
-			);
-
-			chooser.select_multiple = false;
-			chooser.set_filename(selected_directory);
-
-			if (chooser.run() == Gtk.ResponseType.ACCEPT) {
-				entry.text = chooser.get_filename();
-
-				//App.repo = new SnapshotRepo.from_path(entry.text, this);
-				//check_backup_location();
-			}
-
-			chooser.destroy();
-		});
-
-		return entry;
+		/*
+		Gtk.ButtonBoxStyle.CENTER
+		CENTER - Buttons are centered in the box.
+		EDGE - Buttons are placed at the edges of the box.
+		END - Buttons are grouped towards the end of the box, (on the right for a HBox, or the bottom for a VBox).
+		EXPAND - Buttons expand to fill the box.
+		SPREAD - Buttons are evenly spread across the box.
+		START - Buttons are grouped towards the start of the box, (on the left for a HBox, or the top for a VBox).
+		*/
+		
+		return bbox;
 	}
-
 }
 

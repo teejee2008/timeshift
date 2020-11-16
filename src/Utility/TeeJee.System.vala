@@ -275,14 +275,6 @@ namespace TeeJee.System{
 		return list;
 	}
 
-	public int get_display_width(){
-		return Gdk.Screen.get_default().get_width();
-	}
-
-	public int get_display_height(){
-		return Gdk.Screen.get_default().get_height();
-	}
-	
 	// internet helpers ----------------------
 	
 	public bool shutdown (){

@@ -922,7 +922,7 @@ class MainWindow : Gtk.Window{
 
 	private void btn_about_clicked (){
 		
-		var dialog = new AboutWindow();
+		var dialog = new AboutWindow(this);
 		dialog.set_transient_for (this);
 
 		dialog.authors = {

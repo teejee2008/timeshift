@@ -82,7 +82,7 @@ public class DonationWindow : Gtk.Window {
 
 		add_label(msg);
 		
-		msg = _("This a free application that is provided without warranty or support. You can use the GitHub issue tracker for reporting issues, or post your questions on the Linux Mint forums. Please avoid reporting issues by email.");
+		msg = _("You can use the GitHub issue tracker for reporting issues, or post your questions on the Linux Mint forums. Please avoid reporting issues by email.");
 		
 		add_label(msg);
 

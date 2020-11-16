@@ -74,6 +74,7 @@ public abstract class AsyncTask : GLib.Object{
 	public signal void task_complete();
 
 	protected AsyncTask(){
+		
 		working_dir = TEMP_DIR + "/" + timestamp_for_path();
 		script_file = path_combine(working_dir, "script.sh");
 		log_file = path_combine(working_dir, "task.log");
@@ -258,6 +259,7 @@ public abstract class AsyncTask : GLib.Object{
 	protected abstract void parse_stderr_line(string err_line);
 	
 	private void finish(){
+		
 		// finish() gets called by 2 threads but should be executed only once
 		if (finish_called) { return; }
 		finish_called = true;
@@ -317,6 +319,7 @@ public abstract class AsyncTask : GLib.Object{
 	protected abstract void finish_task();
 
 	protected int read_exit_code(){
+		
 		exit_code = -1;
 		var path = file_parent(script_file) + "/status";
 		if (file_exists(path)){
@@ -328,12 +331,14 @@ public abstract class AsyncTask : GLib.Object{
 	}
 
 	public bool is_running(){
+		
 		return (status == AppStatus.RUNNING);
 	}
 	
 	// public actions --------------
 
 	public void pause() {
+		
 		Pid sub_child_pid;
 		foreach (long pid in get_process_children(child_pid)) {
 			sub_child_pid = (Pid) pid;
@@ -344,6 +349,7 @@ public abstract class AsyncTask : GLib.Object{
 	}
 
 	public void resume() {
+		
 		Pid sub_child_pid;
 		foreach (long pid in get_process_children(child_pid)) {
 			sub_child_pid = (Pid) pid;
@@ -354,6 +360,7 @@ public abstract class AsyncTask : GLib.Object{
 	}
 
 	public void stop(AppStatus status_to_update = AppStatus.CANCELLED) {
+		
 		// we need to un-freeze the processes before we kill them
 		if (status == AppStatus.PAUSED) {
 			resume();
@@ -367,6 +374,7 @@ public abstract class AsyncTask : GLib.Object{
 	}
 
 	public void set_priority() {
+		
 		if (background_mode){
 			set_priority_value(5);
 		}
@@ -376,6 +384,7 @@ public abstract class AsyncTask : GLib.Object{
 	}
 
 	public void set_priority_value(int prio) {
+		
 		Pid app_pid = Posix.getpid();
 		process_set_priority (app_pid, prio);
 
@@ -414,6 +423,7 @@ public abstract class AsyncTask : GLib.Object{
 	}
 
 	public void print_app_status(){
+		
 		switch(status){
 		case AppStatus.NOT_STARTED:
 			log_debug("status=%s".printf("NOT_STARTED"));

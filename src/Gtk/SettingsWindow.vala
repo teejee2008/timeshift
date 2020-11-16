@@ -126,6 +126,7 @@ class SettingsWindow : Gtk.Window{
         bbox.add(btn_ok);
         
         btn_ok.clicked.connect(()=>{
+			save_changes();
 			this.destroy();
 		});
 

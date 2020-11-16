@@ -1,3 +1,30 @@
+timeshift (20.11.1) focal; urgency=medium
+
+  * Fix #631: Escape single quote in LUKS password when unlocking device
+  
+  * Fix #626: Filters: Save filter order changes when clicking OK
+    
+  * Fix #643: Filters: Save changes after Include/Exclude radio is toggled
+
+  * Fix #668: Filters: Save changes immediately after pattern is edited
+
+  * Fix #666: Filters: Save changes immediately after adding a pattern;
+  and before clicking Summary button
+  
+  * Move config file to /etc/timeshift/timeshift.json
+  
+  * Move default config to /etc/timeshift/default.json
+  
+  * AppStream: Install only under /usr/share/metainfo. Don't install 
+  under /usr/share/appdata/
+  
+  * Remove unused functions and code
+  
+  * pkexec: Don't pass DISPLAY and AUTHORITY in launcher script
+
+ -- Tony George <teejeetech@gmail.com>  Sun, 15 Nov 2020 20:00:00 +0530
+
+
 timeshift (20.03) xenial; urgency=medium
 
   * Fix an issue with script execution

@@ -201,8 +201,7 @@ public class IconManager : GLib.Object {
 		return null;
 	}
 
-	public static Gdk.Pixbuf? add_emblem (Gdk.Pixbuf pixbuf, string icon_name, int emblem_size,
-		bool emblem_symbolic, Gtk.CornerType corner_type) {
+	public static Gdk.Pixbuf? add_emblem (Gdk.Pixbuf pixbuf, string icon_name, int emblem_size, bool emblem_symbolic, Gtk.CornerType corner_type) {
 
 		if (icon_name.length == 0){ return pixbuf; }
 

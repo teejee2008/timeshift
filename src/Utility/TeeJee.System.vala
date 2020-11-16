@@ -151,7 +151,6 @@ namespace TeeJee.System{
 		return get_user_home(get_username_effective());
 	}
 
-
 	// application -----------------------------------------------
 	
 	public string get_app_path(){
@@ -286,45 +285,6 @@ namespace TeeJee.System{
 	
 	// internet helpers ----------------------
 	
-	public bool check_internet_connectivity(){
-		bool connected = false;
-		connected = check_internet_connectivity_test1();
-
-		if (connected){
-			return connected;
-		}
-		
-		if (!connected){
-			connected = check_internet_connectivity_test2();
-		}
-
-	    return connected;
-	}
-
-	public bool check_internet_connectivity_test1(){
-		int exit_code = -1;
-		string std_err;
-		string std_out;
-
-		string cmd = "ping -q -w 1 -c 1 `ip r | grep default | cut -d ' ' -f 3`\n";
-		cmd += "exit $?";
-		exit_code = exec_script_sync(cmd, out std_out, out std_err, false);
-
-	    return (exit_code == 0);
-	}
-
-	public bool check_internet_connectivity_test2(){
-		int exit_code = -1;
-		string std_err;
-		string std_out;
-
-		string cmd = "ping -q -w 1 -c 1 google.com\n";
-		cmd += "exit $?";
-		exit_code = exec_script_sync(cmd, out std_out, out std_err, false);
-
-	    return (exit_code == 0);
-	}
-
 	public bool shutdown (){
 
 		/* Shutdown the system immediately */
@@ -472,43 +432,6 @@ namespace TeeJee.System{
 		return dir_exists("/sys/firmware/efi");
 	}
 
-	public void open_terminal_window(
-		string terminal_emulator,
-		string working_dir,
-		string script_file_to_execute,
-		bool run_as_admin){
-			
-		string cmd = "";
-		if (run_as_admin){
-			cmd += "pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY ";
-		}
-
-		string term = terminal_emulator;
-		if (!command_exists(term)){
-			term = "gnome-terminal";
-			if (!command_exists(term)){
-				term = "xfce4-terminal";
-			}
-		}
-
-		cmd += term;
-		
-		switch (term){
-		case "gnome-terminal":
-		case "xfce4-terminal":
-			if (working_dir.length > 0){
-				cmd += " --working-directory='%s'".printf(escape_single_quote(working_dir));
-			}
-			if (script_file_to_execute.length > 0){
-				cmd += " -e '%s\n; echo Press ENTER to exit... ; read dummy;'".printf(escape_single_quote(script_file_to_execute));
-			}
-			break;
-		}
-
-		log_debug(cmd);
-		exec_script_async(cmd);
-	}
-	
 	// timers --------------------------------------------------
 	
 	public GLib.Timer timer_start(){
@@ -550,7 +473,6 @@ namespace TeeJee.System{
 		}
 		log_msg("%s %lu\n".printf(seconds.to_string(), microseconds));
 	}	
-
 
 	public void set_numeric_locale(string type){
 		Intl.setlocale(GLib.LocaleCategory.NUMERIC, type);

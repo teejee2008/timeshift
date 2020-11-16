@@ -2,17 +2,17 @@
 
 app_command='timeshift-gtk'
 
-if [ `id -u` -eq 0 ]; then
-	#user is admin
+if [ "$(id -u)" -eq 0 ]; then
+	# user is admin
 	${app_command}
 else
-	#user is not admin
-	if `echo $- | grep "i" >/dev/null 2>&1`; then
-		#script is running in interactive mode
+	# user is not admin
+	if echo $- | grep "i" >/dev/null 2>&1; then
+		# script is running in interactive mode
 		su - -c "${app_command}"
 	else
-		#script is running in non-interactive mode
-		if [ $XDG_SESSION_TYPE = "wayland" ] ; then
+		# script is running in non-interactive mode
+		if [ "$XDG_SESSION_TYPE" = "wayland" ] ; then
 			xhost +SI:localuser:root
 			pkexec ${app_command}
 			xhost -SI:localuser:root

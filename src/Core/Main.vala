@@ -3104,14 +3104,15 @@ public class Main : GLib.Object{
 		// check if first run -----------------------
 		
 		var f = File.new_for_path(this.app_conf_path);
+		
 		if (!f.query_exists()) {
-			file_copy(app_conf_path_default, app_conf_path);
+			
+			if (file_exists(app_conf_path_default)){
+				// copy default file
+				file_copy(app_conf_path_default, app_conf_path);
+			}
 		}
-		if (!f.query_exists()) {
-			set_first_run_flag();
-			return;
-		}
-
+		
 		// load settings from config file --------------------------
 		
 		var parser = new Json.Parser();
@@ -3124,13 +3125,13 @@ public class Main : GLib.Object{
         var config = node.get_object();
 
 		bool do_first_run = json_get_bool(config, "do_first_run", false); // false as default
+
+		btrfs_mode = json_get_bool(config, "btrfs_mode", false); // false as default
 		
 		if (do_first_run){
 			set_first_run_flag();
 		}
-
-		btrfs_mode = json_get_bool(config, "btrfs_mode", false); // false as default
-
+		
 		if (config.has_member("include_btrfs_home")){
 			include_btrfs_home_for_backup = json_get_bool(config, "include_btrfs_home", include_btrfs_home_for_backup);
 		}

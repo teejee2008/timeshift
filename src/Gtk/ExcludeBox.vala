@@ -210,6 +210,8 @@ class ExcludeBox : Gtk.Box{
 			}
 			
 			model.set (iter, 0, pattern, -1);
+			
+			save_changes();
 		});
 	}
 

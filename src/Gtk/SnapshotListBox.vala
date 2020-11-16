@@ -221,7 +221,7 @@ class SnapshotListBox : Gtk.Box{
 
 		//cell_desc
 		col_desc = new TreeViewColumn();
-		col_desc.title = _("Comments");
+		col_desc.title = _("Comments (click to edit)");
 		col_desc.resizable = true;
 		col_desc.clickable = true;
 		col_desc.expand = true;

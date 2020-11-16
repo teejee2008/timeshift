@@ -634,7 +634,7 @@ class MainWindow : Gtk.Window{
 
 		App.repo.load_snapshots();
 
-		string title = (marked ? "Marked " : "Unchecked ") + "for deletion";
+		string title = (marked ? "Marked " : "Unmarked ") + "for deletion";
 		string message = (marked ? "Snapshots will " : "Snapshots will not ") + "be removed during the next scheduled run";
 
 		gtk_messagebox(_(title),

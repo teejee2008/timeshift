@@ -7,7 +7,7 @@ assignees: ''
 
 ---
 
-**Note:** This application is provided "as-is" without support or warranty. If you have any requests, consider [making a donation](https://www.paypal.com/cgi-bin/webscr?business=teejeetech@gmail.com&cmd=_xclick&currency_code=USD&item_name=Timeshift+Donation) to support the development.
+**Note:** This application is provided "as-is" without support or warranty. If you need changes or additional features in the application, please download the source code, make the changes, test it properly, and then submit a pull request. The changes will be reviewed and merged in the next update.
 
 **Is your feature request related to a problem? Please describe.**
 A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]

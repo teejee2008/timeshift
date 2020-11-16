@@ -121,6 +121,8 @@ class ExcludeBox : Gtk.Box{
 			}
 
 			treeview_update_item(ref iter, pattern);
+			
+			save_changes();
 		});
 
 		// column
@@ -155,6 +157,8 @@ class ExcludeBox : Gtk.Box{
 			}
 
 			treeview_update_item(ref iter, pattern);
+			
+			save_changes();
 		});
 		
 		// column
@@ -206,6 +210,8 @@ class ExcludeBox : Gtk.Box{
 			}
 			
 			model.set (iter, 0, pattern, -1);
+			
+			save_changes();
 		});
 	}
 
@@ -229,6 +235,8 @@ class ExcludeBox : Gtk.Box{
 				treeview_add_item(treeview, pattern); // don't strip
 				Main.first_snapshot_size = 0; //re-calculate
 			}
+			
+			save_changes();
 		});
 		
 		button = add_button(hbox, _("Add Files"), _("Add files"), size_group, null);
@@ -258,6 +266,7 @@ class ExcludeBox : Gtk.Box{
 
 		button = add_button(hbox, _("Summary"), "", size_group, null);
         button.clicked.connect(()=>{
+			save_changes();
 			new ExcludeListSummaryWindow(false);
 		});
 	}

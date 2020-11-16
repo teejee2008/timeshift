@@ -82,23 +82,20 @@ public class DonationWindow : Gtk.Window {
 
 		add_label(msg);
 		
-		msg = _("Since this a free application there is no dedicated support for this app. You can use the GitHub issue tracker for reporting issues, or post your questions on the Linux Mint forums. Please avoid reporting issues by email.");
+		msg = _("You can use the GitHub issue tracker for reporting issues, or post your questions on the Linux Mint forums. Please avoid reporting issues by email.");
 		
 		add_label(msg);
 
 		hbox = add_vbox();
 
-		add_button(hbox, _("GitHub"),
-			"https://github.com/teejee2008/%s/issues".printf(appname.down()));
+		add_button(hbox, _("GitHub"), "https://github.com/teejee2008/%s/issues".printf(appname.down()));
 
 		if (has_wiki){
 			
-			add_button(hbox, _("Wiki"),
-				"https://github.com/teejee2008/%s/wiki".printf(appname.down()));
+			add_button(hbox, _("Wiki"), "https://github.com/teejee2008/%s/wiki".printf(appname.down()));
 		}
 
-		add_button(hbox, _("Website"),
-			"https://teejeetech.in/");
+		add_button(hbox, _("Website"), "https://teejeetech.in/");
 		
 		// close window ---------------------------------------------------------
 

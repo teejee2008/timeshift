@@ -67,6 +67,7 @@ public class SystemUser : GLib.Object {
 	}
 
 	public static void query_users(bool no_passwords = true){
+		
 		if (no_passwords){
 			all_users = read_users_from_file("/etc/passwd","","");
 		}
@@ -93,20 +94,14 @@ public class SystemUser : GLib.Object {
 	}
 
 	public static Gee.HashMap<string,SystemUser> read_users_from_file(
+	
 		string passwd_file, string shadow_file, string password){
 		
 		var list = new Gee.HashMap<string,SystemUser>();
 
 		// read 'passwd' file ---------------------------------
 		
-		string txt = "";
-
-		if (passwd_file.has_suffix(".tar.gpg")){
-			txt = file_decrypt_untar_read(passwd_file, password);
-		}
-		else{
-			txt = file_read(passwd_file);
-		}
+		string txt = file_read(passwd_file);
 
 		if (txt.length == 0){
 			return list;
@@ -128,14 +123,7 @@ public class SystemUser : GLib.Object {
 
 		// read 'shadow' file ---------------------------------
 		
-		txt = "";
-		
-		if (shadow_file.has_suffix(".tar.gpg")){
-			txt = file_decrypt_untar_read(shadow_file, password);
-		}
-		else{
-			txt = file_read(shadow_file);
-		}
+		txt = file_read(shadow_file);
 
 		if (txt.length == 0){
 			return list;
@@ -152,6 +140,7 @@ public class SystemUser : GLib.Object {
 	}
 
 	private static SystemUser? parse_line_passwd(string line){
+		
 		if ((line == null) || (line.length == 0)){
 			return null;
 		}
@@ -198,6 +187,7 @@ public class SystemUser : GLib.Object {
 	}
 
 	private static SystemUser? parse_line_shadow(string line, Gee.HashMap<string,SystemUser> list){
+		
 		if ((line == null) || (line.length == 0)){
 			return null;
 		}
@@ -233,24 +223,6 @@ public class SystemUser : GLib.Object {
 			log_error("'shadow' file contains a record with non-standard fields" + ": %d".printf(fields.length));
 			return null;
 		}
-	}
-
-	public static int add_user(string user_name, bool system_account = false){
-		string std_out, std_err;
-		string cmd = "adduser%s --gecos '' --disabled-login %s".printf((system_account ? " --system" : ""), user_name);
-		log_debug(cmd);
-		int status = exec_sync(cmd, out std_out, out std_err);
-		if (status != 0){
-			log_error(std_err);
-		}
-		else{
-			//log_msg(std_out);
-		}
-		return status;
-	}
-
-	public int add(){
-		return add_user(name, is_system);
 	}
 
 	public void check_encrypted_dirs() {
@@ -311,97 +283,6 @@ public class SystemUser : GLib.Object {
 		owned get {
 			return "";
 		}
-	}
-
-	public bool update_passwd_file(){
-		
-		string file_path = "/etc/passwd";
-		string txt = file_read(file_path);
-		
-		var txt_new = "";
-		foreach(string line in txt.split("\n")){
-			if (line.strip().length == 0) {
-				continue;
-			}
-			
-			string[] parts = line.split(":");
-
-			if (parts.length != 7){
-				log_error("'passwd' file contains a record with non-standard fields" + ": %d".printf(parts.length));
-				return false;
-			}
-			
-			if (parts[0].strip() == name){
-				txt_new += get_passwd_line() + "\n";
-			}
-			else{
-				txt_new += line + "\n";
-			}
-		}
-
-		file_write(file_path, txt_new);
-		
-		log_msg("Updated user settings in /etc/passwd" + ": %s".printf(name));
-		
-		return true;
-	}
-
-	public string get_passwd_line(){
-		string txt = "";
-		txt += "%s".printf(name);
-		txt += ":%s".printf(password);
-		txt += ":%d".printf(uid);
-		txt += ":%d".printf(gid);
-		txt += ":%s".printf(user_info);
-		txt += ":%s".printf(home_path);
-		txt += ":%s".printf(shell_path);
-		return txt;
-	}
-	
-	public bool update_shadow_file(){
-		string file_path = "/etc/shadow";
-		string txt = file_read(file_path);
-		
-		var txt_new = "";
-		foreach(string line in txt.split("\n")){
-			if (line.strip().length == 0) {
-				continue;
-			}
-			
-			string[] parts = line.split(":");
-
-			if (parts.length != 9){
-				log_error("'shadow' file contains a record with non-standard fields" + ": %d".printf(parts.length));
-				return false;
-			}
-			
-			if (parts[0].strip() == name){
-				txt_new += get_shadow_line() + "\n";
-			}
-			else{
-				txt_new += line + "\n";
-			}
-		}
-
-		file_write(file_path, txt_new);
-		
-		log_msg("Updated user settings in /etc/shadow" + ": %s".printf(name));
-		
-		return true;
-	}
-
-	public string get_shadow_line(){
-		string txt = "";
-		txt += "%s".printf(name);
-		txt += ":%s".printf(pwd_hash);
-		txt += ":%s".printf(pwd_last_changed);
-		txt += ":%s".printf(pwd_age_min);
-		txt += ":%s".printf(pwd_age_max);
-		txt += ":%s".printf(pwd_warning_period);
-		txt += ":%s".printf(pwd_inactivity_period);
-		txt += ":%s".printf(pwd_expiraton_date);
-		txt += ":%s".printf(reserved_field);
-		return txt;
 	}
 }
 

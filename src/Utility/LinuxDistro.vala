@@ -1,6 +1,6 @@
 
 /*
- * ProcStats.vala
+ * LinuxDistro.vala
  *
  * Copyright 2012-2018 Tony George <teejeetech@gmail.com>
  *
@@ -36,6 +36,7 @@ public class LinuxDistro : GLib.Object{
 	public string codename = "";
 
 	public LinuxDistro(){
+		
 		dist_id = "";
 		description = "";
 		release = "";
@@ -43,6 +44,7 @@ public class LinuxDistro : GLib.Object{
 	}
 
 	public string full_name(){
+		
 		if (dist_id == ""){
 			return "";
 		}

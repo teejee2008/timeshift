@@ -233,6 +233,8 @@ class ExcludeBox : Gtk.Box{
 				treeview_add_item(treeview, pattern); // don't strip
 				Main.first_snapshot_size = 0; //re-calculate
 			}
+			
+			save_changes();
 		});
 		
 		button = add_button(hbox, _("Add Files"), _("Add files"), size_group, null);
@@ -262,6 +264,7 @@ class ExcludeBox : Gtk.Box{
 
 		button = add_button(hbox, _("Summary"), "", size_group, null);
         button.clicked.connect(()=>{
+			save_changes();
 			new ExcludeListSummaryWindow(false);
 		});
 	}

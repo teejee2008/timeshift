@@ -5,6 +5,7 @@ CHECKEXECS := $(foreach exec,$(EXECUTABLES), $(if $(shell which $(exec)),,$(erro
 
 prefix=/usr
 sysconfdir=/etc
+appconfdir=$(sysconfdir)/timeshift
 bindir=$(prefix)/bin
 sharedir=$(prefix)/share
 polkitdir=$(sharedir)/polkit-1/actions
@@ -102,7 +103,8 @@ install:
 	mkdir -p "$(DESTDIR)$(man1dir)"
 	mkdir -p "$(DESTDIR)$(launcherdir)"
 	mkdir -p "$(DESTDIR)$(polkitdir)"
-	mkdir -p "$(DESTDIR)$(sysconfdir)/default"
+	mkdir -p "$(DESTDIR)$(sysconfdir)"
+	mkdir -p "$(DESTDIR)$(appconfdir)"
 	mkdir -p "$(DESTDIR)$(sharedir)/${app_name}"
 	mkdir -p "$(DESTDIR)$(sharedir)/icons"
 	mkdir -p "$(DESTDIR)$(sharedir)/appdata" 
@@ -126,7 +128,7 @@ install:
 	install -m 0755 ${app_name}-gtk.desktop "$(DESTDIR)$(launcherdir)"
 
 	# config
-	install -m 0644 ../files/${app_name}.json "$(DESTDIR)$(sysconfdir)/default"
+	install -m 0644 ../files/${app_name}.json "$(DESTDIR)$(appconfdir)/default.json"
 
 	# man page
 	install -m 0644 ../man/${app_name}.1.gz "$(DESTDIR)$(man1dir)/${app_name}.1.gz"

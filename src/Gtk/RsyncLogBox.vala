@@ -69,7 +69,7 @@ public class RsyncLogBox : Gtk.Box {
 
 	public RsyncLogBox(Gtk.Window _window) {
 		
-		Object(orientation: Gtk.Orientation.VERTICAL, spacing: 6); // work-around
+		GLib.Object(orientation: Gtk.Orientation.VERTICAL, spacing: 6); // work-around
 
 		this.margin = 6;
 		

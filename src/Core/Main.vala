@@ -1500,7 +1500,7 @@ public class Main : GLib.Object{
 				dst_path = dst_path.replace("/@home/@home", "/@home");
 			}
 			
-			string cmd = "btrfs subvolume snapshot '%s' '%s' \n".printf(src_path, dst_path);
+			string cmd = "btrfs subvolume snapshot -r '%s' '%s' \n".printf(src_path, dst_path);
 			
 			if (LOG_COMMANDS) { log_debug(cmd); }
 

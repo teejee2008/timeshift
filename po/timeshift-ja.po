@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: linuxmint\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
 "POT-Creation-Date: 2020-11-16 17:44+0530\n"
-"PO-Revision-Date: 2019-10-13 04:55+0900\n"
-"Last-Translator: @ kazuo210 <kazu.nito@gmail.com>\n"
+"PO-Revision-Date: 2021-02-11 23:23+0900\n"
+"Last-Translator: KotaKato(@kato-k) <peony.btn@gmail.com>\n"
 "Language-Team: \n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2018-02-03 14:28+0000\n"
-"X-Generator: Poedit 2.2.4\n"
+"X-Generator: Poedit 2.3\n"
 "X-Launchpad-Export-Date: 2017-11-23 10:47+0000\n"
 "X-Generator: Launchpad (build 18509)\n"
 "X-Poedit-Basepath: ../src\n"
@@ -383,7 +383,7 @@ msgstr "クリックして編集します。 ドラッグアンドドロップ�
 
 #: Gtk/ExcludeBox.vala:59
 msgid "Click to edit. Drag-drop to re-order."
-msgstr "編集する時にクリックします。 ドラッグアンドドロップして並べ替えます。"
+msgstr "クリックして編集します。 ドラッグアンドドロップして並べ替えます。"
 
 #: Gtk/RestoreWindow.vala:69
 msgid "Clone System"
@@ -418,9 +418,8 @@ msgid "Commands listed below are not available on this system"
 msgstr "以下にリストされているコマンドは、このシステムでは使用できません"
 
 #: Gtk/SnapshotListBox.vala:224
-#, fuzzy
 msgid "Comments (click to edit)"
-msgstr "<b>コメント</b> (ダブルクリックして編集)"
+msgstr "コメント (クリックして編集)"
 
 #: Gtk/RestoreBox.vala:74 Gtk/RestoreBox.vala:187 Core/Main.vala:2795
 msgid "Comparing Files (Dry Run)..."
@@ -446,7 +445,7 @@ msgstr "アクションを確認する"
 #: Console/AppConsole.vala:1070
 #, c-format
 msgid "Continue with restore? (y/n): "
-msgstr "復元を続行しますか？ (y /n): "
+msgstr "復元を続行しますか？ (y/n): "
 
 #: Utility/Gtk/AboutWindow.vala:425
 msgid "Contributors"
@@ -581,15 +580,15 @@ msgstr "重大なエラー"
 
 #: Utility/CronTab.vala:136
 msgid "Cron job added"
-msgstr "Cron ジョブが追加されました"
+msgstr "cron ジョブが追加されました"
 
 #: Utility/CronTab.vala:217
 msgid "Cron job removed"
-msgstr "Cron ジョブが削除されました"
+msgstr "cron ジョブが削除されました"
 
 #: Utility/CronTab.vala:304
 msgid "Cron task exists"
-msgstr "Cron タスクが存在します"
+msgstr "cron タスクが存在します"
 
 #: Gtk/MiscBox.vala:98
 msgid "Custom"
@@ -613,7 +612,7 @@ msgstr "データは次のデバイスで変更されます:"
 
 #: Gtk/MiscBox.vala:71
 msgid "Date Format"
-msgstr "日付形式"
+msgstr "日付の形式"
 
 #: Console/AppConsole.vala:371 Gtk/MainWindow.vala:161
 #: Gtk/SnapshotListBox.vala:322 Gtk/DeleteWindow.vala:98
@@ -673,7 +672,7 @@ msgstr "説明"
 #: Core/Subvolume.vala:181
 #, c-format
 msgid "Destroyed qgroup"
-msgstr "qgroup 破棄されました"
+msgstr "qgroup を破棄しました"
 
 #: Core/Subvolume.vala:171
 #, c-format
@@ -827,9 +826,8 @@ msgid "Examples"
 msgstr "例"
 
 #: Gtk/UsersBox.vala:136
-#, fuzzy
 msgid "Exclude All Files"
-msgstr "すべて除外"
+msgstr "すべてを除外"
 
 #: Gtk/RestoreExcludeBox.vala:55 Gtk/ExcludeAppsBox.vala:51
 msgid "Exclude Application Settings"
@@ -1088,7 +1086,7 @@ msgstr "既存の復元前のスナップショットが見つかりました"
 
 #: Gtk/BackupDeviceBox.vala:215
 msgid "Free"
-msgstr "未使用"
+msgstr "空き容量"
 
 #: Core/SnapshotRepo.vala:77 Core/SnapshotRepo.vala:147
 msgid "Free space"
@@ -1201,14 +1199,12 @@ msgid "Include @home subvolume in backups"
 msgstr "バックアップに @home サブボリュームを含めます"
 
 #: Gtk/UsersBox.vala:266
-#, fuzzy
 msgid "Include All Files"
-msgstr "すべて含める"
+msgstr "すべてを含める"
 
 #: Gtk/UsersBox.vala:194
-#, fuzzy
 msgid "Include Only Hidden Files"
-msgstr "Include hidden items"
+msgstr "非表示にされたファイルのみを含める"
 
 #: Core/Main.vala:2046
 msgid "Invalid Snapshot"
@@ -1229,7 +1225,7 @@ msgstr "選択されていないアイテム"
 
 #: Gtk/ScheduleBox.vala:283
 msgid "Keep"
-msgstr "保持"
+msgstr "保持上限"
 
 #: Gtk/RestoreExcludeBox.vala:112
 msgid ""
@@ -1526,7 +1522,7 @@ msgstr ""
 #: Utility/Gtk/CustomMessageDialog.vala:171 Gtk/SettingsWindow.vala:123
 #: Gtk/ExcludeListSummaryWindow.vala:84 Core/SnapshotRepo.vala:615
 msgid "OK"
-msgstr "はい"
+msgstr "OK"
 
 #: Gtk/SnapshotBackendBox.vala:180
 msgid ""
@@ -1981,7 +1977,7 @@ msgstr "このディスク上のパーティションを選択します"
 
 #: Gtk/MainWindow.vala:794
 msgid "Select a single snapshot to restore"
-msgstr "復元するスナップショットを 1 つ選択する"
+msgstr "復元するスナップショットを1つ選択してください"
 
 #: Gtk/RestoreDeviceBox.vala:481
 msgid "Select another device for root file system (/)"
@@ -2662,11 +2658,11 @@ msgstr "作成時のRsyncログを表示"
 
 #: Gtk/SnapshotListBox.vala:350
 msgid "View Rsync Log for Restore"
-msgstr "復元時のRsync ログを表示"
+msgstr "復元時のRsyncログを表示"
 
 #: Gtk/MainWindow.vala:380
 msgid "View TimeShift Logs"
-msgstr "タイムシフトログを表示"
+msgstr "タイムシフトのログを表示"
 
 #: Gtk/RestoreDeviceBox.vala:101
 msgid "Volume"
@@ -2727,13 +2723,12 @@ msgstr ""
 "復元し、復元を '元に戻す' ことができます。"
 
 #: Utility/Gtk/DonationWindow.vala:85
-#, fuzzy
 msgid ""
 "You can use the GitHub issue tracker for reporting issues, or post your "
 "questions on the Linux Mint forums. Please avoid reporting issues by email."
 msgstr ""
-"問題の報告、質問、機能のリクエストには、問題追跡ツールを使用します。 電子メー"
-"ルによる問題の報告は避けてください。"
+"問題はGitHub issue trackerで報告できます。また、Linux Mint forumsで質問をする"
+"こともできます。emailで報告することは避けてください。"
 
 #: Gtk/RestoreDeviceBox.vala:413
 msgid ""

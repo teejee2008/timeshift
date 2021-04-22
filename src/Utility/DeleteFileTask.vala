@@ -90,7 +90,7 @@ public class DeleteFileTask : AsyncTask{
 
 		if (use_rsync){
 
-			cmd += "rsync -aii";
+			cmd += "ionice -c idle rsync -aii";
 
 			if (verbose){
 				cmd += " --verbose";

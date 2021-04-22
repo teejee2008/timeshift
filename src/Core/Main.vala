@@ -338,7 +338,7 @@ public class Main : GLib.Object{
 
 		log_debug("Main: check_dependencies()");
 		
-		string[] dependencies = { "rsync","/sbin/blkid","df","mount","umount","fuser","crontab","cp","rm","touch","ln","sync"}; //"shutdown","chroot",
+		string[] dependencies = { "rsync","/sbin/blkid","df","mount","umount","fuser","crontab","cp","rm","touch","ln","sync","ionice"}; //"shutdown","chroot",
 
 		string path;
 		foreach(string cmd_tool in dependencies){
@@ -2269,7 +2269,7 @@ public class Main : GLib.Object{
 
 		// run rsync ---------------------------------------
 
-		sh += "rsync -avir --force --delete --delete-after";
+		sh += "ionice -c idle rsync -avir --force --delete --delete-after";
 
 		if (dry_run){
 			sh += " --dry-run";
@@ -3742,7 +3742,7 @@ public class Main : GLib.Object{
 
 			save_exclude_list_for_backup(TEMP_DIR);
 			
-			cmd  = "LC_ALL=C ; rsync -ai --delete --numeric-ids --relative --stats --dry-run --delete-excluded --exclude-from='%s' /. '%s' &> '%s'".printf(file_exclude_list, dir_empty, file_log);
+			cmd  = "LC_ALL=C ; ionice -c idle rsync -ai --delete --numeric-ids --relative --stats --dry-run --delete-excluded --exclude-from='%s' /. '%s' &> '%s'".printf(file_exclude_list, dir_empty, file_log);
 
 			log_debug(cmd);
 			ret_val = exec_script_sync(cmd, out std_out, out std_err);

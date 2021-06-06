@@ -1962,51 +1962,10 @@ public class Device : GLib.Object{
 		return "<tt>%s</tt>".printf(tt);
 	}
 
-	private string display_name(bool short_name = true, bool show_label = true, bool show_parent = true, bool show_alias = false){
-	
-		string txt = "";
-
-		if (short_name){
-			txt += kname;
-		}
-		else{
-			txt += device;
-		}
-
-		if (type == "disk"){
-			if (vendor.length > 0){
-				txt += " " + vendor;
-			}
-			if (model.length > 0){
-				txt += " " + model;
-			}
-			if (size_bytes > 0) {
-				if (txt.strip().length == 0){
-					txt += "%s Device".printf(format_file_size(size_bytes, false, "", true, 0));
-				}
-				else{
-					txt += " (%s)".printf(format_file_size(size_bytes, false, "", true, 0));
-				}
-			}
-		}
-		else{
-			if (show_label && (label.length > 0)){
-				txt += "(%s)".printf(label);
-			}
-			if (show_parent && has_parent() && (parent.type == "part")){ // TODO: if parent is crypt (like lvm on luks)
-				txt += "(%s)".printf(pkname);
-			}
-			if (show_alias && (mapped_name.length > 0)){
-				txt += "(%s)".printf(mapped_name);
-			}
-		}
-		
-		return txt;
-	}	
-	
 	// testing -----------------------------------
 
 	public static void test_all(){
+		
 		var list = get_block_devices_using_lsblk();
 		log_msg("\n> get_block_devices_using_lsblk()");
 		print_device_list(list);

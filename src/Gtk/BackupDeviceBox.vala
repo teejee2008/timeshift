@@ -46,7 +46,7 @@ class BackupDeviceBox : Gtk.Box{
 		log_debug("BackupDeviceBox: BackupDeviceBox()");
 		
 		//base(Gtk.Orientation.VERTICAL, 6); // issue with vala
-		Object(orientation: Gtk.Orientation.VERTICAL, spacing: 6); // work-around
+		GLib.Object(orientation: Gtk.Orientation.VERTICAL, spacing: 6); // work-around
 		parent_window = _parent_window;
 		margin = 12;
 

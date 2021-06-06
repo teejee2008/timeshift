@@ -338,7 +338,7 @@ public class Main : GLib.Object{
 
 		log_debug("Main: check_dependencies()");
 		
-		string[] dependencies = { "rsync","/sbin/blkid","df","mount","umount","fuser","crontab","cp","rm","touch","ln","sync"}; //"shutdown","chroot",
+		string[] dependencies = { "rsync","/sbin/blkid","df","mount","umount","fuser","crontab","cp","rm","touch","ln","sync","which"}; //"shutdown","chroot",
 
 		string path;
 		foreach(string cmd_tool in dependencies){
@@ -2756,7 +2756,7 @@ public class Main : GLib.Object{
 				}
 			}
 			sh_fsck += "echo '' \n";
-			int ret_val = exec_script_sync(sh_fsck, null, null, false, false, false, true);
+			exec_script_sync(sh_fsck, null, null, false, false, false, true);
 		}
 	}
 

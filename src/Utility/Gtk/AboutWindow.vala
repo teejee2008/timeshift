@@ -31,7 +31,7 @@ using TeeJee.GtkHelper;
 using TeeJee.System;
 using TeeJee.Misc;
 
-public class AboutWindow : Dialog {
+public class AboutWindow : Gtk.Window {
 	
 	private Gtk.Box vbox_main;
 	private Gtk.Box vbox_logo;
@@ -42,6 +42,7 @@ public class AboutWindow : Dialog {
 	private Gtk.Button btn_license;
 	private Gtk.Button btn_credits;
 	private Gtk.Button btn_close;
+	private Gtk.Window window;
 
 	private Gtk.Image img_logo;
 	private Gtk.Label lbl_program_name;
@@ -203,22 +204,26 @@ public class AboutWindow : Dialog {
 
 	private string username = "";
 	
-	public AboutWindow() {
+	public AboutWindow(Gtk.Window _window) {
+
+		window = _window;
 		
         window_position = WindowPosition.CENTER_ON_PARENT;
 		set_destroy_with_parent (true);
 		set_modal (true);
         skip_taskbar_hint = false;
-        set_default_size (450, 400);
+        set_default_size(450, 450);
 
 		if (get_user_id_effective() == 0){
 			username = get_username();
+			log_debug("username: %s".printf(username));
 		}
-
-	    vbox_main = get_content_area();
-		vbox_main.margin = 6;
+		
+		vbox_main = new Gtk.Box(Orientation.VERTICAL,0);
+		vbox_main.margin = 12;
 		vbox_main.spacing = 6;
-
+		this.add(vbox_main);
+		
 		vbox_logo = new Gtk.Box(Orientation.VERTICAL,0);
 		vbox_main.add(vbox_logo);
 
@@ -243,7 +248,6 @@ public class AboutWindow : Dialog {
 		label.wrap_mode = Pango.WrapMode.WORD_CHAR;
 		label.use_markup = true;
 		label.margin = 6;
-		label.margin_right = 25;
 		sw_license.add(label);
 		lbl_license = label;
 		
@@ -309,8 +313,8 @@ public class AboutWindow : Dialog {
 	}
 
 	private void add_action_buttons(){
-		
-		hbox_action = (Box) get_action_area();
+
+		hbox_action = add_button_box(vbox_main, Gtk.Orientation.HORIZONTAL, Gtk.ButtonBoxStyle.CENTER, 6);
 
 		//btn_license
 		btn_license = new Gtk.Button.with_label("  " + _("License"));

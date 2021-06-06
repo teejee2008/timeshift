@@ -48,9 +48,7 @@ public class CustomMessageDialog : Gtk.Dialog {
 	private Gtk.MessageType msg_type;
 	private Gtk.ButtonsType buttons_type;
 	
-	public CustomMessageDialog(
-		string _msg_title, string _msg_body,
-		Gtk.MessageType _msg_type, Window? parent, Gtk.ButtonsType _buttons_type) {
+	public CustomMessageDialog(string _msg_title, string _msg_body, Gtk.MessageType _msg_type, Window? parent, Gtk.ButtonsType _buttons_type) {
 			
 		set_transient_for(parent);
 		set_modal(true);
@@ -62,34 +60,18 @@ public class CustomMessageDialog : Gtk.Dialog {
 		
 		init_window();
 
-		//lbl_msg.label += string.nfill(4000, 'n');
-		
 		lbl_msg.expand = true;
 		sw_msg.expand = true;
 		sw_msg.vscrollbar_policy = PolicyType.NEVER;
-		
-		//log_debug("0: label=%dx%d".printf(lbl_msg.get_allocated_width(), lbl_msg.get_allocated_height()));
-		//log_debug("0: scroll=%dx%d".printf(sw_msg.get_allocated_width(), sw_msg.get_allocated_height()));
 
 		sw_msg.set_size_request(500, 150); // sets minimum size
 
-		//log_debug("0: label=%dx%d".printf(lbl_msg.get_allocated_width(), lbl_msg.get_allocated_height()));
-		//log_debug("0: scroll=%dx%d".printf(sw_msg.get_allocated_width(), sw_msg.get_allocated_height()));
-
 		show_all();
-
-		//log_debug("1: label=%dx%d".printf(lbl_msg.get_allocated_width(), lbl_msg.get_allocated_height()));
-		//log_debug("1: scroll=%dx%d".printf(sw_msg.get_allocated_width(), sw_msg.get_allocated_height()));
 
 		if (lbl_msg.get_allocated_height() > 400){
 			sw_msg.vscrollbar_policy = PolicyType.AUTOMATIC;
 			sw_msg.set_size_request(500, 400);
-			//gtk_do_events();
-			//this.set_position(WindowPosition.CENTER);
 		}
-
-		//log_debug("1: label=%dx%d".printf(lbl_msg.get_allocated_width(), lbl_msg.get_allocated_height()));
-		//log_debug("1: scroll=%dx%d".printf(sw_msg.get_allocated_width(), sw_msg.get_allocated_height()));
 	}
 
 	public void init_window () {
@@ -131,7 +113,6 @@ public class CustomMessageDialog : Gtk.Dialog {
 		// image ----------------
 		
 		var img = new Image.from_icon_name(icon_name, Gtk.IconSize.DIALOG);
-		img.margin_right = 12;
 		hbox_contents.add(img);
 		
 		// label -------------------
@@ -146,8 +127,7 @@ public class CustomMessageDialog : Gtk.Dialog {
 		lbl_msg.wrap = true;
 		lbl_msg.wrap_mode = Pango.WrapMode.WORD_CHAR;
 		lbl_msg.use_markup = true;
-		lbl_msg.margin_right = 25;
-		
+
 		//sw_msg
 		sw_msg = new Gtk.ScrolledWindow(null, null);
 		//sw_msg.set_shadow_type (ShadowType.ETCHED_IN);
@@ -159,9 +139,6 @@ public class CustomMessageDialog : Gtk.Dialog {
 
 		// actions -------------------------
 		
-		var action_area = get_action_area () as Gtk.Box;
-		action_area.margin_top = 12;
-
 		switch(buttons_type){
 		case Gtk.ButtonsType.OK:
 			btn_ok = (Gtk.Button) add_button (_("OK"), Gtk.ResponseType.OK);

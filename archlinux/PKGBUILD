@@ -1,0 +1,54 @@
+# Maintainer:  Tony George teejeetech at gmail dot com
+
+set -u
+
+rm -rf *.pkg.tar*
+
+if ! [ -d src ]; then
+rsync -avh --delete --exclude=.git --exclude=archlinux --exclude=debian --exclude=release ../ src/
+fi
+
+pkgname='timeshift'
+pkgver="$(cd .. && dpkg-parsechangelog --show-field Version)"
+pkgrel='1'
+pkgdesc='System restore tool for Linux'
+arch=('i686' 'x86_64' 'armv7h' 'aarch64')
+license=('gplv2')
+
+# required for build and run
+depends=('libgee>=0.18.0' 'libsoup' 'json-glib' 'desktop-file-utils' 'vte3' 'rsync') 
+
+# required for build
+# dpkg is needed to parse version string
+makedepends=('vala' 'dpkg' 'diffutils' 'coreutils') 
+
+optdepends=(
+  'cronie: scheduling'
+)
+
+_srcdir=./
+source=()
+
+prepare() {
+  set -u
+  cd "${_srcdir}"
+  set +u
+}
+
+build() {
+  set -u
+  make -C "${_srcdir}" -s -j1
+  set +u
+}
+
+package() {
+  set -u
+  make -C "${_srcdir}" -j1 DESTDIR="${pkgdir}" install
+  set +u
+}
+
+set +u
+
+# (cd archlinux; makepkg )
+# sudo pacman -U --noconfirm ./${pkgname}-20.08.3-1-x86_64.pkg.tar.zst
+

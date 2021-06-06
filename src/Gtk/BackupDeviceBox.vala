@@ -569,7 +569,6 @@ class BackupDeviceBox : Gtk.Box{
 
 		}
 		
-
 		return ok;
 	}
 

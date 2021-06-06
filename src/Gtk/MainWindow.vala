@@ -945,13 +945,13 @@ class MainWindow : Gtk.Window{
 
 		dialog.program_name = AppName;
 		dialog.comments = _("System Restore Utility");
-		dialog.copyright = "Copyright © 2012-18 Tony George (%s)".printf(AppAuthorEmail);
+		dialog.copyright = "Copyright © 2012-21 Tony George (%s)".printf(AppAuthorEmail);
 		dialog.version = AppVersion;
 		dialog.logo = IconManager.lookup("timeshift", 256);
 
 		//dialog.license = "";
-		dialog.website = "https://teejeetech.in/";
-		dialog.website_label = "https://teejeetech.in/";
+		dialog.website = "https://teejeetech.com/";
+		dialog.website_label = "https://teejeetech.com/";
 		
 		dialog.initialize();
 		dialog.show_all();

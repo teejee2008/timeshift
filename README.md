@@ -55,7 +55,6 @@ You can selectively include items for backup from the ***Settings*** window. Sel
 ![](images/settings_users_rsync.png)
 
 ![](images/settings_filters.png)
-### Better Snapshots & Rotation
 
 *   Unlike similar tools that are scheduled to take backups at a fixed time of the day, Timeshift is designed to run once every hour and take snapshots only when a snapshot is due. This is more suitable for desktop users who keep their laptops and desktops switched on for few hours daily. Scheduling snapshots at a fixed time on such users will result in missed backups since the system may not be running when the snapshot is scheduled to run. By running once every hour and creating snapshots when due, Timeshift ensures that backups are not missed.
 *   Applications like rsnapshot rotate a snapshot to the next level by creating a hard-linked copy. Creating a hard-linked copy may seem like a good idea but it is still a waste of disk space, since only files can be hard-linked and not directories. The duplicated directory structure can take up as much as 100 MB of space. Timeshift avoids this wastage by using tags for maintaining backup levels. Each snapshot will have only one copy on disk and is tagged as "daily", "monthly", etc. The snapshot location will have a set of folders for each backup level ("Monthly", "Daily", etc) with symbolic links pointing to the actual snapshots tagged with the level.
@@ -90,6 +89,7 @@ You can selectively include items for backup from the ***Settings*** window. Sel
   - Only Ubuntu-type layouts with **@** and **@home** subvolumes are supported
   - **@** and **@home** subvolumes may be on same or different BTRFS volumes
   - **@** may be on BTRFS volume and **/home** may be mounted on non-BTRFS partition
+  - If swap files are used they should not be located in **@** or **@home** and could instead be stored in their own subvolume, eg **@swap**
   - Other layouts are not supported
 
 - **GRUB2** - Bootloader must be GRUB2. GRUB legacy and other bootloaders are not supported.
@@ -150,6 +150,8 @@ If you used the installer to install Timeshift, you can remove the installed fil
 
 #### BTRFS volumes
 BTRFS volumes must have an Ubuntu-type layout with **@** and **@home** subvolumes. Other layouts are not supported. Systems having the **@** subvolume and having **/home** on a non-BTRFS partition are also supported.
+
+`Text file busy / btrfs returned an error: 256 / Failed to create snapshot` can occur if you have a Linux swapfile mounted within the **@** or **@home** subvolumes which prevents snapshot from succeeding. Relocate the swapfile out of **@** or **@home*, for example into it's own subvolume like **@swap**.
 #### Disk Space
 Timeshift requires a lot of disk space to keep snapshot data. The device selected as snapshot device must have sufficient free space to store the snapshots that will be created. 
 

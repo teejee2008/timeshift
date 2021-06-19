@@ -2387,7 +2387,7 @@ public class Main : GLib.Object{
 			if (target_distro.dist_type == "redhat"){
 				sh += "%s grub2-mkconfig -o /boot/grub2/grub.cfg \n".printf(chroot);
 			}
-			if (target_distro.dist_type == "arch"){
+			else if (target_distro.dist_type == "arch"){
 				sh += "%s grub-mkconfig -o /boot/grub/grub.cfg \n".printf(chroot);
 			}
 			else{

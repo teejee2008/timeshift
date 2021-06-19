@@ -2385,7 +2385,11 @@ public class Main : GLib.Object{
 			sh += "echo '" + _("Updating GRUB menu...") + "' \n";
 			
 			if (target_distro.dist_type == "redhat"){
-				sh += "%s grub2-mkconfig -o /boot/grub2/grub.cfg \n".printf(chroot);
+				if (target_distro.is_efi){
+					sh += "%s grub2-mkconfig -o /boot/efi/EFI/%s/grub.cfg \n".printf(chroot, target_distro.dist_id);
+				else{
+					sh += "%s grub2-mkconfig -o /boot/grub2/grub.cfg \n".printf(chroot);
+				}
 			}
 			else if (target_distro.dist_type == "arch"){
 				sh += "%s grub-mkconfig -o /boot/grub/grub.cfg \n".printf(chroot);

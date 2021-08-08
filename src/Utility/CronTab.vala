@@ -292,12 +292,19 @@ public class CronTab : GLib.Object {
 		string file_path = "/etc/cron.%s/%s".printf(cron_dir_type, file_name.replace(".","-")); // dot is not allowed in file name
 
 		string sh = "";
-		sh += "SHELL=/bin/bash" + "\n";
-		sh += "PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin" + "\n";
-		if (stop_cron_emails){
-			sh += "MAILTO=\"\"" + "\n";
+		LinuxDistro info = LinuxDistro.get_dist_info("/");
+		
+		if (info.dist_id == "slackware"){
+			sh += "#!/bin/sh\n\n";
 		}
-		sh += "\n";
+		else{
+			sh += "SHELL=/bin/bash" + "\n";
+			sh += "PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin" + "\n";
+			if (stop_cron_emails){
+				sh += "MAILTO=\"\"" + "\n";
+			}
+			sh += "\n";
+		}
 		sh += text + "\n";
 
 		if (file_exists(file_path) && (file_read(file_path) == sh)){
@@ -307,7 +314,14 @@ public class CronTab : GLib.Object {
 
 		file_write(file_path, sh);
 		chown(file_path, "root", "root");
-		chmod(file_path, "644");
+
+		// As this is a script in Slackware, make it executable
+		if (info.dist_id == "slackware"){
+			chmod(file_path, "755");
+		}
+		else{
+			chmod(file_path, "644");
+		}
 
 		log_msg(_("Added cron task") + ": %s".printf(file_path));
 		

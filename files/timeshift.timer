@@ -1,0 +1,10 @@
+[Unit]
+Description=Hourly Timeshift check for snapshots
+Documentation=man:timeshift(1)
+
+[Timer]
+OnCalendar=hourly
+Persistent=true
+
+[Install]
+WantedBy=timers.target

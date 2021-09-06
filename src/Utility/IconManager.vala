@@ -75,13 +75,16 @@ public class IconManager : GLib.Object {
 		}
 
 		// check relative location
-		string base_path = file_parent(file_parent(file_parent(binpath)));
+		string base_path = file_parent(file_parent(binpath));
 		if (base_path != "/"){
-			log_debug("base_path: %s".printf(base_path));
-			path = path_combine(base_path, path);
-			if (dir_exists(path)){
-				search_paths.add(path);
-				log_debug("found images directory: %s".printf(path));
+			base_path = file_parent(base_path);
+			if (base_path != "/"){
+				log_debug("base_path: %s".printf(base_path));
+				path = path_combine(base_path, path);
+				if (dir_exists(path)){
+					search_paths.add(path);
+					log_debug("found images directory: %s".printf(path));
+				}
 			}
 		}
 

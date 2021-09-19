@@ -3077,6 +3077,12 @@ public class Main : GLib.Object{
 		config.set_array_member("exclude",arr);
 
 		arr = new Json.Array();
+		foreach(string path in exclude_list_default){
+			arr.add_string_element(path);
+		}
+		config.set_array_member("exclude_default",arr);
+
+		arr = new Json.Array();
 		foreach(var name in exclude_app_names){
 			arr.add_string_element(name);
 		}

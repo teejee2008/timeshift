@@ -536,31 +536,32 @@ public class Main : GLib.Object{
 
 		// default exclude entries -------------------
 
-		exclude_list_default.add("/dev/*");
-		exclude_list_default.add("/proc/*");
-		exclude_list_default.add("/sys/*");
-		exclude_list_default.add("/media/*");
-		exclude_list_default.add("/mnt/*");
-		exclude_list_default.add("/tmp/*");
-		exclude_list_default.add("/run/*");
-		exclude_list_default.add("/var/run/*");
-		exclude_list_default.add("/var/lock/*");
-		//exclude_list_default.add("/var/spool/*");
-		exclude_list_default.add("/var/lib/docker/*");
-		exclude_list_default.add("/var/lib/schroot/*");
-		exclude_list_default.add("/lost+found");
-		exclude_list_default.add("/timeshift/*");
-		exclude_list_default.add("/timeshift-btrfs/*");
-		exclude_list_default.add("/data/*");
-		exclude_list_default.add("/DATA/*");
-		exclude_list_default.add("/cdrom/*");
-		exclude_list_default.add("/sdcard/*");
-		exclude_list_default.add("/system/*");
-		exclude_list_default.add("/etc/timeshift.json");
-		exclude_list_default.add("/var/log/timeshift/*");
-		exclude_list_default.add("/var/log/timeshift-btrfs/*");
-		exclude_list_default.add("/swapfile");
-		exclude_list_default.add("/snap/*");
+		exclude_list_default.add_all(load_default_exclusions_from_file());
+		//  exclude_list_default.add("/dev/*");
+		//  exclude_list_default.add("/proc/*");
+		//  exclude_list_default.add("/sys/*");
+		//  exclude_list_default.add("/media/*");
+		//  exclude_list_default.add("/mnt/*");
+		//  exclude_list_default.add("/tmp/*");
+		//  exclude_list_default.add("/run/*");
+		//  exclude_list_default.add("/var/run/*");
+		//  exclude_list_default.add("/var/lock/*");
+		//  // exclude_list_default.add("/var/spool/*");
+		//  exclude_list_default.add("/var/lib/docker/*");
+		//  exclude_list_default.add("/var/lib/schroot/*");
+		//  exclude_list_default.add("/lost+found");
+		//  exclude_list_default.add("/timeshift/*");
+		//  exclude_list_default.add("/timeshift-btrfs/*");
+		//  exclude_list_default.add("/data/*");
+		//  exclude_list_default.add("/DATA/*");
+		//  exclude_list_default.add("/cdrom/*");
+		//  exclude_list_default.add("/sdcard/*");
+		//  exclude_list_default.add("/system/*");
+		//  exclude_list_default.add("/etc/timeshift.json");
+		//  exclude_list_default.add("/var/log/timeshift/*");
+		//  exclude_list_default.add("/var/log/timeshift-btrfs/*");
+		//  exclude_list_default.add("/swapfile");
+		//  exclude_list_default.add("/snap/*");
 
 		foreach(var entry in FsTabEntry.read_file("/etc/fstab")){
 
@@ -596,17 +597,17 @@ public class Main : GLib.Object{
 			exclude_list_default_extra.add(entry.mount_point + "/*");
 		}
 
-		exclude_list_default.add("/root/.thumbnails");
-		exclude_list_default.add("/root/.cache");
-		exclude_list_default.add("/root/.dbus");
-		exclude_list_default.add("/root/.gvfs");
-		exclude_list_default.add("/root/.local/share/[Tt]rash");
+		//  exclude_list_default.add("/root/.thumbnails");
+		//  exclude_list_default.add("/root/.cache");
+		//  exclude_list_default.add("/root/.dbus");
+		//  exclude_list_default.add("/root/.gvfs");
+		//  exclude_list_default.add("/root/.local/share/[Tt]rash");
 
-		exclude_list_default.add("/home/*/.thumbnails");
-		exclude_list_default.add("/home/*/.cache");
-		exclude_list_default.add("/home/*/.dbus");
-		exclude_list_default.add("/home/*/.gvfs");
-		exclude_list_default.add("/home/*/.local/share/[Tt]rash");
+		//  exclude_list_default.add("/home/*/.thumbnails");
+		//  exclude_list_default.add("/home/*/.cache");
+		//  exclude_list_default.add("/home/*/.dbus");
+		//  exclude_list_default.add("/home/*/.gvfs");
+		//  exclude_list_default.add("/home/*/.local/share/[Tt]rash");
 
 		// default extra ------------------
 
@@ -3099,6 +3100,54 @@ public class Main : GLib.Object{
 		}
 	}
 
+	public Gee.ArrayList<string> load_default_exclusions_from_file() {
+		var f = File.new_for_path(this.app_conf_path);
+		
+		if (!f.query_exists()) {
+			if ((app_mode == "")||(LOG_DEBUG)){
+				log_msg(_("Config file was not found at") + ": %s".printf(this.app_conf_path) + ". Will use default or file at old path.");
+			}
+			if (file_exists(app_conf_path_old)){
+				// move old file
+				file_move(app_conf_path_old, app_conf_path);
+			}
+			else if (file_exists(app_conf_path_default)){
+				// copy default file
+				file_copy(app_conf_path_default, app_conf_path);
+			}
+		}
+
+		// load settings from config file --------------------------
+		Gee.ArrayList<string> exclusions_from_file = new Gee.ArrayList<string>();
+		var parser = new Json.Parser();
+        try{
+			parser.load_from_file(this.app_conf_path);
+		} catch (Error e) {
+	        log_error (e.message);
+	    }
+        var node = parser.get_root();
+        var config = node.get_object();
+
+		if (config.has_member ("exclude_default")){
+			
+			foreach (Json.Node jnode in config.get_array_member ("exclude_default").get_elements()) {
+				
+				string path = jnode.get_string();
+				
+				if (!exclude_list_default.contains(path)
+					&& !exclusions_from_file.contains(path)
+					&& !exclude_list_home.contains(path)){
+						
+					exclusions_from_file.add(path);
+				}
+			}
+			log_debug("Main: loaded default exclusions.");
+		} else {
+			log_msg("Default exclusions are missing from the config file.");
+		}
+		return exclusions_from_file;
+	}
+
 	public void load_app_config(){
 
 		log_debug("Main: load_app_config()");
@@ -3175,6 +3224,8 @@ public class Main : GLib.Object{
 		Main.first_snapshot_count = (int64) json_get_uint64(config,"snapshot_count", Main.first_snapshot_count);
 		
 		exclude_list_user.clear();
+
+		
 		
 		if (config.has_member ("exclude")){
 			
@@ -4262,7 +4313,6 @@ public class Main : GLib.Object{
 		//Gtk.main_quit ();
 	}
 }
-
 
 
 

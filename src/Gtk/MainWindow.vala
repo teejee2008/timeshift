@@ -673,10 +673,10 @@ class MainWindow : Gtk.Window{
 				store.get (iter, 0, out bak);
 
 				if (App.btrfs_mode){
-					exo_open_folder(bak.path);
+					exo_open_folder(bak.path, false);
 				}
 				else{
-					exo_open_folder(bak.path + "/localhost");
+					exo_open_folder(bak.path + "/localhost", false);
 				}
 				return;
 			}

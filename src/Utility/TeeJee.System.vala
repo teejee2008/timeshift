@@ -339,7 +339,7 @@ namespace TeeJee.System{
 		}
 
 		foreach(string app_name in
-			new string[]{ "nemo", "nautilus", "thunar", "pantheon-files", "marlin"}){
+			new string[]{ "nemo", "nautilus", "thunar", "io.elementary.files", "pantheon-files", "marlin", "dolphin" }){
 				
 			path = get_cmd_path (app_name);
 			if ((path != null)&&(path != "")){

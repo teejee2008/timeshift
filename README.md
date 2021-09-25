@@ -120,6 +120,10 @@ DEB packages are available on [Releases](https://github.com/teejee2008/Timeshift
 
 #### Fedora
 
+Fedora is not fully supported. BTRFS snapshots only support Ubuntu-specific layouts. 
+
+Take a look at the [issue tracker](https://github.com/teejee2008/timeshift/issues) for open issues and use it with caution. 
+
 ```sh
 sudo dnf update
 sudo dnf install timeshift
@@ -152,29 +156,34 @@ If you used the installer to install Timeshift, you can remove the installed fil
 BTRFS volumes must have an Ubuntu-type layout with **@** and **@home** subvolumes. Other layouts are not supported. Systems having the **@** subvolume and having **/home** on a non-BTRFS partition are also supported.
 
 `Text file busy / btrfs returned an error: 256 / Failed to create snapshot` can occur if you have a Linux swapfile mounted within the **@** or **@home** subvolumes which prevents snapshot from succeeding. Relocate the swapfile out of **@** or **@home*, for example into it's own subvolume like **@swap**.
+
 #### Disk Space
+
 Timeshift requires a lot of disk space to keep snapshot data. The device selected as snapshot device must have sufficient free space to store the snapshots that will be created. 
 
-If the backup device is running out of space, try the following steps:  
+If the backup device is running out of space, try the following steps:
 
 *   Reduce the number of backup levels - Uncheck the backup levels and keep only one selected
 *   Reduce the number of snapshots that are kept - In the _Schedule_ tab set the number of snapshots to 5 or less.
 *   You can also disable scheduled snapshots completely and create snapshots manually when required
 
 #### Bootloader & EFI
-* Only those systems are supported which use GRUB2 bootloader. Trying to create and restore snapshots on a system using older versions of GRUB will result in a non-bootable system.  
+
+* Only those systems are supported which use GRUB2 bootloader. Trying to create and restore snapshots on a system using older versions of GRUB will result in a non-bootable system.
 * EFI systems are fully supported. Ensure that the ***/boot/efi*** partition is mapped while restoring a snapshot. It will be mapped automatically if detected.
 * If you are restoring from Live CD/USB, and your installed system uses EFI mode, then you must boot from Live CD/USB in EFI mode.
 
 ## Support
 
+This is a free application that is provided "as-is" without support or warranty.
+
 If you use Linux Mint and need support for an issue please use the [Linux Mint support forums](https://forums.linuxmint.com)
 
-Issues reported on the Issue Tracker will be fixed during the next update. Please do not expect a response as the tracker is checked once a year when the app is being updated.
+Issues reported on the Issue Tracker will be fixed during the next update. Updates are done once a year due to lack of time and developers.
 
 ## Disclaimer
 
-This program is free for personal and commercial use and comes with absolutely no warranty. You use this program entirely at your own risk. The author will not be liable for any damages arising from the use of this program. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.   
+This program is free for personal and commercial use and comes with absolutely no warranty. You use this program entirely at your own risk. The author will not be liable for any damages arising from the use of this program. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 ## Contribute
 
@@ -187,11 +196,11 @@ You can contribute to this project in various ways:
 
 ## Donate
 
-*Timeshift* is a non-commercial application. I work on it during my free time based on my requirements and interest. If you wish to support this project, you can make a donation for $10 or more via PayPal. Your contributions will help keep the project alive.
+*Timeshift* is a non-commercial application. I work on it during my free time based on my requirements and interest. If you wish to support this project, you can make a donation via PayPal.
 
 **PayPal**
 
-[![](images/PayPal.png)](https://www.paypal.com/cgi-bin/webscr?business=teejeetech@gmail.com&cmd=_xclick&currency_code=USD&amount=10&item_name=Timeshift%20Donation)  
+[![](images/PayPal.png)](https://www.paypal.com/cgi-bin/webscr?business=teejeetech@gmail.com&cmd=_xclick&currency_code=USD&amount=10&item_name=Timeshift%20Donation)
 
 **Bitcoin** ~ You can send bitcoins at this address or by scanning the QR code below:
 

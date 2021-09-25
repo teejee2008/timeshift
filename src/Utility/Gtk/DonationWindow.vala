@@ -67,7 +67,7 @@ public class DonationWindow : Gtk.Window {
 
 		add_label(msg);
 
-		msg = _("If you find this application useful, consider making a donation to support the development.");
+		msg = _("This software is updated once a year due to lack of time, developers, and funds. You can support this project by making a donation with PayPal.");
 
 		add_label(msg);
 		
@@ -97,7 +97,7 @@ public class DonationWindow : Gtk.Window {
 		
 		hbox = add_hbox();
 
-		add_button(hbox, _("Website"), "https://teejeetech.com/");
+		add_button(hbox, _("Visit Website"), "https://teejeetech.com/");
 
 		add_button(hbox, _("More Apps"), "https://teejeetech.com/shop/");
 		

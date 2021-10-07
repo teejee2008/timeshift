@@ -428,10 +428,10 @@ public class Device : GLib.Object{
 
 			try{
 				if (lsblk_is_ancient){
-					rex = new Regex("""NAME="(.*)" KNAME="(.*)" LABEL="(.*)" UUID="(.*)" TYPE="(.*)" FSTYPE="(.*)" SIZE="(.*)" MOUNTPOINT="(.*)" MODEL="(.*)" RO="([0-9]+)" RM="([0-9]+)" MAJ:MIN="([0-9:]+)"""");
+					rex = new Regex("""NAME="(.*)" KNAME="(.*)" LABEL="(.*)" UUID="(.*)" TYPE="(.*)" FSTYPE="(.*)" SIZE="(.*)" MOUNTPOINT="(.*)" MODEL="(.*)" RO="([0-9]+)" RM="([0-9]+)" MAJ[_:]MIN="([0-9:]+)"""");
 				}
 				else{
-					rex = new Regex("""NAME="(.*)" KNAME="(.*)" LABEL="(.*)" UUID="(.*)" TYPE="(.*)" FSTYPE="(.*)" SIZE="(.*)" MOUNTPOINT="(.*)" MODEL="(.*)" RO="([0-9]+)" HOTPLUG="([0-9]+)" MAJ:MIN="([0-9:]+)" PARTLABEL="(.*)" PARTUUID="(.*)" PKNAME="(.*)" VENDOR="(.*)" SERIAL="(.*)" REV="(.*)"""");
+					rex = new Regex("""NAME="(.*)" KNAME="(.*)" LABEL="(.*)" UUID="(.*)" TYPE="(.*)" FSTYPE="(.*)" SIZE="(.*)" MOUNTPOINT="(.*)" MODEL="(.*)" RO="([0-9]+)" HOTPLUG="([0-9]+)" MAJ[_:]MIN="([0-9:]+)" PARTLABEL="(.*)" PARTUUID="(.*)" PKNAME="(.*)" VENDOR="(.*)" SERIAL="(.*)" REV="(.*)"""");
 				}
 
 				if (rex.match (line, 0, out match)){
@@ -1423,9 +1423,9 @@ public class Device : GLib.Object{
 				// use password to unlock
 
 				var cmd = "echo -n -e '%s' | cryptsetup luksOpen --key-file - '%s' '%s'\n".printf(
-					luks_pass, luks_device.device, luks_name);
+					escape_single_quote(luks_pass), luks_device.device, luks_name);
 
-				log_debug(cmd.replace(luks_pass, "**PASSWORD**"));
+				log_debug(cmd.replace(escape_single_quote(luks_pass), "**PASSWORD**"));
 				
 				int status = exec_script_sync(cmd, out std_out, out std_err, false, true);
 
@@ -1469,9 +1469,9 @@ public class Device : GLib.Object{
 				// use password to unlock
 
 				var cmd = "echo -n -e '%s' | cryptsetup luksOpen --key-file - '%s' '%s'\n".printf(
-					luks_pass, luks_device.device, luks_name);
+					escape_single_quote(luks_pass), luks_device.device, luks_name);
 
-				log_debug(cmd.replace(luks_pass, "**PASSWORD**"));
+				log_debug(cmd.replace(escape_single_quote(luks_pass), "**PASSWORD**"));
 				
 				int status = exec_script_sync(cmd, out std_out, out std_err, false, true);
 
@@ -1515,6 +1515,7 @@ public class Device : GLib.Object{
 	}
 
 	public static bool luks_lock(string kname, Gtk.Window? parent_window){
+		
 		var cmd = "cryptsetup luksClose %s".printf(kname);
 
 		log_debug(cmd);
@@ -1961,51 +1962,10 @@ public class Device : GLib.Object{
 		return "<tt>%s</tt>".printf(tt);
 	}
 
-	private string display_name(bool short_name = true, bool show_label = true, bool show_parent = true, bool show_alias = false){
-	
-		string txt = "";
-
-		if (short_name){
-			txt += kname;
-		}
-		else{
-			txt += device;
-		}
-
-		if (type == "disk"){
-			if (vendor.length > 0){
-				txt += " " + vendor;
-			}
-			if (model.length > 0){
-				txt += " " + model;
-			}
-			if (size_bytes > 0) {
-				if (txt.strip().length == 0){
-					txt += "%s Device".printf(format_file_size(size_bytes, false, "", true, 0));
-				}
-				else{
-					txt += " (%s)".printf(format_file_size(size_bytes, false, "", true, 0));
-				}
-			}
-		}
-		else{
-			if (show_label && (label.length > 0)){
-				txt += "(%s)".printf(label);
-			}
-			if (show_parent && has_parent() && (parent.type == "part")){ // TODO: if parent is crypt (like lvm on luks)
-				txt += "(%s)".printf(pkname);
-			}
-			if (show_alias && (mapped_name.length > 0)){
-				txt += "(%s)".printf(mapped_name);
-			}
-		}
-		
-		return txt;
-	}	
-	
 	// testing -----------------------------------
 
 	public static void test_all(){
+		
 		var list = get_block_devices_using_lsblk();
 		log_msg("\n> get_block_devices_using_lsblk()");
 		print_device_list(list);

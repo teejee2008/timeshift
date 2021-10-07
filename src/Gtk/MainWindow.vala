@@ -250,7 +250,7 @@ class MainWindow : Gtk.Window{
 		
 		// scrolled
 		var scrolled = new Gtk.ScrolledWindow(null, null);
-		scrolled.set_shadow_type (ShadowType.ETCHED_IN);
+		//scrolled.set_shadow_type (ShadowType.ETCHED_IN);
 		//scrolled.margin = 6;
 		//scrolled.margin_top = 0;
 		scrolled.hscrollbar_policy = Gtk.PolicyType.NEVER;
@@ -298,7 +298,7 @@ class MainWindow : Gtk.Window{
 
 		// scrolled
         scrolled = new Gtk.ScrolledWindow(null, null);
-		scrolled.set_shadow_type (ShadowType.ETCHED_IN);
+		//scrolled.set_shadow_type (ShadowType.ETCHED_IN);
 		scrolled.hscrollbar_policy = Gtk.PolicyType.NEVER;
 		scrolled.vscrollbar_policy = Gtk.PolicyType.NEVER;
 		scrolled.set_no_show_all(true);
@@ -334,7 +334,7 @@ class MainWindow : Gtk.Window{
         //vbox_free_space = vbox;
 
         scrolled = new Gtk.ScrolledWindow(null, null);
-		scrolled.set_shadow_type (ShadowType.ETCHED_IN);
+		//scrolled.set_shadow_type (ShadowType.ETCHED_IN);
 		scrolled.hscrollbar_policy = Gtk.PolicyType.NEVER;
 		scrolled.vscrollbar_policy = Gtk.PolicyType.NEVER;
 		scrolled.set_no_show_all(true);
@@ -616,6 +616,7 @@ class MainWindow : Gtk.Window{
 
 		var store = (Gtk.ListStore) snapshot_list_box.treeview.model;
 		bool iterExists = store.get_iter_first (out iter);
+		bool marked = false;
 		
 		while (iterExists && is_success) {
 			
@@ -625,14 +626,19 @@ class MainWindow : Gtk.Window{
 				store.get (iter, 0, out bak);
 				// mark for deletion
 				bak.mark_for_deletion();
+				// have any snapshots been marked?
+				marked = marked || bak.marked_for_deletion;
 			}
 			iterExists = store.iter_next (ref iter);
 		}
 
 		App.repo.load_snapshots();
 
-		gtk_messagebox(_("Marked for deletion"), 
-			_("Snapshots will be removed during the next scheduled run"),
+		string title = (marked ? "Marked " : "Unmarked ") + "for deletion";
+		string message = (marked ? "Snapshots will " : "Snapshots will not ") + "be removed during the next scheduled run";
+
+		gtk_messagebox(_(title),
+			_(message),
 			this, false);
 
 		snapshot_list_box.refresh();
@@ -667,10 +673,10 @@ class MainWindow : Gtk.Window{
 				store.get (iter, 0, out bak);
 
 				if (App.btrfs_mode){
-					exo_open_folder(bak.path);
+					exo_open_folder(bak.path, false);
 				}
 				else{
-					exo_open_folder(bak.path + "/localhost");
+					exo_open_folder(bak.path + "/localhost", false);
 				}
 				return;
 			}
@@ -916,7 +922,7 @@ class MainWindow : Gtk.Window{
 
 	private void btn_about_clicked (){
 		
-		var dialog = new AboutWindow();
+		var dialog = new AboutWindow(this);
 		dialog.set_transient_for (this);
 
 		dialog.authors = {
@@ -939,13 +945,13 @@ class MainWindow : Gtk.Window{
 
 		dialog.program_name = AppName;
 		dialog.comments = _("System Restore Utility");
-		dialog.copyright = "Copyright © 2012-18 Tony George (%s)".printf(AppAuthorEmail);
+		dialog.copyright = "Copyright © 2012-21 Tony George (%s)".printf(AppAuthorEmail);
 		dialog.version = AppVersion;
 		dialog.logo = IconManager.lookup("timeshift", 256);
 
 		//dialog.license = "";
-		dialog.website = "https://teejeetech.in/";
-		dialog.website_label = "https://teejeetech.in/";
+		dialog.website = "https://teejeetech.com/";
+		dialog.website_label = "https://teejeetech.com/";
 		
 		dialog.initialize();
 		dialog.show_all();

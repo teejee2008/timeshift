@@ -191,8 +191,7 @@ public class FsTabEntry : GLib.Object{
 		}
 	}
 
-	public static FsTabEntry? find_entry_by_mount_point(
-		Gee.ArrayList<FsTabEntry> entries, string mount_path){
+	public static FsTabEntry? find_entry_by_mount_point(Gee.ArrayList<FsTabEntry> entries, string mount_path){
 			
 		foreach(var entry in entries){
 			if (entry.mount_point == mount_path){
@@ -203,6 +202,7 @@ public class FsTabEntry : GLib.Object{
 	}
 
 	public Device? resolve_device(Gee.ArrayList<CryptTabEntry> crypttab, Gtk.Window? parent_window){
+		
 		Device dev_fstab = null;
 		if (device_uuid.length > 0){
 			dev_fstab = Device.get_device_by_uuid(device_uuid);

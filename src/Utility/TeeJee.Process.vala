@@ -23,6 +23,7 @@
  */
  
 namespace TeeJee.ProcessHelper{
+	
 	using TeeJee.Logging;
 	using TeeJee.FileSystem;
 	using TeeJee.Misc;
@@ -77,7 +78,7 @@ namespace TeeJee.ProcessHelper{
 	
 	public int exec_script_sync (string script,
 		out string? std_out = null, out string? std_err = null,
-		bool supress_errors = false, bool run_as_admin = false,
+		bool supress_errors = false, bool run_as_admin = false, 
 		bool cleanup_tmp = true, bool print_to_terminal = false){
 
 		/* Executes commands synchronously.
@@ -342,35 +343,6 @@ namespace TeeJee.ProcessHelper{
 		return -1;
 	}
 
-	public void get_proc_io_stats(int pid, out int64 read_bytes, out int64 write_bytes){
-
-		/* Returns the number of bytes read and written by a process to disk */
-		
-		string io_stat_file_path = "/proc/%d/io".printf(pid);
-		var file = File.new_for_path(io_stat_file_path);
-
-		read_bytes = 0;
-		write_bytes = 0;
-
-		try {
-			if (file.query_exists()){
-				var dis = new DataInputStream (file.read());
-				string line;
-				while ((line = dis.read_line (null)) != null) {
-					if(line.has_prefix("rchar:")){
-						read_bytes = int64.parse(line.replace("rchar:","").strip());
-					}
-					else if(line.has_prefix("wchar:")){
-						write_bytes = int64.parse(line.replace("wchar:","").strip());
-					}
-				}
-			} //stream closed
-		}
-		catch(Error e){
-			log_error (e.message);
-		}
-	}
-
 	// dep: ps TODO: Rewrite using /proc
 	public bool process_is_running(long pid){
 
@@ -450,13 +422,13 @@ namespace TeeJee.ProcessHelper{
 		 * */
 
 		int[] child_pids = get_process_children (process_pid);
-		Posix.kill (process_pid, Posix.SIGTERM);
+		Posix.kill (process_pid, Posix.Signal.TERM);
 
 		if (killChildren){
 			Pid childPid;
 			foreach (long pid in child_pids){
 				childPid = (Pid) pid;
-				Posix.kill (childPid, Posix.SIGTERM);
+				Posix.kill (childPid, Posix.Signal.TERM);
 			}
 		}
 	}
@@ -469,13 +441,13 @@ namespace TeeJee.ProcessHelper{
 		 * */
 		
 		int[] child_pids = get_process_children (process_pid);
-		Posix.kill (process_pid, Posix.SIGKILL);
+		Posix.kill (process_pid, Posix.Signal.KILL);
 
 		if (killChildren){
 			Pid childPid;
 			foreach (long pid in child_pids){
 				childPid = (Pid) pid;
-				Posix.kill (childPid, Posix.SIGKILL);
+				Posix.kill (childPid, Posix.Signal.KILL);
 			}
 		}
 	}

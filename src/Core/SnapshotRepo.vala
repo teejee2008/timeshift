@@ -270,10 +270,6 @@ public class SnapshotRepo : GLib.Object{
 		else{
 			return "";
 		}
-
-		log_debug("SnapshotRepo: unlock_and_mount_device(): exit");
-				
-		return "";
 	}
 
 	public Device? unlock_encrypted_device(Device luks_device){

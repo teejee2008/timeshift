@@ -63,11 +63,11 @@ public class DonationWindow : Gtk.Window {
 
 		// -----------------------------
 
-		string msg = _("This software is free for personal and commercial use. It is distributed in the hope that it is useful but without any warranty. See the GNU General Public License v2 or later for more information");
+		string msg = _("This software is free for personal and commercial use. It is distributed in the hope that it is useful but without any warranty or support. See the GNU General Public License v2 or later for more information");
 
 		add_label(msg);
 
-		msg = _("If you find this application useful, consider making a donation to support the development.");
+		msg = _("This software is updated once a year due to lack of time, developers, and funds. You can support this project by making a donation with PayPal.");
 
 		add_label(msg);
 		
@@ -77,35 +77,31 @@ public class DonationWindow : Gtk.Window {
 			"https://www.paypal.com/cgi-bin/webscr?business=teejeetech@gmail.com&cmd=_xclick&currency_code=USD&item_name=%s+Donation".printf(appname));
 
 		// -----------------------------
-
-		msg = format_heading(_("Support")) + "   ";
-
-		add_label(msg);
 		
-		msg = _("Since this a free application there is no dedicated support for this app. You can use the GitHub issue tracker for reporting issues, or post your questions on the Linux Mint forums. Please avoid reporting issues by email.");
+		msg = _("Use the GitHub issue tracker for reporting issues, or post your questions on the Linux Mint forums. Please avoid reporting issues by email.");
 		
 		add_label(msg);
 
 		hbox = add_vbox();
 
-		add_button(hbox, _("GitHub"),
-			"https://github.com/teejee2008/%s/issues".printf(appname.down()));
+		add_button(hbox, _("GitHub"), "https://github.com/teejee2008/%s/issues".printf(appname.down()));
 
 		if (has_wiki){
-			
-			add_button(hbox, _("Wiki"),
-				"https://github.com/teejee2008/%s/wiki".printf(appname.down()));
+			add_button(hbox, _("Wiki"), "https://github.com/teejee2008/%s/wiki".printf(appname.down()));
 		}
-
-		add_button(hbox, _("Website"),
-			"https://teejeetech.in/");
 		
 		// close window ---------------------------------------------------------
 
+		var lbl_dummy = add_label("");
+		lbl_dummy.margin = 20;
+		
 		hbox = add_hbox();
+
+		add_button(hbox, _("Visit Website"), "https://teejeetech.com/");
+
+		add_button(hbox, _("More Apps"), "https://teejeetech.com/shop/");
 		
 		var button = new Gtk.Button.with_label(_("Close"));
-		button.margin_top = 24;
 		hbox.add(button);
 		
 		button.clicked.connect(() => {

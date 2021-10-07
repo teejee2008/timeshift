@@ -26,7 +26,6 @@ using Gtk;
 using Gee;
 using Json;
 
-
 using TeeJee.Logging;
 using TeeJee.FileSystem;
 using TeeJee.JsonHelper;
@@ -38,7 +37,7 @@ using TeeJee.Misc;
 public Main App;
 public const string AppName = "Timeshift";
 public const string AppShortName = "timeshift";
-public const string AppVersion = "20.03";
+public const string AppVersion = "21.09.1";
 public const string AppAuthor = "Tony George";
 public const string AppAuthorEmail = "teejeetech@gmail.com";
 
@@ -72,6 +71,7 @@ public class AppGtk : GLib.Object {
 	}
 
 	private static void set_locale() {
+		
 		log_debug("setting locale...");
 		Intl.setlocale(GLib.LocaleCategory.MESSAGES, "timeshift");
 		Intl.textdomain(GETTEXT_PACKAGE);
@@ -107,6 +107,7 @@ public class AppGtk : GLib.Object {
 	}
 
 	public static string help_message() {
+		
 		string msg = "\n%s v%s by Tony George (%s)\n".printf(AppName, AppVersion, AppAuthorEmail);
 		msg += "\n";
 		msg += _("Syntax") + ": timeshift-gtk [options]\n";
@@ -123,6 +124,7 @@ public class AppGtk : GLib.Object {
 	public static void check_if_admin(){
 		
 		if (!user_is_admin()){
+			
 			var msg = _("Admin access is required to backup and restore system files.") + "\n";
 			msg += _("Please re-run the application as admin (using 'sudo' or 'su')");
 

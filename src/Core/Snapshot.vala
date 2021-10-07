@@ -564,9 +564,11 @@ public class Snapshot : GLib.Object{
 		
 		if (!file_exists(delete_trigger_file)){
 			file_write(delete_trigger_file, "");
+			marked_for_deletion = true;
+		} else {
+			file_delete(delete_trigger_file);
+			marked_for_deletion = false;
 		}
-		
-		marked_for_deletion = true;
 	}
 
 	public void parse_log_file(){

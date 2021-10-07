@@ -53,8 +53,7 @@ namespace TeeJee.GtkHelper{
 		gtk_do_events ();
 	}
 
-	public void gtk_messagebox(
-		string title, string message, Gtk.Window? parent_win, bool is_error = false){
+	public void gtk_messagebox(string title, string message, Gtk.Window? parent_win, bool is_error = false){
 
 		/* Shows a simple message box */
 
@@ -81,8 +80,7 @@ namespace TeeJee.GtkHelper{
 		dlg.destroy();
 	}
 
-	public string? gtk_inputbox(
-		string title, string message, Gtk.Window? parent_win, bool mask_password = false){
+	public string? gtk_inputbox(string title, string message, Gtk.Window? parent_win, bool mask_password = false){
 
 		/* Shows a simple input prompt */
 
@@ -117,11 +115,8 @@ namespace TeeJee.GtkHelper{
 		content.margin = 6;
 		
 		//add buttons
-		var actions = (Box) dlg.get_action_area ();
 		dlg.add_button(_("OK"),Gtk.ResponseType.OK);
 		dlg.add_button(_("Cancel"),Gtk.ResponseType.CANCEL);
-		//actions.margin = 6;
-		actions.margin_top = 12;
 		
 		//keyboard shortcuts
 		txt_input.key_press_event.connect ((w, event) => {
@@ -194,10 +189,7 @@ namespace TeeJee.GtkHelper{
 		return val;
 	}
 
-	public GLib.Object gtk_combobox_get_selected_object (
-		ComboBox combo,
-		int index,
-		GLib.Object default_value){
+	public GLib.Object gtk_combobox_get_selected_object (ComboBox combo, int index, GLib.Object default_value){
 
 		/* Conveniance function to get combobox value */
 
@@ -230,6 +222,7 @@ namespace TeeJee.GtkHelper{
 	// styles ----------------
 
 	public static int CSS_AUTO_CLASS_INDEX = 0;
+	
 	public static void gtk_apply_css(Gtk.Widget[] widgets, string css_style){
 		var css_provider = new Gtk.CssProvider();
 		var css = ".style_%d { %s }".printf(++CSS_AUTO_CLASS_INDEX, css_style);
@@ -262,98 +255,12 @@ namespace TeeJee.GtkHelper{
 		return count;
 	}
 
-	public void gtk_stripe_row(
-		Gtk.CellRenderer cell,
-		bool odd_row,
-		string odd_color = "#F4F6F7",
-		string even_color = "#FFFFFF"){
-
-		if (cell is Gtk.CellRendererText){
-			(cell as Gtk.CellRendererText).background = odd_row ? odd_color : even_color;
-		}
-		else if (cell is Gtk.CellRendererPixbuf){
-			(cell as Gtk.CellRendererPixbuf).cell_background = odd_row ? odd_color : even_color;
-		}
-	}
-
 	public void gtk_treeview_redraw(Gtk.TreeView treeview){
 		var model = treeview.model;
 		treeview.model = null;
 		treeview.model = model;
 	}
 	
-	// menu
-	
-	public void gtk_menu_add_separator(Gtk.Menu menu){
-		Gdk.RGBA gray = Gdk.RGBA();
-		gray.parse ("rgba(200,200,200,1)");
-		
-		// separator
-		var menu_item = new Gtk.SeparatorMenuItem();
-		menu_item.override_color (StateFlags.NORMAL, gray);
-		menu.append(menu_item);
-	}
-
-	public Gtk.MenuItem gtk_menu_add_item(
-		Gtk.Menu menu,
-		string label,
-		string tooltip,
-		Gtk.Image? icon_image,
-		Gtk.SizeGroup? sg_icon = null,
-		Gtk.SizeGroup? sg_label = null){
-
-		var menu_item = new Gtk.MenuItem();
-		menu.append(menu_item);
-			
-		var box = new Gtk.Box(Orientation.HORIZONTAL, 3);
-		menu_item.add(box);
-
-		// add icon
-
-		if (icon_image == null){
-			var dummy = new Gtk.Label("");
-			box.add(dummy);
-
-			if (sg_icon != null){
-				sg_icon.add_widget(dummy);
-			}
-		}
-		else{
-			box.add(icon_image);
-
-			if (sg_icon != null){
-				sg_icon.add_widget(icon_image);
-			}
-		}
-		
-		// add label
-		
-		var lbl = new Gtk.Label(label);
-		lbl.xalign = (float) 0.0;
-		lbl.margin_right = 6;
-		box.add(lbl);
-
-		if (sg_label != null){
-			sg_label.add_widget(lbl);
-		}
-
-		box.set_tooltip_text(tooltip);
-
-		return menu_item;
-	}
-
-	// build ui
-
-	public Gtk.Label gtk_box_add_header(Gtk.Box box, string text){
-		var label = new Gtk.Label("<b>" + text + "</b>");
-		label.set_use_markup(true);
-		label.xalign = (float) 0.0;
-		label.margin_bottom = 6;
-		box.add(label);
-
-		return label;
-	}
-
 	// misc
 	
 	public bool gtk_container_has_child(Gtk.Container container, Gtk.Widget widget){
@@ -365,31 +272,6 @@ namespace TeeJee.GtkHelper{
 		return false;
 	}
 
-
-	private void text_view_append(Gtk.TextView view, string text){
-		TextIter iter;
-		view.buffer.get_end_iter(out iter);
-		view.buffer.insert(ref iter, text, text.length);
-	}
-
-	private void text_view_prepend(Gtk.TextView view, string text){
-		TextIter iter;
-		view.buffer.get_start_iter(out iter);
-		view.buffer.insert(ref iter, text, text.length);
-	}
-
-	private void text_view_scroll_to_end(Gtk.TextView view){
-		TextIter iter;
-		view.buffer.get_end_iter(out iter);
-		view.scroll_to_iter(iter, 0.0, false, 0.0, 0.0);
-	}
-
-	private void text_view_scroll_to_start(Gtk.TextView view){
-		TextIter iter;
-		view.buffer.get_start_iter(out iter);
-		view.scroll_to_iter(iter, 0.0, false, 0.0, 0.0);
-	}
-	
 	// file chooser ----------------
 	
 	public Gtk.FileFilter create_file_filter(string group_name, string[] patterns) {
@@ -404,8 +286,7 @@ namespace TeeJee.GtkHelper{
 	// utility ------------------
 
 	// add_notebook
-	private Gtk.Notebook add_notebook(
-		Gtk.Box box, bool show_tabs = true, bool show_border = true){
+	private Gtk.Notebook add_notebook(Gtk.Box box, bool show_tabs = true, bool show_border = true){
 			
         // notebook
 		var book = new Gtk.Notebook();
@@ -418,29 +299,12 @@ namespace TeeJee.GtkHelper{
 		return book;
 	}
 
-	// add_tab
-	private Gtk.Box add_tab(
-		Gtk.Notebook book, string title, int margin = 12, int spacing = 6){
-			
-		// label
-		var label = new Gtk.Label(title);
-
-        // vbox
-        var vbox = new Gtk.Box(Gtk.Orientation.VERTICAL, spacing);
-        vbox.margin = margin;
-        book.append_page (vbox, label);
-
-        return vbox;
-	}
-
 	// add_treeview
-	private Gtk.TreeView add_treeview(Gtk.Box box,
-		Gtk.SelectionMode selection_mode = Gtk.SelectionMode.SINGLE){
+	private Gtk.TreeView add_treeview(Gtk.Box box, Gtk.SelectionMode selection_mode = Gtk.SelectionMode.SINGLE){
 			
 		// TreeView
 		var treeview = new TreeView();
 		treeview.get_selection().mode = selection_mode;
-		treeview.set_rules_hint (true);
 		treeview.show_expanders = true;
 		treeview.enable_tree_lines = true;
 
@@ -455,8 +319,7 @@ namespace TeeJee.GtkHelper{
 	}
 
 	// add_column_text
-	private Gtk.TreeViewColumn add_column_text(
-		Gtk.TreeView treeview, string title, out Gtk.CellRendererText cell){
+	private Gtk.TreeViewColumn add_column_text(Gtk.TreeView treeview, string title, out Gtk.CellRendererText cell){
 			
 		// TreeViewColumn
 		var col = new Gtk.TreeViewColumn();
@@ -470,10 +333,8 @@ namespace TeeJee.GtkHelper{
 		return col;
 	}
 
-
 	// add_column_icon
-	private Gtk.TreeViewColumn add_column_icon(
-		Gtk.TreeView treeview, string title, out Gtk.CellRendererPixbuf cell){
+	private Gtk.TreeViewColumn add_column_icon(Gtk.TreeView treeview, string title, out Gtk.CellRendererPixbuf cell){
 		
 		// TreeViewColumn
 		var col = new Gtk.TreeViewColumn();
@@ -488,8 +349,7 @@ namespace TeeJee.GtkHelper{
 	}
 
 	// add_column_icon_and_text
-	private Gtk.TreeViewColumn add_column_icon_and_text(
-		Gtk.TreeView treeview, string title,
+	private Gtk.TreeViewColumn add_column_icon_and_text(Gtk.TreeView treeview, string title,
 		out Gtk.CellRendererPixbuf cell_pix, out Gtk.CellRendererText cell_text){
 			
 		// TreeViewColumn
@@ -509,8 +369,7 @@ namespace TeeJee.GtkHelper{
 	}
 
 	// add_column_radio_and_text
-	private Gtk.TreeViewColumn add_column_radio_and_text(
-		Gtk.TreeView treeview, string title,
+	private Gtk.TreeViewColumn add_column_radio_and_text(Gtk.TreeView treeview, string title,
 		out Gtk.CellRendererToggle cell_radio, out Gtk.CellRendererText cell_text){
 			
 		// TreeViewColumn
@@ -532,11 +391,8 @@ namespace TeeJee.GtkHelper{
 	}
 
 	// add_column_icon_radio_text
-	private Gtk.TreeViewColumn add_column_icon_radio_text(
-		Gtk.TreeView treeview, string title,
-		out Gtk.CellRendererPixbuf cell_pix,
-		out Gtk.CellRendererToggle cell_radio,
-		out Gtk.CellRendererText cell_text){
+	private Gtk.TreeViewColumn add_column_icon_radio_text(Gtk.TreeView treeview, string title, 
+		out Gtk.CellRendererPixbuf cell_pix, out Gtk.CellRendererToggle cell_radio, out Gtk.CellRendererText cell_text){
 			
 		// TreeViewColumn
 		var col = new Gtk.TreeViewColumn();
@@ -561,9 +417,7 @@ namespace TeeJee.GtkHelper{
 	}
 
 	// add_label_scrolled
-	private Gtk.Label add_label_scrolled(
-		Gtk.Box box, string text,
-		bool show_border = false, bool wrap = false, int ellipsize_chars = 40){
+	private Gtk.Label add_label_scrolled(Gtk.Box box, string text, bool show_border = false, bool wrap = false, int ellipsize_chars = 40){
 
 		// ScrolledWindow
 		var scroll = new Gtk.ScrolledWindow(null, null);
@@ -592,40 +446,12 @@ namespace TeeJee.GtkHelper{
 		if (show_border){
 			scroll.set_shadow_type (ShadowType.ETCHED_IN);
 		}
-		else{
-			label.margin_left = 0;
-		}
-		
+
 		return label;
 	}
 
-	// add_text_view
-	private Gtk.TextView add_text_view(
-		Gtk.Box box, string text){
-
-		// ScrolledWindow
-		var scrolled = new Gtk.ScrolledWindow(null, null);
-		scrolled.hscrollbar_policy = PolicyType.NEVER;
-		scrolled.vscrollbar_policy = PolicyType.ALWAYS;
-		scrolled.expand = true;
-		box.add(scrolled);
-		
-		var view = new Gtk.TextView();
-		view.wrap_mode = Gtk.WrapMode.WORD_CHAR;
-		view.accepts_tab = false;
-		view.editable = false;
-		view.cursor_visible = false;
-		view.buffer.text = text;
-		view.sensitive = false;
-		scrolled.add (view);
-
-		return view;
-	}
-		
 	// add_label
-	private Gtk.Label add_label(
-		Gtk.Box box, string text, bool bold = false,
-		bool italic = false, bool large = false){
+	private Gtk.Label add_label(Gtk.Box box, string text, bool bold = false, bool italic = false, bool large = false){
 			
 		string msg = "<span%s%s%s>%s</span>".printf(
 			(bold ? " weight=\"bold\"" : ""),
@@ -642,9 +468,7 @@ namespace TeeJee.GtkHelper{
 		return label;
 	}
 
-	private string format_text(
-		string text,
-		bool bold = false, bool italic = false, bool large = false){
+	private string format_text(string text, bool bold = false, bool italic = false, bool large = false){
 			
 		string msg = "<span%s%s%s>%s</span>".printf(
 			(bold ? " weight=\"bold\"" : ""),
@@ -656,8 +480,7 @@ namespace TeeJee.GtkHelper{
 	}
 
 	// add_label_header
-	private Gtk.Label add_label_header(
-		Gtk.Box box, string text, bool large_heading = false){
+	private Gtk.Label add_label_header(Gtk.Box box, string text, bool large_heading = false){
 		
 		var label = add_label(box, escape_html(text), true, false, large_heading);
 		label.margin_bottom = 12;
@@ -665,17 +488,14 @@ namespace TeeJee.GtkHelper{
 	}
 
 	// add_label_subnote
-	private Gtk.Label add_label_subnote(
-		Gtk.Box box, string text){
+	private Gtk.Label add_label_subnote(Gtk.Box box, string text){
 		
 		var label = add_label(box, text, false, true);
-		label.margin_left = 6;
 		return label;
 	}
 
 	// add_radio
-	private Gtk.RadioButton add_radio(
-		Gtk.Box box, string text, Gtk.RadioButton? another_radio_in_group){
+	private Gtk.RadioButton add_radio(Gtk.Box box, string text, Gtk.RadioButton? another_radio_in_group){
 
 		Gtk.RadioButton radio = null;
 
@@ -702,8 +522,7 @@ namespace TeeJee.GtkHelper{
 	}
 
 	// add_checkbox
-	private Gtk.CheckButton add_checkbox(
-		Gtk.Box box, string text){
+	private Gtk.CheckButton add_checkbox(Gtk.Box box, string text){
 
 		var chk = new Gtk.CheckButton.with_label(text);
 		chk.label = text;
@@ -727,9 +546,7 @@ namespace TeeJee.GtkHelper{
 	}
 
 	// add_spin
-	private Gtk.SpinButton add_spin(
-		Gtk.Box box, double min, double max, double val,
-		int digits = 0, double step = 1, double step_page = 1){
+	private Gtk.SpinButton add_spin(Gtk.Box box, double min, double max, double val, int digits = 0, double step = 1, double step_page = 1){
 
 		var adj = new Gtk.Adjustment(val, min, max, step, step_page, 0);
 		var spin  = new Gtk.SpinButton(adj, step, digits);
@@ -746,10 +563,7 @@ namespace TeeJee.GtkHelper{
 	}
 
 	// add_button
-	private Gtk.Button add_button(
-		Gtk.Box box, string text, string tooltip,
-		Gtk.SizeGroup? size_group,
-		Gtk.Image? icon = null){
+	private Gtk.Button add_button(Gtk.Box box, string text, string tooltip, Gtk.SizeGroup? size_group, Gtk.Image? icon = null){
 			
 		var button = new Gtk.Button();
         box.add(button);
@@ -768,75 +582,26 @@ namespace TeeJee.GtkHelper{
 
         return button;
 	}
-
-	// add_toggle_button
-	private Gtk.ToggleButton add_toggle_button(
-		Gtk.Box box, string text, string tooltip,
-		Gtk.SizeGroup? size_group,
-		Gtk.Image? icon = null){
-			
-		var button = new Gtk.ToggleButton();
-        box.add(button);
-
-        button.set_label(text);
-        button.set_tooltip_text(tooltip);
-
-        if (icon != null){
-			button.set_image(icon);
-			button.set_always_show_image(true);
-		}
-
-		if (size_group != null){
-			size_group.add_widget(button);
-		}
-		
-        return button;
-	}
 	
-	// add_directory_chooser
-	private Gtk.Entry add_directory_chooser(
-		Gtk.Box box, string selected_directory, Gtk.Window parent_window){
-			
-		// Entry
-		var entry = new Gtk.Entry();
-		entry.hexpand = true;
-		//entry.margin_left = 6;
-		entry.secondary_icon_stock = "gtk-open";
-		entry.placeholder_text = _("Enter path or browse for directory");
-		box.add (entry);
+	public Gtk.ButtonBox add_button_box(Gtk.Container box, Gtk.Orientation orientation = Gtk.Orientation.HORIZONTAL, 
+		Gtk.ButtonBoxStyle layout = Gtk.ButtonBoxStyle.CENTER, int spacing = 6){
 
-		if ((selected_directory != null) && dir_exists(selected_directory)){
-			entry.text = selected_directory;
-		}
+		var bbox = new Gtk.ButtonBox(orientation);
+		bbox.set_layout(layout);
+		bbox.set_spacing(spacing);
+		box.add(bbox);
 
-		entry.icon_release.connect((p0, p1) => {
-			//chooser
-			var chooser = new Gtk.FileChooserDialog(
-			    _("Select Path"),
-			    parent_window,
-			    FileChooserAction.SELECT_FOLDER,
-			    "_Cancel",
-			    Gtk.ResponseType.CANCEL,
-			    "_Open",
-			    Gtk.ResponseType.ACCEPT
-			);
-
-			chooser.select_multiple = false;
-			chooser.set_filename(selected_directory);
-
-			if (chooser.run() == Gtk.ResponseType.ACCEPT) {
-				entry.text = chooser.get_filename();
-
-				//App.repo = new SnapshotRepo.from_path(entry.text, this);
-				//check_backup_location();
-			}
-
-			chooser.destroy();
-		});
-
-		return entry;
+		/*
+		Gtk.ButtonBoxStyle.CENTER
+		CENTER - Buttons are centered in the box.
+		EDGE - Buttons are placed at the edges of the box.
+		END - Buttons are grouped towards the end of the box, (on the right for a HBox, or the bottom for a VBox).
+		EXPAND - Buttons expand to fill the box.
+		SPREAD - Buttons are evenly spread across the box.
+		START - Buttons are grouped towards the start of the box, (on the left for a HBox, or the top for a VBox).
+		*/
+		
+		return bbox;
 	}
-
-
 }
 

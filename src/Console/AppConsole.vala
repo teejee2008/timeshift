@@ -38,7 +38,7 @@ using TeeJee.Misc;
 public Main App;
 public const string AppName = "Timeshift";
 public const string AppShortName = "timeshift";
-public const string AppVersion = "20.03";
+public const string AppVersion = "21.09.1";
 public const string AppAuthor = "Tony George";
 public const string AppAuthorEmail = "teejeetech@gmail.com";
 
@@ -56,7 +56,7 @@ public class AppConsole : GLib.Object {
 		set_locale();
 
 		LOG_TIMESTAMP = false;
-
+		
 		if (args.length > 1) {
 			switch (args[1].down()) {
 				case "--help":

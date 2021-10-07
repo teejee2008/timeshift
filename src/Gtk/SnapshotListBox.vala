@@ -63,7 +63,7 @@ class SnapshotListBox : Gtk.Box{
 		log_debug("SnapshotListBox: SnapshotListBox()");
 		
 		//base(Gtk.Orientation.VERTICAL, 6); // issue with vala
-		Object(orientation: Gtk.Orientation.VERTICAL, spacing: 6); // work-around
+		GLib.Object(orientation: Gtk.Orientation.VERTICAL, spacing: 6); // work-around
 		parent_window = _parent_window;
 		margin = 6;
 
@@ -221,7 +221,7 @@ class SnapshotListBox : Gtk.Box{
 
 		//cell_desc
 		col_desc = new TreeViewColumn();
-		col_desc.title = _("Comments");
+		col_desc.title = _("Comments (click to edit)");
 		col_desc.resizable = true;
 		col_desc.clickable = true;
 		col_desc.expand = true;
@@ -326,7 +326,7 @@ class SnapshotListBox : Gtk.Box{
 		mi_remove = item;
 		
 		// mi_mark
-		item = new ImageMenuItem.with_label(_("Mark for Deletion"));
+		item = new ImageMenuItem.with_label(_("Mark/Unmark for Deletion"));
 		item.image = IconManager.lookup_image("edit-delete", 16);
 		item.activate.connect(()=> { mark_selected(); });
 		menu_snapshots.append(item);

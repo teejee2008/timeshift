@@ -5,6 +5,7 @@ CHECKEXECS := $(foreach exec,$(EXECUTABLES), $(if $(shell which $(exec)),,$(erro
 
 prefix=/usr
 sysconfdir=/etc
+appconfdir=$(sysconfdir)/timeshift
 bindir=$(prefix)/bin
 sharedir=$(prefix)/share
 polkitdir=$(sharedir)/polkit-1/actions
@@ -54,7 +55,7 @@ app-gtk:
 		Core/*.vala Gtk/*.vala Utility/*.vala Utility/Gtk/*.vala \
 		-o ${app_name}-gtk \
 		--pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix \
-		--pkg gee-0.8 --pkg json-glib-1.0 \
+		--pkg gee-0.8 --pkg json-glib-1.0 --pkg gio-2.0 \
 		--pkg gtk+-3.0 --pkg vte-2.91 $(xapp_pkg)
 
 app-console:
@@ -65,7 +66,7 @@ app-console:
 		Core/*.vala Utility/*.vala Utility/Gtk/*.vala Console/*.vala \
 		-o ${app_name} \
 		--pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix \
-		--pkg gee-0.8 --pkg json-glib-1.0 \
+		--pkg gee-0.8 --pkg json-glib-1.0 --pkg gio-2.0 \
 		--pkg gtk+-3.0 --pkg vte-2.91 $(xapp_pkg)
 
 manpage:
@@ -85,7 +86,7 @@ pot:
 		-o ../${app_name}.pot
 
 	# translations
-	for lang in am ar az bg ca cs da de el en_GB es et eu fr he hi hr hu ia id is it ko lt nb ne nl pl pt pt_BR ro ru sk sr sv tr uk vi zh_CN ja; do \
+	for lang in am ar az bg ca cs da de el en_GB es et eu fi fr he hi hr hu ia id is it ja ko lt nb ne nl pl pt pt_BR ro ru sk sr sv tr uk vi zh_CN zh_TW; do \
 		msgmerge --update -v ../po/${app_name}-$$lang.po ../${app_name}.pot ; \
 	done
 	
@@ -102,7 +103,8 @@ install:
 	mkdir -p "$(DESTDIR)$(man1dir)"
 	mkdir -p "$(DESTDIR)$(launcherdir)"
 	mkdir -p "$(DESTDIR)$(polkitdir)"
-	mkdir -p "$(DESTDIR)$(sysconfdir)/default"
+	mkdir -p "$(DESTDIR)$(sysconfdir)"
+	mkdir -p "$(DESTDIR)$(appconfdir)"
 	mkdir -p "$(DESTDIR)$(sharedir)/${app_name}"
 	mkdir -p "$(DESTDIR)$(sharedir)/icons"
 	mkdir -p "$(DESTDIR)$(sharedir)/appdata" 
@@ -126,7 +128,7 @@ install:
 	install -m 0755 ${app_name}-gtk.desktop "$(DESTDIR)$(launcherdir)"
 
 	# config
-	install -m 0644 ../files/${app_name}.json "$(DESTDIR)$(sysconfdir)/default"
+	install -m 0644 ../files/${app_name}.json "$(DESTDIR)$(appconfdir)/default.json"
 
 	# man page
 	install -m 0644 ../man/${app_name}.1.gz "$(DESTDIR)$(man1dir)/${app_name}.1.gz"
@@ -136,7 +138,7 @@ install:
 	chmod --recursive 0644 $(DESTDIR)$(sharedir)/icons/hicolor/*/apps/${app_name}.png
 
 	# appdata
-	install -m 0644 ../debian/${app_name}.appdata.xml "$(DESTDIR)$(sharedir)/appdata" 
+	#install -m 0644 ../debian/${app_name}.appdata.xml "$(DESTDIR)$(sharedir)/appdata" 
 	install -m 0644 ../debian/${app_name}.appdata.xml "$(DESTDIR)$(sharedir)/metainfo"
 
 	# translations

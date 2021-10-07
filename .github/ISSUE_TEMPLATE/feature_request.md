@@ -7,7 +7,8 @@ assignees: ''
 
 ---
 
-**Note:** This application is provided "as-is" without support or warranty. Due to lack of time, I check this tracker once every few months. If you need help with an issue, consider posting the issue on Linux Mint forums where there are more people to help you out.
+This is a free application that is provided "as-is" without support or warranty. It is updated once a year due to a lack of time, developers, and funds. You can support this project by making a donation with [PayPal](
+https://www.paypal.com/cgi-bin/webscr?business=teejeetech@gmail.com&cmd=_xclick&currency_code=USD&amount=10&item_name=Timeshift%20Donation)
 
 **Is your feature request related to a problem? Please describe.**
 A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]

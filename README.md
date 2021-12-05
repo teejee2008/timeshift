@@ -6,7 +6,7 @@ In RSYNC mode, snapshots are taken using [rsync](http://rsync.samba.org/) and [h
 
 In BTRFS mode, snapshots are taken using the in-built features of the BTRFS filesystem. BTRFS snapshots are supported only on BTRFS systems having an Ubuntu-type subvolume layout (with @ and @home subvolumes).
 
-Timeshift is similar to applications like [rsnapshot](http://www.rsnapshot.org/), [BackInTime](https://github.com/bit-team/backintime) and [TimeVault](https://wiki.ubuntu.com/TimeVault) but with different goals. It is designed to protect only system files and settings. User files such as documents, pictures and music are excluded. This ensures that your files remains unchanged when you restore your system to an earlier date. If you need a tool to backup your documents and files please take a look at the excellent [BackInTime](https://github.com/bit-team/backintime) application which is more configurable and provides options for saving user files.  
+Timeshift is similar to applications like [rsnapshot](http://www.rsnapshot.org/), [BackInTime](https://github.com/bit-team/backintime) and [TimeVault](https://wiki.ubuntu.com/TimeVault) but with different goals. It is designed to protect only system files and settings. User files such as documents, pictures and music are excluded. This ensures that your files remains unchanged when you restore your system to an earlier date. If you need a tool to back up your documents and files please take a look at the excellent [BackInTime](https://github.com/bit-team/backintime) application which is more configurable and provides options for saving user files.  
 
 ![](images/main_window.png)
 
@@ -48,7 +48,7 @@ Timeshift is designed to protect system files and settings. It is NOT a backup t
 *   You don't need to worry about your documents getting overwritten when you restore a previous snapshot to recover the system.
 *   Your music and video collection in your home directory will not waste space on the backup device.
 
-You can selectively include items for backup from the ***Settings*** window. Selecting the option "*Include hidden items*" from the ***Users*** tab will backup and restore the .hidden files and directories in your home folder. These folders contain user-specific config files and can be included in snapshots if required.
+You can selectively include items for backup from the ***Settings*** window. Selecting the option "*Include hidden items*" from the ***Users*** tab will back up and restore the .hidden files and directories in your home folder. These folders contain user-specific config files and can be included in snapshots if required.
 
 *Note*: It is not recommended to include user data in backups as it will be overwritten when you restore the snapshot.
 

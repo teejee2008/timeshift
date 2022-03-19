@@ -7,7 +7,7 @@ assignees: ''
 
 ---
 
-This is a free application that is provided "as-is" without support or warranty. It is updated once a year due to a lack of time, developers, and funds. You can support this project by making a donation with [PayPal](
+This is a free application that is provided "as-is" without support or warranty. You can support this project by making a donation with [PayPal](
 https://www.paypal.com/cgi-bin/webscr?business=teejeetech@gmail.com&cmd=_xclick&currency_code=USD&amount=10&item_name=Timeshift%20Donation)
 
 **Is your feature request related to a problem? Please describe.**

@@ -200,7 +200,7 @@ public class LinuxDistro : GLib.Object{
 		
 		owned get{
 			
-			if (dist_id == "fedora"){
+			if (dist_id in "fedora rhel rocky centos almalinux"){
 				return "redhat";
 			}
 			else if (dist_id.down().contains("manjaro") || dist_id.down().contains("arch")){

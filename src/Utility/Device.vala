@@ -591,7 +591,7 @@ public class Device : GLib.Object{
                     if (list[j].kname == list[i].pkname) {
                         list.remove_at(j);
                         list.remove_at(j-1);
-                        --i; // we are removing 2 elements before i
+                        i-=2; // we are removing 2 elements before i
                         break;
                     }
                 }

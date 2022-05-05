@@ -1,14 +1,14 @@
 # Danish translation for timeshift
 # Copyright (c) 2017 Rosetta Contributors and Canonical Ltd 2017
 # This file is distributed under the same license as the timeshift package.
-# Alan Mortensen <alanmortensen.am@gmail.com>, 2018, 2020.
+# Alan Mortensen <alanmortensen.am@gmail.com>, 2018, 2020, 2022.
 # scootergrisen, 2018-2019.
 msgid ""
 msgstr ""
 "Project-Id-Version: timeshift\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
 "POT-Creation-Date: 2022-04-24 11:00+0530\n"
-"PO-Revision-Date: 2021-06-04 21:52+0200\n"
+"PO-Revision-Date: 2022-05-05 19:58+0200\n"
 "Last-Translator: Alan Mortensen <alanmortensen.am@gmail.com>\n"
 "Language-Team: Danish\n"
 "Language: da\n"
@@ -35,12 +35,12 @@ msgstr "%d øjebliksbilleder, %s ledig"
 #: Console/AppConsole.vala:916
 #, c-format
 msgid "'%s' will be on '%s'"
-msgstr "\"%s\" vil være på \"%s\""
+msgstr "“%s” vil være på “%s”"
 
 #: Console/AppConsole.vala:913
 #, c-format
 msgid "'%s' will be on root device"
-msgstr "\"%s\" vil være på rodenheden"
+msgstr "“%s” vil være på rodenheden"
 
 #: Gtk/BootOptionsBox.vala:118
 msgid "(Re)install GRUB2 on:"
@@ -781,7 +781,7 @@ msgstr "Angiv enhedsnavn eller -nummer (a = afbryd)"
 #: Utility/Device.vala:1455
 #, c-format
 msgid "Enter passphrase to unlock '%s'"
-msgstr "Angiv adgangskoden til at låse \"%s\" op"
+msgstr "Angiv adgangskoden til at låse “%s” op"
 
 #: Console/AppConsole.vala:756
 #, c-format
@@ -1350,9 +1350,8 @@ msgid "Main window closed by user"
 msgstr "Hovedvinduet blev lukket af brugeren"
 
 #: Gtk/SnapshotListBox.vala:329
-#, fuzzy
 msgid "Mark/Unmark for Deletion"
-msgstr "Markér til sletning"
+msgstr "Markér/fjern markering til sletning"
 
 #: Core/SnapshotRepo.vala:684 Core/SnapshotRepo.vala:727
 msgid "Maximum backups exceeded for backup level"
@@ -1399,7 +1398,7 @@ msgstr "Månedligt øjebliksbillede mislykkedes!"
 
 #: Utility/Gtk/DonationWindow.vala:102
 msgid "More Apps"
-msgstr ""
+msgstr "Flere programmer"
 
 #: Core/Main.vala:2134 Core/Main.vala:2167
 msgid "Mount"
@@ -1601,14 +1600,13 @@ msgstr "Installér de påkrævede pakker og prøv at køre TimeShift igen"
 #: Gtk/AppGtk.vala:129
 msgid "Please re-run the application as admin (using 'sudo' or 'su')"
 msgstr ""
-"Kør programmet igen med administratorrettigheder (med brug af \"sudo\" eller "
-"\"su\")"
+"Kør programmet igen med administratorrettigheder (med brug af “sudo” eller "
+"“su”)"
 
 #: Console/AppConsole.vala:103
 msgid "Please run the application as admin (using 'sudo' or 'su')"
 msgstr ""
-"Kør programmet med administratorrettigheder (med brug af \"sudo\" eller "
-"\"su\")"
+"Kør programmet med administratorrettigheder (med brug af “sudo” eller “su”"
 
 #: Core/Main.vala:2215
 msgid "Please save your work and close all applications."
@@ -1728,7 +1726,7 @@ msgstr "Cron-opgaven blev fjernet"
 #: Core/Main.vala:3615
 #, c-format
 msgid "Removed mount directory: '%s'"
-msgstr "Monteringsmappen blev fjernet: \"%s\""
+msgstr "Monteringsmappen blev fjernet: “%s”"
 
 #: Core/Snapshot.vala:555
 msgid "Removed snapshot"
@@ -1812,7 +1810,7 @@ msgstr ""
 "Gendannelse af et øjebliksbillede vil erstatte systemets underdiskenheder, "
 "og underdiskenheder i brug vil blive bevaret som et nyt øjebliksbillede. "
 "Hvis det er påkrævet, kan dette øjebliksbillede gendannes på et senere "
-"tidspunkt for at \"omgøre\" gendannelsen."
+"tidspunkt for at “omgøre” gendannelsen."
 
 #: Core/Main.vala:2799
 msgid "Restoring snapshot..."
@@ -1849,7 +1847,7 @@ msgstr "Logfremviser"
 #: Gtk/AppGtk.vala:120
 #, c-format
 msgid "Run 'timeshift' for the command-line version of this tool"
-msgstr "Kør \"timeshift\" for at få kommandolinjeversionen af dette program"
+msgstr "Kør “timeshift” for at få kommandolinjeversionen af dette program"
 
 #: Console/AppConsole.vala:383
 msgid "Run in non-interactive mode"
@@ -1915,7 +1913,7 @@ msgstr ""
 #: Console/AppConsole.vala:872
 #, c-format
 msgid "Select '%s' device (default = %s)"
-msgstr "Vælg enheden \"%s\" (standard = %s)"
+msgstr "Vælg enheden “%s” (standard = %s)"
 
 #: Console/AppConsole.vala:691 Core/SnapshotRepo.vala:565
 msgid "Select BTRFS system disk with root subvolume (@)"
@@ -2156,7 +2154,7 @@ msgid ""
 "Snapshot '%s' is being used by the system and cannot be deleted. Restart the "
 "system to activate the restored snapshot."
 msgstr ""
-"Øjebliksbilledet \"%s\" bruges af systemet og kan ikke slettes. Genstart "
+"Øjebliksbilledet “%s” bruges af systemet og kan ikke slettes. Genstart "
 "systemet for at aktivere det gendannede øjebliksbillede."
 
 #: Gtk/BackupFinishBox.vala:60
@@ -2216,7 +2214,7 @@ msgid ""
 "transaction at the file system level."
 msgstr ""
 "Øjebliksbilleder oprettes og gendannes øjeblikkeligt. Oprettelse af "
-"øjebliksbilleder er en \"atomovergang\" på filsystemniveauet."
+"øjebliksbilleder er en “atomovergang” på filsystemniveauet."
 
 #: Gtk/SnapshotBackendBox.vala:187
 msgid ""
@@ -2430,8 +2428,8 @@ msgid ""
 "The 'btrfs' command is not available on your system. Install the 'btrfs-"
 "tools' package and try again."
 msgstr ""
-"Kommandoen \"btrfs\" er ikke tilgængelig på dit system. Installér pakken "
-"\"btrfs-tools\" og prøv igen."
+"Kommandoen “btrfs” er ikke tilgængelig på dit system. Installér pakken "
+"“btrfs-tools” og prøv igen."
 
 #: Gtk/ScheduleBox.vala:156
 msgid ""
@@ -2469,21 +2467,23 @@ msgstr ""
 "noget ansvar for skader, som dette program måtte forvolde."
 
 #: Utility/Gtk/DonationWindow.vala:66
-#, fuzzy
 msgid ""
 "This software is free for personal and commercial use. It is distributed in "
 "the hope that it is useful but without any warranty or support. See the GNU "
 "General Public License v2 or later for more information"
 msgstr ""
 "Dette program er gratis til personligt og kommercielt brug. Det distribueres "
-"med håbet om, at det er nyttigt, men uden nogen garanti. Yderligere detaljer "
-"kan læses i GNU General Public License v2 eller senere"
+"med håbet om, at det er nyttigt, men uden nogen garanti eller "
+"understøttelse. Yderligere detaljer kan læses i GNU General Public License "
+"v2 eller senere"
 
 #: Utility/Gtk/DonationWindow.vala:70
 msgid ""
 "This software is updated once a year due to lack of time, developers, and "
 "funds. You can support this project by making a donation with PayPal."
 msgstr ""
+"Dette program opdateres en gang om året pga. mangel på tid, udviklere og "
+"finansiering. Du kan støtte projektet ved at donere med PayPal."
 
 #: Gtk/MainWindow.vala:1037 Gtk/MainWindow.vala:1048
 msgid "Timeshift is active"
@@ -2536,7 +2536,7 @@ msgstr "Ukendt værdi angivet for tilvalget --tags"
 #: Utility/Device.vala:1391 Utility/Device.vala:1507
 #, c-format
 msgid "Unlocked device is mapped to '%s'"
-msgstr "Ulåst enhed er afbildet til \"%s\""
+msgstr "Ulåst enhed er afbildet til “%s”"
 
 #: Utility/Device.vala:1506
 msgid "Unlocked successfully"
@@ -2587,12 +2587,11 @@ msgid "Updating bootloader configuration..."
 msgstr "Opdaterer bootloader-konfigurationen …"
 
 #: Utility/Gtk/DonationWindow.vala:81
-#, fuzzy
 msgid ""
 "Use the GitHub issue tracker for reporting issues, or post your questions on "
 "the Linux Mint forums. Please avoid reporting issues by email."
 msgstr ""
-"Brug GitHub-problemsporingen til at rapportere problemer, eller stil dine "
+"Brug GitHubs “issue tracker” til at rapportere problemer, eller stil dine "
 "spørgsmål i Linux Mints fora. Undlad at rapportere problemer via e-mail."
 
 #: Utility/Device.vala:1956
@@ -2645,9 +2644,8 @@ msgid "View TimeShift Logs"
 msgstr "Vis Timeshift-logge"
 
 #: Utility/Gtk/DonationWindow.vala:100
-#, fuzzy
 msgid "Visit Website"
-msgstr "Websted"
+msgstr "Besøg websted"
 
 #: Gtk/RestoreDeviceBox.vala:101
 msgid "Volume"

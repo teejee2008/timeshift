@@ -174,7 +174,7 @@ public class RsyncTask : AsyncTask{
 
 	private string build_script() {
 		
-		var cmd = "";
+		var cmd = "export LC_ALL=C.UTF-8\n";
 
 		if (io_nice){
 			//cmd += "ionice -c2 -n7 ";

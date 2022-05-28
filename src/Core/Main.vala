@@ -1201,93 +1201,87 @@ public class Main : GLib.Object{
 		var dt_begin = new DateTime.now_local();
 		bool status = true;
 		
-		try{
-			// get system boot time
-			DateTime now = new DateTime.now_local();
-			DateTime dt_sys_boot = now.add_seconds((-1) * get_system_uptime_seconds());
+		// get system boot time
+		DateTime now = new DateTime.now_local();
+		DateTime dt_sys_boot = now.add_seconds((-1) * get_system_uptime_seconds());
 
-			// check if we can rotate an existing backup -------------
+		// check if we can rotate an existing backup -------------
 
-			DateTime dt_filter = null;
+		DateTime dt_filter = null;
 
-			if (tag != "ondemand"){
-				switch(tag){
-					case "boot":
-						dt_filter = dt_sys_boot;
-						break;
-					case "hourly":
-					case "daily":
-					case "weekly":
-					case "monthly":
-						dt_filter = now.add_hours(-1).add_seconds(59);
-						break;
-					default:
-						log_error(_("Unknown snapshot type") + ": %s".printf(tag));
-						return false;
-				}
+		if (tag != "ondemand"){
+			switch(tag){
+				case "boot":
+					dt_filter = dt_sys_boot;
+					break;
+				case "hourly":
+				case "daily":
+				case "weekly":
+				case "monthly":
+					dt_filter = now.add_hours(-1).add_seconds(59);
+					break;
+				default:
+					log_error(_("Unknown snapshot type") + ": %s".printf(tag));
+					return false;
+			}
 
-				// find a recent backup that can be used
-				Snapshot backup_to_rotate = null;
-				foreach(var bak in repo.snapshots){
-					if (bak.date.compare(dt_filter) > 0){
-						backup_to_rotate = bak;
-						break;
-					}
-				}
-
-				if (backup_to_rotate != null){
-					
-					// tag the backup
-					backup_to_rotate.add_tag(tag);
-	
-					var message = _("Tagged snapshot") + " '%s': %s".printf(backup_to_rotate.name, tag);
-					log_msg(message);
-
-					return true;
+			// find a recent backup that can be used
+			Snapshot backup_to_rotate = null;
+			foreach(var bak in repo.snapshots){
+				if (bak.date.compare(dt_filter) > 0){
+					backup_to_rotate = bak;
+					break;
 				}
 			}
 
-			if (!repo.available() || !repo.has_space()){
-				log_error(repo.status_message);
-				log_error(repo.status_details);
-				exit_app();
-			}
-			
-			// create new snapshot -----------------------
+			if (backup_to_rotate != null){
+				
+				// tag the backup
+				backup_to_rotate.add_tag(tag);
 
-			Snapshot new_snapshot = null;
-			if (btrfs_mode){
-				new_snapshot = create_snapshot_with_btrfs(tag, dt_created);
-			}
-			else{
-				new_snapshot = create_snapshot_with_rsync(tag, dt_created);
-			}
-			
-			// finish ------------------------------
-		
-			var dt_end = new DateTime.now_local();
-			TimeSpan elapsed = dt_end.difference(dt_begin);
-			long seconds = (long)(elapsed * 1.0 / TimeSpan.SECOND);
-			
-			var message = "";
-			if (new_snapshot != null){
-				message = "%s %s (%lds)".printf((btrfs_mode ? "BTRFS" : "RSYNC"), _("Snapshot saved successfully"), seconds);
-			}
-			else{
-				message = _("Failed to create snapshot");
-			}
-
-			log_msg(message);
-			OSDNotify.notify_send("TimeShift", message, 10000, "low");
-
-			if (new_snapshot != null){
-				message = _("Tagged snapshot") + " '%s': %s".printf(new_snapshot.name, tag);
+				var message = _("Tagged snapshot") + " '%s': %s".printf(backup_to_rotate.name, tag);
 				log_msg(message);
+
+				return true;
 			}
 		}
-		catch(Error e){
-			log_error (e.message);
-			return false;
+
+		if (!repo.available() || !repo.has_space()){
+			log_error(repo.status_message);
+			log_error(repo.status_details);
+			exit_app();
+		}
+		
+		// create new snapshot -----------------------
+
+		Snapshot new_snapshot = null;
+		if (btrfs_mode){
+			new_snapshot = create_snapshot_with_btrfs(tag, dt_created);
+		}
+		else{
+			new_snapshot = create_snapshot_with_rsync(tag, dt_created);
+		}
+		
+		// finish ------------------------------
+	
+		var dt_end = new DateTime.now_local();
+		TimeSpan elapsed = dt_end.difference(dt_begin);
+		long seconds = (long)(elapsed * 1.0 / TimeSpan.SECOND);
+		
+		var message = "";
+		if (new_snapshot != null){
+			message = "%s %s (%lds)".printf((btrfs_mode ? "BTRFS" : "RSYNC"), _("Snapshot saved successfully"), seconds);
+		}
+		else{
+			message = _("Failed to create snapshot");
+		}
+
+		log_msg(message);
+		OSDNotify.notify_send("TimeShift", message, 10000, "low");
+
+		if (new_snapshot != null){
+			message = _("Tagged snapshot") + " '%s': %s".printf(new_snapshot.name, tag);
+			log_msg(message);
 		}
 
 		return status;

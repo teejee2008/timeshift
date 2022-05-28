@@ -98,7 +98,7 @@ class RestoreDeviceBox : Gtk.Box{
 		label.xalign = (float) 0.0;
 		sg_device.add_widget(label);
 
-		label = add_label(hbox, _("Volume"), true, true);
+		label = add_label(hbox, _("Subvolume"), true, true);
 		label.xalign = (float) 0.5;
 		label.set_no_show_all(true);
 		lbl_header_subvol = label;

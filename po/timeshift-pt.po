@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: linuxmint\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2022-05-24 11:46+0530\n"
+"POT-Creation-Date: 2022-05-28 16:13+0530\n"
 "PO-Revision-Date: 2021-10-25 13:26+0100\n"
 "Last-Translator: Hugo Carvalho <hugokarvalho@hotmail.com>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
@@ -30,7 +30,7 @@ msgstr ""
 "\n"
 "Prima ENTER para continuar..."
 
-#: Core/SnapshotRepo.vala:613
+#: Core/SnapshotRepo.vala:550
 #, c-format
 msgid "%d snapshots, %s free"
 msgstr "%d cópias, %s livre"
@@ -53,19 +53,19 @@ msgstr "(Re)instalar o GRUB2 em:"
 msgid "** Uninstalled Timeshift BTRFS **"
 msgstr "** Timeshift BTRFS Desinstalado **"
 
-#: Core/Main.vala:3372
+#: Core/Main.vala:3374
 msgid "/ is mapped to device"
 msgstr "/ foi mapeado para o dispositivo"
 
-#: Core/Main.vala:3394
+#: Core/Main.vala:3396
 msgid "/boot is mapped to device"
 msgstr "/boot foi mapeado para o dispositivo"
 
-#: Core/Main.vala:3405
+#: Core/Main.vala:3407
 msgid "/boot/efi is mapped to device"
 msgstr "/boot/efi foi mapeado para o dispositivo"
 
-#: Core/Main.vala:3383
+#: Core/Main.vala:3385
 msgid "/home is mapped to device"
 msgstr "/home foi mapeado para o dispositivo"
 
@@ -188,11 +188,11 @@ msgstr "Outra instância do Timeshift está a ser executada!"
 msgid "Answer YES to all confirmation prompts"
 msgstr "Responda SIM a todos os avisos de confirmação"
 
-#: Core/Main.vala:3209
+#: Core/Main.vala:3211
 msgid "App config loaded"
 msgstr "Configuração do programa carregadas"
 
-#: Core/Main.vala:3097
+#: Core/Main.vala:3099
 msgid "App config saved"
 msgstr "Configurações do programa guardadas"
 
@@ -200,7 +200,7 @@ msgstr "Configurações do programa guardadas"
 msgid "Application needs admin access."
 msgstr "O programa precisa de acesso de administrador."
 
-#: Core/Main.vala:3549
+#: Core/Main.vala:3551
 msgid "Application will exit"
 msgstr "O programa vai sair"
 
@@ -232,7 +232,7 @@ msgstr "Cópias de Segurança BTRFS"
 msgid "BTRFS Tools Not Found"
 msgstr "Ferramentas BTRFS não encontradas"
 
-#: Core/Main.vala:2063 Core/Main.vala:2067
+#: Core/Main.vala:2057 Core/Main.vala:2061
 msgid "BTRFS device is not mounted"
 msgstr "Dispositivo BTRFS não está montado"
 
@@ -268,11 +268,11 @@ msgstr "Mecanismo interno"
 msgid "Backup"
 msgstr "Cópia de segurança"
 
-#: Core/Main.vala:2039
+#: Core/Main.vala:2033
 msgid "Backup Device"
 msgstr "Dispositivo da cópia de segurança"
 
-#: Core/Main.vala:2034
+#: Core/Main.vala:2028
 msgid "Backup device not specified!"
 msgstr "Dispositivo de cópia de segurança não especificado!"
 
@@ -323,14 +323,14 @@ msgstr "Procurar ficheiros"
 msgid "Browse selected snapshot"
 msgstr "Procurar cópia de segurança selecionada"
 
-#: Core/Main.vala:2521
+#: Core/Main.vala:2523
 msgid "Building file list..."
 msgstr "A criar lista de ficheiros..."
 
-#: Gtk/BackupWindow.vala:181 Gtk/DeleteWindow.vala:190
-#: Gtk/SetupWizardWindow.vala:220 Gtk/RestoreWindow.vala:215
-#: Gtk/RestoreWindow.vala:224 Utility/Gtk/CustomMessageDialog.vala:149
-#: Utility/GtkHelper.vala:119
+#: Gtk/DeleteWindow.vala:190 Gtk/SetupWizardWindow.vala:220
+#: Gtk/RestoreWindow.vala:215 Gtk/RestoreWindow.vala:224
+#: Gtk/BackupWindow.vala:181 Utility/Gtk/CustomMessageDialog.vala:152
+#: Utility/GtkHelper.vala:109
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -368,7 +368,7 @@ msgstr "Items alterados:"
 msgid "Checking Restore Actions (Dry Run)"
 msgstr "A verificar ações de restauro (Dry Run)"
 
-#: Core/Main.vala:2754
+#: Core/Main.vala:2756
 msgid "Checking file systems for errors..."
 msgstr "A procurar erros no sistema de ficheiros..."
 
@@ -377,7 +377,7 @@ msgstr "A procurar erros no sistema de ficheiros..."
 msgid "Checksum"
 msgstr "Checksum"
 
-#: Core/Main.vala:2410
+#: Core/Main.vala:2404
 msgid "Cleaning up..."
 msgstr "A limpar..."
 
@@ -393,22 +393,18 @@ msgstr "Clique para editar. Arraste e largue para reorganizar."
 msgid "Clone System"
 msgstr "Clonar o sistema"
 
-#: Console/AppConsole.vala:365
-msgid "Clone current system"
-msgstr "Clonar o sistema atual"
-
 #: Gtk/RestoreFinishBox.vala:68
 msgid "Cloning"
 msgstr "A clonar"
 
-#: Core/Main.vala:2804
+#: Core/Main.vala:2806
 msgid "Cloning system..."
 msgstr "A clonar o sistema..."
 
-#: Gtk/BackupWindow.vala:172 Gtk/BootOptionsWindow.vala:106
-#: Gtk/DeleteWindow.vala:173 Gtk/RsyncLogBox.vala:266
-#: Gtk/RestoreWindow.vala:501 Utility/Gtk/AboutWindow.vala:330
-#: Utility/Gtk/DonationWindow.vala:104
+#: Gtk/BootOptionsWindow.vala:106 Gtk/DeleteWindow.vala:173
+#: Gtk/RsyncLogBox.vala:266 Gtk/RestoreWindow.vala:501
+#: Gtk/BackupWindow.vala:172 Utility/Gtk/AboutWindow.vala:330
+#: Utility/Gtk/DonationWindow.vala:94
 msgid "Close"
 msgstr "Fechar"
 
@@ -425,11 +421,11 @@ msgstr "Comandos listados abaixo não disponiveis neste sistema"
 msgid "Comments (click to edit)"
 msgstr "Comentários (clique para editar)"
 
-#: Core/Main.vala:2797 Gtk/RestoreBox.vala:74 Gtk/RestoreBox.vala:187
+#: Core/Main.vala:2799 Gtk/RestoreBox.vala:74 Gtk/RestoreBox.vala:187
 msgid "Comparing Files (Dry Run)..."
 msgstr "Comparação de ficheiros (Dry Run)..."
 
-#: Core/Main.vala:2563
+#: Core/Main.vala:2565
 msgid "Comparing files with rsync..."
 msgstr "A sincronizar ficheiros com rsync..."
 
@@ -468,11 +464,11 @@ msgstr "Ficheiro não encontrado"
 msgid "Could not find snapshot"
 msgstr "Não foi possível encontrar a cópia de segurança"
 
-#: Core/Main.vala:2966
+#: Core/Main.vala:2968
 msgid "Could not find system subvolume"
 msgstr "Não foi possível encontrar o subvolume do sistema"
 
-#: Core/Main.vala:2994
+#: Core/Main.vala:2996
 msgid "Could not find system subvolumes for creating pre-restore snapshot"
 msgstr ""
 "Não foi possível encontrar subvolumes do sistema para criar cópias de "
@@ -545,15 +541,15 @@ msgstr "Criada"
 msgid "Created control file"
 msgstr "Ficheiro de controlo criado"
 
-#: Utility/TeeJee.FileSystem.vala:332
+#: Utility/TeeJee.FileSystem.vala:294
 msgid "Created directory"
 msgstr "Diretório criado"
 
-#: Core/Main.vala:3016
+#: Core/Main.vala:3018
 msgid "Created pre-restore snapshot"
 msgstr "Criada cópia de segurança pré-restauro"
 
-#: Core/Main.vala:1521
+#: Core/Main.vala:1515
 msgid "Created subvolume snapshot"
 msgstr "Cópia de segurança de subvolume criada"
 
@@ -561,15 +557,15 @@ msgstr "Cópia de segurança de subvolume criada"
 msgid "Creating Snapshot..."
 msgstr "A criar cópia..."
 
-#: Core/Main.vala:1459
+#: Core/Main.vala:1453
 msgid "Creating new backup..."
 msgstr "A criar uma nova cópia de segurança..."
 
-#: Core/Main.vala:1305
+#: Core/Main.vala:1299
 msgid "Creating new snapshot..."
 msgstr "A criar uma nova cópia..."
 
-#: Core/Main.vala:2944
+#: Core/Main.vala:2946
 msgid "Creating pre-restore snapshot from system subvolumes..."
 msgstr "A criar cópia de segurança pré-restauro de subvolumes de sistema..."
 
@@ -577,7 +573,7 @@ msgstr "A criar cópia de segurança pré-restauro de subvolumes de sistema..."
 msgid "Credits"
 msgstr "Créditos"
 
-#: Core/Main.vala:3548
+#: Core/Main.vala:3550
 msgid "Critical Error"
 msgstr "Erro crítico"
 
@@ -609,7 +605,7 @@ msgstr "Cópia diária falhou!"
 msgid "Daily snapshots are enabled"
 msgstr "As cópias diárias estão ativas"
 
-#: Core/Main.vala:2133
+#: Core/Main.vala:2127
 msgid "Data will be modified on following devices:"
 msgstr "Os dados serão modificados nos seguintes dispositivos:"
 
@@ -646,11 +642,11 @@ msgstr "Eliminar cópia"
 msgid "Deleted"
 msgstr "Eliminada"
 
-#: Utility/TeeJee.FileSystem.vala:366
+#: Utility/TeeJee.FileSystem.vala:328
 msgid "Deleted directory"
 msgstr "Diretório eliminado"
 
-#: Core/Subvolume.vala:167 Core/Main.vala:2923 Core/Main.vala:2927
+#: Core/Subvolume.vala:167 Core/Main.vala:2925 Core/Main.vala:2929
 #, c-format
 msgid "Deleted subvolume"
 msgstr "Subvolume eliminado"
@@ -673,9 +669,9 @@ msgid "Description"
 msgstr "Descrição"
 
 #: Console/AppConsole.vala:456 Console/AppConsole.vala:495
-#: Console/AppConsole.vala:543 Core/SnapshotRepo.vala:76
-#: Core/SnapshotRepo.vala:655 Core/SnapshotRepo.vala:658 Core/Main.vala:2136
-#: Core/Main.vala:2168 Gtk/RestoreDeviceBox.vala:97 Utility/Device.vala:1932
+#: Console/AppConsole.vala:543 Core/SnapshotRepo.vala:73
+#: Core/SnapshotRepo.vala:592 Core/SnapshotRepo.vala:595 Core/Main.vala:2130
+#: Core/Main.vala:2162 Gtk/RestoreDeviceBox.vala:97 Utility/Device.vala:1932
 #: Utility/Device.vala:1942
 #, c-format
 msgid "Device"
@@ -689,7 +685,7 @@ msgstr "O dispositivo está desbloqueado"
 msgid "Device name is empty!"
 msgstr "O nome do dispositivo está em branco!"
 
-#: Console/AppConsole.vala:665 Core/SnapshotRepo.vala:532 Core/Main.vala:3262
+#: Console/AppConsole.vala:665 Core/SnapshotRepo.vala:471 Core/Main.vala:3264
 msgid "Device not found"
 msgstr "Dispositivo não encontrado"
 
@@ -719,11 +715,11 @@ msgstr ""
 "Dispositivos com sistemas de ficheiros Windows não são suportados (NTFS, "
 "FAT, etc.)"
 
-#: Core/SnapshotRepo.vala:970
+#: Core/SnapshotRepo.vala:907
 msgid "Directory not found"
 msgstr "Diretório não encontrado"
 
-#: Core/Main.vala:2228 Gtk/RestoreSummaryBox.vala:64
+#: Core/Main.vala:2222 Gtk/RestoreSummaryBox.vala:64
 msgid "Disclaimer"
 msgstr "Aviso legal"
 
@@ -740,7 +736,7 @@ msgid "Documentation"
 msgstr "Documentação"
 
 #: Gtk/MainWindow.vala:209 Gtk/MainWindow.vala:210
-#: Utility/Gtk/DonationWindow.vala:43 Utility/Gtk/DonationWindow.vala:76
+#: Utility/Gtk/DonationWindow.vala:42 Utility/Gtk/DonationWindow.vala:75
 msgid "Donate"
 msgstr "Doar"
 
@@ -784,7 +780,7 @@ msgstr "Introduza o número da cópia (a=Abortar, p=Anterior, n=Seguinte)"
 msgid "Enter the pattern to exclude (Ex: *.mp3, *.bak)"
 msgstr "Insira o padrão para excluir (Ex: *.mp3, *.bak)"
 
-#: Gtk/RestoreDeviceBox.vala:520 Utility/GtkHelper.vala:18
+#: Gtk/RestoreDeviceBox.vala:520
 msgid "Error"
 msgstr "Erro"
 
@@ -792,7 +788,7 @@ msgstr "Erro"
 msgid "Error running Rsync"
 msgstr "Erro ao executar Rsync"
 
-#: Gtk/BackupWindow.vala:82 Gtk/SetupWizardWindow.vala:99
+#: Gtk/SetupWizardWindow.vala:99 Gtk/BackupWindow.vala:82
 msgid "Estimate"
 msgstr "Estimativa"
 
@@ -800,7 +796,7 @@ msgstr "Estimativa"
 msgid "Estimating System Size..."
 msgstr "A estimar o tamanho do sistema..."
 
-#: Core/Main.vala:1301
+#: Core/Main.vala:1295
 msgid "Estimating system size..."
 msgstr "A estimar o tamanho do sistema..."
 
@@ -836,7 +832,7 @@ msgstr "Excluir padrão"
 msgid "Excluded Directories"
 msgstr "Diretórios excluídos"
 
-#: Core/Main.vala:1589
+#: Core/Main.vala:1583
 msgid "Expected values: O, B, H, D, W, M"
 msgstr "Valores esperados: O, B, H, D, W, M"
 
@@ -848,27 +844,27 @@ msgstr "Falha ao adicionar trabalho agendado"
 msgid "Failed to copy file"
 msgstr "Falha ao copiar ficheiro"
 
-#: Utility/TeeJee.FileSystem.vala:335 Utility/TeeJee.FileSystem.vala:344
+#: Utility/TeeJee.FileSystem.vala:297 Utility/TeeJee.FileSystem.vala:306
 msgid "Failed to create directory"
 msgstr "Falha ao criar o diretório"
 
-#: Core/Main.vala:1427
+#: Core/Main.vala:1421
 msgid "Failed to create new snapshot"
 msgstr "Falha ao criar nova cópia de segurança"
 
-#: Core/Main.vala:1277
+#: Core/Main.vala:1276
 msgid "Failed to create snapshot"
 msgstr "Falha ao criar cópia de segurança"
 
-#: Core/Main.vala:1517
+#: Core/Main.vala:1511
 msgid "Failed to create subvolume snapshot"
 msgstr "Falha ao criar a cópia de segurança do subvolume"
 
-#: Core/SnapshotRepo.vala:1011
+#: Core/SnapshotRepo.vala:948
 msgid "Failed to create symlinks"
 msgstr "Falha ao criar symlinks"
 
-#: Utility/TeeJee.FileSystem.vala:369
+#: Utility/TeeJee.FileSystem.vala:331
 msgid "Failed to delete directory"
 msgstr "Falha ao eliminar o diretório"
 
@@ -884,11 +880,11 @@ msgstr "Falha ao eliminar o subvolume aninhado da cópia"
 msgid "Failed to delete snapshot subvolume"
 msgstr "Falha ao eliminar o subvolume da cópia"
 
-#: Core/SnapshotRepo.vala:1037
+#: Core/SnapshotRepo.vala:974
 msgid "Failed to delete symlinks"
 msgstr "Falha ao eliminar ligações simbólicas"
 
-#: Core/Main.vala:3763 Core/Main.vala:3769
+#: Core/Main.vala:3765 Core/Main.vala:3771
 msgid "Failed to estimate system size"
 msgstr "Falha ao estimar o tamanho do sistema"
 
@@ -906,7 +902,7 @@ msgstr "Falha ao obter em 3 tentativas a entrada do utilizar"
 msgid "Failed to get partition list"
 msgstr "Falha ao obter a lista de partições"
 
-#: Core/Main.vala:3345
+#: Core/Main.vala:3347
 msgid "Failed to get partition list."
 msgstr "Falha ao obter a lista de partições."
 
@@ -922,13 +918,13 @@ msgstr "Falha ao montar dispositivos"
 msgid "Failed to move file"
 msgstr "Falha ao mover ficheiro"
 
-#: Core/Main.vala:2981
+#: Core/Main.vala:2983
 msgid "Failed to move system subvolume to snapshot directory"
 msgstr ""
 "Falha ao mover o subvolume do sistema para o diretório das cópias de "
 "segurança"
 
-#: Core/Main.vala:3868
+#: Core/Main.vala:3870
 msgid "Failed to query subvolume list"
 msgstr "Falha ao consultar a lista de subvolume"
 
@@ -940,7 +936,7 @@ msgstr "Falha ao ler o crontab"
 msgid "Failed to read file"
 msgstr "Falha ao ler o ficheiro"
 
-#: Core/SnapshotRepo.vala:957
+#: Core/SnapshotRepo.vala:894
 msgid "Failed to remove"
 msgstr "Falha ao remover"
 
@@ -956,7 +952,7 @@ msgstr "Falha ao remover a cópia de segurança"
 msgid "Failed to restore system subvolume"
 msgstr "Falha ao restaurar o subvolume do sistema"
 
-#: Core/Main.vala:1377
+#: Core/Main.vala:1371
 msgid "Failed to save exclude list"
 msgstr "Falha ao guardar a lista de exclusão"
 
@@ -969,7 +965,7 @@ msgstr "Falha ao desbloquear dispositivo"
 msgid "Failed to unmount"
 msgstr "Falha ao desmontar"
 
-#: Core/Main.vala:3549
+#: Core/Main.vala:3551
 msgid "Failed to unmount device!"
 msgstr "Falha ao desmontar dispositivo!"
 
@@ -1032,8 +1028,8 @@ msgstr "Introduza o nome ou número do dispositivo"
 msgid "Filters"
 msgstr "Filtros"
 
-#: Gtk/BackupWindow.vala:97 Gtk/DeleteWindow.vala:103
-#: Gtk/SetupWizardWindow.vala:211
+#: Gtk/DeleteWindow.vala:103 Gtk/SetupWizardWindow.vala:211
+#: Gtk/BackupWindow.vala:97
 msgid "Finish"
 msgstr "Terminar"
 
@@ -1045,11 +1041,11 @@ msgstr "Concluído"
 msgid "Firefox, Chromium, Chrome, Opera, Epiphany, Midori"
 msgstr "Firefox, Chromium, Chrome, Opera, Epiphany, Midori"
 
-#: Core/SnapshotRepo.vala:639
+#: Core/SnapshotRepo.vala:576
 msgid "First snapshot requires:"
 msgstr "Primeira cópia requer:"
 
-#: Core/Main.vala:2914
+#: Core/Main.vala:2916
 msgid "Found existing pre-restore snapshot"
 msgstr "Encontrado a cópia de pré-restauração existente"
 
@@ -1057,7 +1053,7 @@ msgstr "Encontrado a cópia de pré-restauração existente"
 msgid "Free"
 msgstr "Livre"
 
-#: Core/SnapshotRepo.vala:77 Core/SnapshotRepo.vala:147
+#: Core/SnapshotRepo.vala:74 Core/SnapshotRepo.vala:144
 msgid "Free space"
 msgstr "Espaço livre"
 
@@ -1073,11 +1069,11 @@ msgstr "Dispositivo GRUB não selecionado"
 msgid "GRUB will NOT be reinstalled"
 msgstr "GRUB não será reinstalado"
 
-#: Core/Main.vala:2370
+#: Core/Main.vala:2364
 msgid "Generating initramfs..."
 msgstr "A criar initramfs..."
 
-#: Utility/Gtk/DonationWindow.vala:98
+#: Utility/Gtk/DonationWindow.vala:88
 msgid "GitHub"
 msgstr "GitHub"
 
@@ -1142,7 +1138,7 @@ msgstr ""
 "Se o sistema restaurado falhar ao iniciar, arranque com um CD/USB, instale "
 "Timeshift e tente restaurar outra cópia de segurança."
 
-#: Core/Main.vala:2234
+#: Core/Main.vala:2228
 msgid ""
 "If these terms are not acceptable to you, please do not proceed beyond this "
 "point!"
@@ -1150,7 +1146,7 @@ msgstr ""
 "Se estes termos não são aceitáveis para si, por favor, não prossiga além "
 "deste ponto!"
 
-#: Utility/Gtk/DonationWindow.vala:70
+#: Utility/Gtk/DonationWindow.vala:69
 msgid ""
 "If you find this software useful, you can buy me a coffee by making a "
 "donation with PayPal."
@@ -1172,7 +1168,7 @@ msgstr "Incluir todos os ficheiros"
 msgid "Include Only Hidden Files"
 msgstr "Incluir apenas os ficheiros ocultos"
 
-#: Core/Main.vala:2048
+#: Core/Main.vala:2042
 msgid "Invalid Snapshot"
 msgstr "Cópia Inválida"
 
@@ -1306,7 +1302,7 @@ msgstr "Última cópia"
 msgid "License"
 msgstr "Licença"
 
-#: Core/Main.vala:1366
+#: Core/Main.vala:1360
 #, c-format
 msgid "Linking from snapshot"
 msgstr "Criar ligação à cópia"
@@ -1327,8 +1323,8 @@ msgstr "Listar cópias de segurança"
 msgid "Live USB Mode (Restore Only)"
 msgstr "Modo Live USB (Apenas para restauro)"
 
-#: Gtk/BackupWindow.vala:87 Gtk/SettingsWindow.vala:90
-#: Gtk/SetupWizardWindow.vala:104
+#: Gtk/SettingsWindow.vala:90 Gtk/SetupWizardWindow.vala:104
+#: Gtk/BackupWindow.vala:87
 msgid "Location"
 msgstr "Localização"
 
@@ -1340,7 +1336,7 @@ msgstr "Janela principal fechada pelo utilizador"
 msgid "Mark/Unmark for Deletion"
 msgstr "Marcar/Desmarcar para eliminação"
 
-#: Core/SnapshotRepo.vala:684 Core/SnapshotRepo.vala:727
+#: Core/SnapshotRepo.vala:621 Core/SnapshotRepo.vala:664
 msgid "Maximum backups exceeded for backup level"
 msgstr ""
 "Número máximo de cópia de segurança excedido para o nível de cópia de "
@@ -1358,7 +1354,7 @@ msgstr "Diversos"
 msgid "Missing Dependencies"
 msgstr "Dependências em falta"
 
-#: Core/SnapshotRepo.vala:661
+#: Core/SnapshotRepo.vala:598
 #, c-format
 msgid "Mode"
 msgstr "Modo"
@@ -1380,15 +1376,15 @@ msgstr "As cópias de segurança mensais estão ativas"
 msgid "Monthly snapshot failed!"
 msgstr "A cópia de segurança mensal falhou!"
 
-#: Utility/Gtk/DonationWindow.vala:102
+#: Utility/Gtk/DonationWindow.vala:92
 msgid "More Apps"
 msgstr "Mais aplicações"
 
-#: Core/Main.vala:2135 Core/Main.vala:2168
+#: Core/Main.vala:2129 Core/Main.vala:2162
 msgid "Mount"
 msgstr "Montar"
 
-#: Core/Main.vala:2988
+#: Core/Main.vala:2990
 msgid "Moved system subvolume to snapshot directory"
 msgstr "Subvolume de sistema movido para o diretório das cópias de segurança"
 
@@ -1401,12 +1397,12 @@ msgstr "Várias cópias de segurança selecionadas"
 msgid "Name"
 msgstr "Nome"
 
-#: Gtk/BackupWindow.vala:164 Gtk/DeleteWindow.vala:165
-#: Gtk/SetupWizardWindow.vala:203 Gtk/RestoreWindow.vala:201
+#: Gtk/DeleteWindow.vala:165 Gtk/SetupWizardWindow.vala:203
+#: Gtk/RestoreWindow.vala:201 Gtk/BackupWindow.vala:164
 msgid "Next"
 msgstr "Avançar"
 
-#: Utility/Gtk/CustomMessageDialog.vala:154
+#: Utility/Gtk/CustomMessageDialog.vala:157
 msgid "No"
 msgstr "Não"
 
@@ -1422,7 +1418,7 @@ msgstr "Nenhuma cópia selecionada"
 msgid "No snapshots available"
 msgstr "Nenhuma cópia disponível"
 
-#: Console/AppConsole.vala:321 Core/SnapshotRepo.vala:886
+#: Console/AppConsole.vala:321 Core/SnapshotRepo.vala:823
 #: Gtk/MainWindow.vala:1009
 msgid "No snapshots found"
 msgstr "Nenhuma cópia encontrada"
@@ -1435,7 +1431,7 @@ msgstr "Nenhuma imagem do disco encontrada no dispositivo"
 msgid "No snapshots on device"
 msgstr "Nenhuma cópia de segurança no dispositivo"
 
-#: Core/SnapshotRepo.vala:637
+#: Core/SnapshotRepo.vala:574
 msgid "No snapshots on this device"
 msgstr "Nenhuma cópia de segurança neste dispositivo"
 
@@ -1452,7 +1448,7 @@ msgstr "Nenhum"
 msgid "Not Found"
 msgstr "Não encontrado"
 
-#: Core/SnapshotRepo.vala:655
+#: Core/SnapshotRepo.vala:592
 msgid "Not Selected"
 msgstr "Não selecionado"
 
@@ -1460,7 +1456,7 @@ msgstr "Não selecionado"
 msgid "Not Supported"
 msgstr "Não suportado"
 
-#: Core/SnapshotRepo.vala:601 Core/SnapshotRepo.vala:628
+#: Core/SnapshotRepo.vala:538 Core/SnapshotRepo.vala:565
 msgid "Not enough disk space"
 msgstr "Espaço no disco insufuciente"
 
@@ -1485,9 +1481,9 @@ msgstr ""
 "Número de cópias a serem mantidas.\n"
 "As cópias mais antigas serão removidas assim que esse limite for excedido."
 
-#: Core/SnapshotRepo.vala:611 Gtk/ExcludeListSummaryWindow.vala:84
-#: Gtk/SettingsWindow.vala:123 Utility/Gtk/CustomMessageDialog.vala:144
-#: Utility/Gtk/CustomMessageDialog.vala:148 Utility/GtkHelper.vala:118
+#: Core/SnapshotRepo.vala:548 Gtk/ExcludeListSummaryWindow.vala:84
+#: Gtk/SettingsWindow.vala:123 Utility/Gtk/CustomMessageDialog.vala:147
+#: Utility/Gtk/CustomMessageDialog.vala:151 Utility/GtkHelper.vala:108
 msgid "OK"
 msgstr "Aceitar"
 
@@ -1499,7 +1495,7 @@ msgstr ""
 "O sistema deve ser instalado numa partição BTRFS com disposição do subvolume "
 "do tipo Ubuntu (@ e subvolumes @home). Outras disposições não são suportadas."
 
-#: Core/Main.vala:4014
+#: Core/Main.vala:4016
 msgid "Older log files removed"
 msgstr "Ficheiros de registo mais antigos removidos"
 
@@ -1511,7 +1507,7 @@ msgstr "Cópias antigas"
 msgid "On demand (manual)"
 msgstr "A pedido (manual)"
 
-#: Core/Main.vala:383 Core/Main.vala:3462 Gtk/RestoreDeviceBox.vala:511
+#: Core/Main.vala:383 Core/Main.vala:3464 Gtk/RestoreDeviceBox.vala:511
 msgid ""
 "Only ubuntu-type layouts with @ and @home subvolumes are currently supported."
 msgstr ""
@@ -1522,7 +1518,7 @@ msgstr ""
 msgid "Open Menu"
 msgstr "Abrir menu"
 
-#: Core/Main.vala:3244
+#: Core/Main.vala:3246
 msgid ""
 "Option --snapshot-device should not be specified for creating snapshots in "
 "BTRFS mode"
@@ -1548,7 +1544,7 @@ msgstr "Proprietário"
 msgid "Parent Device"
 msgstr "Dispositivo principal"
 
-#: Core/Main.vala:2491 Core/Main.vala:2582 Gtk/RsyncLogBox.vala:222
+#: Core/Main.vala:2493 Core/Main.vala:2584 Gtk/RsyncLogBox.vala:222
 msgid "Parsing log file..."
 msgstr "A analisar o ficheiro de registo..."
 
@@ -1556,7 +1552,7 @@ msgstr "A analisar o ficheiro de registo..."
 msgid "Partition has an unsupported subvolume layout."
 msgstr "A partição tem uma disposição de subvolume não suportada."
 
-#: Core/SnapshotRepo.vala:660 Gtk/RestoreDeviceBox.vala:93
+#: Core/SnapshotRepo.vala:597 Gtk/RestoreDeviceBox.vala:93
 #, c-format
 msgid "Path"
 msgstr "Localização"
@@ -1574,7 +1570,7 @@ msgstr "Permissões"
 msgid "Please check if you have multiple windows open."
 msgstr "Verifique se tem várias janelas abertas."
 
-#: Core/Main.vala:2266
+#: Core/Main.vala:2260
 msgid "Please do not interrupt the restore process!"
 msgstr "Não interrompa o processo de restauro!"
 
@@ -1591,7 +1587,7 @@ msgstr ""
 msgid "Please run the application as admin (using 'sudo' or 'su')"
 msgstr "Executar o programa como administrador (utilizando 'sudo' ou 'su')"
 
-#: Core/Main.vala:2216
+#: Core/Main.vala:2210
 msgid "Please save your work and close all applications."
 msgstr "Guarde o seu trabalho e feche todas as aplicações."
 
@@ -1619,13 +1615,13 @@ msgstr "Aguarde..."
 msgid "Populating list..."
 msgstr "A preencher a lista..."
 
-#: Core/Main.vala:1601 Gtk/BackupBox.vala:114 Gtk/DeleteBox.vala:68
+#: Core/Main.vala:1595 Gtk/BackupBox.vala:114 Gtk/DeleteBox.vala:68
 #: Gtk/RestoreBox.vala:88 Gtk/RsyncLogBox.vala:232
 msgid "Preparing..."
 msgstr "A preparar..."
 
-#: Gtk/BackupWindow.vala:156 Gtk/DeleteWindow.vala:157
-#: Gtk/SetupWizardWindow.vala:195 Gtk/RestoreWindow.vala:193
+#: Gtk/DeleteWindow.vala:157 Gtk/SetupWizardWindow.vala:195
+#: Gtk/RestoreWindow.vala:193 Gtk/BackupWindow.vala:156
 msgid "Previous"
 msgstr "Anterior"
 
@@ -1633,11 +1629,11 @@ msgstr "Anterior"
 msgid "Print debug information"
 msgstr "Imprimir informação sobre os erros"
 
-#: Core/Main.vala:3824
+#: Core/Main.vala:3826
 msgid "Query completed"
 msgstr "Consulta concluída"
 
-#: Core/Main.vala:3807
+#: Core/Main.vala:3809
 msgid "Querying subvolume info..."
 msgstr "A consultar informações do subvolume..."
 
@@ -1662,7 +1658,7 @@ msgstr ""
 msgid "Re-install GRUB2 bootloader?"
 msgstr "Reinstalar o carregador de arranque GRUB2?"
 
-#: Core/Main.vala:2329
+#: Core/Main.vala:2323
 msgid "Re-installing GRUB2 bootloader..."
 msgstr "A reinstalar o carregador de arranque GRUB2..."
 
@@ -1675,7 +1671,7 @@ msgstr "Reinstalar o carregador de arranque GRUB2 no dispositivo selecionado."
 msgid "Read %'d of %'d lines..."
 msgstr "A ler %'d de %'d linhas..."
 
-#: Core/Main.vala:2422
+#: Core/Main.vala:2423
 msgid "Rebooting system..."
 msgstr "A reiniciar o sistema..."
 
@@ -1696,8 +1692,8 @@ msgstr "Os locais remotos e de rede não são suportados."
 msgid "Remove"
 msgstr "Remover"
 
-#: Core/Snapshot.vala:509 Core/SnapshotRepo.vala:963 Core/Main.vala:1639
-#: Core/Main.vala:1650 Core/Main.vala:4010
+#: Core/Snapshot.vala:509 Core/SnapshotRepo.vala:900 Core/Main.vala:1633
+#: Core/Main.vala:1644 Core/Main.vala:4012
 #, c-format
 msgid "Removed"
 msgstr "Removida"
@@ -1706,7 +1702,7 @@ msgstr "Removida"
 msgid "Removed cron task"
 msgstr "Tarefa agendada removida"
 
-#: Core/Main.vala:3612
+#: Core/Main.vala:3614
 #, c-format
 msgid "Removed mount directory: '%s'"
 msgstr "Removido diretório de montagem: '%s'"
@@ -1723,8 +1719,8 @@ msgstr "A remover"
 msgid "Removing snapshot"
 msgstr "A remover cópia"
 
-#: Core/SnapshotRepo.vala:819 Core/SnapshotRepo.vala:838
-#: Core/SnapshotRepo.vala:856 Core/SnapshotRepo.vala:870
+#: Core/SnapshotRepo.vala:756 Core/SnapshotRepo.vala:775
+#: Core/SnapshotRepo.vala:793 Core/SnapshotRepo.vala:807
 #, c-format
 msgid "Removing snapshots"
 msgstr "A remover cópias"
@@ -1751,7 +1747,7 @@ msgstr "Eliminar do restauro"
 msgid "Restore Snapshot"
 msgstr "Restaurar cópia"
 
-#: Core/Main.vala:2831 Core/Main.vala:2873
+#: Core/Main.vala:2833 Core/Main.vala:2875
 msgid "Restore completed"
 msgstr "Restauro concluído"
 
@@ -1787,7 +1783,7 @@ msgstr ""
 "segurança. Se necessário, esta cópia pode ser restaurada mais tarde para "
 "reverter a restauração."
 
-#: Core/Main.vala:2800
+#: Core/Main.vala:2802
 msgid "Restoring snapshot..."
 msgstr "A restaurar imagem..."
 
@@ -1851,7 +1847,7 @@ msgstr ""
 "Pode até instalar outra distribuição Linux e depois reverter para a "
 "distribuição anterior restaurando uma cópia de segurança."
 
-#: Core/Main.vala:1307 Core/Main.vala:1461 Core/Main.vala:1463
+#: Core/Main.vala:1301 Core/Main.vala:1455 Core/Main.vala:1457
 msgid "Saving to device"
 msgstr "A guardar no dispositivo"
 
@@ -1889,7 +1885,7 @@ msgstr ""
 msgid "Select '%s' device (default = %s)"
 msgstr "Selecionar '%s' dispositivo (padrão = %s)"
 
-#: Console/AppConsole.vala:691 Core/SnapshotRepo.vala:565
+#: Console/AppConsole.vala:691 Core/SnapshotRepo.vala:502
 msgid "Select BTRFS system disk with root subvolume (@)"
 msgstr "Selecione o disco do sistema BTRFS com subvolume root (@)"
 
@@ -1934,7 +1930,7 @@ msgstr "Selecionar uma única cópia de segurança a restaurar"
 msgid "Select another device for root file system (/)"
 msgstr "Selecionar outro dispositivo para o sistema de ficheiros root (/)"
 
-#: Core/SnapshotRepo.vala:604 Core/SnapshotRepo.vala:631
+#: Core/SnapshotRepo.vala:541 Core/SnapshotRepo.vala:568
 msgid "Select another device or free up some space"
 msgstr "Selecionar outro dispositivo ou liberte algum espaço do disco"
 
@@ -1986,7 +1982,7 @@ msgstr "Selecione os intervalos de criação de cópias de segurança"
 msgid "Select the items to be removed from the list"
 msgstr "Selecionar os itens a remover da lista"
 
-#: Core/SnapshotRepo.vala:525
+#: Core/SnapshotRepo.vala:464
 msgid "Select the snapshot device"
 msgstr "Selecionar o dispositivo com cópias de segurança"
 
@@ -2006,11 +2002,11 @@ msgstr "Selecione as cópias de segurança a serem marcadas para eliminação"
 msgid "Select the target devices where system will be cloned."
 msgstr "Selecione os dispositivos de destino onde o sistema será clonado."
 
-#: Core/Main.vala:3272
+#: Core/Main.vala:3274
 msgid "Selected default snapshot device"
 msgstr "Dispositivo de cópia de segurança padrão selecionado"
 
-#: Core/Main.vala:3223 Core/Main.vala:3227
+#: Core/Main.vala:3225 Core/Main.vala:3229
 msgid "Selected default snapshot type"
 msgstr "Tipo de cópia de segurança padrão selecionada"
 
@@ -2022,16 +2018,16 @@ msgstr "O dispositivo selecionado não tem partição BTRFS"
 msgid "Selected device does not have Linux partition"
 msgstr "O dispositivo selecionado não tem uma partição Linux"
 
-#: Core/SnapshotRepo.vala:146
+#: Core/SnapshotRepo.vala:143
 msgid "Selected snapshot device"
 msgstr "Dispositivo de cópia de segurança selecionado"
 
-#: Console/AppConsole.vala:690 Core/SnapshotRepo.vala:564
+#: Console/AppConsole.vala:690 Core/SnapshotRepo.vala:501
 msgid "Selected snapshot device is not a system disk"
 msgstr ""
 "O dispositivo de cópia de segurança selecionado não é um disco do sistema"
 
-#: Core/Main.vala:2049
+#: Core/Main.vala:2043
 msgid "Selected snapshot is marked for deletion"
 msgstr "A cópia de segurança selecionada está marcada para exclusão"
 
@@ -2118,7 +2114,7 @@ msgstr ""
 msgid "Skip GRUB2 reinstall"
 msgstr "Ignorar reinstalação do GRUB2"
 
-#: Core/SnapshotRepo.vala:687 Core/SnapshotRepo.vala:740 Core/Main.vala:2054
+#: Core/SnapshotRepo.vala:624 Core/SnapshotRepo.vala:677 Core/Main.vala:2048
 #: Gtk/SnapshotListBox.vala:93
 #, c-format
 msgid "Snapshot"
@@ -2146,33 +2142,33 @@ msgstr "Níveis de cópia de segurança"
 msgid "Snapshot deletion in progress..."
 msgstr "Eliminação da cópia de segurança em andamento..."
 
-#: Core/SnapshotRepo.vala:442
+#: Core/SnapshotRepo.vala:435
 #, c-format
 msgid "Snapshot device"
 msgstr "Dispositivo de cópia de segurança"
 
-#: Console/AppConsole.vala:664 Core/SnapshotRepo.vala:531
+#: Console/AppConsole.vala:664 Core/SnapshotRepo.vala:470
 msgid "Snapshot device not available"
 msgstr "Nenhum dispositivo de cópia de segurança disponível"
 
-#: Console/AppConsole.vala:660 Core/SnapshotRepo.vala:524
+#: Console/AppConsole.vala:660 Core/SnapshotRepo.vala:463
 msgid "Snapshot device not selected"
 msgstr "Nenhum dispositivo de cópia de segurança selecionado"
 
-#: Core/SnapshotRepo.vala:446
+#: Core/SnapshotRepo.vala:439
 #, c-format
 msgid "Snapshot location"
 msgstr "Localização da cópia de segurança"
 
-#: Core/Main.vala:1274
+#: Core/Main.vala:1273
 msgid "Snapshot saved successfully"
 msgstr "Cópia de Segurança guardada com sucesso"
 
-#: Core/Main.vala:2044
+#: Core/Main.vala:2038
 msgid "Snapshot to restore not specified!"
 msgstr "Cópia de segurança a restaurar não especificada!"
 
-#: Core/Main.vala:2877
+#: Core/Main.vala:2879
 msgid "Snapshot will become active after system is rebooted."
 msgstr "A cópia de segurança ficará ativa após o reinício do sistema."
 
@@ -2307,7 +2303,7 @@ msgstr "Especificar cópia de segurança a restaurar"
 msgid "Specify target device"
 msgstr "Especificar dispositivo de destino"
 
-#: Core/SnapshotRepo.vala:452 Core/SnapshotRepo.vala:662
+#: Core/SnapshotRepo.vala:445 Core/SnapshotRepo.vala:599
 #: Gtk/RsyncLogBox.vala:472
 #, c-format
 msgid "Status"
@@ -2317,7 +2313,7 @@ msgstr "Estado"
 msgid "Stop cron emails for scheduled tasks"
 msgstr "Parar emails no cron para tarefas agendadas"
 
-#: Utility/TeeJee.Process.vala:486
+#: Utility/TeeJee.Process.vala:487
 msgid "Stopped"
 msgstr "Parado"
 
@@ -2349,15 +2345,15 @@ msgstr "Mudar para o modo BTRFS (padrão: config)"
 msgid "Switch to RSYNC mode (default: config)"
 msgstr "Mudar para o modo RSYNC (padrão: config)"
 
-#: Core/SnapshotRepo.vala:1017
+#: Core/SnapshotRepo.vala:954
 msgid "Symlinks updated"
 msgstr "Ligações simbólicas atualizadas"
 
-#: Core/Main.vala:2404
+#: Core/Main.vala:2398
 msgid "Synching file systems..."
 msgstr "Sincronizar sistemas de ficheiros..."
 
-#: Core/Main.vala:1383 Core/Main.vala:2566 Core/Main.vala:2807
+#: Core/Main.vala:1377 Core/Main.vala:2568 Core/Main.vala:2809
 msgid "Synching files with rsync..."
 msgstr "A sincronizar ficheiros com rsync..."
 
@@ -2380,15 +2376,15 @@ msgstr ""
 "O sistema pode ser revertido para uma data anterior restaurando uma cópia de "
 "segurança."
 
-#: Core/Main.vala:2267
+#: Core/Main.vala:2261
 msgid "System will reboot after files are restored"
 msgstr "O sistema será reiniciado após os ficheiros serem restaurados"
 
-#: Core/Main.vala:2217
+#: Core/Main.vala:2211
 msgid "System will reboot after files are restored."
 msgstr "O sistema será reiniciado após a restauração dos ficheiros."
 
-#: Core/Main.vala:1243 Core/Main.vala:1284
+#: Core/Main.vala:1242 Core/Main.vala:1283
 msgid "Tagged snapshot"
 msgstr "Cópia de segurança com marcador"
 
@@ -2396,7 +2392,7 @@ msgstr "Cópia de segurança com marcador"
 msgid "Tags"
 msgstr "Marcadores"
 
-#: Core/Main.vala:2079
+#: Core/Main.vala:2073
 msgid "Target device is not mounted"
 msgstr "Dispositivo de destino não está montado"
 
@@ -2404,7 +2400,7 @@ msgstr "Dispositivo de destino não está montado"
 msgid "Target device is same as system device"
 msgstr "Dispositivo de destino é igual ao dispositivo do sistema"
 
-#: Core/Main.vala:2073
+#: Core/Main.vala:2067
 msgid "Target device not specified!"
 msgstr "Dispositivo de destino não especificado!"
 
@@ -2430,7 +2426,7 @@ msgstr ""
 msgid "The system partition has an unsupported subvolume layout."
 msgstr "A partição do sistema tem uma disposição de subvolume não suportada."
 
-#: Core/Main.vala:3461
+#: Core/Main.vala:3463
 msgid "The target partition has an unsupported subvolume layout."
 msgstr "A partição de destino tem uma disposição de subvolume não suportada."
 
@@ -2443,7 +2439,7 @@ msgstr "Não há cópias de segurança neste dispositivo"
 msgid "This device is not encrypted"
 msgstr "Este dispositivo não está encriptado"
 
-#: Core/Main.vala:2233
+#: Core/Main.vala:2227
 msgid ""
 "This software comes without absolutely NO warranty and the author takes no "
 "responsibility for any damage arising from the use of this program."
@@ -2451,7 +2447,7 @@ msgstr ""
 "Este programa vem sem nenhuma garantia e o autor não assume nenhuma "
 "responsabilidade por quaisquer danos decorrentes do uso deste programa."
 
-#: Utility/Gtk/DonationWindow.vala:66
+#: Utility/Gtk/DonationWindow.vala:65
 msgid ""
 "This software is free for personal and commercial use. It is distributed in "
 "the hope that it is useful but without any warranty or support. See the GNU "
@@ -2501,11 +2497,11 @@ msgstr "UUID"
 msgid "Unknown option"
 msgstr "Opção desconhecida"
 
-#: Core/Main.vala:1225
+#: Core/Main.vala:1224
 msgid "Unknown snapshot type"
 msgstr "Tipo de cópia de segurança desconhecida"
 
-#: Core/Main.vala:1588
+#: Core/Main.vala:1582
 msgid "Unknown value specified for option --tags"
 msgstr "Valor desconhecido especificado para a opção --tags"
 
@@ -2522,7 +2518,7 @@ msgstr "Desbloqueado com sucesso"
 msgid "Unmounting from"
 msgstr "A desmontar de"
 
-#: Core/Main.vala:3465 Gtk/RestoreDeviceBox.vala:508
+#: Core/Main.vala:3467 Gtk/RestoreDeviceBox.vala:508
 msgid "Unsupported Subvolume Layout"
 msgstr "Disposição de subvolume não suportada"
 
@@ -2534,11 +2530,11 @@ msgstr "Atualizar menu GRUB"
 msgid "Update initramfs"
 msgstr "Atualizar initramfs"
 
-#: Core/Main.vala:2746
+#: Core/Main.vala:2748
 msgid "Updated /etc/crypttab on target device"
 msgstr "Atualização /etc/crypttab no dispositivo de destino"
 
-#: Core/Main.vala:2666
+#: Core/Main.vala:2668
 msgid "Updated /etc/fstab on target device"
 msgstr "Atualização /etc/fstab no dispositivo de destino"
 
@@ -2550,15 +2546,15 @@ msgstr ""
 "Atualiza as entradas do menu GRUB (recomendado). Isto é seguro executar e "
 "deve ser deixado selecionado."
 
-#: Core/Main.vala:2387
+#: Core/Main.vala:2381
 msgid "Updating GRUB menu..."
 msgstr "A atualizar o menu GRUB..."
 
-#: Core/Main.vala:2590
+#: Core/Main.vala:2592
 msgid "Updating bootloader configuration..."
 msgstr "A atualizar a configuração do carregador de arranque..."
 
-#: Utility/Gtk/DonationWindow.vala:81
+#: Utility/Gtk/DonationWindow.vala:80
 msgid ""
 "Use the GitHub issue tracker for reporting issues, or post your questions on "
 "the Linux Mint forums. Please avoid reporting issues by email."
@@ -2616,7 +2612,7 @@ msgstr "Ver registo Rsync para restaurar"
 msgid "View TimeShift Logs"
 msgstr "Ver registos do TimeShift"
 
-#: Core/Main.vala:2128 Gtk/RestoreSummaryBox.vala:53
+#: Core/Main.vala:2122 Gtk/RestoreSummaryBox.vala:53
 msgid "Warning"
 msgstr "Aviso"
 
@@ -2624,7 +2620,7 @@ msgstr "Aviso"
 msgid "Web Browsers"
 msgstr "Navegadores de Internet"
 
-#: Utility/Gtk/DonationWindow.vala:100
+#: Utility/Gtk/DonationWindow.vala:90
 #, fuzzy
 msgid "Website"
 msgstr "Website"
@@ -2653,7 +2649,7 @@ msgstr "Assistente"
 msgid "Wrong password"
 msgstr "Palavra-passe incorreta"
 
-#: Utility/Gtk/CustomMessageDialog.vala:153
+#: Utility/Gtk/CustomMessageDialog.vala:156
 msgid "Yes"
 msgstr "Sim"
 
@@ -2691,15 +2687,15 @@ msgstr ""
 msgid "[Warning] Deleted invalid lock"
 msgstr "[Aviso] Bloqueio inválido eliminado"
 
-#: Core/SnapshotRepo.vala:870
+#: Core/SnapshotRepo.vala:807
 msgid "all"
 msgstr "tudo"
 
-#: Core/Subvolume.vala:199 Core/Main.vala:1516 Core/Main.vala:3867
+#: Core/Subvolume.vala:199 Core/Main.vala:1510 Core/Main.vala:3869
 msgid "btrfs returned an error"
 msgstr "btrfs deu um erro"
 
-#: Core/Snapshot.vala:500 Core/Main.vala:1415
+#: Core/Snapshot.vala:500 Core/Main.vala:1409
 msgid "complete"
 msgstr "concluído"
 
@@ -2711,31 +2707,34 @@ msgstr "ficheiro crontab exportado"
 msgid "crontab file installed"
 msgstr "ficheiro crontab instalado"
 
-#: Core/SnapshotRepo.vala:856
+#: Core/SnapshotRepo.vala:793
 msgid "incomplete"
 msgstr "incompleto"
 
-#: Core/SnapshotRepo.vala:838
+#: Core/SnapshotRepo.vala:775
 msgid "marked for deletion"
 msgstr "marcado para eliminação"
 
-#: Core/Main.vala:1307 Core/Main.vala:1461 Core/Main.vala:1463
+#: Core/Main.vala:1301 Core/Main.vala:1455 Core/Main.vala:1457
 msgid "mounted at path"
 msgstr "montado no local"
 
-#: Core/Snapshot.vala:501 Core/Main.vala:1415 Gtk/BackupBox.vala:234
+#: Core/Snapshot.vala:501 Core/Main.vala:1409 Gtk/BackupBox.vala:234
 #: Gtk/DeleteBox.vala:149 Gtk/RestoreBox.vala:237
 msgid "remaining"
 msgstr "restante"
 
-#: Core/Main.vala:1426
+#: Core/Main.vala:1420
 msgid "rsync returned an error"
 msgstr "rsync deu um erro"
 
-#: Core/SnapshotRepo.vala:687 Core/SnapshotRepo.vala:740
-#: Core/SnapshotRepo.vala:819
+#: Core/SnapshotRepo.vala:624 Core/SnapshotRepo.vala:677
+#: Core/SnapshotRepo.vala:756
 msgid "un-tagged"
 msgstr "desmarcado"
+
+#~ msgid "Clone current system"
+#~ msgstr "Clonar o sistema atual"
 
 #~ msgid "Volume"
 #~ msgstr "Volume"

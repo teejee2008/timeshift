@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timeshift\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2022-05-24 11:46+0530\n"
+"POT-Creation-Date: 2022-05-28 16:13+0530\n"
 "PO-Revision-Date: 2022-02-23 12:43+0200\n"
 "Last-Translator: Pjotr <pjotrvertaalt@gmail.com>\n"
 "Language-Team: Dutch <unknown>\n"
@@ -26,7 +26,7 @@ msgstr ""
 "\n"
 "Druk op Enter om door te gaan..."
 
-#: Core/SnapshotRepo.vala:613
+#: Core/SnapshotRepo.vala:550
 #, c-format
 msgid "%d snapshots, %s free"
 msgstr "%d momentopnamen, %s vrij"
@@ -49,19 +49,19 @@ msgstr "(Her)installeer GRUB2 op:"
 msgid "** Uninstalled Timeshift BTRFS **"
 msgstr "** Timeshift BTRFS verwijderd **"
 
-#: Core/Main.vala:3372
+#: Core/Main.vala:3374
 msgid "/ is mapped to device"
 msgstr "/ is toegewezen aan apparaat"
 
-#: Core/Main.vala:3394
+#: Core/Main.vala:3396
 msgid "/boot is mapped to device"
 msgstr "/boot is toegewezen aan apparaat"
 
-#: Core/Main.vala:3405
+#: Core/Main.vala:3407
 msgid "/boot/efi is mapped to device"
 msgstr "/boot/efi is toegewezen aan apparaat"
 
-#: Core/Main.vala:3383
+#: Core/Main.vala:3385
 msgid "/home is mapped to device"
 msgstr "/home is toegewezen aan apparaat"
 
@@ -184,11 +184,11 @@ msgstr "Er draait nu al een andere instantie van Timeshift."
 msgid "Answer YES to all confirmation prompts"
 msgstr "Antwoord 'JA' op alle bevestigingsvragen"
 
-#: Core/Main.vala:3209
+#: Core/Main.vala:3211
 msgid "App config loaded"
 msgstr "App-instellingen geladen"
 
-#: Core/Main.vala:3097
+#: Core/Main.vala:3099
 msgid "App config saved"
 msgstr "App-instellingen opgeslagen"
 
@@ -196,7 +196,7 @@ msgstr "App-instellingen opgeslagen"
 msgid "Application needs admin access."
 msgstr "Toepassing vereist beheerdersrechten."
 
-#: Core/Main.vala:3549
+#: Core/Main.vala:3551
 msgid "Application will exit"
 msgstr "Toepassing wordt afgesloten"
 
@@ -228,7 +228,7 @@ msgstr "BTRFS-momentopnamen"
 msgid "BTRFS Tools Not Found"
 msgstr "BTRFS-gereedschap niet aangetroffen"
 
-#: Core/Main.vala:2063 Core/Main.vala:2067
+#: Core/Main.vala:2057 Core/Main.vala:2061
 msgid "BTRFS device is not mounted"
 msgstr "BTRFS-apparaat is niet aangekoppeld"
 
@@ -265,11 +265,11 @@ msgstr "Achtergrondsysteem"
 msgid "Backup"
 msgstr "Reservekopie"
 
-#: Core/Main.vala:2039
+#: Core/Main.vala:2033
 msgid "Backup Device"
 msgstr "Reservekopie-apparaat"
 
-#: Core/Main.vala:2034
+#: Core/Main.vala:2028
 msgid "Backup device not specified!"
 msgstr "Reservekopie-apparaat niet opgegeven."
 
@@ -318,14 +318,14 @@ msgstr "Bestanden verkennen"
 msgid "Browse selected snapshot"
 msgstr "Gekozen momentopname verkennen"
 
-#: Core/Main.vala:2521
+#: Core/Main.vala:2523
 msgid "Building file list..."
 msgstr "Bestandenlijst maken...."
 
-#: Gtk/BackupWindow.vala:181 Gtk/DeleteWindow.vala:190
-#: Gtk/SetupWizardWindow.vala:220 Gtk/RestoreWindow.vala:215
-#: Gtk/RestoreWindow.vala:224 Utility/Gtk/CustomMessageDialog.vala:149
-#: Utility/GtkHelper.vala:119
+#: Gtk/DeleteWindow.vala:190 Gtk/SetupWizardWindow.vala:220
+#: Gtk/RestoreWindow.vala:215 Gtk/RestoreWindow.vala:224
+#: Gtk/BackupWindow.vala:181 Utility/Gtk/CustomMessageDialog.vala:152
+#: Utility/GtkHelper.vala:109
 msgid "Cancel"
 msgstr "Afbreken"
 
@@ -363,7 +363,7 @@ msgstr "Gewijzigde elementen:"
 msgid "Checking Restore Actions (Dry Run)"
 msgstr "Herstelacties worden gecontroleerd (nog niet uitgevoerd)"
 
-#: Core/Main.vala:2754
+#: Core/Main.vala:2756
 msgid "Checking file systems for errors..."
 msgstr "Bestandssystemen aan het nakijken op fouten..."
 
@@ -372,7 +372,7 @@ msgstr "Bestandssystemen aan het nakijken op fouten..."
 msgid "Checksum"
 msgstr "Controlesom"
 
-#: Core/Main.vala:2410
+#: Core/Main.vala:2404
 msgid "Cleaning up..."
 msgstr "Opschonen..."
 
@@ -388,22 +388,18 @@ msgstr "Klik om te bewerken. Versleep om te herschikken."
 msgid "Clone System"
 msgstr "Systeem klonen"
 
-#: Console/AppConsole.vala:365
-msgid "Clone current system"
-msgstr "Huidig systeem klonen"
-
 #: Gtk/RestoreFinishBox.vala:68
 msgid "Cloning"
 msgstr "Klonen"
 
-#: Core/Main.vala:2804
+#: Core/Main.vala:2806
 msgid "Cloning system..."
 msgstr "Systeem klonen..."
 
-#: Gtk/BackupWindow.vala:172 Gtk/BootOptionsWindow.vala:106
-#: Gtk/DeleteWindow.vala:173 Gtk/RsyncLogBox.vala:266
-#: Gtk/RestoreWindow.vala:501 Utility/Gtk/AboutWindow.vala:330
-#: Utility/Gtk/DonationWindow.vala:104
+#: Gtk/BootOptionsWindow.vala:106 Gtk/DeleteWindow.vala:173
+#: Gtk/RsyncLogBox.vala:266 Gtk/RestoreWindow.vala:501
+#: Gtk/BackupWindow.vala:172 Utility/Gtk/AboutWindow.vala:330
+#: Utility/Gtk/DonationWindow.vala:94
 msgid "Close"
 msgstr "Afsluiten"
 
@@ -420,11 +416,11 @@ msgstr "Onderstaande opdrachten zijn op dit systeem niet beschikbaar"
 msgid "Comments (click to edit)"
 msgstr "Opmerkingen (klik om te bewerken)"
 
-#: Core/Main.vala:2797 Gtk/RestoreBox.vala:74 Gtk/RestoreBox.vala:187
+#: Core/Main.vala:2799 Gtk/RestoreBox.vala:74 Gtk/RestoreBox.vala:187
 msgid "Comparing Files (Dry Run)..."
 msgstr "Bestanden worden vergeleken (er wordt niets aangepast)..."
 
-#: Core/Main.vala:2563
+#: Core/Main.vala:2565
 msgid "Comparing files with rsync..."
 msgstr "Bestanden synchroniseren met rsync..."
 
@@ -463,11 +459,11 @@ msgstr "Kon bestand niet vinden"
 msgid "Could not find snapshot"
 msgstr "Kon momentopname niet vinden"
 
-#: Core/Main.vala:2966
+#: Core/Main.vala:2968
 msgid "Could not find system subvolume"
 msgstr "Kon subvolume van systeem niet vinden"
 
-#: Core/Main.vala:2994
+#: Core/Main.vala:2996
 msgid "Could not find system subvolumes for creating pre-restore snapshot"
 msgstr ""
 "Kon subvolumes van het systeem niet vinden voor het maken van een pre-"
@@ -540,15 +536,15 @@ msgstr "Gemaakt"
 msgid "Created control file"
 msgstr "Controlebestand gemaakt"
 
-#: Utility/TeeJee.FileSystem.vala:332
+#: Utility/TeeJee.FileSystem.vala:294
 msgid "Created directory"
 msgstr "Map gemaakt"
 
-#: Core/Main.vala:3016
+#: Core/Main.vala:3018
 msgid "Created pre-restore snapshot"
 msgstr "Pre-terugzet-momentopname gemaakt"
 
-#: Core/Main.vala:1521
+#: Core/Main.vala:1515
 msgid "Created subvolume snapshot"
 msgstr "Momentopname gemaakt van subvolume"
 
@@ -556,15 +552,15 @@ msgstr "Momentopname gemaakt van subvolume"
 msgid "Creating Snapshot..."
 msgstr "Momentopname maken..."
 
-#: Core/Main.vala:1459
+#: Core/Main.vala:1453
 msgid "Creating new backup..."
 msgstr "Nieuwe reservekopie maken..."
 
-#: Core/Main.vala:1305
+#: Core/Main.vala:1299
 msgid "Creating new snapshot..."
 msgstr "Nieuwe momentopname maken..."
 
-#: Core/Main.vala:2944
+#: Core/Main.vala:2946
 msgid "Creating pre-restore snapshot from system subvolumes..."
 msgstr "Pre-terugzet-momentopname maken van subvolumes van het systeem..."
 
@@ -572,7 +568,7 @@ msgstr "Pre-terugzet-momentopname maken van subvolumes van het systeem..."
 msgid "Credits"
 msgstr "Met dank aan"
 
-#: Core/Main.vala:3548
+#: Core/Main.vala:3550
 msgid "Critical Error"
 msgstr "Kritieke fout"
 
@@ -604,7 +600,7 @@ msgstr "Dagelijkse momentopname is mislukt."
 msgid "Daily snapshots are enabled"
 msgstr "Dagelijkse momentopnamen zijn ingeschakeld"
 
-#: Core/Main.vala:2133
+#: Core/Main.vala:2127
 msgid "Data will be modified on following devices:"
 msgstr "Er zullen gegevens worden gewijzigd op de volgende apparaten:"
 
@@ -641,11 +637,11 @@ msgstr "Momentopname verwijderen"
 msgid "Deleted"
 msgstr "Verwijderd"
 
-#: Utility/TeeJee.FileSystem.vala:366
+#: Utility/TeeJee.FileSystem.vala:328
 msgid "Deleted directory"
 msgstr "Verwijderde map"
 
-#: Core/Subvolume.vala:167 Core/Main.vala:2923 Core/Main.vala:2927
+#: Core/Subvolume.vala:167 Core/Main.vala:2925 Core/Main.vala:2929
 #, c-format
 msgid "Deleted subvolume"
 msgstr "Verwijderd subvolume"
@@ -668,9 +664,9 @@ msgid "Description"
 msgstr "Beschrijving"
 
 #: Console/AppConsole.vala:456 Console/AppConsole.vala:495
-#: Console/AppConsole.vala:543 Core/SnapshotRepo.vala:76
-#: Core/SnapshotRepo.vala:655 Core/SnapshotRepo.vala:658 Core/Main.vala:2136
-#: Core/Main.vala:2168 Gtk/RestoreDeviceBox.vala:97 Utility/Device.vala:1932
+#: Console/AppConsole.vala:543 Core/SnapshotRepo.vala:73
+#: Core/SnapshotRepo.vala:592 Core/SnapshotRepo.vala:595 Core/Main.vala:2130
+#: Core/Main.vala:2162 Gtk/RestoreDeviceBox.vala:97 Utility/Device.vala:1932
 #: Utility/Device.vala:1942
 #, c-format
 msgid "Device"
@@ -684,7 +680,7 @@ msgstr "Apparaat is ontsleuteld"
 msgid "Device name is empty!"
 msgstr "Apparaatnaam is leeg."
 
-#: Console/AppConsole.vala:665 Core/SnapshotRepo.vala:532 Core/Main.vala:3262
+#: Console/AppConsole.vala:665 Core/SnapshotRepo.vala:471 Core/Main.vala:3264
 msgid "Device not found"
 msgstr "Apparaat niet gevonden"
 
@@ -712,11 +708,11 @@ msgstr ""
 "Apparaten met Windows-bestandssystemen worden niet ondersteund (NTFS, FAT, "
 "enz)."
 
-#: Core/SnapshotRepo.vala:970
+#: Core/SnapshotRepo.vala:907
 msgid "Directory not found"
 msgstr "Map niet gevonden"
 
-#: Core/Main.vala:2228 Gtk/RestoreSummaryBox.vala:64
+#: Core/Main.vala:2222 Gtk/RestoreSummaryBox.vala:64
 msgid "Disclaimer"
 msgstr "Uitsluiting aansprakelijkheid"
 
@@ -733,7 +729,7 @@ msgid "Documentation"
 msgstr "Documentatie"
 
 #: Gtk/MainWindow.vala:209 Gtk/MainWindow.vala:210
-#: Utility/Gtk/DonationWindow.vala:43 Utility/Gtk/DonationWindow.vala:76
+#: Utility/Gtk/DonationWindow.vala:42 Utility/Gtk/DonationWindow.vala:75
 msgid "Donate"
 msgstr "Doneren"
 
@@ -777,7 +773,7 @@ msgstr "Voer nummer van momentopname in (a=Afbreken, p=Vorige, n=Volgende)"
 msgid "Enter the pattern to exclude (Ex: *.mp3, *.bak)"
 msgstr "Voer het uitsluitingspatroon in (bijv. *.mp3, *.bak)"
 
-#: Gtk/RestoreDeviceBox.vala:520 Utility/GtkHelper.vala:18
+#: Gtk/RestoreDeviceBox.vala:520
 msgid "Error"
 msgstr "Fout"
 
@@ -785,7 +781,7 @@ msgstr "Fout"
 msgid "Error running Rsync"
 msgstr "Fout bij het draaien van Rsync"
 
-#: Gtk/BackupWindow.vala:82 Gtk/SetupWizardWindow.vala:99
+#: Gtk/SetupWizardWindow.vala:99 Gtk/BackupWindow.vala:82
 msgid "Estimate"
 msgstr "Schatting"
 
@@ -793,7 +789,7 @@ msgstr "Schatting"
 msgid "Estimating System Size..."
 msgstr "Systeemgrootte schatten..."
 
-#: Core/Main.vala:1301
+#: Core/Main.vala:1295
 msgid "Estimating system size..."
 msgstr "Systeemgrootte schatten..."
 
@@ -829,7 +825,7 @@ msgstr "Patroon uitsluiten"
 msgid "Excluded Directories"
 msgstr "Uitgesloten mappen"
 
-#: Core/Main.vala:1589
+#: Core/Main.vala:1583
 msgid "Expected values: O, B, H, D, W, M"
 msgstr "Verwachte waarden: O, B, H, D, W, M"
 
@@ -841,27 +837,27 @@ msgstr "Kon geen crontaak toevoegen"
 msgid "Failed to copy file"
 msgstr "Kon bestand niet kopiëren"
 
-#: Utility/TeeJee.FileSystem.vala:335 Utility/TeeJee.FileSystem.vala:344
+#: Utility/TeeJee.FileSystem.vala:297 Utility/TeeJee.FileSystem.vala:306
 msgid "Failed to create directory"
 msgstr "Kon map niet maken"
 
-#: Core/Main.vala:1427
+#: Core/Main.vala:1421
 msgid "Failed to create new snapshot"
 msgstr "Kon nieuwe momentopname niet maken"
 
-#: Core/Main.vala:1277
+#: Core/Main.vala:1276
 msgid "Failed to create snapshot"
 msgstr "Kon momentopname niet maken"
 
-#: Core/Main.vala:1517
+#: Core/Main.vala:1511
 msgid "Failed to create subvolume snapshot"
 msgstr "Kon momentopname van subvolume niet maken"
 
-#: Core/SnapshotRepo.vala:1011
+#: Core/SnapshotRepo.vala:948
 msgid "Failed to create symlinks"
 msgstr "Kon geen symbolische koppelingen maken"
 
-#: Utility/TeeJee.FileSystem.vala:369
+#: Utility/TeeJee.FileSystem.vala:331
 msgid "Failed to delete directory"
 msgstr "Kon map niet verwijderen"
 
@@ -877,11 +873,11 @@ msgstr "Kon ingebed subvolume in momentopname niet verwijderen"
 msgid "Failed to delete snapshot subvolume"
 msgstr "Kon subvolume van momentopname niet verwijderen"
 
-#: Core/SnapshotRepo.vala:1037
+#: Core/SnapshotRepo.vala:974
 msgid "Failed to delete symlinks"
 msgstr "Kon symbolische koppelingen niet verwijderen"
 
-#: Core/Main.vala:3763 Core/Main.vala:3769
+#: Core/Main.vala:3765 Core/Main.vala:3771
 msgid "Failed to estimate system size"
 msgstr "Kon systeemgrootte niet schatten"
 
@@ -899,7 +895,7 @@ msgstr "Kon geen invoer verkrijgen van de gebruiker in drie pogingen"
 msgid "Failed to get partition list"
 msgstr "Kon partitielijst niet verkrijgen"
 
-#: Core/Main.vala:3345
+#: Core/Main.vala:3347
 msgid "Failed to get partition list."
 msgstr "Kon geen partitielijst verkrijgen."
 
@@ -915,11 +911,11 @@ msgstr "Kon apparaten niet aankoppelen"
 msgid "Failed to move file"
 msgstr "Kon bestand niet verplaatsen"
 
-#: Core/Main.vala:2981
+#: Core/Main.vala:2983
 msgid "Failed to move system subvolume to snapshot directory"
 msgstr "Kon subvolume van systeem niet verplaatsen naar momentopname-map"
 
-#: Core/Main.vala:3868
+#: Core/Main.vala:3870
 msgid "Failed to query subvolume list"
 msgstr "Kon subvolumelijst niet bevragen"
 
@@ -931,7 +927,7 @@ msgstr "Kon crontab niet lezen"
 msgid "Failed to read file"
 msgstr "Kon bestand niet lezen"
 
-#: Core/SnapshotRepo.vala:957
+#: Core/SnapshotRepo.vala:894
 msgid "Failed to remove"
 msgstr "Kon niet verwijderen"
 
@@ -947,7 +943,7 @@ msgstr "Kon momentopname niet verwijderen"
 msgid "Failed to restore system subvolume"
 msgstr "Kon subvolume van systeem niet terugzetten"
 
-#: Core/Main.vala:1377
+#: Core/Main.vala:1371
 msgid "Failed to save exclude list"
 msgstr "Kon uitsluitingslijst niet opslaan"
 
@@ -960,7 +956,7 @@ msgstr "Kon apparaat niet ontsluiten"
 msgid "Failed to unmount"
 msgstr "Kon niet ontkoppelen"
 
-#: Core/Main.vala:3549
+#: Core/Main.vala:3551
 msgid "Failed to unmount device!"
 msgstr "Kon apparaat niet ontkoppelen."
 
@@ -1025,8 +1021,8 @@ msgstr "Filter op naam of pad"
 msgid "Filters"
 msgstr "Filters"
 
-#: Gtk/BackupWindow.vala:97 Gtk/DeleteWindow.vala:103
-#: Gtk/SetupWizardWindow.vala:211
+#: Gtk/DeleteWindow.vala:103 Gtk/SetupWizardWindow.vala:211
+#: Gtk/BackupWindow.vala:97
 msgid "Finish"
 msgstr "Voltooien"
 
@@ -1038,11 +1034,11 @@ msgstr "Voltooid"
 msgid "Firefox, Chromium, Chrome, Opera, Epiphany, Midori"
 msgstr "Firefox, Chromium, Chrome, Opera, Epiphany, Midori"
 
-#: Core/SnapshotRepo.vala:639
+#: Core/SnapshotRepo.vala:576
 msgid "First snapshot requires:"
 msgstr "Eerste momentopname vereist:"
 
-#: Core/Main.vala:2914
+#: Core/Main.vala:2916
 msgid "Found existing pre-restore snapshot"
 msgstr "Bestaande pre-terugzet-momentopname aangetroffen"
 
@@ -1050,7 +1046,7 @@ msgstr "Bestaande pre-terugzet-momentopname aangetroffen"
 msgid "Free"
 msgstr "Vrij"
 
-#: Core/SnapshotRepo.vala:77 Core/SnapshotRepo.vala:147
+#: Core/SnapshotRepo.vala:74 Core/SnapshotRepo.vala:144
 msgid "Free space"
 msgstr "Vrije ruimte"
 
@@ -1066,11 +1062,11 @@ msgstr "Geen GRUB-apparaat gekozen"
 msgid "GRUB will NOT be reinstalled"
 msgstr "GRUB zal niet worden geherinstalleerd"
 
-#: Core/Main.vala:2370
+#: Core/Main.vala:2364
 msgid "Generating initramfs..."
 msgstr "initramfs maken..."
 
-#: Utility/Gtk/DonationWindow.vala:98
+#: Utility/Gtk/DonationWindow.vala:88
 msgid "GitHub"
 msgstr "GitHub"
 
@@ -1136,7 +1132,7 @@ msgstr ""
 "DVD of -USB, installeer Timeshift in de uitprobeersessie, en tracht om "
 "daarmee een andere momentopname terug te zetten."
 
-#: Core/Main.vala:2234
+#: Core/Main.vala:2228
 msgid ""
 "If these terms are not acceptable to you, please do not proceed beyond this "
 "point!"
@@ -1144,7 +1140,7 @@ msgstr ""
 "Indien deze voorwaarden niet aanvaardbaar voor u zijn, ga dan a.u.b. niet "
 "verder."
 
-#: Utility/Gtk/DonationWindow.vala:70
+#: Utility/Gtk/DonationWindow.vala:69
 msgid ""
 "If you find this software useful, you can buy me a coffee by making a "
 "donation with PayPal."
@@ -1166,7 +1162,7 @@ msgstr "Alle bestanden opnemen"
 msgid "Include Only Hidden Files"
 msgstr "Alleen verborgen bestanden opnemen"
 
-#: Core/Main.vala:2048
+#: Core/Main.vala:2042
 msgid "Invalid Snapshot"
 msgstr "Ongeldige momentopname"
 
@@ -1299,7 +1295,7 @@ msgstr "Nieuwste momentopname"
 msgid "License"
 msgstr "Licentie"
 
-#: Core/Main.vala:1366
+#: Core/Main.vala:1360
 #, c-format
 msgid "Linking from snapshot"
 msgstr "Koppelen vanuit momentopname"
@@ -1320,8 +1316,8 @@ msgstr "Lijst van momentopnamen maken"
 msgid "Live USB Mode (Restore Only)"
 msgstr "Live-USB-modus (alleen terugzetten)"
 
-#: Gtk/BackupWindow.vala:87 Gtk/SettingsWindow.vala:90
-#: Gtk/SetupWizardWindow.vala:104
+#: Gtk/SettingsWindow.vala:90 Gtk/SetupWizardWindow.vala:104
+#: Gtk/BackupWindow.vala:87
 msgid "Location"
 msgstr "Locatie"
 
@@ -1333,7 +1329,7 @@ msgstr "Hoofdvenster door gebruiker gesloten"
 msgid "Mark/Unmark for Deletion"
 msgstr "Markeren/ontmarkeren voor verwijdering"
 
-#: Core/SnapshotRepo.vala:684 Core/SnapshotRepo.vala:727
+#: Core/SnapshotRepo.vala:621 Core/SnapshotRepo.vala:664
 msgid "Maximum backups exceeded for backup level"
 msgstr "Maximale aantal reservekopieën overschreden voor reservekopieniveau"
 
@@ -1349,7 +1345,7 @@ msgstr "Varia"
 msgid "Missing Dependencies"
 msgstr "Ontbrekende afhankelijkheden"
 
-#: Core/SnapshotRepo.vala:661
+#: Core/SnapshotRepo.vala:598
 #, c-format
 msgid "Mode"
 msgstr "Modus"
@@ -1371,15 +1367,15 @@ msgstr "Maandelijkse momentopnamen zijn ingeschakeld"
 msgid "Monthly snapshot failed!"
 msgstr "Maandelijkse momentopname is mislukt."
 
-#: Utility/Gtk/DonationWindow.vala:102
+#: Utility/Gtk/DonationWindow.vala:92
 msgid "More Apps"
 msgstr "Meer toepassingen"
 
-#: Core/Main.vala:2135 Core/Main.vala:2168
+#: Core/Main.vala:2129 Core/Main.vala:2162
 msgid "Mount"
 msgstr "Aankoppelen"
 
-#: Core/Main.vala:2988
+#: Core/Main.vala:2990
 msgid "Moved system subvolume to snapshot directory"
 msgstr "Subvolume van systeem verplaatst naar momentopname-map"
 
@@ -1392,12 +1388,12 @@ msgstr "Meerdere momentopnamen gekozen"
 msgid "Name"
 msgstr "Naam"
 
-#: Gtk/BackupWindow.vala:164 Gtk/DeleteWindow.vala:165
-#: Gtk/SetupWizardWindow.vala:203 Gtk/RestoreWindow.vala:201
+#: Gtk/DeleteWindow.vala:165 Gtk/SetupWizardWindow.vala:203
+#: Gtk/RestoreWindow.vala:201 Gtk/BackupWindow.vala:164
 msgid "Next"
 msgstr "Volgende"
 
-#: Utility/Gtk/CustomMessageDialog.vala:154
+#: Utility/Gtk/CustomMessageDialog.vala:157
 msgid "No"
 msgstr "Nee"
 
@@ -1413,7 +1409,7 @@ msgstr "Geen momentopnamen gekozen"
 msgid "No snapshots available"
 msgstr "Geen momentopnamen beschikbaar"
 
-#: Console/AppConsole.vala:321 Core/SnapshotRepo.vala:886
+#: Console/AppConsole.vala:321 Core/SnapshotRepo.vala:823
 #: Gtk/MainWindow.vala:1009
 msgid "No snapshots found"
 msgstr "Geen momentopnamen gevonden"
@@ -1426,7 +1422,7 @@ msgstr "Geen momentopnamen gevonden op apparaat"
 msgid "No snapshots on device"
 msgstr "Geen momentopnamen op apparaat"
 
-#: Core/SnapshotRepo.vala:637
+#: Core/SnapshotRepo.vala:574
 msgid "No snapshots on this device"
 msgstr "Geen momentopnamen op dit apparaat"
 
@@ -1443,7 +1439,7 @@ msgstr "Geen"
 msgid "Not Found"
 msgstr "Niet gevonden"
 
-#: Core/SnapshotRepo.vala:655
+#: Core/SnapshotRepo.vala:592
 msgid "Not Selected"
 msgstr "Niet gekozen"
 
@@ -1451,7 +1447,7 @@ msgstr "Niet gekozen"
 msgid "Not Supported"
 msgstr "Niet ondersteund"
 
-#: Core/SnapshotRepo.vala:601 Core/SnapshotRepo.vala:628
+#: Core/SnapshotRepo.vala:538 Core/SnapshotRepo.vala:565
 msgid "Not enough disk space"
 msgstr "Niet genoeg schijfruimte"
 
@@ -1477,9 +1473,9 @@ msgstr ""
 "Oudere momentopnamen zullen worden verwijderd wanneer deze grens wordt "
 "overschreden."
 
-#: Core/SnapshotRepo.vala:611 Gtk/ExcludeListSummaryWindow.vala:84
-#: Gtk/SettingsWindow.vala:123 Utility/Gtk/CustomMessageDialog.vala:144
-#: Utility/Gtk/CustomMessageDialog.vala:148 Utility/GtkHelper.vala:118
+#: Core/SnapshotRepo.vala:548 Gtk/ExcludeListSummaryWindow.vala:84
+#: Gtk/SettingsWindow.vala:123 Utility/Gtk/CustomMessageDialog.vala:147
+#: Utility/Gtk/CustomMessageDialog.vala:151 Utility/GtkHelper.vala:108
 msgid "OK"
 msgstr "Oké"
 
@@ -1492,7 +1488,7 @@ msgstr ""
 "Ubuntu-achtige subvolume-indeling (@ en @home subvolumes). Andere indelingen "
 "worden niet ondersteund."
 
-#: Core/Main.vala:4014
+#: Core/Main.vala:4016
 msgid "Older log files removed"
 msgstr "Oudere logboekbestanden verwijderd"
 
@@ -1504,7 +1500,7 @@ msgstr "Oudste momentopname"
 msgid "On demand (manual)"
 msgstr "Op aanvraag (handmatig)"
 
-#: Core/Main.vala:383 Core/Main.vala:3462 Gtk/RestoreDeviceBox.vala:511
+#: Core/Main.vala:383 Core/Main.vala:3464 Gtk/RestoreDeviceBox.vala:511
 msgid ""
 "Only ubuntu-type layouts with @ and @home subvolumes are currently supported."
 msgstr ""
@@ -1515,7 +1511,7 @@ msgstr ""
 msgid "Open Menu"
 msgstr "Menu openen"
 
-#: Core/Main.vala:3244
+#: Core/Main.vala:3246
 msgid ""
 "Option --snapshot-device should not be specified for creating snapshots in "
 "BTRFS mode"
@@ -1541,7 +1537,7 @@ msgstr "Eigenaar"
 msgid "Parent Device"
 msgstr "Moederapparaat"
 
-#: Core/Main.vala:2491 Core/Main.vala:2582 Gtk/RsyncLogBox.vala:222
+#: Core/Main.vala:2493 Core/Main.vala:2584 Gtk/RsyncLogBox.vala:222
 msgid "Parsing log file..."
 msgstr "Logboekbestand lezen..."
 
@@ -1549,7 +1545,7 @@ msgstr "Logboekbestand lezen..."
 msgid "Partition has an unsupported subvolume layout."
 msgstr "Partitie heeft een niet-ondersteunde subvolume-indeling."
 
-#: Core/SnapshotRepo.vala:660 Gtk/RestoreDeviceBox.vala:93
+#: Core/SnapshotRepo.vala:597 Gtk/RestoreDeviceBox.vala:93
 #, c-format
 msgid "Path"
 msgstr "Pad"
@@ -1567,7 +1563,7 @@ msgstr "Rechten"
 msgid "Please check if you have multiple windows open."
 msgstr "Kijk a.u.b. na of u meerdere vensters heeft openstaan."
 
-#: Core/Main.vala:2266
+#: Core/Main.vala:2260
 msgid "Please do not interrupt the restore process!"
 msgstr "Onderbreek a.u.b. het terugzetproces niet."
 
@@ -1585,7 +1581,7 @@ msgstr "Draai a.u.b. de toepassing opnieuw als beheerder (met 'sudo' of 'su')"
 msgid "Please run the application as admin (using 'sudo' or 'su')"
 msgstr "Draai a.u.b. de toepassing als beheerder (met 'sudo' of 'su')"
 
-#: Core/Main.vala:2216
+#: Core/Main.vala:2210
 msgid "Please save your work and close all applications."
 msgstr "Sla a.u.b. uw werk op en sluit alle toepassingen."
 
@@ -1613,13 +1609,13 @@ msgstr "Even geduld a.u.b..."
 msgid "Populating list..."
 msgstr "Lijst vullen..."
 
-#: Core/Main.vala:1601 Gtk/BackupBox.vala:114 Gtk/DeleteBox.vala:68
+#: Core/Main.vala:1595 Gtk/BackupBox.vala:114 Gtk/DeleteBox.vala:68
 #: Gtk/RestoreBox.vala:88 Gtk/RsyncLogBox.vala:232
 msgid "Preparing..."
 msgstr "Voorbereiden..."
 
-#: Gtk/BackupWindow.vala:156 Gtk/DeleteWindow.vala:157
-#: Gtk/SetupWizardWindow.vala:195 Gtk/RestoreWindow.vala:193
+#: Gtk/DeleteWindow.vala:157 Gtk/SetupWizardWindow.vala:195
+#: Gtk/RestoreWindow.vala:193 Gtk/BackupWindow.vala:156
 msgid "Previous"
 msgstr "Vorige"
 
@@ -1627,11 +1623,11 @@ msgstr "Vorige"
 msgid "Print debug information"
 msgstr "Druk foutopsporingsinformatie af"
 
-#: Core/Main.vala:3824
+#: Core/Main.vala:3826
 msgid "Query completed"
 msgstr "Bevraging voltooid"
 
-#: Core/Main.vala:3807
+#: Core/Main.vala:3809
 msgid "Querying subvolume info..."
 msgstr "De subvolume-informatie bevragen..."
 
@@ -1657,7 +1653,7 @@ msgstr ""
 msgid "Re-install GRUB2 bootloader?"
 msgstr "Opstartlader GRUB2 opnieuw installeren?"
 
-#: Core/Main.vala:2329
+#: Core/Main.vala:2323
 msgid "Re-installing GRUB2 bootloader..."
 msgstr "Opstartlader GRUB2 opnieuw installeren..."
 
@@ -1670,7 +1666,7 @@ msgstr "Installeert de opstartlader GRUB2 opnieuw op het gekozen apparaat."
 msgid "Read %'d of %'d lines..."
 msgstr "%'d van %'d regels lezen..."
 
-#: Core/Main.vala:2422
+#: Core/Main.vala:2423
 msgid "Rebooting system..."
 msgstr "Systeem opnieuw opstarten..."
 
@@ -1691,8 +1687,8 @@ msgstr "Netwerklocaties en locaties-op-afstand worden niet ondersteund."
 msgid "Remove"
 msgstr "Verwijderen"
 
-#: Core/Snapshot.vala:509 Core/SnapshotRepo.vala:963 Core/Main.vala:1639
-#: Core/Main.vala:1650 Core/Main.vala:4010
+#: Core/Snapshot.vala:509 Core/SnapshotRepo.vala:900 Core/Main.vala:1633
+#: Core/Main.vala:1644 Core/Main.vala:4012
 #, c-format
 msgid "Removed"
 msgstr "Verwijderd"
@@ -1701,7 +1697,7 @@ msgstr "Verwijderd"
 msgid "Removed cron task"
 msgstr "crontaak verwijderd"
 
-#: Core/Main.vala:3612
+#: Core/Main.vala:3614
 #, c-format
 msgid "Removed mount directory: '%s'"
 msgstr "Aankoppelmap verwijderd: '%s'"
@@ -1718,8 +1714,8 @@ msgstr "Verwijderen..."
 msgid "Removing snapshot"
 msgstr "Momentopname verwijderen..."
 
-#: Core/SnapshotRepo.vala:819 Core/SnapshotRepo.vala:838
-#: Core/SnapshotRepo.vala:856 Core/SnapshotRepo.vala:870
+#: Core/SnapshotRepo.vala:756 Core/SnapshotRepo.vala:775
+#: Core/SnapshotRepo.vala:793 Core/SnapshotRepo.vala:807
 #, c-format
 msgid "Removing snapshots"
 msgstr "Momentopnamen verwijderen..."
@@ -1746,7 +1742,7 @@ msgstr "Terugzetten uitsluiten"
 msgid "Restore Snapshot"
 msgstr "Momentopname terugzetten"
 
-#: Core/Main.vala:2831 Core/Main.vala:2873
+#: Core/Main.vala:2833 Core/Main.vala:2875
 msgid "Restore completed"
 msgstr "Terugzetten voltooid"
 
@@ -1782,7 +1778,7 @@ msgstr ""
 "blijven als nieuwe momentopname. Indien gewenst, kan deze momentopname later "
 "worden teruggezet om het eerdere terugzetten ongedaan te maken."
 
-#: Core/Main.vala:2800
+#: Core/Main.vala:2802
 msgid "Restoring snapshot..."
 msgstr "Momentopname terugzetten..."
 
@@ -1848,7 +1844,7 @@ msgstr ""
 "zelfs een andere Linuxdistributie installeren en later de vorige distributie "
 "terugzetten, door het simpelweg terugzetten van een momentopname."
 
-#: Core/Main.vala:1307 Core/Main.vala:1461 Core/Main.vala:1463
+#: Core/Main.vala:1301 Core/Main.vala:1455 Core/Main.vala:1457
 msgid "Saving to device"
 msgstr "Opslaan op apparaat"
 
@@ -1887,7 +1883,7 @@ msgstr ""
 msgid "Select '%s' device (default = %s)"
 msgstr "Kies '%s' apparaat (standaard = %s)"
 
-#: Console/AppConsole.vala:691 Core/SnapshotRepo.vala:565
+#: Console/AppConsole.vala:691 Core/SnapshotRepo.vala:502
 msgid "Select BTRFS system disk with root subvolume (@)"
 msgstr "Kies BTRFS-bestandssysteem met root-subvolume (@)"
 
@@ -1932,7 +1928,7 @@ msgstr "Kies een enkele momentopname om terug te zetten"
 msgid "Select another device for root file system (/)"
 msgstr "Kies een ander apparaat voor het root-bestandssysteem (/)"
 
-#: Core/SnapshotRepo.vala:604 Core/SnapshotRepo.vala:631
+#: Core/SnapshotRepo.vala:541 Core/SnapshotRepo.vala:568
 msgid "Select another device or free up some space"
 msgstr "Kies een ander apparaat of maak wat ruimte vrij"
 
@@ -1984,7 +1980,7 @@ msgstr "Kies de tussenpozen voor het maken van momentopnamen"
 msgid "Select the items to be removed from the list"
 msgstr "Kies de elementen die van de lijst moeten worden verwijderd"
 
-#: Core/SnapshotRepo.vala:525
+#: Core/SnapshotRepo.vala:464
 msgid "Select the snapshot device"
 msgstr "Kies het momentopname-apparaat"
 
@@ -2004,11 +2000,11 @@ msgstr "Kies de momentopnamen die moeten worden gemarkeerd voor verwijdering"
 msgid "Select the target devices where system will be cloned."
 msgstr "Kies de doelapparaten waar het systeem op zal worden gekloond."
 
-#: Core/Main.vala:3272
+#: Core/Main.vala:3274
 msgid "Selected default snapshot device"
 msgstr "Gekozen standaardapparaat voor momentopnamen"
 
-#: Core/Main.vala:3223 Core/Main.vala:3227
+#: Core/Main.vala:3225 Core/Main.vala:3229
 msgid "Selected default snapshot type"
 msgstr "Gekozen standaardsoort voor momentopnamen"
 
@@ -2020,15 +2016,15 @@ msgstr "Gekozen apparaat heeft geen BTRFS-partitie"
 msgid "Selected device does not have Linux partition"
 msgstr "Gekozen apparaat heeft geen Linuxpartitie"
 
-#: Core/SnapshotRepo.vala:146
+#: Core/SnapshotRepo.vala:143
 msgid "Selected snapshot device"
 msgstr "Gekozen momentopname-apparaat"
 
-#: Console/AppConsole.vala:690 Core/SnapshotRepo.vala:564
+#: Console/AppConsole.vala:690 Core/SnapshotRepo.vala:501
 msgid "Selected snapshot device is not a system disk"
 msgstr "Gekozen momentopname-apparaat is geen systeemschijf"
 
-#: Core/Main.vala:2049
+#: Core/Main.vala:2043
 msgid "Selected snapshot is marked for deletion"
 msgstr "Gekozen momentopname is gemarkeerd voor verwijdering"
 
@@ -2115,7 +2111,7 @@ msgstr ""
 msgid "Skip GRUB2 reinstall"
 msgstr "Herinstallatie van GRUB2 overslaan"
 
-#: Core/SnapshotRepo.vala:687 Core/SnapshotRepo.vala:740 Core/Main.vala:2054
+#: Core/SnapshotRepo.vala:624 Core/SnapshotRepo.vala:677 Core/Main.vala:2048
 #: Gtk/SnapshotListBox.vala:93
 #, c-format
 msgid "Snapshot"
@@ -2144,33 +2140,33 @@ msgstr "Niveaus voor momentopnamen"
 msgid "Snapshot deletion in progress..."
 msgstr "Verwijdering van momentopname(n) aan de gang..."
 
-#: Core/SnapshotRepo.vala:442
+#: Core/SnapshotRepo.vala:435
 #, c-format
 msgid "Snapshot device"
 msgstr "Momentopname-apparaat"
 
-#: Console/AppConsole.vala:664 Core/SnapshotRepo.vala:531
+#: Console/AppConsole.vala:664 Core/SnapshotRepo.vala:470
 msgid "Snapshot device not available"
 msgstr "Momentopname-apparaat niet beschikbaar"
 
-#: Console/AppConsole.vala:660 Core/SnapshotRepo.vala:524
+#: Console/AppConsole.vala:660 Core/SnapshotRepo.vala:463
 msgid "Snapshot device not selected"
 msgstr "Momentopname-apparaat niet gekozen"
 
-#: Core/SnapshotRepo.vala:446
+#: Core/SnapshotRepo.vala:439
 #, c-format
 msgid "Snapshot location"
 msgstr "Locatie van momentopname"
 
-#: Core/Main.vala:1274
+#: Core/Main.vala:1273
 msgid "Snapshot saved successfully"
 msgstr "Momentopname met succes opgeslagen"
 
-#: Core/Main.vala:2044
+#: Core/Main.vala:2038
 msgid "Snapshot to restore not specified!"
 msgstr "Terug te zetten momentopname is niet opgegeven."
 
-#: Core/Main.vala:2877
+#: Core/Main.vala:2879
 msgid "Snapshot will become active after system is rebooted."
 msgstr "Momentopname zal actief worden na herstart van het systeem."
 
@@ -2306,7 +2302,7 @@ msgstr "Geef terug te zetten momentopname op"
 msgid "Specify target device"
 msgstr "Geef doelapparaat op"
 
-#: Core/SnapshotRepo.vala:452 Core/SnapshotRepo.vala:662
+#: Core/SnapshotRepo.vala:445 Core/SnapshotRepo.vala:599
 #: Gtk/RsyncLogBox.vala:472
 #, c-format
 msgid "Status"
@@ -2316,7 +2312,7 @@ msgstr "Toestand"
 msgid "Stop cron emails for scheduled tasks"
 msgstr "Staak cron-emails voor ingeroosterde taken"
 
-#: Utility/TeeJee.Process.vala:486
+#: Utility/TeeJee.Process.vala:487
 msgid "Stopped"
 msgstr "Gestaakt"
 
@@ -2348,15 +2344,15 @@ msgstr "Schakel om naar BTRFS-modus (standaard: config)"
 msgid "Switch to RSYNC mode (default: config)"
 msgstr "Schakel om naar RSYNC-modus (standaard: config)"
 
-#: Core/SnapshotRepo.vala:1017
+#: Core/SnapshotRepo.vala:954
 msgid "Symlinks updated"
 msgstr "Symbolische koppelingen bijgewerkt"
 
-#: Core/Main.vala:2404
+#: Core/Main.vala:2398
 msgid "Synching file systems..."
 msgstr "Bestandssystemen synchroniseren..."
 
-#: Core/Main.vala:1383 Core/Main.vala:2566 Core/Main.vala:2807
+#: Core/Main.vala:1377 Core/Main.vala:2568 Core/Main.vala:2809
 msgid "Synching files with rsync..."
 msgstr "Bestanden synchroniseren met rsync..."
 
@@ -2379,15 +2375,15 @@ msgstr ""
 "Het systeem kan teruggerold worden naar een eerdere datum, door het "
 "terugzetten van een momentopname."
 
-#: Core/Main.vala:2267
+#: Core/Main.vala:2261
 msgid "System will reboot after files are restored"
 msgstr "Het systeem zal herstarten nadat de bestanden zijn teruggezet"
 
-#: Core/Main.vala:2217
+#: Core/Main.vala:2211
 msgid "System will reboot after files are restored."
 msgstr "Het systeem zal herstarten nadat de bestanden zijn teruggezet."
 
-#: Core/Main.vala:1243 Core/Main.vala:1284
+#: Core/Main.vala:1242 Core/Main.vala:1283
 msgid "Tagged snapshot"
 msgstr "Gemarkeerde momentopname"
 
@@ -2395,7 +2391,7 @@ msgstr "Gemarkeerde momentopname"
 msgid "Tags"
 msgstr "Markeringen"
 
-#: Core/Main.vala:2079
+#: Core/Main.vala:2073
 msgid "Target device is not mounted"
 msgstr "Doelapparaat is niet aangekoppeld"
 
@@ -2403,7 +2399,7 @@ msgstr "Doelapparaat is niet aangekoppeld"
 msgid "Target device is same as system device"
 msgstr "Doelapparaat is hetzelfde als het systeemapparaat"
 
-#: Core/Main.vala:2073
+#: Core/Main.vala:2067
 msgid "Target device not specified!"
 msgstr "Doelapparaat is niet opgegeven."
 
@@ -2429,7 +2425,7 @@ msgstr ""
 msgid "The system partition has an unsupported subvolume layout."
 msgstr "De systeempartitie heeft een niet-ondersteunde subvolume-indeling."
 
-#: Core/Main.vala:3461
+#: Core/Main.vala:3463
 msgid "The target partition has an unsupported subvolume layout."
 msgstr "De doelpartitie heeft een niet-ondersteunde subvolume-indeling."
 
@@ -2442,7 +2438,7 @@ msgstr "Er zijn geen momentopnamen op dit apparaat"
 msgid "This device is not encrypted"
 msgstr "Dit apparaat is niet versleuteld"
 
-#: Core/Main.vala:2233
+#: Core/Main.vala:2227
 msgid ""
 "This software comes without absolutely NO warranty and the author takes no "
 "responsibility for any damage arising from the use of this program."
@@ -2451,7 +2447,7 @@ msgstr ""
 "geen enkele verantwoordelijkheid voor welke schade dan ook, die mogelijk "
 "voortvloeit uit het gebruik van dit programma."
 
-#: Utility/Gtk/DonationWindow.vala:66
+#: Utility/Gtk/DonationWindow.vala:65
 msgid ""
 "This software is free for personal and commercial use. It is distributed in "
 "the hope that it is useful but without any warranty or support. See the GNU "
@@ -2501,11 +2497,11 @@ msgstr "UUID"
 msgid "Unknown option"
 msgstr "Onbekende optie"
 
-#: Core/Main.vala:1225
+#: Core/Main.vala:1224
 msgid "Unknown snapshot type"
 msgstr "Onbekende soort momentopname"
 
-#: Core/Main.vala:1588
+#: Core/Main.vala:1582
 msgid "Unknown value specified for option --tags"
 msgstr "Onbekende waarde opgegeven voor optie --tags"
 
@@ -2522,7 +2518,7 @@ msgstr "Met succes ontsloten"
 msgid "Unmounting from"
 msgstr "Ontkoppelen van"
 
-#: Core/Main.vala:3465 Gtk/RestoreDeviceBox.vala:508
+#: Core/Main.vala:3467 Gtk/RestoreDeviceBox.vala:508
 msgid "Unsupported Subvolume Layout"
 msgstr "Niet-ondersteunde subvolume-indeling"
 
@@ -2534,11 +2530,11 @@ msgstr "GRUBmenu bijwerken"
 msgid "Update initramfs"
 msgstr "initramfs bijwerken"
 
-#: Core/Main.vala:2746
+#: Core/Main.vala:2748
 msgid "Updated /etc/crypttab on target device"
 msgstr "Bijgewerkte /etc/crypttab op doelapparaat"
 
-#: Core/Main.vala:2666
+#: Core/Main.vala:2668
 msgid "Updated /etc/fstab on target device"
 msgstr "Bijgewerkte /etc/fstab op doelapparaat"
 
@@ -2550,15 +2546,15 @@ msgstr ""
 "Werkt de elementen in het GRUBmenu bij (aanbevolen). Dit is veilig om uit te "
 "voeren en zou gekozen moeten blijven."
 
-#: Core/Main.vala:2387
+#: Core/Main.vala:2381
 msgid "Updating GRUB menu..."
 msgstr "GRUBmenu bijwerken..."
 
-#: Core/Main.vala:2590
+#: Core/Main.vala:2592
 msgid "Updating bootloader configuration..."
 msgstr "Instellingen van opstartlader bijwerken..."
 
-#: Utility/Gtk/DonationWindow.vala:81
+#: Utility/Gtk/DonationWindow.vala:80
 msgid ""
 "Use the GitHub issue tracker for reporting issues, or post your questions on "
 "the Linux Mint forums. Please avoid reporting issues by email."
@@ -2616,7 +2612,7 @@ msgstr "Bekijk Rsync-logboek voor terugzetten"
 msgid "View TimeShift Logs"
 msgstr "Bekijk de logboeken van Timeshift"
 
-#: Core/Main.vala:2128 Gtk/RestoreSummaryBox.vala:53
+#: Core/Main.vala:2122 Gtk/RestoreSummaryBox.vala:53
 msgid "Warning"
 msgstr "Waarschuwing"
 
@@ -2624,7 +2620,7 @@ msgstr "Waarschuwing"
 msgid "Web Browsers"
 msgstr "Webbrowsers"
 
-#: Utility/Gtk/DonationWindow.vala:100
+#: Utility/Gtk/DonationWindow.vala:90
 #, fuzzy
 msgid "Website"
 msgstr "Website"
@@ -2653,7 +2649,7 @@ msgstr "Instelhulp"
 msgid "Wrong password"
 msgstr "Verkeerd wachtwoord"
 
-#: Utility/Gtk/CustomMessageDialog.vala:153
+#: Utility/Gtk/CustomMessageDialog.vala:156
 msgid "Yes"
 msgstr "Ja"
 
@@ -2691,15 +2687,15 @@ msgstr ""
 msgid "[Warning] Deleted invalid lock"
 msgstr "[Waarschuwing] Ongeldig slot verwijderd"
 
-#: Core/SnapshotRepo.vala:870
+#: Core/SnapshotRepo.vala:807
 msgid "all"
 msgstr "alles"
 
-#: Core/Subvolume.vala:199 Core/Main.vala:1516 Core/Main.vala:3867
+#: Core/Subvolume.vala:199 Core/Main.vala:1510 Core/Main.vala:3869
 msgid "btrfs returned an error"
 msgstr "btrfs meldde een fout"
 
-#: Core/Snapshot.vala:500 Core/Main.vala:1415
+#: Core/Snapshot.vala:500 Core/Main.vala:1409
 msgid "complete"
 msgstr "volledig"
 
@@ -2711,31 +2707,34 @@ msgstr "crontab-bestand geëxporteerd"
 msgid "crontab file installed"
 msgstr "crontab-bestand geïnstalleerd"
 
-#: Core/SnapshotRepo.vala:856
+#: Core/SnapshotRepo.vala:793
 msgid "incomplete"
 msgstr "onvolledig"
 
-#: Core/SnapshotRepo.vala:838
+#: Core/SnapshotRepo.vala:775
 msgid "marked for deletion"
 msgstr "gemarkeerd voor verwijdering"
 
-#: Core/Main.vala:1307 Core/Main.vala:1461 Core/Main.vala:1463
+#: Core/Main.vala:1301 Core/Main.vala:1455 Core/Main.vala:1457
 msgid "mounted at path"
 msgstr "aangekoppeld op pad"
 
-#: Core/Snapshot.vala:501 Core/Main.vala:1415 Gtk/BackupBox.vala:234
+#: Core/Snapshot.vala:501 Core/Main.vala:1409 Gtk/BackupBox.vala:234
 #: Gtk/DeleteBox.vala:149 Gtk/RestoreBox.vala:237
 msgid "remaining"
 msgstr "resterend"
 
-#: Core/Main.vala:1426
+#: Core/Main.vala:1420
 msgid "rsync returned an error"
 msgstr "rsync meldde een fout"
 
-#: Core/SnapshotRepo.vala:687 Core/SnapshotRepo.vala:740
-#: Core/SnapshotRepo.vala:819
+#: Core/SnapshotRepo.vala:624 Core/SnapshotRepo.vala:677
+#: Core/SnapshotRepo.vala:756
 msgid "un-tagged"
 msgstr "ontmarkeerd"
+
+#~ msgid "Clone current system"
+#~ msgstr "Huidig systeem klonen"
 
 #~ msgid "Volume"
 #~ msgstr "Opslagmedium"

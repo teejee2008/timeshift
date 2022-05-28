@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: linuxmint\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2022-05-24 11:46+0530\n"
+"POT-Creation-Date: 2022-05-28 16:13+0530\n"
 "PO-Revision-Date: 2017-10-20 22:08+0000\n"
 "Last-Translator: Kheyyam Gojayev <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <az@li.org>\n"
@@ -29,7 +29,7 @@ msgstr ""
 "\n"
 "Davam etmək üçün ENTER vurun"
 
-#: Core/SnapshotRepo.vala:613
+#: Core/SnapshotRepo.vala:550
 #, c-format
 msgid "%d snapshots, %s free"
 msgstr "%d nüsxələr, %s boş"
@@ -52,19 +52,19 @@ msgstr "GRUB2-nin (təkrar) quraşdırılma yeri:"
 msgid "** Uninstalled Timeshift BTRFS **"
 msgstr "** Timeshift BTRFS silindi **"
 
-#: Core/Main.vala:3372
+#: Core/Main.vala:3374
 msgid "/ is mapped to device"
 msgstr "/ cihaza qoşuldu"
 
-#: Core/Main.vala:3394
+#: Core/Main.vala:3396
 msgid "/boot is mapped to device"
 msgstr "/boot cihaza qoşuldu"
 
-#: Core/Main.vala:3405
+#: Core/Main.vala:3407
 msgid "/boot/efi is mapped to device"
 msgstr "/boot/efi cihaza qoşuldu"
 
-#: Core/Main.vala:3383
+#: Core/Main.vala:3385
 msgid "/home is mapped to device"
 msgstr "/home cihaza qoşuldu"
 
@@ -186,11 +186,11 @@ msgstr "Hal-hazırda Timeshiftin başqa nümunəsi başladılıb!"
 msgid "Answer YES to all confirmation prompts"
 msgstr "Bütün sorğuları təsdiqləmək üçün BƏLİ cavabı verin"
 
-#: Core/Main.vala:3209
+#: Core/Main.vala:3211
 msgid "App config loaded"
 msgstr "Tətbiqin ayarları yükləndi"
 
-#: Core/Main.vala:3097
+#: Core/Main.vala:3099
 msgid "App config saved"
 msgstr "Tətbiqin ayarları saxlanıldı"
 
@@ -198,7 +198,7 @@ msgstr "Tətbiqin ayarları saxlanıldı"
 msgid "Application needs admin access."
 msgstr "Tətbiq, inzibatçı imtiyazları tələb edir."
 
-#: Core/Main.vala:3549
+#: Core/Main.vala:3551
 msgid "Application will exit"
 msgstr "Tətbiq bağlanacaq"
 
@@ -230,7 +230,7 @@ msgstr "BTRFS nüsxələri"
 msgid "BTRFS Tools Not Found"
 msgstr "BTRFS vasitəsi tapılmadı"
 
-#: Core/Main.vala:2063 Core/Main.vala:2067
+#: Core/Main.vala:2057 Core/Main.vala:2061
 msgid "BTRFS device is not mounted"
 msgstr "BTRFS cihazı qoşulmayıb"
 
@@ -266,11 +266,11 @@ msgstr "Server tərəfi"
 msgid "Backup"
 msgstr "Ehtiyat nüsxələmə"
 
-#: Core/Main.vala:2039
+#: Core/Main.vala:2033
 msgid "Backup Device"
 msgstr "Ehtiyyat nüsxələmə üçün qurğu"
 
-#: Core/Main.vala:2034
+#: Core/Main.vala:2028
 msgid "Backup device not specified!"
 msgstr "Ehtiyyat nüsxələmə üçün qurğu göstərilməyib!"
 
@@ -321,14 +321,14 @@ msgstr "Fayllara baxış"
 msgid "Browse selected snapshot"
 msgstr "Seçilmiş nüsxələrə baxış"
 
-#: Core/Main.vala:2521
+#: Core/Main.vala:2523
 msgid "Building file list..."
 msgstr "Fayl sisyahısı qurulur..."
 
-#: Gtk/BackupWindow.vala:181 Gtk/DeleteWindow.vala:190
-#: Gtk/SetupWizardWindow.vala:220 Gtk/RestoreWindow.vala:215
-#: Gtk/RestoreWindow.vala:224 Utility/Gtk/CustomMessageDialog.vala:149
-#: Utility/GtkHelper.vala:119
+#: Gtk/DeleteWindow.vala:190 Gtk/SetupWizardWindow.vala:220
+#: Gtk/RestoreWindow.vala:215 Gtk/RestoreWindow.vala:224
+#: Gtk/BackupWindow.vala:181 Utility/Gtk/CustomMessageDialog.vala:152
+#: Utility/GtkHelper.vala:109
 msgid "Cancel"
 msgstr "Ləğv edin"
 
@@ -365,7 +365,7 @@ msgstr "Element dəyişdirildi"
 msgid "Checking Restore Actions (Dry Run)"
 msgstr "Bərpa əməllərini dəyişin (Sınaq başlaması)"
 
-#: Core/Main.vala:2754
+#: Core/Main.vala:2756
 msgid "Checking file systems for errors..."
 msgstr "Fayl sisteminində xətalar yoxlanılır..."
 
@@ -374,7 +374,7 @@ msgstr "Fayl sisteminində xətalar yoxlanılır..."
 msgid "Checksum"
 msgstr "Yoxlama cəmi"
 
-#: Core/Main.vala:2410
+#: Core/Main.vala:2404
 msgid "Cleaning up..."
 msgstr "Təmizlənir..."
 
@@ -390,22 +390,18 @@ msgstr "Düzəliş üçün vurun. Yenidən sıralamaq üçün tutub köçürün.
 msgid "Clone System"
 msgstr "Sistemin təkrarını yaradın"
 
-#: Console/AppConsole.vala:365
-msgid "Clone current system"
-msgstr "Cari sistemin təkrarını yaradın"
-
 #: Gtk/RestoreFinishBox.vala:68
 msgid "Cloning"
 msgstr "Təkrarı yaradılır"
 
-#: Core/Main.vala:2804
+#: Core/Main.vala:2806
 msgid "Cloning system..."
 msgstr "Sistemin təkrarı yaradılır..."
 
-#: Gtk/BackupWindow.vala:172 Gtk/BootOptionsWindow.vala:106
-#: Gtk/DeleteWindow.vala:173 Gtk/RsyncLogBox.vala:266
-#: Gtk/RestoreWindow.vala:501 Utility/Gtk/AboutWindow.vala:330
-#: Utility/Gtk/DonationWindow.vala:104
+#: Gtk/BootOptionsWindow.vala:106 Gtk/DeleteWindow.vala:173
+#: Gtk/RsyncLogBox.vala:266 Gtk/RestoreWindow.vala:501
+#: Gtk/BackupWindow.vala:172 Utility/Gtk/AboutWindow.vala:330
+#: Utility/Gtk/DonationWindow.vala:94
 msgid "Close"
 msgstr "Bağlayın"
 
@@ -422,11 +418,11 @@ msgstr "Şağıdakı siyahıdakı əmrlər bu sistemdə əlçatan deyil"
 msgid "Comments (click to edit)"
 msgstr "Şərhlər (düzəliş üçün vurun)"
 
-#: Core/Main.vala:2797 Gtk/RestoreBox.vala:74 Gtk/RestoreBox.vala:187
+#: Core/Main.vala:2799 Gtk/RestoreBox.vala:74 Gtk/RestoreBox.vala:187
 msgid "Comparing Files (Dry Run)..."
 msgstr "Fayllar müqayisə olunur (Sınaq başlaması)..."
 
-#: Core/Main.vala:2563
+#: Core/Main.vala:2565
 msgid "Comparing files with rsync..."
 msgstr "Fayllar rsync ilə müqayısə olunur"
 
@@ -465,11 +461,11 @@ msgstr "Fayl tapılmadı"
 msgid "Could not find snapshot"
 msgstr "Ehtiyyat nüsxə tapılmadı"
 
-#: Core/Main.vala:2966
+#: Core/Main.vala:2968
 msgid "Could not find system subvolume"
 msgstr "Sistem alt bölməsi tapılmadı"
 
-#: Core/Main.vala:2994
+#: Core/Main.vala:2996
 msgid "Could not find system subvolumes for creating pre-restore snapshot"
 msgstr ""
 "Bərpadan əvvəlki ehtiyyat nüsxənin yaradılması üçün alt bölmələr tapılmadı"
@@ -541,15 +537,15 @@ msgstr "Nüsxələndi"
 msgid "Created control file"
 msgstr "Nəzarət faylı yaradı"
 
-#: Utility/TeeJee.FileSystem.vala:332
+#: Utility/TeeJee.FileSystem.vala:294
 msgid "Created directory"
 msgstr "Qovluq yaradıldı"
 
-#: Core/Main.vala:3016
+#: Core/Main.vala:3018
 msgid "Created pre-restore snapshot"
 msgstr "Bərpadan əvvəlki nüsxə yaradıldı"
 
-#: Core/Main.vala:1521
+#: Core/Main.vala:1515
 msgid "Created subvolume snapshot"
 msgstr "Alt bölmə nüsxələri yaradıldı"
 
@@ -557,15 +553,15 @@ msgstr "Alt bölmə nüsxələri yaradıldı"
 msgid "Creating Snapshot..."
 msgstr "Nüsxələnir..."
 
-#: Core/Main.vala:1459
+#: Core/Main.vala:1453
 msgid "Creating new backup..."
 msgstr "Yeni ehtiyyat nüsxə yaradılır..."
 
-#: Core/Main.vala:1305
+#: Core/Main.vala:1299
 msgid "Creating new snapshot..."
 msgstr "Yeni nüsxə yaradılır..."
 
-#: Core/Main.vala:2944
+#: Core/Main.vala:2946
 msgid "Creating pre-restore snapshot from system subvolumes..."
 msgstr "Sistem alt bölməsindən bərpadan əvvəlki nüsxə yaradılır..."
 
@@ -573,7 +569,7 @@ msgstr "Sistem alt bölməsindən bərpadan əvvəlki nüsxə yaradılır..."
 msgid "Credits"
 msgstr "Məlumatlar"
 
-#: Core/Main.vala:3548
+#: Core/Main.vala:3550
 msgid "Critical Error"
 msgstr "Ciddi xəta"
 
@@ -605,7 +601,7 @@ msgstr "Günlük nüsxələmə uğursuz oldu!"
 msgid "Daily snapshots are enabled"
 msgstr "Günlük nüsxələmələr aktiv edildi"
 
-#: Core/Main.vala:2133
+#: Core/Main.vala:2127
 msgid "Data will be modified on following devices:"
 msgstr "Aşağıdakı cihazlardakı verilənlər dəyişəcəkdir:"
 
@@ -642,11 +638,11 @@ msgstr "Nüsxəni silin"
 msgid "Deleted"
 msgstr "Silindi"
 
-#: Utility/TeeJee.FileSystem.vala:366
+#: Utility/TeeJee.FileSystem.vala:328
 msgid "Deleted directory"
 msgstr "Qovluq silindi"
 
-#: Core/Subvolume.vala:167 Core/Main.vala:2923 Core/Main.vala:2927
+#: Core/Subvolume.vala:167 Core/Main.vala:2925 Core/Main.vala:2929
 #, c-format
 msgid "Deleted subvolume"
 msgstr "Alt bölmə silindi"
@@ -669,9 +665,9 @@ msgid "Description"
 msgstr "Təfərrüatı"
 
 #: Console/AppConsole.vala:456 Console/AppConsole.vala:495
-#: Console/AppConsole.vala:543 Core/SnapshotRepo.vala:76
-#: Core/SnapshotRepo.vala:655 Core/SnapshotRepo.vala:658 Core/Main.vala:2136
-#: Core/Main.vala:2168 Gtk/RestoreDeviceBox.vala:97 Utility/Device.vala:1932
+#: Console/AppConsole.vala:543 Core/SnapshotRepo.vala:73
+#: Core/SnapshotRepo.vala:592 Core/SnapshotRepo.vala:595 Core/Main.vala:2130
+#: Core/Main.vala:2162 Gtk/RestoreDeviceBox.vala:97 Utility/Device.vala:1932
 #: Utility/Device.vala:1942
 #, c-format
 msgid "Device"
@@ -685,7 +681,7 @@ msgstr "Cihaz kiliddən çıxarıldı"
 msgid "Device name is empty!"
 msgstr "Cihazın adı boşdur!"
 
-#: Console/AppConsole.vala:665 Core/SnapshotRepo.vala:532 Core/Main.vala:3262
+#: Console/AppConsole.vala:665 Core/SnapshotRepo.vala:471 Core/Main.vala:3264
 msgid "Device not found"
 msgstr "Cihaz tapılmadı"
 
@@ -711,11 +707,11 @@ msgstr "Linux fayl sistemli cihazlar"
 msgid "Devices with Windows file systems are not supported (NTFS, FAT, etc)."
 msgstr "Windows fayl sistemli (NTFS, FAT, və s.) cihzlar dəstəklənmir."
 
-#: Core/SnapshotRepo.vala:970
+#: Core/SnapshotRepo.vala:907
 msgid "Directory not found"
 msgstr "Kataloq tapılmadı"
 
-#: Core/Main.vala:2228 Gtk/RestoreSummaryBox.vala:64
+#: Core/Main.vala:2222 Gtk/RestoreSummaryBox.vala:64
 msgid "Disclaimer"
 msgstr "Cavabdehlikdən imtina"
 
@@ -732,7 +728,7 @@ msgid "Documentation"
 msgstr "Sənədləşmə"
 
 #: Gtk/MainWindow.vala:209 Gtk/MainWindow.vala:210
-#: Utility/Gtk/DonationWindow.vala:43 Utility/Gtk/DonationWindow.vala:76
+#: Utility/Gtk/DonationWindow.vala:42 Utility/Gtk/DonationWindow.vala:75
 msgid "Donate"
 msgstr "Maddi dəstək"
 
@@ -776,7 +772,7 @@ msgstr "Nüsxənin nömrəsini daxil edin (a=Ləğv, p=Əvvəlki, n=Növbəti"
 msgid "Enter the pattern to exclude (Ex: *.mp3, *.bak)"
 msgstr "İstisna olunacaqların şablonunu daxil edin (Məs.:*.mp3, *.bak"
 
-#: Gtk/RestoreDeviceBox.vala:520 Utility/GtkHelper.vala:18
+#: Gtk/RestoreDeviceBox.vala:520
 msgid "Error"
 msgstr "Xəta"
 
@@ -784,7 +780,7 @@ msgstr "Xəta"
 msgid "Error running Rsync"
 msgstr "Rsync işləməsində xəta"
 
-#: Gtk/BackupWindow.vala:82 Gtk/SetupWizardWindow.vala:99
+#: Gtk/SetupWizardWindow.vala:99 Gtk/BackupWindow.vala:82
 msgid "Estimate"
 msgstr "Hesablamaq"
 
@@ -792,7 +788,7 @@ msgstr "Hesablamaq"
 msgid "Estimating System Size..."
 msgstr "Sistemin ölçüsü hesablanır..."
 
-#: Core/Main.vala:1301
+#: Core/Main.vala:1295
 msgid "Estimating system size..."
 msgstr "Sistemin ölçüsü hesablanır..."
 
@@ -828,7 +824,7 @@ msgstr "İstisnalar şablonu"
 msgid "Excluded Directories"
 msgstr "Qovluqlar istisna olundu"
 
-#: Core/Main.vala:1589
+#: Core/Main.vala:1583
 msgid "Expected values: O, B, H, D, W, M"
 msgstr "Gözlənilən dəyərlər: O, B, H, D, W, M"
 
@@ -840,27 +836,27 @@ msgstr "Cron tapşırığı əlavə olunmadı"
 msgid "Failed to copy file"
 msgstr "Fayl kopyalana bilmədi"
 
-#: Utility/TeeJee.FileSystem.vala:335 Utility/TeeJee.FileSystem.vala:344
+#: Utility/TeeJee.FileSystem.vala:297 Utility/TeeJee.FileSystem.vala:306
 msgid "Failed to create directory"
 msgstr "Qovluq yaradılmadı"
 
-#: Core/Main.vala:1427
+#: Core/Main.vala:1421
 msgid "Failed to create new snapshot"
 msgstr "Yeni nüsxə yaradılması uğursuz oldu"
 
-#: Core/Main.vala:1277
+#: Core/Main.vala:1276
 msgid "Failed to create snapshot"
 msgstr "Nüsxə yaradıla bilmədi"
 
-#: Core/Main.vala:1517
+#: Core/Main.vala:1511
 msgid "Failed to create subvolume snapshot"
 msgstr "Alt bölmə nüsxəsi yaradıla bilmədi"
 
-#: Core/SnapshotRepo.vala:1011
+#: Core/SnapshotRepo.vala:948
 msgid "Failed to create symlinks"
 msgstr "Simvolik keçidlər yaradıla bilmədi"
 
-#: Utility/TeeJee.FileSystem.vala:369
+#: Utility/TeeJee.FileSystem.vala:331
 msgid "Failed to delete directory"
 msgstr "Kataloq silinə bilmədi"
 
@@ -876,11 +872,11 @@ msgstr "Alt bölümdə yerləşən nüsxə silinə bilmədi"
 msgid "Failed to delete snapshot subvolume"
 msgstr "Nüsxə alt bölümü silinə bilmədi"
 
-#: Core/SnapshotRepo.vala:1037
+#: Core/SnapshotRepo.vala:974
 msgid "Failed to delete symlinks"
 msgstr "Simvolik keçidlər silinə bilmədi"
 
-#: Core/Main.vala:3763 Core/Main.vala:3769
+#: Core/Main.vala:3765 Core/Main.vala:3771
 msgid "Failed to estimate system size"
 msgstr "Sitemin ölçüsü hesablana bilmədi"
 
@@ -898,7 +894,7 @@ msgstr "3 cəhd edildi, lakin istifadəçidən girişlər alına bilmədi"
 msgid "Failed to get partition list"
 msgstr "Bölmələr siyahısı alına bilmədi"
 
-#: Core/Main.vala:3345
+#: Core/Main.vala:3347
 msgid "Failed to get partition list."
 msgstr "Bölmələr siyahısı alına bilmədi."
 
@@ -914,11 +910,11 @@ msgstr "Cihazlar qoşula bilmədi"
 msgid "Failed to move file"
 msgstr "Fayl köçürülə bilmədi"
 
-#: Core/Main.vala:2981
+#: Core/Main.vala:2983
 msgid "Failed to move system subvolume to snapshot directory"
 msgstr "Sistem alt bölməsi nüsxələr qovluğuna köçürülə bilmıədi"
 
-#: Core/Main.vala:3868
+#: Core/Main.vala:3870
 msgid "Failed to query subvolume list"
 msgstr "Alt bölmələr siyahısı sorğusu baş tutmadı"
 
@@ -930,7 +926,7 @@ msgstr "Crontab faylı oxuna bilmədi"
 msgid "Failed to read file"
 msgstr "Fayl oxuna bilmədi"
 
-#: Core/SnapshotRepo.vala:957
+#: Core/SnapshotRepo.vala:894
 msgid "Failed to remove"
 msgstr "Silinə bilmədi"
 
@@ -946,7 +942,7 @@ msgstr "Nüsxə silinə bilmədi"
 msgid "Failed to restore system subvolume"
 msgstr "Sistem alt bölməsi bərpa edilə bilmədi"
 
-#: Core/Main.vala:1377
+#: Core/Main.vala:1371
 msgid "Failed to save exclude list"
 msgstr "İstisnalar siyahısı saxlanıla bilmədi"
 
@@ -959,7 +955,7 @@ msgstr "Cihazları kiliddən çıxarmaq baş tutmadı"
 msgid "Failed to unmount"
 msgstr "Ayırmaq olmur"
 
-#: Core/Main.vala:3549
+#: Core/Main.vala:3551
 msgid "Failed to unmount device!"
 msgstr "Cihazları ayırmaq olmur"
 
@@ -1021,8 +1017,8 @@ msgstr "Adına və yoluna görə süzgəcləyin"
 msgid "Filters"
 msgstr "Süzgəclər"
 
-#: Gtk/BackupWindow.vala:97 Gtk/DeleteWindow.vala:103
-#: Gtk/SetupWizardWindow.vala:211
+#: Gtk/DeleteWindow.vala:103 Gtk/SetupWizardWindow.vala:211
+#: Gtk/BackupWindow.vala:97
 msgid "Finish"
 msgstr "Son"
 
@@ -1034,11 +1030,11 @@ msgstr "Başa çatdı"
 msgid "Firefox, Chromium, Chrome, Opera, Epiphany, Midori"
 msgstr "Firefox, Chromium, Chrome, Opera, Epiphany, Midori"
 
-#: Core/SnapshotRepo.vala:639
+#: Core/SnapshotRepo.vala:576
 msgid "First snapshot requires:"
 msgstr "İlk nüsxə tələb olunur:"
 
-#: Core/Main.vala:2914
+#: Core/Main.vala:2916
 msgid "Found existing pre-restore snapshot"
 msgstr "Mövcud bərpadan əvvəlki nüsxə tapıldı"
 
@@ -1046,7 +1042,7 @@ msgstr "Mövcud bərpadan əvvəlki nüsxə tapıldı"
 msgid "Free"
 msgstr "Boş"
 
-#: Core/SnapshotRepo.vala:77 Core/SnapshotRepo.vala:147
+#: Core/SnapshotRepo.vala:74 Core/SnapshotRepo.vala:144
 msgid "Free space"
 msgstr "Boş yer"
 
@@ -1062,11 +1058,11 @@ msgstr "GRUB cihazı seçilmyib"
 msgid "GRUB will NOT be reinstalled"
 msgstr "GRUB təkrar QURAŞDIRILMAYACAQ"
 
-#: Core/Main.vala:2370
+#: Core/Main.vala:2364
 msgid "Generating initramfs..."
 msgstr "İnitramfs yaradılır..."
 
-#: Utility/Gtk/DonationWindow.vala:98
+#: Utility/Gtk/DonationWindow.vala:88
 msgid "GitHub"
 msgstr "GitHub"
 
@@ -1131,13 +1127,13 @@ msgstr ""
 "Əgər bərpa olunan sistem açıla bilmirsə, Live CD/USB-dən sistemi açın, "
 "Timeshift'i quraşdırın və başqa nüsxəni bərpa etməyə cəhd edin."
 
-#: Core/Main.vala:2234
+#: Core/Main.vala:2228
 msgid ""
 "If these terms are not acceptable to you, please do not proceed beyond this "
 "point!"
 msgstr "Əgər bu sizin üçün uyğun deyilsə lütfən davam etməyin!"
 
-#: Utility/Gtk/DonationWindow.vala:70
+#: Utility/Gtk/DonationWindow.vala:69
 msgid ""
 "If you find this software useful, you can buy me a coffee by making a "
 "donation with PayPal."
@@ -1159,7 +1155,7 @@ msgstr "Bütün fayllar daxil"
 msgid "Include Only Hidden Files"
 msgstr "Yalnız gizli fayllar daxil"
 
-#: Core/Main.vala:2048
+#: Core/Main.vala:2042
 msgid "Invalid Snapshot"
 msgstr "Səhv nüsxə"
 
@@ -1288,7 +1284,7 @@ msgstr "Sonuncu nüsxə"
 msgid "License"
 msgstr "Lisenziya"
 
-#: Core/Main.vala:1366
+#: Core/Main.vala:1360
 #, c-format
 msgid "Linking from snapshot"
 msgstr "Nüsxədən alınıb"
@@ -1309,8 +1305,8 @@ msgstr "Nüsxələrin siyahısı"
 msgid "Live USB Mode (Restore Only)"
 msgstr "Live USB rejimi (Yalnız bərpa)"
 
-#: Gtk/BackupWindow.vala:87 Gtk/SettingsWindow.vala:90
-#: Gtk/SetupWizardWindow.vala:104
+#: Gtk/SettingsWindow.vala:90 Gtk/SetupWizardWindow.vala:104
+#: Gtk/BackupWindow.vala:87
 msgid "Location"
 msgstr "Yerləşmə yeri"
 
@@ -1323,7 +1319,7 @@ msgstr "Əsas pəncərə istifadəçi tərəfindən bağlanıb"
 msgid "Mark/Unmark for Deletion"
 msgstr "Silmək üçün içarələnib"
 
-#: Core/SnapshotRepo.vala:684 Core/SnapshotRepo.vala:727
+#: Core/SnapshotRepo.vala:621 Core/SnapshotRepo.vala:664
 msgid "Maximum backups exceeded for backup level"
 msgstr "Ehtiyyat nüsxələrin sayı maksimum ehtiyyat nüsxələmə səviyyəsini aşdı"
 
@@ -1339,7 +1335,7 @@ msgstr "Qarışıq"
 msgid "Missing Dependencies"
 msgstr "Asılılıqlar çatışmır"
 
-#: Core/SnapshotRepo.vala:661
+#: Core/SnapshotRepo.vala:598
 #, c-format
 msgid "Mode"
 msgstr "Rejim"
@@ -1361,15 +1357,15 @@ msgstr "Aylıq nüsxələmə aktiv edildi"
 msgid "Monthly snapshot failed!"
 msgstr "Aylıq nüsxələmə alınmadı"
 
-#: Utility/Gtk/DonationWindow.vala:102
+#: Utility/Gtk/DonationWindow.vala:92
 msgid "More Apps"
 msgstr ""
 
-#: Core/Main.vala:2135 Core/Main.vala:2168
+#: Core/Main.vala:2129 Core/Main.vala:2162
 msgid "Mount"
 msgstr "Qoşmaq"
 
-#: Core/Main.vala:2988
+#: Core/Main.vala:2990
 msgid "Moved system subvolume to snapshot directory"
 msgstr "Sistem alt bölmələri nüsxələmə kataloquna köçürüldü"
 
@@ -1382,12 +1378,12 @@ msgstr "Birdən çox nüsxələr seçildi"
 msgid "Name"
 msgstr "Ad"
 
-#: Gtk/BackupWindow.vala:164 Gtk/DeleteWindow.vala:165
-#: Gtk/SetupWizardWindow.vala:203 Gtk/RestoreWindow.vala:201
+#: Gtk/DeleteWindow.vala:165 Gtk/SetupWizardWindow.vala:203
+#: Gtk/RestoreWindow.vala:201 Gtk/BackupWindow.vala:164
 msgid "Next"
 msgstr "Növbəti"
 
-#: Utility/Gtk/CustomMessageDialog.vala:154
+#: Utility/Gtk/CustomMessageDialog.vala:157
 msgid "No"
 msgstr "Xeyr"
 
@@ -1403,7 +1399,7 @@ msgstr "Nüsxələr seçilməyib"
 msgid "No snapshots available"
 msgstr "Nüsxələr əlçatan deyil"
 
-#: Console/AppConsole.vala:321 Core/SnapshotRepo.vala:886
+#: Console/AppConsole.vala:321 Core/SnapshotRepo.vala:823
 #: Gtk/MainWindow.vala:1009
 msgid "No snapshots found"
 msgstr "Nüsxələr tapılmadı"
@@ -1416,7 +1412,7 @@ msgstr "Cihazda nüsxələr tapılmadı"
 msgid "No snapshots on device"
 msgstr "Cihazda heç bir nüsxə yoxdur"
 
-#: Core/SnapshotRepo.vala:637
+#: Core/SnapshotRepo.vala:574
 msgid "No snapshots on this device"
 msgstr "Bu cihazda heç bir nüsxə yoxdur"
 
@@ -1433,7 +1429,7 @@ msgstr "Heç biri"
 msgid "Not Found"
 msgstr "Tapılmadı"
 
-#: Core/SnapshotRepo.vala:655
+#: Core/SnapshotRepo.vala:592
 msgid "Not Selected"
 msgstr "Seçilməyib"
 
@@ -1441,7 +1437,7 @@ msgstr "Seçilməyib"
 msgid "Not Supported"
 msgstr "Dəstəklnməyən"
 
-#: Core/SnapshotRepo.vala:601 Core/SnapshotRepo.vala:628
+#: Core/SnapshotRepo.vala:538 Core/SnapshotRepo.vala:565
 msgid "Not enough disk space"
 msgstr "Diskdə kifayət qədər yer yoxdur"
 
@@ -1466,9 +1462,9 @@ msgstr ""
 "Saxlanılacaq nüsxələrin sayı.\n"
 "Bu həddi aşdıqda köhnə nüsxələr silinəcəkdir."
 
-#: Core/SnapshotRepo.vala:611 Gtk/ExcludeListSummaryWindow.vala:84
-#: Gtk/SettingsWindow.vala:123 Utility/Gtk/CustomMessageDialog.vala:144
-#: Utility/Gtk/CustomMessageDialog.vala:148 Utility/GtkHelper.vala:118
+#: Core/SnapshotRepo.vala:548 Gtk/ExcludeListSummaryWindow.vala:84
+#: Gtk/SettingsWindow.vala:123 Utility/Gtk/CustomMessageDialog.vala:147
+#: Utility/Gtk/CustomMessageDialog.vala:151 Utility/GtkHelper.vala:108
 msgid "OK"
 msgstr "OLDU"
 
@@ -1480,7 +1476,7 @@ msgstr ""
 "ƏS, Ubuntu tipli alt bölmə qatı olan bir BTRFS bölməsinə quraşdırılmalıdır "
 "(@ və @home alt bölmələri). Digər səviyyələr qatlar dəstəklənmir."
 
-#: Core/Main.vala:4014
+#: Core/Main.vala:4016
 msgid "Older log files removed"
 msgstr "Köhnə jurnal faylları silindi"
 
@@ -1492,7 +1488,7 @@ msgstr "Köhnə nüsxələr"
 msgid "On demand (manual)"
 msgstr "İstəyə görə"
 
-#: Core/Main.vala:383 Core/Main.vala:3462 Gtk/RestoreDeviceBox.vala:511
+#: Core/Main.vala:383 Core/Main.vala:3464 Gtk/RestoreDeviceBox.vala:511
 msgid ""
 "Only ubuntu-type layouts with @ and @home subvolumes are currently supported."
 msgstr "Yalnız, @ və @home Ubuntu tipli alt bölmələri hal-hazırda dəstəklənir."
@@ -1501,7 +1497,7 @@ msgstr "Yalnız, @ və @home Ubuntu tipli alt bölmələri hal-hazırda dəstək
 msgid "Open Menu"
 msgstr "Menyunu açın"
 
-#: Core/Main.vala:3244
+#: Core/Main.vala:3246
 msgid ""
 "Option --snapshot-device should not be specified for creating snapshots in "
 "BTRFS mode"
@@ -1525,7 +1521,7 @@ msgstr "Sahibi"
 msgid "Parent Device"
 msgstr "Əsas cihaz"
 
-#: Core/Main.vala:2491 Core/Main.vala:2582 Gtk/RsyncLogBox.vala:222
+#: Core/Main.vala:2493 Core/Main.vala:2584 Gtk/RsyncLogBox.vala:222
 msgid "Parsing log file..."
 msgstr "Jurnal faylları təhlil olunur..."
 
@@ -1533,7 +1529,7 @@ msgstr "Jurnal faylları təhlil olunur..."
 msgid "Partition has an unsupported subvolume layout."
 msgstr "Bölmədə dəstəklənməyən alt bölmə qatı var."
 
-#: Core/SnapshotRepo.vala:660 Gtk/RestoreDeviceBox.vala:93
+#: Core/SnapshotRepo.vala:597 Gtk/RestoreDeviceBox.vala:93
 #, c-format
 msgid "Path"
 msgstr "Yol"
@@ -1551,7 +1547,7 @@ msgstr "İcazələr"
 msgid "Please check if you have multiple windows open."
 msgstr "Birdən çox pəncərələrin açılıb-açılmadığını yoxlayın."
 
-#: Core/Main.vala:2266
+#: Core/Main.vala:2260
 msgid "Please do not interrupt the restore process!"
 msgstr "Lütfən bərpa əməliyyatını yarımçıq kəsməyin!"
 
@@ -1569,7 +1565,7 @@ msgstr "Lütfən tətbiqi admin adından ('sudo' və ya 'su' ilə) yenidən baş
 msgid "Please run the application as admin (using 'sudo' or 'su')"
 msgstr "Tətbiqi admin kimi başladın ('sudo' və ya 'su' ilə)"
 
-#: Core/Main.vala:2216
+#: Core/Main.vala:2210
 msgid "Please save your work and close all applications."
 msgstr "İşlərinizi yaddaşda saxlayın və bütün tətbiqləri bağlayın."
 
@@ -1597,13 +1593,13 @@ msgstr "Lütfən gözləyin..."
 msgid "Populating list..."
 msgstr "Siyahı doldurulur..."
 
-#: Core/Main.vala:1601 Gtk/BackupBox.vala:114 Gtk/DeleteBox.vala:68
+#: Core/Main.vala:1595 Gtk/BackupBox.vala:114 Gtk/DeleteBox.vala:68
 #: Gtk/RestoreBox.vala:88 Gtk/RsyncLogBox.vala:232
 msgid "Preparing..."
 msgstr "Hazırlanır..."
 
-#: Gtk/BackupWindow.vala:156 Gtk/DeleteWindow.vala:157
-#: Gtk/SetupWizardWindow.vala:195 Gtk/RestoreWindow.vala:193
+#: Gtk/DeleteWindow.vala:157 Gtk/SetupWizardWindow.vala:195
+#: Gtk/RestoreWindow.vala:193 Gtk/BackupWindow.vala:156
 msgid "Previous"
 msgstr "Əvvəlkilər"
 
@@ -1611,11 +1607,11 @@ msgstr "Əvvəlkilər"
 msgid "Print debug information"
 msgstr "Sazlama məlumatlarını çap edin"
 
-#: Core/Main.vala:3824
+#: Core/Main.vala:3826
 msgid "Query completed"
 msgstr "Sorğu tamamlandı"
 
-#: Core/Main.vala:3807
+#: Core/Main.vala:3809
 msgid "Querying subvolume info..."
 msgstr "Alt bölmə məlumatları sorğulanır..."
 
@@ -1640,7 +1636,7 @@ msgstr ""
 msgid "Re-install GRUB2 bootloader?"
 msgstr "GRUB2 önyükləyici yenidən quraşdırılsın?"
 
-#: Core/Main.vala:2329
+#: Core/Main.vala:2323
 msgid "Re-installing GRUB2 bootloader..."
 msgstr "GRUB2 önyükləyici yenidən quraşdırılır..."
 
@@ -1653,7 +1649,7 @@ msgstr "Seçilmiş cihazda GRUB2 önyükləyici yenidən quraşdırılır."
 msgid "Read %'d of %'d lines..."
 msgstr "%'d / %'d sətirlər oxunur"
 
-#: Core/Main.vala:2422
+#: Core/Main.vala:2423
 msgid "Rebooting system..."
 msgstr "Sistem yenidən başladılır..."
 
@@ -1674,8 +1670,8 @@ msgstr "Serverdəki və şəbəkə üzərindəki yerlər dəstəklənmir."
 msgid "Remove"
 msgstr "Silin"
 
-#: Core/Snapshot.vala:509 Core/SnapshotRepo.vala:963 Core/Main.vala:1639
-#: Core/Main.vala:1650 Core/Main.vala:4010
+#: Core/Snapshot.vala:509 Core/SnapshotRepo.vala:900 Core/Main.vala:1633
+#: Core/Main.vala:1644 Core/Main.vala:4012
 #, c-format
 msgid "Removed"
 msgstr "Silindi"
@@ -1684,7 +1680,7 @@ msgstr "Silindi"
 msgid "Removed cron task"
 msgstr "Cron tapşırığı silindi"
 
-#: Core/Main.vala:3612
+#: Core/Main.vala:3614
 #, c-format
 msgid "Removed mount directory: '%s'"
 msgstr "Qoşulma kataloqu silindi: '%s'"
@@ -1701,8 +1697,8 @@ msgstr "Silinir"
 msgid "Removing snapshot"
 msgstr "Nüsxə silinir"
 
-#: Core/SnapshotRepo.vala:819 Core/SnapshotRepo.vala:838
-#: Core/SnapshotRepo.vala:856 Core/SnapshotRepo.vala:870
+#: Core/SnapshotRepo.vala:756 Core/SnapshotRepo.vala:775
+#: Core/SnapshotRepo.vala:793 Core/SnapshotRepo.vala:807
 #, c-format
 msgid "Removing snapshots"
 msgstr "Nüsxələr silinir"
@@ -1729,7 +1725,7 @@ msgstr "İstisnaları bərpa edin"
 msgid "Restore Snapshot"
 msgstr "Nüsxələri bərpa edin"
 
-#: Core/Main.vala:2831 Core/Main.vala:2873
+#: Core/Main.vala:2833 Core/Main.vala:2875
 msgid "Restore completed"
 msgstr "Bərpa başa çatdı"
 
@@ -1764,7 +1760,7 @@ msgstr ""
 "hazırda istifadə olunan sistem bölmələri yeni nüsxə kimi saxlanılacaq. Sonra "
 "lazım gələrsə bu nüsxə bərpanı 'geri qaytarmaq' üçün istifadə oluna bilər."
 
-#: Core/Main.vala:2800
+#: Core/Main.vala:2802
 msgid "Restoring snapshot..."
 msgstr "Nüsxə bərpa olunur..."
 
@@ -1827,7 +1823,7 @@ msgstr ""
 "distribütoru quraşdıra bilərsiniz və sonra orada nüsxəni bərpa edərək "
 "əvvəlki düstribütoru qaytara bilərsiniz."
 
-#: Core/Main.vala:1307 Core/Main.vala:1461 Core/Main.vala:1463
+#: Core/Main.vala:1301 Core/Main.vala:1455 Core/Main.vala:1457
 msgid "Saving to device"
 msgstr "Cihazda saxlanılır"
 
@@ -1864,7 +1860,7 @@ msgstr ""
 msgid "Select '%s' device (default = %s)"
 msgstr "'%s' cihazı seçin (ilkin = %s)"
 
-#: Console/AppConsole.vala:691 Core/SnapshotRepo.vala:565
+#: Console/AppConsole.vala:691 Core/SnapshotRepo.vala:502
 msgid "Select BTRFS system disk with root subvolume (@)"
 msgstr "Kök alt bölməsi (@) ilə BTRFS sistem diskini seçin"
 
@@ -1909,7 +1905,7 @@ msgstr "Bərpa etmək üçün tək nüsxə seçin"
 msgid "Select another device for root file system (/)"
 msgstr "Kök (/) fayl sistemi üçün başqa cihaz seçin"
 
-#: Core/SnapshotRepo.vala:604 Core/SnapshotRepo.vala:631
+#: Core/SnapshotRepo.vala:541 Core/SnapshotRepo.vala:568
 msgid "Select another device or free up some space"
 msgstr "Başqa cihaz seçin və ya bir az yer boşaldın"
 
@@ -1961,7 +1957,7 @@ msgstr "Nüsxələmə aralıqlarını seçin"
 msgid "Select the items to be removed from the list"
 msgstr "Siyahıdan silinəcək elementləri silin"
 
-#: Core/SnapshotRepo.vala:525
+#: Core/SnapshotRepo.vala:464
 msgid "Select the snapshot device"
 msgstr "Nüsxələmə cihazını seçin"
 
@@ -1981,11 +1977,11 @@ msgstr "Silmək üçün işarələnəcək nüsxələri seçin"
 msgid "Select the target devices where system will be cloned."
 msgstr "Sistemin təktrarının yaradılacağı hədəf cihazları seçin."
 
-#: Core/Main.vala:3272
+#: Core/Main.vala:3274
 msgid "Selected default snapshot device"
 msgstr "İlkin nüsxələmə cihazı seçildi"
 
-#: Core/Main.vala:3223 Core/Main.vala:3227
+#: Core/Main.vala:3225 Core/Main.vala:3229
 msgid "Selected default snapshot type"
 msgstr "İlkin nüsxələmə növü seçildi"
 
@@ -1997,15 +1993,15 @@ msgstr "seçilmiş cihazda BTRFS bölməsi yoxdur"
 msgid "Selected device does not have Linux partition"
 msgstr "Seçilmiş cihazda Linux bölməsi yoxdur"
 
-#: Core/SnapshotRepo.vala:146
+#: Core/SnapshotRepo.vala:143
 msgid "Selected snapshot device"
 msgstr "Seçilmiş nüsxə cihazı"
 
-#: Console/AppConsole.vala:690 Core/SnapshotRepo.vala:564
+#: Console/AppConsole.vala:690 Core/SnapshotRepo.vala:501
 msgid "Selected snapshot device is not a system disk"
 msgstr "Seçilmiş nüsxə cihazı sistem diski deyil"
 
-#: Core/Main.vala:2049
+#: Core/Main.vala:2043
 msgid "Selected snapshot is marked for deletion"
 msgstr "Seçilmiş nüsxə silinmək üçün işarələnib"
 
@@ -2089,7 +2085,7 @@ msgstr ""
 msgid "Skip GRUB2 reinstall"
 msgstr "GRUB quraşdırmasını ötürün"
 
-#: Core/SnapshotRepo.vala:687 Core/SnapshotRepo.vala:740 Core/Main.vala:2054
+#: Core/SnapshotRepo.vala:624 Core/SnapshotRepo.vala:677 Core/Main.vala:2048
 #: Gtk/SnapshotListBox.vala:93
 #, c-format
 msgid "Snapshot"
@@ -2117,33 +2113,33 @@ msgstr "Nüsxələmə səviyyələri"
 msgid "Snapshot deletion in progress..."
 msgstr "Nüsxənin silinməsi icra olunur..."
 
-#: Core/SnapshotRepo.vala:442
+#: Core/SnapshotRepo.vala:435
 #, c-format
 msgid "Snapshot device"
 msgstr "Nüsxələmə cihazı"
 
-#: Console/AppConsole.vala:664 Core/SnapshotRepo.vala:531
+#: Console/AppConsole.vala:664 Core/SnapshotRepo.vala:470
 msgid "Snapshot device not available"
 msgstr "Nüsxələmə cihazı əlçatan deyil"
 
-#: Console/AppConsole.vala:660 Core/SnapshotRepo.vala:524
+#: Console/AppConsole.vala:660 Core/SnapshotRepo.vala:463
 msgid "Snapshot device not selected"
 msgstr "Nüsxələmə cihazı seçilməyib"
 
-#: Core/SnapshotRepo.vala:446
+#: Core/SnapshotRepo.vala:439
 #, c-format
 msgid "Snapshot location"
 msgstr "Nüsxələmə yeri"
 
-#: Core/Main.vala:1274
+#: Core/Main.vala:1273
 msgid "Snapshot saved successfully"
 msgstr "Nüsxələmə uğurla saxlanıldı"
 
-#: Core/Main.vala:2044
+#: Core/Main.vala:2038
 msgid "Snapshot to restore not specified!"
 msgstr "Bərpa etmək üçün nüsxə seçilməyib!"
 
-#: Core/Main.vala:2877
+#: Core/Main.vala:2879
 msgid "Snapshot will become active after system is rebooted."
 msgstr "Sistem yenidən başladıqdan sonra bərpa olunan nüsxə aktiv olacaq."
 
@@ -2274,7 +2270,7 @@ msgstr "Bərpa ediləcək nüsxəni göstərin"
 msgid "Specify target device"
 msgstr "Hədəf cihazını göstərin"
 
-#: Core/SnapshotRepo.vala:452 Core/SnapshotRepo.vala:662
+#: Core/SnapshotRepo.vala:445 Core/SnapshotRepo.vala:599
 #: Gtk/RsyncLogBox.vala:472
 #, c-format
 msgid "Status"
@@ -2284,7 +2280,7 @@ msgstr "Vəziyyət"
 msgid "Stop cron emails for scheduled tasks"
 msgstr "Planlaşdırılmış tapşırıqlar üçün cron e-poçtlarını dayandırın"
 
-#: Utility/TeeJee.Process.vala:486
+#: Utility/TeeJee.Process.vala:487
 msgid "Stopped"
 msgstr "Dayandırıldı"
 
@@ -2316,15 +2312,15 @@ msgstr "BTRFS rejiminə keçin (ilkin: config)"
 msgid "Switch to RSYNC mode (default: config)"
 msgstr "RSYNC rejiminə keçin (ilkin: config)"
 
-#: Core/SnapshotRepo.vala:1017
+#: Core/SnapshotRepo.vala:954
 msgid "Symlinks updated"
 msgstr "Simvolik keçidlər yeniləndi"
 
-#: Core/Main.vala:2404
+#: Core/Main.vala:2398
 msgid "Synching file systems..."
 msgstr "Fayl sistemləri eyniləşdirilir..."
 
-#: Core/Main.vala:1383 Core/Main.vala:2566 Core/Main.vala:2807
+#: Core/Main.vala:1377 Core/Main.vala:2568 Core/Main.vala:2809
 msgid "Synching files with rsync..."
 msgstr "Fayllar, rsync ilə eyniləşdirilir..."
 
@@ -2346,15 +2342,15 @@ msgid "System can be rolled-back to a previous date by restoring a snapshot."
 msgstr ""
 "Nüsxəni brpa etməklə sistemi əvvəlki tarixdəki vəziyyətinə qaytarmaq olar."
 
-#: Core/Main.vala:2267
+#: Core/Main.vala:2261
 msgid "System will reboot after files are restored"
 msgstr "Fayllar bərpa olunduqdan sonra sistem yenidən başladılacaq"
 
-#: Core/Main.vala:2217
+#: Core/Main.vala:2211
 msgid "System will reboot after files are restored."
 msgstr "ayllar bərpa olunduqdan sonra sistem yenidən başladılacaq."
 
-#: Core/Main.vala:1243 Core/Main.vala:1284
+#: Core/Main.vala:1242 Core/Main.vala:1283
 msgid "Tagged snapshot"
 msgstr "Etiketlənmiş nüsxələr"
 
@@ -2362,7 +2358,7 @@ msgstr "Etiketlənmiş nüsxələr"
 msgid "Tags"
 msgstr "Etiketlər"
 
-#: Core/Main.vala:2079
+#: Core/Main.vala:2073
 msgid "Target device is not mounted"
 msgstr "Hədəf cihazı qoşulmayıb"
 
@@ -2370,7 +2366,7 @@ msgstr "Hədəf cihazı qoşulmayıb"
 msgid "Target device is same as system device"
 msgstr "Hədəf cihazı sistem cihazı ilə eynidir"
 
-#: Core/Main.vala:2073
+#: Core/Main.vala:2067
 msgid "Target device not specified!"
 msgstr "Hədəf cihazı göstərilməyib!"
 
@@ -2396,7 +2392,7 @@ msgstr ""
 msgid "The system partition has an unsupported subvolume layout."
 msgstr "Sistem bölməsində dəstəklənməyən alt bölmə qatı var."
 
-#: Core/Main.vala:3461
+#: Core/Main.vala:3463
 msgid "The target partition has an unsupported subvolume layout."
 msgstr "Hədəf cihazında dəstəklənməyən alt bölmə qatı var."
 
@@ -2409,7 +2405,7 @@ msgstr "Bu cihazda heç bir nüsxə yoxdur"
 msgid "This device is not encrypted"
 msgstr "Bi cihaz şifrələnməyib"
 
-#: Core/Main.vala:2233
+#: Core/Main.vala:2227
 msgid ""
 "This software comes without absolutely NO warranty and the author takes no "
 "responsibility for any damage arising from the use of this program."
@@ -2417,7 +2413,7 @@ msgstr ""
 "Bu proqram təminatı heç bir zəmanət VERİLMƏDƏN təqdim olunur və müəllif, bu "
 "proqramın istifadəsi zamanı vurulacaq heç bir ziyan üçün məsuliyyət daşımır."
 
-#: Utility/Gtk/DonationWindow.vala:66
+#: Utility/Gtk/DonationWindow.vala:65
 #, fuzzy
 msgid ""
 "This software is free for personal and commercial use. It is distributed in "
@@ -2469,11 +2465,11 @@ msgstr "UUİD"
 msgid "Unknown option"
 msgstr "Bilinməyən parametr"
 
-#: Core/Main.vala:1225
+#: Core/Main.vala:1224
 msgid "Unknown snapshot type"
 msgstr "Bilinməyən nüsxə növü"
 
-#: Core/Main.vala:1588
+#: Core/Main.vala:1582
 msgid "Unknown value specified for option --tags"
 msgstr "--tags seçimi üçün bilinməyən dəyər göstərildi"
 
@@ -2490,7 +2486,7 @@ msgstr "Uğurla kiliddən çıxarıldı"
 msgid "Unmounting from"
 msgstr "Bu cihazdan ayrılır"
 
-#: Core/Main.vala:3465 Gtk/RestoreDeviceBox.vala:508
+#: Core/Main.vala:3467 Gtk/RestoreDeviceBox.vala:508
 msgid "Unsupported Subvolume Layout"
 msgstr "Dəstəklənməyən alt bölüm qatı"
 
@@ -2502,11 +2498,11 @@ msgstr "GRUB menyusu yenilənsin"
 msgid "Update initramfs"
 msgstr "İnitramfs yenilənsin"
 
-#: Core/Main.vala:2746
+#: Core/Main.vala:2748
 msgid "Updated /etc/crypttab on target device"
 msgstr "Hədəf cihazında /etc/crypttab yeniləndi"
 
-#: Core/Main.vala:2666
+#: Core/Main.vala:2668
 msgid "Updated /etc/fstab on target device"
 msgstr "Hədəf cihazında /etc/fstab yeniləndi"
 
@@ -2518,15 +2514,15 @@ msgstr ""
 "GRUB menyu girişləri yenilənir (tövsiyyə olunan). Bu başlatmaq üçün "
 "təhlükəsizdir və olduğu kimi saxlanılmalıdır."
 
-#: Core/Main.vala:2387
+#: Core/Main.vala:2381
 msgid "Updating GRUB menu..."
 msgstr "GRUB menyu yenilənir..."
 
-#: Core/Main.vala:2590
+#: Core/Main.vala:2592
 msgid "Updating bootloader configuration..."
 msgstr "Önyükləyici tənzimləmələri yenilkənir..."
 
-#: Utility/Gtk/DonationWindow.vala:81
+#: Utility/Gtk/DonationWindow.vala:80
 #, fuzzy
 msgid ""
 "Use the GitHub issue tracker for reporting issues, or post your questions on "
@@ -2584,7 +2580,7 @@ msgstr "Bərpa üçün Rsync jurnalına baxın"
 msgid "View TimeShift Logs"
 msgstr "TimeShift jurnallarına baxın"
 
-#: Core/Main.vala:2128 Gtk/RestoreSummaryBox.vala:53
+#: Core/Main.vala:2122 Gtk/RestoreSummaryBox.vala:53
 msgid "Warning"
 msgstr "Xəbərdarlıq"
 
@@ -2592,7 +2588,7 @@ msgstr "Xəbərdarlıq"
 msgid "Web Browsers"
 msgstr "Veb-bələdçilər"
 
-#: Utility/Gtk/DonationWindow.vala:100
+#: Utility/Gtk/DonationWindow.vala:90
 #, fuzzy
 msgid "Website"
 msgstr "Veb-səhifələr"
@@ -2621,7 +2617,7 @@ msgstr "Köməkçi"
 msgid "Wrong password"
 msgstr "Şifrə səhvdir"
 
-#: Utility/Gtk/CustomMessageDialog.vala:153
+#: Utility/Gtk/CustomMessageDialog.vala:156
 msgid "Yes"
 msgstr "Bəli"
 
@@ -2658,15 +2654,15 @@ msgstr ""
 msgid "[Warning] Deleted invalid lock"
 msgstr "[Xəbərdarlıq] səhv kilid silindi"
 
-#: Core/SnapshotRepo.vala:870
+#: Core/SnapshotRepo.vala:807
 msgid "all"
 msgstr "hamısı"
 
-#: Core/Subvolume.vala:199 Core/Main.vala:1516 Core/Main.vala:3867
+#: Core/Subvolume.vala:199 Core/Main.vala:1510 Core/Main.vala:3869
 msgid "btrfs returned an error"
 msgstr "btrfs xəta ilə cavab verdi"
 
-#: Core/Snapshot.vala:500 Core/Main.vala:1415
+#: Core/Snapshot.vala:500 Core/Main.vala:1409
 msgid "complete"
 msgstr "başa çatdı"
 
@@ -2678,31 +2674,34 @@ msgstr "crontab faylı ixrac olundu"
 msgid "crontab file installed"
 msgstr "crontab faylı quraşdırıldı"
 
-#: Core/SnapshotRepo.vala:856
+#: Core/SnapshotRepo.vala:793
 msgid "incomplete"
 msgstr "Başa çatmayan"
 
-#: Core/SnapshotRepo.vala:838
+#: Core/SnapshotRepo.vala:775
 msgid "marked for deletion"
 msgstr "silimək üçüm işarələnib"
 
-#: Core/Main.vala:1307 Core/Main.vala:1461 Core/Main.vala:1463
+#: Core/Main.vala:1301 Core/Main.vala:1455 Core/Main.vala:1457
 msgid "mounted at path"
 msgstr "bu yolda qoşulub"
 
-#: Core/Snapshot.vala:501 Core/Main.vala:1415 Gtk/BackupBox.vala:234
+#: Core/Snapshot.vala:501 Core/Main.vala:1409 Gtk/BackupBox.vala:234
 #: Gtk/DeleteBox.vala:149 Gtk/RestoreBox.vala:237
 msgid "remaining"
 msgstr "qalır"
 
-#: Core/Main.vala:1426
+#: Core/Main.vala:1420
 msgid "rsync returned an error"
 msgstr "rsync xəta ilə cavab verdi"
 
-#: Core/SnapshotRepo.vala:687 Core/SnapshotRepo.vala:740
-#: Core/SnapshotRepo.vala:819
+#: Core/SnapshotRepo.vala:624 Core/SnapshotRepo.vala:677
+#: Core/SnapshotRepo.vala:756
 msgid "un-tagged"
 msgstr "etiketlənməmiş"
+
+#~ msgid "Clone current system"
+#~ msgstr "Cari sistemin təkrarını yaradın"
 
 #~ msgid "Volume"
 #~ msgstr "Bölmə"

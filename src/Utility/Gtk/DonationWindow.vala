@@ -36,7 +36,6 @@ public class DonationWindow : Gtk.Window {
 	private Gtk.Box vbox_main;
 	private string username = "";
 	private string appname = "Timeshift";
-	private bool has_wiki = false;
 
 	public DonationWindow(Gtk.Window window) {
 
@@ -82,17 +81,8 @@ public class DonationWindow : Gtk.Window {
 		
 		add_label(msg);
 
-		//hbox = add_vbox();
-
-		//if (has_wiki){
-		//	add_button(hbox, _("Wiki"), "https://github.com/teejee2008/%s/wiki".printf(appname.down()));
-		//}
-		
 		// close window ---------------------------------------------------------
 
-		//var lbl_dummy = add_label("");
-		//lbl_dummy.margin = 20;
-		
 		hbox = add_hbox();
 		
 		add_button(hbox, _("GitHub"), "https://github.com/teejee2008/%s/issues".printf(appname.down()));
@@ -137,15 +127,6 @@ public class DonationWindow : Gtk.Window {
 		return hbox;
 	}
 	
-	private Gtk.ButtonBox add_vbox(){
-
-		var vbox = new Gtk.ButtonBox(Orientation.VERTICAL);
-		vbox.set_layout(Gtk.ButtonBoxStyle.CENTER);
-		vbox.set_spacing(6);
-		vbox_main.add(vbox);
-		return vbox;
-	}
-
 	private void add_button(Gtk.Box box, string text, string url){
 
 		var button = new Gtk.Button.with_label(text);

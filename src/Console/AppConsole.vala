@@ -362,7 +362,7 @@ public class AppConsole : GLib.Object {
 		msg += "\n";
 		msg += _("Restore") + ":\n";
 		msg += "  --restore                  " + _("Restore snapshot") + "\n";
-		msg += "  --clone                    " + _("Clone current system") + "\n";
+		//msg += "  --clone                    " + _("Clone current system") + "\n"; // broken feature, not supported
 		msg += "  --snapshot <name>          " + _("Specify snapshot to restore") + "\n";
 		msg += "  --target[-device] <device> " + _("Specify target device") + "\n";
 		msg += "  --grub[-device] <device>   " + _("Specify device for installing GRUB2 bootloader") + "\n";

@@ -255,44 +255,6 @@ namespace TeeJee.FileSystem{
 	
 	// file info -----------------
 
-	public int64 file_get_size(string file_path){
-		
-		try{
-			
-			File file = File.parse_name (file_path);
-			
-			if (FileUtils.test(file_path, GLib.FileTest.EXISTS)){
-				
-				if (FileUtils.test(file_path, GLib.FileTest.IS_REGULAR)
-					&& !FileUtils.test(file_path, GLib.FileTest.IS_SYMLINK)){
-						
-					return file.query_info("standard::size",0).get_size();
-				}
-			}
-		}
-		catch(Error e){
-			log_error (e.message);
-		}
-
-		return -1;
-	}
-
-	public DateTime file_get_modified_date(string file_path){
-		try{
-			FileInfo info;
-			File file = File.parse_name (file_path);
-			if (file.query_exists()) {
-				info = file.query_info("%s".printf(FileAttribute.TIME_MODIFIED), 0);
-				return (new DateTime.from_timeval_utc(info.get_modification_time())).to_local();
-			}
-		}
-		catch (Error e) {
-			log_error (e.message);
-		}
-		
-		return (new DateTime.from_unix_utc(0)); //1970
-	}
-	
 	public string file_get_symlink_target(string file_path){
 		try{
 			FileInfo info;

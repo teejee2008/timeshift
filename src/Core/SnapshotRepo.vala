@@ -54,9 +54,6 @@ public class SnapshotRepo : GLib.Object{
 
 		log_debug("SnapshotRepo: from_path()");
 		
-		//this.snapshot_path_user = path;
-		//this.use_snapshot_path_custom = true;
-
 		this.mount_path = path;
 		this.parent_window = parent_win;
 		this.btrfs_mode = _btrfs_mode;
@@ -427,10 +424,6 @@ public class SnapshotRepo : GLib.Object{
 		status_message = "";
 		status_details = "";
 
-		//log_msg("");
-		//log_msg("Config: Free space limit is %s".printf(
-		//	format_file_size(Main.MIN_FREE_SPACE)));
-
 		if (available()){
 			has_snapshots();
 			has_space();
@@ -461,60 +454,6 @@ public class SnapshotRepo : GLib.Object{
 	public bool available(){
 
 		log_debug("SnapshotRepo: available()");
-		
-		/*if (use_snapshot_path_custom){
-
-			log_debug("checking selected path");
-			
-			if (snapshot_path_user.strip().length == 0){
-				status_message = _("Snapshot device not selected");
-				status_details = _("Select the snapshot device");
-				status_code = SnapshotLocationStatus.NOT_SELECTED;
-				return false;
-			}
-			else{
-				
-				log_debug("path: %s".printf(snapshot_path_user));
-				
-				if (!dir_exists(snapshot_path_user)){
-
-					log_debug("path not found");
-					
-					status_message = _("Snapshot location not available");
-					status_details = _("Path not found") + ": '%s'".printf(snapshot_path_user);
-					status_code = SnapshotLocationStatus.NOT_AVAILABLE;
-					return false;
-				}
-				else{
-					log_debug("path exists");
-					
-					bool is_readonly;
-					bool hardlink_supported =
-						filesystem_supports_hardlinks(snapshot_path_user, out is_readonly);
-
-					if (is_readonly){
-						status_message = _("File system is read-only");
-						status_details = _("Select another location for saving snapshots");
-						status_code = SnapshotLocationStatus.READ_ONLY_FS;
-						log_debug("is_available: false");
-						return false;
-					}
-					else if (!hardlink_supported){
-						status_message = _("File system does not support hard-links");
-						status_details = _("Select another location for saving snapshots");
-						status_code = SnapshotLocationStatus.HARDLINKS_NOT_SUPPORTED;
-						log_debug("is_available: false");
-						return false;
-					}
-					else{
-						log_debug("is_available: ok");
-						// ok
-						return true;
-					}
-				}
-			}
-		}
-		else{*/
 		
 		//log_debug("checking selected device");
 
@@ -548,8 +487,6 @@ public class SnapshotRepo : GLib.Object{
 				return true;
 			}
 		}
-
-		return false;
 	}
 
 	public bool has_btrfs_system(){
@@ -743,7 +680,7 @@ public class SnapshotRepo : GLib.Object{
 			}
 		}
 
-		// remove tags from older older backups - max days -------
+		// remove tags from older backups - max days -------
 
 		/*show_msg = true;
 		count = 0;

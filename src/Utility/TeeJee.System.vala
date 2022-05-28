@@ -204,77 +204,6 @@ namespace TeeJee.System{
 		}
 	}
 
-	public string get_desktop_name(){
-
-		/* Return the names of the current Desktop environment */
-
-		int pid = -1;
-
-		pid = get_pid_by_name("cinnamon");
-		if (pid > 0){
-			return "Cinnamon";
-		}
-
-		pid = get_pid_by_name("xfdesktop");
-		if (pid > 0){
-			return "Xfce";
-		}
-
-		pid = get_pid_by_name("lxsession");
-		if (pid > 0){
-			return "LXDE";
-		}
-
-		pid = get_pid_by_name("gnome-shell");
-		if (pid > 0){
-			return "Gnome";
-		}
-
-		pid = get_pid_by_name("wingpanel");
-		if (pid > 0){
-			return "Elementary";
-		}
-
-		pid = get_pid_by_name("unity-panel-service");
-		if (pid > 0){
-			return "Unity";
-		}
-
-		pid = get_pid_by_name("plasma-desktop");
-		if (pid > 0){
-			return "KDE";
-		}
-
-		return "Unknown";
-	}
-
-	public Gee.ArrayList<string> list_dir_names(string path){
-		var list = new Gee.ArrayList<string>();
-		
-		try
-		{
-			File f_home = File.new_for_path (path);
-			FileEnumerator enumerator = f_home.enumerate_children ("%s".printf(FileAttribute.STANDARD_NAME), 0);
-			FileInfo file;
-			while ((file = enumerator.next_file ()) != null) {
-				string name = file.get_name();
-				//string item = path + "/" + name;
-				list.add(name);
-			}
-		}
-		catch (Error e) {
-			log_error (e.message);
-		}
-
-		//sort the list
-		CompareDataFunc<string> entry_compare = (a, b) => {
-			return strcmp(a,b);
-		};
-		list.sort((owned) entry_compare);
-
-		return list;
-	}
-
 	// internet helpers ----------------------
 	
 	public bool shutdown (){
@@ -362,60 +291,6 @@ namespace TeeJee.System{
 		return false;
 	}
 
-	public bool exo_open_textfile (string txt_file){
-
-		/* Tries to open the given text file in a text editor */
-
-		string path;
-		int status;
-		string cmd;
-		
-		path = get_cmd_path ("exo-open");
-		if ((path != null)&&(path != "")){
-			cmd = "exo-open '%s'".printf(escape_single_quote(txt_file));
-			status = exec_script_async (cmd);
-			return (status == 0);
-		}
-
-		path = get_cmd_path ("gedit");
-		if ((path != null)&&(path != "")){
-			cmd = "gedit --new-document '%s'".printf(escape_single_quote(txt_file));
-			status = exec_script_async (cmd);
-			return (status == 0);
-		}
-
-		return false;
-	}
-
-	public bool exo_open_url (string url){
-
-		/* Tries to open the given text file in a text editor */
-
-		string path;
-		int status;
-		//string cmd;
-		
-		path = get_cmd_path ("exo-open");
-		if ((path != null)&&(path != "")){
-			status = exec_script_async ("exo-open \"" + url + "\"");
-			return (status == 0);
-		}
-
-		path = get_cmd_path ("firefox");
-		if ((path != null)&&(path != "")){
-			status = exec_script_async ("firefox \"" + url + "\"");
-			return (status == 0);
-		}
-
-		path = get_cmd_path ("chromium-browser");
-		if ((path != null)&&(path != "")){
-			status = exec_script_async ("chromium-browser \"" + url + "\"");
-			return (status == 0);
-		}
-
-		return false;
-	}
-
 	public bool using_efi_boot(){
 		
 		/* Returns true if the system was booted in EFI mode
@@ -455,16 +330,6 @@ namespace TeeJee.System{
 		}
 		return "%.0f ms".printf((seconds * 1000 ) + microseconds/1000);
 	}
-
-	public void timer_elapsed_print(GLib.Timer timer, bool stop = true){
-		ulong microseconds;
-		double seconds;
-		seconds = timer.elapsed (out microseconds);
-		if (stop){
-			timer.stop();
-		}
-		log_msg("%s %lu\n".printf(seconds.to_string(), microseconds));
-	}	
 
 	public void set_numeric_locale(string type){
 		Intl.setlocale(GLib.LocaleCategory.NUMERIC, type);

@@ -320,8 +320,6 @@ class BackupWindow : Gtk.Window{
 		}
 	}
 
-	
-
 	private bool validate_current_tab(){
 		
 		if (notebook.page == Tabs.BACKUP_DEVICE){

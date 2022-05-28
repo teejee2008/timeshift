@@ -2248,7 +2248,7 @@ public class Main : GLib.Object{
 
 		log_debug("Main: create_restore_scripts()");
 		
-		string sh = "";
+		string sh = "export LC_ALL=C.UTF-8\n";
 
 		// create scripts --------------------------------------
 
@@ -3733,8 +3733,8 @@ public class Main : GLib.Object{
 			}
 
 			save_exclude_list_for_backup(TEMP_DIR);
-			
-			cmd  = "LC_ALL=C ; rsync -ai --delete --numeric-ids --relative --stats --dry-run --delete-excluded --exclude-from='%s' /. '%s' &> '%s'".printf(file_exclude_list, dir_empty, file_log);
+
+			cmd  = "export LC_ALL=C.UTF-8 ; rsync -ai --delete --numeric-ids --relative --stats --dry-run --delete-excluded --exclude-from='%s' /. '%s' &> '%s'".printf(file_exclude_list, dir_empty, file_log);
 
 			log_debug(cmd);
 			ret_val = exec_script_sync(cmd, out std_out, out std_err);

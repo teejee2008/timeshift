@@ -204,7 +204,8 @@ namespace TeeJee.ProcessHelper{
 		script.append ("#!/bin/bash\n");
 		script.append ("\n");
 		if (force_locale){
-			script.append ("LANG=C\n");
+			script.append("LANG=C\n");
+			script.append("LC_ALL=C.UTF-8\n");
 		}
 		script.append ("\n");
 		script.append ("%s\n".printf(commands));

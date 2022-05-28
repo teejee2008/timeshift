@@ -36,11 +36,7 @@ class MiscBox : Gtk.Box{
 	
 	private Gtk.Window parent_window;
 	private bool restore_mode = false;
-	
-	//private Gtk.CheckButton chk_include_btrfs_home;
-	//private Gtk.CheckButton chk_enable_qgroups;
-	
-	
+
 	public MiscBox (Gtk.Window _parent_window, bool _restore_mode) {
 
 		log_debug("MiscBox: MiscBox()");

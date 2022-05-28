@@ -41,7 +41,6 @@ class UsersBox : Gtk.Box{
 	private Gtk.Box box_btrfs;
 	private Gtk.Label lbl_message;
 	private Gtk.CheckButton chk_include_btrfs_home;
-	private Gtk.CheckButton chk_enable_qgroups;
 	private bool restore_mode = false;
 	
 	public UsersBox (Gtk.Window _parent_window, ExcludeBox _exclude_box, bool _restore_mode) {
@@ -73,8 +72,6 @@ class UsersBox : Gtk.Box{
 		add(box_btrfs);
 
 		init_btrfs_home_option(box_btrfs);
-
-		init_btrfs_qgroup_option(box_btrfs);
 		
 		refresh();
 
@@ -347,26 +344,6 @@ class UsersBox : Gtk.Box{
 		}
 	}
 
-	private void init_btrfs_qgroup_option(Gtk.Box box){
-
-		if (!restore_mode){
-
-			var label = add_label_header(box, _("Miscellaneous"), true);
-			label.margin_top = 12;
-			
-			chk_enable_qgroups = new Gtk.CheckButton.with_label(_("Enable BTRFS qgroups (recommended)"));
-			box.add(chk_enable_qgroups);
-
-			chk_enable_qgroups.set_tooltip_text(_("Required for displaying shared and unshared size for snapshots in the main window"));
-
-			chk_enable_qgroups.active = App.btrfs_use_qgroup;
-
-			chk_enable_qgroups.toggled.connect(()=>{
-				App.btrfs_use_qgroup = chk_enable_qgroups.active; 
-			});
-		}
-	}
-	
 	// helpers
 
 	public void refresh(){

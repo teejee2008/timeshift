@@ -109,7 +109,8 @@ install:
 	mkdir -p "$(DESTDIR)$(sharedir)/icons"
 	mkdir -p "$(DESTDIR)$(sharedir)/appdata" 
 	mkdir -p "$(DESTDIR)$(sharedir)/metainfo"
-
+	mkdir -p "$(DESTDIR)$(sharedir)/pixmaps"
+	
 	# binary
 	install -m 0755 ${app_name} "$(DESTDIR)$(bindir)"
 	install -m 0755 ${app_name}-gtk "$(DESTDIR)$(bindir)"

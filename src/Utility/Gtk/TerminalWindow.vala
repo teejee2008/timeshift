@@ -88,7 +88,7 @@ public class TerminalWindow : Gtk.Window {
 		term.backspace_binding = Vte.EraseBinding.AUTO;
 		term.cursor_blink_mode = Vte.CursorBlinkMode.SYSTEM;
 		term.cursor_shape = Vte.CursorShape.UNDERLINE;
-		term.rewrap_on_resize = true;
+		//term.rewrap_on_resize = true;
 		
 		term.scroll_on_keystroke = true;
 		term.scroll_on_output = true;

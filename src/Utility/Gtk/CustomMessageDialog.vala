@@ -108,6 +108,9 @@ public class CustomMessageDialog : Gtk.Dialog {
 		case Gtk.MessageType.ERROR:
 			icon_name = "dialog-error";
 			break;
+		case Gtk.MessageType.OTHER:
+			icon_name = "dialog-info";
+			break;
 		}
 
 		// image ----------------

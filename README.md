@@ -1,3 +1,8 @@
+| :warning: NOTE          |
+|:---------------------------|
+| There is a forked [version of Timeshift](https://github.com/linuxmint/timeshift) maintained by Linux Mint. This fork will see more development going forward. <br/>I currently update the original version of Timeshift once or twice a year and I plan to continue doing so. My repo of Timeshift will continue to be available, but will only see bug fixes and minor changes. Any new features or PRs should be submitted to the [Linux Mint repository](https://github.com/linuxmint/timeshift).|
+
+
 # Timeshift
 
 Timeshift for Linux is an application that provides functionality similar to the _System Restore_ feature in Windows and the _Time Machine_ tool in Mac OS. Timeshift protects your system by taking incremental snapshots of the file system at regular intervals. These snapshots can be restored at a later date to undo all changes to the system. 

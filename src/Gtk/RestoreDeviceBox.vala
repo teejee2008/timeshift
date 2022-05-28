@@ -394,32 +394,18 @@ class RestoreDeviceBox : Gtk.Box{
 
 	private void add_boot_options(){
 
-		// buffer
-		var label = new Gtk.Label("");
-		label.vexpand = true;
-		add(label);
-		
-		var hbox = new Gtk.ButtonBox (Gtk.Orientation.HORIZONTAL);
-		hbox.margin_bottom = 24;
+		var hbox = new Gtk.ButtonBox(Gtk.Orientation.HORIZONTAL);
+		hbox.layout_style = Gtk.ButtonBoxStyle.START;
         add(hbox);
-
-		var size_group = new Gtk.SizeGroup(SizeGroupMode.HORIZONTAL);
 		
-		// close
-		
-		//var img = new Image.from_stock("gtk-dialog-warning", Gtk.IconSize.BUTTON);
-		var button = add_button(hbox, _("Bootloader Options (Advanced)"), "", size_group, null);
-		button.set_size_request(300, 40);
-		button.set_tooltip_text(_("[Advanced Users Only] Change these settings only if the restored system fails to boot."));
+		string tt = _("[For Experienced Users] Change these settings if the restored system fails to boot.");
+		var button = add_button(hbox, _("Bootloader Options (Advanced)"), tt, null, null);
+		button.margin = 10;
 		var btn_boot_options = button;
-		//hbox.set_child_packing(btn_boot_options, false, true, 6, Gtk.PackType.END);
-		
+
         btn_boot_options.clicked.connect(()=>{
 			var win = new BootOptionsWindow();
 			win.set_transient_for(parent_window);
-			//win.destroy.connect(()=>{
-				
-			//});;
 		});
 	}
 

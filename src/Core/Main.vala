@@ -78,7 +78,7 @@ public class Main : GLib.Object{
 	public Gee.HashMap<string, Subvolume> sys_subvolumes;
 
 	public string mount_point_restore = "";
-	public string mount_point_app = "/run/timeshift";
+	public string mount_point_app = "";
 
 	public LinuxDistro current_distro;
 	public bool mirror_system = false;
@@ -173,9 +173,12 @@ public class Main : GLib.Object{
 
 	public string encrypted_private_dirs = "";
 	public bool encrypted_private_warning_shown = false;
-
+	
 	public Main(string[] args, bool gui_mode){
-
+		
+		this.mount_point_app = "/run/timeshift/%lld".printf(Posix.getpid());
+		dir_create(this.mount_point_app);
+		
 		parse_some_arguments(args);
 	
 		if (gui_mode){
@@ -927,7 +930,7 @@ public class Main : GLib.Object{
 		});
 	}
 
-	//properties
+	// properties
 	
 	public bool scheduled{
 		get{
@@ -3421,7 +3424,7 @@ public class Main : GLib.Object{
 
 	public bool mount_target_devices(Gtk.Window? parent_win = null){
 		/* Note:
-		 * Target device will be mounted explicitly to /mnt/timeshift/restore
+		 * Target device will be mounted explicitly to /run/timeshift/<pid>/restore
 		 * Existing mount points are not used since we need to mount other devices in sub-directories
 		 * */
 
@@ -4257,10 +4260,86 @@ public class Main : GLib.Object{
 		app_lock.remove();
 		
 		dir_delete(TEMP_DIR);
-
+		
+		cleanup_unmount_devices();
+		
 		exit(exit_code);
 
 		//Gtk.main_quit ();
+	}
+	
+	private void cleanup_unmount_devices(){
+		
+		log_debug("cleanup_unmount_devices()");
+		
+		if (!dir_exists("/run/timeshift")){ return; }
+		
+		var dirlist = dir_list_names("/run/timeshift");
+		
+		foreach(var dname in dirlist){
+			
+			int pid = int.parse(dname);
+
+			if (pid != Posix.getpid()){ // if some other process
+				
+				// check if the process is still running
+				
+				string procdir = "/proc/%d".printf(pid);
+				
+				if (dir_exists(procdir)){ continue; }
+			}
+			
+			// -----------------------------------------------
+			
+			string mdir = "/run/timeshift/%s".printf(dname);
+			
+			var dirlist2 = dir_list_names(mdir);
+			
+			foreach(var dname2 in dirlist2){
+				
+				string mdir2 = "/run/timeshift/%s/%s".printf(dname, dname2);
+				
+				// check if a device is mounted here
+				
+				foreach (var dev in Device.get_filesystems()){
+					
+					foreach (var mnt in dev.mount_points){
+						
+						if (mnt.mount_point == mdir2){
+							
+							log_msg("\nFound stale mount for device '%s' at path '%s'".printf(dev.device, mdir2));
+			
+							string cmd = "umount '%s'".printf(escape_single_quote(mdir2));
+							int retval = exec_sync(cmd);
+							
+							string cmd2 = "rmdir '%s'".printf(escape_single_quote(mdir2));
+							int retval2 = exec_sync(cmd2);
+							
+							if (retval2 != 0){
+								log_error("Failed to unmount");
+								log_msg("Ret=%d".printf(retval));
+								//ignore
+							}
+							else{
+								log_msg("Unmounted successfully");
+							}
+						}
+					}
+				}
+			}
+			
+			if (dir_exists(mdir)){
+
+				string cmd3 = "rmdir '%s'".printf(escape_single_quote(mdir));
+				int retval3 = exec_sync(cmd3);
+				
+				if (retval3 != 0){
+					log_error("Failed to remove directory");
+					log_msg("Ret=%d".printf(retval3));
+					//ignore
+				}
+			}
+		}
 	}
 }
 

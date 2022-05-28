@@ -125,10 +125,10 @@ public class Subvolume : GLib.Object{
 
 		if (is_system_subvolume){
 			if (name == "@"){
-				path = path_combine("/run/timeshift/backup", "@");
+				path = path_combine(App.mount_point_app + "/backup", "@");
 			}
 			else if (name == "@home"){
-				path = path_combine("/run/timeshift/backup-home", "@home");
+				path = path_combine(App.mount_point_app + "/backup-home", "@home");
 			}
 		}
 		

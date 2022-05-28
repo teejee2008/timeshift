@@ -201,6 +201,12 @@ class RestoreWindow : Gtk.Window{
 		btn_next = add_button(bbox, _("Next"), "", size_group, null);
 
         btn_next.clicked.connect(()=>{
+			
+			// finish any pending Gtk events before showing the next page
+			gtk_set_busy(true, this);
+			gtk_do_events();
+			gtk_set_busy(false, this);
+			
 			go_next();
 		});
 

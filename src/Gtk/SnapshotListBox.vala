@@ -445,6 +445,11 @@ class SnapshotListBox : Gtk.Box{
 		
 		var ctxt = (cell as Gtk.CellRendererText);
 		ctxt.text = bak.sys_distro;
+
+		if ("LinuxMint" in ctxt.text) {
+			ctxt.text = ctxt.text.replace("LinuxMint", "Linux Mint");
+		}
+
 		ctxt.sensitive = !bak.marked_for_deletion;
 
 		if (bak.live){

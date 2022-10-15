@@ -59,13 +59,13 @@ public class DonationWindow : Gtk.Window {
 		if (get_user_id_effective() == 0){
 			username = get_username();
 		}
-
+		
+		string msg = "";
+		
 		// -----------------------------
-
-		string msg = _("This software is free for personal and commercial use. It is distributed in the hope that it is useful but without any warranty or support. See the GNU General Public License v2 or later for more information");
-
-		add_label(msg);
-
+		
+		add_label("<b>%s</b>".printf(_("Donate")));
+		
 		msg = _("If you find this software useful, you can buy me a coffee by making a donation with PayPal.");
 
 		add_label(msg);
@@ -77,19 +77,29 @@ public class DonationWindow : Gtk.Window {
 
 		// -----------------------------
 		
-		msg = _("Use the GitHub issue tracker for reporting issues, or post your questions on the Linux Mint forums. Please avoid reporting issues by email.");
+		add_label("<b>%s</b>".printf(_("Linux Mint Version")));
+		
+		msg = _("There is a fork of Timeshift maintained by Linux Mint which is under more active development. It is recommended to switch to the Linux Mint version.\n\nThis version of Timeshift will continue to be available but will only see minor fixes and changes. Any new features, issues, or pull requests should be submitted to the Linux Mint repository.");
 		
 		add_label(msg);
-
-		// close window ---------------------------------------------------------
-
+		
 		hbox = add_hbox();
 		
-		add_button(hbox, _("GitHub"), "https://github.com/teejee2008/%s/issues".printf(appname.down()));
+		add_button(hbox, _("Linux Mint GitHub"), "https://github.com/linuxmint/%s/issues".printf(appname));
+
+		// close window ---------------------------------------------------------
+		
+		add_label("<b>%s</b>".printf(_("Website")));
+		
+		add_label("Visit teejeetech.com for more Linux apps.");
+		
+		add_label("");
+		
+		hbox = add_hbox();
 		
 		add_button(hbox, _("Website"), "https://teejeetech.com/");
 
-		add_button(hbox, _("More Apps"), "https://teejeetech.com/shop/");
+		add_button(hbox, _("Store"), "https://teejeetech.com/shop/");
 		
 		var button = new Gtk.Button.with_label(_("Close"));
 		hbox.add(button);

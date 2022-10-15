@@ -37,7 +37,7 @@ using TeeJee.System;
 using TeeJee.Misc;
 
 class BackupBox : Gtk.Box{
-	
+	private Gtk.Box details_box;
 	private Gtk.Spinner spinner;
 	public Gtk.Label lbl_msg;
 	public Gtk.Label lbl_status;
@@ -77,24 +77,27 @@ class BackupBox : Gtk.Box{
 		Gtk.SizeGroup sg_label = null;
 		Gtk.SizeGroup sg_value = null;
 
-		var label = add_label(this, _("File and directory counts:"), true);
+		details_box = new Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6);
+		add(details_box);
+
+		var label = add_label(details_box, _("File and directory counts:"), true);
 		label.margin_bottom = 6;
 		label.margin_top = 12;
 		
-		lbl_unchanged = add_count_label(this, _("No Change"), ref sg_label, ref sg_value);
-		lbl_created = add_count_label(this, _("Created"), ref sg_label, ref sg_value);
-		lbl_deleted = add_count_label(this, _("Deleted"), ref sg_label, ref sg_value);
-		lbl_modified = add_count_label(this, _("Changed"), ref sg_label, ref sg_value, 12);
+		lbl_unchanged = add_count_label(details_box, _("No Change"), ref sg_label, ref sg_value);
+		lbl_created = add_count_label(details_box, _("Created"), ref sg_label, ref sg_value);
+		lbl_deleted = add_count_label(details_box, _("Deleted"), ref sg_label, ref sg_value);
+		lbl_modified = add_count_label(details_box, _("Changed"), ref sg_label, ref sg_value, 12);
 
-		label = add_label(this, _("Changed items:"), true);
+		label = add_label(details_box, _("Changed items:"), true);
 		label.margin_bottom = 6;
 		
-		lbl_checksum = add_count_label(this, _("Checksum"), ref sg_label, ref sg_value);
-		lbl_size = add_count_label(this, _("Size"), ref sg_label, ref sg_value);
-		lbl_timestamp = add_count_label(this, _("Timestamp"), ref sg_label, ref sg_value);
-		lbl_permissions = add_count_label(this, _("Permissions"), ref sg_label, ref sg_value);
-		lbl_owner = add_count_label(this, _("Owner"), ref sg_label, ref sg_value);
-		lbl_group = add_count_label(this, _("Group"), ref sg_label, ref sg_value, 24);
+		lbl_checksum = add_count_label(details_box, _("Checksum"), ref sg_label, ref sg_value);
+		lbl_size = add_count_label(details_box, _("Size"), ref sg_label, ref sg_value);
+		lbl_timestamp = add_count_label(details_box, _("Timestamp"), ref sg_label, ref sg_value);
+		lbl_permissions = add_count_label(details_box, _("Permissions"), ref sg_label, ref sg_value);
+		lbl_owner = add_count_label(details_box, _("Owner"), ref sg_label, ref sg_value);
+		lbl_group = add_count_label(details_box, _("Group"), ref sg_label, ref sg_value, 24);
 
 		lbl_deleted.sensitive = false;
 
@@ -208,11 +211,30 @@ class BackupBox : Gtk.Box{
 			string status_line = "";
 			string last_status_line = "";
 			int remaining_counter = 10;
-			
-			while (thread_is_running){
 
-				status_line = escape_html(App.task.status_line);
-				
+			while (thread_is_running){
+                string task_status_line;
+                double fraction;
+                string task_stat_time_remaining;
+
+				bool checking = App.space_check_task != null;
+
+				details_box.visible = !checking;
+
+                if (checking)
+                {
+                    task_status_line = App.space_check_task.status_line;
+                    fraction = App.space_check_task.progress;
+                    task_stat_time_remaining = App.space_check_task.stat_time_remaining;
+                }
+                else
+                {
+                    task_status_line = App.task.status_line;
+                    fraction = App.task.progress;
+                    task_stat_time_remaining = App.task.stat_time_remaining;
+                }
+
+				status_line = escape_html(task_status_line);
 				if (status_line != last_status_line){
 					lbl_status.label = status_line;
 					last_status_line = status_line;
@@ -226,13 +248,11 @@ class BackupBox : Gtk.Box{
 					}
 				}
 
-				double fraction = App.task.progress;
-
 				// time remaining
 				remaining_counter--;
 				if (remaining_counter == 0){
 					lbl_remaining.label =
-						App.task.stat_time_remaining + " " + _("remaining");
+						task_stat_time_remaining + " " + _("remaining");
 
 					remaining_counter = 10;
 				}	
@@ -246,16 +266,19 @@ class BackupBox : Gtk.Box{
 
 				lbl_msg.label = escape_html(App.progress_text);
 
-				lbl_unchanged.label = "%'d".printf(App.task.count_unchanged);
-				lbl_created.label = "%'d".printf(App.task.count_created);
-				lbl_deleted.label = "%'d".printf(App.task.count_deleted);
-				lbl_modified.label = "%'d".printf(App.task.count_modified);
-				lbl_checksum.label = "%'d".printf(App.task.count_checksum);
-				lbl_size.label = "%'d".printf(App.task.count_size);
-				lbl_timestamp.label = "%'d".printf(App.task.count_timestamp);
-				lbl_permissions.label = "%'d".printf(App.task.count_permissions);
-				lbl_owner.label = "%'d".printf(App.task.count_owner);
-				lbl_group.label = "%'d".printf(App.task.count_group);
+				if (!checking)
+				{
+					lbl_unchanged.label = "%'d".printf(App.task.count_unchanged);
+					lbl_created.label = "%'d".printf(App.task.count_created);
+					lbl_deleted.label = "%'d".printf(App.task.count_deleted);
+					lbl_modified.label = "%'d".printf(App.task.count_modified);
+					lbl_checksum.label = "%'d".printf(App.task.count_checksum);
+					lbl_size.label = "%'d".printf(App.task.count_size);
+					lbl_timestamp.label = "%'d".printf(App.task.count_timestamp);
+					lbl_permissions.label = "%'d".printf(App.task.count_permissions);
+					lbl_owner.label = "%'d".printf(App.task.count_owner);
+					lbl_group.label = "%'d".printf(App.task.count_group);
+				}
 
 				gtk_do_events();
 

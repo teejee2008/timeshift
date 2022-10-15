@@ -515,7 +515,7 @@ class MainWindow : Gtk.Window{
 
 		// check snapshot device -----------
 
-		if (!App.repo.available() || !App.repo.has_space()){
+		if (!App.repo.available()){
 			gtk_messagebox(App.repo.status_message, App.repo.status_details, this, true);
 			// allow user to continue after showing message
 		}

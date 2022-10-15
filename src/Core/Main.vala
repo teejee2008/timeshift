@@ -120,8 +120,6 @@ public class Main : GLib.Object{
 
 	public int startup_delay_interval_mins = 10;
 	public int retain_snapshots_max_days = 200;
-	
-	public int64 snapshot_location_free_space = 0;
 
 	public const uint64 MIN_FREE_SPACE = 1 * GB;
 	public static uint64 first_snapshot_size = 0;
@@ -163,6 +161,7 @@ public class Main : GLib.Object{
 	
 	public RsyncTask task;
 	public DeleteFileTask delete_file_task;
+	public RsyncSpaceCheckTask space_check_task;
 
 	public Gee.HashMap<string, SystemUser> current_system_users;
 	public string users_with_encrypted_home = "";
@@ -1246,24 +1245,57 @@ public class Main : GLib.Object{
 			}
 		}
 
-		if (!repo.available() || !repo.has_space()){
+		if (!repo.available()) {
 			log_error(repo.status_message);
 			log_error(repo.status_details);
 			exit_app();
 		}
 		
-		// create new snapshot -----------------------
 
+		if (repo.mount_path.length == 0){
+			log_error("Backup location not mounted");
+			exit_app();
+		}
+
+		// create new snapshot -----------------------
 		Snapshot new_snapshot = null;
-		if (btrfs_mode){
+		if (btrfs_mode)
+		{
 			new_snapshot = create_snapshot_with_btrfs(tag, dt_created);
 		}
-		else{
+		else
+		if (first_snapshot_size > 0 && repo.device.free_bytes < first_snapshot_size)
+		{
+			// Perform a dry-run of the intended backup and make sure we'll have enough room
+			uint64 needed = get_space_needed_for_rsync_snapshot(dt_created);
+			bool enough = repo.has_space(needed);
+
+			var message = "Space required for snapshot: %lld (%s). Space available: %lu (%s)"
+							    .printf(needed, format_file_size(needed), repo.device.free_bytes, repo.device.free);
+			log_msg(message);
+			if (!enough)
+			{
+				message = "Not enough disk space! Additional required: %lld (%s)".printf(needed - repo.device.free_bytes, format_file_size(needed - repo.device.free_bytes));
+				log_msg(message);
+			}
+
+			if (enough)
+			{
+				new_snapshot = create_snapshot_with_rsync(tag, dt_created);
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			// this is the initial snapshot (which means a size check has already been made) or the target
+			// drive's available space is more than the the original (full) snapshot's size.
 			new_snapshot = create_snapshot_with_rsync(tag, dt_created);
 		}
-		
 		// finish ------------------------------
-	
+
 		var dt_end = new DateTime.now_local();
 		TimeSpan elapsed = dt_end.difference(dt_begin);
 		long seconds = (long)(elapsed * 1.0 / TimeSpan.SECOND);
@@ -1287,8 +1319,109 @@ public class Main : GLib.Object{
 		return status;
 	}
 
-	private Snapshot? create_snapshot_with_rsync(string tag, DateTime dt_created){
+	private uint64 get_space_needed_for_rsync_snapshot(DateTime dt_created) {
+		log_msg(string.nfill(78, '-'));
 
+		log_msg("Checking if target drive has enough free space for a snapshot (RSYNC)");
+		log_msg("Target device: %s, mount path: %s".printf(repo.device.device, repo.mount_path));
+		
+		string time_stamp = dt_created.format("%Y-%m-%d_%H-%M-%S");
+		string snapshot_dir = repo.snapshots_path;
+		string snapshot_name = time_stamp;
+		string snapshot_path = path_combine(snapshot_dir, snapshot_name);
+		dir_create(snapshot_path);
+		string localhost_path = path_combine(snapshot_path, "localhost");
+		dir_create(localhost_path);
+		
+		string sys_uuid = (sys_root == null) ? "" : sys_root.uuid;
+
+		Snapshot snapshot_to_link = null;
+
+		// check if a snapshot was restored recently and use it for linking ---------
+
+		try{
+			
+			string ctl_path = path_combine(snapshot_dir, ".sync-restore");
+			var f = File.new_for_path(ctl_path);
+			
+			if (f.query_exists()){
+
+				// read snapshot name from file
+				string snap_path = file_read(ctl_path);
+				string snap_name = file_basename(snap_path);
+				
+				// find the snapshot that was restored
+				foreach(var bak in repo.snapshots){
+					if ((bak.name == snap_name) && (bak.sys_uuid == sys_uuid)){
+						// use for linking
+						snapshot_to_link = bak;
+						// delete the restore-control-file
+						f.delete();
+						break;
+					}
+				}
+			}
+		}
+		catch(Error e){
+			log_error (e.message);
+			return 0;
+		}
+
+		// get latest snapshot to link if not set -------
+
+		if (snapshot_to_link == null){
+			snapshot_to_link = repo.get_latest_snapshot("", sys_uuid);
+		}
+
+		string link_from_path = "";
+		if (snapshot_to_link != null){
+			log_msg("Linking from snapshot: %s".printf(snapshot_to_link.name));
+			link_from_path = "%s/localhost/".printf(snapshot_to_link.path);
+		}
+
+		// save exclude list ----------------
+
+		bool ok = save_exclude_list_for_backup(snapshot_path);
+		
+		string exclude_from_file = path_combine(snapshot_path, "exclude.list");
+
+		if (!ok){
+			log_error("Failed to save exclude list");
+			return 0;
+		}
+
+		progress_text = _("Calculating disk space required...");
+		log_msg(progress_text);
+
+		space_check_task = new RsyncSpaceCheckTask();
+
+		space_check_task.source_path = "";
+		space_check_task.dest_path = snapshot_path + "/localhost/";
+		space_check_task.link_from_path = link_from_path;
+		space_check_task.exclude_from_file = exclude_from_file;
+		space_check_task.prg_count_total = Main.first_snapshot_count;
+
+		space_check_task.relative = true;
+		space_check_task.verbose = true;
+		space_check_task.delete_extra = true;
+		space_check_task.delete_excluded = true;
+		space_check_task.delete_after = false;
+
+		space_check_task.execute();
+
+		while (space_check_task.status == AppStatus.RUNNING){
+			sleep(1000);
+			gtk_do_events();
+
+			stdout.flush();
+		}
+
+		var total_size = space_check_task.total_size;
+		space_check_task = null;
+		return total_size;
+	}
+
+	private Snapshot? create_snapshot_with_rsync(string tag, DateTime dt_created){
 		log_msg(string.nfill(78, '-'));
 
 		if (first_snapshot_size == 0){

@@ -149,27 +149,9 @@ namespace TeeJee.Misc {
 		return new_txt;
 	}
 	
-	public string escape_html(string html, bool pango_markup = true){
-		string txt = html;
-
-		if (pango_markup){
-			txt = txt
-				.replace("\\u00", "")
-				.replace("\\x"  , ""); 
-		}
-		else{
-			txt = txt
-				.replace(" ", "&nbsp;");  //pango markup throws an error with &nbsp;
-		}
+	public string escape_html(string html){
 		
-		txt = txt
-				.replace("&" , "&amp;")
-				.replace("\"", "&quot;")
-				.replace("<" , "&lt;")
-				.replace(">" , "&gt;")
-				;
-
-		return txt;
+		return GLib.Markup.escape_text(html);
 	}
 
 	public string unescape_html(string html){

@@ -925,33 +925,18 @@ class MainWindow : Gtk.Window{
 	private void btn_about_clicked (){
 		
 		var dialog = new AboutWindow(this);
-		dialog.set_transient_for (this);
+		dialog.set_transient_for(this);
 
 		dialog.authors = {
 			"Tony George:teejeetech@gmail.com"
 		};
 
-		dialog.translators = null;
-
-		dialog.contributors = {
-			"View on GitHub:https://github.com/teejee2008/timeshift/graphs/contributors"
-		};
-
-		dialog.third_party = {
-			"rsync by Andrew Tridgell, Wayne Davison, and others:http://rsync.samba.org/"
-		};
-
-		dialog.documenters = null;
-		dialog.artists = null;
-		dialog.donations = null;
-
 		dialog.program_name = AppName;
 		dialog.comments = _("System Restore Utility");
-		dialog.copyright = "Copyright © 2012-21 Tony George (%s)".printf(AppAuthorEmail);
+		dialog.copyright = "Copyright © 2012-22 Tony George (%s)".printf(AppAuthorEmail);
 		dialog.version = AppVersion;
 		dialog.logo = IconManager.lookup("timeshift", 256);
 
-		//dialog.license = "";
 		dialog.website = "https://teejeetech.com/";
 		dialog.website_label = "https://teejeetech.com/";
 		

@@ -34,14 +34,8 @@ using TeeJee.Misc;
 public class AboutWindow : Gtk.Window {
 	
 	private Gtk.Box vbox_main;
-	private Gtk.Box vbox_logo;
-	private Gtk.Box vbox_credits;
-	private Gtk.Box vbox_license;
 	private Gtk.Box vbox_lines;
 	private Gtk.Box hbox_action;
-	private Gtk.Button btn_license;
-	private Gtk.Button btn_credits;
-	private Gtk.Button btn_close;
 	private Gtk.Window window;
 
 	private Gtk.Image img_logo;
@@ -52,16 +46,6 @@ public class AboutWindow : Gtk.Window {
 	private Gtk.LinkButton lbtn_website;
 	private Gtk.Label lbl_copyright;
 
-	private string[] _artists;
-	public string[] artists{
-		get{
-			return _artists;
-		}
-		set{
-			_artists = value;
-		}
-	}
-
 	private string[] _authors;
 	public string[] authors{
 		get{
@@ -69,16 +53,6 @@ public class AboutWindow : Gtk.Window {
 		}
 		set{
 			_authors = value;
-		}
-	}
-
-	private string[] _contributors;
-	public string[] contributors{
-		get{
-			return _contributors;
-		}
-		set{
-			_contributors = value;
 		}
 	}
 	
@@ -91,7 +65,7 @@ public class AboutWindow : Gtk.Window {
 			_comments = value;
 		}
 	}
-
+	
 	private string _copyright = "";
 	public string copyright{
 		get{
@@ -99,36 +73,6 @@ public class AboutWindow : Gtk.Window {
 		}
 		set{
 			_copyright = value;
-		}
-	}
-
-	private string[] _documenters;
-	public string[] documenters{
-		get{
-			return _documenters;
-		}
-		set{
-			_documenters = value;
-		}
-	}
-
-	private string[] _donations;
-	public string[] donations{
-		get{
-			return _donations;
-		}
-		set{
-			_donations = value;
-		}
-	}
-
-	private string _license = "";
-	public string license{
-		get{
-			return _license;
-		}
-		set{
-			_license = value;
 		}
 	}
 
@@ -212,102 +156,64 @@ public class AboutWindow : Gtk.Window {
 		set_destroy_with_parent (true);
 		set_modal (true);
         skip_taskbar_hint = false;
-        set_default_size(450, 450);
+        set_default_size(450, 400);
 
 		if (get_user_id_effective() == 0){
 			username = get_username();
 			log_debug("username: %s".printf(username));
 		}
 		
-		vbox_main = new Gtk.Box(Orientation.VERTICAL,0);
-		vbox_main.margin = 12;
-		vbox_main.spacing = 6;
+		vbox_main = new Gtk.Box(Orientation.VERTICAL, 10);
+		vbox_main.margin = 10;
 		this.add(vbox_main);
 		
-		vbox_logo = new Gtk.Box(Orientation.VERTICAL,0);
-		vbox_main.add(vbox_logo);
-
-		// license -------------------------------------
+		// logo
 		
-		vbox_license = new Gtk.Box(Orientation.VERTICAL,0);
-		vbox_license.no_show_all = true;
-		vbox_main.add(vbox_license);
-
-		var sw_license = new Gtk.ScrolledWindow(null, null);
-		sw_license.set_shadow_type(ShadowType.ETCHED_IN);
-		sw_license.expand = true;
-		vbox_license.add(sw_license);
-		
-		var label = new Gtk.Label("");
-		label.set_use_markup(true);
-		label.margin_top = 5;
-		label.xalign = 0.0f;
-		label.yalign = 0.0f;
-		//label.max_width_chars = 70;
-		label.wrap = true;
-		label.wrap_mode = Pango.WrapMode.WORD_CHAR;
-		label.use_markup = true;
-		label.margin = 6;
-		sw_license.add(label);
-		lbl_license = label;
-		
-		// credits --------------------------------
-		
-		vbox_credits = new Gtk.Box(Orientation.VERTICAL,0);
-		vbox_credits.no_show_all = true;
-		vbox_main.add(vbox_credits);
-
-		var sw_credits = new Gtk.ScrolledWindow(null, null);
-		sw_credits.set_shadow_type(ShadowType.ETCHED_IN);
-		sw_credits.expand = true;
-		vbox_credits.add(sw_credits);
-		
-		vbox_lines = new Gtk.Box(Orientation.VERTICAL,0);
-		vbox_lines.margin_top = 10;
-		sw_credits.add(vbox_lines);
-		
-		//logo
 		img_logo = new Gtk.Image();
-		img_logo.margin_top = 6;
-		img_logo.margin_bottom = 6;
-        vbox_logo.add(img_logo);
+		img_logo.margin = 10;
+        vbox_main.add(img_logo);
 
-		//program_name
+		// program_name
+		
 		lbl_program_name = new Gtk.Label("");
 		lbl_program_name.set_use_markup(true);
-		vbox_logo.add(lbl_program_name);
+		vbox_main.add(lbl_program_name);
 
-		//version
+		// version
+		
 		lbl_version = new Gtk.Label("");
 		lbl_version.set_use_markup(true);
-		lbl_version.margin_top = 5;
-		vbox_logo.add(lbl_version);
-
-		//comments
+		vbox_main.add(lbl_version);
+		
+		// comments
+		
 		lbl_comments = new Gtk.Label("");
 		lbl_comments.set_use_markup(true);
-		lbl_comments.margin_top = 10;
-		vbox_logo.add(lbl_comments);
-
-		//website
+		vbox_main.add(lbl_comments);
+		
+		// website
+		
 		lbtn_website = new LinkButton("");
-		lbtn_website.margin_top = 5;
-		vbox_logo.add(lbtn_website);
+		vbox_main.add(lbtn_website);
 
 		lbtn_website.activate_link.connect(()=>{
 			return xdg_open(lbtn_website.uri, username); 
 		});
 
-		//copyright
+		// copyright
 		lbl_copyright = new Gtk.Label("");
 		lbl_copyright.set_use_markup(true);
-		lbl_copyright.margin_top = 5;
-		vbox_logo.add(lbl_copyright);
+		vbox_main.add(lbl_copyright);
+		
+		// copyright
+		lbl_license = new Gtk.Label("");
+		lbl_license.set_use_markup(true);
+		vbox_main.add(lbl_license);
 
-		//spacer_bottom
-		var spacer_bottom = new Gtk.Label("");
-		spacer_bottom.margin_top = 20;
-		vbox_logo.add(spacer_bottom);
+		// spacer
+		var spacer = new Gtk.Label("");
+		spacer.vexpand = true;
+		//vbox_main.add(spacer);
 
 		add_action_buttons();
 	}
@@ -315,86 +221,24 @@ public class AboutWindow : Gtk.Window {
 	private void add_action_buttons(){
 
 		hbox_action = add_button_box(vbox_main, Gtk.Orientation.HORIZONTAL, Gtk.ButtonBoxStyle.CENTER, 6);
-
-		//btn_license
-		btn_license = new Gtk.Button.with_label("  " + _("License"));
+		hbox_action.margin = 10;
+		
+		string url = "https://www.gnu.org/licenses/old-licenses/gpl-2.0.html";
+		
+		// btn_license
+		var btn_license = new Gtk.Button.with_label("License");
+		btn_license.set_tooltip_text(url);
 		btn_license.image = IconManager.lookup_image("help-about-symbolic", 16);
 		hbox_action.add(btn_license);
 
-		//btn_credits
-		btn_credits = new Gtk.Button.with_label("  " + _("Credits"));
-		btn_credits.image = IconManager.lookup_image("help-about-symbolic", 16);
-		hbox_action.add(btn_credits);
-
-		//btn_close
-		btn_close = new Gtk.Button.with_label("  " + _("Close"));
+		btn_license.clicked.connect(()=>{ 
+			xdg_open(url, username); 
+		});
+		
+		// btn_close
+		var btn_close = new Gtk.Button.with_label(_("Close"));
 		btn_close.image = IconManager.lookup_image("help-about-symbolic", 16);
 		hbox_action.add(btn_close);
-
-		// handlers
-		
-        btn_license.clicked.connect(()=>{
-			
-			vbox_logo.visible = !vbox_logo.visible;
-
-			vbox_license.visible = !vbox_license.visible;
-			
-			if (vbox_license.visible){
-				vbox_license.set_no_show_all(false);
-				vbox_license.show_all();
-				vbox_credits.hide();
-				vbox_logo.hide();
-			}
-			else{
-				vbox_logo.show_all();
-			}
-
-			if (vbox_license.visible){
-				btn_license.label = "  " + _("Back");
-				btn_license.image = IconManager.lookup_image("go-previous-symbolic", 16);
-				btn_license.always_show_image = true;
-				btn_credits.hide();
-				this.resize(800, 500);
-			}
-			else{
-				btn_license.label = "  " + _("License");
-				btn_license.image = IconManager.lookup_image("help-about-symbolic", 16);
-				btn_license.always_show_image = true;
-				btn_credits.show();
-				this.resize(450, 400);
-			}
-		});
-
-        btn_credits.clicked.connect(()=>{
-			
-			vbox_logo.visible = !vbox_logo.visible;
-
-			vbox_credits.visible = !vbox_credits.visible;
-
-			if (vbox_credits.visible){
-				vbox_credits.set_no_show_all(false);
-				vbox_credits.show_all();
-				vbox_license.hide();
-				vbox_logo.hide();
-			}
-			else{
-				vbox_logo.show_all();
-			}
-
-			if (vbox_credits.visible){
-				btn_credits.label = "  " + _("Back");
-				btn_credits.image = IconManager.lookup_image("go-previous-symbolic", 16);
-				btn_credits.always_show_image = true;
-				btn_license.hide();
-			}
-			else{
-				btn_credits.label = "  " + _("Credits");
-				btn_credits.image = IconManager.lookup_image("help-about-symbolic", 16);
-				btn_credits.always_show_image = true;
-				btn_license.show();
-			}
-		});
-
 
 		btn_close.clicked.connect(()=>{ this.destroy(); });
 	}
@@ -403,84 +247,29 @@ public class AboutWindow : Gtk.Window {
 		
 		title = program_name;
 		img_logo.pixbuf = logo.scale_simple(128,128,Gdk.InterpType.HYPER);
-		lbl_program_name.label = "<span size='larger'>%s</span>".printf(program_name);
+		lbl_program_name.label = "<span size='larger' weight='bold'>%s</span>".printf(program_name);
 		lbl_version.label = "v%s".printf(version);
 		lbl_comments.label = "%s".printf(comments);
 		lbtn_website.uri = website;
 		lbtn_website.label = website_label;
 		lbl_copyright.label = "<span>%s</span>".printf(copyright);
-
-		if (license.length > 0){
-			lbl_license.label = license;
-		}
-		else{
-			lbl_license.label = escape_html(GPLv2LicenseText);
-		}
+		
+		lbl_license.label = 
+"""<small>This program comes with absolutely no warranty.
+See the GNU General Public License v2 or later, for details</small>""";
 
 		if (authors.length > 0){
-			add_header(_("Authors"));
 			foreach(string name in authors){
 				add_line("%s\n".printf(name));
 			}
 			add_line("\n");
-		}
-
-		if (contributors.length > 0){
-			add_header(_("Contributors"));
-			foreach(string name in contributors){
-				add_line("%s\n".printf(name));
-			}
-			add_line("\n");
-		}
-
-		if (artists.length > 0){
-			add_header(_("Artists"));
-			foreach(string name in artists){
-				add_line("%s\n".printf(name));
-			}
-			add_line("\n");
-		}
-
-		if (translators.length > 0){
-			add_header(_("Translations"));
-			foreach(string name in translators){
-				add_line("%s\n".printf(name));
-			}
-			add_line("\n");
-		}
-
-		if (documenters.length > 0){
-			add_header(_("Documentation"));
-			foreach(string name in documenters){
-				add_line("%s\n".printf(name));
-			}
-			add_line("\n");
-		}
-
-		if (third_party.length > 0){
-			add_header(_("Tools"));
-			foreach(string name in third_party){
-				add_line("%s\n".printf(name));
-			}
-			add_line("\n");
-		}
-
-		if (donations.length > 0){
-			add_header(_("Donations"));
-			foreach(string name in donations){
-				add_line("%s\n".printf(name));
-			}
-			add_line("\n");
-		}
-
-		if (vbox_lines.get_children().length() == 0){
-			btn_credits.visible = false;
 		}
 	}
 
 	private void add_line(string text, bool escape_html_chars = true){
 		
 		if (text.split(":").length >= 2){
+			
 			var link = new LinkButton(escape_html(text.split(":")[0]));
 			vbox_lines.add(link);
 
@@ -512,9 +301,5 @@ public class AboutWindow : Gtk.Window {
 			lbl.wrap_mode = Pango.WrapMode.WORD;
 			vbox_lines.add(lbl);
 		}
-	}
-
-	private void add_header(string text){
-		add_line("<b>%s</b>\n".printf(escape_html(text)), false);
 	}
 }

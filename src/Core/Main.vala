@@ -4086,7 +4086,7 @@ public class Main : GLib.Object{
 						
 						if (mnt.mount_point == mdir2){
 							
-							log_msg("\nFound stale mount for device '%s' at path '%s'".printf(dev.device, mdir2));
+							log_debug("\nFound stale mount for device '%s' at path '%s'".printf(dev.device, mdir2));
 			
 							string cmd = "umount '%s'".printf(escape_single_quote(mdir2));
 							int retval = exec_sync(cmd);
@@ -4095,12 +4095,12 @@ public class Main : GLib.Object{
 							int retval2 = exec_sync(cmd2);
 							
 							if (retval2 != 0){
-								log_error("Failed to unmount");
-								log_msg("Ret=%d".printf(retval));
+								log_debug("E: Failed to unmount");
+								log_debug("Ret=%d".printf(retval));
 								//ignore
 							}
 							else{
-								log_msg("Unmounted successfully");
+								log_debug("Unmounted successfully");
 							}
 						}
 					}

@@ -65,24 +65,10 @@ namespace TeeJee.FileSystem{
 	
 	// file helpers -----------------------------
 
-	public bool file_or_dir_exists(string item_path){
-		
-		/* check if item exists on disk*/
-
-		var item = File.parse_name(item_path);
-		return item.query_exists();
-	}
-	
 	public bool file_exists (string file_path){
 		/* Check if file exists */
 		return (FileUtils.test(file_path, GLib.FileTest.EXISTS)
 			&& !FileUtils.test(file_path, GLib.FileTest.IS_DIR));
-	}
-
-	public bool file_exists_regular (string file_path){
-		/* Check if file exists */
-		return ( FileUtils.test(file_path, GLib.FileTest.EXISTS)
-		&& FileUtils.test(file_path, GLib.FileTest.IS_REGULAR));
 	}
 
 	public bool file_delete(string file_path){
@@ -222,18 +208,6 @@ namespace TeeJee.FileSystem{
 		return file_exists(dst_file);
 	}
 
-	public bool file_gunzip (string src_file){
-		
-		string dst_file = src_file;
-		file_delete(dst_file);
-		
-		string cmd = "gunzip '%s'".printf(escape_single_quote(src_file));
-		string std_out, std_err;
-		exec_sync(cmd, out std_out, out std_err);
-		
-		return file_exists(dst_file);
-	}
-
 	public string file_resolve_executable_path(string file_path){
 
 		if (file_path.has_prefix("/")){
@@ -360,51 +334,6 @@ namespace TeeJee.FileSystem{
 		}
 	}
 
-	public bool filesystem_supports_hardlinks(string path, out bool is_readonly){
-		
-		bool supports_hardlinks = false;
-		is_readonly = false;
-		
-		var test_file = path_combine(path, random_string() + "~");
-		
-		if (file_write(test_file,"")){
-			
-			var test_file2 = path_combine(path, random_string() + "~");
-
-			var cmd = "ln '%s' '%s'".printf(
-				escape_single_quote(test_file),
-				escape_single_quote(test_file2));
-				
-			log_debug(cmd);
-
-			int status = exec_sync(cmd);
-
-			cmd = "stat --printf '%%h' '%s'".printf(
-				escape_single_quote(test_file));
-
-			log_debug(cmd);
-			
-			string std_out, std_err;
-			status = exec_sync(cmd, out std_out, out std_err);
-			log_debug("stdout: %s".printf(std_out));
-			
-			int64 count = 0;
-			if (int64.try_parse(std_out, out count)){
-				if (count > 1){
-					supports_hardlinks = true;
-				}
-			}
-			
-			file_delete(test_file2); // delete if exists
-			file_delete(test_file);
-		}
-		else{
-			is_readonly = true;
-		}
-
-		return supports_hardlinks;
-	}
-
 	public Gee.ArrayList<string> dir_list_names(string path){
 		
 		var list = new Gee.ArrayList<string>();
@@ -438,42 +367,6 @@ namespace TeeJee.FileSystem{
 		return (status == 0);
 	}
 	
-	// dir info -------------------
-	
-	// dep: find wc    TODO: rewrite
-	public long dir_count(string path){
-
-		/* Return total count of files and directories */
-
-		string cmd = "";
-		string std_out;
-		string std_err;
-		int ret_val;
-
-		cmd = "find '%s' | wc -l".printf(escape_single_quote(path));
-		ret_val = exec_script_sync(cmd, out std_out, out std_err);
-		return long.parse(std_out);
-	}
-
-	// dep: du
-	public long dir_size(string path){
-
-		/* Returns size of files and directories in KB*/
-
-		string cmd = "du -s -b '%s'".printf(escape_single_quote(path));
-		string std_out, std_err;
-		exec_sync(cmd, out std_out, out std_err);
-		return long.parse(std_out.split("\t")[0]);
-	}
-
-	// dep: du
-	public long dir_size_kb(string path){
-
-		/* Returns size of files and directories in KB*/
-
-		return (long)(dir_size(path) / 1024.0);
-	}
-
 	// misc --------------------
 
 	public string format_file_size (
@@ -531,21 +424,9 @@ namespace TeeJee.FileSystem{
 	}
 	
 	// dep: chmod
-	public int chmod (string file, string permission){
+	public int chmod(string file, string permission){
 
 		string cmd = "chmod %s '%s'".printf(permission, escape_single_quote(file));
-		return exec_sync (cmd, null, null);
-	}
-	
-	public int rsync(string sourceDirectory, string destDirectory, bool updateExisting, bool deleteExtra){
-
-		/* Sync files with rsync */
-
-		string cmd = "rsync -avh";
-		cmd += updateExisting ? "" : " --ignore-existing";
-		cmd += deleteExtra ? " --delete" : "";
-		cmd += " '%s'".printf(escape_single_quote(sourceDirectory) + "//");
-		cmd += " '%s'".printf(escape_single_quote(destDirectory));
 		return exec_sync (cmd, null, null);
 	}
 }

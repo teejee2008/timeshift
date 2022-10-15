@@ -151,82 +151,17 @@ namespace TeeJee.System{
 		return get_user_home(get_username_effective());
 	}
 
-	// application -----------------------------------------------
-	
-	public string get_app_path(){
-
-		/* Get path of current process */
-
-		try{
-			return GLib.FileUtils.read_link ("/proc/self/exe");
-		}
-		catch (Error e){
-	        log_error (e.message);
-	        return "";
-	    }
-	}
-
-	public string get_app_dir(){
-
-		/* Get parent directory of current process */
-
-		try{
-			return (File.new_for_path (GLib.FileUtils.read_link ("/proc/self/exe"))).get_parent ().get_path ();
-		}
-		catch (Error e){
-	        log_error (e.message);
-	        return "";
-	    }
-	}
-
 	// system ------------------------------------
 
-	// dep: cat TODO: rewrite
 	public double get_system_uptime_seconds(){
 
 		/* Returns the system up-time in seconds */
 
-		string cmd = "";
-		string std_out;
-		string std_err;
-		int ret_val;
-
-		try{
-			cmd = "cat /proc/uptime";
-			Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-			string uptime = std_out.split(" ")[0];
-			double secs = double.parse(uptime);
-			return secs;
-		}
-		catch(Error e){
-			log_error (e.message);
-			return 0;
-		}
+		string uptime = file_read("/proc/uptime").split(" ")[0];
+		double secs = double.parse(uptime);
+		return secs;
 	}
 
-	// internet helpers ----------------------
-	
-	public bool shutdown (){
-
-		/* Shutdown the system immediately */
-
-		try{
-			string[] argv = { "shutdown", "-h", "now" };
-			Pid procId;
-			Process.spawn_async(null, argv, null, SpawnFlags.SEARCH_PATH, null, out procId);
-			return true;
-		}
-		catch (Error e) {
-			log_error (e.message);
-			return false;
-		}
-	}
-
-	public bool command_exists(string command){
-		string path = get_cmd_path(command);
-		return ((path != null) && (path.length > 0));
-	}
-	
 	// open -----------------------------
 
 	public bool xdg_open (string file, string user = ""){

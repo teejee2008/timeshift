@@ -212,6 +212,7 @@ class BackupBox : Gtk.Box{
 			while (thread_is_running){
 
 				status_line = escape_html(App.task.status_line);
+				
 				if (status_line != last_status_line){
 					lbl_status.label = status_line;
 					last_status_line = status_line;

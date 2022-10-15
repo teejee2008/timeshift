@@ -484,7 +484,7 @@ public class Main : GLib.Object{
 
 	private void detect_encrypted_dirs(){
 		
-		current_system_users = SystemUser.read_users_from_file("/etc/passwd","","");
+		current_system_users = SystemUser.read_users_from_file("/etc/passwd");
 
 		string txt = "";
 		users_with_encrypted_home = "";
@@ -3609,7 +3609,7 @@ public class Main : GLib.Object{
 		}
 
 		if (Device.unmount(mnt_btrfs)){
-			if (dir_exists(mnt_btrfs) && (dir_count(mnt_btrfs) == 0)){
+			if (dir_exists(mnt_btrfs) && dir_is_empty(mnt_btrfs)){
 				dir_delete(mnt_btrfs);
 				log_debug(_("Removed mount directory: '%s'").printf(mnt_btrfs));
 			}

@@ -2134,10 +2134,3 @@ public class Device : GLib.Object{
 		log_debug("");
 	}
 }
-
-
-
-
-
-
-

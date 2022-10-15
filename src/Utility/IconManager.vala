@@ -64,25 +64,11 @@ public class IconManager : GLib.Object {
 		
 		search_paths = new Gee.ArrayList<string>();
 
-		string binpath = file_resolve_executable_path(args[0]);
-		log_debug("bin_path: %s".printf(binpath));
-
 		// check absolute location
 		string path = "/usr/share/%s/images".printf(app_name);
 		if (dir_exists(path)){
 			search_paths.add(path);
 			log_debug("found images directory: %s".printf(path));
-		}
-
-		// check relative location
-		string base_path = file_parent(file_parent(file_parent(binpath)));
-		if (base_path != "/"){
-			log_debug("base_path: %s".printf(base_path));
-			path = path_combine(base_path, path);
-			if (dir_exists(path)){
-				search_paths.add(path);
-				log_debug("found images directory: %s".printf(path));
-			}
 		}
 
 		refresh_icon_theme();
@@ -179,26 +165,6 @@ public class IconManager : GLib.Object {
 		}
 
 		return pixbuf;
-	}
-
-	public static Gtk.Image? lookup_animation(string gif_name){
-
-		if (gif_name.length == 0){ return null; }
-		
-		foreach(string search_path in search_paths){
-
-			foreach(string ext in new string[] { ".gif" }){
-
-				string img_file = path_combine(search_path, gif_name + ext);
-
-				if (file_exists(img_file)){
-
-					return new Gtk.Image.from_file(img_file);
-				}
-			}
-		}
-
-		return null;
 	}
 
 	public static Gdk.Pixbuf? add_emblem (Gdk.Pixbuf pixbuf, string icon_name, int emblem_size, bool emblem_symbolic, Gtk.CornerType corner_type) {

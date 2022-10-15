@@ -51,7 +51,7 @@ public class AppGtk : GLib.Object {
 	public static int main (string[] args) {
 		
 		set_locale();
-
+		
 		Gtk.init(ref args);
 
 		GTK_INITIALIZED = true;

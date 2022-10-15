@@ -266,7 +266,6 @@ public class FsTabEntry : GLib.Object{
 		return dev_fstab;
 	}
 
-
 	public void append_option(string option){
 		
 		if (!options.contains(option)){

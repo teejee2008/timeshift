@@ -337,35 +337,8 @@ public abstract class AsyncTask : GLib.Object{
 	
 	// public actions --------------
 
-	public void pause() {
-		
-		Pid sub_child_pid;
-		foreach (long pid in get_process_children(child_pid)) {
-			sub_child_pid = (Pid) pid;
-			process_pause(sub_child_pid);
-		}
-
-		status = AppStatus.PAUSED;
-	}
-
-	public void resume() {
-		
-		Pid sub_child_pid;
-		foreach (long pid in get_process_children(child_pid)) {
-			sub_child_pid = (Pid) pid;
-			process_resume(sub_child_pid);
-		}
-
-		status = AppStatus.RUNNING;
-	}
-
 	public void stop(AppStatus status_to_update = AppStatus.CANCELLED) {
 		
-		// we need to un-freeze the processes before we kill them
-		if (status == AppStatus.PAUSED) {
-			resume();
-		}
-
 		status = status_to_update;
 		
 		process_quit(child_pid);

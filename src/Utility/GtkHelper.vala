@@ -179,100 +179,6 @@ namespace TeeJee.GtkHelper{
 		return val;
 	}
 
-	public GLib.Object gtk_combobox_get_selected_object (ComboBox combo, int index, GLib.Object default_value){
-
-		/* Conveniance function to get combobox value */
-
-		if ((combo.model == null) || (combo.active < 0)) { return default_value; }
-
-		TreeIter iter;
-		GLib.Object val = null;
-		combo.get_active_iter (out iter);
-		TreeModel model = (TreeModel) combo.model;
-		model.get(iter, index, out val);
-
-		return val;
-	}
-	
-	public int gtk_combobox_get_value_enum (ComboBox combo, int index, int default_value){
-
-		/* Conveniance function to get combobox value */
-
-		if ((combo.model == null) || (combo.active < 0)) { return default_value; }
-
-		TreeIter iter;
-		int val;
-		combo.get_active_iter (out iter);
-		TreeModel model = (TreeModel) combo.model;
-		model.get(iter, index, out val);
-
-		return val;
-	}
-
-	// styles ----------------
-
-	public static int CSS_AUTO_CLASS_INDEX = 0;
-	
-	public static void gtk_apply_css(Gtk.Widget[] widgets, string css_style){
-		var css_provider = new Gtk.CssProvider();
-		var css = ".style_%d { %s }".printf(++CSS_AUTO_CLASS_INDEX, css_style);
-		try {
-			css_provider.load_from_data(css,-1);
-		} catch (GLib.Error e) {
-            warning(e.message);
-        }
-
-        foreach(var widget in widgets){
-			
-			widget.get_style_context().add_provider(
-				css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
-				
-			widget.get_style_context().add_class("style_%d".printf(CSS_AUTO_CLASS_INDEX));
-		}
-	}
-	
-	// treeview -----------------
-	
-	public int gtk_treeview_model_count(TreeModel model){
-		int count = 0;
-		TreeIter iter;
-		if (model.get_iter_first(out iter)){
-			count++;
-			while(model.iter_next(ref iter)){
-				count++;
-			}
-		}
-		return count;
-	}
-
-	public void gtk_treeview_redraw(Gtk.TreeView treeview){
-		var model = treeview.model;
-		treeview.model = null;
-		treeview.model = model;
-	}
-	
-	// misc
-	
-	public bool gtk_container_has_child(Gtk.Container container, Gtk.Widget widget){
-		foreach(var child in container.get_children()){
-			if (child == widget){
-				return true;
-			}
-		}
-		return false;
-	}
-
-	// file chooser ----------------
-	
-	public Gtk.FileFilter create_file_filter(string group_name, string[] patterns) {
-		var filter = new Gtk.FileFilter ();
-		filter.set_filter_name(group_name);
-		foreach(string pattern in patterns) {
-			filter.add_pattern (pattern);
-		}
-		return filter;
-	}
-
 	// utility ------------------
 
 	// add_notebook
@@ -333,48 +239,6 @@ namespace TeeJee.GtkHelper{
 		cell = new Gtk.CellRendererPixbuf();
 		cell.xpad = 2;
 		col.pack_start (cell, false);
-		treeview.append_column(col);
-
-		return col;
-	}
-
-	// add_column_icon_and_text
-	private Gtk.TreeViewColumn add_column_icon_and_text(Gtk.TreeView treeview, string title,
-		out Gtk.CellRendererPixbuf cell_pix, out Gtk.CellRendererText cell_text){
-			
-		// TreeViewColumn
-		var col = new Gtk.TreeViewColumn();
-		col.title = title;
-
-		cell_pix = new Gtk.CellRendererPixbuf();
-		cell_pix.xpad = 2;
-		col.pack_start (cell_pix, false);
-		
-		cell_text = new Gtk.CellRendererText();
-		cell_text.xalign = (float) 0.0;
-		col.pack_start (cell_text, false);
-		treeview.append_column(col);
-
-		return col;
-	}
-
-	// add_column_radio_and_text
-	private Gtk.TreeViewColumn add_column_radio_and_text(Gtk.TreeView treeview, string title,
-		out Gtk.CellRendererToggle cell_radio, out Gtk.CellRendererText cell_text){
-			
-		// TreeViewColumn
-		var col = new Gtk.TreeViewColumn();
-		col.title = title;
-
-		cell_radio = new Gtk.CellRendererToggle();
-		cell_radio.xpad = 2;
-		cell_radio.radio = true;
-		cell_radio.activatable = true;
-		col.pack_start (cell_radio, false);
-		
-		cell_text = new Gtk.CellRendererText();
-		cell_text.xalign = (float) 0.0;
-		col.pack_start (cell_text, false);
 		treeview.append_column(col);
 
 		return col;
@@ -474,13 +338,6 @@ namespace TeeJee.GtkHelper{
 		
 		var label = add_label(box, escape_html(text), true, false, large_heading);
 		label.margin_bottom = 12;
-		return label;
-	}
-
-	// add_label_subnote
-	private Gtk.Label add_label_subnote(Gtk.Box box, string text){
-		
-		var label = add_label(box, text, false, true);
 		return label;
 	}
 

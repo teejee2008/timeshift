@@ -53,12 +53,6 @@ namespace TeeJee.ProcessHelper{
 		//log_debug("TEMP_DIR=" + TEMP_DIR);
 	}
 
-	public string create_temp_subdir(){
-		var temp = "%s/%s".printf(TEMP_DIR, random_string());
-		dir_create(temp);
-		return temp;
-	}
-	
 	public int exec_sync (string cmd, out string? std_out = null, out string? std_err = null){
 
 		/* Executes single command synchronously.
@@ -249,10 +243,6 @@ namespace TeeJee.ProcessHelper{
 		return TEMP_DIR + "/" + timestamp_numeric() + (new Rand()).next_int().to_string();
 	}
 
-	public void exec_process_new_session(string command){
-		exec_script_async("setsid %s &".printf(command));
-	}
-	
 	// find process -------------------------------
 	
 	// dep: which
@@ -300,50 +290,6 @@ namespace TeeJee.ProcessHelper{
 		return -1;
 	}
 
-	public int get_pid_by_command(string cmdline){
-
-		/* Searches for process using the command line used to start the process.
-		 * Returns the process id if found.
-		 * */
-		 
-		try {
-			FileEnumerator enumerator;
-			FileInfo info;
-			File file = File.parse_name ("/proc");
-
-			enumerator = file.enumerate_children ("standard::name", 0);
-			while ((info = enumerator.next_file()) != null) {
-				try {
-					string io_stat_file_path = "/proc/%s/cmdline".printf(info.get_name());
-					var io_stat_file = File.new_for_path(io_stat_file_path);
-					if (file.query_exists()){
-						var dis = new DataInputStream (io_stat_file.read());
-
-						string line;
-						string text = "";
-						size_t length;
-						while((line = dis.read_until ("\0", out length)) != null){
-							text += " " + line;
-						}
-
-						if ((text != null) && text.contains(cmdline)){
-							return int.parse(info.get_name());
-						}
-					} //stream closed
-				}
-				catch(Error e){
-					// do not log
-					// some processes cannot be accessed by non-admin user
-				}
-			}
-		}
-		catch(Error e){
-		  log_error (e.message);
-		}
-
-		return -1;
-	}
-
 	// dep: ps TODO: Rewrite using /proc
 	public bool process_is_running(long pid){
 
@@ -366,28 +312,6 @@ namespace TeeJee.ProcessHelper{
 		return (ret_val == 0);
 	}
 
-	// dep: pgrep TODO: Rewrite using /proc
-	public bool process_is_running_by_name(string proc_name){
-
-		/* Checks if given process is running */
-
-		string cmd = "";
-		string std_out;
-		string std_err;
-		int ret_val;
-
-		try{
-			cmd = "pgrep -f '%s'".printf(proc_name);
-			Process.spawn_command_line_sync(cmd, out std_out, out std_err, out ret_val);
-		}
-		catch (Error e) {
-			log_error (e.message);
-			return false;
-		}
-
-		return (ret_val == 0);
-	}
-	
 	// dep: ps TODO: Rewrite using /proc
 	public int[] get_process_children (Pid parent_pid){
 
@@ -449,42 +373,6 @@ namespace TeeJee.ProcessHelper{
 			foreach (long pid in child_pids){
 				childPid = (Pid) pid;
 				Posix.kill (childPid, Posix.Signal.KILL);
-			}
-		}
-	}
-
-	// dep: kill
-	public int process_pause (Pid procID){
-
-		/* Pause/Freeze a process */
-
-		return exec_sync ("kill -STOP %d".printf(procID), null, null);
-	}
-
-	// dep: kill
-	public int process_resume (Pid procID){
-
-		/* Resume/Un-freeze a process*/
-
-		return exec_sync ("kill -CONT %d".printf(procID), null, null);
-	}
-
-	// dep: ps TODO: Rewrite using /proc
-	public void process_quit_by_name(string cmd_name, string cmd_to_match, bool exact_match){
-
-		/* Kills a specific command */
-		
-		string std_out, std_err;
-		exec_sync ("ps w -C '%s'".printf(cmd_name), out std_out, out std_err);
-		//use 'ps ew -C conky' for all users
-
-		string pid = "";
-		foreach(string line in std_out.split("\n")){
-			if ((exact_match && line.has_suffix(" " + cmd_to_match))
-			|| (!exact_match && (line.index_of(cmd_to_match) != -1))){
-				pid = line.strip().split(" ")[0];
-				Posix.kill ((Pid) int.parse(pid), 15);
-				log_debug(_("Stopped") + ": [PID=" + pid + "] ");
 			}
 		}
 	}

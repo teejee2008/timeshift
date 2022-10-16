@@ -1,6 +1,6 @@
-| :warning: NOTE          |
+| :mega: NOTE :mega:         |
 |:---------------------------|
-| Timeshift is now maintained by the Linux Mint project. Any new feature requests, PRs, or issues should be posted to the [Linux Mint repository](https://github.com/linuxmint/timeshift).|
+| Timeshift is now maintained by the [Linux Mint](https://linuxmint.com/) project.<br/> Any feature requests, pull requests, or issues should be submitted to the [Linux Mint repository](https://github.com/linuxmint/timeshift).<br/> <br/>This repository contains the original code for Timeshift, and has been archived to avoid duplication of effort. Any open items in the issue tracker that are still relevant should be resubmitted in the new repo. Development will continue in the new repository. |
 
 # Timeshift
 

@@ -1,6 +1,6 @@
 | :warning: NOTE          |
 |:---------------------------|
-| This repo contains the original version of Timeshift. There is a [fork of Timeshift](https://github.com/linuxmint/timeshift) maintained by Linux Mint which will see more active development going forward. You can either continue using this version or switch to the version maintained by Linux Mint.<br/><br/>This repo will continue to be available in the future, but will only see bug fixes and minor changes. Any new features or PRs should be submitted to the [Linux Mint repository](https://github.com/linuxmint/timeshift).|
+| Timeshift is now maintained by the Linux Mint project. Any new feature requests, PRs, or issues should be posted to the [Linux Mint repository](https://github.com/linuxmint/timeshift).|
 
 # Timeshift
 

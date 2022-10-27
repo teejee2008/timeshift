@@ -64,6 +64,8 @@ public class LinuxDistro : GLib.Object{
 
 		LinuxDistro info = new LinuxDistro();
 
+		/* Ubuntu distribution */
+		
 		string dist_file = root_path + "/etc/lsb-release";
 		var f = File.new_for_path(dist_file);
 		if (f.query_exists()){
@@ -105,50 +107,82 @@ public class LinuxDistro : GLib.Object{
 						break;
 				}
 			}
+
+			return info;
 		}
-		else{
 
-			dist_file = root_path + "/etc/os-release";
-			f = File.new_for_path(dist_file);
-			if (f.query_exists()){
+		/* Ubuntu distribution again */
+		
+		dist_file = root_path + "/etc/os-release";
+		f = File.new_for_path(dist_file);
+		if (f.query_exists()){
 
-				/*
-					NAME="Ubuntu"
-					VERSION="13.04, Raring Ringtail"
-					ID=ubuntu
-					ID_LIKE=debian
-					PRETTY_NAME="Ubuntu 13.04"
-					VERSION_ID="13.04"
-					HOME_URL="http://www.ubuntu.com/"
-					SUPPORT_URL="http://help.ubuntu.com/"
-					BUG_REPORT_URL="http://bugs.launchpad.net/ubuntu/"
-				*/
+			/*
+				NAME="Ubuntu"
+				VERSION="13.04, Raring Ringtail"
+				ID=ubuntu
+				ID_LIKE=debian
+				PRETTY_NAME="Ubuntu 13.04"
+				VERSION_ID="13.04"
+				HOME_URL="http://www.ubuntu.com/"
+				SUPPORT_URL="http://help.ubuntu.com/"
+				BUG_REPORT_URL="http://bugs.launchpad.net/ubuntu/"
+			*/
 
-				foreach(string line in file_read(dist_file).split("\n")){
+			foreach(string line in file_read(dist_file).split("\n")){
 
-					if (line.split("=").length != 2){ continue; }
+				if (line.split("=").length != 2){ continue; }
 
-					string key = line.split("=")[0].strip();
-					string val = line.split("=")[1].strip();
+				string key = line.split("=")[0].strip();
+				string val = line.split("=")[1].strip();
 
-					switch (key){
-						case "ID":
-							info.dist_id = val;
-							break;
-						case "VERSION_ID":
-							info.release = val;
-							break;
-						//case "DISTRIB_CODENAME":
-							//info.codename = val;
-							//break;
-						case "PRETTY_NAME":
-							info.description = val;
-							break;
-					}
+				switch (key){
+					case "ID":
+						info.dist_id = val;
+						break;
+					case "VERSION_ID":
+						info.release = val;
+						break;
+					//case "DISTRIB_CODENAME":
+						//info.codename = val;
+						//break;
+					case "PRETTY_NAME":
+						info.description = val;
+						break;
 				}
 			}
+
+			return info;
 		}
 
+		/* Slackware distribution */
+
+		dist_file = root_path + "/etc/slackware-version";
+		f = File.new_for_path(dist_file);
+		if (f.query_exists()){
+
+			/*
+				DISTRIB_ID=Slackware
+				DISTRIB_RELEASE=14.2
+				DISTRIB_DESCRIPTION="Slackware 14.2"
+			*/
+
+			string line = file_read(dist_file);
+			
+			if (line.split(" ").length == 2)
+			{
+				string name = line.split(" ")[0];
+				string version = line.split(" ")[1];
+				
+				info.dist_id = "slackware";
+				info.codename = name;
+				info.description = line;
+				info.release = version;
+
+				return info;
+			}
+		}
+		
 		return info;
 	}
 
@@ -208,6 +242,9 @@ public class LinuxDistro : GLib.Object{
 			}
 			else if (dist_id.down().contains("ubuntu") || dist_id.down().contains("debian")){
 				return "debian";
+			}
+			else if (dist_id.down().contains("slackware")){
+				return "slackware";
 			}
 			else{
 				return "";

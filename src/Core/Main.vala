@@ -4092,15 +4092,21 @@ public class Main : GLib.Object{
 		
 		if (scheduled){
 			
-			//hourly
-			CronTab.add_script_file("timeshift-hourly", "d", "0 * * * * root timeshift --check --scripted", stop_cron_emails);
-			
-			//boot
-			if (schedule_boot){
-				CronTab.add_script_file("timeshift-boot", "d", "@reboot root sleep 10m && timeshift --create --scripted --tags B", stop_cron_emails);
+			if (this.current_distro.dist_id == "slackware"){
+				//hourly
+				CronTab.add_script_file("timeshift-hourly", "hourly", "/usr/bin/timeshift --check --scripted", stop_cron_emails);
 			}
 			else{
-				CronTab.remove_script_file("timeshift-boot", "d");
+				//hourly
+				CronTab.add_script_file("timeshift-hourly", "d", "0 * * * * root timeshift --check --scripted", stop_cron_emails);
+				
+				//boot
+				if (schedule_boot){
+					CronTab.add_script_file("timeshift-boot", "d", "@reboot root sleep 10m && timeshift --create --scripted --tags B", stop_cron_emails);
+				}
+				else{
+					CronTab.remove_script_file("timeshift-boot", "d");
+				}
 			}
 		}
 		else{

@@ -97,37 +97,45 @@ class SnapshotBackendBox : Gtk.Box{
 		hbox.add (opt);
 		opt_btrfs = opt;
 
+        if (!check_for_btrfs_tools()) {
+            opt.sensitive = false;
+            opt_rsync.active = true;
+        }
+
 		opt_btrfs.toggled.connect(()=>{
 			if (opt_btrfs.active){
-				if (check_for_btrfs_tools()){
-					App.btrfs_mode = true;
-					init_backend();
-					type_changed();
-					update_description();
-				}
-				else{
-					opt_rsync.active = true;
-				}
+				App.btrfs_mode = true;
+				init_backend();
+				type_changed();
+				update_description();
 			}
 		});
 	}
 
-	private bool check_for_btrfs_tools(){
-		
-		if (!cmd_exists("btrfs")){
-			
-			string msg = _("The 'btrfs' command is not available on your system. Install the 'btrfs-tools' package and try again.");
-			string title = _("BTRFS Tools Not Found");
-			gtk_set_busy(false, parent_window);
-			gtk_messagebox(title, msg, parent_window, true);
-			
-			return false;
-		}
-		else{
-			return true;
-		}
+	private bool check_for_btrfs_tools() {
+        try {
+            const string args[] = {"lsblk", "-o", "FSTYPE", null};
+            var proc = new Subprocess.newv(
+                args,
+                SubprocessFlags.STDOUT_PIPE | SubprocessFlags.STDERR_SILENCE
+            );
+
+            Bytes stdout;
+            if (proc.communicate(null, null, out stdout, null)) {
+                string output = (string) Bytes.unref_to_data(stdout);
+
+                if (output.contains("btrfs")) {
+                    return true;
+                }
+            }
+        }
+        catch (Error e) {
+            log_error (e.message);
+        }
+
+        return false;
 	}
-	
+
 	private void add_description(){
 
 		Gtk.Expander expander = new Gtk.Expander(_("Help"));

@@ -125,10 +125,10 @@ public class Subvolume : GLib.Object{
 
 		if (is_system_subvolume){
 			if (name == "@"){
-				path = path_combine("/run/timeshift/backup", "@");
+				path = path_combine(App.mount_point_app + "/backup", "@");
 			}
 			else if (name == "@home"){
-				path = path_combine("/run/timeshift/backup-home", "@home");
+				path = path_combine(App.mount_point_app + "/backup-home", "@home");
 			}
 		}
 		
@@ -165,21 +165,6 @@ public class Subvolume : GLib.Object{
 		}
 
 		log_msg("%s: %s (Id:%ld)\n".printf(_("Deleted subvolume"), name, id));
-		
-		if ((id > 0) && (repo != null)){
-
-			log_msg("%s: 0/%ld".printf(_("Destroying qgroup"), id));
-			
-			cmd = "btrfs qgroup destroy 0/%ld '%s'".printf(id, repo.mount_paths[name]);
-			log_debug(cmd);
-			ret_val = exec_sync(cmd, out std_out, out std_err);
-			if (ret_val != 0){
-				log_error(_("Failed to destroy qgroup") + ": '0/%ld'".printf(id));
-				return false;
-			}
-
-			log_msg("%s: 0/%ld\n".printf(_("Destroyed qgroup"), id));
-		}
 
 		return true;
 	}

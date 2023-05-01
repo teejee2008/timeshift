@@ -42,17 +42,6 @@ public class SystemUser : GLib.Object {
 	public string phone_home = "";
 	public string other_info = "";
 
-	//public string
-	public string shadow_line = "";
-	public string pwd_hash = "";
-	public string pwd_last_changed = "";
-	public string pwd_age_min = "";
-	public string pwd_age_max = "";
-	public string pwd_warning_period = "";
-	public string pwd_inactivity_period = "";
-	public string pwd_expiraton_date = "";
-	public string reserved_field = "";
-
 	public bool has_encrypted_home = false;
 	public bool has_encrypted_private_dirs = false;
 	public Gee.ArrayList<string> encrypted_dirs = new Gee.ArrayList<string>();
@@ -66,14 +55,9 @@ public class SystemUser : GLib.Object {
 		this.name = name;
 	}
 
-	public static void query_users(bool no_passwords = true){
+	public static void query_users(){
 		
-		if (no_passwords){
-			all_users = read_users_from_file("/etc/passwd","","");
-		}
-		else{
-			all_users = read_users_from_file("/etc/passwd","/etc/shadow","");
-		}
+		all_users = read_users_from_file("/etc/passwd");
 	}
 
 	public static Gee.ArrayList<SystemUser> all_users_sorted {
@@ -87,15 +71,7 @@ public class SystemUser : GLib.Object {
 		}
 	}
 
-	public bool is_installed{
-		get {
-			return SystemUser.all_users.has_key(name);
-		}
-	}
-
-	public static Gee.HashMap<string,SystemUser> read_users_from_file(
-	
-		string passwd_file, string shadow_file, string password){
+	public static Gee.HashMap<string,SystemUser> read_users_from_file(string passwd_file){
 		
 		var list = new Gee.HashMap<string,SystemUser>();
 
@@ -115,25 +91,6 @@ public class SystemUser : GLib.Object {
 			if (user != null){
 				list[user.name] = user;
 			}
-		}
-
-		if (shadow_file.length == 0){
-			return list;
-		}
-
-		// read 'shadow' file ---------------------------------
-		
-		txt = file_read(shadow_file);
-
-		if (txt.length == 0){
-			return list;
-		}
-
-		foreach(string line in txt.split("\n")){
-			if ((line == null) || (line.length == 0)){
-				continue;
-			}
-			parse_line_shadow(line, list);
 		}
 
 		return list;
@@ -184,45 +141,6 @@ public class SystemUser : GLib.Object {
 		}
 		
 		return user;
-	}
-
-	private static SystemUser? parse_line_shadow(string line, Gee.HashMap<string,SystemUser> list){
-		
-		if ((line == null) || (line.length == 0)){
-			return null;
-		}
-		
-		SystemUser user = null;
-
-		//root:$1$Etg2ExUZ$F9NTP7omafhKIlqaBMqng1:15651:0:99999:7:::
-		//<username>:$<hash-algo>$<salt>$<hash>:<last-changed>:<change-interval-min>:<change-interval-max>:<change-warning-interval>:<disable-expired-account-after-days>:<days-since-account-disbaled>:<not-used>
-
-		string[] fields = line.split(":");
-
-		if (fields.length == 9){
-			string user_name = fields[0].strip();
-			if (list.has_key(user_name)){
-				user = list[user_name];
-				user.shadow_line = line;
-				user.pwd_hash = fields[1].strip();
-				user.pwd_last_changed = fields[2].strip();
-				user.pwd_age_min = fields[3].strip();
-				user.pwd_age_max = fields[4].strip();
-				user.pwd_warning_period = fields[5].strip();
-				user.pwd_inactivity_period = fields[6].strip();
-				user.pwd_expiraton_date = fields[7].strip();
-				user.reserved_field = fields[8].strip();
-				return user;
-			}
-			else{
-				log_error("user in file 'shadow' does not exist in file 'passwd'" + ": %s".printf(user_name));
-				return null;
-			}
-		}
-		else{
-			log_error("'shadow' file contains a record with non-standard fields" + ": %d".printf(fields.length));
-			return null;
-		}
 	}
 
 	public void check_encrypted_dirs() {

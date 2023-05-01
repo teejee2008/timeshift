@@ -37,8 +37,6 @@ class SnapshotListBox : Gtk.Box{
 	public Gtk.TreeView treeview;
     private Gtk.TreeViewColumn col_date;
     private Gtk.TreeViewColumn col_tags;
-    private Gtk.TreeViewColumn col_size;
-    private Gtk.TreeViewColumn col_unshared;
     private Gtk.TreeViewColumn col_system;
     private Gtk.TreeViewColumn col_desc;
 	private int treeview_sort_column_index = 0;
@@ -159,56 +157,6 @@ class SnapshotListBox : Gtk.Box{
 		treeview.append_column(col_tags);
 
 		col_tags.clicked.connect(() => {
-			if(treeview_sort_column_index == 2){
-				treeview_sort_column_desc = !treeview_sort_column_desc;
-			}
-			else{
-				treeview_sort_column_index = 2;
-				treeview_sort_column_desc = false;
-			}
-			refresh();
-		});
-
-		//col_size
-		var col = new TreeViewColumn();
-		col.title = _("Size");
-		col.resizable = true;
-		col.min_width = 80;
-		col.clickable = true;
-		var cell_size = new CellRendererText ();
-		cell_size.ellipsize = Pango.EllipsizeMode.END;
-		cell_size.xalign = (float) 1.0;
-		col.pack_start (cell_size, false);
-		col.set_cell_data_func (cell_size, cell_size_render);
-		col_size = col;
-		treeview.append_column(col_size);
-		
-		col_size.clicked.connect(() => {
-			if(treeview_sort_column_index == 2){
-				treeview_sort_column_desc = !treeview_sort_column_desc;
-			}
-			else{
-				treeview_sort_column_index = 2;
-				treeview_sort_column_desc = false;
-			}
-			refresh();
-		});
-
-		//col_unshared
-		col = new TreeViewColumn();
-		col.title = _("Unshared");
-		col.resizable = true;
-		col.min_width = 80;
-		col.clickable = true;
-		var cell_unshared = new CellRendererText ();
-		cell_unshared.ellipsize = Pango.EllipsizeMode.END;
-		cell_unshared.xalign = (float) 1.0;
-		col.pack_start (cell_unshared, false);
-		col.set_cell_data_func (cell_unshared, cell_unshared_render);
-		col_unshared = col;
-		treeview.append_column(col_unshared);
-		
-		col_unshared.clicked.connect(() => {
 			if(treeview_sort_column_index == 2){
 				treeview_sort_column_desc = !treeview_sort_column_desc;
 			}
@@ -497,6 +445,11 @@ class SnapshotListBox : Gtk.Box{
 		
 		var ctxt = (cell as Gtk.CellRendererText);
 		ctxt.text = bak.sys_distro;
+
+		if ("LinuxMint" in ctxt.text) {
+			ctxt.text = ctxt.text.replace("LinuxMint", "Linux Mint");
+		}
+
 		ctxt.sensitive = !bak.marked_for_deletion;
 
 		if (bak.live){
@@ -614,9 +567,6 @@ class SnapshotListBox : Gtk.Box{
 			model.append(out iter);
 			model.set (iter, 0, bak);
 		}
-
-		col_size.visible = App.btrfs_mode;
-		col_unshared.visible = App.btrfs_mode; 
 
 		treeview.set_model (model);
 		treeview.columns_autosize ();

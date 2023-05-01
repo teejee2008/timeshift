@@ -45,13 +45,13 @@ endif
 
 symbols=$(shell echo "${vte_symbol} ${gtk3_symbol} ${xapp_symbol}")
 
-all: app-gtk app-console pot
+all: app-gtk app-console
 
 app-gtk:
 
 	#timeshift-gtk
 	valac -X -D'GETTEXT_PACKAGE="${app_name}"' \
-		--Xcc="-lm" --Xcc="-O3" ${symbols} \
+		--Xcc="-lm" --Xcc="-Os" ${symbols} \
 		Core/*.vala Gtk/*.vala Utility/*.vala Utility/Gtk/*.vala \
 		-o ${app_name}-gtk \
 		--pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix \
@@ -62,7 +62,7 @@ app-console:
 
 	#timeshift
 	valac -X -D'GETTEXT_PACKAGE="${app_name}"' \
-		--Xcc="-lm" --Xcc="-O3" ${symbols} \
+		--Xcc="-lm" --Xcc="-Os" ${symbols} \
 		Core/*.vala Utility/*.vala Utility/Gtk/*.vala Console/*.vala \
 		-o ${app_name} \
 		--pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix \
@@ -86,7 +86,7 @@ pot:
 		-o ../${app_name}.pot
 
 	# translations
-	for lang in am ar az bg ca cs da de el en_GB es et eu fr he hi hr hu ia id is it ko lt nb ne nl pl pt pt_BR ro ru sk sr sv tr uk vi zh_CN ja; do \
+	for lang in am ar az bg ca cs da de el en_GB es et eu fi fr he hi hr hu ia id is it ja ko lt nb ne nl pl pt pt_BR ro ru sk sr sv tr uk vi zh_CN zh_TW; do \
 		msgmerge --update -v ../po/${app_name}-$$lang.po ../${app_name}.pot ; \
 	done
 	
@@ -109,7 +109,8 @@ install:
 	mkdir -p "$(DESTDIR)$(sharedir)/icons"
 	mkdir -p "$(DESTDIR)$(sharedir)/appdata" 
 	mkdir -p "$(DESTDIR)$(sharedir)/metainfo"
-
+	mkdir -p "$(DESTDIR)$(sharedir)/pixmaps"
+	
 	# binary
 	install -m 0755 ${app_name} "$(DESTDIR)$(bindir)"
 	install -m 0755 ${app_name}-gtk "$(DESTDIR)$(bindir)"
@@ -136,7 +137,10 @@ install:
 	# app icons
 	cp -dpr --no-preserve=ownership -t "$(DESTDIR)$(sharedir)/icons" ./share/icons/*
 	chmod --recursive 0644 $(DESTDIR)$(sharedir)/icons/hicolor/*/apps/${app_name}.png
-
+	
+	# app icon
+	install -m 0755 ./share/pixmaps/${app_name}.png "$(DESTDIR)$(sharedir)/pixmaps/"
+	
 	# appdata
 	#install -m 0644 ../debian/${app_name}.appdata.xml "$(DESTDIR)$(sharedir)/appdata" 
 	install -m 0644 ../debian/${app_name}.appdata.xml "$(DESTDIR)$(sharedir)/metainfo"

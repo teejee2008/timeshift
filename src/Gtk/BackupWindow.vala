@@ -315,12 +315,20 @@ class BackupWindow : Gtk.Window{
 			break;
 		case Tabs.BACKUP_FINISH:
 			backup_finish_box.update_message(success);
-			wait_and_close_window(1000, this);
+            if (App.repo.status_code == SnapshotLocationStatus.HAS_SNAPSHOTS_NO_SPACE)
+            {
+                this.hide();
+                gtk_messagebox(App.repo.status_message, App.repo.status_details, this, true);
+                this.destroy();
+            }
+            else
+            {
+                backup_finish_box.update_message(success);
+                wait_and_close_window(1000, this);
+            }
 			break;
 		}
 	}
-
-	
 
 	private bool validate_current_tab(){
 		

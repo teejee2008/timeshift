@@ -1,3 +1,42 @@
+timeshift (22.06.6) jammy; urgency=medium
+
+  * #939, #937: Fix crash on ArchLinux and Ubuntu 22.10 Kinetic
+  * Don't show message when unmounting temporary mount points
+  * Remove unused code and functions
+  * Use -Os for compilation instead of -O3
+  * Merge some changes from the Linux Mint branch
+
+ -- Tony George <teejeetech@gmail.com>  Sat, 15 Oct 2022 10:00:00 +0530
+
+timeshift (22.06.1) focal; urgency=medium
+
+  * Fix #895, #809, #689, #653, #10: Unmount devices that were mounted by Timeshift before exit
+  * Fix #865, #839, #680: Do not create or remove Qgroups when snapshots are created or removed
+  * Fix #900, #891: Force C locale for Rsync
+  * Install app icon in /usr/share/pixmaps directory
+  * Remove columns 'Size' and 'Unshared Size' for BTRFS snapshots.
+  * Rsync: Restore: Delete files using --delete-before instead of --delete-after
+  * Fix #260: No text on Summary page under 'Warning' and 'Disclaimer' heading
+  * Rsync: Restore: Improve UI for the device selection page
+  * Code cleanup: Remove unused functions and code
+  * Update donation window
+  * Update translations
+  * Fix a build failure
+
+ -- Tony George <teejeetech@gmail.com>  Sat, 28 May 2022 10:00:00 +0530
+
+timeshift (21.09.1) focal; urgency=medium
+
+  * Fix #676 Build fails with xapp 2.0.0
+  * Fix #676 Update references to GLib.Object
+  * Fix #425, #753, #755
+  * Fix #589
+  * Fix #186
+  * Fix compiler warnings
+  * Update README
+
+ -- Tony George <teejeetech@gmail.com>  Sat, 25 Sep 2021 10:00:00 +0530
+
 timeshift (21.06) focal; urgency=medium
 
   * Update packaging

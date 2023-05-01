@@ -37,7 +37,7 @@ using TeeJee.Misc;
 public Main App;
 public const string AppName = "Timeshift";
 public const string AppShortName = "timeshift";
-public const string AppVersion = "21.06";
+public const string AppVersion = "22.06.6";
 public const string AppAuthor = "Tony George";
 public const string AppAuthorEmail = "teejeetech@gmail.com";
 
@@ -51,7 +51,7 @@ public class AppGtk : GLib.Object {
 	public static int main (string[] args) {
 		
 		set_locale();
-
+		
 		Gtk.init(ref args);
 
 		GTK_INITIALIZED = true;

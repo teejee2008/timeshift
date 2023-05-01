@@ -78,7 +78,7 @@ public class Main : GLib.Object{
 	public Gee.HashMap<string, Subvolume> sys_subvolumes;
 
 	public string mount_point_restore = "";
-	public string mount_point_app = "/run/timeshift";
+	public string mount_point_app = "";
 
 	public LinuxDistro current_distro;
 	public bool mirror_system = false;
@@ -93,8 +93,6 @@ public class Main : GLib.Object{
 	public int count_daily = 5;
 	public int count_hourly = 6;
 	public int count_boot = 5;
-
-	public bool btrfs_use_qgroup = true;
 
 	public string app_mode = "";
 
@@ -122,8 +120,6 @@ public class Main : GLib.Object{
 
 	public int startup_delay_interval_mins = 10;
 	public int retain_snapshots_max_days = 200;
-	
-	public int64 snapshot_location_free_space = 0;
 
 	public const uint64 MIN_FREE_SPACE = 1 * GB;
 	public static uint64 first_snapshot_size = 0;
@@ -165,6 +161,7 @@ public class Main : GLib.Object{
 	
 	public RsyncTask task;
 	public DeleteFileTask delete_file_task;
+	public RsyncSpaceCheckTask space_check_task;
 
 	public Gee.HashMap<string, SystemUser> current_system_users;
 	public string users_with_encrypted_home = "";
@@ -173,9 +170,12 @@ public class Main : GLib.Object{
 
 	public string encrypted_private_dirs = "";
 	public bool encrypted_private_warning_shown = false;
-
+	
 	public Main(string[] args, bool gui_mode){
-
+		
+		this.mount_point_app = "/run/timeshift/%lld".printf(Posix.getpid());
+		dir_create(this.mount_point_app);
+		
 		parse_some_arguments(args);
 	
 		if (gui_mode){
@@ -483,7 +483,7 @@ public class Main : GLib.Object{
 
 	private void detect_encrypted_dirs(){
 		
-		current_system_users = SystemUser.read_users_from_file("/etc/passwd","","");
+		current_system_users = SystemUser.read_users_from_file("/etc/passwd");
 
 		string txt = "";
 		users_with_encrypted_home = "";
@@ -546,6 +546,7 @@ public class Main : GLib.Object{
 		exclude_list_default.add("/var/run/*");
 		exclude_list_default.add("/var/lock/*");
 		//exclude_list_default.add("/var/spool/*");
+		exclude_list_default.add("/var/lib/dhcpcd/*");
 		exclude_list_default.add("/var/lib/docker/*");
 		exclude_list_default.add("/var/lib/schroot/*");
 		exclude_list_default.add("/lost+found");
@@ -926,7 +927,7 @@ public class Main : GLib.Object{
 		});
 	}
 
-	//properties
+	// properties
 	
 	public bool scheduled{
 		get{
@@ -1199,100 +1200,228 @@ public class Main : GLib.Object{
 		var dt_begin = new DateTime.now_local();
 		bool status = true;
 		
-		try{
-			// get system boot time
-			DateTime now = new DateTime.now_local();
-			DateTime dt_sys_boot = now.add_seconds((-1) * get_system_uptime_seconds());
+		// get system boot time
+		DateTime now = new DateTime.now_local();
+		DateTime dt_sys_boot = now.add_seconds((-1) * get_system_uptime_seconds());
 
-			// check if we can rotate an existing backup -------------
+		// check if we can rotate an existing backup -------------
 
-			DateTime dt_filter = null;
+		DateTime dt_filter = null;
 
-			if (tag != "ondemand"){
-				switch(tag){
-					case "boot":
-						dt_filter = dt_sys_boot;
-						break;
-					case "hourly":
-					case "daily":
-					case "weekly":
-					case "monthly":
-						dt_filter = now.add_hours(-1).add_seconds(59);
-						break;
-					default:
-						log_error(_("Unknown snapshot type") + ": %s".printf(tag));
-						return false;
-				}
+		if (tag != "ondemand"){
+			switch(tag){
+				case "boot":
+					dt_filter = dt_sys_boot;
+					break;
+				case "hourly":
+				case "daily":
+				case "weekly":
+				case "monthly":
+					dt_filter = now.add_hours(-1).add_seconds(59);
+					break;
+				default:
+					log_error(_("Unknown snapshot type") + ": %s".printf(tag));
+					return false;
+			}
 
-				// find a recent backup that can be used
-				Snapshot backup_to_rotate = null;
-				foreach(var bak in repo.snapshots){
-					if (bak.date.compare(dt_filter) > 0){
-						backup_to_rotate = bak;
-						break;
-					}
-				}
-
-				if (backup_to_rotate != null){
-					
-					// tag the backup
-					backup_to_rotate.add_tag(tag);
-	
-					var message = _("Tagged snapshot") + " '%s': %s".printf(backup_to_rotate.name, tag);
-					log_msg(message);
-
-					return true;
+			// find a recent backup that can be used
+			Snapshot backup_to_rotate = null;
+			foreach(var bak in repo.snapshots){
+				if (bak.date.compare(dt_filter) > 0){
+					backup_to_rotate = bak;
+					break;
 				}
 			}
 
-			if (!repo.available() || !repo.has_space()){
-				log_error(repo.status_message);
-				log_error(repo.status_details);
-				exit_app();
-			}
-			
-			// create new snapshot -----------------------
+			if (backup_to_rotate != null){
+				
+				// tag the backup
+				backup_to_rotate.add_tag(tag);
 
-			Snapshot new_snapshot = null;
-			if (btrfs_mode){
-				new_snapshot = create_snapshot_with_btrfs(tag, dt_created);
-			}
-			else{
-				new_snapshot = create_snapshot_with_rsync(tag, dt_created);
-			}
-			
-			// finish ------------------------------
-		
-			var dt_end = new DateTime.now_local();
-			TimeSpan elapsed = dt_end.difference(dt_begin);
-			long seconds = (long)(elapsed * 1.0 / TimeSpan.SECOND);
-			
-			var message = "";
-			if (new_snapshot != null){
-				message = "%s %s (%lds)".printf((btrfs_mode ? "BTRFS" : "RSYNC"), _("Snapshot saved successfully"), seconds);
-			}
-			else{
-				message = _("Failed to create snapshot");
-			}
-
-			log_msg(message);
-			OSDNotify.notify_send("TimeShift", message, 10000, "low");
-
-			if (new_snapshot != null){
-				message = _("Tagged snapshot") + " '%s': %s".printf(new_snapshot.name, tag);
+				var message = _("Tagged snapshot") + " '%s': %s".printf(backup_to_rotate.name, tag);
 				log_msg(message);
+
+				return true;
 			}
 		}
-		catch(Error e){
-			log_error (e.message);
-			return false;
+
+		if (!repo.available()) {
+			log_error(repo.status_message);
+			log_error(repo.status_details);
+			exit_app();
+		}
+		
+
+		if (repo.mount_path.length == 0){
+			log_error("Backup location not mounted");
+			exit_app();
+		}
+
+		// create new snapshot -----------------------
+		Snapshot new_snapshot = null;
+		if (btrfs_mode)
+		{
+			new_snapshot = create_snapshot_with_btrfs(tag, dt_created);
+		}
+		else
+		if (first_snapshot_size > 0 && repo.device.free_bytes < first_snapshot_size)
+		{
+			// Perform a dry-run of the intended backup and make sure we'll have enough room
+			uint64 needed = get_space_needed_for_rsync_snapshot(dt_created);
+			bool enough = repo.has_space(needed);
+
+			var message = "Space required for snapshot: %lld (%s). Space available: %lu (%s)"
+							    .printf(needed, format_file_size(needed), repo.device.free_bytes, repo.device.free);
+			log_msg(message);
+			if (!enough)
+			{
+				message = "Not enough disk space! Additional required: %lld (%s)".printf(needed - repo.device.free_bytes, format_file_size(needed - repo.device.free_bytes));
+				log_msg(message);
+			}
+
+			if (enough)
+			{
+				new_snapshot = create_snapshot_with_rsync(tag, dt_created);
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			// this is the initial snapshot (which means a size check has already been made) or the target
+			// drive's available space is more than the the original (full) snapshot's size.
+			new_snapshot = create_snapshot_with_rsync(tag, dt_created);
+		}
+		// finish ------------------------------
+
+		var dt_end = new DateTime.now_local();
+		TimeSpan elapsed = dt_end.difference(dt_begin);
+		long seconds = (long)(elapsed * 1.0 / TimeSpan.SECOND);
+		
+		var message = "";
+		if (new_snapshot != null){
+			message = "%s %s (%lds)".printf((btrfs_mode ? "BTRFS" : "RSYNC"), _("Snapshot saved successfully"), seconds);
+		}
+		else{
+			message = _("Failed to create snapshot");
+		}
+
+		log_msg(message);
+		OSDNotify.notify_send("TimeShift", message, 10000, "low");
+
+		if (new_snapshot != null){
+			message = _("Tagged snapshot") + " '%s': %s".printf(new_snapshot.name, tag);
+			log_msg(message);
 		}
 
 		return status;
 	}
 
-	private Snapshot? create_snapshot_with_rsync(string tag, DateTime dt_created){
+	private uint64 get_space_needed_for_rsync_snapshot(DateTime dt_created) {
+		log_msg(string.nfill(78, '-'));
 
+		log_msg("Checking if target drive has enough free space for a snapshot (RSYNC)");
+		log_msg("Target device: %s, mount path: %s".printf(repo.device.device, repo.mount_path));
+		
+		string time_stamp = dt_created.format("%Y-%m-%d_%H-%M-%S");
+		string snapshot_dir = repo.snapshots_path;
+		string snapshot_name = time_stamp;
+		string snapshot_path = path_combine(snapshot_dir, snapshot_name);
+		dir_create(snapshot_path);
+		string localhost_path = path_combine(snapshot_path, "localhost");
+		dir_create(localhost_path);
+		
+		string sys_uuid = (sys_root == null) ? "" : sys_root.uuid;
+
+		Snapshot snapshot_to_link = null;
+
+		// check if a snapshot was restored recently and use it for linking ---------
+
+		try{
+			
+			string ctl_path = path_combine(snapshot_dir, ".sync-restore");
+			var f = File.new_for_path(ctl_path);
+			
+			if (f.query_exists()){
+
+				// read snapshot name from file
+				string snap_path = file_read(ctl_path);
+				string snap_name = file_basename(snap_path);
+				
+				// find the snapshot that was restored
+				foreach(var bak in repo.snapshots){
+					if ((bak.name == snap_name) && (bak.sys_uuid == sys_uuid)){
+						// use for linking
+						snapshot_to_link = bak;
+						// delete the restore-control-file
+						f.delete();
+						break;
+					}
+				}
+			}
+		}
+		catch(Error e){
+			log_error (e.message);
+			return 0;
+		}
+
+		// get latest snapshot to link if not set -------
+
+		if (snapshot_to_link == null){
+			snapshot_to_link = repo.get_latest_snapshot("", sys_uuid);
+		}
+
+		string link_from_path = "";
+		if (snapshot_to_link != null){
+			log_msg("Linking from snapshot: %s".printf(snapshot_to_link.name));
+			link_from_path = "%s/localhost/".printf(snapshot_to_link.path);
+		}
+
+		// save exclude list ----------------
+
+		bool ok = save_exclude_list_for_backup(snapshot_path);
+		
+		string exclude_from_file = path_combine(snapshot_path, "exclude.list");
+
+		if (!ok){
+			log_error("Failed to save exclude list");
+			return 0;
+		}
+
+		progress_text = _("Calculating disk space required...");
+		log_msg(progress_text);
+
+		space_check_task = new RsyncSpaceCheckTask();
+
+		space_check_task.source_path = "";
+		space_check_task.dest_path = snapshot_path + "/localhost/";
+		space_check_task.link_from_path = link_from_path;
+		space_check_task.exclude_from_file = exclude_from_file;
+		space_check_task.prg_count_total = Main.first_snapshot_count;
+
+		space_check_task.relative = true;
+		space_check_task.verbose = true;
+		space_check_task.delete_extra = true;
+		space_check_task.delete_excluded = true;
+		space_check_task.delete_after = false;
+
+		space_check_task.execute();
+
+		while (space_check_task.status == AppStatus.RUNNING){
+			sleep(1000);
+			gtk_do_events();
+
+			stdout.flush();
+		}
+
+		var total_size = space_check_task.total_size;
+		space_check_task = null;
+		return total_size;
+	}
+
+	private Snapshot? create_snapshot_with_rsync(string tag, DateTime dt_created){
 		log_msg(string.nfill(78, '-'));
 
 		if (first_snapshot_size == 0){
@@ -2252,7 +2381,7 @@ public class Main : GLib.Object{
 
 		log_debug("Main: create_restore_scripts()");
 		
-		string sh = "";
+		string sh = "export LC_ALL=C.UTF-8\n";
 
 		// create scripts --------------------------------------
 
@@ -2269,7 +2398,7 @@ public class Main : GLib.Object{
 
 		// run rsync ---------------------------------------
 
-		sh += "rsync -avir --force --delete --delete-after";
+		sh += "rsync -avir --force --delete --delete-before";
 
 		if (dry_run){
 			sh += " --dry-run";
@@ -2413,11 +2542,19 @@ public class Main : GLib.Object{
 		log_debug("GRUB2 install script:");
 		log_debug(sh);
 
+		// Perform any post-restore actions
+		log_debug("Running post-restore tasks...");
+
+		sh += "if [ -d \"/etc/timeshift/restore-hooks.d\" ]; then \n";
+		sh += "  run-parts --verbose /etc/timeshift/restore-hooks.d \n";
+		sh += "fi \n";
+
 		// reboot if required -----------------------------------
 
 		if (restore_current_system){
 			sh += "echo '' \n";
 			sh += "echo '" + _("Rebooting system...") + "' \n";
+			sh += "sleep 5s \n";
 			sh += "reboot -f \n";
 			//sh_reboot += "shutdown -r now \n";
 		}
@@ -2877,8 +3014,6 @@ public class Main : GLib.Object{
 
 		log_msg(string.nfill(78, '-'));
 
-		query_subvolume_quotas();
-
 		thread_restore_running = false;
 		return thr_success;
 	}
@@ -3050,7 +3185,6 @@ public class Main : GLib.Object{
 		config.set_string_member("include_btrfs_home_for_backup", include_btrfs_home_for_backup.to_string());
 		config.set_string_member("include_btrfs_home_for_restore", include_btrfs_home_for_restore.to_string());
 		config.set_string_member("stop_cron_emails", stop_cron_emails.to_string());
-		config.set_string_member("btrfs_use_qgroup", btrfs_use_qgroup.to_string());
 
 		config.set_string_member("schedule_monthly", schedule_monthly.to_string());
 		config.set_string_member("schedule_weekly", schedule_weekly.to_string());
@@ -3064,8 +3198,16 @@ public class Main : GLib.Object{
 		config.set_string_member("count_hourly", count_hourly.to_string());
 		config.set_string_member("count_boot", count_boot.to_string());
 
-		config.set_string_member("snapshot_size", first_snapshot_size.to_string());
-		config.set_string_member("snapshot_count", first_snapshot_count.to_string());
+		if (repo.has_snapshots())
+		{
+			config.set_string_member("snapshot_size", first_snapshot_size.to_string());
+			config.set_string_member("snapshot_count", first_snapshot_count.to_string());
+		}
+		else
+		{
+			first_snapshot_size = 0;
+			first_snapshot_count = 0;
+		}
 
 		config.set_string_member("date_format", date_format);
 		
@@ -3147,8 +3289,7 @@ public class Main : GLib.Object{
 		
 		include_btrfs_home_for_restore = json_get_bool(config, "include_btrfs_home_for_restore", include_btrfs_home_for_restore);
 		stop_cron_emails = json_get_bool(config, "stop_cron_emails", stop_cron_emails);
-		btrfs_use_qgroup = json_get_bool(config, "btrfs_use_qgroup", btrfs_use_qgroup);
-		
+
 		if (cmd_btrfs_mode != null){
 			btrfs_mode = cmd_btrfs_mode; //override
 		}
@@ -3420,7 +3561,7 @@ public class Main : GLib.Object{
 
 	public bool mount_target_devices(Gtk.Window? parent_win = null){
 		/* Note:
-		 * Target device will be mounted explicitly to /mnt/timeshift/restore
+		 * Target device will be mounted explicitly to /run/timeshift/<pid>/restore
 		 * Existing mount points are not used since we need to mount other devices in sub-directories
 		 * */
 
@@ -3609,7 +3750,7 @@ public class Main : GLib.Object{
 		}
 
 		if (Device.unmount(mnt_btrfs)){
-			if (dir_exists(mnt_btrfs) && (dir_count(mnt_btrfs) == 0)){
+			if (dir_exists(mnt_btrfs) && dir_is_empty(mnt_btrfs)){
 				dir_delete(mnt_btrfs);
 				log_debug(_("Removed mount directory: '%s'").printf(mnt_btrfs));
 			}
@@ -3741,8 +3882,8 @@ public class Main : GLib.Object{
 			}
 
 			save_exclude_list_for_backup(TEMP_DIR);
-			
-			cmd  = "LC_ALL=C ; rsync -ai --delete --numeric-ids --relative --stats --dry-run --delete-excluded --exclude-from='%s' /. '%s' &> '%s'".printf(file_exclude_list, dir_empty, file_log);
+
+			cmd  = "export LC_ALL=C.UTF-8 ; rsync -ai --delete --numeric-ids --relative --stats --dry-run --delete-excluded --exclude-from='%s' /. '%s' &> '%s'".printf(file_exclude_list, dir_empty, file_log);
 
 			log_debug(cmd);
 			ret_val = exec_script_sync(cmd, out std_out, out std_err);
@@ -3839,31 +3980,6 @@ public class Main : GLib.Object{
 			return;
 		}
 
-		//query quota
-		ok = query_subvolume_quotas();
-		
-		if (!ok){
-
-			if (btrfs_use_qgroup){
-				
-				//try enabling quota
-				ok = enable_subvolume_quotas();
-				if (!ok){
-					thread_subvol_info_success = false;
-					thread_subvol_info_running = false;
-					return;
-				}
-
-				//query quota again
-				ok = query_subvolume_quotas();
-				if (!ok){
-					thread_subvol_info_success = false;
-					thread_subvol_info_running = false;
-					return;
-				}
-			}
-		}
-
 		thread_subvol_info_success = true;
 		thread_subvol_info_running = false;
 		return;
@@ -3933,198 +4049,6 @@ public class Main : GLib.Object{
 			if (subvol != null){
 				subvol.id = long.parse(parts[1]);
 			}
-		}
-
-		return true;
-	}
-
-	public bool query_subvolume_quotas(){
-
-		bool ok = query_subvolume_quota("@");
-		if (repo.device.uuid != repo.device_home.uuid){
-			ok = ok && query_subvolume_quota("@home");
-		}
-		return ok;
-	}
-	
-	public bool query_subvolume_quota(string subvol_name){
-
-		log_debug("query_subvolume_quota():%s".printf(subvol_name));
-		
-		string cmd = "";
-		string std_out;
-		string std_err;
-		int ret_val;
-
-		string options = use_option_raw ? "--raw" : "";
-		
-		cmd = "btrfs qgroup show %s '%s'".printf(options, repo.mount_paths[subvol_name]);
-		log_debug(cmd);
-		ret_val = exec_sync(cmd, out std_out, out std_err);
-		
-		if (ret_val != 0){
-			
-			if (use_option_raw){
-				use_option_raw = false;
-
-				// try again without --raw option
-				cmd = "btrfs qgroup show '%s'".printf(repo.mount_paths[subvol_name]);
-				log_debug(cmd);
-				ret_val = exec_sync(cmd, out std_out, out std_err);
-			}	
-			
-			if (ret_val != 0){
-				log_error (std_err);
-				log_error(_("btrfs returned an error") + ": %d".printf(ret_val));
-				log_error(_("Failed to query subvolume quota"));
-				return false;
-			}
-		}
-
-		/* Sample Output:
-		 *
-		qgroupid rfer       excl
-		-------- ----       ----
-		0/5      106496     106496
-		0/257    3825262592 557056
-		0/258    12689408   49152
-		 * */
-
-		foreach(string line in std_out.split("\n")){
-			if (line == null) { continue; }
-
-			string[] parts = line.split(" ");
-			if (parts.length < 3) { continue; }
-			if (parts[0].split("/").length < 2) { continue; }
-
-			int subvol_id = int.parse(parts[0].split("/")[1]);
-
-			Subvolume subvol = null;
-
-			if ((sys_subvolumes.size > 0) && (sys_subvolumes["@"].id == subvol_id)){
-				
-				subvol = sys_subvolumes["@"];
-			}
-			else if ((sys_subvolumes.size > 0)
-				&& sys_subvolumes.has_key("@home")
-				&& (sys_subvolumes["@home"].id == subvol_id)){
-					
-				subvol = sys_subvolumes["@home"];
-			}
-			else {
-				foreach(var bak in repo.snapshots){
-					foreach(var sub in bak.subvolumes.values){
-						if (sub.id == subvol_id){
-							subvol = sub;
-						}
-					}
-				}
-			}
-
-			if (subvol != null){
-				int part_num = -1;
-				foreach(string part in parts){
-					if (part.strip().length > 0){
-						part_num ++;
-						switch (part_num){
-							case 1:
-								subvol.total_bytes = int64.parse(part);
-								break;
-							case 2:
-								subvol.unshared_bytes = int64.parse(part);
-								break;
-							default:
-								//ignore
-								break;
-						}
-					}
-				}
-			}
-		}
-
-		foreach(var bak in repo.snapshots){
-			bak.update_control_file();
-		}
-
-		return true;
-	}
-
-	public bool enable_subvolume_quotas(){
-
-		if (!btrfs_use_qgroup){ return false; }
-		
-		bool ok = enable_subvolume_quota("@");
-		
-		if (repo.device.uuid != repo.device_home.uuid){
-			ok = ok && enable_subvolume_quota("@home");
-		}
-		if (ok){
-			log_msg(_("Enabled subvolume quota support"));
-		}
-		
-		return ok;
-	}
-	
-	public bool enable_subvolume_quota(string subvol_name){
-
-		if (!btrfs_use_qgroup){ return false; }
-		
-		log_debug("enable_subvolume_quota():%s".printf(subvol_name));
-		
-		string cmd = "";
-		string std_out;
-		string std_err;
-		int ret_val;
-
-		cmd = "btrfs quota enable '%s'".printf(repo.mount_paths[subvol_name]);
-		log_debug(cmd);
-		
-		ret_val = exec_sync(cmd, out std_out, out std_err);
-		
-		if (ret_val != 0){
-			log_error (std_err);
-			log_error(_("btrfs returned an error") + ": %d".printf(ret_val));
-			log_error(_("Failed to enable subvolume quota"));
-			return false;
-		}
-
-		return true;
-	}
-
-	public bool rescan_subvolume_quotas(){
-		
-		bool ok = rescan_subvolume_quota("@");
-		
-		if (repo.device.uuid != repo.device_home.uuid){
-			ok = ok && rescan_subvolume_quota("@home");
-		}
-		if (ok){
-			log_msg(_("Enabled subvolume quota support"));
-		}
-		
-		return ok;
-	}
-	
-	public bool rescan_subvolume_quota(string subvol_name){
-
-		log_debug("rescan_subvolume_quota():%s".printf(subvol_name));
-		
-		string cmd = "";
-		string std_out;
-		string std_err;
-		int ret_val;
-
-		cmd = "btrfs quota rescan '%s'".printf(repo.mount_paths[subvol_name]);
-		log_debug(cmd);
-		
-		ret_val = exec_sync(cmd, out std_out, out std_err);
-		
-		if (ret_val != 0){
-			
-			log_error (std_err);
-			log_error(_("btrfs returned an error") + ": %d".printf(ret_val));
-			log_error(_("Failed to rescan subvolume quota"));
-			return false;
 		}
 
 		return true;
@@ -4256,10 +4180,86 @@ public class Main : GLib.Object{
 		app_lock.remove();
 		
 		dir_delete(TEMP_DIR);
-
+		
+		cleanup_unmount_devices();
+		
 		exit(exit_code);
 
 		//Gtk.main_quit ();
+	}
+	
+	private void cleanup_unmount_devices(){
+		
+		log_debug("cleanup_unmount_devices()");
+		
+		if (!dir_exists("/run/timeshift")){ return; }
+		
+		var dirlist = dir_list_names("/run/timeshift");
+		
+		foreach(var dname in dirlist){
+			
+			int pid = int.parse(dname);
+
+			if (pid != Posix.getpid()){ // if some other process
+				
+				// check if the process is still running
+				
+				string procdir = "/proc/%d".printf(pid);
+				
+				if (dir_exists(procdir)){ continue; }
+			}
+			
+			// -----------------------------------------------
+			
+			string mdir = "/run/timeshift/%s".printf(dname);
+			
+			var dirlist2 = dir_list_names(mdir);
+			
+			foreach(var dname2 in dirlist2){
+				
+				string mdir2 = "/run/timeshift/%s/%s".printf(dname, dname2);
+				
+				// check if a device is mounted here
+				
+				foreach (var dev in Device.get_filesystems()){
+					
+					foreach (var mnt in dev.mount_points){
+						
+						if (mnt.mount_point == mdir2){
+							
+							log_debug("\nFound stale mount for device '%s' at path '%s'".printf(dev.device, mdir2));
+			
+							string cmd = "umount '%s'".printf(escape_single_quote(mdir2));
+							int retval = exec_sync(cmd);
+							
+							string cmd2 = "rmdir '%s'".printf(escape_single_quote(mdir2));
+							int retval2 = exec_sync(cmd2);
+							
+							if (retval2 != 0){
+								log_debug("E: Failed to unmount");
+								log_debug("Ret=%d".printf(retval));
+								//ignore
+							}
+							else{
+								log_debug("Unmounted successfully");
+							}
+						}
+					}
+				}
+			}
+			
+			if (dir_exists(mdir)){
+
+				string cmd3 = "rmdir '%s'".printf(escape_single_quote(mdir));
+				int retval3 = exec_sync(cmd3);
+				
+				if (retval3 != 0){
+					log_error("Failed to remove directory");
+					log_msg("Ret=%d".printf(retval3));
+					//ignore
+				}
+			}
+		}
 	}
 }
 

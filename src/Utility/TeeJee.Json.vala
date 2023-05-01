@@ -40,17 +40,6 @@ namespace TeeJee.JsonHelper{
 		}
 	}
 
-	public double json_get_double(Json.Object jobj, string member, double def_value){
-		var text = json_get_string(jobj, member, def_value.to_string());
-		double double_value;
-		if (double.try_parse(text, out double_value)){
-			return double_value;
-		}
-		else{
-			return def_value;
-		}
-	}
-
 	public bool json_get_bool(Json.Object jobj, string member, bool def_value){
 		if (jobj.has_member(member)){
 			return bool.parse(jobj.get_string_member(member));
@@ -80,24 +69,4 @@ namespace TeeJee.JsonHelper{
 			return def_value;
 		}
 	}
-
-	public Gee.ArrayList<string> json_get_array(
-		Json.Object jobj,
-		string member,
-		Gee.ArrayList<string> def_value){
-			
-		if (jobj.has_member(member)){
-			var jarray = jobj.get_array_member(member);
-			var list = new Gee.ArrayList<string>();
-			foreach(var node in jarray.get_elements()){
-				list.add(node.get_string());
-			}
-			return list;
-		}
-		else{
-			log_debug ("Member not found in JSON object: " + member);
-			return def_value;
-		}
-	}
-
 }

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: linuxmint\n"
 "Report-Msgid-Bugs-To: teejeetech@gmail.com\n"
-"POT-Creation-Date: 2020-11-16 17:44+0530\n"
+"POT-Creation-Date: 2022-10-15 14:32+0530\n"
 "PO-Revision-Date: 2019-03-08 17:00+0800\n"
 "Last-Translator: AlephAlpha <alephalpha911@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
@@ -29,7 +29,7 @@ msgstr ""
 "\n"
 "按回车键以继续..."
 
-#: Core/SnapshotRepo.vala:617
+#: Core/SnapshotRepo.vala:556
 #, c-format
 msgid "%d snapshots, %s free"
 msgstr "%d 快照， %s 可用"
@@ -52,23 +52,23 @@ msgstr "（重新）安装 GRUB2 于："
 msgid "** Uninstalled Timeshift BTRFS **"
 msgstr "** 卸载 Timeshift BTRFS **"
 
-#: Core/Main.vala:3374
+#: Core/Main.vala:3515
 msgid "/ is mapped to device"
 msgstr "/ 映射到设备"
 
-#: Core/Main.vala:3396
+#: Core/Main.vala:3537
 msgid "/boot is mapped to device"
 msgstr "/boot 映射到设备"
 
-#: Core/Main.vala:3407
+#: Core/Main.vala:3548
 msgid "/boot/efi is mapped to device"
 msgstr "/boot/efi 映射到设备"
 
-#: Core/Main.vala:3385
+#: Core/Main.vala:3526
 msgid "/home is mapped to device"
 msgstr "/home 映射到设备"
 
-#: Gtk/SnapshotListBox.vala:290
+#: Gtk/SnapshotListBox.vala:238
 msgid "<b>Comments</b> (double-click to edit)"
 msgstr "<b>注释</b> (双击以修改)"
 
@@ -136,7 +136,7 @@ msgstr "备份和恢复系统文件需要管理员权限。"
 msgid "All Files"
 msgstr "添加文件"
 
-#: Gtk/SnapshotBackendBox.vala:189
+#: Gtk/SnapshotBackendBox.vala:197
 msgid ""
 "All files are copied when first snapshot is created. Subsequent snapshots "
 "are incremental. Unchanged files will be hard-linked from the previous "
@@ -149,7 +149,7 @@ msgstr ""
 msgid "All other files and folders are excluded."
 msgstr "其他文件和文件夹将被排除。"
 
-#: Gtk/RestoreDeviceBox.vala:500
+#: Gtk/RestoreDeviceBox.vala:486
 msgid ""
 "An encrypted device is selected for root file system (/). The boot directory "
 "(/boot) must be mounted on a non-encrypted device for the system to boot "
@@ -179,11 +179,11 @@ msgstr "Timeshift 的另一个实例正在运行！"
 msgid "Answer YES to all confirmation prompts"
 msgstr "对所有的确认提示回答 YES"
 
-#: Core/Main.vala:3211
+#: Core/Main.vala:3352
 msgid "App config loaded"
 msgstr "应用配置已加载"
 
-#: Core/Main.vala:3098
+#: Core/Main.vala:3240
 msgid "App config saved"
 msgstr "应用配置已保存"
 
@@ -191,7 +191,7 @@ msgstr "应用配置已保存"
 msgid "Application needs admin access."
 msgstr "应用需要管理员权限。"
 
-#: Core/Main.vala:3551
+#: Core/Main.vala:3692
 msgid "Application will exit"
 msgstr "应用将会退出"
 
@@ -199,11 +199,11 @@ msgstr "应用将会退出"
 msgid "Application will exit."
 msgstr "程序将会关闭。"
 
-#: Utility/Gtk/AboutWindow.vala:433
+#: Utility/Gtk/AboutWindow.vala:437
 msgid "Artists"
 msgstr "艺术家"
 
-#: Utility/Gtk/AboutWindow.vala:417
+#: Utility/Gtk/AboutWindow.vala:421
 msgid "Authors"
 msgstr "作者"
 
@@ -215,15 +215,11 @@ msgstr "可用"
 msgid "BTRFS"
 msgstr "BTRFS"
 
-#: Gtk/SnapshotBackendBox.vala:166
+#: Gtk/SnapshotBackendBox.vala:174
 msgid "BTRFS Snapshots"
 msgstr "BTRFS快照"
 
-#: Gtk/SnapshotBackendBox.vala:120
-msgid "BTRFS Tools Not Found"
-msgstr "BTRFS工具丢失"
-
-#: Core/Main.vala:2061 Core/Main.vala:2065
+#: Core/Main.vala:2190 Core/Main.vala:2194
 msgid "BTRFS device is not mounted"
 msgstr "BTRFS设备未加载"
 
@@ -243,7 +239,7 @@ msgstr ""
 "BTRFS快照保存在创建它的同一个磁盘内。如果系统磁盘损坏，快照也会随此丢失。因此"
 "建议使用RSYNC模式来把快照存贮在外部非系统磁盘。"
 
-#: Utility/Gtk/AboutWindow.vala:349 Utility/Gtk/AboutWindow.vala:381
+#: Utility/Gtk/AboutWindow.vala:353 Utility/Gtk/AboutWindow.vala:385
 msgid "Back"
 msgstr "返回"
 
@@ -255,11 +251,11 @@ msgstr "后台"
 msgid "Backup"
 msgstr "备份"
 
-#: Core/Main.vala:2037
+#: Core/Main.vala:2166
 msgid "Backup Device"
 msgstr "备份设备"
 
-#: Core/Main.vala:2032
+#: Core/Main.vala:2161
 msgid "Backup device not specified!"
 msgstr "未指定需备份的设备！"
 
@@ -267,15 +263,15 @@ msgstr "未指定需备份的设备！"
 msgid "Bittorrent Clients"
 msgstr "Bittorrent客户端"
 
-#: Gtk/SnapshotListBox.vala:298 Gtk/ScheduleBox.vala:136
+#: Gtk/ScheduleBox.vala:136 Gtk/SnapshotListBox.vala:246
 msgid "Boot"
 msgstr "启动"
 
-#: Gtk/RestoreDeviceBox.vala:499
+#: Gtk/RestoreDeviceBox.vala:485
 msgid "Boot device not selected"
 msgstr "启动设备未被选定"
 
-#: Core/Main.vala:1032
+#: Core/Main.vala:1033
 msgid "Boot snapshot failed!"
 msgstr "启动快照失败！"
 
@@ -284,7 +280,7 @@ msgid ""
 "Boot snapshots are created with a delay of 10 minutes after system startup."
 msgstr "启动快照在系统启动后延迟10分钟创建。"
 
-#: Core/Main.vala:1013
+#: Core/Main.vala:1014
 msgid "Boot snapshots are enabled"
 msgstr "已启用启动快照"
 
@@ -292,7 +288,7 @@ msgstr "已启用启动快照"
 msgid "Bootloader Options"
 msgstr "引导加载程序选项"
 
-#: Gtk/RestoreDeviceBox.vala:411
+#: Gtk/RestoreDeviceBox.vala:402
 msgid "Bootloader Options (Advanced)"
 msgstr "引导加载程序选项（高级）"
 
@@ -300,7 +296,7 @@ msgstr "引导加载程序选项（高级）"
 msgid "Browse"
 msgstr "浏览"
 
-#: Gtk/SnapshotListBox.vala:336
+#: Gtk/SnapshotListBox.vala:284
 msgid "Browse Files"
 msgstr "浏览文件"
 
@@ -308,22 +304,26 @@ msgstr "浏览文件"
 msgid "Browse selected snapshot"
 msgstr "浏览选定的快照"
 
-#: Core/Main.vala:2519
+#: Core/Main.vala:2656
 msgid "Building file list..."
 msgstr "建立文件列表..."
 
-#: Utility/GtkHelper.vala:120 Utility/Gtk/CustomMessageDialog.vala:172
-#: Gtk/RestoreWindow.vala:209 Gtk/RestoreWindow.vala:218
-#: Gtk/SetupWizardWindow.vala:220 Gtk/BackupWindow.vala:181
-#: Gtk/DeleteWindow.vala:190
+#: Core/Main.vala:1393
+msgid "Calculating disk space required..."
+msgstr ""
+
+#: Gtk/DeleteWindow.vala:190 Gtk/SetupWizardWindow.vala:220
+#: Gtk/BackupWindow.vala:181 Gtk/RestoreWindow.vala:215
+#: Gtk/RestoreWindow.vala:224 Utility/Gtk/CustomMessageDialog.vala:152
+#: Utility/GtkHelper.vala:109
 msgid "Cancel"
 msgstr "取消"
 
-#: Gtk/RestoreWindow.vala:224
+#: Gtk/RestoreWindow.vala:230
 msgid "Cancel restore?"
 msgstr "取消恢复？"
 
-#: Gtk/RestoreWindow.vala:226
+#: Gtk/RestoreWindow.vala:232
 msgid ""
 "Cancelling the restore process will leave the target system in an "
 "inconsistent state. The system may fail to boot or you may run into various "
@@ -334,16 +334,16 @@ msgstr ""
 "题。在取消恢复后，您必须恢复其他的快照来保证系统数据的一致。请点击“确定”以确"
 "认。"
 
-#: Gtk/MainWindow.vala:556
+#: Gtk/MainWindow.vala:558
 msgid "Cannot Delete Live Snapshot"
 msgstr "无法删除实时快照"
 
-#: Gtk/RestoreBox.vala:125 Gtk/BackupBox.vala:87 Gtk/RsyncLogBox.vala:380
-#: Gtk/RsyncLogBox.vala:383 Gtk/RsyncLogBox.vala:567 Gtk/RsyncLogBox.vala:588
+#: Gtk/RestoreBox.vala:125 Gtk/RsyncLogBox.vala:380 Gtk/RsyncLogBox.vala:383
+#: Gtk/RsyncLogBox.vala:567 Gtk/RsyncLogBox.vala:588 Gtk/BackupBox.vala:90
 msgid "Changed"
 msgstr "已更改"
 
-#: Gtk/RestoreBox.vala:127 Gtk/BackupBox.vala:89
+#: Gtk/RestoreBox.vala:127 Gtk/BackupBox.vala:92
 msgid "Changed items:"
 msgstr "更改的项目："
 
@@ -351,20 +351,20 @@ msgstr "更改的项目："
 msgid "Checking Restore Actions (Dry Run)"
 msgstr "正在检查还原操作（空运行）"
 
-#: Core/Main.vala:2752
+#: Core/Main.vala:2889
 msgid "Checking file systems for errors..."
 msgstr "正在检查文件系统中的错误..."
 
-#: Gtk/RestoreBox.vala:130 Gtk/BackupBox.vala:92 Gtk/RsyncLogBox.vala:390
+#: Gtk/RestoreBox.vala:130 Gtk/RsyncLogBox.vala:390 Gtk/BackupBox.vala:95
 #, c-format
 msgid "Checksum"
 msgstr "校验和"
 
-#: Core/Main.vala:2408
+#: Core/Main.vala:2537
 msgid "Cleaning up..."
 msgstr "正在清理..."
 
-#: Gtk/UsersBox.vala:92 Gtk/ExcludeBox.vala:84
+#: Gtk/ExcludeBox.vala:84 Gtk/UsersBox.vala:89
 msgid "Click to edit. Drag and drop to re-order."
 msgstr "点击以修改。拖放以排序。"
 
@@ -377,27 +377,23 @@ msgstr "点击以修改。拖放以排序。"
 msgid "Clone System"
 msgstr "复制系统"
 
-#: Console/AppConsole.vala:365
-msgid "Clone current system"
-msgstr "复制当前的系统"
-
 #: Gtk/RestoreFinishBox.vala:68
 msgid "Cloning"
 msgstr "正在复制"
 
-#: Core/Main.vala:2802
+#: Core/Main.vala:2939
 msgid "Cloning system..."
 msgstr "正在复制系统……"
 
-#: Utility/Gtk/AboutWindow.vala:326 Utility/Gtk/DonationWindow.vala:104
-#: Gtk/RestoreWindow.vala:495 Gtk/BackupWindow.vala:172
 #: Gtk/BootOptionsWindow.vala:106 Gtk/DeleteWindow.vala:173
-#: Gtk/RsyncLogBox.vala:266
+#: Gtk/RsyncLogBox.vala:266 Gtk/BackupWindow.vala:172
+#: Gtk/RestoreWindow.vala:501 Utility/Gtk/DonationWindow.vala:94
+#: Utility/Gtk/AboutWindow.vala:330
 msgid "Close"
 msgstr "关闭"
 
-#: Gtk/FinishBox.vala:101 Gtk/BackupFinishBox.vala:70
-#: Gtk/DeleteFinishBox.vala:71 Gtk/RestoreFinishBox.vala:106
+#: Gtk/BackupFinishBox.vala:70 Gtk/DeleteFinishBox.vala:71
+#: Gtk/FinishBox.vala:101 Gtk/RestoreFinishBox.vala:106
 msgid "Close window to exit"
 msgstr "关闭窗口以退出"
 
@@ -405,16 +401,16 @@ msgstr "关闭窗口以退出"
 msgid "Commands listed below are not available on this system"
 msgstr "以下列出的命令并不适用于此系统"
 
-#: Gtk/SnapshotListBox.vala:224
+#: Gtk/SnapshotListBox.vala:172
 #, fuzzy
 msgid "Comments (click to edit)"
 msgstr "<b>注释</b> (双击以修改)"
 
-#: Gtk/RestoreBox.vala:74 Gtk/RestoreBox.vala:187 Core/Main.vala:2795
+#: Core/Main.vala:2932 Gtk/RestoreBox.vala:74 Gtk/RestoreBox.vala:187
 msgid "Comparing Files (Dry Run)..."
 msgstr "正在比较文件（空运行）..."
 
-#: Core/Main.vala:2561
+#: Core/Main.vala:2698
 msgid "Comparing files with rsync..."
 msgstr "正在使用rsync同步文件..."
 
@@ -427,7 +423,7 @@ msgstr "已完成"
 msgid "Completed With Errors"
 msgstr "已完成，但有错误"
 
-#: Gtk/RestoreWindow.vala:109 Gtk/RsyncLogBox.vala:87
+#: Gtk/RsyncLogBox.vala:87 Gtk/RestoreWindow.vala:109
 msgid "Confirm Actions"
 msgstr "确认操作"
 
@@ -436,7 +432,7 @@ msgstr "确认操作"
 msgid "Continue with restore? (y/n): "
 msgstr "是否继续恢复？(y/n) "
 
-#: Utility/Gtk/AboutWindow.vala:425
+#: Utility/Gtk/AboutWindow.vala:429
 #, fuzzy
 msgid "Contributors"
 msgstr "贡献"
@@ -454,15 +450,15 @@ msgstr "找不到文件"
 msgid "Could not find snapshot"
 msgstr "无法找到快照"
 
-#: Core/Main.vala:2966
+#: Core/Main.vala:3101
 msgid "Could not find system subvolume"
 msgstr "无法找到系统子卷"
 
-#: Core/Main.vala:2994
+#: Core/Main.vala:3129
 msgid "Could not find system subvolumes for creating pre-restore snapshot"
 msgstr "无法找到系统子卷以创造预恢复快照"
 
-#: Gtk/MainWindow.vala:141 Gtk/RsyncLogBox.vala:366 Gtk/RsyncLogBox.vala:571
+#: Gtk/RsyncLogBox.vala:366 Gtk/RsyncLogBox.vala:571 Gtk/MainWindow.vala:141
 #, c-format
 msgid "Create"
 msgstr "创建"
@@ -503,7 +499,7 @@ msgstr "按计划创建快照"
 msgid "Create snapshot of current system"
 msgstr "为当前系统创建快照"
 
-#: Gtk/MainWindow.vala:1058
+#: Gtk/MainWindow.vala:1066
 msgid ""
 "Create snapshots manually or enable scheduled snapshots to protect your "
 "system"
@@ -518,8 +514,8 @@ msgstr "用 RSYNC 创建快照"
 msgid "Create snapshots using RSYNC tool and hard-links"
 msgstr "使用 RSYNC 工具和硬链接来创建快照"
 
-#: Gtk/RestoreBox.vala:123 Gtk/BackupBox.vala:85 Gtk/RsyncLogBox.vala:366
-#: Gtk/RsyncLogBox.vala:571 Gtk/RsyncLogBox.vala:592
+#: Gtk/RestoreBox.vala:123 Gtk/RsyncLogBox.vala:366 Gtk/RsyncLogBox.vala:571
+#: Gtk/RsyncLogBox.vala:592 Gtk/BackupBox.vala:88
 #, c-format
 msgid "Created"
 msgstr "已创建"
@@ -528,15 +524,15 @@ msgstr "已创建"
 msgid "Created control file"
 msgstr "已创建控制文件"
 
-#: Utility/TeeJee.FileSystem.vala:332
+#: Utility/TeeJee.FileSystem.vala:268
 msgid "Created directory"
 msgstr "已创建目录"
 
-#: Core/Main.vala:3016
+#: Core/Main.vala:3151
 msgid "Created pre-restore snapshot"
 msgstr "已创建预恢复快照"
 
-#: Core/Main.vala:1519
+#: Core/Main.vala:1648
 msgid "Created subvolume snapshot"
 msgstr "创建子卷快照"
 
@@ -544,23 +540,23 @@ msgstr "创建子卷快照"
 msgid "Creating Snapshot..."
 msgstr "正在创建快照..."
 
-#: Core/Main.vala:1457
+#: Core/Main.vala:1586
 msgid "Creating new backup..."
 msgstr "正在创建新的备份..."
 
-#: Core/Main.vala:1303
+#: Core/Main.vala:1432
 msgid "Creating new snapshot..."
 msgstr "正在创建新的快照..."
 
-#: Core/Main.vala:2944
+#: Core/Main.vala:3079
 msgid "Creating pre-restore snapshot from system subvolumes..."
 msgstr "正在为子卷创建预恢复快照..."
 
-#: Utility/Gtk/AboutWindow.vala:321 Utility/Gtk/AboutWindow.vala:387
+#: Utility/Gtk/AboutWindow.vala:325 Utility/Gtk/AboutWindow.vala:391
 msgid "Credits"
 msgstr "贡献者"
 
-#: Core/Main.vala:3550
+#: Core/Main.vala:3691
 msgid "Critical Error"
 msgstr "严重错误"
 
@@ -576,33 +572,33 @@ msgstr "已移除 Cron 任务"
 msgid "Cron task exists"
 msgstr "Cron 任务已存在"
 
-#: Gtk/MiscBox.vala:98
+#: Gtk/MiscBox.vala:94
 msgid "Custom"
 msgstr ""
 
-#: Gtk/SnapshotListBox.vala:300 Gtk/ScheduleBox.vala:100
+#: Gtk/ScheduleBox.vala:100 Gtk/SnapshotListBox.vala:248
 msgid "Daily"
 msgstr "每日"
 
-#: Core/Main.vala:1094
+#: Core/Main.vala:1095
 msgid "Daily snapshot failed!"
 msgstr "每日快照失败！"
 
-#: Core/Main.vala:1075
+#: Core/Main.vala:1076
 msgid "Daily snapshots are enabled"
 msgstr "已启用每日快照"
 
-#: Core/Main.vala:2131
+#: Core/Main.vala:2260
 msgid "Data will be modified on following devices:"
 msgstr "以下设备中的数据将被修改："
 
-#: Gtk/MiscBox.vala:71
+#: Gtk/MiscBox.vala:67
 msgid "Date Format"
 msgstr ""
 
-#: Console/AppConsole.vala:371 Gtk/MainWindow.vala:161
-#: Gtk/SnapshotListBox.vala:322 Gtk/DeleteWindow.vala:98
+#: Console/AppConsole.vala:371 Gtk/DeleteWindow.vala:98
 #: Gtk/RsyncLogBox.vala:370 Gtk/RsyncLogBox.vala:575
+#: Gtk/SnapshotListBox.vala:270 Gtk/MainWindow.vala:161
 #, c-format
 msgid "Delete"
 msgstr "删除"
@@ -623,17 +619,17 @@ msgstr "删除选中的快照"
 msgid "Delete snapshot"
 msgstr "删除快照"
 
-#: Gtk/RestoreBox.vala:124 Gtk/BackupBox.vala:86 Gtk/RsyncLogBox.vala:370
-#: Gtk/RsyncLogBox.vala:575 Gtk/RsyncLogBox.vala:596
+#: Gtk/RestoreBox.vala:124 Gtk/RsyncLogBox.vala:370 Gtk/RsyncLogBox.vala:575
+#: Gtk/RsyncLogBox.vala:596 Gtk/BackupBox.vala:89
 #, c-format
 msgid "Deleted"
 msgstr "已删除"
 
-#: Utility/TeeJee.FileSystem.vala:366
+#: Utility/TeeJee.FileSystem.vala:302
 msgid "Deleted directory"
 msgstr "删除目录"
 
-#: Core/Subvolume.vala:167 Core/Main.vala:2923 Core/Main.vala:2927
+#: Core/Subvolume.vala:167 Core/Main.vala:3058 Core/Main.vala:3062
 #, c-format
 msgid "Deleted subvolume"
 msgstr "删除子卷"
@@ -655,21 +651,11 @@ msgstr "Deluge, Transmission"
 msgid "Description"
 msgstr "描述"
 
-#: Core/Subvolume.vala:181
-#, c-format
-msgid "Destroyed qgroup"
-msgstr "已销毁配额组"
-
-#: Core/Subvolume.vala:171
-#, c-format
-msgid "Destroying qgroup"
-msgstr "正在销毁配额组"
-
 #: Console/AppConsole.vala:456 Console/AppConsole.vala:495
-#: Console/AppConsole.vala:543 Utility/Device.vala:1932
-#: Utility/Device.vala:1942 Gtk/RestoreDeviceBox.vala:97
-#: Core/SnapshotRepo.vala:76 Core/SnapshotRepo.vala:659
-#: Core/SnapshotRepo.vala:662 Core/Main.vala:2134 Core/Main.vala:2166
+#: Console/AppConsole.vala:543 Core/SnapshotRepo.vala:74
+#: Core/SnapshotRepo.vala:599 Core/SnapshotRepo.vala:602 Core/Main.vala:2263
+#: Core/Main.vala:2295 Gtk/RestoreDeviceBox.vala:97 Utility/Device.vala:1932
+#: Utility/Device.vala:1942
 #, c-format
 msgid "Device"
 msgstr "设备"
@@ -682,7 +668,7 @@ msgstr "设备已解锁"
 msgid "Device name is empty!"
 msgstr "设备名称为空！"
 
-#: Console/AppConsole.vala:665 Core/SnapshotRepo.vala:536 Core/Main.vala:3264
+#: Console/AppConsole.vala:665 Core/SnapshotRepo.vala:479 Core/Main.vala:3405
 msgid "Device not found"
 msgstr "设备未找到"
 
@@ -708,11 +694,11 @@ msgstr "Linux 文件系统所在的设备"
 msgid "Devices with Windows file systems are not supported (NTFS, FAT, etc)."
 msgstr "不支持 Windows 文件系统的设备（NTFS、FAT等）"
 
-#: Core/SnapshotRepo.vala:974
+#: Core/SnapshotRepo.vala:914
 msgid "Directory not found"
 msgstr "未找到目录"
 
-#: Gtk/RestoreSummaryBox.vala:64 Core/Main.vala:2226
+#: Core/Main.vala:2355 Gtk/RestoreSummaryBox.vala:64
 msgid "Disclaimer"
 msgstr "声明"
 
@@ -724,36 +710,28 @@ msgstr "磁盘"
 msgid "Distribution"
 msgstr "发行版"
 
-#: Utility/Gtk/AboutWindow.vala:449
+#: Utility/Gtk/AboutWindow.vala:453
 msgid "Documentation"
 msgstr "文档"
 
-#: Utility/Gtk/DonationWindow.vala:43 Utility/Gtk/DonationWindow.vala:76
 #: Gtk/MainWindow.vala:209 Gtk/MainWindow.vala:210
+#: Utility/Gtk/DonationWindow.vala:42 Utility/Gtk/DonationWindow.vala:75
 msgid "Donate"
 msgstr "捐助"
 
-#: Utility/Gtk/AboutWindow.vala:465
+#: Utility/Gtk/AboutWindow.vala:469
 msgid "Donations"
 msgstr "捐赠"
 
-#: Gtk/UsersBox.vala:357
-msgid "Enable BTRFS qgroups (recommended)"
-msgstr "启用 BTRFS 配额组（推荐）"
-
-#: Gtk/MainWindow.vala:1052
+#: Gtk/MainWindow.vala:1060
 msgid "Enable scheduled snapshots to protect your system"
 msgstr "启用计划快照已保护您的系统"
-
-#: Core/Main.vala:4062 Core/Main.vala:4102
-msgid "Enabled subvolume quota support"
-msgstr "启用子卷配额支持"
 
 #: Utility/Device.vala:1454
 msgid "Encrypted Device"
 msgstr "加密的设备"
 
-#: Gtk/UsersBox.vala:236
+#: Gtk/UsersBox.vala:233
 msgid "Encrypted Home Directory"
 msgstr "加密的主目录"
 
@@ -772,10 +750,6 @@ msgstr "输入设备名称或编号 (a=中断)"
 msgid "Enter passphrase to unlock '%s'"
 msgstr "输入密码以解锁'%s'"
 
-#: Utility/GtkHelper.vala:623
-msgid "Enter path or browse for directory"
-msgstr "输入路径或浏览以选取目录"
-
 #: Console/AppConsole.vala:756
 #, c-format
 msgid "Enter snapshot number (a=Abort, p=Previous, n=Next)"
@@ -785,11 +759,11 @@ msgstr "输入快照编号 (a=中断, p=前一个, n=后一个)"
 msgid "Enter the pattern to exclude (Ex: *.mp3, *.bak)"
 msgstr "输入排除的模式 (例如：*.mp3, *.bak)"
 
-#: Utility/GtkHelper.vala:18 Gtk/RestoreDeviceBox.vala:534
+#: Gtk/RestoreDeviceBox.vala:520
 msgid "Error"
 msgstr "错误"
 
-#: Gtk/RestoreWindow.vala:475
+#: Gtk/RestoreWindow.vala:481
 msgid "Error running Rsync"
 msgstr "运行 rsync 时出错"
 
@@ -801,7 +775,7 @@ msgstr "估算"
 msgid "Estimating System Size..."
 msgstr "正在估算系统大小…"
 
-#: Core/Main.vala:1299
+#: Core/Main.vala:1428
 msgid "Estimating system size..."
 msgstr "正在估算系统大小…"
 
@@ -809,12 +783,12 @@ msgstr "正在估算系统大小…"
 msgid "Examples"
 msgstr "示例"
 
-#: Gtk/UsersBox.vala:136
+#: Gtk/UsersBox.vala:133
 #, fuzzy
 msgid "Exclude All Files"
 msgstr "排除一切"
 
-#: Gtk/RestoreExcludeBox.vala:55 Gtk/ExcludeAppsBox.vala:51
+#: Gtk/ExcludeAppsBox.vala:51 Gtk/RestoreExcludeBox.vala:55
 msgid "Exclude Application Settings"
 msgstr "排除应用设定"
 
@@ -838,7 +812,7 @@ msgstr "排除模式"
 msgid "Excluded Directories"
 msgstr "排除目录"
 
-#: Core/Main.vala:1587
+#: Core/Main.vala:1716
 msgid "Expected values: O, B, H, D, W, M"
 msgstr "排除值：O, B, H, D, W, M"
 
@@ -846,35 +820,35 @@ msgstr "排除值：O, B, H, D, W, M"
 msgid "Failed to add cron job"
 msgstr "添加 Cron 任务失败"
 
-#: Utility/TeeJee.FileSystem.vala:169
+#: Utility/TeeJee.FileSystem.vala:155
 msgid "Failed to copy file"
 msgstr "复制文件失败"
 
-#: Utility/TeeJee.FileSystem.vala:335 Utility/TeeJee.FileSystem.vala:344
+#: Utility/TeeJee.FileSystem.vala:271 Utility/TeeJee.FileSystem.vala:280
 msgid "Failed to create directory"
 msgstr "创建目录失败"
 
-#: Core/Main.vala:1425
+#: Core/Main.vala:1554
 msgid "Failed to create new snapshot"
 msgstr "创建新快照失败"
 
-#: Core/Main.vala:1275
+#: Core/Main.vala:1308
 msgid "Failed to create snapshot"
 msgstr "创建快照失败"
 
-#: Core/Main.vala:1515
+#: Core/Main.vala:1644
 msgid "Failed to create subvolume snapshot"
 msgstr "创建子卷快照失败"
 
-#: Core/SnapshotRepo.vala:1015
+#: Core/SnapshotRepo.vala:955
 msgid "Failed to create symlinks"
 msgstr "创建符号链接失败"
 
-#: Utility/TeeJee.FileSystem.vala:369
+#: Utility/TeeJee.FileSystem.vala:305
 msgid "Failed to delete directory"
 msgstr "删除目录失败"
 
-#: Utility/TeeJee.FileSystem.vala:100
+#: Utility/TeeJee.FileSystem.vala:86
 msgid "Failed to delete file"
 msgstr "删除文件失败"
 
@@ -887,19 +861,11 @@ msgstr "删除快照子卷失败"
 msgid "Failed to delete snapshot subvolume"
 msgstr "删除快照子卷失败"
 
-#: Core/SnapshotRepo.vala:1041
+#: Core/SnapshotRepo.vala:981
 msgid "Failed to delete symlinks"
 msgstr "删除符号链接失败"
 
-#: Core/Subvolume.vala:177
-msgid "Failed to destroy qgroup"
-msgstr "销毁配额组失败"
-
-#: Core/Main.vala:4087
-msgid "Failed to enable subvolume quota"
-msgstr "启用子卷配额失败"
-
-#: Core/Main.vala:3765 Core/Main.vala:3771
+#: Core/Main.vala:3906 Core/Main.vala:3912
 msgid "Failed to estimate system size"
 msgstr "估算文件大小失败"
 
@@ -917,7 +883,7 @@ msgstr "未能在3次尝试中获得用户的输入"
 msgid "Failed to get partition list"
 msgstr "获取分区表失败"
 
-#: Core/Main.vala:3347
+#: Core/Main.vala:3488
 msgid "Failed to get partition list."
 msgstr "获取分区表失败。"
 
@@ -925,35 +891,31 @@ msgstr "获取分区表失败。"
 msgid "Failed to install crontab file"
 msgstr "安装 crontab 文件失败"
 
-#: Gtk/RestoreDeviceBox.vala:535
+#: Gtk/RestoreDeviceBox.vala:521
 msgid "Failed to mount devices"
 msgstr "加载设备失败"
 
-#: Utility/TeeJee.FileSystem.vala:188
+#: Utility/TeeJee.FileSystem.vala:174
 msgid "Failed to move file"
 msgstr "移动文件失败"
 
-#: Core/Main.vala:2981
+#: Core/Main.vala:3116
 msgid "Failed to move system subvolume to snapshot directory"
 msgstr "移动系统子卷到快照目录时失败"
 
-#: Core/Main.vala:3895
+#: Core/Main.vala:4011
 msgid "Failed to query subvolume list"
 msgstr "查询子卷列表失败"
-
-#: Core/Main.vala:3979
-msgid "Failed to query subvolume quota"
-msgstr "查询子卷配额失败"
 
 #: Utility/CronTab.vala:50
 msgid "Failed to read cron tab"
 msgstr "读取 cron tab 失败"
 
-#: Utility/TeeJee.FileSystem.vala:126
+#: Utility/TeeJee.FileSystem.vala:112
 msgid "Failed to read file"
 msgstr "读取文件失败"
 
-#: Core/SnapshotRepo.vala:961
+#: Core/SnapshotRepo.vala:901
 msgid "Failed to remove"
 msgstr "移除失败"
 
@@ -965,15 +927,11 @@ msgstr "移除 Cron 任务失败"
 msgid "Failed to remove snapshot"
 msgstr "移除快照失败"
 
-#: Core/Main.vala:4126
-msgid "Failed to rescan subvolume quota"
-msgstr "重新扫描子卷配额失败"
-
-#: Core/Subvolume.vala:215
+#: Core/Subvolume.vala:200
 msgid "Failed to restore system subvolume"
 msgstr "恢复系统子卷失败"
 
-#: Core/Main.vala:1375
+#: Core/Main.vala:1504
 msgid "Failed to save exclude list"
 msgstr "保存排除列表失败"
 
@@ -986,11 +944,11 @@ msgstr "解锁设备失败"
 msgid "Failed to unmount"
 msgstr "卸载失败"
 
-#: Core/Main.vala:3551
+#: Core/Main.vala:3692
 msgid "Failed to unmount device!"
 msgstr "卸载设备失败！"
 
-#: Utility/TeeJee.FileSystem.vala:153
+#: Utility/TeeJee.FileSystem.vala:139
 msgid "Failed to write file"
 msgstr "写入文件失败"
 
@@ -1006,12 +964,12 @@ msgstr "文件（系统）"
 msgid "File Pattern"
 msgstr "文件模式"
 
-#: Gtk/BackupBox.vala:80
+#: Gtk/BackupBox.vala:83
 msgid "File and directory counts:"
 msgstr "文件和目录计数："
 
-#: Utility/CronTab.vala:225 Utility/TeeJee.FileSystem.vala:183
-#: Utility/RsyncTask.vala:298
+#: Utility/CronTab.vala:225 Utility/RsyncTask.vala:298
+#: Utility/TeeJee.FileSystem.vala:169
 msgid "File not found"
 msgstr "无法找到文件"
 
@@ -1022,7 +980,7 @@ msgid ""
 msgstr ""
 "与以下模式匹配的文件和目录将被排除。以 a + 开头的模式将包含项目，而非排除。"
 
-#: Gtk/SnapshotBackendBox.vala:193
+#: Gtk/SnapshotBackendBox.vala:201
 msgid "Files and directories can be excluded to save disk space."
 msgstr "您可以排除文件和目录以节省磁盘空间。"
 
@@ -1047,12 +1005,12 @@ msgstr "通过文件或路径筛选"
 msgid "Filters"
 msgstr "筛选"
 
-#: Gtk/SetupWizardWindow.vala:211 Gtk/BackupWindow.vala:97
-#: Gtk/DeleteWindow.vala:103
+#: Gtk/DeleteWindow.vala:103 Gtk/SetupWizardWindow.vala:211
+#: Gtk/BackupWindow.vala:97
 msgid "Finish"
 msgstr "完成"
 
-#: Gtk/RestoreWindow.vala:130 Gtk/SetupWizardWindow.vala:120
+#: Gtk/SetupWizardWindow.vala:120 Gtk/RestoreWindow.vala:130
 msgid "Finished"
 msgstr "已完成"
 
@@ -1060,11 +1018,11 @@ msgstr "已完成"
 msgid "Firefox, Chromium, Chrome, Opera, Epiphany, Midori"
 msgstr "Firefox, Chromium, Chrome, Opera, Epiphany, Midori"
 
-#: Core/SnapshotRepo.vala:643
+#: Core/SnapshotRepo.vala:583
 msgid "First snapshot requires:"
 msgstr "第一次快照需要："
 
-#: Core/Main.vala:2914
+#: Core/Main.vala:3049
 msgid "Found existing pre-restore snapshot"
 msgstr "找到现有的预恢复快照"
 
@@ -1072,7 +1030,7 @@ msgstr "找到现有的预恢复快照"
 msgid "Free"
 msgstr "空闲"
 
-#: Core/SnapshotRepo.vala:77 Core/SnapshotRepo.vala:147
+#: Core/SnapshotRepo.vala:75 Core/SnapshotRepo.vala:145
 msgid "Free space"
 msgstr "剩余空间"
 
@@ -1080,7 +1038,7 @@ msgstr "剩余空间"
 msgid "GRUB Device"
 msgstr "GRUB 设备"
 
-#: Gtk/RestoreDeviceBox.vala:511
+#: Gtk/RestoreDeviceBox.vala:497
 msgid "GRUB device not selected"
 msgstr "未选取 GRUB 设备"
 
@@ -1088,11 +1046,11 @@ msgstr "未选取 GRUB 设备"
 msgid "GRUB will NOT be reinstalled"
 msgstr "不会重新安装 GRUB"
 
-#: Core/Main.vala:2368
+#: Core/Main.vala:2497
 msgid "Generating initramfs..."
 msgstr "正在生成 initramfs…"
 
-#: Utility/Gtk/DonationWindow.vala:91
+#: Utility/Gtk/DonationWindow.vala:88
 msgid "GitHub"
 msgstr ""
 
@@ -1100,12 +1058,12 @@ msgstr ""
 msgid "Global"
 msgstr "全局"
 
-#: Gtk/RestoreBox.vala:135 Gtk/BackupBox.vala:97 Gtk/RsyncLogBox.vala:400
+#: Gtk/RestoreBox.vala:135 Gtk/RsyncLogBox.vala:400 Gtk/BackupBox.vala:100
 #, c-format
 msgid "Group"
 msgstr "组"
 
-#: Gtk/SnapshotBackendBox.vala:133
+#: Gtk/SnapshotBackendBox.vala:141
 msgid "Help"
 msgstr ""
 
@@ -1127,7 +1085,7 @@ msgstr "隐藏 rsync 输出"
 msgid "Hide this window (files will be deleted in background)"
 msgstr "隐藏此窗口（将在后台删除文件）"
 
-#: Gtk/UsersBox.vala:120
+#: Gtk/UsersBox.vala:117
 msgid "Home"
 msgstr "主目录"
 
@@ -1135,15 +1093,15 @@ msgstr "主目录"
 msgid "Home Directory"
 msgstr "主目录"
 
-#: Gtk/SnapshotListBox.vala:299 Gtk/ScheduleBox.vala:118
+#: Gtk/ScheduleBox.vala:118 Gtk/SnapshotListBox.vala:247
 msgid "Hourly"
 msgstr "每小时"
 
-#: Core/Main.vala:1063
+#: Core/Main.vala:1064
 msgid "Hourly snapshot failed!"
 msgstr "每小时快照失败！"
 
-#: Core/Main.vala:1044
+#: Core/Main.vala:1045
 msgid "Hourly snapshots are enabled"
 msgstr "已启用每小时快照"
 
@@ -1155,37 +1113,37 @@ msgstr ""
 "如果恢复的设备无法启动，请从 Live CD/USB 启动，安装 Timeshift，并尝试恢复另一"
 "个快照。"
 
-#: Core/Main.vala:2232
+#: Core/Main.vala:2361
 msgid ""
 "If these terms are not acceptable to you, please do not proceed beyond this "
 "point!"
 msgstr "如果您无法接受这些条款，请不要继续进行下去！"
 
-#: Utility/Gtk/DonationWindow.vala:70
+#: Utility/Gtk/DonationWindow.vala:69
 msgid ""
-"If you find this application useful, consider making a donation to support "
-"the development."
-msgstr "如果您觉得此应用有用，请考虑捐赠以支持开发。"
+"If you find this software useful, you can buy me a coffee by making a "
+"donation with PayPal."
+msgstr ""
 
 #: Gtk/ExcludeBox.vala:54
 msgid "Include / Exclude Patterns"
 msgstr "包含/排除模式"
 
-#: Gtk/UsersBox.vala:340
+#: Gtk/UsersBox.vala:337
 msgid "Include @home subvolume in backups"
 msgstr "在备份中包含 @home 子卷"
 
-#: Gtk/UsersBox.vala:266
+#: Gtk/UsersBox.vala:263
 #, fuzzy
 msgid "Include All Files"
 msgstr "包含一切"
 
-#: Gtk/UsersBox.vala:194
+#: Gtk/UsersBox.vala:191
 #, fuzzy
 msgid "Include Only Hidden Files"
 msgstr "包含隐藏文件"
 
-#: Core/Main.vala:2046
+#: Core/Main.vala:2175
 msgid "Invalid Snapshot"
 msgstr "无效的快照"
 
@@ -1194,7 +1152,7 @@ msgstr "无效的快照"
 msgid "Invalid command line arguments"
 msgstr "无效的命令行参数"
 
-#: Gtk/MainWindow.vala:817
+#: Gtk/MainWindow.vala:825
 msgid "Invalid snapshot"
 msgstr "无效的快照"
 
@@ -1231,91 +1189,91 @@ msgstr "保存于根设备"
 msgid "Keep this mount path on the root filesystem"
 msgstr "在根文件系统上保存此挂载路径"
 
-#: Gtk/SnapshotListBox.vala:519
+#: Gtk/SnapshotListBox.vala:472
 msgid "LIVE"
 msgstr "实时"
 
 #: Console/AppConsole.vala:460 Console/AppConsole.vala:499
-#: Utility/Device.vala:1951 Gtk/BackupDeviceBox.vala:254
+#: Gtk/BackupDeviceBox.vala:254 Utility/Device.vala:1951
 #, c-format
 msgid "Label"
 msgstr "标签"
 
-#: Core/Main.vala:1025
+#: Core/Main.vala:1026
 #, c-format
 msgid "Last boot snapshot is %d hours old"
 msgstr "上一次启动快照是在 %d 小时之前"
 
-#: Core/Main.vala:1020
+#: Core/Main.vala:1021
 msgid "Last boot snapshot is older than system start time"
 msgstr "上一次启动快照早于系统启动时间"
 
-#: Core/Main.vala:1016
+#: Core/Main.vala:1017
 msgid "Last boot snapshot not found"
 msgstr "未找到上一次启动快照"
 
-#: Core/Main.vala:1087
+#: Core/Main.vala:1088
 #, c-format
 msgid "Last daily snapshot is %d hours old"
 msgstr "上一次每日快照是在 %d 小时之前"
 
-#: Core/Main.vala:1082
+#: Core/Main.vala:1083
 msgid "Last daily snapshot is more than 1 day old"
 msgstr "上一次每日快照早于一天之前"
 
-#: Core/Main.vala:1078
+#: Core/Main.vala:1079
 msgid "Last daily snapshot not found"
 msgstr "未找到上一次每日快照"
 
-#: Core/Main.vala:1056
+#: Core/Main.vala:1057
 #, c-format
 msgid "Last hourly snapshot is %d minutes old"
 msgstr "上一次每小时快照是在 %d 分钟之前"
 
-#: Core/Main.vala:1051
+#: Core/Main.vala:1052
 msgid "Last hourly snapshot is more than 1 hour old"
 msgstr "上一次每小时快照早于一小时之前"
 
-#: Core/Main.vala:1047
+#: Core/Main.vala:1048
 msgid "Last hourly snapshot not found"
 msgstr "未找到上一次每小时快照"
 
-#: Core/Main.vala:1149
+#: Core/Main.vala:1150
 #, c-format
 msgid "Last monthly snapshot is %d days old"
 msgstr "上一次每月快照是在 %d 天之前"
 
-#: Core/Main.vala:1144
+#: Core/Main.vala:1145
 msgid "Last monthly snapshot is more than 1 month old"
 msgstr "上一次每月快照早于一个月之前"
 
-#: Core/Main.vala:1140
+#: Core/Main.vala:1141
 msgid "Last monthly snapshot not found"
 msgstr "未找到上一次每月快照"
 
-#: Core/Main.vala:1118
+#: Core/Main.vala:1119
 #, c-format
 msgid "Last weekly snapshot is %d days old"
 msgstr "上一次每周快照是在 %d 天之前"
 
-#: Core/Main.vala:1113
+#: Core/Main.vala:1114
 msgid "Last weekly snapshot is more than 1 week old"
 msgstr "上一次每周快照早于一周之前"
 
-#: Core/Main.vala:1109
+#: Core/Main.vala:1110
 msgid "Last weekly snapshot not found"
 msgstr "未找到上一次每周快照"
 
-#: Gtk/MainWindow.vala:1033
+#: Gtk/MainWindow.vala:1041
 #, c-format
 msgid "Latest snapshot"
 msgstr "最新的快照"
 
-#: Utility/Gtk/AboutWindow.vala:316 Utility/Gtk/AboutWindow.vala:356
+#: Utility/Gtk/AboutWindow.vala:320 Utility/Gtk/AboutWindow.vala:360
 msgid "License"
 msgstr "许可证"
 
-#: Core/Main.vala:1364
+#: Core/Main.vala:1493
 #, c-format
 msgid "Linking from snapshot"
 msgstr "从快照链接"
@@ -1332,12 +1290,12 @@ msgstr "列出设备"
 msgid "List snapshots"
 msgstr "列出快照"
 
-#: Gtk/MainWindow.vala:984
+#: Gtk/MainWindow.vala:992
 msgid "Live USB Mode (Restore Only)"
 msgstr "实时 USB 模式（仅恢复）"
 
-#: Gtk/SetupWizardWindow.vala:104 Gtk/BackupWindow.vala:87
-#: Gtk/SettingsWindow.vala:90
+#: Gtk/SettingsWindow.vala:90 Gtk/SetupWizardWindow.vala:104
+#: Gtk/BackupWindow.vala:87
 msgid "Location"
 msgstr "位置"
 
@@ -1345,15 +1303,12 @@ msgstr "位置"
 msgid "Main window closed by user"
 msgstr "主窗口被用户关闭"
 
-#: Gtk/SnapshotListBox.vala:329
-msgid "Mark for Deletion"
+#: Gtk/SnapshotListBox.vala:277
+#, fuzzy
+msgid "Mark/Unmark for Deletion"
 msgstr "标记为删除"
 
-#: Gtk/MainWindow.vala:634
-msgid "Marked for deletion"
-msgstr "已标记为删除"
-
-#: Core/SnapshotRepo.vala:688 Core/SnapshotRepo.vala:731
+#: Core/SnapshotRepo.vala:628 Core/SnapshotRepo.vala:671
 msgid "Maximum backups exceeded for backup level"
 msgstr "超过备份等级的最大备份数"
 
@@ -1365,15 +1320,11 @@ msgstr "菜单"
 msgid "Misc"
 msgstr ""
 
-#: Gtk/UsersBox.vala:354
-msgid "Miscellaneous"
-msgstr "杂项"
-
 #: Core/Main.vala:239
 msgid "Missing Dependencies"
 msgstr "依赖关系丢失"
 
-#: Core/SnapshotRepo.vala:665
+#: Core/SnapshotRepo.vala:605
 #, c-format
 msgid "Mode"
 msgstr "模式"
@@ -1383,27 +1334,31 @@ msgstr "模式"
 msgid "Model"
 msgstr "模型"
 
-#: Gtk/SnapshotListBox.vala:302 Gtk/ScheduleBox.vala:64
+#: Gtk/ScheduleBox.vala:64 Gtk/SnapshotListBox.vala:250
 msgid "Monthly"
 msgstr "每月"
 
-#: Core/Main.vala:1137
+#: Core/Main.vala:1138
 msgid "Monthly snapshot are enabled"
 msgstr "已启用每月快照"
 
-#: Core/Main.vala:1156
+#: Core/Main.vala:1157
 msgid "Monthly snapshot failed!"
 msgstr "每月快照失败！"
 
-#: Core/Main.vala:2133 Core/Main.vala:2166
+#: Utility/Gtk/DonationWindow.vala:92
+msgid "More Apps"
+msgstr ""
+
+#: Core/Main.vala:2262 Core/Main.vala:2295
 msgid "Mount"
 msgstr "挂载"
 
-#: Core/Main.vala:2988
+#: Core/Main.vala:3123
 msgid "Moved system subvolume to snapshot directory"
 msgstr "把系统子卷移动到快照目录"
 
-#: Gtk/MainWindow.vala:793
+#: Gtk/MainWindow.vala:801
 msgid "Multiple snapshots selected"
 msgstr "选取了多个快照"
 
@@ -1412,29 +1367,29 @@ msgstr "选取了多个快照"
 msgid "Name"
 msgstr "名称"
 
-#: Gtk/RestoreWindow.vala:201 Gtk/SetupWizardWindow.vala:203
-#: Gtk/BackupWindow.vala:164 Gtk/DeleteWindow.vala:165
+#: Gtk/DeleteWindow.vala:165 Gtk/SetupWizardWindow.vala:203
+#: Gtk/BackupWindow.vala:164 Gtk/RestoreWindow.vala:201
 msgid "Next"
 msgstr "下一步"
 
-#: Utility/Gtk/CustomMessageDialog.vala:177
+#: Utility/Gtk/CustomMessageDialog.vala:157
 msgid "No"
 msgstr "否"
 
-#: Gtk/RestoreBox.vala:122 Gtk/BackupBox.vala:84
+#: Gtk/RestoreBox.vala:122 Gtk/BackupBox.vala:87
 msgid "No Change"
 msgstr "无更改"
 
-#: Gtk/MainWindow.vala:608 Gtk/DeleteWindow.vala:335
+#: Gtk/DeleteWindow.vala:335 Gtk/MainWindow.vala:610
 msgid "No Snapshots Selected"
 msgstr "未选取任何快照"
 
-#: Gtk/MainWindow.vala:1057
+#: Gtk/MainWindow.vala:1065
 msgid "No snapshots available"
 msgstr "没有可用的快照"
 
-#: Console/AppConsole.vala:321 Gtk/MainWindow.vala:1001
-#: Core/SnapshotRepo.vala:890
+#: Console/AppConsole.vala:321 Core/SnapshotRepo.vala:830
+#: Gtk/MainWindow.vala:1009
 msgid "No snapshots found"
 msgstr "找不到快照"
 
@@ -1442,28 +1397,28 @@ msgstr "找不到快照"
 msgid "No snapshots found on device"
 msgstr "设备上找不到快照"
 
-#: Gtk/MainWindow.vala:546
+#: Gtk/MainWindow.vala:548
 msgid "No snapshots on device"
 msgstr "设备上没有快照"
 
-#: Core/SnapshotRepo.vala:641
+#: Core/SnapshotRepo.vala:581
 msgid "No snapshots on this device"
 msgstr "此设备上没有快照"
 
-#: Gtk/MainWindow.vala:786
+#: Gtk/MainWindow.vala:794
 msgid "No snapshots selected"
 msgstr "未选取任何快照"
 
-#: Gtk/MainWindow.vala:1034 Gtk/MainWindow.vala:1036
+#: Gtk/MainWindow.vala:1042 Gtk/MainWindow.vala:1044
 msgid "None"
 msgstr "无"
 
-#: Core/Subvolume.vala:197
+#: Core/Subvolume.vala:182
 #, fuzzy, c-format
 msgid "Not Found"
 msgstr "目录未找到"
 
-#: Core/SnapshotRepo.vala:659
+#: Core/SnapshotRepo.vala:599
 msgid "Not Selected"
 msgstr "未选定"
 
@@ -1471,7 +1426,7 @@ msgstr "未选定"
 msgid "Not Supported"
 msgstr "不支持"
 
-#: Core/SnapshotRepo.vala:605 Core/SnapshotRepo.vala:632
+#: Core/SnapshotRepo.vala:543 Core/SnapshotRepo.vala:572
 msgid "Not enough disk space"
 msgstr "可用磁盘空间不足"
 
@@ -1479,7 +1434,7 @@ msgstr "可用磁盘空间不足"
 msgid "Notes"
 msgstr "备注"
 
-#: Core/Main.vala:1167
+#: Core/Main.vala:1168
 msgid "Nothing to do!"
 msgstr "无事可做！"
 
@@ -1496,13 +1451,13 @@ msgstr ""
 "要保留的快照数。\n"
 "一旦超过此限制，旧的快照将被移除。"
 
-#: Utility/GtkHelper.vala:119 Utility/Gtk/CustomMessageDialog.vala:167
-#: Utility/Gtk/CustomMessageDialog.vala:171 Gtk/SettingsWindow.vala:123
-#: Gtk/ExcludeListSummaryWindow.vala:84 Core/SnapshotRepo.vala:615
+#: Core/SnapshotRepo.vala:554 Gtk/ExcludeListSummaryWindow.vala:84
+#: Gtk/SettingsWindow.vala:123 Utility/Gtk/CustomMessageDialog.vala:147
+#: Utility/Gtk/CustomMessageDialog.vala:151 Utility/GtkHelper.vala:108
 msgid "OK"
 msgstr "确定"
 
-#: Gtk/SnapshotBackendBox.vala:180
+#: Gtk/SnapshotBackendBox.vala:188
 msgid ""
 "OS must be installed on a BTRFS partition with Ubuntu-type subvolume layout "
 "(@ and @home subvolumes). Other layouts are not supported."
@@ -1510,19 +1465,19 @@ msgstr ""
 "操作系统必须安装在具有Ubuntu类型的子卷布局（@ 和 @home 子卷）的BTRFS分区上。 "
 "不支持其他布局。"
 
-#: Core/Main.vala:4233
+#: Core/Main.vala:4157
 msgid "Older log files removed"
 msgstr "更早的日志文件已被移除"
 
-#: Gtk/MainWindow.vala:1035
+#: Gtk/MainWindow.vala:1043
 msgid "Oldest snapshot"
 msgstr "最早的快照"
 
-#: Gtk/SnapshotListBox.vala:297
+#: Gtk/SnapshotListBox.vala:245
 msgid "On demand (manual)"
 msgstr "按需（手动）"
 
-#: Gtk/RestoreDeviceBox.vala:525 Core/Main.vala:382 Core/Main.vala:3464
+#: Core/Main.vala:382 Core/Main.vala:3605 Gtk/RestoreDeviceBox.vala:511
 msgid ""
 "Only ubuntu-type layouts with @ and @home subvolumes are currently supported."
 msgstr "目前只支持具有 @ 和 @home 子卷的Ubuntu类型布局。"
@@ -1531,7 +1486,7 @@ msgstr "目前只支持具有 @ 和 @home 子卷的Ubuntu类型布局。"
 msgid "Open Menu"
 msgstr "打开菜单"
 
-#: Core/Main.vala:3246
+#: Core/Main.vala:3387
 msgid ""
 "Option --snapshot-device should not be specified for creating snapshots in "
 "BTRFS mode"
@@ -1545,7 +1500,7 @@ msgstr "选项"
 msgid "Other applications (next page)"
 msgstr "其它应用（下一页）"
 
-#: Gtk/RestoreBox.vala:134 Gtk/BackupBox.vala:96 Gtk/RsyncLogBox.vala:398
+#: Gtk/RestoreBox.vala:134 Gtk/RsyncLogBox.vala:398 Gtk/BackupBox.vala:99
 #, c-format
 msgid "Owner"
 msgstr "拥有者"
@@ -1555,15 +1510,15 @@ msgstr "拥有者"
 msgid "Parent Device"
 msgstr "母设备"
 
-#: Gtk/RsyncLogBox.vala:222 Core/Main.vala:2489 Core/Main.vala:2580
+#: Core/Main.vala:2626 Core/Main.vala:2717 Gtk/RsyncLogBox.vala:222
 msgid "Parsing log file..."
 msgstr "正在解析日志文件…"
 
-#: Gtk/RestoreDeviceBox.vala:524
+#: Gtk/RestoreDeviceBox.vala:510
 msgid "Partition has an unsupported subvolume layout."
 msgstr "分区具有不支持的子卷布局。"
 
-#: Gtk/RestoreDeviceBox.vala:93 Core/SnapshotRepo.vala:664
+#: Core/SnapshotRepo.vala:604 Gtk/RestoreDeviceBox.vala:93
 #, c-format
 msgid "Path"
 msgstr "路径"
@@ -1572,7 +1527,7 @@ msgstr "路径"
 msgid "Pattern"
 msgstr "模式"
 
-#: Gtk/RestoreBox.vala:133 Gtk/BackupBox.vala:95 Gtk/RsyncLogBox.vala:396
+#: Gtk/RestoreBox.vala:133 Gtk/RsyncLogBox.vala:396 Gtk/BackupBox.vala:98
 #, c-format
 msgid "Permissions"
 msgstr "权限"
@@ -1581,7 +1536,7 @@ msgstr "权限"
 msgid "Please check if you have multiple windows open."
 msgstr "请检查是否有打开了多个窗口。"
 
-#: Core/Main.vala:2264
+#: Core/Main.vala:2393
 msgid "Please do not interrupt the restore process!"
 msgstr "请不要中断恢复过程！"
 
@@ -1597,15 +1552,15 @@ msgstr "请以管理员身份重新运行此应用程序（使用sudo或su）"
 msgid "Please run the application as admin (using 'sudo' or 'su')"
 msgstr "请以管理员身份运行此应用程序（使用sudo或su）"
 
-#: Core/Main.vala:2214
+#: Core/Main.vala:2343
 msgid "Please save your work and close all applications."
 msgstr "请保存您的工作并关闭所有应用程序。"
 
-#: Gtk/MainWindow.vala:688
+#: Gtk/MainWindow.vala:696
 msgid "Please select a snapshot to view the log!"
 msgstr "请选择一个快照以查看日志！"
 
-#: Gtk/RestoreDeviceBox.vala:512
+#: Gtk/RestoreDeviceBox.vala:498
 msgid "Please select the GRUB device"
 msgstr "请选择 GRUB 设备"
 
@@ -1613,7 +1568,7 @@ msgstr "请选择 GRUB 设备"
 msgid "Please wait a few minutes and try again."
 msgstr "请稍等几分钟，然后再试一次。"
 
-#: Gtk/MainWindow.vala:755
+#: Gtk/MainWindow.vala:763
 msgid "Please wait for snapshots to be deleted."
 msgstr "请等待快照被删除。"
 
@@ -1625,13 +1580,13 @@ msgstr "请稍候..."
 msgid "Populating list..."
 msgstr "正在填充列表..."
 
-#: Gtk/RestoreBox.vala:88 Gtk/BackupBox.vala:114 Gtk/DeleteBox.vala:68
-#: Gtk/RsyncLogBox.vala:232 Core/Main.vala:1599
+#: Core/Main.vala:1728 Gtk/DeleteBox.vala:68 Gtk/RestoreBox.vala:88
+#: Gtk/RsyncLogBox.vala:232 Gtk/BackupBox.vala:117
 msgid "Preparing..."
 msgstr "正在准备..."
 
-#: Gtk/RestoreWindow.vala:193 Gtk/SetupWizardWindow.vala:195
-#: Gtk/BackupWindow.vala:156 Gtk/DeleteWindow.vala:157
+#: Gtk/DeleteWindow.vala:157 Gtk/SetupWizardWindow.vala:195
+#: Gtk/BackupWindow.vala:156 Gtk/RestoreWindow.vala:193
 msgid "Previous"
 msgstr "上一步"
 
@@ -1639,11 +1594,11 @@ msgstr "上一步"
 msgid "Print debug information"
 msgstr "输出调试信息"
 
-#: Core/Main.vala:3826
+#: Core/Main.vala:3967
 msgid "Query completed"
 msgstr "查询已完成"
 
-#: Core/Main.vala:3809
+#: Core/Main.vala:3950
 msgid "Querying subvolume info..."
 msgstr "正在查询子卷信息..."
 
@@ -1651,7 +1606,7 @@ msgstr "正在查询子卷信息..."
 msgid "RSYNC"
 msgstr "RSYNC"
 
-#: Gtk/SnapshotBackendBox.vala:185
+#: Gtk/SnapshotBackendBox.vala:193
 msgid "RSYNC Snapshots"
 msgstr "RSYNC 快照"
 
@@ -1668,7 +1623,7 @@ msgstr ""
 msgid "Re-install GRUB2 bootloader?"
 msgstr "是否重新安装 GRUB2 引导加载程序？"
 
-#: Core/Main.vala:2327
+#: Core/Main.vala:2456
 msgid "Re-installing GRUB2 bootloader..."
 msgstr "正在重新安装 GRUB2 引导加载程序..."
 
@@ -1681,7 +1636,7 @@ msgstr "在选择的设备上重新安装 GRUB2 引导加载程序。"
 msgid "Read %'d of %'d lines..."
 msgstr "读取第 %'d 行，共 %'d 行..."
 
-#: Core/Main.vala:2420
+#: Core/Main.vala:2556
 msgid "Rebooting system..."
 msgstr "正在重启系统..."
 
@@ -1702,17 +1657,17 @@ msgstr "不支持远程和网络位置。"
 msgid "Remove"
 msgstr "移除"
 
-#: Core/Snapshot.vala:509 Core/SnapshotRepo.vala:967 Core/Main.vala:1637
-#: Core/Main.vala:1648 Core/Main.vala:4229
+#: Core/Snapshot.vala:509 Core/SnapshotRepo.vala:907 Core/Main.vala:1766
+#: Core/Main.vala:1777 Core/Main.vala:4153
 #, c-format
 msgid "Removed"
 msgstr "已移除"
 
-#: Utility/CronTab.vala:341
+#: Utility/CronTab.vala:340
 msgid "Removed cron task"
 msgstr "已移除 cron 任务"
 
-#: Core/Main.vala:3614
+#: Core/Main.vala:3755
 #, c-format
 msgid "Removed mount directory: '%s'"
 msgstr "已移除挂载目录：'%s'"
@@ -1729,25 +1684,19 @@ msgstr "正在移除"
 msgid "Removing snapshot"
 msgstr "正在移除快照"
 
-#: Core/SnapshotRepo.vala:823 Core/SnapshotRepo.vala:842
-#: Core/SnapshotRepo.vala:860 Core/SnapshotRepo.vala:874
+#: Core/SnapshotRepo.vala:763 Core/SnapshotRepo.vala:782
+#: Core/SnapshotRepo.vala:800 Core/SnapshotRepo.vala:814
 #, c-format
 msgid "Removing snapshots"
 msgstr "正在移除快照"
 
-#: Gtk/UsersBox.vala:360
-msgid ""
-"Required for displaying shared and unshared size for snapshots in the main "
-"window"
-msgstr "在主窗口中显示快照的共享大小和未共享大小时需要"
-
-#: Console/AppConsole.vala:363 Gtk/RestoreWindow.vala:125
-#: Gtk/MainWindow.vala:151 Gtk/RestoreFinishBox.vala:71
-#: Gtk/RsyncLogBox.vala:377 Gtk/RsyncLogBox.vala:567
+#: Console/AppConsole.vala:363 Gtk/RestoreFinishBox.vala:71
+#: Gtk/RsyncLogBox.vala:377 Gtk/RsyncLogBox.vala:567 Gtk/RestoreWindow.vala:125
+#: Gtk/MainWindow.vala:151
 msgid "Restore"
 msgstr "恢复"
 
-#: Gtk/UsersBox.vala:329
+#: Gtk/UsersBox.vala:326
 #, fuzzy
 msgid "Restore @home subvolume"
 msgstr "删除子卷"
@@ -1764,7 +1713,7 @@ msgstr "恢复排除"
 msgid "Restore Snapshot"
 msgstr "恢复快照"
 
-#: Core/Main.vala:2829 Core/Main.vala:2871
+#: Core/Main.vala:2966 Core/Main.vala:3008
 msgid "Restore completed"
 msgstr "恢复完成"
 
@@ -1780,7 +1729,7 @@ msgstr "恢复快照"
 msgid "Restored subvolumes will become active after system is restarted."
 msgstr "恢复的子卷将在系统重新启动后变为活动状态。"
 
-#: Core/Subvolume.vala:219
+#: Core/Subvolume.vala:204
 msgid "Restored system subvolume"
 msgstr "已恢复系统子卷"
 
@@ -1797,7 +1746,7 @@ msgstr ""
 "恢复快照时会替换系统子卷，而当前正在使用的系统子卷将作为新快照保留。如果需"
 "要，以后可以恢复此快照以“撤消”恢复。"
 
-#: Core/Main.vala:2798
+#: Core/Main.vala:2935
 msgid "Restoring snapshot..."
 msgstr "正在恢复快照..."
 
@@ -1818,7 +1767,7 @@ msgstr ""
 msgid "Revision"
 msgstr "修订版"
 
-#: Gtk/RestoreDeviceBox.vala:452
+#: Gtk/RestoreDeviceBox.vala:438
 msgid "Root device not selected"
 msgstr "未选择根设备"
 
@@ -1856,11 +1805,11 @@ msgstr ""
 "系统，而不会丢失存储在系统磁盘上的快照。您甚至可以安装另一个 Linux 发行版，然"
 "后通过恢复快照来回滚以前的发行版。"
 
-#: Core/Main.vala:1305 Core/Main.vala:1459 Core/Main.vala:1461
+#: Core/Main.vala:1434 Core/Main.vala:1588 Core/Main.vala:1590
 msgid "Saving to device"
 msgstr "正在保存到设备"
 
-#: Gtk/SetupWizardWindow.vala:109 Gtk/SettingsWindow.vala:93
+#: Gtk/SettingsWindow.vala:93 Gtk/SetupWizardWindow.vala:109
 msgid "Schedule"
 msgstr "计划"
 
@@ -1868,7 +1817,7 @@ msgstr "计划"
 msgid "Scheduled snapshot in progress..."
 msgstr "计划的快照正在进行中..."
 
-#: Gtk/MainWindow.vala:1051 Gtk/ScheduleBox.vala:312 Core/Main.vala:1167
+#: Core/Main.vala:1168 Gtk/ScheduleBox.vala:312 Gtk/MainWindow.vala:1059
 msgid "Scheduled snapshots are disabled"
 msgstr "已禁用计划的快照"
 
@@ -1891,7 +1840,7 @@ msgstr "已启用计划的快照。将自动按选定的等级创建快照。"
 msgid "Select '%s' device (default = %s)"
 msgstr "选择 \"%s\" 设备（默认 = %s）"
 
-#: Console/AppConsole.vala:691 Core/SnapshotRepo.vala:569
+#: Console/AppConsole.vala:691 Core/SnapshotRepo.vala:510
 msgid "Select BTRFS system disk with root subvolume (@)"
 msgstr "选择具有根子卷（@）的BTRFS系统磁盘"
 
@@ -1899,11 +1848,7 @@ msgstr "选择具有根子卷（@）的BTRFS系统磁盘"
 msgid "Select GRUB device"
 msgstr "选择 GRUB 设备"
 
-#: Utility/GtkHelper.vala:633
-msgid "Select Path"
-msgstr "选择路径"
-
-#: Gtk/MainWindow.vala:687
+#: Gtk/MainWindow.vala:695
 msgid "Select Snapshot"
 msgstr "选择快照"
 
@@ -1932,19 +1877,19 @@ msgstr "选择目标设备"
 msgid "Select a partition on this disk"
 msgstr "在这个磁盘上选择一个分区"
 
-#: Gtk/MainWindow.vala:794
+#: Gtk/MainWindow.vala:802
 msgid "Select a single snapshot to restore"
 msgstr "选择一个要还原的快照"
 
-#: Gtk/RestoreDeviceBox.vala:481
+#: Gtk/RestoreDeviceBox.vala:467
 msgid "Select another device for root file system (/)"
 msgstr "为根文件系统（/）选择另一个设备"
 
-#: Core/SnapshotRepo.vala:608 Core/SnapshotRepo.vala:635
+#: Core/SnapshotRepo.vala:546 Core/SnapshotRepo.vala:575
 msgid "Select another device or free up some space"
 msgstr "请选择另一个设备或腾出一些空间"
 
-#: Gtk/MainWindow.vala:540 Gtk/MainWindow.vala:547
+#: Gtk/MainWindow.vala:542 Gtk/MainWindow.vala:549
 msgid "Select another device to delete snasphots"
 msgstr "选择另一个要删除快照的设备"
 
@@ -1976,7 +1921,7 @@ msgstr "选择快照"
 msgid "Select snapshots to delete"
 msgstr "选择要删除的快照"
 
-#: Gtk/RestoreDeviceBox.vala:453
+#: Gtk/RestoreDeviceBox.vala:439
 msgid "Select the device for root file system (/)"
 msgstr "为根文件系统（/）选择设备"
 
@@ -1992,11 +1937,11 @@ msgstr "选择创建快照的时间间隔"
 msgid "Select the items to be removed from the list"
 msgstr "选择要从列表中移除的项目"
 
-#: Core/SnapshotRepo.vala:529
+#: Core/SnapshotRepo.vala:472
 msgid "Select the snapshot device"
 msgstr "选择快照设备"
 
-#: Gtk/MainWindow.vala:787
+#: Gtk/MainWindow.vala:795
 msgid "Select the snapshot to restore"
 msgstr "选择要恢复的快照"
 
@@ -2004,7 +1949,7 @@ msgstr "选择要恢复的快照"
 msgid "Select the snapshots to be deleted"
 msgstr "选择要删除的快照"
 
-#: Gtk/MainWindow.vala:609
+#: Gtk/MainWindow.vala:611
 msgid "Select the snapshots to mark for deletion"
 msgstr "选择要标记为删除的快照"
 
@@ -2012,11 +1957,11 @@ msgstr "选择要标记为删除的快照"
 msgid "Select the target devices where system will be cloned."
 msgstr "选择复制系统的目标设备。"
 
-#: Core/Main.vala:3274
+#: Core/Main.vala:3415
 msgid "Selected default snapshot device"
 msgstr "已选择默认的快照设备"
 
-#: Core/Main.vala:3225 Core/Main.vala:3229
+#: Core/Main.vala:3366 Core/Main.vala:3370
 msgid "Selected default snapshot type"
 msgstr "已选择默认的快照类型"
 
@@ -2028,23 +1973,23 @@ msgstr "选中的设备没有 BTRFS 分区"
 msgid "Selected device does not have Linux partition"
 msgstr "选中的设备没有 Linux 分区"
 
-#: Core/SnapshotRepo.vala:146
+#: Core/SnapshotRepo.vala:144
 msgid "Selected snapshot device"
 msgstr "已选择快照设备"
 
-#: Console/AppConsole.vala:690 Core/SnapshotRepo.vala:568
+#: Console/AppConsole.vala:690 Core/SnapshotRepo.vala:509
 msgid "Selected snapshot device is not a system disk"
 msgstr "选中的快照设备不是系统磁盘"
 
-#: Core/Main.vala:2047
+#: Core/Main.vala:2176
 msgid "Selected snapshot is marked for deletion"
 msgstr "选中的快照被标记为删除"
 
-#: Gtk/MainWindow.vala:818
+#: Gtk/MainWindow.vala:826
 msgid "Selected snapshot is marked for deletion and cannot be restored"
 msgstr "选中的快照被标记为删除，且无法恢复"
 
-#: Gtk/UsersBox.vala:238
+#: Gtk/UsersBox.vala:235
 msgid ""
 "Selected user has an encrypted home directory. It's not possible to include "
 "only hidden files."
@@ -2063,7 +2008,7 @@ msgstr "会话日志文件"
 msgid "Set snapshot description"
 msgstr "设置快照描述"
 
-#: Gtk/MainWindow.vala:181 Gtk/MainWindow.vala:182 Gtk/SettingsWindow.vala:56
+#: Gtk/SettingsWindow.vala:56 Gtk/MainWindow.vala:181 Gtk/MainWindow.vala:182
 msgid "Settings"
 msgstr "设定"
 
@@ -2096,14 +2041,14 @@ msgid "Show rsync output (default)"
 msgstr "显示 rsync 输出（默认）"
 
 #: Console/AppConsole.vala:458 Console/AppConsole.vala:497
-#: Utility/Device.vala:1938 Utility/Device.vala:1953 Gtk/RestoreBox.vala:131
-#: Gtk/SnapshotListBox.vala:174 Gtk/BackupBox.vala:93
-#: Gtk/BackupDeviceBox.vala:202 Gtk/RsyncLogBox.vala:392
+#: Gtk/BackupDeviceBox.vala:202 Gtk/RestoreBox.vala:131
+#: Gtk/RsyncLogBox.vala:392 Gtk/BackupBox.vala:96 Utility/Device.vala:1938
+#: Utility/Device.vala:1953
 #, c-format
 msgid "Size"
 msgstr "大小"
 
-#: Gtk/SnapshotBackendBox.vala:178
+#: Gtk/SnapshotBackendBox.vala:186
 msgid ""
 "Size of BTRFS snapshots are initially zero. As system files gradually change "
 "with time, data gets written to new data blocks which take up disk space "
@@ -2117,13 +2062,13 @@ msgstr ""
 msgid "Skip GRUB2 reinstall"
 msgstr "跳过 GRUB2 安装"
 
-#: Gtk/SnapshotListBox.vala:95 Core/SnapshotRepo.vala:691
-#: Core/SnapshotRepo.vala:744 Core/Main.vala:2052
+#: Core/SnapshotRepo.vala:631 Core/SnapshotRepo.vala:684 Core/Main.vala:2181
+#: Gtk/SnapshotListBox.vala:93
 #, c-format
 msgid "Snapshot"
 msgstr "快照"
 
-#: Gtk/MainWindow.vala:557
+#: Gtk/MainWindow.vala:559
 #, c-format
 msgid ""
 "Snapshot '%s' is being used by the system and cannot be deleted. Restart the "
@@ -2134,42 +2079,42 @@ msgstr "系统正在使用快照\"%s\"，无法删除。重新启动系统以激
 msgid "Snapshot Created"
 msgstr "快照已创建"
 
-#: Gtk/SnapshotListBox.vala:296
+#: Gtk/SnapshotListBox.vala:244
 #, c-format
 msgid "Snapshot Levels"
 msgstr "BTRFS快照"
 
-#: Gtk/MainWindow.vala:754
+#: Gtk/MainWindow.vala:762
 msgid "Snapshot deletion in progress..."
 msgstr "快照删除正在进行中..."
 
-#: Core/SnapshotRepo.vala:446
+#: Core/SnapshotRepo.vala:442
 #, c-format
 msgid "Snapshot device"
 msgstr "快照设备"
 
-#: Console/AppConsole.vala:664 Core/SnapshotRepo.vala:535
+#: Console/AppConsole.vala:664 Core/SnapshotRepo.vala:478
 msgid "Snapshot device not available"
 msgstr "快照设备不可用"
 
-#: Console/AppConsole.vala:660 Core/SnapshotRepo.vala:528
+#: Console/AppConsole.vala:660 Core/SnapshotRepo.vala:471
 msgid "Snapshot device not selected"
 msgstr "未选择快照设备"
 
-#: Core/SnapshotRepo.vala:450
+#: Core/SnapshotRepo.vala:446
 #, c-format
 msgid "Snapshot location"
 msgstr "快照位置"
 
-#: Core/Main.vala:1272
+#: Core/Main.vala:1305
 msgid "Snapshot saved successfully"
 msgstr "成功保存快照"
 
-#: Core/Main.vala:2042
+#: Core/Main.vala:2171
 msgid "Snapshot to restore not specified!"
 msgstr "未指定要恢复的快照！"
 
-#: Core/Main.vala:2875
+#: Core/Main.vala:3012
 msgid "Snapshot will become active after system is rebooted."
 msgstr "快照将在系统重启后变为活动状态。"
 
@@ -2177,18 +2122,18 @@ msgstr "快照将在系统重启后变为活动状态。"
 msgid "Snapshot(s) Deleted"
 msgstr "已删除快照"
 
-#: Gtk/MainWindow.vala:320 Gtk/DeleteWindow.vala:89
+#: Gtk/DeleteWindow.vala:89 Gtk/MainWindow.vala:320
 msgid "Snapshots"
 msgstr "快照"
 
-#: Gtk/SnapshotBackendBox.vala:170
+#: Gtk/SnapshotBackendBox.vala:178
 msgid ""
 "Snapshots are created and restored instantly. Snapshot creation is an atomic "
 "transaction at the file system level."
 msgstr ""
 "快照的创建和恢复只在一瞬间。在文件系统层面上，创建快照是原子级别的事务。"
 
-#: Gtk/SnapshotBackendBox.vala:187
+#: Gtk/SnapshotBackendBox.vala:195
 msgid ""
 "Snapshots are created by creating copies of system files using rsync, and "
 "hard-linking unchanged files from previous snapshot."
@@ -2196,7 +2141,7 @@ msgstr ""
 "快照的创建方式是使用 rsync 来创建系统文件的副本，以及从以前的快照中硬链接未更"
 "改的文件。"
 
-#: Gtk/SnapshotBackendBox.vala:168
+#: Gtk/SnapshotBackendBox.vala:176
 msgid ""
 "Snapshots are created using the built-in features of the BTRFS file system."
 msgstr "使用 BTRFS 文件系统的内置特性来创建快照。"
@@ -2206,13 +2151,13 @@ msgstr "使用 BTRFS 文件系统的内置特性来创建快照。"
 msgid "Snapshots are not scheduled at fixed times."
 msgstr "快照不会在计划在固定的时间。"
 
-#: Gtk/SnapshotBackendBox.vala:174
+#: Gtk/SnapshotBackendBox.vala:182
 msgid ""
 "Snapshots are perfect, byte-for-byte copies of the system. Nothing is "
 "excluded."
 msgstr "快照是系统的完美、逐字节的副本。 不会排除任何内容。"
 
-#: Gtk/SnapshotBackendBox.vala:172
+#: Gtk/SnapshotBackendBox.vala:180
 msgid ""
 "Snapshots are restored by replacing system subvolumes. Since files are never "
 "copied, deleted or overwritten, there is no risk of data loss. The existing "
@@ -2221,7 +2166,7 @@ msgstr ""
 "通过替换系统子卷来恢复快照。由于文件不会被复制、删除或覆盖，因此不存在数据丢"
 "失的风险。恢复之后，现有系统将保存为新快照。"
 
-#: Gtk/SnapshotBackendBox.vala:176
+#: Gtk/SnapshotBackendBox.vala:184
 msgid ""
 "Snapshots are saved on the same disk from which they are created (system "
 "disk). Storage on other disks is not supported. If system disk fails then "
@@ -2242,11 +2187,11 @@ msgid ""
 "locations are not supported."
 msgstr "快照保存到选定分区上的 /timeeshift-btrfs 目录。不支持其他地点。"
 
-#: Gtk/MainWindow.vala:996
+#: Gtk/MainWindow.vala:1004
 msgid "Snapshots available for restore"
 msgstr "可用于还原的快照"
 
-#: Gtk/SnapshotBackendBox.vala:191
+#: Gtk/SnapshotBackendBox.vala:199
 msgid ""
 "Snapshots can be saved to any disk formatted with a Linux file system. "
 "Saving snapshots to non-system or external disk allows the system to be "
@@ -2259,7 +2204,7 @@ msgstr ""
 msgid "Snapshots cannot be created in Live CD mode"
 msgstr "无法在实时 CD 模式下创建快照"
 
-#: Gtk/MainWindow.vala:1043
+#: Gtk/MainWindow.vala:1051
 msgid "Snapshots will be created at selected intervals"
 msgstr "将以选定的时间间隔创建快照"
 
@@ -2268,10 +2213,6 @@ msgid ""
 "Snapshots will be created at selected intervals if snapshot disk has enough "
 "space (> 1 GB)"
 msgstr "当快照磁盘具有足够的空间（>1GB）时，将以选定的时间间隔创建快照"
-
-#: Gtk/MainWindow.vala:635
-msgid "Snapshots will be removed during the next scheduled run"
-msgstr "快照将在下一次计划运行期间移除"
 
 #: Console/AppConsole.vala:376
 msgid "Specify backup device (default: config)"
@@ -2289,8 +2230,8 @@ msgstr "指定要恢复的快照"
 msgid "Specify target device"
 msgstr "指定目标设备"
 
-#: Gtk/RsyncLogBox.vala:472 Core/SnapshotRepo.vala:456
-#: Core/SnapshotRepo.vala:666
+#: Core/SnapshotRepo.vala:452 Core/SnapshotRepo.vala:606
+#: Gtk/RsyncLogBox.vala:472
 #, c-format
 msgid "Status"
 msgstr "状态"
@@ -2299,28 +2240,25 @@ msgstr "状态"
 msgid "Stop cron emails for scheduled tasks"
 msgstr "停止计划任务的cron电子邮件"
 
-#: Utility/TeeJee.Process.vala:486
-msgid "Stopped"
-msgstr "已停止"
+#: Gtk/RestoreDeviceBox.vala:101
+#, fuzzy
+msgid "Subvolume"
+msgstr "子卷"
 
-#: Core/Subvolume.vala:202
+#: Core/Subvolume.vala:187
 #, c-format
 msgid "Subvolume exists at destination"
 msgstr "目标位置存在子卷"
 
-#: Gtk/SnapshotListBox.vala:275
+#: Gtk/SnapshotListBox.vala:223
 #, c-format
 msgid "Subvolumes"
 msgstr "子卷"
 
-#: Gtk/RestoreWindow.vala:120 Gtk/ExcludeAppsBox.vala:135
-#: Gtk/ExcludeBox.vala:267
+#: Gtk/ExcludeAppsBox.vala:135 Gtk/ExcludeBox.vala:267
+#: Gtk/RestoreWindow.vala:120
 msgid "Summary"
 msgstr "摘要"
-
-#: Utility/Gtk/DonationWindow.vala:81
-msgid "Support"
-msgstr "支持"
 
 #: Console/AppConsole.vala:378
 msgid "Switch to BTRFS mode (default: config)"
@@ -2330,15 +2268,15 @@ msgstr "切换到 BTRFS 模式（默认：config）"
 msgid "Switch to RSYNC mode (default: config)"
 msgstr "切换到 RSYNC 模式（默认：config）"
 
-#: Core/SnapshotRepo.vala:1021
+#: Core/SnapshotRepo.vala:961
 msgid "Symlinks updated"
 msgstr "符号链接已更新"
 
-#: Core/Main.vala:2402
+#: Core/Main.vala:2531
 msgid "Synching file systems..."
 msgstr "正在同步文件系统..."
 
-#: Core/Main.vala:1381 Core/Main.vala:2564 Core/Main.vala:2805
+#: Core/Main.vala:1510 Core/Main.vala:2701 Core/Main.vala:2942
 msgid "Synching files with rsync..."
 msgstr "正在使用rsync同步文件..."
 
@@ -2346,12 +2284,12 @@ msgstr "正在使用rsync同步文件..."
 msgid "Syntax"
 msgstr "语法"
 
-#: Utility/Device.vala:1959 Gtk/SnapshotListBox.vala:127
+#: Gtk/SnapshotListBox.vala:125 Utility/Device.vala:1959
 #, c-format
 msgid "System"
 msgstr "系统"
 
-#: Gtk/MainWindow.vala:941
+#: Gtk/MainWindow.vala:949
 msgid "System Restore Utility"
 msgstr "系统还原工具语法"
 
@@ -2359,39 +2297,33 @@ msgstr "系统还原工具语法"
 msgid "System can be rolled-back to a previous date by restoring a snapshot."
 msgstr "可以通过恢复快照将系统回滚到之前的日期的系统。"
 
-#: Core/Main.vala:2265
+#: Core/Main.vala:2394
 msgid "System will reboot after files are restored"
 msgstr "恢复文件后系统将重启"
 
-#: Core/Main.vala:2215
+#: Core/Main.vala:2344
 msgid "System will reboot after files are restored."
 msgstr "恢复文件后系统将重启。"
 
-#: Core/Main.vala:1241 Core/Main.vala:1282
+#: Core/Main.vala:1241 Core/Main.vala:1315
 msgid "Tagged snapshot"
 msgstr "带标签的快照"
 
-#: Console/AppConsole.vala:427 Gtk/SnapshotListBox.vala:151
+#: Console/AppConsole.vala:427 Gtk/SnapshotListBox.vala:149
 msgid "Tags"
 msgstr "标签"
 
-#: Core/Main.vala:2077
+#: Core/Main.vala:2206
 msgid "Target device is not mounted"
 msgstr "目标设备未被挂载"
 
-#: Gtk/RestoreDeviceBox.vala:480
+#: Gtk/RestoreDeviceBox.vala:466
 msgid "Target device is same as system device"
 msgstr "目标设备与系统设备相同"
 
-#: Core/Main.vala:2071
+#: Core/Main.vala:2200
 msgid "Target device not specified!"
 msgstr "目标设备未指定！"
-
-#: Gtk/SnapshotBackendBox.vala:119
-msgid ""
-"The 'btrfs' command is not available on your system. Install the 'btrfs-"
-"tools' package and try again."
-msgstr "'btrfs'命令在您的系统上不可用。 请先安装'btrfs-tools'，然后重试。"
 
 #: Gtk/ScheduleBox.vala:156
 msgid ""
@@ -2406,7 +2338,7 @@ msgstr ""
 msgid "The system partition has an unsupported subvolume layout."
 msgstr "系统分区存在无法支持的子卷布局。"
 
-#: Core/Main.vala:3463
+#: Core/Main.vala:3604
 msgid "The target partition has an unsupported subvolume layout."
 msgstr "目标分区存在无法支持的子卷布局。"
 
@@ -2419,27 +2351,28 @@ msgstr "此设备上没有快照"
 msgid "This device is not encrypted"
 msgstr "此设备未被加密"
 
-#: Core/Main.vala:2231
+#: Core/Main.vala:2360
 msgid ""
 "This software comes without absolutely NO warranty and the author takes no "
 "responsibility for any damage arising from the use of this program."
 msgstr ""
 "该软件没有绝对的免费保修，作者对使用本程序造成的任何损害不承担任何责任。"
 
-#: Utility/Gtk/DonationWindow.vala:66
+#: Utility/Gtk/DonationWindow.vala:65
+#, fuzzy
 msgid ""
 "This software is free for personal and commercial use. It is distributed in "
-"the hope that it is useful but without any warranty. See the GNU General "
-"Public License v2 or later for more information"
+"the hope that it is useful but without any warranty or support. See the GNU "
+"General Public License v2 or later for more information"
 msgstr ""
 "该软件可免费用于个人和商业用途。希望它的分发是有用的，但不作任何担保。有关更"
 "多信息，请参阅GNU通用公共许可证v2或更高版本"
 
-#: Gtk/MainWindow.vala:1031 Gtk/MainWindow.vala:1042
+#: Gtk/MainWindow.vala:1039 Gtk/MainWindow.vala:1050
 msgid "Timeshift is active"
 msgstr "Timeshift已开启"
 
-#: Gtk/RestoreBox.vala:132 Gtk/BackupBox.vala:94 Gtk/RsyncLogBox.vala:394
+#: Gtk/RestoreBox.vala:132 Gtk/RsyncLogBox.vala:394 Gtk/BackupBox.vala:97
 #, c-format
 msgid "Timestamp"
 msgstr "时间戳"
@@ -2449,17 +2382,17 @@ msgstr "时间戳"
 msgid "To restore with default options, press the ENTER key for all prompts!"
 msgstr "为了恢复默认设置，请按“回车键”来处理所有提示！"
 
-#: Utility/Gtk/AboutWindow.vala:457
+#: Utility/Gtk/AboutWindow.vala:461
 msgid "Tools"
 msgstr "工具"
 
-#: Utility/Gtk/AboutWindow.vala:441
+#: Utility/Gtk/AboutWindow.vala:445
 msgid "Translations"
 msgstr "翻译"
 
 #: Console/AppConsole.vala:459 Console/AppConsole.vala:498
-#: Utility/Device.vala:1949 Gtk/SettingsWindow.vala:87
-#: Gtk/BackupDeviceBox.vala:190
+#: Gtk/BackupDeviceBox.vala:190 Gtk/SettingsWindow.vala:87
+#: Utility/Device.vala:1949
 #, c-format
 msgid "Type"
 msgstr "类型"
@@ -2477,7 +2410,7 @@ msgstr "未知选项"
 msgid "Unknown snapshot type"
 msgstr "未知快照类型"
 
-#: Core/Main.vala:1586
+#: Core/Main.vala:1715
 msgid "Unknown value specified for option --tags"
 msgstr "为 --tags 选项指定的值未知"
 
@@ -2494,11 +2427,7 @@ msgstr "成功解除锁定"
 msgid "Unmounting from"
 msgstr "正在卸载"
 
-#: Gtk/SnapshotListBox.vala:199
-msgid "Unshared"
-msgstr "不共享"
-
-#: Gtk/RestoreDeviceBox.vala:522 Core/Main.vala:3467
+#: Core/Main.vala:3608 Gtk/RestoreDeviceBox.vala:508
 msgid "Unsupported Subvolume Layout"
 msgstr "不支持的子卷布局"
 
@@ -2510,11 +2439,11 @@ msgstr "更新GRUB目录"
 msgid "Update initramfs"
 msgstr "更新initramfs"
 
-#: Core/Main.vala:2744
+#: Core/Main.vala:2881
 msgid "Updated /etc/crypttab on target device"
 msgstr "在目标设备上更新/etc/crypttab"
 
-#: Core/Main.vala:2664
+#: Core/Main.vala:2801
 msgid "Updated /etc/fstab on target device"
 msgstr "在目标设备上更新/etc/fstab"
 
@@ -2524,24 +2453,31 @@ msgid ""
 "be left selected."
 msgstr "更新GRUB菜单项（推荐）。 这是安全的运行，应该被选中。"
 
-#: Core/Main.vala:2385
+#: Core/Main.vala:2514
 msgid "Updating GRUB menu..."
 msgstr "正在更新GRUB目录..."
 
-#: Core/Main.vala:2588
+#: Core/Main.vala:2725
 msgid "Updating bootloader configuration..."
 msgstr "更新引导加载程序配置..."
+
+#: Utility/Gtk/DonationWindow.vala:80
+#, fuzzy
+msgid ""
+"Use the GitHub issue tracker for reporting issues, or post your questions on "
+"the Linux Mint forums. Please avoid reporting issues by email."
+msgstr "使用问题跟踪器来报告问题、提问和请求特性。请不要通过电子邮件报告问题。"
 
 #: Utility/Device.vala:1956
 #, c-format
 msgid "Used"
 msgstr "已使用"
 
-#: Gtk/UsersBox.vala:105 Gtk/SetupWizardWindow.vala:114
+#: Gtk/SetupWizardWindow.vala:114 Gtk/UsersBox.vala:102
 msgid "User"
 msgstr "用户"
 
-#: Gtk/UsersBox.vala:63
+#: Gtk/UsersBox.vala:62
 msgid "User Home Directories"
 msgstr "用户主目录"
 
@@ -2549,7 +2485,7 @@ msgstr "用户主目录"
 msgid "User cancelled the password prompt"
 msgstr "用户已取消密码提示"
 
-#: Gtk/UsersBox.vala:67
+#: Gtk/UsersBox.vala:66
 msgid ""
 "User home directories are excluded by default unless you enable them here"
 msgstr "默认情况下，除非您在这里开启，否则会排除用户主目录"
@@ -2567,11 +2503,11 @@ msgstr "用户主目录"
 msgid "Vendor"
 msgstr "供应商"
 
-#: Gtk/SnapshotListBox.vala:343
+#: Gtk/SnapshotListBox.vala:291
 msgid "View Rsync Log for Create"
 msgstr "查看 Rsync 创建日志"
 
-#: Gtk/SnapshotListBox.vala:350
+#: Gtk/SnapshotListBox.vala:298
 msgid "View Rsync Log for Restore"
 msgstr "查看 Rsync 恢复日志"
 
@@ -2579,11 +2515,7 @@ msgstr "查看 Rsync 恢复日志"
 msgid "View TimeShift Logs"
 msgstr "查看TimeShift日志文件"
 
-#: Gtk/RestoreDeviceBox.vala:101
-msgid "Volume"
-msgstr "卷"
-
-#: Gtk/RestoreSummaryBox.vala:53 Core/Main.vala:2126
+#: Core/Main.vala:2255 Gtk/RestoreSummaryBox.vala:53
 msgid "Warning"
 msgstr "警告"
 
@@ -2591,25 +2523,21 @@ msgstr "警告"
 msgid "Web Browsers"
 msgstr "网页浏览器"
 
-#: Utility/Gtk/DonationWindow.vala:98
+#: Utility/Gtk/DonationWindow.vala:90
 msgid "Website"
 msgstr ""
 
-#: Gtk/SnapshotListBox.vala:301 Gtk/ScheduleBox.vala:82
+#: Gtk/ScheduleBox.vala:82 Gtk/SnapshotListBox.vala:249
 msgid "Weekly"
 msgstr "每周"
 
-#: Core/Main.vala:1125
+#: Core/Main.vala:1126
 msgid "Weekly snapshot failed!"
 msgstr "每周快照失败！"
 
-#: Core/Main.vala:1106
+#: Core/Main.vala:1107
 msgid "Weekly snapshots are enabled"
 msgstr "已启用每周快照"
-
-#: Utility/Gtk/DonationWindow.vala:95
-msgid "Wiki"
-msgstr "维基"
 
 #: Gtk/BackupFinishBox.vala:63 Gtk/DeleteFinishBox.vala:63
 msgid "With Errors"
@@ -2623,7 +2551,7 @@ msgstr "向导"
 msgid "Wrong password"
 msgstr "密码错误"
 
-#: Utility/Gtk/CustomMessageDialog.vala:176
+#: Utility/Gtk/CustomMessageDialog.vala:156
 msgid "Yes"
 msgstr "是"
 
@@ -2636,19 +2564,6 @@ msgstr ""
 "您可以继续在当前系统上工作。 重新启动后，当前系统将以新快照显示。 如果需要，"
 "可以稍后恢复此快照，以“撤销”恢复。"
 
-#: Utility/Gtk/DonationWindow.vala:85
-#, fuzzy
-msgid ""
-"You can use the GitHub issue tracker for reporting issues, or post your "
-"questions on the Linux Mint forums. Please avoid reporting issues by email."
-msgstr "使用问题跟踪器来报告问题、提问和请求特性。请不要通过电子邮件报告问题。"
-
-#: Gtk/RestoreDeviceBox.vala:413
-msgid ""
-"[Advanced Users Only] Change these settings only if the restored system "
-"fails to boot."
-msgstr "[仅限高级用户]仅当还原的系统引导失败时才需更改此设置。"
-
 #: Console/AppConsole.vala:1012
 #, c-format
 msgid "[ENTER = Default (%s), a = Abort]"
@@ -2659,20 +2574,26 @@ msgstr "[回车= 默认(%s), a = 终止]"
 msgid "[ENTER = Default (%s), r = Root device, a = Abort]"
 msgstr "[回车= 默认(%s), r = 根设备, a = 终止]"
 
+#: Gtk/RestoreDeviceBox.vala:401
+#, fuzzy
+msgid ""
+"[For Experienced Users] Change these settings if the restored system fails "
+"to boot."
+msgstr "[仅限高级用户]仅当还原的系统引导失败时才需更改此设置。"
+
 #: Utility/AppLock.vala:54
 msgid "[Warning] Deleted invalid lock"
 msgstr "[警告]删除无效锁定"
 
-#: Core/SnapshotRepo.vala:874
+#: Core/SnapshotRepo.vala:814
 msgid "all"
 msgstr "所有"
 
-#: Core/Subvolume.vala:214 Core/Main.vala:1514 Core/Main.vala:3894
-#: Core/Main.vala:3978 Core/Main.vala:4086 Core/Main.vala:4125
+#: Core/Subvolume.vala:199 Core/Main.vala:1643 Core/Main.vala:4010
 msgid "btrfs returned an error"
 msgstr "btrfs返回一个错误"
 
-#: Core/Snapshot.vala:500 Core/Main.vala:1413
+#: Core/Snapshot.vala:500 Core/Main.vala:1542
 msgid "complete"
 msgstr "完整"
 
@@ -2684,31 +2605,106 @@ msgstr "crontab文件已导出"
 msgid "crontab file installed"
 msgstr "crontab文件已安装"
 
-#: Core/SnapshotRepo.vala:860
+#: Core/SnapshotRepo.vala:800
 msgid "incomplete"
 msgstr "不完整"
 
-#: Core/SnapshotRepo.vala:842
+#: Core/SnapshotRepo.vala:782
 msgid "marked for deletion"
 msgstr "已标记删除"
 
-#: Core/Main.vala:1305 Core/Main.vala:1459 Core/Main.vala:1461
+#: Core/Main.vala:1434 Core/Main.vala:1588 Core/Main.vala:1590
 msgid "mounted at path"
 msgstr "挂载到指定路径"
 
-#: Gtk/RestoreBox.vala:237 Gtk/BackupBox.vala:234 Gtk/DeleteBox.vala:149
-#: Core/Snapshot.vala:501 Core/Main.vala:1413
+#: Core/Snapshot.vala:501 Core/Main.vala:1542 Gtk/DeleteBox.vala:149
+#: Gtk/RestoreBox.vala:237 Gtk/BackupBox.vala:255
 msgid "remaining"
 msgstr "剩余"
 
-#: Core/Main.vala:1424
+#: Core/Main.vala:1553
 msgid "rsync returned an error"
 msgstr "rsync返回一个错误"
 
-#: Core/SnapshotRepo.vala:691 Core/SnapshotRepo.vala:744
-#: Core/SnapshotRepo.vala:823
+#: Core/SnapshotRepo.vala:631 Core/SnapshotRepo.vala:684
+#: Core/SnapshotRepo.vala:763
 msgid "un-tagged"
 msgstr "未标记"
+
+#~ msgid "BTRFS Tools Not Found"
+#~ msgstr "BTRFS工具丢失"
+
+#~ msgid "Stopped"
+#~ msgstr "已停止"
+
+#~ msgid ""
+#~ "The 'btrfs' command is not available on your system. Install the 'btrfs-"
+#~ "tools' package and try again."
+#~ msgstr "'btrfs'命令在您的系统上不可用。 请先安装'btrfs-tools'，然后重试。"
+
+#~ msgid "Clone current system"
+#~ msgstr "复制当前的系统"
+
+#~ msgid "Volume"
+#~ msgstr "卷"
+
+#~ msgid "Wiki"
+#~ msgstr "维基"
+
+#~ msgid "Unshared"
+#~ msgstr "不共享"
+
+#~ msgid "Destroyed qgroup"
+#~ msgstr "已销毁配额组"
+
+#~ msgid "Destroying qgroup"
+#~ msgstr "正在销毁配额组"
+
+#~ msgid "Enable BTRFS qgroups (recommended)"
+#~ msgstr "启用 BTRFS 配额组（推荐）"
+
+#~ msgid "Enabled subvolume quota support"
+#~ msgstr "启用子卷配额支持"
+
+#~ msgid "Failed to destroy qgroup"
+#~ msgstr "销毁配额组失败"
+
+#~ msgid "Failed to enable subvolume quota"
+#~ msgstr "启用子卷配额失败"
+
+#~ msgid "Failed to query subvolume quota"
+#~ msgstr "查询子卷配额失败"
+
+#~ msgid "Failed to rescan subvolume quota"
+#~ msgstr "重新扫描子卷配额失败"
+
+#~ msgid "Miscellaneous"
+#~ msgstr "杂项"
+
+#~ msgid ""
+#~ "Required for displaying shared and unshared size for snapshots in the "
+#~ "main window"
+#~ msgstr "在主窗口中显示快照的共享大小和未共享大小时需要"
+
+#~ msgid "Enter path or browse for directory"
+#~ msgstr "输入路径或浏览以选取目录"
+
+#~ msgid ""
+#~ "If you find this application useful, consider making a donation to "
+#~ "support the development."
+#~ msgstr "如果您觉得此应用有用，请考虑捐赠以支持开发。"
+
+#~ msgid "Marked for deletion"
+#~ msgstr "已标记为删除"
+
+#~ msgid "Select Path"
+#~ msgstr "选择路径"
+
+#~ msgid "Snapshots will be removed during the next scheduled run"
+#~ msgstr "快照将在下一次计划运行期间移除"
+
+#~ msgid "Support"
+#~ msgstr "支持"
 
 #~ msgid "Comments"
 #~ msgstr "注释"

@@ -34,6 +34,7 @@ public class LinuxDistro : GLib.Object{
 	public string description = "";
 	public string release = "";
 	public string codename = "";
+	public bool is_efi = true;
 
 	public LinuxDistro(){
 		
@@ -41,6 +42,7 @@ public class LinuxDistro : GLib.Object{
 		description = "";
 		release = "";
 		codename = "";
+		is_efi = true;
 	}
 
 	public string full_name(){
@@ -63,6 +65,9 @@ public class LinuxDistro : GLib.Object{
 		 * installed at the given root path */
 
 		LinuxDistro info = new LinuxDistro();
+
+		string efi_dir = root_path + "/sys/firmware/efi";
+		info.is_efi = File.parse_name(efi_dir).query_exists();
 
 		string dist_file = root_path + "/etc/lsb-release";
 		var f = File.new_for_path(dist_file);
